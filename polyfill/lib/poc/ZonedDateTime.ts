@@ -748,13 +748,20 @@ export class ZonedDateTime {
       | 'nanoseconds'
     >
   ): Temporal.Duration {
-    // The default of 'hours' is different from DateTime and Instant, which is
-    // why we can't simply passthrough the options to those types.
-    const largestUnit = getOption(options, 'largestUnit', DIFFERENCE_UNITS, 'hours');
-    const smallestUnit = getOption(options, 'smallestUnit', DIFFERENCE_UNITS, 'nanoseconds');
+    // The default of `largestUnit: 'hours'` is different from DateTime and
+    // Instant, which is why we can't passthrough the options to those types.
+    let largestUnit = getOption(options, 'largestUnit', LARGEST_UNITS, 'auto');
+    if (largestUnit === 'auto') largestUnit = 'hours';
+    const smallestUnit = getOption(options, 'smallestUnit', SMALLEST_UNITS, 'nanoseconds');
+
+    // If smallestUnit is larger than largestUnit, then set largestUnit = smallestUnit
+    const smallestUnitIndex = SMALLEST_UNITS.indexOf(smallestUnit);
+    const largestUnitIndex = SMALLEST_UNITS.indexOf(largestUnit);
+    if (largestUnitIndex > smallestUnitIndex) largestUnit = smallestUnit;
+
     const roundingIncrement = options && options.roundingIncrement;
     const roundingMode = getOption(options, 'roundingMode', ROUNDING_MODES, 'nearest');
-    const dateUnits = ['years', 'months', 'weeks', 'days'] as DifferenceUnit[];
+    const dateUnits = ['years', 'months', 'weeks', 'days'] as SmallestUnit[];
     const wantDateUnits = dateUnits.includes(largestUnit);
     const wantDateUnitsOnly = dateUnits.includes(smallestUnit);
 
@@ -765,141 +772,121 @@ export class ZonedDateTime {
       );
     }
 
+    if (wantDateUnitsOnly && roundingIncrement !== undefined && roundingIncrement !== 1) {
+      throw new RangeError('`roundingIncrement` other than 1 is not allowed for `smallestUnit` of `days` or larger');
+    }
+
     type InstantSmallestUnit = 'hours' | 'minutes' | 'seconds' | 'milliseconds' | 'microseconds' | 'nanoseconds';
 
+    // TODO: remove this after relativeTo lands for duration.add
+    function adjustDay(d: Temporal.Duration, direction: -1 | 1, relativeTo: ZonedDateTime) {
+      const sum = relativeTo._dt.add(d);
+      const oneDayEarlier = sum.add({ days: direction });
+      const result = oneDayEarlier.difference(relativeTo._dt, {
+        largestUnit: 'years',
+        smallestUnit: 'days',
+        roundingMode: 'ceil'
+      });
+      return result;
+    }
+
+    const direction = ZonedDateTime.compare(this, other);
+    if (direction === 0) return new Temporal.Duration();
+
     if (!wantDateUnits) {
-      // The user is only asking for a time difference, so just use Instant.prototype.difference
-      const revisedOptions = {
+      // The user is only asking for a time difference, so return difference of instants.
+      return this._abs.difference(other._abs, {
         largestUnit: largestUnit as InstantSmallestUnit,
         smallestUnit: smallestUnit as InstantSmallestUnit,
         roundingIncrement,
         roundingMode
-      };
-      return this._abs.difference(other._abs, revisedOptions);
+      });
     }
 
-    // If the user is only asking for days or larger units, then per RFC 5545 we
-    // can just diff the dates using DateTime math only.
-    // TODO: this assumption needs to be vetted. In particular:
-    // * What about rounding to nearest if there's a DST transition?  Should the
-    //   extra or missing hour be a tiebreaker?
-    // * If the full-day difference ends on a skipped DST hour, then the actual
-    //   local time will be one hour later. Will lack of rounding up in that
-    //   case cause any problems?
+    // Find the difference in dates only.
+    let dateDuration = this._dt.difference(other._dt, { largestUnit, smallestUnit: 'days', roundingMode: 'trunc' });
+    let zdtIntermediate = other.add(dateDuration); // may disambiguate
+
+    // If clock time after addition was in the middle of a skipped period, the
+    // endpoint was disambiguated to a later clock time. So it's possible that
+    // the resulting disambiguated result is later than `this`. If so, then back
+    // up one day and try again. Repeat if necessary (some transitions are
+    // > 24 hours) until either there's zero days left or the date duration is
+    // back inside the period where it belongs. Note that this case only can
+    // happen for positive durations because the only direction that
+    // `disambiguation: 'compatible'` can change clock time is forwards.
+    while (direction === 1 && dateDuration.sign === 1 && ZonedDateTime.compare(zdtIntermediate, this) > 0) {
+      // TODO: after PlainDate.add rounding lands, uncomment use of relativeTo
+      // dateDuration = dateDuration.subtract({ days: -1, relativeTo: other._dt });
+      dateDuration = adjustDay(dateDuration, -1, other);
+      zdtIntermediate = other.add(dateDuration); // may do disambiguation
+    }
+
+    let isOverflow = false;
+    let dayLengthNs = 0;
+    let timeRemainderNs = 0;
+    do {
+      // calculate length of the next day (day that contains the time remainder)
+      const oneDayFartherDuration = adjustDay(dateDuration, direction, other);
+      const oneDayFarther = other.add(oneDayFartherDuration);
+      dayLengthNs = oneDayFarther._abs.difference(zdtIntermediate._abs, { largestUnit: 'nanoseconds' }).nanoseconds;
+      timeRemainderNs = this._abs.difference(zdtIntermediate._abs, { largestUnit: 'nanoseconds' }).nanoseconds;
+      isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
+      if (isOverflow) {
+        dateDuration = oneDayFartherDuration;
+        zdtIntermediate = oneDayFarther;
+      }
+    } while (isOverflow);
+
+    // if there's no time remainder, we're done!
+    if (timeRemainderNs === 0) return dateDuration;
+
     if (wantDateUnitsOnly) {
-      return this._dt.difference(other._dt, { largestUnit, smallestUnit, roundingIncrement, roundingMode });
-    }
-
-    // Also, if there's no change in timezone offset between `this` and `other`,
-    // then we don't have to do any DST-related fixups. Just return the simple
-    // DateTime difference.
-    // const diffOffset = this.offsetNanoseconds - other.offsetNanoseconds;
-    // if (diffOffset === 0) return dtDiff;
-
-    // const { dateDuration, timeDuration } = splitDuration(dtDiff);
-
-    // If we get here, it's the hard case:
-    // 1) The timezone offset is different between`this` and `other, so there's
-    //    a DST transition in the middle.
-    // 2) The user caller both date units and time units in the result
-
-    // A goal of difference() is to be reversible. The following comparisons should all
-    // evaluate to `true`:
-    // ```js
-    // Temporal.ZonedDateTime.compare(zdt, other.add(zdt.difference(other))) === 0;
-    // Temporal.ZonedDateTime.compare(zdt, other.subtract(other.difference(zdt))) === 0;
-    // Temporal.ZonedDateTime.compare(other, zdt.subtract(zdt.difference(other))) === 0;
-    // Temporal.ZonedDateTime.compare(other, zdt.add(other.difference(zdt))) === 0;
-    // ```
-    // first, normalize the inputs so that there's a deterministic order
-    const [earlier, later] = [this, other].sort(ZonedDateTime.compare);
-    const [earlierDt, laterDt] = [earlier.toDateTime(), later.toDateTime()];
-    const mustNegateResult = later !== this;
-    const dateDuration = laterDt.difference(earlierDt, { largestUnit, smallestUnit: 'days', roundingMode: 'trunc' });
-    const diffDays = laterDt.difference(earlierDt, {
-      largestUnit: 'days',
-      smallestUnit: 'days',
-      roundingMode: 'trunc'
-    }).days;
-
-    // It's possible that DST disambiguation may cause the addded days to be later
-    // than the earlier time. If this happens, back off one day and try again.
-    let intermediate = earlier.add({ days: diffDays });
-    if (ZonedDateTime.compare(intermediate, later) > 0) {
-      intermediate = earlier.add({ days: diffDays - 1 });
-    }
-    const timeDuration = later.toInstant().difference(intermediate.toInstant(), {
-      largestUnit: 'hours',
-      smallestUnit: smallestUnit as InstantSmallestUnit,
-      roundingIncrement,
-      roundingMode
-    });
-    if (timeDuration.sign < 0) {
-      throw new RangeError('Internal error: time duration should never be negative');
-    }
-
-    // TODO: it's possible that rounding may cause the time duration to be over 24 hours.
-    // How should we handle this case?  Leave as unbalanced 24 hours?  Add 1 day?
-    // Note that this may be OK for cases where DST happened!
-
-    const hybridDuration = mergeDuration({ dateDuration, timeDuration });
-    return mustNegateResult ? hybridDuration.negated() : hybridDuration;
-
-    /* Code below will be removed once we finalize difference()
-
-    //
-    // RFC 5545 expects that date durations are measured in nominal (DateTime)
-    // days, while time durations are measured in exact (Instant) time.
-    if (timeDuration.isZero) return dateDuration; // even number of calendar days
-
-    // If we get here, there's both a time and date part of the duration AND
-    // there's a time zone offset transition during the duration. RFC 5545 says
-    // that we should calculate full days using DateTime math and remainder
-    // times using Instant. To do this, we calculate a `DateTime` difference,
-    // split it into date and time portions, and then convert the time portion
-    // to an exact (Instant) duration before returning to the caller.  A
-    // challenge: converting the time duration involves a conversion from
-    // `DateTime` to `Instant` which can be ambiguous. This can cause
-    // unpredictable behavior because the disambiguation is happening inside of
-    // the duration, not at its edges like in `add` or `from`. We'll reduce the
-    // chance of this unpredictability as follows:
-    // 1. First, calculate the time portion as if it's closest to `other`.
-    // 2. If the time portion in (1) contains a tz offset transition, then
-    //    reverse the calculation and assume that the time portion is closest to
-    //    `this`.
-    //
-    // The approach above ensures that in almost all cases, there will be no
-    // "internal disambiguation" required. It's possible to construct a test
-    // case where both `this` and `other` are both within 25 hours of a
-    // different offset transition, but in practice this will be exceedingly
-    // rare.
-    let intermediateDt = this._dt.subtract(dateDuration);
-    let intermediateAbs = intermediateDt.toInstant(this._tz);
-    let adjustedTimeDuration: Temporal.Duration;
-
-    // TODO: the logic below doesn't work with rounding and smallestUnit. Given
-    // that we're going to review all the logic in this method, it doesn't make
-    // sense to fix rounding until we decide on the final logic, which should
-    // happen in the next few days. In the meantime, difference() will be broken
-    // in those cases.
-
-    if (this._tz.getOffsetNanosecondsFor(intermediateAbs) === other.offsetNanoseconds) {
-      // The transition was in the date portion which is what we want.
-      adjustedTimeDuration = intermediateAbs.difference(other._abs, { largestUnit: 'hours' });
+      // There's a time remainder and `smallestUnit` is `days` or larger. This
+      // means that there will be no time remainder in the final result. and
+      // that we may have to round from hours to days. there will be no time
+      // remainder in the final result.
+      const fraction = direction * (timeRemainderNs / dayLengthNs);
+      // Conveniently, rounding methods' names mostly match `Math` functions. If
+      // we add more rounding methods, probably need to change this trick.
+      const roundingMethod = roundingMode === 'nearest' ? 'round' : roundingMode;
+      const rounded = Math[roundingMethod](fraction);
+      if (rounded) dateDuration = adjustDay(dateDuration, direction, other);
+      return dateDuration;
     } else {
-      // There was a transition in the time portion, so try assuming that the
-      // time portion is on the other side next to `this`, where there's
-      // unlikely to be another transition.
-      intermediateDt = other._dt.add(dateDuration);
-      intermediateAbs = intermediateDt.toInstant(this._tz);
-      adjustedTimeDuration = this._abs.difference(intermediateAbs, { largestUnit: 'hours' });
+      // There's a time remainder and `smallestUnit` is `hours` or smaller.
+      // Calculate the time remainder (with rounding).
+      let timeDuration = this._abs.difference(zdtIntermediate._abs, {
+        largestUnit: 'hours',
+        smallestUnit: smallestUnit as InstantSmallestUnit,
+        roundingIncrement,
+        roundingMode
+      });
+
+      // There's one more round of rounding possible: the time duration above
+      // could have rounded up into enough hours to exceed the day length. If
+      // this happens, grow the date duration by a single day and re-run the
+      // time rounding on the smaller remainder. DO NOT RECURSE, because once
+      // the extra hours are sucked up into the date duration, there's no way
+      // for another full day to come from the next round of rounding. And if
+      // it were possible (e.g. contrived calendar with 30-minute-long "days")
+      // then it'd risk an infinite loop.
+      timeRemainderNs = timeDuration.round({ largestUnit: 'nanoseconds', smallestUnit: 'nanoseconds' }).nanoseconds;
+      isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
+      if (isOverflow) {
+        dateDuration = adjustDay(dateDuration, direction, other);
+        timeRemainderNs -= dayLengthNs;
+        timeDuration = Temporal.Duration.from({ nanoseconds: timeRemainderNs }).round({
+          largestUnit: 'hours',
+          smallestUnit: smallestUnit as InstantSmallestUnit,
+          roundingIncrement,
+          roundingMode
+        });
+      }
+
+      // Finally, merge the date and time durations and return the merged result.
+      return mergeDuration({ dateDuration, timeDuration });
     }
-
-    const hybridDuration = mergeDuration({ dateDuration, timeDuration: adjustedTimeDuration });
-    return hybridDuration;
-    */
-
-    // TODO: more tests for cases where intermediate value lands on a discontinuity
   }
 
   /**
@@ -919,6 +906,12 @@ export class ZonedDateTime {
   ): ZonedDateTime {
     // first, round the underlying DateTime fields
     const rounded = this._dt.round(options);
+
+    // TODO: there's a case not yet implemented here: if there's a DST
+    // transition during the current day, then it's ignored by rounding. For
+    // example, using the `nearest` mode a time of 11:45 would round up in
+    // DateTime rounding but should round down if the day is 23 hours long.
+    // The difference() implementation below shows one way to do this rounding.
 
     // Now reset all DateTime fields but leave the TimeZone. The offset will
     // also be retained (using the default `offset: 'prefer'` option of `with`)
@@ -1134,8 +1127,8 @@ function mergeDuration({
   });
 }
 
-type DifferenceUnit = NonNullable<NonNullable<Parameters<ZonedDateTime['difference']>[1]>['smallestUnit']>;
-const DIFFERENCE_UNITS: DifferenceUnit[] = [
+type SmallestUnit = NonNullable<NonNullable<Parameters<ZonedDateTime['difference']>[1]>['smallestUnit']>;
+const SMALLEST_UNITS: SmallestUnit[] = [
   'years',
   'months',
   'weeks',
@@ -1147,14 +1140,21 @@ const DIFFERENCE_UNITS: DifferenceUnit[] = [
   'microseconds',
   'nanoseconds'
 ];
+
+type LargestUnit = SmallestUnit | 'auto';
+const LARGEST_UNITS: LargestUnit[] = [...SMALLEST_UNITS, 'auto'];
+
 const DISAMBIGUATION_OPTIONS: Temporal.ToInstantOptions['disambiguation'][] = [
   'compatible',
   'earlier',
   'later',
   'reject'
 ];
+
 const OFFSET_OPTIONS: offsetDisambiguationOptions['offset'][] = ['use', 'prefer', 'ignore', 'reject'];
+
 const OVERFLOW_OPTIONS: Temporal.AssignmentOptions['overflow'][] = ['constrain', 'reject'];
+
 const ROUNDING_MODES: NonNullable<Temporal.DifferenceOptions<'years'>['roundingMode']>[] = [
   'nearest',
   'ceil',

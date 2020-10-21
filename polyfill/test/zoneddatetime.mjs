@@ -223,22 +223,24 @@ describe('ZonedDateTime', () => {
       equal(`${undo}`, `${start}`);
     });
 
-    /* skipping this test until we fix difference()
-        it('Samoa date line change (subtract): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
-          const dayAfterSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 31, 23).toInstant('Pacific/Apia');
-          const start = dayAfterSamoaDateLineChangeAbs.toZonedDateTime('Pacific/Apia');
-          const added = start.subtract({ days: 1, hours: 1 });
-          equal(added.day, 29);
-          equal(added.hour, 22);
-          equal(added.minute, 0);
-          const diff = added.difference(start, { largestUnit: 'days' });
-          equal(diff.minutes, 0);
-          equal(diff.hours, -1);
-          equal(diff.days, -2);
-          const undo = added.subtract(diff);
-          equal(`${undo}`, `${start}`);
-        });
-        */
+    it('Samoa date line change (subtract): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
+      const dayAfterSamoaDateLineChangeAbs = new Temporal.DateTime(2011, 12, 31, 23).toInstant('Pacific/Apia');
+      const start = dayAfterSamoaDateLineChangeAbs.toZonedDateTime('Pacific/Apia');
+      const skipped = start.subtract({ days: 1, hours: 1 });
+      equal(skipped.day, 31);
+      equal(skipped.hour, 22);
+      equal(skipped.minute, 0);
+      const end = start.subtract({ days: 2, hours: 1 });
+      equal(end.day, 29);
+      equal(end.hour, 22);
+      equal(end.minute, 0);
+      const diff = end.difference(start, { largestUnit: 'days' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, -1);
+      equal(diff.days, -2);
+      const undo = start.add(diff);
+      equal(`${undo}`, `${end}`);
+    });
 
     it('3:30 day before DST start -> 3:30 day of DST start', () => {
       const start = dayBeforeDstStart.add({ hours: 1 }); // 3:30AM
@@ -263,11 +265,8 @@ describe('ZonedDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 0);
       equal(diff.days, 1);
-      // TODO: uncomment and revise these tests after
-      // difference algorithm round-trip issue is resolved.
-      // See https://mailarchive.ietf.org/arch/msg/calsify/9rPGjL2YRM6SUmW1uDY_wmZ4kPk/
-      // const undo = added.subtract(diff);
-      // equal(`${undo}`, `${dayBeforeDstStart}`);
+      const undo = dayBeforeDstStart.add(diff);
+      equal(`${undo}`, `${added}`);
     });
 
     it('1:30 day DST starts -> 4:30 day DST starts', () => {
@@ -294,11 +293,9 @@ describe('ZonedDateTime', () => {
       equal(diff.minutes, 0);
       equal(diff.hours, 0);
       equal(diff.days, 1);
-      // TODO: uncomment and revise these tests after
-      // difference algorithm round-trip issue is resolved.
-      // See https://mailarchive.ietf.org/arch/msg/calsify/9rPGjL2YRM6SUmW1uDY_wmZ4kPk/
-      // const undo = added.subtract(diff);
-      // equal(`${undo}`, `${start}`);
+
+      const undo = start.add(diff);
+      equal(`${undo}`, `${added}`);
     });
 
     it('1:00AM day DST starts -> (add 24 hours) -> 2:00AM day after DST starts', () => {
@@ -327,6 +324,125 @@ describe('ZonedDateTime', () => {
       equal(diff.days, 1);
       const undo = added.subtract(diff);
       equal(`${undo}`, `${start}`);
+    });
+
+    it('Difference can return day length > 24 hours', () => {
+      const start = ZonedDateTime.from('2020-10-30T01:45-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-11-02T01:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days' });
+      equal(diff.minutes, 30);
+      equal(diff.hours, 24);
+      equal(diff.days, 2);
+      const undo = start.add(diff);
+      equal(`${undo}`, `${end}`);
+    });
+
+    it('Difference rounding (nearest day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { smallestUnit: 'days' }); // roundingMode: 'nearest'
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, -3);
+    });
+
+    it('Difference rounding (ceil day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { smallestUnit: 'days', roundingMode: 'ceil' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, -2);
+    });
+
+    it('Difference rounding (trunc day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { smallestUnit: 'days', roundingMode: 'trunc' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, -2);
+    });
+
+    it('Difference rounding (floor day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { smallestUnit: 'days', roundingMode: 'floor' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, -3);
+    });
+
+    it('Difference rounding (nearest hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days', smallestUnit: 'hours' }); // roundingMode: 'nearest'
+      equal(diff.minutes, 0);
+      equal(diff.hours, -12);
+      equal(diff.days, -2);
+    });
+
+    it('Difference rounding (ceil hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'ceil' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, -12);
+      equal(diff.days, -2);
+    });
+
+    it('Difference rounding (trunc hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'trunc' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, -12);
+      equal(diff.days, -2);
+    });
+
+    it('Difference rounding (floor hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'floor' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, -13);
+      equal(diff.days, -2);
+    });
+
+    it('Difference when date portion ends inside a DST-skipped period', () => {
+      const start = ZonedDateTime.from('2020-03-07T02:30-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-08T03:15-07:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days' });
+      equal(diff.minutes, 45);
+      equal(diff.hours, 23);
+      equal(diff.days, 0);
+    });
+
+    it("Difference when date portion ends inside day skipped by Samoa's 24hr 2011 transition", () => {
+      const end = ZonedDateTime.from('2011-12-31T05:00+14:00[Pacific/Apia]');
+      const start = ZonedDateTime.from('2011-12-28T10:00-10:00[Pacific/Apia]');
+      const diff = end.difference(start, { largestUnit: 'days' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 19);
+      equal(diff.days, 1);
+    });
+
+    it('Rounding up to hours causes one more day of overflow (positive)', () => {
+      const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
+      const diff = end.difference(start, { largestUnit: 'days', smallestUnit: 'hours' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, 3);
+    });
+
+    it('Rounding up to hours causes one more day of overflow (negative)', () => {
+      const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
+      const diff = start.difference(end, { largestUnit: 'days', smallestUnit: 'hours' });
+      equal(diff.minutes, 0);
+      equal(diff.hours, 0);
+      equal(diff.days, -3);
     });
 
     it('addition and difference work near DST start', () => {
