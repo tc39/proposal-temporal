@@ -3157,10 +3157,10 @@
   var timeZoneID = new RegExp("(?:".concat(tzComponent.source, "(?:\\/(?:").concat(tzComponent.source, "))*|Etc/GMT[-+]\\d{1,2})"));
   var calComponent = /[A-Za-z0-9]{3,8}/;
   var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
-  var yearpart = /(?:[+-\u2212]\d{6}|\d{4})/;
+  var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-  var offset = /([+-\u2212])([0-2][0-9])(?::?([0-5][0-9]))?/;
+  var offset = /([+\u2212-])([0-2][0-9])(?::?([0-5][0-9]))?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?(?:\\[(").concat(timeZoneID.source, ")\\])?)"));
   var calendar = new RegExp("\\[c=(".concat(calendarID.source, ")\\]"));
   var instant = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
@@ -3173,7 +3173,7 @@
 
   var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
   var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
-  var duration = /^([+-\u2212])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
+  var duration = /^([+\u2212-])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var MathAbs = Math.abs;
