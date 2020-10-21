@@ -188,6 +188,18 @@ function doAddOrSubtract(
   const { timeZone, calendar } = zonedDateTime;
   const { timeDuration, dateDuration } = splitDuration(durationLike);
 
+  // If only time to be added/subtracted, then use Instant math only. It's not
+  // OK to fall fall through to the date/time code below because compatible
+  // disambiguation in the PDT=>Instant conversion will change the offset of any
+  // ZDT in the repeated clock time after a backwards transition. When
+  // adding/subtracting time units and not dates, this disambiguation is not
+  // expected and so is avoided below via a fast path for time-only arithmetic.
+  // BTW, this behavior is similar in spirit to`offset: 'prefer'` in `with`.
+  if (dateDuration.isZero()) {
+    const instantResult = zonedDateTime.toInstant()[op](timeDuration);
+    return new ZonedDateTime(instantResult.epochNanoseconds, timeZone, calendar);
+  }
+
   // RFC 5545 requires the date portion to be added/subtracted in calendar days
   // and the time portion to be added/subtracted in exact time.
   // TODO: remove the manual order-of-operations hack below after #993 fix lands
@@ -198,11 +210,11 @@ function doAddOrSubtract(
   dtIntermediate = months ? dtIntermediate[op]({ months }, { overflow }) : dtIntermediate;
   dtIntermediate = weeks ? dtIntermediate[op]({ weeks }, { overflow }) : dtIntermediate;
   dtIntermediate = days ? dtIntermediate[op]({ days }, { overflow }) : dtIntermediate;
-  // Note that `{ disambiguation: 'compatible' }` is implicitly used below
+  // Note that `{ disambiguation: 'compatible' }` is used below (in `toInstant`)
   // because this disambiguation behavior is required by RFC 5545.
-  const absIntermediate = dtIntermediate.toInstant(timeZone);
-  const absResult = absIntermediate[op](timeDuration);
-  return new ZonedDateTime(absResult.epochNanoseconds, timeZone, calendar);
+  const instantIntermediate = dtIntermediate.toInstant(timeZone);
+  const instantResult = instantIntermediate[op](timeDuration);
+  return new ZonedDateTime(instantResult.epochNanoseconds, timeZone, calendar);
 }
 
 export class ZonedDateTime {
