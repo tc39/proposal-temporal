@@ -234,6 +234,7 @@ Any subclass of <code>Temporal.Calendar</code> will be accepted in Temporal APIs
 <p>The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in <a href="https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier">Unicode Technical Standard 35</a>.</p>
 <h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom calendar, without subclassing.
 The object must implement the <code>Temporal.Calendar</code> methods and have an <code>id</code> property.
+It must not have a <code>calendar</code> property, so that it can be distinguished in <code>Temporal.Calendar.from()</code> from other Temporal objects that have a calendar.
 It is possible to pass such an object into any Temporal API that would normally take a built-in <code>Temporal.Calendar</code>.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Calendar"><a class="heading-link" href="#new-Temporal-Calendar"></a><strong>new Temporal.Calendar</strong>(<em>calendarIdentifier</em>: string) : Temporal.Calendar</h3><p><strong>Parameters:</strong></p>
@@ -251,11 +252,12 @@ cal <span class="token operator">=</span> <span class="token keyword">new</span>
 <span class="token comment">/*⚠️*/</span> cal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span><span class="token punctuation">(</span><span class="token string">'discordian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// not a built-in calendar, throws</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Calendar.<strong>from</strong>(<em>thing</em>: any) : Temporal.Calendar</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: A <code>Temporal.Calendar</code> object or a value from which to create a <code>Temporal.Calendar</code>.</li>
+<li><code>thing</code>: A calendar object, a Temporal object that carries a calendar, or a value from which to create a <code>Temporal.Calendar</code>.</li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Calendar</code> object.</p>
+<p><strong>Returns:</strong> a calendar object.</p>
 <p>This static method creates a new calendar from another value.
-If the value is another <code>Temporal.Calendar</code> object, a new object representing the same calendar is returned.</p>
+If the value is another <code>Temporal.Calendar</code> object, or object implementing the calendar protocol, the same object is returned.
+If the value is another Temporal object that carries a calendar or an object with a <code>calendar</code> property, such as a <code>Temporal.ZonedDateTime</code>, the object&#39;s calendar is returned.</p>
 <p>Any other value is converted to a string, which is expected to be either:</p>
 <ul>
 <li>a string that is accepted by <code>new Temporal.Calendar()</code>; or</li>

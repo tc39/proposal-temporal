@@ -5990,7 +5990,12 @@
     }], [{
       key: "from",
       value: function from(item) {
-        if (ES.Type(item) === 'Object') return item;
+        if (ES.Type(item) === 'Object') {
+          if (!('calendar' in item)) return item;
+          item = item.calendar;
+          if (ES.Type(item) === 'Object' && !('calendar' in item)) return item;
+        }
+
         var stringIdent = ES.ToString(item);
         if (IsBuiltinCalendar(stringIdent)) return GetBuiltinCalendar(stringIdent);
         var calendar;
@@ -6624,7 +6629,12 @@
     }], [{
       key: "from",
       value: function from(item) {
-        if (ES.Type(item) === 'Object') return item;
+        if (ES.Type(item) === 'Object') {
+          if (!('timeZone' in item)) return item;
+          item = item.timeZone;
+          if (ES.Type(item) === 'Object' && !('timeZone' in item)) return item;
+        }
+
         var timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
         var result = new this(timeZone);
         if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
