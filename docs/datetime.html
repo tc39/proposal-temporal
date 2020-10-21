@@ -467,9 +467,9 @@ dt <span class="token operator">=</span> Temporal<span class="token punctuation"
 dt<span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
 dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>datetime.<strong>with</strong>(<em>dateTimeLike</em>: object, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="with"><a class="heading-link" href="#with"></a>datetime.<strong>with</strong>(<em>dateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>dateTimeLike</code> (object): an object with some or all of the properties of a <code>Temporal.DateTime</code>.</li>
+<li><code>dateTimeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.DateTime</code>, or an ISO string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
@@ -480,6 +480,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.DateTime</code> object.</p>
 <p>This method creates a new <code>Temporal.DateTime</code> which is a copy of <code>datetime</code>, but any properties present on <code>dateTimeLike</code> override the ones already present on <code>datetime</code>.</p>
+<p>If <code>dateTimeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.Date</code> (if no time is given in the string), <code>Temporal.DateTime</code>, or <code>Temporal.Time</code>, in order of priority.</p>
 <p>Since <code>Temporal.DateTime</code> objects are immutable, use this method instead of modifying one.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.DateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
@@ -499,8 +500,12 @@ dt<span class="token punctuation">.</span><span class="token function">with</spa
 midnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>midnight<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00</span>
 <span class="token comment">// Note: not the same as dt.with({ hour: 0 })!</span>
+<span class="token comment">// Same as above but using a string:</span>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-03-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-03-31T03:24:31.000003500</span>
+<span class="token comment">// Same as above but using a string:</span>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'2015-03-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-03-31T03:24:31.000003500</span>
 yearMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>yearMonth<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2018-04-07T03:24:31.000003500</span>
 monthDay <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

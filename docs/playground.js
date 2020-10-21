@@ -3908,6 +3908,54 @@
       var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
       return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     },
+    RelevantTemporalObjectFromString: function RelevantTemporalObjectFromString(str) {
+      var props;
+
+      try {
+        props = ES.ParseISODateTime(str, {
+          zoneRequired: false
+        });
+      } catch (_unused4) {
+        try {
+          props = ES.ParseTemporalTimeString(str);
+        } catch (_unused5) {
+          throw new RangeError("invalid value ".concat(str, " for a Temporal object"));
+        }
+
+        var _props = props,
+            _hour = _props.hour,
+            _minute = _props.minute,
+            _second = _props.second,
+            _millisecond = _props.millisecond,
+            _microsecond = _props.microsecond,
+            _nanosecond = _props.nanosecond;
+        var TemporalTime = GetIntrinsic$1('%Temporal.Time%');
+        return new TemporalTime(_hour, _minute, _second, _millisecond, _microsecond, _nanosecond);
+      }
+
+      var _props2 = props,
+          year = _props2.year,
+          month = _props2.month,
+          day = _props2.day,
+          hour = _props2.hour,
+          minute = _props2.minute,
+          second = _props2.second,
+          millisecond = _props2.millisecond,
+          microsecond = _props2.microsecond,
+          nanosecond = _props2.nanosecond,
+          calendar = _props2.calendar;
+      if (!calendar) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
+      var DATE_ONLY = new RegExp("^".concat(datesplit.source, "$"));
+      var match = DATE_ONLY.exec(str);
+
+      if (match) {
+        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+        return new TemporalDate(year, month, day, calendar);
+      }
+
+      var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    },
     ValidateTemporalUnitRange: function ValidateTemporalUnitRange(largestUnit, smallestUnit) {
       var validUnits = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
@@ -7375,6 +7423,12 @@
       value: function _with(temporalDateLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+
+        if (ES.Type(temporalDateLike) !== 'Object') {
+          var str = ES.ToString(temporalDateLike);
+          temporalDateLike = ES.RelevantTemporalObjectFromString(str);
+        }
+
         var source;
         var calendar = temporalDateLike.calendar;
 
@@ -7816,6 +7870,12 @@
       value: function _with(temporalDateTimeLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+
+        if (ES.Type(temporalDateTimeLike) !== 'Object') {
+          var str = ES.ToString(temporalDateTimeLike);
+          temporalDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+        }
+
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var source;
@@ -9233,6 +9293,12 @@
       value: function _with(temporalTimeLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+
+        if (ES.Type(temporalTimeLike) !== 'Object') {
+          var str = ES.ToString(temporalTimeLike);
+          temporalTimeLike = ES.RelevantTemporalObjectFromString(str);
+        }
+
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);

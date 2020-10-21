@@ -679,15 +679,9 @@ zdt<span class="token punctuation">.</span><span class="token function">with</sp
   <span class="token comment">// => "+05:30"</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>zonedDateTimeLike</code> (object): an object with some or all of the properties of a <code>Temporal.ZonedDateTime</code>. Accepted fields include:<ul>
-<li>All date/time fields</li>
-<li><code>calendar</code> as a calendar identifier string like <code>japanese</code> or <code>iso8601</code>, a <code>Temporal.Calendar</code> instance, or a <code>Temporal.CalendarProtocol</code> object</li>
-<li><code>timeZone</code> as a time zone identifier string like <code>Europe/Paris</code>, a <code>Temporal.TimeZone</code> instance, or a <code>Temporal.TimeZoneProtocol</code> object.</li>
-<li><code>offsetNanoseconds</code> to uniquely identify a time that&#39;s ambiguous or invalid due to DST.</li>
-</ul>
-</li>
+<li><code>zonedDateTimeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.ZonedDateTime</code> (including <code>offsetNanoseconds</code>), or an ISO string.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
 Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
@@ -703,6 +697,7 @@ The default is <code>&#39;prefer&#39;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.ZonedDateTime</code> object.</p>
 <p>This method creates a new <code>Temporal.ZonedDateTime</code> which is a copy of <code>zonedDateTime</code>, but any properties present on <code>zonedDateTimeLike</code> override the ones already present on <code>zonedDateTime</code>.</p>
+<p>If <code>zonedDateTimeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.ZonedDateTime</code>, <code>Temporal.Date</code> (if no time is given in the string), <code>Temporal.DateTime</code>, or <code>Temporal.Time</code>, in order of priority.</p>
 <p>Since <code>Temporal.ZonedDateTime</code> objects are immutable, this method will create a new instance instead of modifying the existing instance.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
@@ -735,8 +730,12 @@ zdt<span class="token punctuation">.</span><span class="token function">with</sp
 midnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>midnight<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00-06:00[America/Chicago]</span>
 <span class="token comment">// Note: not the same as zdt.with({ hour: 0 }), because all time units are set to zero.</span>
+<span class="token comment">// Same as above but using a string:</span>
+zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00-06:00[America/Chicago]</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-05-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-05-31T03:24-05:00[America/Chicago] (automatically adjusted for DST)</span>
+<span class="token comment">// Same as above but using a string:</span>
+zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'2015-05-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-05-31T03:24-05:00[America/Chicago]</span>
 yearMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>yearMonth<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2018-04-07T03:24-05:00[America/Chicago]</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>zonedDateTime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>

@@ -319,9 +319,9 @@ time<span class="token punctuation">.</span>microsecond<span class="token punctu
 time<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 205</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.Time</code>.</li>
+<li><code>timeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.Time</code>, or an ISO string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
@@ -332,6 +332,8 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
 <p>This method creates a new <code>Temporal.Time</code> which is a copy of <code>time</code>, but any properties present on <code>timeLike</code> override the ones already present on <code>time</code>.</p>
+<p>If <code>timeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.Time</code>.
+(In this case, the result is identical to to <code>Temporal.Time.from(timeLike)</code>.)</p>
 <p>Since <code>Temporal.Time</code> objects are immutable, use this method instead of modifying one.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
