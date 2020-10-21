@@ -164,11 +164,11 @@ time.nanosecond;  // => 205
 
 ## Methods
 
-### time.**with**(_timeLike_: object, _options_?: object) : Temporal.Time
+### time.**with**(_timeLike_: object | string, _options_?: object) : Temporal.Time
 
 **Parameters:**
 
-- `timeLike` (object): an object with some or all of the properties of a `Temporal.Time`.
+- `timeLike` (object or string): an object with some or all of the properties of a `Temporal.Time`, or an ISO string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -178,6 +178,9 @@ time.nanosecond;  // => 205
 **Returns:** a new `Temporal.Time` object.
 
 This method creates a new `Temporal.Time` which is a copy of `time`, but any properties present on `timeLike` override the ones already present on `time`.
+
+If `timeLike` is a string, then it will be attempted to be converted into a `Temporal.Time`.
+(In this case, the result is identical to to `Temporal.Time.from(timeLike)`.)
 
 Since `Temporal.Time` objects are immutable, use this method instead of modifying one.
 

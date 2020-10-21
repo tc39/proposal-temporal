@@ -291,11 +291,11 @@ date.with({ year: 2100 }).leapYear; // => false
 
 ## Methods
 
-### date.**with**(_dateLike_: object, _options_?: object) : Temporal.Date
+### date.**with**(_dateLike_: object | string, _options_?: object) : Temporal.Date
 
 **Parameters:**
 
-- `dateLike` (object): an object with some or all of the properties of a `Temporal.Date`.
+- `dateLike` (object or string): an object with some or all of the properties of a `Temporal.Date`, or an ISO string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -305,6 +305,9 @@ date.with({ year: 2100 }).leapYear; // => false
 **Returns:** a new `Temporal.Date` object.
 
 This method creates a new `Temporal.Date` which is a copy of `date`, but any properties present on `dateLike` override the ones already present on `date`.
+
+If `dateLike` is a string, then it will be attempted to be converted into a `Temporal.Date`.
+(In this case the result is the same as `Temporal.Date.from(dateLike)`.)
 
 Since `Temporal.Date` objects are immutable, use this method instead of modifying one.
 

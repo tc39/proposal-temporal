@@ -254,6 +254,9 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. If Type(_temporalTimeLike_) is not Object, then
+          1. Let _isoString_ be ? ToString(_temporalTimeLike_).
+          1. Set _temporalTimeLike_ to ? RelevantTemporalObjectFromString(_isoString_).
         1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).

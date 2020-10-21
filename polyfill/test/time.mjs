@@ -209,6 +209,17 @@ describe('Time', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${time.with({ minutes: 1, hour: 1 })}`, '01:23:30.123456789');
     });
+    it('time.with(iso time string)', () => {
+      equal(`${time.with('18:05:42.577')}`, '18:05:42.577');
+      equal(`${time.with('2019-05-17T18:05:42.577')}`, '18:05:42.577');
+      equal(`${time.with('2019-05-17T18:05:42.577Z')}`, '18:05:42.577');
+    });
+    it('time.with(bad string)', () => {
+      throws(() => time.with('42'), RangeError);
+    });
+    it('time.with(good string but irrelevant type)', () => {
+      throws(() => time.with('2019-05-17'), TypeError);
+    });
   });
   describe('time.toDateTime() works', () => {
     const time = Time.from('11:30:23.123456789');

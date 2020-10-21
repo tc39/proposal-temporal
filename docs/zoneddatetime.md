@@ -646,15 +646,11 @@ zdt.with({ timeZone: 'Asia/Kolkata' }).offsetString;
 
 ## Methods
 
-### zonedDateTime.**with**(_zonedDateTimeLike_: object, _options_?: object) : Temporal.ZonedDateTime
+### zonedDateTime.**with**(_zonedDateTimeLike_: object | string, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
-- `zonedDateTimeLike` (object): an object with some or all of the properties of a `Temporal.ZonedDateTime`. Accepted fields include:
-  - All date/time fields
-  - `calendar` as a calendar identifier string like `japanese` or `iso8601`, a `Temporal.Calendar` instance, or a `Temporal.CalendarProtocol` object
-  - `timeZone` as a time zone identifier string like `Europe/Paris`, a `Temporal.TimeZone` instance, or a `Temporal.TimeZoneProtocol` object.
-  - `offsetNanoseconds` to uniquely identify a time that's ambiguous or invalid due to DST.
+- `zonedDateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.ZonedDateTime` (including `offsetNanoseconds`), or an ISO string.
 - `options` (optional object): An object which may have some or all of the following properties:
   - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `'constrain'` and `'reject'`.
@@ -669,6 +665,8 @@ zdt.with({ timeZone: 'Asia/Kolkata' }).offsetString;
 **Returns:** a new `Temporal.ZonedDateTime` object.
 
 This method creates a new `Temporal.ZonedDateTime` which is a copy of `zonedDateTime`, but any properties present on `zonedDateTimeLike` override the ones already present on `zonedDateTime`.
+
+If `zonedDateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.ZonedDateTime`, `Temporal.Date` (if no time is given in the string), `Temporal.DateTime`, or `Temporal.Time`, in order of priority.
 
 Since `Temporal.ZonedDateTime` objects are immutable, this method will create a new instance instead of modifying the existing instance.
 
@@ -713,8 +711,12 @@ zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31-06:00[America/Chica
 midnight = Temporal.Time.from({ hour: 0 });
 zdt.with(midnight); // => 1995-12-07T00:00-06:00[America/Chicago]
 // Note: not the same as zdt.with({ hour: 0 }), because all time units are set to zero.
+// Same as above but using a string:
+zdt.with('00:00'); // => 1995-12-07T00:00-06:00[America/Chicago]
 date = Temporal.Date.from('2015-05-31');
 zdt.with(date); // => 2015-05-31T03:24-05:00[America/Chicago] (automatically adjusted for DST)
+// Same as above but using a string:
+zdt.with('2015-05-31'); // => 2015-05-31T03:24-05:00[America/Chicago]
 yearMonth = Temporal.YearMonth.from('2018-04');
 zdt.with(yearMonth); // => 2018-04-07T03:24-05:00[America/Chicago]
 ```
