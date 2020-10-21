@@ -744,6 +744,23 @@ describe('ZonedDateTime', () => {
       );
     });
   });
+  describe('rounding', () => {
+    it('round to nearest day', () => {
+      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
+      const rounded = zdt.round({ smallestUnit: 'day' });
+      equal(`${rounded}`, '2019-11-19T00:00-08:00[America/Los_Angeles]');
+    });
+    it('round to nearest hour', () => {
+      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
+      const rounded = zdt.round({ smallestUnit: 'hour' });
+      equal(`${rounded}`, '2019-11-18T15:00-08:00[America/Los_Angeles]');
+    });
+    it('round to nearest minute', () => {
+      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
+      const rounded = zdt.round({ smallestUnit: 'minute' });
+      equal(`${rounded}`, '2019-11-18T15:24-08:00[America/Los_Angeles]');
+    });
+  });
 });
 
 import { normalize } from 'path';
