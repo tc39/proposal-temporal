@@ -283,17 +283,17 @@
         1. <ins>If IsTemporalObject(_x_) is *true*, then</ins>
           1. <mark>TODO: _era_, _dayPeriod_, _fractionalSecondDigits_.</mark>
           1. <ins>If _x_ has an [[InitializedTemporalDate]] internal slot, then</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDatePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_x_.[[Year]], _x_.[[Month]], _x_.[[Day]]), [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]] }.</ins>
           1. <ins>If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalYearMonthPattern]].</ins>
             1. <ins>Let _tm_ be { [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]] }.</ins>
           1. <ins>If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalMonthDayPattern]].</ins>
             1. <ins>Let _tm_ be { [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]] }.</ins>
@@ -305,7 +305,7 @@
               1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
               1. <ins>Let _calendar_ be ? CalendarFrom(_dateTimeFormat_.[[Calendar]]).</ins>
               1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDateTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: ToDayOfWeek(_x_.[[Year]], _x_.[[Month]], _x_.[[Day]]), [[year]]: _x_.[[Year]], [[month]]: _x_.[[Month]], [[day]]: _x_.[[Day]], [[hour]]: _x_.[[Hour]], [[minute]]: _x_.[[Minute]], [[second]]: _x_.[[Second]] }.</ins>
