@@ -623,9 +623,9 @@ zdt = Temporal.ZonedDateTime.from({ ...otherFields, offsetNanoseconds }, { disam
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**offsetString** : number
+### zonedDateTime.**offset** : number
 
-The `offsetString` read-only property is the offset (formatted as a string) relative to UTC of the current time zone and exact instant. Examples: `'-08:00'` or `'+05:30'`
+The `offset` read-only property is the offset (formatted as a string) relative to UTC of the current time zone and exact instant. Examples: `'-08:00'` or `'+05:30'`
 
 The format used is defined in the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC) standard.
 
@@ -637,9 +637,9 @@ String values are not accepted for offsets in these cases, nor is this property 
 <!-- prettier-ignore-start -->
 ```javascript
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]');
-zdt.offsetString;
+zdt.offset;
   // => "-07:00"
-zdt.with({ timeZone: 'Asia/Kolkata' }).offsetString;
+zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
   // => "+05:30"
 ```
 <!-- prettier-ignore-end -->
@@ -969,7 +969,7 @@ mar1.difference(jan1, { largestUnit: 'days' }); // => P60D
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which is `zonedDateTime` rounded to `roundingIncrement` of `smallestUnit`.

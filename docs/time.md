@@ -278,7 +278,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
@@ -323,7 +323,7 @@ time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'secon
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
 **Returns:** a new `Temporal.Time` object which is `time` rounded to `roundingIncrement` of `smallestUnit`.

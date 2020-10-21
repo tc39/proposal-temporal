@@ -120,8 +120,9 @@ export namespace Temporal {
     /**
      * Controls how rounding is performed:
      * - `nearest`: Round to the nearest of the values allowed by
-     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
-     *   This mode is the default.
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round away
+     *   from zero like `ceil` for positive durations and like `floor` for
+     *   negative durations. This mode is the default.
      * - `ceil`: Always round up, towards the end of time.
      * - `trunc`: Always round down, towards the beginning of time.
      * - `floor`: Also round down, towards the beginning of time. This mode acts
@@ -131,7 +132,7 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'ceil' | 'floor' | 'trunc' | 'nearest';
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
   /**
@@ -140,8 +141,7 @@ export namespace Temporal {
   export interface RoundOptions<T extends string> {
     /**
      * The unit to round to. For example, to round to the nearest minute, use
-     * `smallestUnit: 'minute'`. This option is required for `round()` and
-     * optional for `difference()`.
+     * `smallestUnit: 'minute'`. This option is required.
      */
     smallestUnit: T;
 
@@ -166,10 +166,24 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
   }
 
   export interface DurationRoundOptions {
+    /**
+     * The largest unit to allow in the resulting `Temporal.Duration` object.
+     *
+     * Valid values may include `'years'`, `'months'`, `'days'`, `'hours'`,
+     * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
+     * `'nanoseconds'` and `'auto'`.
+     *
+     * The default is `'auto'`, which means "the largest nonzero unit in the
+     * input duration". This default prevents expanding durations to larger
+     * units unless the caller opts into this behavior.
+     *
+     * If `smallestUnit` is larger, then `smallestUnit` will be used as
+     * `largestUnit`, superseding a caller-supplied or default value.
+     */
     largestUnit:
       | 'auto'
       | 'years'
@@ -191,6 +205,11 @@ export namespace Temporal {
       | /** @deprecated */ 'millisecond'
       | /** @deprecated */ 'microsecond'
       | /** @deprecated */ 'nanosecond';
+
+    /**
+     * The unit to round to. For example, to round to the nearest minute, use
+     * `smallestUnit: 'minute'`. This option is required.
+     */
     smallestUnit:
       | 'years'
       | 'months'
@@ -211,8 +230,38 @@ export namespace Temporal {
       | /** @deprecated */ 'millisecond'
       | /** @deprecated */ 'microsecond'
       | /** @deprecated */ 'nanosecond';
+
+    /**
+     * Allows rounding to an integer number of units. For example, to round to
+     * increments of a half hour, use `{ smallestUnit: 'minute',
+     * roundingIncrement: 30 }`.
+     */
     roundingIncrement?: number;
-    roundingMode?: 'nearest' | 'ceil' | 'floor' | 'trunc';
+
+    /**
+     * Controls how rounding is performed:
+     * - `nearest`: Round to the nearest of the values allowed by
+     *   `roundingIncrement` and `smallestUnit`. When there is a tie, round away
+     *   from zero like `ceil` for positive durations and like `floor` for
+     *   negative durations. This mode is the default.
+     * - `ceil`: Always round towards positive infinity. For negative durations
+     *   this option will decrease the absolute value of the duration which may
+     *   be unexpected. To round away from zero, use `ceil` for positive
+     *   durations and `floor` for negative durations.
+     * - `trunc`: Always round down towards zero.
+     * - `floor`: Always round towards negative infinity. This mode acts the
+     *   same as `trunc` for positive durations but for negative durations it
+     *   will increase the absolute value of the result which may be unexpected.
+     *   For this reason, `trunc` is recommended for most "round down" use
+     *   cases.
+     */
+    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
+
+    /**
+     * The starting point to use when converting between or rounding to years,
+     * months, weeks, and days. It must be a Temporal.DateTime, or a value that
+     * can be passed to Temporal.DateTime.from(), like a `Temporal.Date`.
+     */
     relativeTo?: Temporal.DateTime | DateTimeLike | string;
   }
 
@@ -932,17 +981,32 @@ export namespace Temporal {
    */
   export namespace now {
     /**
-     * Get the system date and time as a `Temporal.Instant`.
+     * Get the exact system date and time as a `Temporal.Instant`.
      *
      * This method gets the current exact system time, without regard to
      * calendar or time zone. This is a good way to get a timestamp for an
      * event, for example. It works like the old-style JavaScript `Date.now()`,
      * but with nanosecond precision instead of milliseconds.
+     *
+     * Note that a `Temporal.Instant` doesn't know about time zones. For the
+     * exact time in a specific time zone, use `Temporal.now.zonedDateTimeISO`
+     * or `Temporal.now.zonedDateTime`.
      * */
     export function instant(): Temporal.Instant;
 
     /**
-     * Get the current calendar date and clock time in a specific time zone.
+     * Get the current calendar date and clock time in a specific calendar and
+     * time zone.
+     *
+     * The calendar is required. When using the ISO 8601 calendar or if you
+     * don't understand the need for or implications of a calendar, then a more
+     * ergonomic alternative to this method is `Temporal.now.zonedDateTimeISO`.
+     *
+     * Note that the `Temporal.DateTime` type does not persist the time zone,
+     * but retaining the time zone is required for most time-zone-related use
+     * cases. Therefore, it's usually recommended to use
+     * `Temporal.now.zonedDateTimeISO` or `Temporal.now.zonedDateTime` instead
+     * of this function.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
@@ -958,6 +1022,24 @@ export namespace Temporal {
       tzLike?: TimeZoneProtocol | string
     ): Temporal.DateTime;
 
+    /**
+     * Get the current date and clock time in a specific time zone, using the
+     * ISO 8601 calendar.
+     *
+     * Note that the `Temporal.DateTime` type does not persist the time zone,
+     * but retaining the time zone is required for most time-zone-related use
+     * cases. Therefore, it's usually recommended to use
+     * `Temporal.now.zonedDateTimeISO` instead of this function.
+     *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
+     * @param {TimeZoneProtocol | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
+     * object implementing the time zone protocol. If omitted, the environment's
+     * current time zone will be used.
+     */
     export function dateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.DateTime;
 
     /**
@@ -974,6 +1056,19 @@ export namespace Temporal {
      */
     export function date(calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string): Temporal.Date;
 
+    /**
+     * Get the current date in a specific time zone, using the ISO 8601
+     * calendar.
+     *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
+     * @param {TimeZoneProtocol | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
+     * object implementing the time zone protocol. If omitted, the environment's
+     * current time zone will be used.
+     */
     export function dateISO(tzLike?: TimeZoneProtocol | string): Temporal.Date;
 
     /**
