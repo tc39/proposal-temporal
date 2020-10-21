@@ -518,7 +518,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.Date): boolean;
-    with(dateLike: DateLike, options?: AssignmentOptions): Temporal.Date;
+    with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Date;
@@ -630,7 +630,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly isLeapYear: boolean;
     equals(other: Temporal.DateTime): boolean;
-    with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.DateTime;
+    with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.DateTime;
@@ -774,7 +774,7 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     equals(other: Temporal.Time): boolean;
-    with(timeLike: Temporal.Time | TimeLike, options?: AssignmentOptions): Temporal.Time;
+    with(timeLike: TimeLike | string, options?: AssignmentOptions): Temporal.Time;
     add(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     subtract(durationLike: Temporal.Duration | DurationLike, options?: ArithmeticOptions): Temporal.Time;
     difference(

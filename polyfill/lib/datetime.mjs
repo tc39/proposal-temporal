@@ -165,6 +165,10 @@ export class DateTime {
   }
   with(temporalDateTimeLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    if (ES.Type(temporalDateTimeLike) !== 'Object') {
+      const str = ES.ToString(temporalDateTimeLike);
+      temporalDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+    }
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     let source;

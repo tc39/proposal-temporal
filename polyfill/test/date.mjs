@@ -165,6 +165,20 @@ describe('Date', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${original.with({ months: 12, day: 15 })}`, '1976-11-15');
     });
+    it('date.with(iso date string)', () => {
+      const date = original.with('2019-05-17');
+      equal(`${date}`, '2019-05-17');
+      const date2 = original.with('2019-05-17T12:34');
+      equal(`${date2}`, '2019-05-17');
+      const date3 = original.with('2019-05-17T12:34Z');
+      equal(`${date3}`, '2019-05-17');
+    });
+    it('date.with(bad string)', () => {
+      throws(() => original.with('42'), RangeError);
+    });
+    it('date.with(good string but irrelevant type)', () => {
+      throws(() => original.with('18:05:42.577'), TypeError);
+    });
   });
   describe('Date.toDateTime() works', () => {
     const date = Date.from('1976-11-18');
