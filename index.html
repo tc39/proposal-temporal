@@ -1994,6 +1994,11 @@ li.menu-search-result-term:before {
     <emu-clause id="sec-temporal-systeminstant" aoid="SystemInstant">
       <h1><span class="secnum">2.2.2</span> SystemInstant ( )</h1>
       <emu-alg><ol><li>Let <var>ns</var> be the approximate current UTC date and time, in nanoseconds since the epoch.</li><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: !&nbsp;<emu-xref aoid="ValidateInstant" id="_ref_80"><a href="#sec-temporal-validateinstant">ValidateInstant</a></emu-xref>(<var>ns</var>) is <emu-val>true</emu-val>.</li><li>Return ?&nbsp;<emu-xref aoid="CreateTemporalInstant" id="_ref_81"><a href="#sec-temporal-createtemporalinstant">CreateTemporalInstant</a></emu-xref>(<var>ns</var>).</li></ol></emu-alg>
+      <emu-note><span class="note">Note</span><div class="note-contents">
+        <p>The precision of the result depends on the host. In particular, web browsers artificially
+        limit it to prevent abuse of security flaws (e.g., Spectre) and to avoid certain methods of
+        fingerprinting.</p>
+      </div></emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-systemdatetime" aoid="SystemDateTime">
