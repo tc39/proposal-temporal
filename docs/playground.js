@@ -3160,7 +3160,7 @@
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-  var offset = /([+\u2212-])([0-2][0-9])(?::?([0-5][0-9]))?/;
+  var offset = /([+\u2212-])([0-2][0-9])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?(?:\\[(").concat(timeZoneID.source, ")\\])?)"));
   var calendar = new RegExp("\\[c=(".concat(calendarID.source, ")\\]"));
   var instant = new RegExp("^".concat(datesplit.source, "(?:T|\\s+)").concat(timesplit.source).concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
@@ -3272,11 +3272,26 @@
 
       if (match[14] && match[15]) {
         var offsetSign = match[14] === '-' || match[14] === "\u2212" ? '-' : '+';
-        offset = "".concat(offsetSign).concat(match[15], ":").concat(match[16] || '00');
+        var offsetHours = match[15] || '00';
+        var offsetMinutes = match[16] || '00';
+        var offsetSeconds = match[17] || '00';
+        var offsetFraction = match[18] || '0';
+        offset = "".concat(offsetSign).concat(offsetHours, ":").concat(offsetMinutes);
+
+        if (+offsetFraction) {
+          while (offsetFraction.endsWith('0')) {
+            offsetFraction = offsetFraction.slice(0, -1);
+          }
+
+          offset += ":".concat(offsetSeconds, ".").concat(offsetFraction);
+        } else if (+offsetSeconds) {
+          offset += ":".concat(offsetSeconds);
+        }
+
         if (offset === '-00:00') offset = '+00:00';
       }
 
-      var ianaName = match[13] ? 'UTC' : match[17];
+      var ianaName = match[13] ? 'UTC' : match[19];
 
       if (ianaName) {
         try {
@@ -3286,7 +3301,7 @@
         }
       }
 
-      var calendar = match[18] || undefined;
+      var calendar = match[20] || undefined;
       return {
         year: year,
         month: month,
@@ -3413,7 +3428,7 @@
 
         if (canonicalIdent) {
           canonicalIdent = canonicalIdent.toString();
-          if (parseOffsetString(canonicalIdent) !== null) return {
+          if (ES.ParseOffsetString(canonicalIdent) !== null) return {
             offset: canonicalIdent
           };
           return {
@@ -4547,8 +4562,18 @@
       if (!dateParts.length && !timeParts.length) return 'PT0S';
       return "".concat(sign < 0 ? '-' : '', "P").concat(dateParts.join('')).concat(timeParts.join(''));
     },
+    ParseOffsetString: function ParseOffsetString(string) {
+      var match = OFFSET.exec(String(string));
+      if (!match) return null;
+      var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
+      var hours = +match[2];
+      var minutes = +(match[3] || 0);
+      var seconds = +(match[4] || 0);
+      var nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
+      return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
+    },
     GetCanonicalTimeZoneIdentifier: function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
-      var offsetNs = parseOffsetString(timeZoneIdentifier);
+      var offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
       if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
       var formatter = new IntlDateTimeFormat('en-us', {
         timeZone: String(timeZoneIdentifier),
@@ -4581,10 +4606,28 @@
     FormatTimeZoneOffsetString: function FormatTimeZoneOffsetString(offsetNanoseconds) {
       var sign = offsetNanoseconds < 0 ? '-' : '+';
       offsetNanoseconds = Math.abs(offsetNanoseconds);
-      var offsetMinutes = Math.floor(offsetNanoseconds / 60e9);
-      var offsetMinuteString = "00".concat(offsetMinutes % 60).slice(-2);
-      var offsetHourString = "00".concat(Math.floor(offsetMinutes / 60)).slice(-2);
-      return "".concat(sign).concat(offsetHourString, ":").concat(offsetMinuteString);
+      var nanoseconds = offsetNanoseconds % 1e9;
+      var seconds = Math.floor(offsetNanoseconds / 1e9) % 60;
+      var minutes = Math.floor(offsetNanoseconds / 60e9) % 60;
+      var hours = Math.floor(offsetNanoseconds / 3600e9);
+      var hourString = ES.ISODateTimePartString(hours);
+      var minuteString = ES.ISODateTimePartString(minutes);
+      var secondString = ES.ISODateTimePartString(seconds);
+      var post = '';
+
+      if (nanoseconds) {
+        var fraction = "".concat(nanoseconds).padStart(9, '0');
+
+        while (fraction[fraction.length - 1] === '0') {
+          fraction = fraction.slice(0, -1);
+        }
+
+        post = ":".concat(secondString, ".").concat(fraction);
+      } else if (seconds) {
+        post = ":".concat(secondString);
+      }
+
+      return "".concat(sign).concat(hourString, ":").concat(minuteString).concat(post);
     },
     GetEpochFromParts: function GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
       // Note: Date.UTC() interprets one and two-digit years as being in the
@@ -6070,15 +6113,6 @@
   });
   var OFFSET = new RegExp("^".concat(offset.source, "$"));
 
-  function parseOffsetString(string) {
-    var match = OFFSET.exec(String(string));
-    if (!match) return null;
-    var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
-    var hours = +match[2];
-    var minutes = +(match[3] || 0);
-    return sign * (hours * 60 + minutes) * 60 * 1e9;
-  }
-
   function bisect(getState, left, right) {
     var lstate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getState(left);
     var rstate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : getState(right);
@@ -6637,16 +6671,6 @@
 
   var OFFSET$1 = new RegExp("^".concat(offset.source, "$"));
   var IANA_NAME = new RegExp("^".concat(timeZoneID.source, "$"));
-
-  function parseOffsetString$1(string) {
-    var match = OFFSET$1.exec(String(string));
-    if (!match) return null;
-    var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
-    var hours = +match[2];
-    var minutes = +(match[3] || 0);
-    return sign * (hours * 60 + minutes) * 60 * 1e9;
-  }
-
   var TimeZone = /*#__PURE__*/function () {
     function TimeZone(timeZoneIdentifier) {
       _classCallCheck(this, TimeZone);
@@ -6678,7 +6702,7 @@
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         instant = ES.ToTemporalInstant(instant, GetIntrinsic$1('%Temporal.Instant%'));
         var id = GetSlot(this, TIMEZONE_ID);
-        var offsetNs = parseOffsetString$1(id);
+        var offsetNs = ES.ParseOffsetString(id);
         if (offsetNs !== null) return offsetNs;
         return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
       }
@@ -6806,7 +6830,7 @@
         dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic$1('%Temporal.DateTime%'));
         var Instant = GetIntrinsic$1('%Temporal.Instant%');
         var id = GetSlot(this, TIMEZONE_ID);
-        var offsetNs = parseOffsetString$1(id);
+        var offsetNs = ES.ParseOffsetString(id);
 
         if (offsetNs !== null) {
           var epochNs = ES.GetEpochFromParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, HOUR), GetSlot(dateTime, MINUTE), GetSlot(dateTime, SECOND), GetSlot(dateTime, MILLISECOND), GetSlot(dateTime, MICROSECOND), GetSlot(dateTime, NANOSECOND));
@@ -6826,7 +6850,7 @@
         startingPoint = ES.ToTemporalInstant(startingPoint, GetIntrinsic$1('%Temporal.Instant%'));
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
-        if (parseOffsetString$1(id) !== null || id === 'UTC') {
+        if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
           return null;
         }
 
@@ -6842,7 +6866,7 @@
         startingPoint = ES.ToTemporalInstant(startingPoint, GetIntrinsic$1('%Temporal.Instant%'));
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
-        if (parseOffsetString$1(id) !== null || id === 'UTC') {
+        if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
           return null;
         }
 
