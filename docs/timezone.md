@@ -11,21 +11,23 @@ Since `Temporal.Instant` and `Temporal.DateTime` do not contain any time zone in
 
 ## Custom time zones
 
-For specialized applications where you need to do calculations in a time zone that is not supported by `Intl`, you can also implement your own `Temporal.TimeZone` object.
-To do this, create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier, and implement the methods `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, `getNextTransition()`, and `getPreviousTransition()`.
-Any subclass of `Temporal.TimeZone` will be accepted in Temporal APIs where a built-in `Temporal.TimeZone` would work.
+For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
+There are two ways to do this.
+
+The recommended way is to create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier string, and implement the methods `getOffsetNanosecondsFor()` and `getPossibleInstantsFor()`, and optionally `getNextTransition()` and `getPreviousTransition()`.
+You don't need to implement any other methods because other properties and methods will use the base class's default implementations.
+
+The other, more difficult, way to create a custom time zone is to create a plain object implementing the `Temporal.TimeZone` protocol, without subclassing.
+The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
+Any object with those three methods will return the correct output from any Temporal property or method.
+However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
+To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getDateTimeFor()`, `getZonedDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
+Your object must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
 Each component must consist of between one and 14 characters.
 Valid characters are ASCII letters, `.`, `-`, and `_`.
 `-` may not appear as the first character of a component, and a component may not be a single dot `.` or two dots `..`.
-
-### Protocol
-
-It's also possible for a plain object to be a custom time zone, without subclassing.
-The object must have `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
-It must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
-It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.TimeZone`.
 
 ## Constructor
 
@@ -127,6 +129,8 @@ tz2 = Temporal.TimeZone.from(tz);
 The `id` property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
+When subclassing `Temporal.TimeZone`, this property doesn't need to be overridden because the default implementation gives the result of calling `toString()`.
+
 ## Methods
 
 ### timeZone.**getOffsetNanosecondsFor**(_instant_: Temporal.Instant | string) : number
@@ -179,6 +183,8 @@ If `timeZone` is a UTC offset time zone, the return value of this method is effe
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation creates an offset string using the result of calling `timeZone.getOffsetNanosecondsFor()`.
+
 Example usage:
 
 ```javascript
@@ -205,6 +211,8 @@ tz.getOffsetStringFor(timestamp); // => -08:00
 This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation gives a result equivalent to calling `new Temporal.ZonedDateTime(instant.epochNanoseconds, timeZone, calendar)`.
 
 Example usage:
 
@@ -233,6 +241,8 @@ tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation creates a `Temporal.DateTime` from `instant` using a UTC offset which is the result of calling `timeZone.getOffsetNanosecondsFor()`.
 
 Example usage:
 
@@ -283,6 +293,8 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation calls `timeZone.getPossibleInstantsFor()`, and if there is more than one possible instant, uses `disambiguation` to pick which one to return.
+
 ### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.DateTime | object | string) : array&lt;Temporal.Instant&gt;
 
 **Parameters:**
@@ -316,6 +328,9 @@ In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
+When subclassing `Temporal.TimeZone`, this method should be overridden if the time zone changes offsets.
+Single-offset time zones can use the default implementation which returns `null`.
+
 Example usage:
 
 ```javascript
@@ -341,6 +356,9 @@ Note that if the time zone was constructed from a UTC offset, there will be no D
 In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+When subclassing `Temporal.TimeZone`, this method should be overridden if the time zone changes offsets.
+Single-offset time zones can use the default implementation which returns `null`.
 
 Example usage:
 
@@ -369,6 +387,8 @@ It is usually not called directly, but it can be called automatically by `JSON.s
 The reverse operation, recovering a `Temporal.TimeZone` object from a string, is `Temporal.TimeZone.from()`, but it cannot be called automatically by `JSON.parse()`.
 If you need to rebuild a `Temporal.TimeZone` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.TimeZone`s.
 In that case you can build a custom "reviver" function for your use case.
+
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation returns the result of calling `timeZone.toString()`.
 
 Example usage:
 
