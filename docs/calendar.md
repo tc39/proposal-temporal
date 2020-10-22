@@ -37,18 +37,20 @@ date.withCalendar(calendar).add({ months: 1 })
 
 ### Custom calendars
 
-For specialized applications where you need to do calculations in a calendar system that is not supported by Intl, you can also implement your own `Temporal.Calendar` object.
-To do this, create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier, and implement all the methods.
-Any subclass of `Temporal.Calendar` will be accepted in Temporal APIs where a built-in `Temporal.Calendar` would work.
+For specialized applications where you need to do calculations in a calendar system that is not supported by Intl, you can implement a custom calendar.
+There are two ways to do this.
+
+The recommended way is to create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier string, and implement all the members except `id`, `toString()`, and `fields()`, which are optional.
+If you don't implement the optional members, then the base class's default implementations will be used.
+
+The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
+The object must implement all of the `Temporal.Calendar` methods except for `fields()`.
+Any object with the required methods will return the correct output from any Temporal property or method.
+However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
+To interoperate with libraries or other code that you didn't write, then you should implement the `id` property and the `fields()` method as well.
+Your object must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
 
 The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
-
-### Protocol
-
-It's also possible for a plain object to be a custom calendar, without subclassing.
-The object must implement all of the `Temporal.Calendar` methods except for `fields()`.
-It must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
-It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.Calendar`.
 
 ## Constructor
 
@@ -120,6 +122,8 @@ cal = Temporal.Calendar.from({id: 'mycalendar'});
 
 The `id` property gives an unambiguous identifier for the calendar.
 Effectively, this is whatever `calendarIdentifier` was passed as a parameter to the constructor.
+
+When subclassing `Temporal.Calendar`, this property doesn't need to be overridden because the default implementation gives the result of calling `toString()`.
 
 ## Methods
 
@@ -307,7 +311,7 @@ It is called indirectly when using the `from()` static methods and `with()` meth
 Custom calendars should override this method if they require more fields with which to denote the date than the standard `era`, `year`, `month`, and `day`.
 The input array contains the field names that are necessary for a particular operation (for example, `'month'` and `'day'` for `Temporal.MonthDay.prototype.with()`), and the method should make a copy of the array and add whichever extra fields are necessary.
 
-The default implementation of this method returns a copy of `fields`.
+When subclassing `Temporal.Calendar`, this method doesn't need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of `fields`.
 
 Usage example:
 
