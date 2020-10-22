@@ -649,10 +649,8 @@ Example usage:
 instant = Temporal.Instant.from('2019-11-18T11:00:00.000Z');
 instant.toLocaleString(); // => example output: 2019-11-18, 3:00:00 a.m.
 instant.toLocaleString('de-DE'); // => example output: 18.11.2019, 03:00:00
-instant.toLocaleString('de-DE', {
-  timeZone: 'Europe/Berlin',
-  weekday: 'long'
-}); // => Montag, 18.11.2019, 12:00:00
+instant.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
+  // => 18.11.2019, 12:00:00
 instant.toLocaleString('en-US-u-nu-fullwide-hc-h12', {
   timeZone: 'Asia/Kolkata'
 }); // => １１/１８/２０１９, ４:３０:００ PM

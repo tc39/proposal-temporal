@@ -736,7 +736,7 @@ Example usage:
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt.toLocaleString(); // => example output: 1995-12-07, 3:24:30 a.m.
 dt.toLocaleString('de-DE'); // => example output: 7.12.1995, 03:24:30
-dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => Donnerstag, 7.12.1995, 03:24:30
+dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => Donnerstag
 dt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => １２/７/１９９５, ３:２４:３０ AM
 ```
 
