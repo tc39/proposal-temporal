@@ -558,7 +558,7 @@ Example usage:
 date = Temporal.Date.from('2006-08-24');
 date.toLocaleString(); // => example output: 8/24/2006
 date.toLocaleString('de-DE'); // => example output: 24.8.2006
-date.toLocaleString('de-DE', { weekday: 'long' }); // => Donnerstag, 24.8.2006
+date.toLocaleString('de-DE', { weekday: 'long' }); // => Donnerstag
 date.toLocaleString('en-US-u-nu-fullwide'); // => ８/２４/２００６
 ```
 
