@@ -921,7 +921,7 @@ export namespace Temporal {
     timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor?(instant: Temporal.Instant | string): string;
-    getDateTimeFor(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
+    getDateTimeFor?(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.DateTime;
     getInstantFor?(dateTime: Temporal.DateTime | DateTimeLike | string, options?: ToInstantOptions): Temporal.Instant;
     getNextTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
     getPreviousTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
