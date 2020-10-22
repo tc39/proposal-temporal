@@ -704,12 +704,48 @@ dt<span class="token punctuation">.</span><span class="token function">round</sp
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>dt2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
-dt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>datetime.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
+dt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>datetime.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
+Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>smallestUnit</code> (string): The smallest unit of time to include in the output string.
+This option overrides <code>fractionalSecondDigits</code> if both are given.
+Valid values are <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;trunc&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>datetime</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>datetime</code>.
 The string can be passed to <code>Temporal.DateTime.from()</code> to create a new <code>Temporal.DateTime</code> object.</p>
+<p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
+If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
+<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.DateTime.round()</code>.
+Note that rounding may change the value of other units as well.</p>
 <p>Example usage:</p>
-<pre class="language-js"><code class="language-js">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T00:00</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>datetime.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<pre class="language-js"><code class="language-js">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  year<span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">31</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">23</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">59</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token number">59</span><span class="token punctuation">,</span>
+  millisecond<span class="token operator">:</span> <span class="token number">999</span><span class="token punctuation">,</span>
+  microsecond<span class="token operator">:</span> <span class="token number">999</span><span class="token punctuation">,</span>
+  nanosecond<span class="token operator">:</span> <span class="token number">999</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T23:59:59.999999999</span>
+
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T23:59</span>
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T23:59:59</span>
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T23:59:59.9999</span>
+dt<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 2000-01-01T00:00:00.00000000</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>datetime.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
 <li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
