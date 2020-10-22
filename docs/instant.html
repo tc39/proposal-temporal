@@ -364,6 +364,7 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <p>For a list of calendar identifiers, see the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters">Intl.DateTimeFormat</a>.</p>
 <p>If you only want to use the ISO 8601 calendar, use <code>toDateTimeISO()</code>.</p>
 <p>Example usage:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js"><span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -376,7 +377,9 @@ cal <span class="token operator">=</span> Temporal<span class="token punctuation
 zdt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 45 showa</span></code></pre><h3 id="toDateTimeISO"><a class="heading-link" href="#toDateTimeISO"></a>instant.<strong>toDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => 45 showa</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="toDateTimeISO"><a class="heading-link" href="#toDateTimeISO"></a>instant.<strong>toDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
 </ul>
@@ -403,6 +406,7 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
 <p>If you only want to use the ISO 8601 calendar, use <code>toDateTimeISO()</code>.</p>
 <p>Example usage:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js"><span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -415,7 +419,9 @@ cal <span class="token operator">=</span> Temporal<span class="token punctuation
 dt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1970-01-01T09:00[c=japanese]</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 45 showa</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>instant.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+  <span class="token comment">// => 45 showa</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="add"><a class="heading-link" href="#add"></a>instant.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 </ul>
@@ -465,7 +471,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
 The default is <code>&#39;nearest&#39;</code>.</li>
 </ul>
 </li>
@@ -537,7 +543,7 @@ Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <co
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
 The default is <code>&#39;nearest&#39;</code>.</li>
 </ul>
 </li>
