@@ -637,6 +637,12 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
+Because `Temporal.Instant` does not carry a time zone, the time zone used for the output will be the `timeZone` property of `options`, if present; and otherwise, the current time zone from the environment, which is usually the system's time zone.
+
+This is identical to how the time zone is determined in legacy `Date`'s `toLocaleString` method.
+
+> **NOTE**: Be careful when calling this method in a server environment, where the server's time zone may be set to UTC.
+
 Example usage:
 
 ```js
