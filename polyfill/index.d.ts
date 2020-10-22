@@ -430,7 +430,7 @@ export namespace Temporal {
   }
 
   export interface CalendarProtocol {
-    id: string;
+    id?: string;
     calendar?: never;
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
@@ -485,6 +485,7 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     fields?(fields: Array<string>): Array<string>;
+    toString(): string;
   }
 
   /**

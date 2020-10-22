@@ -46,7 +46,7 @@ The identifier of a custom calendar must consist of one or more components of be
 ### Protocol
 
 It's also possible for a plain object to be a custom calendar, without subclassing.
-The object must implement the `Temporal.Calendar` methods and have an `id` property.
+The object must implement all of the `Temporal.Calendar` methods except for `fields()`.
 It must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
 It is possible to pass such an object into any Temporal API that would normally take a built-in `Temporal.Calendar`.
 
