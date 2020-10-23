@@ -638,14 +638,24 @@ instant<span class="token punctuation">.</span><span class="token function">toSt
 <p><strong>Returns:</strong> a language-sensitive representation of <code>instant</code>.</p>
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>instant</code>.</p>
 <p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>Because <code>Temporal.Instant</code> does not carry a time zone, the time zone used for the output will be the <code>timeZone</code> property of <code>options</code>, if present; and otherwise, the current time zone from the environment, which is usually the system&#39;s time zone.</p>
+<p>This is identical to how the time zone is determined in legacy <code>Date</code>&#39;s <code>toLocaleString</code> method.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Be careful when calling this method in a server environment, where the server&#39;s time zone may be set to UTC.</p>
+</blockquote>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-11-18T11:00:00.000Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => example output: 2019-11-18, 3:00:00 a.m.</span>
 instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => example output: 18.11.2019, 03:00:00</span>
 instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
   timeZone<span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span><span class="token punctuation">,</span>
-  weekday<span class="token operator">:</span> <span class="token string">'long'</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => Montag, 18.11.2019, 12:00:00</span>
+  year<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+  timeZoneName<span class="token operator">:</span> <span class="token string">'long'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 18.11.2019, 12:00 Mitteleuropäische Normalzeit</span>
 instant<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h12'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
   timeZone<span class="token operator">:</span> <span class="token string">'Asia/Kolkata'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => １１/１８/２０１９, ４:３０:００ PM</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>instant.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>instant</code>, in the UTC time zone.</p>

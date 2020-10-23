@@ -7203,6 +7203,7 @@
   var MD = Symbol('md');
   var TIME = Symbol('time');
   var DATETIME = Symbol('datetime');
+  var INSTANT = Symbol('instant');
   var ORIGINAL = Symbol('original');
   var TIMEZONE = Symbol('timezone');
   var CAL_ID = Symbol('calendar-id');
@@ -7230,6 +7231,7 @@
     this[MD] = new IntlDateTimeFormat$1(locale, monthDayAmend(options));
     this[TIME] = new IntlDateTimeFormat$1(locale, timeAmend(options));
     this[DATETIME] = new IntlDateTimeFormat$1(locale, datetimeAmend(options));
+    this[INSTANT] = new IntlDateTimeFormat$1(locale, instantAmend(options));
   }
 
   DateTimeFormat.supportedLocalesOf = function () {
@@ -7448,6 +7450,21 @@
     return options;
   }
 
+  function instantAmend(options) {
+    if (!hasTimeOptions(options) && !hasDateOptions(options)) {
+      ObjectAssign$1(options, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+    }
+
+    return options;
+  }
+
   function hasDateOptions(options) {
     return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
   }
@@ -7573,7 +7590,7 @@
     if (ES.IsTemporalInstant(temporalObj)) {
       return {
         instant: temporalObj,
-        formatter: main[DATETIME]
+        formatter: main[INSTANT]
       };
     }
 
@@ -7595,8 +7612,10 @@
       SetSlot(this, EPOCHNANOSECONDS, ns);
 
       {
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        var repr = ES.TemporalInstantToString(this, new TemporalTimeZone('UTC'), 'auto');
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(repr, ">"),
           writable: false,
           enumerable: false,
           configurable: false
