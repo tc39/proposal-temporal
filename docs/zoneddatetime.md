@@ -578,22 +578,6 @@ zdt = Temporal.ZonedDateTime.from('2018-11-04T12:00-02:00[America/Sao_Paulo]').s
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**isOffsetTransition** : boolean
-
-The `isOffsetTransition` read-only property is `true` if this `Temporal.ZonedDateTime` instance is immediately after a DST transition or other change in time zone offset, `false` otherwise.
-
-"Immediately after" means that subtracting one nanosecond would yield a `Temporal.ZonedDateTime` instance that has a different value for `offsetNanoseconds`.
-In the ISO 8601 calendar, to calculate if a DST transition happens on the same day (but not necessarily at the same time), use `.hoursInDay() !== 24`.
-
-<!-- prettier-ignore-start -->
-```javascript
-zdt = Temporal.ZonedDateTime.from('2020-11-01T01:00-07:00[America/Denver]').isOffsetTransition;
-  // => true (DST ended right before this time)
-zdt = Temporal.ZonedDateTime.from('2020-11-01T01:00-07:00[America/Phoenix]').isOffsetTransition;
-  // => false (Phoenix doesn't observe DST)
-```
-<!-- prettier-ignore-end -->
-
 ### zonedDateTime.**offsetNanoseconds** : number
 
 The `offsetNanoseconds` read-only property is the offset (in nanoseconds) relative to UTC of `zonedDateTime`.
