@@ -907,7 +907,7 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
       ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
-      if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
       result = new constructor(year, month, day, calendar);
     }
@@ -967,7 +967,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanosecond,
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
-      if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
     }
     const result = new constructor(
@@ -1050,7 +1050,7 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
       ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
-      if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
       if (referenceISOYear === undefined) referenceISOYear = 1972;
       result = new constructor(month, day, calendar, referenceISOYear);
@@ -1092,7 +1092,7 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
       ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
-      if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
       if (referenceISODay === undefined) referenceISODay = 1;
       result = new constructor(year, month, calendar, referenceISODay);
