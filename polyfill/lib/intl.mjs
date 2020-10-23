@@ -20,6 +20,7 @@ const YM = Symbol('ym');
 const MD = Symbol('md');
 const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
+const INSTANT = Symbol('instant');
 const ORIGINAL = Symbol('original');
 const TIMEZONE = Symbol('timezone');
 const CAL_ID = Symbol('calendar-id');
@@ -47,6 +48,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
   this[MD] = new IntlDateTimeFormat(locale, monthDayAmend(options));
   this[TIME] = new IntlDateTimeFormat(locale, timeAmend(options));
   this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmend(options));
+  this[INSTANT] = new IntlDateTimeFormat(locale, instantAmend(options));
 }
 
 DateTimeFormat.supportedLocalesOf = function (...args) {
@@ -195,6 +197,20 @@ function datetimeAmend(options) {
   return options;
 }
 
+function instantAmend(options) {
+  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
+    ObjectAssign(options, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    });
+  }
+  return options;
+}
+
 function hasDateOptions(options) {
   return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
 }
@@ -307,7 +323,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       instant: temporalObj,
-      formatter: main[DATETIME]
+      formatter: main[INSTANT]
     };
   }
 
