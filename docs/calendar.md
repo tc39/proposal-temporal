@@ -149,7 +149,7 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 
 ### calendar.**monthsInYear**(_date_: Temporal.Date): number
 
-### calendar.**isLeapYear**(_date_: Temporal.Date): boolean
+### calendar.**inLeapYear**(_date_: Temporal.Date): boolean
 
 The above methods are all similar.
 They provide a way to query properties of a particular date in the calendar's date reckoning.

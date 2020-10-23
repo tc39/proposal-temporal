@@ -2,10 +2,10 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.isleapyear
+esid: sec-get-temporal.date.prototype.inleapyear
 ---*/
 
-const descriptor = Object.getOwnPropertyDescriptor(Temporal.Date.prototype, "isLeapYear");
+const descriptor = Object.getOwnPropertyDescriptor(Temporal.Date.prototype, "inLeapYear");
 assert.sameValue(typeof descriptor.get, "function");
 assert.sameValue(descriptor.set, undefined);
 assert.sameValue(descriptor.enumerable, false);

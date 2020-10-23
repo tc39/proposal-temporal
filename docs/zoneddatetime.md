@@ -511,9 +511,9 @@ zdt = Temporal.ZonedDateTime.from('1900-01-01T12:00+09:00[Asia/Tokyo]');
 zdt.monthsInYear; // => 12
 ```
 
-### zonedDateTime.**isLeapYear** : boolean
+### zonedDateTime.**inLeapYear** : boolean
 
-The `isLeapYear` read-only property tells whether the year of this `Temporal.ZonedDateTime` is a leap year.
+The `inLeapYear` read-only property tells whether the year of this `Temporal.ZonedDateTime` is a leap year.
 Its value is `true` if the year is a leap year, and `false` if not.
 
 For the ISO calendar, leap years are years evenly divisible by 4, except years evenly divisible by 100 but not evenly divisible by 400.
@@ -524,9 +524,9 @@ Usage example:
 ```javascript
 // Is this year a leap year?
 zdt = Temporal.now.zonedDateTime();
-zdt.isLeapYear; // example output: true
+zdt.inLeapYear; // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
-zdt.with({ year: 2100 }).isLeapYear; // => false
+zdt.with({ year: 2100 }).inLeapYear; // => false
 ```
 
 ### zonedDateTime.**hoursInDay** : number

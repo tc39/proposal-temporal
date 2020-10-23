@@ -104,9 +104,9 @@ export class Date {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).monthsInYear(this);
   }
-  get isLeapYear() {
+  get inLeapYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).isLeapYear(this);
+    return GetSlot(this, CALENDAR).inLeapYear(this);
   }
   with(temporalDateLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

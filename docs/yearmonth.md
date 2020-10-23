@@ -216,9 +216,9 @@ ym = Temporal.Date.from('1900-01');
 ym.monthsInYear; // => 12
 ```
 
-### yearMonth.**isLeapYear** : boolean
+### yearMonth.**inLeapYear** : boolean
 
-The `isLeapYear` read-only property tells whether the year that the date falls in is a leap year or not.
+The `inLeapYear` read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is `true` if the year is a leap year, and `false` if not.
 
 Usage example:
@@ -226,9 +226,9 @@ Usage example:
 ```javascript
 // Was June 2019 in a leap year?
 ym = Temporal.YearMonth.from('2019-06');
-ym.isLeapYear; // => false
+ym.inLeapYear; // => false
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
-ym.with({ year: 2100 }).isLeapYear; // => false
+ym.with({ year: 2100 }).inLeapYear; // => false
 ```
 
 ## Methods

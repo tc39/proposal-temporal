@@ -443,7 +443,7 @@ export namespace Temporal {
     daysInMonth?(date: Temporal.Date): number;
     daysInYear?(date: Temporal.Date): number;
     monthsInYear?(date: Temporal.Date): number;
-    isLeapYear?(date: Temporal.Date): boolean;
+    inLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
       fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
@@ -511,7 +511,7 @@ export namespace Temporal {
     daysInMonth(date: Temporal.Date): number;
     daysInYear(date: Temporal.Date): number;
     monthsInYear(date: Temporal.Date): number;
-    isLeapYear(date: Temporal.Date): boolean;
+    inLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
       fields: { era?: string | undefined; year: number; month: number; day: number },
       options: AssignmentOptions,
@@ -604,7 +604,7 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly monthsInYear: number;
-    readonly isLeapYear: boolean;
+    readonly inLeapYear: boolean;
     equals(other: Temporal.Date | DateLike | string): boolean;
     with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.Date;
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
@@ -719,7 +719,7 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly daysInMonth: number;
     readonly monthsInYear: number;
-    readonly isLeapYear: boolean;
+    readonly inLeapYear: boolean;
     equals(other: Temporal.DateTime | DateTimeLike | string): boolean;
     with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.DateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
@@ -994,7 +994,7 @@ export namespace Temporal {
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly monthsInYear: number;
-    readonly isLeapYear: boolean;
+    readonly inLeapYear: boolean;
     equals(other: Temporal.YearMonth | YearMonthLike | string): boolean;
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
