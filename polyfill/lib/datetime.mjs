@@ -182,9 +182,9 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).monthsInYear(this);
   }
-  get isLeapYear() {
+  get inLeapYear() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).isLeapYear(this);
+    return GetSlot(this, CALENDAR).inLeapYear(this);
   }
   with(temporalDateTimeLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

@@ -282,17 +282,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.isleapyear">
-      <h1>get Temporal.Date.prototype.isLeapYear</h1>
+    <emu-clause id="sec-get-temporal.date.prototype.inleapyear">
+      <h1>get Temporal.Date.prototype.inLeapYear</h1>
       <p>
-        `Temporal.Date.prototype.isLeapYear` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.Date.prototype.inLeapYear` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"isLeapYear"*).
+        1. Let _method_ be ? Get(_calendar_, *"inLeapYear"*).
         1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>

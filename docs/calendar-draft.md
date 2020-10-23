@@ -138,7 +138,7 @@ class Temporal.Calendar {
 		input: Temporal.Date
 	) : number;
 
-	isLeapYear(
+	inLeapYear(
 		input: Temporal.Date
 	) : boolean;
 }
@@ -211,7 +211,7 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .weekOfYear
 - .daysInMonth
 - .daysInYear
-- .isLeapYear
+- .inLeapYear
 - .year
 - .month
 - .day

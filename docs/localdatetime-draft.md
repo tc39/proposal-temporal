@@ -49,7 +49,7 @@ class Temporal.LocalDateTime {
   get hoursInDay(): number;
   get daysInMonth(): number;
   get daysInYear(): number;
-  get isLeapYear(): boolean;
+  get inLeapYear(): boolean;
   get isTimeZoneOffsetTransition(): boolean;
   getFields(): object;
   getISOFields(): object;

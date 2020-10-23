@@ -79,8 +79,8 @@ describe('Calendar', () => {
       it('Calendar.prototype.monthsInYear is a Function', () => {
         equal(typeof Calendar.prototype.monthsInYear, 'function');
       });
-      it('Calendar.prototype.isLeapYear is a Function', () => {
-        equal(typeof Calendar.prototype.isLeapYear, 'function');
+      it('Calendar.prototype.inLeapYear is a Function', () => {
+        equal(typeof Calendar.prototype.inLeapYear, 'function');
       });
       it('Calendar.prototype.toString is a Function', () => {
         equal(typeof Calendar.prototype.toString, 'function');
