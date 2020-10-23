@@ -444,6 +444,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string, options?: ToStringOptions): string;
+    valueOf(): never;
   }
 
   export interface CalendarProtocol {
@@ -656,6 +657,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
+    valueOf(): never;
   }
 
   export type DateTimeLike = {
@@ -824,6 +826,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringOptions): string;
+    valueOf(): never;
   }
 
   export type MonthDayLike = {
@@ -859,6 +862,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
+    valueOf(): never;
   }
 
   export type TimeLike = {
@@ -976,6 +980,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringOptions): string;
+    valueOf(): never;
   }
 
   /**
@@ -1074,6 +1079,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
+    valueOf(): never;
   }
 
   /**
