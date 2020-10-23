@@ -494,7 +494,7 @@
         1. Assert: Type(_temporalMonthDayLike_) is Object.
         1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
         1. For each value _property_ of _fieldNames_, do
-          1. Let _value_ be ? Get(_temporalDateLike_, _property_).
+          1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
           1. If _property_ is one of *"month"* or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
             1. Set _value_ to ? ToInteger(_value_).
