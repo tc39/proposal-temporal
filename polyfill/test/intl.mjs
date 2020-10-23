@@ -35,6 +35,10 @@ describe('Intl', () => {
       equal(`${instant.toLocaleString('de', { timeZone: 'Europe/Vienna' })}`, '18.11.1976, 15:23:30'));
     const fmt = maybeGetWeekdayOnlyFormat();
     if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(instant), 'Thursday'));
+    it('outputs timeZoneName if requested', () => {
+      const str = instant.toLocaleString('en', { timeZone: 'America/New_York', timeZoneName: 'short' });
+      assert(str.includes('EST'));
+    });
   });
   describe('datetime.toLocaleString()', () => {
     const datetime = Temporal.DateTime.from('1976-11-18T15:23:30');
