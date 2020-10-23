@@ -337,6 +337,7 @@ export namespace Temporal {
       nanoseconds?: number
     );
     readonly sign: -1 | 0 | 1;
+    readonly blank: boolean;
     readonly years: number;
     readonly months: number;
     readonly weeks: number;
@@ -349,7 +350,6 @@ export namespace Temporal {
     readonly nanoseconds: number;
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
-    isZero(): boolean;
     with(durationLike: DurationLike): Temporal.Duration;
     add(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     subtract(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;

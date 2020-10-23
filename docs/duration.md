@@ -155,6 +155,21 @@ d.nanoseconds   // => 321
 
 The read-only `sign` property has the value –1, 0, or 1, depending on whether the duration is negative, zero, or positive.
 
+### duration.**blank** : boolean
+
+The read-only `blank` property is a convenience property that tells whether `duration` represents a zero length of time.
+In other words, `duration.blank === (duration.sign === 0)`.
+
+Usage example:
+
+```javascript
+d = Temporal.Duration.from('PT0S');
+d.blank; // => true
+
+d = Temporal.Duration.from({ days: 0, hours: 0, minutes: 0 });
+d.blank; // => true
+```
+
 ## Methods
 
 ### duration.**with**(_durationLike_: object, _options_?: object) : Temporal.Duration
@@ -340,22 +355,6 @@ Usage example:
 ```javascript
 d = Temporal.Duration.from('-PT8H30M');
 d.abs(); // PT8H30M
-```
-
-### duration.**isZero**() : boolean
-
-**Returns:** `true` if `duration` has zero length, `false` otherwise.
-
-This is a convenience method that tells whether `duration` represents a zero length of time.
-
-Usage example:
-
-```javascript
-d = Temporal.Duration.from('PT0S');
-d.isZero(); // => true
-
-d = Temporal.Duration.from({ days: 0, hours: 0, minutes: 0 });
-d.isZero(); // => true
 ```
 
 ### duration.**round**(_options_: object) : Temporal.Duration
