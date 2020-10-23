@@ -186,6 +186,10 @@ However, we have taken a future-proof approach so that if a use case presents it
     <span class="token comment">/** A string identifier for this calendar */</span>
     id <span class="token operator">:</span> string<span class="token punctuation">;</span>
 
+    <span class="token function">fields</span><span class="token punctuation">(</span>
+        fields<span class="token operator">:</span> array<span class="token operator">&lt;</span>string<span class="token operator">></span>
+    <span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>string<span class="token operator">></span><span class="token punctuation">;</span>
+
     <span class="token comment">//////////////////</span>
     <span class="token comment">//  Arithmetic  //</span>
     <span class="token comment">//////////////////</span>
@@ -253,6 +257,8 @@ However, we have taken a future-proof approach so that if a use case presents it
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">get</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span>foo<span class="token operator">?.</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token operator">...</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre><p>Calendars can add additional <em>calendar-specific accessors</em>, such as the year type (&quot;kesidran&quot;, &quot;chaser&quot;, &quot;maleh&quot;) in the Hebrew calendar, and may add conforming accessor methods to Temporal.Date.prototype.</p>
+<p>If any of these accessors are needed for constructing a Temporal.Date from fields, then the calendar should implement <code>fields()</code> which, given an array of field names in the ISO calendar, returns an array of equivalent field names in the calendar.
+We are not aware of this being necessary for any built-in calendars.</p>
 <p>An instance of <code>MyCalendar</code> is <em>expected</em> to have stateless behavior; i.e., calling a method with the same arguments should return the same result each time.  There would be no mechanism for enforcing that user-land calendars are stateless; the calendar author should test this expectation on their own in order to prevent unexpected behavior such as the lack of round-tripping.</p>
 <h3 id="enumerable-properties"><a class="heading-link" href="#enumerable-properties"></a>Enumerable Properties</h3><p>Main issue: <a href="https://github.com/tc39/proposal-temporal/issues/403">https://github.com/tc39/proposal-temporal/issues/403</a></p>
 <p>If properties of Temporal.Date, etc., are to be enumerable, the calendar should choose which properties to expose.  This operation can cake place in the factory methods of the Temporal.Calendar protocol, such as <code>.dateFromFields()</code>.</p>
