@@ -162,6 +162,17 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-totemporaloffset" aoid="ToTemporalOffset">
+    <h1>ToTemporalOffset ( _normalizedOptions_, _fallback_ )</h1>
+    <p>
+      The abstract operation ToTemporalOffset extracts the value of the property named *"offset"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+      The value _fallback_ is returned if the property is not present.
+    </p>
+    <emu-alg>
+      1. Return ? GetOption(_normalizedOptions_, *"offset"*, *"string"*, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
     <h1>ToTemporalRoundingIncrement ( _normalizedOptions_, _dividend_, _inclusive_ )</h1>
     <emu-alg>

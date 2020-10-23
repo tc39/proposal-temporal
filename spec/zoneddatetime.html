@@ -1,0 +1,1048 @@
+<!doctype html>
+<meta charset="utf8">
+
+<emu-clause id="sec-temporal-zoneddatetime-objects">
+  <h1>Temporal.ZonedDateTime Objects</h1>
+  <p>
+    A Temporal.ZonedDateTime object is an immutable Object referencing a point in time with nanoseconds precision, and containing Object values corresponding to a particular time zone and calendar system.
+  </p>
+
+  <emu-clause id="sec-temporal-zoneddatetime-constructor">
+    <h1>The Temporal.ZonedDateTime Constructor</h1>
+    <p>
+      The Temporal.ZonedDateTime constructor is the %Temporal.ZonedDateTime% intrinsic object.
+      When called as a constructor, it creates and initializes a new Temporal.ZonedDateTime object.
+    </p>
+    <p>
+      The Temporal.ZonedDateTime constructor is designed to be subclassable.
+      It may be used as the value of an extends clause of a class definition.
+      Subclass constructors that intend to inherit the specified ZonedDateTime behaviour must include a super call to the %Temporal.ZonedDateTime% constructor to create and initialize subclass instances with the necessary internal slots.
+    </p>
+
+    <emu-clause id="sec-temporal.zoneddatetime">
+      <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZoneLike_ [ , _calendarLike_ ] )</h1>
+      <p>
+        When the `Temporal.ZonedDateTime` function is called, the following steps are taken:
+      </p>
+      <emu-alg>
+        1. If NewTarget is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
+        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
+        1. If _calendarLike_ is *undefined*, then
+          1. Set _calendar_ to ? GetISO8601Calendar().
+        1. Else,
+          1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
+        1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_, NewTarget).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-the-temporal-zoneddatetime-constructor">
+    <h1>Properties of the Temporal.ZonedDateTime Constructor</h1>
+    <p>The value of the [[Prototype]] internal slot of the Temporal.ZonedDateTime constructor is the intrinsic object %Function.prototype%.</p>
+    <p>The Temporal.ZonedDateTime constructor has the following properties:</p>
+
+    <emu-clause id="sec-temporal-zoneddatetime-prototype">
+      <h1>Temporal.ZonedDateTime.prototype</h1>
+      <p>The initial value of `Temporal.ZonedDateTime.prototype` is %Temporal.ZonedDateTime.prototype%.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime-@@species">
+      <h1>get Temporal.ZonedDateTime [ @@species ]</h1>
+      <p>
+        `Temporal.ZonedDateTime[@@species]` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Return the *this* value.
+      </emu-alg>
+
+      <p>The value of the *"name"* property of this function is *"get [Symbol.species]"*.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.from">
+      <h1>Temporal.ZonedDateTime.from ( _item_ [ , _options_ ] )</h1>
+      <p>
+        The `from` method takes two arguments, _item_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _constructor_ be the *this* value.
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _offset_ be ? ToTemporalOffset(_options_).
+        1. Return ? ToTemporalZonedDateTime(_item_, _constructor_, _overflow_, _disambiguation_, _offset_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.compare">
+      <h1>Temporal.ZonedDateTime.compare ( _one_, _two_ )</h1>
+      <p>
+        The `compare` method takes two arguments, _one_ and _two_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Set _one_ to ? ToTemporalZonedDateTime(_one_).
+        1. Set _two_ to ? ToTemporalZonedDateTime(_two_).
+        1. Let _result_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
+        1. If _result_ ≠ 0, then
+          1. Return 𝔽(_result_).
+        1. Set _result_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
+        1. If _result_ ≠ 0, then
+          1. Return 𝔽(_result_).
+        1. Return 𝔽(? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-the-temporal-zoneddatetime-prototype-object">
+    <h1>Properties of the Temporal.ZonedDateTime Prototype Object</h1>
+
+    <p>The Temporal.ZonedDateTime prototype object</p>
+    <ul>
+      <li>is the intrinsic object <dfn>%Temporal.ZonedDateTime.prototype%</dfn>.
+      <li>is itself an ordinary object.
+      <li>is not a Temporal.ZonedDateTime instance and does not have a [[InitializedTemporalZonedDateTime]] internal slot.
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+    </ul>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.constructor">
+      <h1>Temporal.ZonedDateTime.prototype.constructor</h1>
+      <p>The initial value of `Temporal.ZonedDateTime.prototype.constructor` is %Temporal.ZonedDateTime%.</p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype-@@tostringtag">
+      <h1>Temporal.ZonedDateTime.prototype[ @@toStringTag ]</h1>
+      <p>
+        The initial value of the @@toStringTag property is the string value `"Temporal.ZonedDateTime"`.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.calendar">
+      <h1>get Temporal.ZonedDateTime.prototype.calendar</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return _zonedDateTime_.[[Calendar]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.timezone">
+      <h1>get Temporal.ZonedDateTime.prototype.timeZone</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.timeZone` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return _zonedDateTime_.[[TimeZone]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.year">
+      <h1>get Temporal.ZonedDateTime.prototype.year</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.year` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _year_ be ? Get(_calendar_, *"year"*).
+        1. Return ? Call(_year_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.month">
+      <h1>get Temporal.ZonedDateTime.prototype.month</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.month` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _month_ be ? Get(_calendar_, *"month"*).
+        1. Return ? Call(_month_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.day">
+      <h1>get Temporal.ZonedDateTime.prototype.day</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.day` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _day_ be ? Get(_calendar_, *"day"*).
+        1. Return ? Call(_day_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.hour">
+      <h1>get Temporal.ZonedDateTime.prototype.hour</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.hour` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Hour]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.minute">
+      <h1>get Temporal.ZonedDateTime.prototype.minute</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.minute` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Minute]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.second">
+      <h1>get Temporal.ZonedDateTime.prototype.second</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.second` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Second]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.millisecond">
+      <h1>get Temporal.ZonedDateTime.prototype.millisecond</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.millisecond` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Millisecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.microsecond">
+      <h1>get Temporal.ZonedDateTime.prototype.microsecond</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.microsecond` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Microsecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.nanosecond">
+      <h1>get Temporal.ZonedDateTime.prototype.nanosecond</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.nanosecond` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return _temporalDateTime_.[[Nanosecond]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochseconds">
+      <h1>get Temporal.ZonedDateTime.prototype.epochSeconds</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.epochSeconds` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
+        1. Let _s_ be RoundTowardsZero(ℝ(_ns_) / 1,000,000,000<sub>ℝ</sub>).
+        1. Return 𝔽(_s_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochmilliseconds">
+      <h1>get Temporal.ZonedDateTime.prototype.epochMilliseconds</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.epochMilliseconds` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
+        1. Let _ms_ be RoundTowardsZero(ℝ(_ns_) / 1,000,000<sub>ℝ</sub>).
+        1. Return 𝔽(_ms_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochmicroseconds">
+      <h1>get Temporal.ZonedDateTime.prototype.epochMicroseconds</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.epochMicroseconds` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
+        1. Let _µs_ be RoundTowardsZero(ℝ(_ns_) / 1,000<sub>ℝ</sub>).
+        1. Return ℤ(_µs_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochnanoseconds">
+      <h1>get Temporal.ZonedDateTime.prototype.epochNanoseconds</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.epochNanoseconds` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalZonedDateTime]]).
+        1. Return _zonedDateTime_.[[Nanoseconds]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.dayofweek">
+      <h1>get Temporal.ZonedDateTime.prototype.dayOfWeek</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.dayOfWeek` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _dayOfWeek_ be ? Get(_calendar_, *"dayOfWeek"*).
+        1. Return ? Call(_dayOfWeek_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.dayofyear">
+      <h1>get Temporal.ZonedDateTime.prototype.dayOfYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.dayOfYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _dayOfYear_ be ? Get(_calendar_, *"dayOfYear"*).
+        1. Return ? Call(_dayOfYear_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.weekofyear">
+      <h1>get Temporal.ZonedDateTime.prototype.weekOfYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.weekOfYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _weekOfYear_ be ? Get(_calendar_, *"weekOfYear"*).
+        1. Return ? Call(_weekOfYear_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.hoursinday">
+      <h1>get Temporal.ZonedDateTime.prototype.hoursInDay</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.hoursInDay` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return <mark>TODO</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.daysinweek">
+      <h1>get Temporal.ZonedDateTime.prototype.daysInWeek</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.daysInWeek` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _daysInWeek_ be ? Get(_calendar_, *"daysInWeek"*).
+        1. Return ? Call(_daysInWeek_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.daysinmonth">
+      <h1>get Temporal.ZonedDateTime.prototype.daysInMonth</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.daysInMonth` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
+        1. Return ? Call(_daysInMonth_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.daysinyear">
+      <h1>get Temporal.ZonedDateTime.prototype.daysInYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.daysInYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _daysInYear_ be ? Get(_calendar_, *"daysInYear"*).
+        1. Return ? Call(_daysInYear_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.monthsinyear">
+      <h1>get Temporal.ZonedDateTime.prototype.monthsInYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.monthsInYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _monthsInYear_ be ? Get(_calendar_, *"monthsInYear"*).
+        1. Return ? Call(_monthsInYear_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.inleapyear">
+      <h1>get Temporal.ZonedDateTime.prototype.inLeapYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.inLeapYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _inLeapYear_ be ? Get(_calendar_, *"inLeapYear"*).
+        1. Return ? Call(_inLeapYear_, _calendar_, « _temporalDateTime_ »).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.startofday">
+      <h1>get Temporal.ZonedDateTime.prototype.startOfDay</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.startOfDay` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return <mark>TODO</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.offset">
+      <h1>get Temporal.ZonedDateTime.prototype.offset</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.offset` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Return ? GetOffsetStringFor(_zonedDateTime_.[[TimeZone]], _instant_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.with">
+      <h1>Temporal.ZonedDateTime.prototype.with ( _temporalZonedDateTimeLike_ [ , _options_ ] )</h1>
+      <p>
+        The `with` method takes two arguments, _temporalZonedDateTimeLike_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _partialZonedDateTime_ be ? ToPartialZonedDateTime(_temporalZonedDateTimeLike_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.withtimezone">
+      <h1>Temporal.ZonedDateTime.prototype.withTimeZone ( _timeZoneLike_ )</h1>
+      <p>
+        The `withTimeZone` method takes one argument _timeZoneLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _zonedDateTime_.[[Nanoseconds]], _timeZoneLike_, _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.withcalendar">
+      <h1>Temporal.ZonedDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
+      <p>
+        The `withCalendar` method takes one argument _calendarLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _zonedDateTime_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.add">
+      <h1>Temporal.ZonedDateTime.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
+      <p>
+        The `add` method takes two arguments, _temporalDurationLike_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.subtract">
+      <h1>Temporal.ZonedDateTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
+      <p>
+        The `subtract` method takes two arguments, _temporalDurationLike_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.until">
+      <h1>Temporal.ZonedDateTime.prototype.until ( _other_ [ , _options_ ] )</h1>
+      <p>
+        The `until` method takes two arguments, _other_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
+        1. If ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « », *"nanoseconds"*).
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"days"*, _smallestUnit_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », _defaultLargestUnit_).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalDuration(<mark>TODO</mark>).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.since">
+      <h1>Temporal.ZonedDateTime.prototype.since ( _other_ [ , _options_ ] )</h1>
+      <p>
+        The `since` method takes two arguments, _other_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
+        1. If ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « », *"nanoseconds"*).
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"days"*, _smallestUnit_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », _defaultLargestUnit_).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalDuration(<mark>TODO</mark>).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.round">
+      <h1>Temporal.ZonedDateTime.prototype.round ( _options_ )</h1>
+      <p>
+        The `round` method takes one argument _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. If _options_ is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « »).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
+        1. If _smallestUnit_ is *"day"*, then
+          1. Let _maximum_ be 1.
+        1. Else if _smallestUnit_ is *"hour"*, then
+          1. Let _maximum_ be 24.
+        1. Else if _smallestUnit_ is *"minute"* or *"second"*, then
+          1. Let _maximum_ be 60.
+        1. Else,
+          1. Let _maximum_ be 1000.
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.equals">
+      <h1>Temporal.ZonedDateTime.prototype.equals ( _other_ )</h1>
+      <p>
+        The `equals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
+        1. If _zonedDateTime_.[[Nanoseconds]] ≠ _other_.[[Nanoseconds]], return *false*.
+        1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, return *false*.
+        1. Return ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.tostring">
+      <h1>Temporal.ZonedDateTime.prototype.toString ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.tolocalestring">
+      <h1>Temporal.ZonedDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
+      <p>
+        The `toLocaleString` method takes two arguments, _locales_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. If the implementation does not include the ECMA-402 Internationalization API, then
+          1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_).
+        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
+        1. Return ? FormatDateTime(_dateFormat_, _zonedDateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.tojson">
+      <h1>Temporal.ZonedDateTime.prototype.toJSON ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return ! TemporalZonedDateTimeToString(_zonedDateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.valueof">
+      <h1>Temporal.ZonedDateTime.prototype.valueOf ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Throw a *TypeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.toinstant">
+      <h1>Temporal.ZonedDateTime.prototype.toInstant ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.todate">
+      <h1>Temporal.ZonedDateTime.prototype.toDate ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.totime">
+      <h1>Temporal.ZonedDateTime.prototype.toTime ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return ? CreateTemporalTime(_temporalDateTime_.[[Hour]], _temporalDateTime_.[[Minute]], _temporalDateTime_.[[Second]], _temporalDateTime_.[[Millisecond]], _temporalDateTime_.[[Microsecond]], _temporalDateTime_.[[Nanosecond]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.todatetime">
+      <h1>Temporal.ZonedDateTime.prototype.toDateTime ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.toyearmonth">
+      <h1>Temporal.ZonedDateTime.prototype.toYearMonth ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return ? <mark>create via `calendar.yearMonthFromFields()`</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.tomonthday">
+      <h1>Temporal.ZonedDateTime.prototype.toMonthDay ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Return ? <mark>create via `calendar.monthDayFromFields()`</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.getfields">
+      <h1>Temporal.ZonedDateTime.prototype.getFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. <mark>TODO</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.getisofields">
+      <h1>Temporal.ZonedDateTime.prototype.getISOFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. <mark>TODO</mark>.
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _zonedDateTime_.[[TimeZone]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _zonedDateTime_.[[Calendar]]).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-temporal-zoneddatetime-instances">
+    <h1>Properties of Temporal.ZonedDateTime Instances</h1>
+    <p>
+      Temporal.ZonedDateTime instances are ordinary objects that inherit properties from the %Temporal.ZonedDateTime.prototype% intrinsic object.
+      Temporal.ZonedDateTime instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporalzoneddatetime-instances"></emu-xref>.
+    </p>
+    <emu-table id="table-internal-slots-of-temporalzoneddatetime-instances" caption="Internal Slots of Temporal.ZonedDateTime Instances">
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              Internal Slot
+            </th>
+            <th>
+              Description
+            </th>
+          </tr>
+          <tr>
+            <td>
+              [[InitializedTemporalZonedDateTime]]
+            </td>
+            <td>
+              The only specified use of this slot is for distinguishing Temporal.ZonedDateTime instances from other objects.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Nanoseconds]]
+            </td>
+            <td>
+              A BigInt value representing the number of nanoseconds since the Unix epoch.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[TimeZone]]
+            </td>
+            <td>
+              An Object representing the time zone.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An Object representing the calendar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-zoneddatetime-abstract-ops">
+    <h1>Abstract operations</h1>
+
+    <emu-clause id="sec-temporal-totemporalzoneddatetime" aoid="ToTemporalZonedDateTime">
+      <h1>ToTemporalZonedDateTime ( _item_ [ , _constructor_ [ , _overflow_, _disambiguation_, _offset_ ] ] )</h1>
+      <p>
+        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.Date instance if possible, and throws otherwise.
+      </p>
+      <emu-alg>
+        1. If _constructor_ is not given, set it to %Temporal.ZonedDateTime%.
+        1. If _overflow_ is not given, set it to *"constrain"*.
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. If _disambiguation_ is not given, set it to *"compatible"*.
+        1. Assert: _disambiguation_ is either *"compatible"*, *"earlier"*, *"later"*, or *"reject"*.
+        1. If _offset_ is not given, set it to *"reject"*.
+        1. Assert: _offset_ is either *"use"*, *"ignore"*, *"prefer"*, or *"reject"*.
+        1. If Type(_item_) is Object, then
+          1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Return _item_.
+          1. Let _result_ be <mark>TODO, after landing `Calendar.fields()`</mark>.
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalInstantString(_string_).
+        1. Let _calendar_ be _result_.[[Calendar]].
+        1. If _calendar_ is *undefined*, set _calendar_ to ! GetISO8601Calendar().
+        1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
+        1. <mark>TODO</mark>.
+        1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, <mark>TODO</mark>, _timeZone_ , _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-topartialzoneddatetime" aoid="ToPartialZonedDateTime">
+      <h1>ToPartialZonedDateTime ( _temporalZonedDateTimeLike_ )</h1>
+      <p>
+        The abstract operation ToPartialZonedDateTime <mark>...TODO, after landing `Calendar.fields()`</mark>.
+      </p>
+      <emu-alg>
+        1. If Type(_temporalZonedDateTimeLike_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. <mark>TODO</mark>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtemporalzoneddatetime" aoid="CreateTemporalZonedDateTime">
+      <h1>CreateTemporalZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_ [ , _newTarget_ ] )</h1>
+      <p>
+        The abstract operation CreateTemporalZonedDateTime is used to specify the creation of a new `Temporal.ZonedDateTime` object.
+      </p>
+      <emu-alg>
+        1. Assert: ! ValidateInstant(_epochNanoseconds_) is *true*.
+        1. Assert: Type(_timeZone_) is Object.
+        1. Assert: Type(_calendar_) is Object.
+        1. If _newTarget_ is not given, set it to %Temporal.ZonedDateTime%.
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.ZonedDateTime.prototype%"`, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
+        1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
+        1. Set _object_.[[TimeZone]] to _timeZone_.
+        1. Set _object_.[[Calendar]] to _calendar_.
+        1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtemporalzoneddatetimefrominstance" aoid="CreateTemporalZonedDateTimeFromInstance">
+      <h1>CreateTemporalZonedDateTimeFromInstance ( _zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_ )</h1>
+      <p>
+        The abstract operation CreateTemporalZonedDateTimeFromInstance calls the species constructor of the given `Temporal.ZonedDateTime` instance _zonedDateTime_ in order to create a new instance with the given arguments.
+      </p>
+      <emu-alg>
+        1. Assert: Type(_zonedDateTime_) is Object and _zonedDateTime_ has an [[InitializedTemporalZonedDateTime]] internal slot.
+        1. Assert: ! ValidateInstant(_epochNanoseconds_) is *true*.
+        1. Assert: Type(_timeZone_) is Object.
+        1. Assert: Type(_calendar_) is Object.
+        1. Let _constructor_ be ? SpeciesConstructor(_zonedDateTime_, %Temporal.ZonedDateTime%).
+        1. Let _result_ be ? Construct(_constructor_, « _epochNanoseconds_, _timeZone_, _calendar_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalZonedDateTime]]).
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createtemporalzoneddatetimefromstatic" aoid="CreateTemporalZonedDateTimeFromStatic">
+      <h1>CreateTemporalZonedDateTimeFromStatic ( _constructor_, _epochNanoseconds_, _timeZone_, _calendar_ )</h1>
+      <p>
+        The abstract operation CreateTemporalZonedDateTimeFromStatic calls the given _constructor_ with the given arguments to create a `Temporal.ZonedDateTime` instance.
+      </p>
+      <emu-alg>
+        1. Assert: ! ValidateInstant(_epochNanoseconds_) is *true*.
+        1. Assert: Type(_timeZone_) is Object.
+        1. Assert: Type(_calendar_) is Object.
+        1. If ! IsConstructor(_constructor_) is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Let _result_ be ? Construct(_constructor_, « _epochNanoseconds_, _timeZone_, _calendar_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalZonedDateTime]]).
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-temporalzoneddatetimetostring" aoid="TemporalZonedDateTimeToString">
+      <h1>TemporalZonedDateTimeToString ( _zonedDateTime_ )</h1>
+      <p>
+        The abstract operation TemporalZonedDateTimeToString returns an ISO 8601 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
+      </p>
+      <emu-alg>
+        1. Assert: Type(_zonedDateTime_) is Object and _zonedDateTime_ has an [[InitializedTemporalZonedDateTime]] internal slot.
+        1. <mark>TODO</mark>.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
