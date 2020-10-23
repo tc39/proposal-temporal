@@ -261,6 +261,21 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.duration.prototype.blank">
+      <h1>get Temporal.Duration.prototype.blank</h1>
+      <p>
+        `Temporal.Duration.prototype.blank` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. If _sign_ = 0, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.duration.prototype.with">
       <h1>Temporal.Duration.prototype.with ( _temporalDurationLike_ )</h1>
       <p>
@@ -336,20 +351,6 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, abs(_duration_.[[Years]]), abs(_duration_.[[Months]]), abs(_duration_.[[Weeks]]), abs(_duration_.[[Days]]), abs(_duration_.[[Hours]]), abs(_duration_.[[Minutes]]), abs(_duration_.[[Seconds]]), abs(_duration_.[[Milliseconds]]), abs(_duration_.[[Microseconds]]), abs(_duration_.[[Nanoseconds]])).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.duration.prototype.iszero">
-      <h1>Temporal.Duration.prototype.isZero ( )</h1>
-      <p>
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _duration_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. If _sign_ = 0, return *true*.
-        1. Return *false*.
       </emu-alg>
     </emu-clause>
 

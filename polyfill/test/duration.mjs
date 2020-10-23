@@ -23,6 +23,9 @@ describe('Duration', () => {
       it('Duration.prototype has sign', () => {
         assert('sign' in Duration.prototype);
       });
+      it('Duration.prototype has blank', () => {
+        assert('blank' in Duration.prototype);
+      });
       it('Duration.prototype.with is a Function', () => {
         equal(typeof Duration.prototype.with, 'function');
       });
@@ -40,9 +43,6 @@ describe('Duration', () => {
       });
       it('Duration.prototype.abs is a Function', () => {
         equal(typeof Duration.prototype.abs, 'function');
-      });
-      it('Duration.prototype.isZero is a Function', () => {
-        equal(typeof Duration.prototype.isZero, 'function');
       });
       it('Duration.prototype.round is a Function', () => {
         equal(typeof Duration.prototype.round, 'function');
@@ -695,11 +695,11 @@ describe('Duration', () => {
       equal(zero2.sign, 0);
     });
   });
-  describe('Duration.isZero()', () => {
+  describe('Duration.blank', () => {
     it('works', () => {
-      assert(!Duration.from('P3DT1H').isZero());
-      assert(!Duration.from('-PT2H20M30S').isZero());
-      assert(Duration.from('PT0S').isZero());
+      assert(!Duration.from('P3DT1H').blank);
+      assert(!Duration.from('-PT2H20M30S').blank);
+      assert(Duration.from('PT0S').blank);
     });
     it('zero regardless of how many fields are in the duration', () => {
       const zero = Duration.from({
@@ -714,7 +714,7 @@ describe('Duration', () => {
         microseconds: 0,
         nanoseconds: 0
       });
-      assert(zero.isZero());
+      assert(zero.blank);
     });
   });
   describe('Duration.round()', () => {
