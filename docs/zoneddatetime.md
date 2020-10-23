@@ -28,7 +28,7 @@ The `Temporal.ZonedDateTime` API is a superset of `Temporal.DateTime`, which mak
 
 ## Constructor
 
-### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string | object, _calendar_: string | object) : Temporal.ZonedDateTime
+### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string | object, _calendar_?: string | object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
