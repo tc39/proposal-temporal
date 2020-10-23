@@ -1218,9 +1218,9 @@ zdt.toMonthDay(); // => 12-07
 zdt.toTime(); // => 03:24:30
 ```
 
-### zonedDateTime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }
+### zonedDateTime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object, [propName: string]: unknown }
 
-**Returns:** a plain object with properties equal to the fields of `zonedDateTime`, including all date/time fields (expressed in the current calendar) as well as the `calendar`, `timeZone`, and `offsetNanoseconds` properties.
+**Returns:** a plain object with properties equal to the fields of `zonedDateTime`, including all date/time fields (expressed in the current calendar) as well as the `calendar`, `timeZone`, and `offset` properties.
 
 This method can be used to convert a `Temporal.ZonedDateTime` into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
@@ -1263,9 +1263,9 @@ JSON.stringify(thisWillWork, undefined, 2);
 // }"
 ```
 
-### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object }
+### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object }
 
-**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `calendar`, `timeZone`, and `offsetNanoseconds` properties.
+**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `calendar`, `timeZone`, and `offset` properties.
 Note that date/time properties have different names with an `iso` prefix to better differentiate from "normal" `getFields` results.
 
 This is an advanced method that's mainly useful if you are implementing a custom calendar.
