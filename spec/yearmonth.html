@@ -530,7 +530,7 @@
           1. Let _value_ be ? Get(_temporalYearMonthLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. If _property_ is not *"era"*, then
+            1. If _property_ is either *"month"* or *"year"*, then
               1. Set _value_ to ? ToInteger(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
@@ -655,10 +655,9 @@
         1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
         1. For each value _property_ of _fieldNames_, do
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
-          1. If _property_ is one of *"day"*, *"month"*, or *"year"*, and _value_ is *undefined*, then
-            1. Throw a *TypeError* exception.
-          1. If _property_ is not *"era"*, then
-            1. Let _value_ be ? ToInteger(_value_).
+          1. If _property_ is either *"month"*, or *"year"*, then
+            1. If _value_ is *undefined*, throw a *TypeError* exception.
+            1. Set _value_ to ? ToInteger(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Perform ! CreateDataPropertyOrThrow(_result_, *"day"*, 1).
         1. Return _result_.

@@ -60,6 +60,27 @@ const NS_MAX = bigInt(86400).multiply(1e17);
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+const BUILTIN_FIELDS = new Set([
+  'year',
+  'month',
+  'day',
+  'hour',
+  'minute',
+  'second',
+  'millisecond',
+  'microsecond',
+  'nanosecond',
+  'years',
+  'months',
+  'weeks',
+  'days',
+  'hours',
+  'minutes',
+  'seconds',
+  'milliseconds',
+  'microseconds',
+  'nanoseconds'
+]);
 
 import * as PARSE from './regex.mjs';
 
@@ -735,11 +756,10 @@ export const ES = ObjectAssign({}, ES2020, {
       const value = bag[property];
       if (value !== undefined) {
         any = any || {};
-        if (property === 'era') {
-          // FIXME: this is terrible
-          any.era = value;
-        } else {
+        if (BUILTIN_FIELDS.has(property)) {
           any[property] = ES.ToInteger(value);
+        } else {
+          any[property] = value;
         }
       }
     }
@@ -757,11 +777,10 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         value = defaultValue;
       }
-      if (property === 'era') {
-        // FIXME: this is terrible
-        result.era = value;
-      } else {
+      if (BUILTIN_FIELDS.has(property)) {
         result[property] = ES.ToInteger(value);
+      } else {
+        result[property] = value;
       }
     }
     return result;
