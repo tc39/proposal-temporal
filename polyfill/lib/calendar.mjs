@@ -80,10 +80,6 @@ export class Calendar {
     void date;
     throw new Error('not implemented');
   }
-  era(date) {
-    void date;
-    throw new Error('not implemented');
-  }
   dayOfWeek(date) {
     void date;
     throw new Error('not implemented');
@@ -252,10 +248,6 @@ class ISO8601Calendar extends Calendar {
     if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return GetSlot(date, ISO_DAY);
   }
-  era(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
-    return undefined;
-  }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
@@ -304,6 +296,15 @@ MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar');
 // proposal for ECMA-262. These calendars will be standardized as part of
 // ECMA-402.
 
+function addCustomPropertyGetter(type, name) {
+  Object.defineProperty(GetIntrinsic(`%Temporal.${type}.prototype%`), name, {
+    get() {
+      return this.calendar[name](this);
+    },
+    configurable: true
+  });
+}
+
 // Implementation details for Gregorian calendar
 const gre = {
   isoYear(year, era) {
@@ -317,6 +318,9 @@ const gre = {
 class Gregorian extends ISO8601Calendar {
   constructor() {
     super('gregory');
+    addCustomPropertyGetter('Date', 'era');
+    addCustomPropertyGetter('DateTime', 'era');
+    addCustomPropertyGetter('YearMonth', 'era');
   }
 
   era(date) {
@@ -414,6 +418,9 @@ const jpn = {
 class Japanese extends ISO8601Calendar {
   constructor() {
     super('japanese');
+    addCustomPropertyGetter('Date', 'era');
+    addCustomPropertyGetter('DateTime', 'era');
+    addCustomPropertyGetter('YearMonth', 'era');
   }
 
   era(date) {
