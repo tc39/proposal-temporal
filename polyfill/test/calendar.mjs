@@ -90,6 +90,7 @@ describe('Calendar', () => {
       equal(typeof Calendar.from, 'function');
     });
   });
+  const iso = Calendar.from('iso8601');
   describe('Calendar.from()', () => {
     describe('from identifier', () => {
       test('iso8601');
@@ -147,6 +148,205 @@ describe('Calendar', () => {
         it(`Calendar.from(${isoString}) is a calendar`, () => assert(calendar instanceof Calendar));
         it(`Calendar.from(${isoString}) has ID ${id}`, () => equal(calendar.id, id));
       }
+    });
+  });
+  describe('Calendar.year()', () => {
+    const res = 1994;
+    it('accepts Date', () => equal(iso.year(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.year(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.year(Temporal.YearMonth.from('1994-11')), res));
+    it('casts argument', () => {
+      equal(iso.year({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.year('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.year({ month: 5 }), TypeError);
+    });
+  });
+  describe('Calendar.month()', () => {
+    const res = 11;
+    it('accepts Date', () => equal(iso.month(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.month(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.month(Temporal.YearMonth.from('1994-11')), res));
+    it('accepts MonthDay', () => equal(iso.month(Temporal.MonthDay.from('11-05')), res));
+    it('casts argument', () => {
+      equal(iso.month({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.month('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.month({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.day()', () => {
+    const res = 5;
+    it('accepts Date', () => equal(iso.day(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.day(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts MonthDay', () => equal(iso.day(Temporal.MonthDay.from('11-05')), res));
+    it('casts argument', () => {
+      equal(iso.day({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.day('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.day({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.dayOfWeek()', () => {
+    const res = 5;
+    it('accepts Date', () => equal(iso.dayOfWeek(Temporal.Date.from('2020-10-23')), res));
+    it('accepts DateTime', () => equal(iso.dayOfWeek(Temporal.DateTime.from('2020-10-23T08:15:30')), res));
+    it('casts argument', () => {
+      equal(iso.dayOfWeek({ year: 2020, month: 10, day: 23 }), res);
+      equal(iso.dayOfWeek('2020-10-23'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.dayOfWeek({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.dayOfYear()', () => {
+    const res = 32;
+    it('accepts Date', () => equal(iso.dayOfYear(Temporal.Date.from('1994-02-01')), res));
+    it('accepts DateTime', () => equal(iso.dayOfYear(Temporal.DateTime.from('1994-02-01T08:15:30')), res));
+    it('casts argument', () => {
+      equal(iso.dayOfYear({ year: 1994, month: 2, day: 1 }), res);
+      equal(iso.dayOfYear('1994-02-01'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.dayOfYear({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.weekOfYear()', () => {
+    const res = 44;
+    it('accepts Date', () => equal(iso.weekOfYear(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.weekOfYear(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('casts argument', () => {
+      equal(iso.weekOfYear({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.weekOfYear('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.weekOfYear({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.daysInWeek()', () => {
+    const res = 7;
+    it('accepts Date', () => equal(iso.daysInWeek(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.daysInWeek(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('casts argument', () => {
+      equal(iso.daysInWeek({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.daysInWeek('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.daysInWeek({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.daysInMonth()', () => {
+    const res = 30;
+    it('accepts Date', () => equal(iso.daysInMonth(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.daysInMonth(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.daysInMonth(Temporal.YearMonth.from('1994-11')), res));
+    it('casts argument', () => {
+      equal(iso.daysInMonth({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.daysInMonth('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.daysInMonth({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.daysInYear()', () => {
+    const res = 365;
+    it('accepts Date', () => equal(iso.daysInYear(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.daysInYear(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.daysInYear(Temporal.YearMonth.from('1994-11')), res));
+    it('casts argument', () => {
+      equal(iso.daysInYear({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.daysInYear('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.daysInYear({ month: 11 }), TypeError);
+    });
+  });
+  describe('Calendar.monthsInYear()', () => {
+    const res = 12;
+    it('accepts Date', () => equal(iso.monthsInYear(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.monthsInYear(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.monthsInYear(Temporal.YearMonth.from('1994-11')), res));
+    it('casts argument', () => {
+      equal(iso.monthsInYear({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.monthsInYear('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.monthsInYear({ month: 11 }), TypeError);
+    });
+  });
+  describe('Calendar.inLeapYear()', () => {
+    const res = false;
+    it('accepts Date', () => equal(iso.inLeapYear(Temporal.Date.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.inLeapYear(Temporal.DateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.inLeapYear(Temporal.YearMonth.from('1994-11')), res));
+    it('casts argument', () => {
+      equal(iso.inLeapYear({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.inLeapYear('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.inLeapYear({ month: 11 }), TypeError);
+    });
+  });
+  describe('Calendar.dateAdd()', () => {
+    const date = Temporal.Date.from('1994-11-05');
+    const duration = Temporal.Duration.from({ months: 1, weeks: 1 });
+    it('casts date argument', () => {
+      equal(`${iso.dateAdd(Temporal.DateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.Date)}`, '1994-12-12');
+      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.Date)}`, '1994-12-12');
+      equal(`${iso.dateAdd('1994-11-05', duration, {}, Temporal.Date)}`, '1994-12-12');
+    });
+    it('date object must contain at least the required properties', () => {
+      throws(() => iso.dateAdd({ month: 11 }, duration, {}, Temporal.Date), TypeError);
+    });
+    it('casts duration argument', () => {
+      equal(`${iso.dateAdd(date, { months: 1, weeks: 1 }, {}, Temporal.Date)}`, '1994-12-12');
+      equal(`${iso.dateAdd(date, 'P1M1W', {}, Temporal.Date)}`, '1994-12-12');
+    });
+    it('duration object must contain at least one correctly-spelled property', () => {
+      throws(() => iso.dateAdd(date, { month: 1 }, {}, Temporal.Date), TypeError);
+    });
+  });
+  describe('Calendar.dateSubtract()', () => {
+    const date = Temporal.Date.from('1994-11-05');
+    const duration = Temporal.Duration.from({ months: 1, weeks: 1 });
+    it('casts date argument', () => {
+      equal(
+        `${iso.dateSubtract(Temporal.DateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.Date)}`,
+        '1994-09-29'
+      );
+      equal(`${iso.dateSubtract({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.Date)}`, '1994-09-29');
+      equal(`${iso.dateSubtract('1994-11-05', duration, {}, Temporal.Date)}`, '1994-09-29');
+    });
+    it('date object must contain at least the required properties', () => {
+      throws(() => iso.dateSubtract({ month: 11 }, duration, {}, Temporal.Date), TypeError);
+    });
+    it('casts duration argument', () => {
+      equal(`${iso.dateSubtract(date, { months: 1, weeks: 1 }, {}, Temporal.Date)}`, '1994-09-29');
+      equal(`${iso.dateSubtract(date, 'P1M1W', {}, Temporal.Date)}`, '1994-09-29');
+    });
+    it('duration object must contain at least one correctly-spelled property', () => {
+      throws(() => iso.dateSubtract(date, { month: 1 }, {}, Temporal.Date), TypeError);
+    });
+  });
+  describe('Calendar.dateDifference()', () => {
+    const date1 = Temporal.Date.from('1999-09-03');
+    const date2 = Temporal.Date.from('2000-01-01');
+    it('casts first argument', () => {
+      equal(`${iso.dateDifference(Temporal.DateTime.from('1999-09-03T08:15:30'), date2, {})}`, 'P120D');
+      equal(`${iso.dateDifference({ year: 1999, month: 9, day: 3 }, date2, {})}`, 'P120D');
+      equal(`${iso.dateDifference('1999-09-03', date2, {})}`, 'P120D');
+    });
+    it('casts second argument', () => {
+      equal(`${iso.dateDifference(date1, Temporal.DateTime.from('2000-01-01T08:15:30'), {})}`, 'P120D');
+      equal(`${iso.dateDifference(date1, { year: 2000, month: 1, day: 1 }, {})}`, 'P120D');
+      equal(`${iso.dateDifference(date1, '2000-01-01', {})}`, 'P120D');
+    });
+    it('objects must contain at least the required properties', () => {
+      throws(() => iso.dateDifference({ month: 11 }, date2, {}), TypeError);
+      throws(() => iso.dateDifference(date1, { month: 11 }, {}), TypeError);
     });
   });
 });

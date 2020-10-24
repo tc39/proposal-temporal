@@ -127,40 +127,42 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 
 ## Methods
 
-### calendar.**year**(_date_: Temporal.Date) : number
+### calendar.**year**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : number
 
-### calendar.**month**(_date_: Temporal.Date) : number
+### calendar.**month**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | Temporal.MonthDay | object | string) : number
 
-### calendar.**day**(_date_: Temporal.Date) : number
+### calendar.**day**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.MonthDay | object | string) : number
 
-### calendar.**era**(_date_: Temporal.Date) : unknown
+### calendar.**era**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : string | undefined
 
-### calendar.**dayOfWeek**(_date_: Temporal.Date): number
+### calendar.**dayOfWeek**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
-### calendar.**dayOfYear**(_date_: Temporal.Date): number
+### calendar.**dayOfYear**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
-### calendar.**weekOfYear**(_date_: Temporal.Date): number
+### calendar.**weekOfYear**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
-### calendar.**daysInWeek**(_date_: Temporal.Date): number
+### calendar.**daysInWeek**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
-### calendar.**daysInMonth**(_date_: Temporal.Date): number
+### calendar.**daysInMonth**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number
 
-### calendar.**daysInYear**(_date_: Temporal.Date): number
+### calendar.**daysInYear**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number
 
-### calendar.**monthsInYear**(_date_: Temporal.Date): number
+### calendar.**monthsInYear**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number
 
-### calendar.**inLeapYear**(_date_: Temporal.Date): boolean
+### calendar.**inLeapYear**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): boolean
 
 The above methods are all similar.
 They provide a way to query properties of a particular date in the calendar's date reckoning.
 
 **Parameters:**
-- `date` (`Temporal.Date`): A date.
+- `date` (`Temporal.Date`, or value convertible to one): A date.
 
 **Returns:** some piece of data (year, month, day, etc., depending on the method) associated with `date`, in `calendar`'s calendar system.
 
+If `date` is not one of the appropriate Temporal objects, then it will be converted to a `Temporal.Date` as if it were passed to `Temporal.Date.from()`.
+
 None of the above methods need to be called directly except in specialized code.
-They are called indirectly when reading the various properties of `Temporal.DateTime`, `Temporal.Date`, or `Temporal.YearMonth`.
+They are called indirectly when reading the various properties of `Temporal.ZonedDateTime`, `Temporal.DateTime`, `Temporal.Date`, `Temporal.MonthDay`, or `Temporal.YearMonth`.
 
 For example:
 ```javascript
@@ -218,16 +220,16 @@ date.day         // => 6
 date.toString()  // => 2020-05-29[c=hebrew]
 ```
 
-### calendar.**dateAdd**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**dateAdd**(_date_: Temporal.Date | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.Date
 
-### calendar.**dateSubtract**(_date_: Temporal.Date, _duration_: Temporal.Duration, _options_: object, _constructor_: function) : Temporal.Date
+### calendar.**dateSubtract**(_date_: Temporal.Date | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.Date
 
 The above two methods are similar.
 They provide a way to do date arithmetic in the calendar's date reckoning.
 
 **Parameters:**
-- `date` (`Temporal.Date`): A date.
-- `duration` (`Temporal.Duration`): A duration to add or subtract from `date`.
+- `date` (`Temporal.Date`, or value convertible to one): A date.
+- `duration` (`Temporal.Duration`, or value convertible to one): A duration to add or subtract from `date`.
 - `options` (object): An object with properties representing options for performing the addition or subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values in the result of the addition or subtraction.
@@ -237,6 +239,8 @@ They provide a way to do date arithmetic in the calendar's date reckoning.
   This is used when subclassing Temporal objects.
 
 **Returns:** a new object of the type of `constructor`.
+
+If `date` is not a `Temporal.Date` object, or `duration` not a `Temporal.Duration` object, then they will be converted to one as if they were passed to `Temporal.Date.from()` or `Temporal.Duration.from()`, respectively.
 
 Neither of the above methods need to be called directly except in specialized code.
 They are called indirectly when using the `add()` and `subtract()` methods, respectively, of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
@@ -265,11 +269,11 @@ date.day         // => 7
 date.toString()  // => 2020-06-28[c=islamic]
 ```
 
-### calendar.**dateDifference**(_smaller_: Temporal.Date, _larger_: Temporal.Date, _options_: object) : Temporal.Duration
+### calendar.**dateDifference**(_smaller_: Temporal.Date | object | string, _larger_: Temporal.Date | object | string, _options_: object) : Temporal.Duration
 
 **Parameters:**
-- `smaller` (`Temporal.Date`): A date.
-- `larger` (`Temporal.Date`): A date, which must be later than `smaller`.
+- `smaller` (`Temporal.Date`, or value convertible to one): A date.
+- `larger` (`Temporal.Date`, or value convertible to one): A date, which must be later than `smaller`.
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -277,6 +281,8 @@ date.toString()  // => 2020-06-28[c=islamic]
     The default is `'auto'`.
 
 **Returns:** a `Temporal.Duration` representing the difference between `larger` and `smaller`.
+
+If either of `smaller` or `larger` are not `Temporal.Date` objects, then they will be converted to one as if they were passed to `Temporal.Date.from()`.
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `since()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.

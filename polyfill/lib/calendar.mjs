@@ -3,7 +3,7 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import * as REGEX from './regex.mjs';
-import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlot, SetSlot } from './slots.mjs';
 
 const ID_REGEX = new RegExp(`^${REGEX.calendarID.source}$`);
 
@@ -176,6 +176,8 @@ class ISO8601Calendar extends Calendar {
   }
   dateAdd(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days } = duration;
@@ -193,6 +195,8 @@ class ISO8601Calendar extends Calendar {
   }
   dateSubtract(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days } = duration;
@@ -210,6 +214,8 @@ class ISO8601Calendar extends Calendar {
   }
   dateDifference(one, two, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    one = ES.ToTemporalDate(one, GetIntrinsic('%Temporal.Date%'));
+    two = ES.ToTemporalDate(two, GetIntrinsic('%Temporal.Date%'));
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
       'hours',
@@ -233,50 +239,61 @@ class ISO8601Calendar extends Calendar {
   }
   year(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return GetSlot(date, ISO_YEAR);
   }
   month(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return GetSlot(date, ISO_MONTH);
   }
   day(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return GetSlot(date, ISO_DAY);
   }
   era(date) {
-    void date;
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return undefined;
   }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return ES.DayOfWeek(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   }
   dayOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   }
   weekOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   }
   daysInWeek(date) {
-    void date;
+    ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return 7;
   }
   daysInMonth(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH)) {
+      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    }
     return ES.DaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
   }
   daysInYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
   }
   monthsInYear(date) {
-    void date;
+    if (!HasSlot(date, ISO_YEAR)) ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return 12;
   }
   inLeapYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return ES.LeapYear(GetSlot(date, ISO_YEAR));
   }
 }
@@ -303,9 +320,11 @@ class Gregorian extends ISO8601Calendar {
   }
 
   era(date) {
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
   }
   year(date) {
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     const isoYear = GetSlot(date, ISO_YEAR);
     return isoYear < 1 ? -isoYear + 1 : isoYear;
   }
@@ -398,9 +417,15 @@ class Japanese extends ISO8601Calendar {
   }
 
   era(date) {
+    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
+      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    }
     return jpn.eraNames[jpn.findEra(date)];
   }
   year(date) {
+    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
+      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    }
     const eraIdx = jpn.findEra(date);
     return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
   }
