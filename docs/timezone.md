@@ -338,7 +338,7 @@ Example usage:
 tz = Temporal.now.timeZone();
 now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
-duration = nextTransition.difference(now);
+duration = nextTransition.since(now);
 duration.toLocaleString(); // output will vary
 ```
 
@@ -367,7 +367,7 @@ Example usage:
 tz = Temporal.now.timeZone();
 now = Temporal.now.instant();
 previousTransition = tz.getPreviousTransition(now);
-duration = now.difference(previousTransition);
+duration = now.since(previousTransition);
 duration.toLocaleString(); // output will vary
 ```
 

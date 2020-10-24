@@ -344,7 +344,7 @@ Calendar-sensitive values are used in most places, including:
 
 - Accessing properties like `.year` or `.month`
 - Setting properties using `.from()` or `.with()`.
-- Creating `Temporal.Duration` instances with `.difference()`
+- Creating `Temporal.Duration` instances with `.since()`
 - Interpreting `Temporal.Duration` instances with `.add()` or `.subtract()`
 - Localized formatting with `toLocaleString()`, although if the calendar is ISO then the calendar can be overridden via an option
 - All other places where date/time values are read or written, except as noted below
@@ -774,14 +774,14 @@ zdt = Temporal.ZonedDateTime.from('2020-03-08T00:00-08:00[America/Los_Angeles]')
 laterDay = zdt.add({ days: 1 });
   // => 2020-03-09T00:00-07:00[America/Los_Angeles];
   // Note that the new offset is different, indicating the result is adjusted for DST.
-laterDay.difference(zdt, { largestUnit: 'hours' }).hours;
+laterDay.since(zdt, { largestUnit: 'hours' }).hours;
   // => 23, because one clock hour lost to DST
 
 laterHours = zdt.add({ hours: 24 });
   // => 2020-03-09T01:00-07:00[America/Los_Angeles]
   // Adding time units doesn't adjust for DST. Result is 1:00AM: 24 real-world
   // hours later because a clock hour was skipped by DST.
-laterHours.difference(zdt, { largestUnit: 'hours' }).hours; // => 24
+laterHours.since(zdt, { largestUnit: 'hours' }).hours; // => 24
 ```
 <!-- prettier-ignore-end -->
 
@@ -838,22 +838,22 @@ zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]')
 earlierDay = zdt.subtract({ days: 1 });
   // => 2020-03-08T00:00-08:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
-earlierDay.difference(zdt, { largestUnit: 'hours' }).hours;
+earlierDay.since(zdt, { largestUnit: 'hours' }).hours;
   // => -23, because one clock hour lost to DST
 
 earlierHours = zdt.subtract({ hours: 24 });
   // => 2020-03-07T23:00-08:00[America/Los_Angeles]
   // Subtracting time units doesn't adjust for DST. Result is 11:00PM: 24 real-world
   // hours earlier because a clock hour was skipped by DST.
-earlierHours.difference(zdt, { largestUnit: 'hours' }).hours; // => -24
+earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**difference**(_other_: Temporal.ZonedDateTime, _options_?: object) : Temporal.Duration
+### zonedDateTime.**since**(_other_: Temporal.ZonedDateTime, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.LocalZonedDateTime`): Another date/time with which to compute the difference.
+- `other` (`Temporal.LocalZonedDateTime`): Another date/time since when to compute the difference.
 - `options` (optional object): An object which may have some or all of the following properties:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
@@ -867,7 +867,7 @@ earlierHours.difference(zdt, { largestUnit: 'hours' }).hours; // => -24
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `zonedDateTime` and `other`.
+**Returns:** a `Temporal.Duration` representing the elapsed time before `zonedDateTime` and since `other`.
 
 This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `zonedDateTime` then the resulting duration will be negative.
@@ -884,7 +884,7 @@ Because rounding to an increment expressed in days or larger units requires a re
 The default is to do no rounding.
 
 The duration returned is a "hybrid" duration.
-This means that the duration's date portion represents full calendar days like `DateTime.prototype.difference` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.difference` would return.
+This means that the duration's date portion represents full calendar days like `Temporal.DateTime.prototype.since()` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.since()` would return.
 This "hybrid duration" approach automatically adjusts for DST and matches widely-adopted industry standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 It also matches the behavior of popular JavaScript libraries like moment.js and date-fns.
 
@@ -895,10 +895,10 @@ Examples:
 - Difference between 1:45AM on the day before DST starts and the "second" 1:15AM on the day DST ends => `PT24H30M`
   (because it hasn't been a full calendar day even though it's been 24.5 real-world hours).
 
-If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.difference` was used.
-If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.difference` was used.
-To calculate the difference between calendar dates only, use `.toDate().difference(other.toDate())`.
-To calculate the difference between clock times only, use `.toTime().difference(other.toTime())`.
+If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.since()` was used.
+If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.since()` was used.
+To calculate the difference between calendar dates only, use `.toDate().since(other.toDate())`.
+To calculate the difference between clock times only, use `.toTime().since(other.toTime())`.
 
 If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
 Therefore, a `RangeError` will be thrown if `largestUnit` is `'days'` or larger and the two instances' time zones have different `id` fields.
@@ -918,28 +918,28 @@ Usage example:
 ```javascript
 zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+05:30[Asia/Kolkata]');
 zdt2 = Temporal.ZonedDateTime.from('2019-01-31T15:30+05:30[Asia/Kolkata]');
-zdt2.difference(zdt1);
+zdt2.since(zdt1);
   // =>      PT202956H5M29.999996500S
-zdt2.difference(zdt1, { largestUnit: 'years' });
+zdt2.since(zdt1, { largestUnit: 'years' });
   // =>  P23Y1M24DT12H5M29.999996500S
-zdt1.difference(zdt2, { largestUnit: 'years' });
+zdt1.since(zdt2, { largestUnit: 'years' });
   // => -P23Y1M24DT12H5M29.999996500S
-zdt2.difference(zdt1, { largestUnit: 'nanoseconds' });
+zdt2.since(zdt1, { largestUnit: 'nanoseconds' });
   // =>       PT730641929.999996544S (precision lost)
 
 // Rounding, for example if you don't care about sub-seconds
-zdt2.difference(zdt1, { smallestUnit: 'seconds' });
+zdt2.since(zdt1, { smallestUnit: 'seconds' });
   // => PT202956H5M30S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
   Temporal.ZonedDateTime.from({ year: 2020, month, day: 1, timeZone: 'Asia/Seoul' })
 );
-feb1.difference(jan1, { largestUnit: 'days' }); // => P31D
-feb1.difference(jan1, { largestUnit: 'months' }); // => P1M
-mar1.difference(feb1, { largestUnit: 'days' }); // => P29D
-mar1.difference(feb1, { largestUnit: 'months' }); // => P1M
-mar1.difference(jan1, { largestUnit: 'days' }); // => P60D
+feb1.since(jan1, { largestUnit: 'days' }); // => P31D
+feb1.since(jan1, { largestUnit: 'months' }); // => P1M
+mar1.since(feb1, { largestUnit: 'days' }); // => P29D
+mar1.since(feb1, { largestUnit: 'months' }); // => P1M
+mar1.since(jan1, { largestUnit: 'days' }); // => P60D
 ```
 <!-- prettier-ignore-end -->
 

@@ -119,10 +119,7 @@ export namespace Temporal {
     roundingMode?: RoundingMode;
   };
 
-  /**
-   * Options to control the result of `difference()` methods in `Temporal`
-   * types.
-   * */
+  /** Options to control the result of `since()` methods in `Temporal` types. */
   export interface DifferenceOptions<T extends string> {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
@@ -131,7 +128,7 @@ export namespace Temporal {
      * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
      * `'nanoseconds'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
-     * `hours` is not accepted by `Date.prototype.difference()`.
+     * `hours` is not accepted by `Date.prototype.since()`.
      *
      * The default is always `'auto'`, though the meaning of this depends on the
      * type being used.
@@ -141,7 +138,7 @@ export namespace Temporal {
     /**
      * The unit to round to. For example, to round to the nearest minute, use
      * `smallestUnit: 'minute'`. This option is required for `round()` and
-     * optional for `difference()`.
+     * optional for `since()`.
      */
     smallestUnit?: T;
 
@@ -389,7 +386,7 @@ export namespace Temporal {
     equals(other: Temporal.Instant | string): boolean;
     add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
-    difference(
+    since(
       other: Temporal.Instant | string,
       options?: DifferenceOptions<
         | 'hours'
@@ -610,7 +607,7 @@ export namespace Temporal {
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
-    difference(
+    since(
       other: Temporal.Date | DateLike | string,
       options?: DifferenceOptions<
         | 'years'
@@ -725,7 +722,7 @@ export namespace Temporal {
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
-    difference(
+    since(
       other: Temporal.DateTime | DateTimeLike | string,
       options?: DifferenceOptions<
         | 'years'
@@ -874,7 +871,7 @@ export namespace Temporal {
       durationLike: Temporal.Time | Temporal.Duration | DurationLike | string,
       options?: ArithmeticOptions
     ): Temporal.Time;
-    difference(
+    since(
       other: Temporal.Time | TimeLike | string,
       options?: DifferenceOptions<
         | 'hours'
@@ -999,7 +996,7 @@ export namespace Temporal {
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
-    difference(
+    since(
       other: Temporal.YearMonth | YearMonthLike | string,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
     ): Temporal.Duration;

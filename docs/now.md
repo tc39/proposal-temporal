@@ -74,7 +74,7 @@ function timeit(func) {
     return func();
   } finally {
     end = Temporal.now.instant();
-    console.log(`The function took ${end.difference(start)}`);
+    console.log(`The function took ${end.since(start)}`);
   }
 }
 timeit(() => JSON.parse(someData));

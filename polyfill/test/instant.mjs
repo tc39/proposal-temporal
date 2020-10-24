@@ -30,6 +30,9 @@ describe('Instant', () => {
       it('Instant.prototype.equals is a Function', () => {
         equal(typeof Instant.prototype.equals, 'function');
       });
+      it('Instant.prototype.since is a Function', () => {
+        equal(typeof Instant.prototype.since, 'function');
+      });
       it('Instant.prototype.round is a Function', () => {
         equal(typeof Instant.prototype.round, 'function');
       });
@@ -583,68 +586,68 @@ describe('Instant', () => {
     it('<=', () => throws(() => i1 <= i2));
     it('>=', () => throws(() => i1 >= i2));
   });
-  describe('Instant.difference works', () => {
+  describe('Instant.since() works', () => {
     const earlier = Instant.from('1976-11-18T15:23:30.123456789Z');
     const later = Instant.from('2019-10-29T10:46:38.271986102Z');
-    const diff = later.difference(earlier);
-    it(`(${earlier}).difference(${later}) == (${later}).difference(${earlier}).negated()`, () =>
-      equal(`${earlier.difference(later)}`, `${diff.negated()}`));
+    const diff = later.since(earlier);
+    it(`(${earlier}).since(${later}) == (${later}).since(${earlier}).negated()`, () =>
+      equal(`${earlier.since(later)}`, `${diff.negated()}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
     it('casts argument from string', () => {
-      equal(`${later.difference(earlier.toString())}`, `${diff}`);
+      equal(`${later.since(earlier.toString())}`, `${diff}`);
     });
     it('only casts from a string', () => {
-      throws(() => later.difference(earlier.epochNanoseconds), RangeError);
-      throws(() => earlier.difference({}), RangeError);
+      throws(() => later.since(earlier.epochNanoseconds), RangeError);
+      throws(() => earlier.since({}), RangeError);
     });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');
     it('defaults to returning seconds', () => {
-      equal(`${feb21.difference(feb20)}`, 'PT31622400S');
-      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'PT31622400S');
-      equal(`${feb21.difference(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
-      equal(`${Instant.from('2021-02-01T00:00:00.000000001Z').difference(feb20)}`, 'PT31622400.000000001S');
-      equal(`${feb21.difference(Instant.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
+      equal(`${feb21.since(feb20)}`, 'PT31622400S');
+      equal(`${feb21.since(feb20, { largestUnit: 'auto' })}`, 'PT31622400S');
+      equal(`${feb21.since(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
+      equal(`${Instant.from('2021-02-01T00:00:00.000000001Z').since(feb20)}`, 'PT31622400.000000001S');
+      equal(`${feb21.since(Instant.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
     });
     it('can return minutes and hours', () => {
-      equal(`${feb21.difference(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
-      equal(`${feb21.difference(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
+      equal(`${feb21.since(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
+      equal(`${feb21.since(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
     });
     it('can return subseconds', () => {
       const later = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
-      const msDiff = later.difference(feb20, { largestUnit: 'milliseconds' });
+      const msDiff = later.since(feb20, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
       equal(msDiff.milliseconds, 86400250);
       equal(msDiff.microseconds, 250);
       equal(msDiff.nanoseconds, 250);
 
-      const µsDiff = later.difference(feb20, { largestUnit: 'microseconds' });
+      const µsDiff = later.since(feb20, { largestUnit: 'microseconds' });
       equal(µsDiff.milliseconds, 0);
       equal(µsDiff.microseconds, 86400250250);
       equal(µsDiff.nanoseconds, 250);
 
-      const nsDiff = later.difference(feb20, { largestUnit: 'nanoseconds' });
+      const nsDiff = later.since(feb20, { largestUnit: 'nanoseconds' });
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
     it('cannot return days, weeks, months, and years', () => {
-      throws(() => feb21.difference(feb20, { largestUnit: 'days' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'weeks' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'months' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'years' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'days' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'weeks' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'months' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'years' }), RangeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb21.difference(feb20, badOptions), TypeError)
+        throws(() => feb21.since(feb20, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'PT31622400S'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'PT31622400S'));
     });
     it('throws on disallowed or invalid smallestUnit', () => {
       ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
         (smallestUnit) => {
-          throws(() => later.difference(earlier, { smallestUnit }), RangeError);
+          throws(() => later.since(earlier, { smallestUnit }), RangeError);
         }
       );
     });
@@ -654,16 +657,16 @@ describe('Instant', () => {
         for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
           const largestUnit = units[largestIdx];
           const smallestUnit = units[smallestIdx];
-          throws(() => later.difference(earlier, { largestUnit, smallestUnit }), RangeError);
+          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
         }
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'hours' })}`, 'PT376435H');
-      equal(`${later.difference(earlier, { smallestUnit: 'minutes' })}`, 'PT22586123M');
+      equal(`${later.since(earlier, { smallestUnit: 'hours' })}`, 'PT376435H');
+      equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'PT22586123M');
     });
     it('throws on invalid roundingMode', () => {
-      throws(() => later.difference(earlier, { roundingMode: 'cile' }), RangeError);
+      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
     });
     const largestUnit = 'hours';
     const incrementOneNearest = [
@@ -677,8 +680,8 @@ describe('Instant', () => {
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
       const roundingMode = 'nearest';
       it(`rounds to nearest ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
-        equal(`${earlier.difference(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
+        equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
     const incrementOneCeil = [
@@ -692,8 +695,8 @@ describe('Instant', () => {
     incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
       const roundingMode = 'ceil';
       it(`rounds up to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
-        equal(`${earlier.difference(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
+        equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
     const incrementOneFloor = [
@@ -707,8 +710,8 @@ describe('Instant', () => {
     incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
       const roundingMode = 'floor';
       it(`rounds down to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
-        equal(`${earlier.difference(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
+        equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
     const incrementOneTrunc = [
@@ -722,58 +725,55 @@ describe('Instant', () => {
     incrementOneTrunc.forEach(([smallestUnit, expected]) => {
       const roundingMode = 'trunc';
       it(`truncates to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
-        equal(`${earlier.difference(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
+        equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
     it('nearest is the default', () => {
-      equal(`${later.difference(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT376435H23M8.149S');
-      equal(`${later.difference(earlier, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT376435H23M8.148529S');
+      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT376435H23M8.149S');
+      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT376435H23M8.148529S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${later.difference(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT376434H');
+      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT376434H');
     });
     it('rounds to an increment of minutes', () => {
-      equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 30 })}`,
-        'PT376435H30M'
-      );
+      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT376435H30M');
     });
     it('rounds to an increment of seconds', () => {
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 15 })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 15 })}`,
         'PT376435H23M15S'
       );
     });
     it('rounds to an increment of milliseconds', () => {
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 10 })}`,
         'PT376435H23M8.150S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 10 })}`,
         'PT376435H23M8.148530S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
         'PT376435H23M8.148529310S'
       );
     });
     it('valid hour increments divide into 24', () => {
       [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
         const options = { largestUnit, smallestUnit: 'hours', roundingIncrement };
-        assert(later.difference(earlier, options) instanceof Temporal.Duration);
+        assert(later.since(earlier, options) instanceof Temporal.Duration);
       });
     });
     ['minutes', 'seconds'].forEach((smallestUnit) => {
       it(`valid ${smallestUnit} increments divide into 60`, () => {
         [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
-          assert(later.difference(earlier, options) instanceof Temporal.Duration);
+          assert(later.since(earlier, options) instanceof Temporal.Duration);
         });
       });
     });
@@ -781,110 +781,89 @@ describe('Instant', () => {
       it(`valid ${smallestUnit} increments divide into 1000`, () => {
         [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
-          assert(later.difference(earlier, options) instanceof Temporal.Duration);
+          assert(later.since(earlier, options) instanceof Temporal.Duration);
         });
       });
     });
     it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 11 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 29 }),
         RangeError
       );
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 29 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 29 }),
         RangeError
       );
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 29 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 29 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 29 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 29 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 29 }),
         RangeError
       );
     });
     it('throws on increments that are equal to the next highest', () => {
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+      throws(() => later.since(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 24 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 1000 }),
         RangeError
       );
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 60 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 1000 }),
         RangeError
       );
       throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 60 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 1000 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 1000 }),
-        RangeError
-      );
-      throws(
-        () => later.difference(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 1000 }),
+        () => later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 1000 }),
         RangeError
       );
     });
     it('accepts singular units', () => {
+      equal(`${later.since(earlier, { largestUnit: 'hour' })}`, `${later.since(earlier, { largestUnit: 'hours' })}`);
       equal(
-        `${later.difference(earlier, { largestUnit: 'hour' })}`,
-        `${later.difference(earlier, { largestUnit: 'hours' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'hour' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'hours' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'hour' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'hours' })}`
+        `${later.since(earlier, { largestUnit: 'minute' })}`,
+        `${later.since(earlier, { largestUnit: 'minutes' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit: 'minute' })}`,
-        `${later.difference(earlier, { largestUnit: 'minutes' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'minute' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'minutes' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'minute' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'minutes' })}`
+        `${later.since(earlier, { largestUnit: 'second' })}`,
+        `${later.since(earlier, { largestUnit: 'seconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit: 'second' })}`,
-        `${later.difference(earlier, { largestUnit: 'seconds' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'second' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'seconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'second' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'seconds' })}`
+        `${later.since(earlier, { largestUnit: 'millisecond' })}`,
+        `${later.since(earlier, { largestUnit: 'milliseconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit: 'millisecond' })}`,
-        `${later.difference(earlier, { largestUnit: 'milliseconds' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'millisecond' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'millisecond' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`
+        `${later.since(earlier, { largestUnit: 'microsecond' })}`,
+        `${later.since(earlier, { largestUnit: 'microseconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit: 'microsecond' })}`,
-        `${later.difference(earlier, { largestUnit: 'microseconds' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'microsecond' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'microseconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'microsecond' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'microseconds' })}`
+        `${later.since(earlier, { largestUnit: 'nanosecond' })}`,
+        `${later.since(earlier, { largestUnit: 'nanoseconds' })}`
       );
       equal(
-        `${later.difference(earlier, { largestUnit: 'nanosecond' })}`,
-        `${later.difference(earlier, { largestUnit: 'nanoseconds' })}`
-      );
-      equal(
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'nanosecond' })}`,
-        `${later.difference(earlier, { largestUnit, smallestUnit: 'nanoseconds' })}`
+        `${later.since(earlier, { largestUnit, smallestUnit: 'nanosecond' })}`,
+        `${later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds' })}`
       );
     });
   });

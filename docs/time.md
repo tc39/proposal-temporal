@@ -262,11 +262,11 @@ time = Temporal.Time.from('19:39:09.068346205');
 time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 ```
 
-### time.**difference**(_other_: Temporal.Time | object | string, _options_?: object) : Temporal.Duration
+### time.**since**(_other_: Temporal.Time | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Time` or value convertible to one): Another time with which to compute the difference.
+- `other` (`Temporal.Time` or value convertible to one): Another time since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -281,7 +281,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `time` and `other`.
+**Returns:** a `Temporal.Duration` representing the elapsed time before `time` and since `other`.
 
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `time` then the resulting duration will be negative.
@@ -303,11 +303,11 @@ Usage example:
 <!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
-time.difference(Temporal.Time.from('19:39:09.068346205')); // => PT34M11.903051894S
-time.difference(Temporal.Time.from('22:39:09.068346205')); // => -PT2H25M49.903051894S
+time.since(Temporal.Time.from('19:39:09.068346205')); // => PT34M11.903051894S
+time.since(Temporal.Time.from('22:39:09.068346205')); // => -PT2H25M49.903051894S
 
 // Rounding, for example if you don't care about sub-seconds
-time.difference(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' });
+time.since(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' });
   // => PT34M12S
 ```
 <!-- prettier-ignore-end -->

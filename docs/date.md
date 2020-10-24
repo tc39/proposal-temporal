@@ -433,11 +433,11 @@ date.subtract({ months: 1 }); // => 2019-02-28
 date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### date.**difference**(_other_: Temporal.Date | object | string, _options_?: object) : Temporal.Duration
+### date.**since**(_other_: Temporal.Date | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Date` or value convertible to one): Another date with which to compute the difference.
+- `other` (`Temporal.Date` or value convertible to one): Another date since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -452,7 +452,7 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `date` and `other`.
+**Returns:** a `Temporal.Duration` representing the time elapsed before `date` and since `other`.
 
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `date` then the resulting duration will be negative.
@@ -484,16 +484,16 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2019-01-31');
 other = Temporal.Date.from('2006-08-24');
-date.difference(other);                           // => P4543D
-date.difference(other, { largestUnit: 'years' }); // => P12Y5M7D
-other.difference(date, { largestUnit: 'years' }); // => -P12Y5M7D
+date.since(other);                           // => P4543D
+date.since(other, { largestUnit: 'years' }); // => P12Y5M7D
+other.since(date, { largestUnit: 'years' }); // => -P12Y5M7D
 
 // If you really need to calculate the difference between two Dates in
 // hours, you can eliminate the ambiguity by explicitly choosing the
 // point in time from which you want to reckon the difference. For
 // example, using noon:
 noon = Temporal.Time.from('12:00');
-date.toDateTime(noon).difference(other.toDateTime(noon), { largestUnit: 'hours' });
+date.toDateTime(noon).since(other.toDateTime(noon), { largestUnit: 'hours' });
   // => PT109032H
 ```
 <!-- prettier-ignore-end -->

@@ -279,7 +279,7 @@ date.toString()  // => 2020-06-28[c=islamic]
 **Returns:** a `Temporal.Duration` representing the difference between `larger` and `smaller`.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using the `difference()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+It is called indirectly when using the `since()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
 
 The default `largestUnit` value of `'auto'` is the same as `'days'`.
 
@@ -287,7 +287,7 @@ For example:
 ```javascript
 d1 = Temporal.Date.from('2020-07-29').withCalendar('chinese');
 d2 = Temporal.Date.from('2020-08-29').withCalendar('chinese');
-d2.difference(d1, { largestUnit: 'months' })  // => P1M2D
+d2.since(d1, { largestUnit: 'months' })  // => P1M2D
 
 // same result, but calling the method directly:
 Temporal.Calendar.from('chinese').dateDifference(

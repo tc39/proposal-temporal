@@ -502,11 +502,11 @@ dt.subtract({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
 dt.subtract({ months: 1 }); // => throws
 ```
 
-### datetime.**difference**(_other_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Duration
+### datetime.**since**(_other_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.DateTime` or value convertible to one): Another date/time with which to compute the difference.
+- `other` (`Temporal.DateTime` or value convertible to one): Another date/time since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -521,7 +521,7 @@ dt.subtract({ months: 1 }); // => throws
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `datetime` and `other`.
+**Returns:** a `Temporal.Duration` representing the elapsed time before `datetime` and since `other`.
 
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `datetime` then the resulting duration will be negative.
@@ -555,27 +555,27 @@ Usage example:
 ```javascript
 dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.DateTime.from('2019-01-31T15:30');
-dt2.difference(dt1);
+dt2.since(dt1);
   // =>    P8456DT12H5M29.999996500S
-dt2.difference(dt1, { largestUnit: 'years' });
+dt2.since(dt1, { largestUnit: 'years' });
   // => P23Y1M24DT12H5M29.999996500S
-dt1.difference(dt2, { largestUnit: 'years' });
+dt1.since(dt2, { largestUnit: 'years' });
   // => -P23Y1M24DT12H5M29.999996500S
-dt2.difference(dt1, { largestUnit: 'nanoseconds' });
+dt2.since(dt1, { largestUnit: 'nanoseconds' });
   // =>       PT730641929.999996544S (precision lost)
 
 // Rounding, for example if you don't care about sub-seconds
-dt2.difference(dt1, { smallestUnit: 'seconds' });
+dt2.since(dt1, { smallestUnit: 'seconds' });
   // => P8456DT12H5M30S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
   Temporal.DateTime.from({ year: 2020, month, day: 1 }));
-feb1.difference(jan1);                            // => P31D
-feb1.difference(jan1, { largestUnit: 'months' }); // => P1M
-mar1.difference(feb1);                            // => P29D
-mar1.difference(feb1, { largestUnit: 'months' }); // => P1M
-mar1.difference(jan1);                            // => P121D
+feb1.since(jan1);                            // => P31D
+feb1.since(jan1, { largestUnit: 'months' }); // => P1M
+mar1.since(feb1);                            // => P29D
+mar1.since(feb1, { largestUnit: 'months' }); // => P1M
+mar1.since(jan1);                            // => P121D
 ```
 <!-- prettier-ignore-end -->
 

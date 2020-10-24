@@ -217,7 +217,7 @@ It would in effect render default Temporal.Date (and Temporal.DateTime) with few
 - .day
 - .add()\*
 - .subtract()\*
-- .difference()\*
+- .since()\*
 - .getYearMonth()
 - .getMonthDay()
 - .with()
@@ -616,7 +616,7 @@ Temporal.Date.prototype.add = function(duration, options) {
 	return this.calendar.dateAdd(this, duration, options, constructor);
 }
 
-Temporal.Date.prototype.difference = function(other, options) {
+Temporal.Date.prototype.since = function(other, options) {
 	if (other.calendar !== this.calendar) {
 		// Note: call intrinsic versions of this method
 		other = other.withCalendar(this.calendar);

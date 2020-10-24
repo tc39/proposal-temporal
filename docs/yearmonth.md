@@ -332,11 +332,11 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.subtract({ years: 20, months: 4 }); // => 1999-02
 ```
 
-### yearMonth.**difference**(_other_: Temporal.YearMonth | object | string, _options_?: object) : Temporal.Duration
+### yearMonth.**since**(_other_: Temporal.YearMonth | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.YearMonth` or value convertible to one): Another month with which to compute the difference.
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -351,7 +351,7 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `yearMonth` and `other`.
+**Returns:** a `Temporal.Duration` representing the elapsed time before `yearMonth` and since `other`.
 
 This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `yearMonth` then the resulting duration will be negative.
@@ -379,16 +379,16 @@ Usage example:
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
 other = Temporal.YearMonth.from('2006-08');
-ym.difference(other);                            // => P12Y10M
-ym.difference(other, { largestUnit: 'months' }); // => P154M
-other.difference(ym, { largestUnit: 'months' }); // => -P154M
+ym.since(other);                            // => P12Y10M
+ym.since(other, { largestUnit: 'months' }); // => P154M
+other.since(ym, { largestUnit: 'months' }); // => -P154M
 
 // If you really need to calculate the difference between two YearMonths
 // in days, you can eliminate the ambiguity by explicitly choosing the
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.toDateOnDay(1).difference(other.toDateOnDay(1), { largestUnit: 'days' }); // => P4687D
+ym.toDateOnDay(1).since(other.toDateOnDay(1), { largestUnit: 'days' }); // => P4687D
 ```
 <!-- prettier-ignore-end -->
 

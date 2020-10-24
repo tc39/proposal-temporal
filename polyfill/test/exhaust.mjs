@@ -29,10 +29,10 @@ for (let one = start; Temporal.Date.compare(one, end); one = one.add('P1D')) {
 }
 const ets = Temporal.now.instant();
 console.log(`1..${idx}`);
-console.log(`# Sucess: ${cnt - fail}/${cnt} (${ets.difference(sts)})`);
+console.log(`# Sucess: ${cnt - fail}/${cnt} (${ets.since(sts)})`);
 
 function test(one, two) {
-  const dif = one.difference(two);
+  const dif = one.since(two);
   const add = `${one.add(dif)}` === `${two}`;
   const subtract = `${two.subtract(dif)}` === `${one}`;
   return add && subtract;

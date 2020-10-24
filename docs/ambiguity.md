@@ -239,9 +239,9 @@ earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
   // => 2020-03-08T01:30-08:00[America/Los_Angeles] (1:30 clock time; still in Standard Time)
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-03-08T03:30-07:00[America/Los_Angeles] ('later' is same as 'compatible' for backwards transitions)
-later.toDateTime().difference(earlier.toDateTime());
+later.toDateTime().since(earlier.toDateTime());
   // => PT2H  (2 hour difference in clock time...
-later.difference(earlier);
+later.since(earlier);
   // => PT1H   ... but 1 hour later in real-world time)
 ```
 <!-- prettier-ignore-end -->
@@ -269,10 +269,10 @@ later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-11-01T01:30-08:00[America/Los_Angeles] 
   // Same clock time, but one hour later.
   // -08:00 offset indicates Standard Time.
-later.toDateTime().difference(earlier.toDateTime());
+later.toDateTime().since(earlier.toDateTime());
   // => PT0S  
   // (same clock time...
-later.difference(earlier);
+later.since(earlier);
   // => PT1H   
   // ... but 1 hour later in real-world time)
 ```
