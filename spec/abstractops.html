@@ -146,6 +146,15 @@
 
   <emu-clause id="sec-temporal-totemporalroundingmode" aoid="ToTemporalRoundingMode">
     <h1>ToTemporalRoundingMode ( _normalizedOptions_, _fallback_ )</h1>
+    <p>
+      The abstract operation ToTemporalRoundingMode extracts the value of the property named *"roundingMode"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+      The value _fallback_ is returned if the property is not present.
+    </p>
+    <emu-note type="editor">
+      <p>
+        The rounding modes accepted by this abstract operation (and therefore in the Temporal API) are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </emu-note>
     <emu-alg>
       1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », _fallback_).
     </emu-alg>
@@ -535,6 +544,15 @@
 
   <emu-clause id="sec-temporal-roundnumbertoincrement" aoid="RoundNumberToIncrement">
     <h1>RoundNumberToIncrement ( _x_, _increment_, _roundingMode_ )</h1>
+    <p>
+      The abstract operation RoundNumberToIncrement rounds the mathematical value _x_ to the nearest multiple of the integer _increment_.
+      It rounds up or down according to _roundingMode_.
+    </p>
+    <emu-note type="editor">
+      <p>
+        The rounding modes accepted by this abstract operation are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </emu-note>
     <emu-alg>
       1. Assert: _x_ and _increment_ are mathematical values.
       1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"nearest"*.
