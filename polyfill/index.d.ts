@@ -435,7 +435,6 @@ export namespace Temporal {
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
-    era(date: Temporal.Date): string | undefined;
     dayOfWeek?(date: Temporal.Date): number;
     dayOfYear?(date: Temporal.Date): number;
     weekOfYear?(date: Temporal.Date): number;
@@ -445,12 +444,12 @@ export namespace Temporal {
     monthsInYear?(date: Temporal.Date): number;
     isLeapYear?(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: { era?: string | undefined; year: number; month: number; day: number },
+      fields: { year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: { era?: string | undefined; year: number; month: number },
+      fields: { year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
@@ -503,7 +502,6 @@ export namespace Temporal {
     year(date: Temporal.Date): number;
     month(date: Temporal.Date): number;
     day(date: Temporal.Date): number;
-    era(date: Temporal.Date): string | undefined;
     dayOfWeek(date: Temporal.Date): number;
     dayOfYear(date: Temporal.Date): number;
     weekOfYear(date: Temporal.Date): number;
@@ -513,12 +511,12 @@ export namespace Temporal {
     monthsInYear(date: Temporal.Date): number;
     isLeapYear(date: Temporal.Date): boolean;
     dateFromFields(
-      fields: { era?: string | undefined; year: number; month: number; day: number },
+      fields: { year: number; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     yearMonthFromFields(
-      fields: { era?: string | undefined; year: number; month: number },
+      fields: { year: number; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.YearMonth>
     ): Temporal.YearMonth;
@@ -557,7 +555,6 @@ export namespace Temporal {
   }
 
   export type DateLike = {
-    era?: string | undefined;
     year?: number;
     month?: number;
     day?: number;
@@ -565,7 +562,6 @@ export namespace Temporal {
   };
 
   type DateFields = {
-    era?: string | undefined;
     year: number;
     month: number;
     day: number;
@@ -596,7 +592,6 @@ export namespace Temporal {
     readonly month: number;
     readonly day: number;
     readonly calendar: CalendarProtocol;
-    readonly era: string | undefined;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -633,7 +628,6 @@ export namespace Temporal {
   }
 
   export type DateTimeLike = {
-    era?: string | undefined;
     year?: number;
     month?: number;
     day?: number;
@@ -647,7 +641,6 @@ export namespace Temporal {
   };
 
   type DateTimeFields = {
-    era?: string | undefined;
     year: number;
     month: number;
     day: number;
@@ -711,7 +704,6 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly calendar: CalendarProtocol;
-    readonly era: string | undefined;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -806,7 +798,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.MonthDay | MonthDayLike | string): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
-    toDateInYear(year: number | { era?: string | undefined; year: number }, options?: AssignmentOptions): Temporal.Date;
+    toDateInYear(year: number | { year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -960,14 +952,12 @@ export namespace Temporal {
   }
 
   export type YearMonthLike = {
-    era?: string | undefined;
     year?: number;
     month?: number;
     calendar?: CalendarProtocol | string;
   };
 
   type YearMonthFields = {
-    era?: string | undefined;
     year: number;
     month: number;
     calendar: CalendarProtocol;
@@ -990,7 +980,6 @@ export namespace Temporal {
     readonly year: number;
     readonly month: number;
     readonly calendar: CalendarProtocol;
-    readonly era: string | undefined;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly monthsInYear: number;
