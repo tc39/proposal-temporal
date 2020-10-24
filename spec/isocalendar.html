@@ -125,6 +125,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Set _date_ to ? ToTemporalDate(_date_).
+        1. Set _duration_ to ? ToTemporalDuration(_duration_).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -136,6 +138,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Set _date_ to ? ToTemporalDate(_date_).
+        1. Set _duration_ to ? ToTemporalDuration(_duration_).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -147,6 +151,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
+        1. Set _one_ to ? ToTemporalDate(_one_).
+        1. Set _two_ to ? ToTemporalDate(_two_).
         1. <mark>TODO.</mark>
       </emu-alg>
     </emu-clause>
@@ -158,7 +164,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
@@ -170,7 +177,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
@@ -182,7 +190,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have an [[ISODay]] internal slot, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
@@ -194,7 +203,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Perform ? ToTemporalDate(_dateOrDateTime_).
         1. Return *undefined*.
       </emu-alg>
     </emu-clause>
@@ -206,7 +215,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(! ToDayOfWeek(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
@@ -218,7 +227,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(! ToDayOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
@@ -230,7 +239,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(! ToWeekOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
@@ -242,7 +251,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Perform ? ToTemporalDate(_dateOrDateTime_).
         1. Return *7*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
@@ -254,7 +263,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have [[ISOYear]] and [[ISOMonth]] internal slots, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]])).
       </emu-alg>
     </emu-clause>
@@ -266,7 +276,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(! DaysInYear(_dateOrDateTime_.[[ISOYear]])).
       </emu-alg>
     </emu-clause>
@@ -278,7 +289,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. Perform ? ToTemporalDateTime(_dateOrDateTime_).
         1. Return *12*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
@@ -290,7 +301,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Perform ? RequireOneOfInternalSlots(_dateOrDateTime_, « [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] »).
+        1. If _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
+          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return ! IsLeapYear(_dateOrDateTime_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>

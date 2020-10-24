@@ -41,21 +41,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-requireoneofinternalslots" aoid="RequireOneOfInternalSlots">
-    <h1>RequireOneOfInternalSlots ( _value_, _internalSlots_ )</h1>
-    <p>
-      The abstract operation RequireOneOfInternalSlots takes arguments _value_ and _internalSlots_.
-      It throws an exception unless _value_ is an Object and has one of the given internal slots.
-      It performs the following steps when called:
-    </p>
-    <emu-alg>
-      1. If Type(_value_) is not Object, throw a *TypeError* exception.
-      1. For each element _slot_ of _internalSlots_, do
-        1. If O has a _slot_ internal slot, return.
-      1. Throw a *TypeError* exception.
-    </emu-alg>
-  </emu-clause>
-
   <!-- Copied from ECMA-402 9.2.12 -->
   <emu-clause id="sec-defaultnumberoption" aoid="DefaultNumberOption">
     <h1>DefaultNumberOption ( _value_, _minimum_, _maximum_, _fallback_ )</h1>

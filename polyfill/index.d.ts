@@ -429,17 +429,18 @@ export namespace Temporal {
   export interface CalendarProtocol {
     id?: string;
     calendar?: never;
-    year(date: Temporal.Date): number;
-    month(date: Temporal.Date): number;
-    day(date: Temporal.Date): number;
-    dayOfWeek?(date: Temporal.Date): number;
-    dayOfYear?(date: Temporal.Date): number;
-    weekOfYear?(date: Temporal.Date): number;
-    daysInWeek?(date: Temporal.Date): number;
-    daysInMonth?(date: Temporal.Date): number;
-    daysInYear?(date: Temporal.Date): number;
-    monthsInYear?(date: Temporal.Date): number;
-    inLeapYear?(date: Temporal.Date): boolean;
+    year(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    month(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | Temporal.MonthDay | DateLike | string): number;
+    day(date: Temporal.Date | Temporal.DateTime | Temporal.MonthDay | DateLike | string): number;
+    era(date: Temporal.Date | Temporal.DateTime | DateLike | string): string | undefined;
+    dayOfWeek?(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    dayOfYear?(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    weekOfYear?(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    daysInWeek?(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    daysInMonth?(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    daysInYear?(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    monthsInYear?(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    inLeapYear?(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): boolean;
     dateFromFields(
       fields: { year: number; month: number; day: number },
       options: AssignmentOptions,
@@ -456,20 +457,20 @@ export namespace Temporal {
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
     dateAdd?(
-      date: Temporal.Date,
-      duration: Temporal.Duration,
+      date: Temporal.Date | DateLike | string,
+      duration: Temporal.Duration | DurationLike | string,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     dateSubtract?(
-      date: Temporal.Date,
-      duration: Temporal.Duration,
+      date: Temporal.Date | DateLike | string,
+      duration: Temporal.Duration | DurationLike | string,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     dateDifference?(
-      smaller: Temporal.Date,
-      larger: Temporal.Date,
+      smaller: Temporal.Date | DateLike | string,
+      larger: Temporal.Date | DateLike | string,
       options: DifferenceOptions<
         | 'years'
         | 'months'
@@ -496,17 +497,18 @@ export namespace Temporal {
     static from(item: CalendarProtocol | string): Temporal.Calendar;
     constructor(calendarIdentifier: string);
     readonly id: string;
-    year(date: Temporal.Date): number;
-    month(date: Temporal.Date): number;
-    day(date: Temporal.Date): number;
-    dayOfWeek(date: Temporal.Date): number;
-    dayOfYear(date: Temporal.Date): number;
-    weekOfYear(date: Temporal.Date): number;
-    daysInWeek(date: Temporal.Date): number;
-    daysInMonth(date: Temporal.Date): number;
-    daysInYear(date: Temporal.Date): number;
-    monthsInYear(date: Temporal.Date): number;
-    inLeapYear(date: Temporal.Date): boolean;
+    year(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    month(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | Temporal.MonthDay | DateLike | string): number;
+    day(date: Temporal.Date | Temporal.DateTime | Temporal.MonthDay | DateLike | string): number;
+    era(date: Temporal.Date | Temporal.DateTime | DateLike | string): string | undefined;
+    dayOfWeek(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    dayOfYear(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    weekOfYear(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    daysInWeek(date: Temporal.Date | Temporal.DateTime | DateLike | string): number;
+    daysInMonth(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    daysInYear(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    monthsInYear(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): number;
+    inLeapYear(date: Temporal.Date | Temporal.DateTime | Temporal.YearMonth | DateLike | string): boolean;
     dateFromFields(
       fields: { year: number; month: number; day: number },
       options: AssignmentOptions,
@@ -523,20 +525,20 @@ export namespace Temporal {
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
     dateAdd(
-      date: Temporal.Date,
-      duration: Temporal.Duration,
+      date: Temporal.Date | DateLike | string,
+      duration: Temporal.Duration | DurationLike | string,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     dateSubtract(
-      date: Temporal.Date,
-      duration: Temporal.Duration,
+      date: Temporal.Date | DateLike | string,
+      duration: Temporal.Duration | DurationLike | string,
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
     dateDifference(
-      smaller: Temporal.Date,
-      larger: Temporal.Date,
+      smaller: Temporal.Date | DateLike | string,
+      larger: Temporal.Date | DateLike | string,
       options?: DifferenceOptions<
         | 'years'
         | 'months'
