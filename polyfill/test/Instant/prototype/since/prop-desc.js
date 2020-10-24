@@ -2,17 +2,17 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.difference
 includes: [propertyHelper.js]
 ---*/
 
+const { Instant } = Temporal;
 assert.sameValue(
-  typeof Temporal.Date.prototype.difference,
+  typeof Instant.prototype.since,
   "function",
-  "`typeof Date.prototype.difference` is `function`"
+  "`typeof Instant.prototype.since` is `function`"
 );
 
-verifyProperty(Temporal.Date.prototype, "difference", {
+verifyProperty(Instant.prototype, "since", {
   writable: true,
   enumerable: false,
   configurable: true,

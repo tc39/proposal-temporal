@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.prototype.difference
+esid: sec-temporal.time.prototype.since
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named
@@ -15,7 +15,7 @@ info: |
 includes: [propertyHelper.js]
 ---*/
 
-verifyProperty(Temporal.DateTime.prototype.difference, "length", {
+verifyProperty(Temporal.Time.prototype.since, "length", {
   value: 1,
   writable: false,
   enumerable: false,

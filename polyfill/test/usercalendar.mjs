@@ -242,7 +242,7 @@ describe('Userland calendar', () => {
     function isoToDecimal(date) {
       const { isoYear, isoMonth, isoDay } = date.getISOFields();
       const isoDate = new Temporal.Date(isoYear, isoMonth, isoDay);
-      let { days } = isoDate.difference(new Temporal.Date(1970, 1, 1), { largestUnit: 'days' });
+      let { days } = isoDate.since(new Temporal.Date(1970, 1, 1), { largestUnit: 'days' });
       let year = Math.floor(days / 100);
       if (isoYear < 1970) year *= -1;
       days %= 100;

@@ -273,7 +273,7 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options = undefined) {
+  since(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other, Time);
     options = ES.NormalizeOptionsObject(options);

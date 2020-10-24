@@ -409,11 +409,11 @@ oneHour = Temporal.Duration.from({ hours: 1 });
 Temporal.now.instant().subtract(oneHour);
 ```
 
-### instant.**difference**(_other_: Temporal.Instant | string, _options_?: object) : Temporal.Duration
+### instant.**since**(_other_: Temporal.Instant | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.Instant` or value convertible to one): Another exact time with which to compute the difference.
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -430,7 +430,7 @@ Temporal.now.instant().subtract(oneHour);
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
 
-This method computes the difference between the two exact times represented by `instant` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+This method computes the elapsed time before the exact time represented by `instant` and since the exact time represented by `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `instant` then the resulting duration will be negative.
 
 If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
@@ -464,15 +464,15 @@ Example usage:
 ```js
 startOfMoonMission = Temporal.Instant.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Instant.from('1969-07-24T16:50:35Z');
-missionLength = endOfMoonMission.difference(startOfMoonMission, { largestUnit: 'days' });
+missionLength = endOfMoonMission.since(startOfMoonMission, { largestUnit: 'days' });
   // => PT195H18M35S
-startOfMoonMission.difference(endOfMoonMission, { largestUnit: 'days' });
+startOfMoonMission.since(endOfMoonMission, { largestUnit: 'days' });
   // => throws RangeError
 missionLength.toLocaleString();
   // example output: '195 hours 18 minutes 35 seconds'
 
 // Rounding, for example if you don't care about the minutes and seconds
-approxMissionLength = endOfMoonMission.difference(startOfMoonMission, {
+approxMissionLength = endOfMoonMission.since(startOfMoonMission, {
   largestUnit: 'days',
   smallestUnit: 'hours'
 });
@@ -481,11 +481,11 @@ approxMissionLength = endOfMoonMission.difference(startOfMoonMission, {
 // A billion (10^9) seconds since the epoch in different units
 epoch = Temporal.Instant.fromEpochSeconds(0);
 billion = Temporal.Instant.fromEpochSeconds(1e9);
-billion.difference(epoch);
+billion.since(epoch);
   // =>    PT1000000000S
-billion.difference(epoch, { largestUnit: 'hours' });
+billion.since(epoch, { largestUnit: 'hours' });
   // =>  PT277777H46M40S
-ns = billion.difference(epoch, { largestUnit: 'nanoseconds' });
+ns = billion.since(epoch, { largestUnit: 'nanoseconds' });
   // =>    PT1000000000S
 ns.add({ nanoseconds: 1 });
   // =>    PT1000000000S (lost precision)
@@ -493,7 +493,7 @@ ns.add({ nanoseconds: 1 });
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:
 utc = Temporal.TimeZone.from('UTC');
-billion.toDateTime(utc).difference(epoch.toDateTime(utc), { largestUnit: 'years' });
+billion.toDateTime(utc).since(epoch.toDateTime(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
 ```
 <!-- prettier-ignore-end -->

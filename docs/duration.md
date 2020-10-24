@@ -8,7 +8,7 @@
 A `Temporal.Duration` represents an immutable duration of time which can be used in date/time arithmetic.
 
 `Temporal.Duration` can be constructed directly or returned from `Temporal.Duration.from()`.
-It can also be obtained from the `difference()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` and `subtract()` methods.
+It can also be obtained from the `since()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` and `subtract()` methods.
 
 When printed, a `Temporal.Duration` produces a string according to the ISO 8601 notation for durations.
 The examples in this page use this notation extensively.

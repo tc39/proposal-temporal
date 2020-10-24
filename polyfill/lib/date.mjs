@@ -169,7 +169,7 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
-  difference(other, options = undefined) {
+  since(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalDate(other, Date);
     const calendar = GetSlot(this, CALENDAR);

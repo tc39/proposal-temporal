@@ -60,8 +60,8 @@ describe('Date', () => {
       it('Date.prototype.subtract is a Function', () => {
         equal(typeof Date.prototype.subtract, 'function');
       });
-      it('Date.prototype.difference is a Function', () => {
-        equal(typeof Date.prototype.difference, 'function');
+      it('Date.prototype.since is a Function', () => {
+        equal(typeof Date.prototype.since, 'function');
       });
       it('Date.prototype.equals is a Function', () => {
         equal(typeof Date.prototype.equals, 'function');
@@ -197,10 +197,10 @@ describe('Date', () => {
       equal(`${date.toDateTime()}`, '1976-11-18T00:00:00');
     });
   });
-  describe('date.difference() works', () => {
+  describe('date.since() works', () => {
     const date = new Date(1976, 11, 18);
-    it('date.difference({ year: 1976, month: 10, day: 5 })', () => {
-      const duration = date.difference(Date.from({ year: 1976, month: 10, day: 5 }));
+    it('date.since({ year: 1976, month: 10, day: 5 })', () => {
+      const duration = date.since(Date.from({ year: 1976, month: 10, day: 5 }));
 
       equal(duration.years, 0);
       equal(duration.months, 0);
@@ -213,9 +213,9 @@ describe('Date', () => {
       equal(duration.microseconds, 0);
       equal(duration.nanoseconds, 0);
     });
-    it('date.difference({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
+    it('date.since({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
       const later = Date.from({ year: 2019, month: 11, day: 18 });
-      const duration = later.difference(date, { largestUnit: 'years' });
+      const duration = later.since(date, { largestUnit: 'years' });
       equal(duration.years, 43);
       equal(duration.months, 0);
       equal(duration.weeks, 0);
@@ -228,19 +228,19 @@ describe('Date', () => {
       equal(duration.nanoseconds, 0);
     });
     it('casts argument', () => {
-      equal(`${date.difference({ year: 2019, month: 11, day: 5 })}`, '-P15692D');
-      equal(`${date.difference('2019-11-05')}`, '-P15692D');
+      equal(`${date.since({ year: 2019, month: 11, day: 5 })}`, '-P15692D');
+      equal(`${date.since('2019-11-05')}`, '-P15692D');
     });
     it('takes days per month into account', () => {
       const date1 = Date.from('2019-01-01');
       const date2 = Date.from('2019-02-01');
       const date3 = Date.from('2019-03-01');
-      equal(`${date2.difference(date1)}`, 'P31D');
-      equal(`${date3.difference(date2)}`, 'P28D');
+      equal(`${date2.since(date1)}`, 'P31D');
+      equal(`${date3.since(date2)}`, 'P28D');
 
       const date4 = Date.from('2020-02-01');
       const date5 = Date.from('2020-03-01');
-      equal(`${date5.difference(date4)}`, 'P29D');
+      equal(`${date5.since(date4)}`, 'P29D');
     });
     it('takes days per year into account', () => {
       const date1 = Date.from('2019-01-01');
@@ -249,64 +249,64 @@ describe('Date', () => {
       const date4 = Date.from('2020-06-01');
       const date5 = Date.from('2021-01-01');
       const date6 = Date.from('2021-06-01');
-      equal(`${date3.difference(date1)}`, 'P365D');
-      equal(`${date5.difference(date3)}`, 'P366D');
-      equal(`${date4.difference(date2)}`, 'P366D');
-      equal(`${date6.difference(date4)}`, 'P365D');
+      equal(`${date3.since(date1)}`, 'P365D');
+      equal(`${date5.since(date3)}`, 'P366D');
+      equal(`${date4.since(date2)}`, 'P366D');
+      equal(`${date6.since(date4)}`, 'P365D');
     });
     const feb20 = Date.from('2020-02-01');
     const feb21 = Date.from('2021-02-01');
     it('defaults to returning days', () => {
-      equal(`${feb21.difference(feb20)}`, 'P366D');
-      equal(`${feb21.difference(feb20, { largestUnit: 'auto' })}`, 'P366D');
-      equal(`${feb21.difference(feb20, { largestUnit: 'days' })}`, 'P366D');
+      equal(`${feb21.since(feb20)}`, 'P366D');
+      equal(`${feb21.since(feb20, { largestUnit: 'auto' })}`, 'P366D');
+      equal(`${feb21.since(feb20, { largestUnit: 'days' })}`, 'P366D');
     });
     it('can return higher units', () => {
-      equal(`${feb21.difference(feb20, { largestUnit: 'years' })}`, 'P1Y');
-      equal(`${feb21.difference(feb20, { largestUnit: 'months' })}`, 'P12M');
-      equal(`${feb21.difference(feb20, { largestUnit: 'weeks' })}`, 'P52W2D');
+      equal(`${feb21.since(feb20, { largestUnit: 'years' })}`, 'P1Y');
+      equal(`${feb21.since(feb20, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${feb21.since(feb20, { largestUnit: 'weeks' })}`, 'P52W2D');
     });
     it('cannot return lower units', () => {
-      throws(() => feb21.difference(feb20, { largestUnit: 'hours' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'minutes' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'seconds' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'milliseconds' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'microseconds' }), RangeError);
-      throws(() => feb21.difference(feb20, { largestUnit: 'nanoseconds' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'hours' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'minutes' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'seconds' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'milliseconds' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'microseconds' }), RangeError);
+      throws(() => feb21.since(feb20, { largestUnit: 'nanoseconds' }), RangeError);
     });
     it('does not include higher units than necessary', () => {
       const lastFeb20 = Date.from('2020-02-29');
       const lastFeb21 = Date.from('2021-02-28');
-      equal(`${lastFeb21.difference(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
-      equal(`${lastFeb21.difference(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
+      equal(`${lastFeb21.since(lastFeb20)}`, 'P365D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
     });
     it('weeks and months are mutually exclusive', () => {
       const laterDate = date.add({ days: 42 });
-      const weeksDifference = laterDate.difference(date, { largestUnit: 'weeks' });
+      const weeksDifference = laterDate.since(date, { largestUnit: 'weeks' });
       notEqual(weeksDifference.weeks, 0);
       equal(weeksDifference.months, 0);
-      const monthsDifference = laterDate.difference(date, { largestUnit: 'months' });
+      const monthsDifference = laterDate.since(date, { largestUnit: 'months' });
       equal(monthsDifference.weeks, 0);
       notEqual(monthsDifference.months, 0);
     });
     it('no two different calendars', () => {
       const date1 = new Date(2000, 1, 1);
       const date2 = new Date(2000, 1, 1, Temporal.Calendar.from('japanese'));
-      throws(() => date1.difference(date2), RangeError);
+      throws(() => date1.since(date2), RangeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb21.difference(feb20, badOptions), TypeError)
+        throws(() => feb21.since(feb20, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.difference(feb20, options)}`, 'P366D'));
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'P366D'));
     });
     const earlier = Date.from('2019-01-08');
     const later = Date.from('2021-09-07');
     it('throws on disallowed or invalid smallestUnit', () => {
       ['era', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds', 'nonsense'].forEach(
         (smallestUnit) => {
-          throws(() => later.difference(earlier, { smallestUnit }), RangeError);
+          throws(() => later.since(earlier, { smallestUnit }), RangeError);
         }
       );
     });
@@ -316,17 +316,17 @@ describe('Date', () => {
         for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
           const largestUnit = units[largestIdx];
           const smallestUnit = units[smallestIdx];
-          throws(() => later.difference(earlier, { largestUnit, smallestUnit }), RangeError);
+          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
         }
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${later.difference(earlier, { smallestUnit: 'months' })}`, 'P32M');
-      equal(`${later.difference(earlier, { smallestUnit: 'weeks' })}`, 'P139W');
+      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${later.since(earlier, { smallestUnit: 'months' })}`, 'P32M');
+      equal(`${later.since(earlier, { smallestUnit: 'weeks' })}`, 'P139W');
     });
     it('throws on invalid roundingMode', () => {
-      throws(() => later.difference(earlier, { roundingMode: 'cile' }), RangeError);
+      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['years', 'P3Y'],
@@ -337,8 +337,8 @@ describe('Date', () => {
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
       const roundingMode = 'nearest';
       it(`rounds to nearest ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
-        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
     const incrementOneCeil = [
@@ -350,8 +350,8 @@ describe('Date', () => {
     incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
       const roundingMode = 'ceil';
       it(`rounds up to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
-        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
     const incrementOneFloor = [
@@ -363,8 +363,8 @@ describe('Date', () => {
     incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
       const roundingMode = 'floor';
       it(`rounds down to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
-        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, expectedNegative);
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
     const incrementOneTrunc = [
@@ -376,51 +376,36 @@ describe('Date', () => {
     incrementOneTrunc.forEach(([smallestUnit, expected]) => {
       const roundingMode = 'trunc';
       it(`truncates to ${smallestUnit}`, () => {
-        equal(`${later.difference(earlier, { smallestUnit, roundingMode })}`, expected);
-        equal(`${earlier.difference(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
     it('nearest is the default', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${earlier.difference(later, { smallestUnit: 'years' })}`, '-P3Y');
+      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${earlier.since(later, { smallestUnit: 'years' })}`, '-P3Y');
     });
     it('rounds to an increment of years', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
+      equal(`${later.since(earlier, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
     });
     it('rounds to an increment of months', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P30M');
+      equal(`${later.since(earlier, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P30M');
     });
     it('rounds to an increment of weeks', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'weeks', roundingIncrement: 12 })}`, 'P144W');
+      equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingIncrement: 12 })}`, 'P144W');
     });
     it('rounds to an increment of days', () => {
-      equal(`${later.difference(earlier, { smallestUnit: 'days', roundingIncrement: 100 })}`, 'P1000D');
+      equal(`${later.since(earlier, { smallestUnit: 'days', roundingIncrement: 100 })}`, 'P1000D');
     });
     it('accepts singular units', () => {
+      equal(`${later.since(earlier, { largestUnit: 'year' })}`, `${later.since(earlier, { largestUnit: 'years' })}`);
+      equal(`${later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier, { smallestUnit: 'years' })}`);
+      equal(`${later.since(earlier, { largestUnit: 'month' })}`, `${later.since(earlier, { largestUnit: 'months' })}`);
       equal(
-        `${later.difference(earlier, { largestUnit: 'year' })}`,
-        `${later.difference(earlier, { largestUnit: 'years' })}`
+        `${later.since(earlier, { smallestUnit: 'month' })}`,
+        `${later.since(earlier, { smallestUnit: 'months' })}`
       );
-      equal(
-        `${later.difference(earlier, { smallestUnit: 'year' })}`,
-        `${later.difference(earlier, { smallestUnit: 'years' })}`
-      );
-      equal(
-        `${later.difference(earlier, { largestUnit: 'month' })}`,
-        `${later.difference(earlier, { largestUnit: 'months' })}`
-      );
-      equal(
-        `${later.difference(earlier, { smallestUnit: 'month' })}`,
-        `${later.difference(earlier, { smallestUnit: 'months' })}`
-      );
-      equal(
-        `${later.difference(earlier, { largestUnit: 'day' })}`,
-        `${later.difference(earlier, { largestUnit: 'days' })}`
-      );
-      equal(
-        `${later.difference(earlier, { smallestUnit: 'day' })}`,
-        `${later.difference(earlier, { smallestUnit: 'days' })}`
-      );
+      equal(`${later.since(earlier, { largestUnit: 'day' })}`, `${later.since(earlier, { largestUnit: 'days' })}`);
+      equal(`${later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier, { smallestUnit: 'days' })}`);
     });
   });
   describe('date.add() works', () => {

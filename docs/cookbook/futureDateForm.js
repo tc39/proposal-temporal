@@ -15,8 +15,8 @@ if (futuredateParam !== null) {
   const futureDate = Temporal.Date.from(futuredateParam);
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
   const today = Temporal.now.date(browserCalendar);
-  const until = futureDate.difference(today, { largestUnit: 'days' });
-  const untilMonths = futureDate.round({ largestUnit: 'months', relativeTo: today });
+  const until = futureDate.since(today, { largestUnit: 'days' });
+  const untilMonths = until.round({ largestUnit: 'months', relativeTo: today });
 
   const dayString = englishPlural(until.days, 'day', 'days');
   const monthString =
