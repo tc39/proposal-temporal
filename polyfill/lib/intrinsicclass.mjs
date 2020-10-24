@@ -74,6 +74,7 @@ export function MakeIntrinsicClass(Class, name) {
   }
 
   DefineIntrinsic(name, Class);
+  DefineIntrinsic(`${name}.prototype`, Class.prototype);
 }
 
 export function DefineIntrinsic(name, value) {
