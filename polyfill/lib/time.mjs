@@ -273,6 +273,66 @@ export class Time {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
+  until(other, options = undefined) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalTime(other, Time);
+    options = ES.NormalizeOptionsObject(options);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const maximumIncrements = {
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      GetSlot(this, HOUR),
+      GetSlot(this, MINUTE),
+      GetSlot(this, SECOND),
+      GetSlot(this, MILLISECOND),
+      GetSlot(this, MICROSECOND),
+      GetSlot(this, NANOSECOND),
+      GetSlot(other, HOUR),
+      GetSlot(other, MINUTE),
+      GetSlot(other, SECOND),
+      GetSlot(other, MILLISECOND),
+      GetSlot(other, MICROSECOND),
+      GetSlot(other, NANOSECOND)
+    );
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
+    ));
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit
+    ));
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  }
   since(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other, Time);

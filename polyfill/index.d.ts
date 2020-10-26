@@ -119,7 +119,10 @@ export namespace Temporal {
     roundingMode?: RoundingMode;
   };
 
-  /** Options to control the result of `since()` methods in `Temporal` types. */
+  /**
+   * Options to control the result of `until()` and `since()` methods in
+   * `Temporal` types.
+   */
   export interface DifferenceOptions<T extends string> {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
@@ -138,7 +141,7 @@ export namespace Temporal {
     /**
      * The unit to round to. For example, to round to the nearest minute, use
      * `smallestUnit: 'minute'`. This option is required for `round()` and
-     * optional for `since()`.
+     * optional for `until()` and `since()`.
      */
     smallestUnit?: T;
 
@@ -621,6 +624,18 @@ export namespace Temporal {
     withCalendar(calendar: CalendarProtocol | string): Temporal.Date;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.Date;
+    until(
+      other: Temporal.Date | DateLike | string,
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+      >
+    ): Temporal.Duration;
     since(
       other: Temporal.Date | DateLike | string,
       options?: DifferenceOptions<
@@ -733,6 +748,30 @@ export namespace Temporal {
     withCalendar(calendar: CalendarProtocol | string): Temporal.DateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.DateTime;
+    until(
+      other: Temporal.DateTime | DateTimeLike | string,
+      options?: DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
+      >
+    ): Temporal.Duration;
     since(
       other: Temporal.DateTime | DateTimeLike | string,
       options?: DifferenceOptions<
@@ -882,6 +921,23 @@ export namespace Temporal {
       durationLike: Temporal.Time | Temporal.Duration | DurationLike | string,
       options?: ArithmeticOptions
     ): Temporal.Time;
+    until(
+      other: Temporal.Time | TimeLike | string,
+      options?: DifferenceOptions<
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
+    ): Temporal.Duration;
     since(
       other: Temporal.Time | TimeLike | string,
       options?: DifferenceOptions<
@@ -1004,6 +1060,10 @@ export namespace Temporal {
     with(yearMonthLike: YearMonthLike, options?: AssignmentOptions): Temporal.YearMonth;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.YearMonth;
+    until(
+      other: Temporal.YearMonth | YearMonthLike | string,
+      options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
+    ): Temporal.Duration;
     since(
       other: Temporal.YearMonth | YearMonthLike | string,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>

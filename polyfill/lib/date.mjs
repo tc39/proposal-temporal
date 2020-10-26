@@ -169,6 +169,63 @@ export class Date {
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
+  until(other, options = undefined) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDate(other, Date);
+    const calendar = GetSlot(this, CALENDAR);
+    const otherCalendar = GetSlot(other, CALENDAR);
+    const calendarId = ES.CalendarToString(calendar);
+    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    if (calendarId !== otherCalendarId) {
+      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
+    }
+
+    options = ES.NormalizeOptionsObject(options);
+    const disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+
+    const result = calendar.dateDifference(this, other, { largestUnit });
+    if (smallestUnit === 'days' && roundingIncrement === 1) return result;
+
+    let { years, months, weeks, days } = result;
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const relativeTo = new TemporalDateTime(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      GetSlot(this, CALENDAR)
+    );
+    ({ years, months, weeks, days } = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      relativeTo
+    ));
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+  }
   since(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalDate(other, Date);

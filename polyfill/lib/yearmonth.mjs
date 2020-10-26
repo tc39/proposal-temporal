@@ -136,6 +136,77 @@ export class YearMonth {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   }
+  until(other, options = undefined) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
+    const calendar = GetSlot(this, CALENDAR);
+    const otherCalendar = GetSlot(other, CALENDAR);
+    if (calendar.id !== otherCalendar.id) {
+      throw new RangeError(
+        `cannot compute difference between months of ${calendar.id} and ${otherCalendar.id} calendars`
+      );
+    }
+    options = ES.NormalizeOptionsObject(options);
+    const disallowedUnits = [
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ];
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+
+    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
+    const thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const otherDate = calendar.dateFromFields({ ...otherFields, day: 1 }, {}, TemporalDate);
+    const thisDate = calendar.dateFromFields({ ...thisFields, day: 1 }, {}, TemporalDate);
+
+    const result = calendar.dateDifference(thisDate, otherDate, { largestUnit });
+    if (smallestUnit === 'months' && roundingIncrement === 1) return result;
+
+    let { years, months } = result;
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const relativeTo = new TemporalDateTime(
+      GetSlot(thisDate, ISO_YEAR),
+      GetSlot(thisDate, ISO_MONTH),
+      GetSlot(thisDate, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      calendar
+    );
+    ({ years, months } = ES.RoundDuration(
+      years,
+      months,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      relativeTo
+    ));
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
+  }
   since(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalYearMonth(other, YearMonth);

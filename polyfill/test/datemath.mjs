@@ -12,6 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
+const { equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 
@@ -71,6 +72,7 @@ function buildSub(one, two, largestUnits) {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
       const dif = two.since(one, { largestUnit });
       const overflow = 'reject';
+      it('until() and since() agree', () => equal(`${dif}`, `${one.until(two, { largestUnit })}`));
       it(`(${one}).add(${dif}) => ${two}`, () => assert(one.add(dif, { overflow }).equals(two)));
       it(`(${two}).subtract(${dif}) => ${one}`, () => assert(two.subtract(dif, { overflow }).equals(one)));
       it(`(${one}).subtract(-${dif}) => ${two}`, () => assert(one.subtract(dif.negated(), { overflow }).equals(two)));

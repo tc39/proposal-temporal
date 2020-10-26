@@ -849,6 +849,100 @@ earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
 ```
 <!-- prettier-ignore-end -->
 
+### zonedDateTime.**until**(_other_: Temporal.ZonedDateTime, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+
+- `other` (`Temporal.LocalZonedDateTime`): Another date/time until when to compute the difference.
+- `options` (optional object): An object which may have some or all of the following properties:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'nanoseconds'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'nearest'`.
+
+**Returns:** a `Temporal.Duration` representing the elapsed time after `zonedDateTime` and until `other`.
+
+This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+If `other` is earlier than `zonedDateTime` then the resulting duration will be negative.
+
+The `largestUnit` option controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+For example, a difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`.
+However, a difference of 30 seconds will still be 30 seconds if `largestUnit` is `"hours"`.
+A value of `'auto'` means `'hours'`, unless `smallestUnit` is `'years'`, `'months'`, `'weeks'`, or `'days'`, in which case `largestUnit` is equal to `smallestUnit`.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
+Because rounding to an increment expressed in days or larger units requires a reference point, `zonedDateTime` is used as the starting point in that case.
+The default is to do no rounding.
+
+The duration returned is a "hybrid" duration.
+This means that the duration's date portion represents full calendar days like `Temporal.DateTime.prototype.until()` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.until()` would return.
+This "hybrid duration" approach automatically adjusts for DST and matches widely-adopted industry standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
+It also matches the behavior of popular JavaScript libraries like moment.js and date-fns.
+
+Examples:
+
+- Difference between 2:30AM on the day before DST starts and 3:30AM on the day DST starts => `P1DT1H`
+  (even though it's only 24 hours of real-world elapsed time)
+- Difference between 1:45AM on the day before DST starts and the "second" 1:15AM on the day DST ends => `PT24H30M`
+  (because it hasn't been a full calendar day even though it's been 24.5 real-world hours).
+
+If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.until()` was used.
+If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.until()` was used.
+To calculate the difference between calendar dates only, use `.toDate().until(other.toDate())`.
+To calculate the difference between clock times only, use `.toTime().until(other.toTime())`.
+
+If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
+Therefore, a `RangeError` will be thrown if `largestUnit` is `'days'` or larger and the two instances' time zones have different `id` fields.
+To work around this limitation, transform one of the instances to the other's time zone using `.with({timeZone: other.timeZone})` and then calculate the same-timezone difference.
+Because of the complexity and ambiguity involved in cross-timezone calculations involving days or larger units, `'hours'` is the default for `largestUnit`.
+
+Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
+Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
+
+Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `zonedDateTime.withCalendar`.
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```javascript
+zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+05:30[Asia/Kolkata]');
+zdt2 = Temporal.ZonedDateTime.from('2019-01-31T15:30+05:30[Asia/Kolkata]');
+zdt1.until(zdt2);
+  // =>      PT202956H5M29.999996500S
+zdt1.until(zdt2, { largestUnit: 'years' });
+  // =>  P23Y1M24DT12H5M29.999996500S
+zdt2.until(zdt1, { largestUnit: 'years' });
+  // => -P23Y1M24DT12H5M29.999996500S
+zdt1.until(zdt2, { largestUnit: 'nanoseconds' });
+  // =>       PT730641929.999996544S (precision lost)
+
+// Rounding, for example if you don't care about sub-seconds
+zdt1.until(zdt2, { smallestUnit: 'seconds' });
+  // => PT202956H5M30S
+
+// Months and years can be different lengths
+[jan1, feb1, mar1] = [1, 2, 3].map((month) =>
+  Temporal.ZonedDateTime.from({ year: 2020, month, day: 1, timeZone: 'Asia/Seoul' })
+);
+jan1.until(feb1, { largestUnit: 'days' }); // => P31D
+jan1.until(feb1, { largestUnit: 'months' }); // => P1M
+feb1.until(mar1, { largestUnit: 'days' }); // => P29D
+feb1.until(mar1, { largestUnit: 'months' }); // => P1M
+jan1.until(mar1, { largestUnit: 'days' }); // => P60D
+```
+<!-- prettier-ignore-end -->
+
 ### zonedDateTime.**since**(_other_: Temporal.ZonedDateTime, _options_?: object) : Temporal.Duration
 
 **Parameters:**
@@ -872,76 +966,16 @@ earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
 This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `zonedDateTime` then the resulting duration will be negative.
 
-The `largestUnit` option controls how the resulting duration is expressed.
-The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-For example, a difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`.
-However, a difference of 30 seconds will still be 30 seconds if `largestUnit` is `"hours"`.
-A value of `'auto'` means `'hours'`, unless `smallestUnit` is `'years'`, `'months'`, `'weeks'`, or `'days'`, in which case `largestUnit` is equal to `smallestUnit`.
-
-You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
-These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
-Because rounding to an increment expressed in days or larger units requires a reference point, `zonedDateTime` is used as the reference point in that case.
-The default is to do no rounding.
-
-The duration returned is a "hybrid" duration.
-This means that the duration's date portion represents full calendar days like `Temporal.DateTime.prototype.since()` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.since()` would return.
-This "hybrid duration" approach automatically adjusts for DST and matches widely-adopted industry standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
-It also matches the behavior of popular JavaScript libraries like moment.js and date-fns.
-
-Examples:
-
-- Difference between 2:30AM on the day before DST starts and 3:30AM on the day DST starts => `P1DT1H`
-  (even though it's only 24 hours of real-world elapsed time)
-- Difference between 1:45AM on the day before DST starts and the "second" 1:15AM on the day DST ends => `PT24H30M`
-  (because it hasn't been a full calendar day even though it's been 24.5 real-world hours).
-
-If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.since()` was used.
-If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.since()` was used.
-To calculate the difference between calendar dates only, use `.toDate().since(other.toDate())`.
-To calculate the difference between clock times only, use `.toTime().since(other.toTime())`.
-
-If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
-Therefore, a `RangeError` will be thrown if `largestUnit` is `'days'` or larger and the two instances' time zones have different `id` fields.
-To work around this limitation, transform one of the instances to the other's time zone using `.with({timeZone: other.timeZone})` and then calculate the same-timezone difference.
-Because of the complexity and ambiguity involved in cross-timezone calculations involving days or larger units, `'hours'` is the default for `largestUnit`.
-
-Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
-For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
-Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
-
-Computing the difference between two dates in different calendar systems is not supported.
-If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `zonedDateTime.withCalendar`.
+This method does the same thing as the `Temporal.ZonedDateTime.prototype.until()` method, but reversed, and rounding takes place relative to `zonedDateTime` as an ending point instead of a starting point.
+With the default options, the outcome of `zdt1.since(zdt2)` is the same as `zdt1.until(zdt2).negated()`.
 
 Usage example:
 
-<!-- prettier-ignore-start -->
 ```javascript
 zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+05:30[Asia/Kolkata]');
 zdt2 = Temporal.ZonedDateTime.from('2019-01-31T15:30+05:30[Asia/Kolkata]');
-zdt2.since(zdt1);
-  // =>      PT202956H5M29.999996500S
-zdt2.since(zdt1, { largestUnit: 'years' });
-  // =>  P23Y1M24DT12H5M29.999996500S
-zdt1.since(zdt2, { largestUnit: 'years' });
-  // => -P23Y1M24DT12H5M29.999996500S
-zdt2.since(zdt1, { largestUnit: 'nanoseconds' });
-  // =>       PT730641929.999996544S (precision lost)
-
-// Rounding, for example if you don't care about sub-seconds
-zdt2.since(zdt1, { smallestUnit: 'seconds' });
-  // => PT202956H5M30S
-
-// Months and years can be different lengths
-[jan1, feb1, mar1] = [1, 2, 3].map((month) =>
-  Temporal.ZonedDateTime.from({ year: 2020, month, day: 1, timeZone: 'Asia/Seoul' })
-);
-feb1.since(jan1, { largestUnit: 'days' }); // => P31D
-feb1.since(jan1, { largestUnit: 'months' }); // => P1M
-mar1.since(feb1, { largestUnit: 'days' }); // => P29D
-mar1.since(feb1, { largestUnit: 'months' }); // => P1M
-mar1.since(jan1, { largestUnit: 'days' }); // => P60D
+zdt2.since(zdt1); // => PT202956H5M29.999996500S
 ```
-<!-- prettier-ignore-end -->
 
 ### zonedDateTime.**round**(_options_: object) : Temporal.ZonedDateTime
 

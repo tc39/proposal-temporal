@@ -433,6 +433,71 @@ date.subtract({ months: 1 }); // => 2019-02-28
 date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
+### date.**until**(_other_: Temporal.Date | object | string, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+
+- `other` (`Temporal.Date` or value convertible to one): Another date until when to compute the difference.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, and `'days'`.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`.
+    The default is `'days'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'nearest'`.
+
+**Returns:** a `Temporal.Duration` representing the time elapsed after `date` and until `other`.
+
+This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+If `other` is earlier than `date` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
+
+The `largestUnit` option controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
+However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
+A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months'`, or `'weeks'`, in which case `largestUnit` is equal to `smallestUnit`.
+
+By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
+Because rounding to calendar units requires a reference point, `date` is used as the starting point.
+The default is to do no rounding.
+
+Unlike other Temporal types, hours and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.Date` doesn't have that accuracy.
+
+Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `date.withCalendar()`.
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```javascript
+earlier = Temporal.Date.from('2006-08-24');
+later = Temporal.Date.from('2019-01-31');
+earlier.until(later);                           // => P4543D
+earlier.until(later, { largestUnit: 'years' }); // => P12Y5M7D
+later.until(earlier, { largestUnit: 'years' }); // => -P12Y5M7D
+
+// If you really need to calculate the difference between two Dates in
+// hours, you can eliminate the ambiguity by explicitly choosing the
+// point in time from which you want to reckon the difference. For
+// example, using noon:
+noon = Temporal.Time.from('12:00');
+earlier.toDateTime(noon).until(later.toDateTime(noon), { largestUnit: 'hours' });
+  // => PT109032H
+```
+<!-- prettier-ignore-end -->
+
 ### date.**since**(_other_: Temporal.Date | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
@@ -457,46 +522,16 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `date` then the resulting duration will be negative.
 
-If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
-
-The `largestUnit` option controls how the resulting duration is expressed.
-The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
-However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
-A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months'`, or `'weeks'`, in which case `largestUnit` is equal to `smallestUnit`.
-
-By default, the largest unit in the result is days.
-This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
-
-You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
-These behave as in the `Temporal.Duration.round()` method, but increments of days and larger are allowed.
-Since rounding to calendar units requires a reference point, `date` is used as the reference point.
-The default is to do no rounding.
-
-Unlike other Temporal types, hours and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.Date` doesn't have that accuracy.
-
-Computing the difference between two dates in different calendar systems is not supported.
-If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `date.withCalendar()`.
+This method does the same thing as the `Temporal.Date.prototype.until()` method, but reversed, and rounding takes place relative to `date` as an ending point instead of a starting point.
+With the default options, the outcome of `date1.since(date2)` is the same as `date1.until(date2).negated()`.
 
 Usage example:
 
-<!-- prettier-ignore-start -->
 ```javascript
-date = Temporal.Date.from('2019-01-31');
-other = Temporal.Date.from('2006-08-24');
-date.since(other);                           // => P4543D
-date.since(other, { largestUnit: 'years' }); // => P12Y5M7D
-other.since(date, { largestUnit: 'years' }); // => -P12Y5M7D
-
-// If you really need to calculate the difference between two Dates in
-// hours, you can eliminate the ambiguity by explicitly choosing the
-// point in time from which you want to reckon the difference. For
-// example, using noon:
-noon = Temporal.Time.from('12:00');
-date.toDateTime(noon).since(other.toDateTime(noon), { largestUnit: 'hours' });
-  // => PT109032H
+earlier = Temporal.Date.from('2006-08-24');
+later = Temporal.Date.from('2019-01-31');
+later.since(earlier); // => P4543D
 ```
-<!-- prettier-ignore-end -->
 
 ### date.**equals**(_other_: Temporal.Date | object | string) : boolean
 
