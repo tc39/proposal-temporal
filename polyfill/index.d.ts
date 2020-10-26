@@ -386,6 +386,23 @@ export namespace Temporal {
     equals(other: Temporal.Instant | string): boolean;
     add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
     subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
+    until(
+      other: Temporal.Instant | string,
+      options?: DifferenceOptions<
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
+      >
+    ): Temporal.Duration;
     since(
       other: Temporal.Instant | string,
       options?: DifferenceOptions<

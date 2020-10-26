@@ -276,6 +276,44 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.instant.prototype.until">
+      <h1>Temporal.Instant.prototype.until ( _other_ [ , _options_ ] )</h1>
+      <p>
+        The `until` method takes two arguments, _other_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _instant_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+        1. Set _other_ to ? ToTemporalInstant(_other_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"seconds"*, _smallestUnit_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », _defaultLargestUnit_).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+        1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. If _smallestUnit_ is *"hours"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
+        1. If _smallestUnit_ is *"minutes"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
+        1. Else if _smallestUnit_ is *"seconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
+        1. Else if _smallestUnit_ is *"milliseconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
+        1. Else if _smallestUnit_ is *"microseconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
+        1. Else,
+          1. Assert: _smallestUnit_ is *"nanoseconds"*.
+          1. Let _incrementNs_ be _roundingIncrement_.
+        1. Let _diff_ be the mathematical value of _otherInstant_.[[Nanoseconds]] − _instant_.[[Nanoseconds]].
+        1. Let _roundedNs_ be ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
+        1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
+        1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.instant.prototype.since">
       <h1>Temporal.Instant.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
