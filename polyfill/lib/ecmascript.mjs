@@ -2072,6 +2072,37 @@ export const ES = ObjectAssign({}, ES2020, {
 
     return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
+  DifferenceInstant(ns1, ns2, increment, unit, roundingMode) {
+    const diff = ns2.minus(ns1);
+
+    let incrementNs = increment;
+    switch (unit) {
+      case 'hours':
+        incrementNs *= 60;
+      // fall through
+      case 'minutes':
+        incrementNs *= 60;
+      // fall through
+      case 'seconds':
+        incrementNs *= 1000;
+      // fall through
+      case 'milliseconds':
+        incrementNs *= 1000;
+      // fall through
+      case 'microseconds':
+        incrementNs *= 1000;
+    }
+    const remainder = diff.mod(86400e9);
+    const wholeDays = diff.minus(remainder);
+    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
+    const roundedDiff = wholeDays.plus(roundedRemainder);
+
+    const nanoseconds = +roundedDiff.mod(1e3);
+    const microseconds = +roundedDiff.divide(1e3).mod(1e3);
+    const milliseconds = +roundedDiff.divide(1e6).mod(1e3);
+    const seconds = +roundedDiff.divide(1e9);
+    return { seconds, milliseconds, microseconds, nanoseconds };
+  },
   AddDate: (year, month, day, years, months, weeks, days, overflow) => {
     year += years;
     month += months;

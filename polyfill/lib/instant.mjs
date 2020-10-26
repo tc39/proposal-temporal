@@ -103,6 +103,48 @@ export class Instant {
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
     return result;
   }
+  until(other, options = undefined) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalInstant(other, Instant);
+    const disallowedUnits = ['years', 'months', 'weeks', 'days'];
+    options = ES.NormalizeOptionsObject(options);
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const maximumIncrements = {
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const onens = GetSlot(this, EPOCHNANOSECONDS);
+    const twons = GetSlot(other, EPOCHNANOSECONDS);
+    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+      onens,
+      twons,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
+    );
+    let hours, minutes;
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      0,
+      0,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit
+    ));
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  }
   since(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalInstant(other, Instant);
@@ -122,49 +164,27 @@ export class Instant {
       nanoseconds: 1000
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
-
     const onens = GetSlot(other, EPOCHNANOSECONDS);
     const twons = GetSlot(this, EPOCHNANOSECONDS);
-    const diff = twons.minus(onens);
-
-    let incrementNs = roundingIncrement;
-    switch (smallestUnit) {
-      case 'hours':
-        incrementNs *= 60;
-      // fall through
-      case 'minutes':
-        incrementNs *= 60;
-      // fall through
-      case 'seconds':
-        incrementNs *= 1000;
-      // fall through
-      case 'milliseconds':
-        incrementNs *= 1000;
-      // fall through
-      case 'microseconds':
-        incrementNs *= 1000;
-    }
-    const remainder = diff.mod(86400e9);
-    const wholeDays = diff.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
-    const roundedDiff = wholeDays.plus(roundedRemainder);
-
-    const ns = +roundedDiff.mod(1e3);
-    const us = +roundedDiff.divide(1e3).mod(1e3);
-    const ms = +roundedDiff.divide(1e6).mod(1e3);
-    const ss = +roundedDiff.divide(1e9);
-
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      0,
-      0,
-      0,
-      ss,
-      ms,
-      us,
-      ns,
-      largestUnit
+    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+      onens,
+      twons,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
     );
+    let hours, minutes;
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      0,
+      0,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit
+    ));
+    const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   round(options) {
