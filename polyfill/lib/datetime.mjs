@@ -418,6 +418,109 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
+  until(other, options = undefined) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDateTime(other, DateTime);
+    const calendar = GetSlot(this, CALENDAR);
+    const otherCalendar = GetSlot(other, CALENDAR);
+    const calendarId = ES.CalendarToString(calendar);
+    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    if (calendarId !== otherCalendarId) {
+      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
+    }
+    options = ES.NormalizeOptionsObject(options);
+    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const maximumIncrements = {
+      years: undefined,
+      months: undefined,
+      weeks: undefined,
+      days: undefined,
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+
+    let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      GetSlot(this, HOUR),
+      GetSlot(this, MINUTE),
+      GetSlot(this, SECOND),
+      GetSlot(this, MILLISECOND),
+      GetSlot(this, MICROSECOND),
+      GetSlot(this, NANOSECOND),
+      GetSlot(other, HOUR),
+      GetSlot(other, MINUTE),
+      GetSlot(other, SECOND),
+      GetSlot(other, MILLISECOND),
+      GetSlot(other, MICROSECOND),
+      GetSlot(other, NANOSECOND)
+    );
+    let year = GetSlot(this, ISO_YEAR);
+    let month = GetSlot(this, ISO_MONTH);
+    let day = GetSlot(this, ISO_DAY) + deltaDays;
+    ({ year, month, day } = ES.BalanceDate(year, month, day));
+
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const adjustedDate = new TemporalDate(year, month, day, calendar);
+    const otherDate = new TemporalDate(
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY),
+      calendar
+    );
+    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+    const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
+    const dateDifference = calendar.dateDifference(adjustedDate, otherDate, dateOptions);
+
+    let { years, months, weeks, days } = dateDifference;
+    ({
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode,
+      this
+    ));
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit
+    ));
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  }
   since(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalDateTime(other, DateTime);

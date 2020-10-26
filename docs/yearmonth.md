@@ -332,6 +332,66 @@ ym = Temporal.YearMonth.from('2019-06');
 ym.subtract({ years: 20, months: 4 }); // => 1999-02
 ```
 
+### yearMonth.**until**(_other_: Temporal.YearMonth | object | string, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month until when to compute the difference.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'auto'`, `'years'` and `'months'`.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'years'` and `'months'`.
+    The default is `'months'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'nearest'`.
+
+**Returns:** a `Temporal.Duration` representing the elapsed time after `yearMonth` and until `other`.
+
+This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+If `other` is earlier than `yearMonth` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
+
+The `largestUnit` option controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
+However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
+A value of `'auto'` means `'years'`.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method, but increments of months and larger are allowed.
+Because rounding to calendar units requires a reference point, the first day of `yearMonth` is used as the starting point.
+The default is to do no rounding.
+
+Unlike other Temporal types, weeks and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
+
+Computing the difference between two months in different calendar systems is not supported.
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```javascript
+ym = Temporal.YearMonth.from('2006-08');
+other = Temporal.YearMonth.from('2019-06');
+ym.until(other);                            // => P12Y10M
+ym.until(other, { largestUnit: 'months' }); // => P154M
+other.until(ym, { largestUnit: 'months' }); // => -P154M
+
+// If you really need to calculate the difference between two YearMonths
+// in days, you can eliminate the ambiguity by explicitly choosing the
+// day of the month (and if applicable, the time of that day) from which
+// you want to reckon the difference. For example, using the first of
+// the month to calculate a number of days:
+ym.toDateOnDay(1).until(other.toDateOnDay(1), { largestUnit: 'days' }); // => P4687D
+```
+<!-- prettier-ignore-end -->
+
 ### yearMonth.**since**(_other_: Temporal.YearMonth | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
@@ -356,41 +416,16 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
 This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `yearMonth` then the resulting duration will be negative.
 
-If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
-
-The `largestUnit` option controls how the resulting duration is expressed.
-The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
-However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
-A value of `'auto'` means `'years'`.
-
-You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
-These behave as in the `Temporal.Duration.round()` method, but increments of months and larger are allowed.
-Since rounding to calendar units requires a reference point, the first day of `yearMonth` is used as the reference point.
-The default is to do no rounding.
-
-Unlike other Temporal types, weeks and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.YearMonth` doesn't have that accuracy.
-
-Computing the difference between two months in different calendar systems is not supported.
+This method does the same thing as the `Temporal.YearMonth.prototype.until()` method, but reversed, and rounding takes place relative to `yearMonth` as an ending point instead of a starting point.
+With the default options, the outcome of `ym1.since(ym2)` is the same as `ym1.until(ym2).negated()`.
 
 Usage example:
 
-<!-- prettier-ignore-start -->
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
 other = Temporal.YearMonth.from('2006-08');
-ym.since(other);                            // => P12Y10M
-ym.since(other, { largestUnit: 'months' }); // => P154M
-other.since(ym, { largestUnit: 'months' }); // => -P154M
-
-// If you really need to calculate the difference between two YearMonths
-// in days, you can eliminate the ambiguity by explicitly choosing the
-// day of the month (and if applicable, the time of that day) from which
-// you want to reckon the difference. For example, using the first of
-// the month to calculate a number of days:
-ym.toDateOnDay(1).since(other.toDateOnDay(1), { largestUnit: 'days' }); // => P4687D
+ym.since(other); // => P12Y10M
 ```
-<!-- prettier-ignore-end -->
 
 ### yearMonth.**equals**(_other_: Temporal.YearMonth | object | string) : boolean
 

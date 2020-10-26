@@ -520,7 +520,7 @@ epoch.toDateTime(utc).until(billion.toDateTime(utc), { largestUnit: 'years' });
 This method computes the elapsed time before the exact time represented by `instant` and since the exact time represented by `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `instant` then the resulting duration will be negative.
 
-This method does the same thing as the `Temporal.instant.prototype.until()` method, but reversed.
+This method does the same thing as the `Temporal.Instant.prototype.until()` method, but reversed.
 The outcome of `instant1.since(instant2)` is the same as `instant1.until(instant2).negated()`.
 
 Example usage:

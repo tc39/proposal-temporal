@@ -262,6 +262,56 @@ time = Temporal.Time.from('19:39:09.068346205');
 time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 ```
 
+### time.**until**(_other_: Temporal.Time | object | string, _options_?: object) : Temporal.Duration
+
+**Parameters:**
+
+- `other` (`Temporal.Time` or value convertible to one): Another time until when to compute the difference.
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+    Valid values are `'auto'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+    Valid values are `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    The default is `'nanoseconds'`, i.e., no rounding.
+  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+    The default is 1.
+  - `roundingMode` (string): How to handle the remainder, if rounding.
+    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'nearest'`.
+
+**Returns:** a `Temporal.Duration` representing the elapsed time after `time` and until `other`.
+
+This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
+If `other` is earlier than `time` then the resulting duration will be negative.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
+
+The `largestUnit` parameter controls how the resulting duration is expressed.
+The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
+A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
+However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
+A value of `'auto'` means `'hours'`.
+
+You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
+These behave as in the `Temporal.Duration.round()` method.
+The default is to do no rounding.
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```javascript
+time = Temporal.Time.from('20:13:20.971398099');
+time.until(Temporal.Time.from('22:39:09.068346205')); // => PT2H25M49.903051894S
+time.until(Temporal.Time.from('19:39:09.068346205')); // => -PT34M11.903051894S
+
+// Rounding, for example if you don't care about sub-seconds
+time.until(Temporal.Time.from('22:39:09.068346205'), { smallestUnit: 'seconds' });
+  // => PT2H25M50S
+```
+<!-- prettier-ignore-end -->
+
 ### time.**since**(_other_: Temporal.Time | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
@@ -286,31 +336,16 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `time` then the resulting duration will be negative.
 
-If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
-
-The `largestUnit` parameter controls how the resulting duration is expressed.
-The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-A difference of two hours will become 7200 seconds when `largestUnit` is `'seconds'`, for example.
-However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `'hours'`.
-A value of `'auto'` means `'hours'`.
-
-You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
-These behave as in the `Temporal.Duration.round()` method.
-The default is to do no rounding.
+This method does the same thing as the `Temporal.Time.prototype.until()` method, but reversed, and rounding takes place relative to `time` as an ending point instead of a starting point.
+With the default options, the outcome of `time1.since(time2)` is the same as `time1.until(time2).negated()`.
 
 Usage example:
 
-<!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.Time.from('20:13:20.971398099');
 time.since(Temporal.Time.from('19:39:09.068346205')); // => PT34M11.903051894S
 time.since(Temporal.Time.from('22:39:09.068346205')); // => -PT2H25M49.903051894S
-
-// Rounding, for example if you don't care about sub-seconds
-time.since(Temporal.Time.from('19:39:09.068346205'), { smallestUnit: 'seconds' });
-  // => PT34M12S
 ```
-<!-- prettier-ignore-end -->
 
 ### time.**round**(_options_: object) : Temporal.Time
 

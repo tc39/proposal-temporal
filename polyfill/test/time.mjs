@@ -54,6 +54,9 @@ describe('Time', () => {
       it('Time.prototype.subtract is a Function', () => {
         equal(typeof Time.prototype.subtract, 'function');
       });
+      it('Time.prototype.until is a Function', () => {
+        equal(typeof Time.prototype.until, 'function');
+      });
       it('Time.prototype.since is a Function', () => {
         equal(typeof Time.prototype.since, 'function');
       });
@@ -234,6 +237,256 @@ describe('Time', () => {
       throws(() => time.toDateTime({ year: 1976 }), TypeError);
     });
   });
+  describe('time.until() works', () => {
+    const time = new Time(15, 23, 30, 123, 456, 789);
+    const one = new Time(16, 23, 30, 123, 456, 789);
+    it(`(${time}).until(${one}) => PT1H`, () => {
+      const duration = time.until(one);
+      equal(`${duration}`, 'PT1H');
+    });
+    const two = new Time(17, 0, 30, 123, 456, 789);
+    it(`(${time}).until(${two}) => PT1H37M`, () => {
+      const duration = time.until(two);
+      equal(`${duration}`, 'PT1H37M');
+    });
+    it(`(${two}).until(${time}) => -PT1H37M`, () => equal(`${two.until(time)}`, '-PT1H37M'));
+    it(`(${time}).until(${two}) === (${two}).since(${time})`, () => equal(`${time.until(two)}`, `${two.since(time)}`));
+    it('casts argument', () => {
+      equal(`${time.until({ hour: 16, minute: 34 })}`, 'PT1H10M29.876543211S');
+      equal(`${time.until('16:34')}`, 'PT1H10M29.876543211S');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => time.until({}), TypeError);
+      throws(() => time.until({ minutes: 30 }), TypeError);
+    });
+    const time1 = Time.from('10:23:15');
+    const time2 = Time.from('17:15:57');
+    it('the default largest unit is at least hours', () => {
+      equal(`${time1.until(time2)}`, 'PT6H52M42S');
+      equal(`${time1.until(time2, { largestUnit: 'auto' })}`, 'PT6H52M42S');
+      equal(`${time1.until(time2, { largestUnit: 'hours' })}`, 'PT6H52M42S');
+    });
+    it('higher units are not allowed', () => {
+      throws(() => time1.until(time2, { largestUnit: 'days' }), RangeError);
+      throws(() => time1.until(time2, { largestUnit: 'weeks' }), RangeError);
+      throws(() => time1.until(time2, { largestUnit: 'months' }), RangeError);
+      throws(() => time1.until(time2, { largestUnit: 'years' }), RangeError);
+    });
+    it('can return lower units', () => {
+      equal(`${time1.until(time2, { largestUnit: 'minutes' })}`, 'PT412M42S');
+      equal(`${time1.until(time2, { largestUnit: 'seconds' })}`, 'PT24762S');
+    });
+    it('can return subseconds', () => {
+      const time3 = time2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+      const msDiff = time1.until(time3, { largestUnit: 'milliseconds' });
+      equal(msDiff.seconds, 0);
+      equal(msDiff.milliseconds, 24762250);
+      equal(msDiff.microseconds, 250);
+      equal(msDiff.nanoseconds, 250);
+
+      const µsDiff = time1.until(time3, { largestUnit: 'microseconds' });
+      equal(µsDiff.milliseconds, 0);
+      equal(µsDiff.microseconds, 24762250250);
+      equal(µsDiff.nanoseconds, 250);
+
+      const nsDiff = time1.until(time3, { largestUnit: 'nanoseconds' });
+      equal(nsDiff.microseconds, 0);
+      equal(nsDiff.nanoseconds, 24762250250250);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => time.until(one, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${time.until(one, options)}`, 'PT1H'));
+    });
+    const earlier = Time.from('08:22:36.123456789');
+    const later = Time.from('12:39:40.987654321');
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'years', 'months', 'weeks', 'days', 'year', 'month', 'week', 'day', 'nonsense'].forEach(
+        (smallestUnit) => {
+          throws(() => earlier.until(later, { smallestUnit }), RangeError);
+        }
+      );
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+          const largestUnit = units[largestIdx];
+          const smallestUnit = units[smallestIdx];
+          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
+        }
+      }
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['hours', 'PT4H'],
+      ['minutes', 'PT4H17M'],
+      ['seconds', 'PT4H17M5S'],
+      ['milliseconds', 'PT4H17M4.864S'],
+      ['microseconds', 'PT4H17M4.864198S'],
+      ['nanoseconds', 'PT4H17M4.864197532S']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'nearest';
+      it(`rounds to nearest ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    const incrementOneCeil = [
+      ['hours', 'PT5H', '-PT4H'],
+      ['minutes', 'PT4H18M', '-PT4H17M'],
+      ['seconds', 'PT4H17M5S', '-PT4H17M4S'],
+      ['milliseconds', 'PT4H17M4.865S', '-PT4H17M4.864S'],
+      ['microseconds', 'PT4H17M4.864198S', '-PT4H17M4.864197S'],
+      ['nanoseconds', 'PT4H17M4.864197532S', '-PT4H17M4.864197532S']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'ceil';
+      it(`rounds up to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneFloor = [
+      ['hours', 'PT4H', '-PT5H'],
+      ['minutes', 'PT4H17M', '-PT4H18M'],
+      ['seconds', 'PT4H17M4S', '-PT4H17M5S'],
+      ['milliseconds', 'PT4H17M4.864S', '-PT4H17M4.865S'],
+      ['microseconds', 'PT4H17M4.864197S', '-PT4H17M4.864198S'],
+      ['nanoseconds', 'PT4H17M4.864197532S', '-PT4H17M4.864197532S']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'floor';
+      it(`rounds down to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneTrunc = [
+      ['hours', 'PT4H'],
+      ['minutes', 'PT4H17M'],
+      ['seconds', 'PT4H17M4S'],
+      ['milliseconds', 'PT4H17M4.864S'],
+      ['microseconds', 'PT4H17M4.864197S'],
+      ['nanoseconds', 'PT4H17M4.864197532S']
+    ];
+    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'trunc';
+      it(`truncates to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    it('nearest is the default', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'PT4H17M');
+      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'PT4H17M5S');
+    });
+    it('rounds to an increment of hours', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT3H');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT4H30M');
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT4H17M');
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'PT4H17M4.860S');
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864200S');
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864197530S');
+    });
+    it('valid hour increments divide into 24', () => {
+      [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+        const options = { smallestUnit: 'hours', roundingIncrement };
+        assert(earlier.until(later, options) instanceof Temporal.Duration);
+      });
+    });
+    ['minutes', 'seconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 60`, () => {
+        [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(earlier.until(later, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+        [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(earlier.until(later, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 29 }), RangeError);
+    });
+    it('throws on increments that are equal to the next highest', () => {
+      throws(() => earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
+    });
+    it('accepts singular units', () => {
+      equal(`${earlier.until(later, { largestUnit: 'hour' })}`, `${earlier.until(later, { largestUnit: 'hours' })}`);
+      equal(`${earlier.until(later, { smallestUnit: 'hour' })}`, `${earlier.until(later, { smallestUnit: 'hours' })}`);
+      equal(
+        `${earlier.until(later, { largestUnit: 'minute' })}`,
+        `${earlier.until(later, { largestUnit: 'minutes' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'minute' })}`,
+        `${earlier.until(later, { smallestUnit: 'minutes' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'second' })}`,
+        `${earlier.until(later, { largestUnit: 'seconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'second' })}`,
+        `${earlier.until(later, { smallestUnit: 'seconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'millisecond' })}`,
+        `${earlier.until(later, { largestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'millisecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'microsecond' })}`,
+        `${earlier.until(later, { largestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'microsecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'nanosecond' })}`,
+        `${earlier.until(later, { largestUnit: 'nanoseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'nanosecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'nanoseconds' })}`
+      );
+    });
+  });
   describe('time.since() works', () => {
     const time = new Time(15, 23, 30, 123, 456, 789);
     const one = new Time(14, 23, 30, 123, 456, 789);
@@ -247,6 +500,7 @@ describe('Time', () => {
       equal(`${duration}`, 'PT1H53M');
     });
     it(`(${two}).since(${time}) => -PT1H53M`, () => equal(`${two.since(time)}`, '-PT1H53M'));
+    it(`(${two}).since(${time}) === (${time}).until(${two})`, () => equal(`${two.since(time)}`, `${time.until(two)}`));
     it('casts argument', () => {
       equal(`${time.since({ hour: 16, minute: 34 })}`, '-PT1H10M29.876543211S');
       equal(`${time.since('16:34')}`, '-PT1H10M29.876543211S');
