@@ -488,9 +488,9 @@ export namespace Temporal {
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    dateDifference?(
-      smaller: Temporal.Date | DateLike | string,
-      larger: Temporal.Date | DateLike | string,
+    dateUntil?(
+      one: Temporal.Date | DateLike | string,
+      two: Temporal.Date | DateLike | string,
       options: DifferenceOptions<
         | 'years'
         | 'months'
@@ -556,9 +556,9 @@ export namespace Temporal {
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    dateDifference(
-      smaller: Temporal.Date | DateLike | string,
-      larger: Temporal.Date | DateLike | string,
+    dateUntil(
+      one: Temporal.Date | DateLike | string,
+      two: Temporal.Date | DateLike | string,
       options?: DifferenceOptions<
         | 'years'
         | 'months'

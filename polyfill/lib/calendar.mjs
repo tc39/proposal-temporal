@@ -62,7 +62,7 @@ export class Calendar {
     void constructor;
     throw new Error('not implemented');
   }
-  dateDifference(one, two, options) {
+  dateUntil(one, two, options) {
     void one;
     void two;
     void options;
@@ -212,7 +212,7 @@ class ISO8601Calendar extends Calendar {
     }
     return new constructor(year, month, day, this);
   }
-  dateDifference(one, two, options) {
+  dateUntil(one, two, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     one = ES.ToTemporalDate(one, GetIntrinsic('%Temporal.Date%'));
     two = ES.ToTemporalDate(two, GetIntrinsic('%Temporal.Date%'));

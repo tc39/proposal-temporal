@@ -43,8 +43,8 @@ describe('Calendar', () => {
       it('Calendar.prototype.dateSubtract is a Function', () => {
         equal(typeof Calendar.prototype.dateSubtract, 'function');
       });
-      it('Calendar.prototype.dateDifference is a Function', () => {
-        equal(typeof Calendar.prototype.dateDifference, 'function');
+      it('Calendar.prototype.dateUntil is a Function', () => {
+        equal(typeof Calendar.prototype.dateUntil, 'function');
       });
       it('Calendar.prototype.year is a Function', () => {
         equal(typeof Calendar.prototype.year, 'function');
@@ -331,22 +331,22 @@ describe('Calendar', () => {
       throws(() => iso.dateSubtract(date, { month: 1 }, {}, Temporal.Date), TypeError);
     });
   });
-  describe('Calendar.dateDifference()', () => {
+  describe('Calendar.dateUntil()', () => {
     const date1 = Temporal.Date.from('1999-09-03');
     const date2 = Temporal.Date.from('2000-01-01');
     it('casts first argument', () => {
-      equal(`${iso.dateDifference(Temporal.DateTime.from('1999-09-03T08:15:30'), date2, {})}`, 'P120D');
-      equal(`${iso.dateDifference({ year: 1999, month: 9, day: 3 }, date2, {})}`, 'P120D');
-      equal(`${iso.dateDifference('1999-09-03', date2, {})}`, 'P120D');
+      equal(`${iso.dateUntil(Temporal.DateTime.from('1999-09-03T08:15:30'), date2, {})}`, 'P120D');
+      equal(`${iso.dateUntil({ year: 1999, month: 9, day: 3 }, date2, {})}`, 'P120D');
+      equal(`${iso.dateUntil('1999-09-03', date2, {})}`, 'P120D');
     });
     it('casts second argument', () => {
-      equal(`${iso.dateDifference(date1, Temporal.DateTime.from('2000-01-01T08:15:30'), {})}`, 'P120D');
-      equal(`${iso.dateDifference(date1, { year: 2000, month: 1, day: 1 }, {})}`, 'P120D');
-      equal(`${iso.dateDifference(date1, '2000-01-01', {})}`, 'P120D');
+      equal(`${iso.dateUntil(date1, Temporal.DateTime.from('2000-01-01T08:15:30'), {})}`, 'P120D');
+      equal(`${iso.dateUntil(date1, { year: 2000, month: 1, day: 1 }, {})}`, 'P120D');
+      equal(`${iso.dateUntil(date1, '2000-01-01', {})}`, 'P120D');
     });
     it('objects must contain at least the required properties', () => {
-      throws(() => iso.dateDifference({ month: 11 }, date2, {}), TypeError);
-      throws(() => iso.dateDifference(date1, { month: 11 }, {}), TypeError);
+      throws(() => iso.dateUntil({ month: 11 }, date2, {}), TypeError);
+      throws(() => iso.dateUntil(date1, { month: 11 }, {}), TypeError);
     });
   });
 });

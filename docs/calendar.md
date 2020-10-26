@@ -269,23 +269,25 @@ date.day         // => 7
 date.toString()  // => 2020-06-28[c=islamic]
 ```
 
-### calendar.**dateDifference**(_smaller_: Temporal.Date | object | string, _larger_: Temporal.Date | object | string, _options_: object) : Temporal.Duration
+### calendar.**dateUntil**(_one_: Temporal.Date | object | string, _two_: Temporal.Date | object | string, _options_: object) : Temporal.Duration
 
 **Parameters:**
-- `smaller` (`Temporal.Date`, or value convertible to one): A date.
-- `larger` (`Temporal.Date`, or value convertible to one): A date, which must be later than `smaller`.
+- `one` (`Temporal.Date`, or value convertible to one): A date.
+- `two` (`Temporal.Date`, or value convertible to one): Another date.
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'auto'`, `'years'`, `'months'`, and `'days'`.
     The default is `'auto'`.
 
-**Returns:** a `Temporal.Duration` representing the difference between `larger` and `smaller`.
+**Returns:** a `Temporal.Duration` representing the time elapsed after `one` and until `two`.
 
 If either of `smaller` or `larger` are not `Temporal.Date` objects, then they will be converted to one as if they were passed to `Temporal.Date.from()`.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using the `since()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+It is called indirectly when using the `until()` and `since()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
+
+If `one` is later than `two`, then the resulting duration should be negative.
 
 The default `largestUnit` value of `'auto'` is the same as `'days'`.
 
@@ -293,12 +295,12 @@ For example:
 ```javascript
 d1 = Temporal.Date.from('2020-07-29').withCalendar('chinese');
 d2 = Temporal.Date.from('2020-08-29').withCalendar('chinese');
-d2.since(d1, { largestUnit: 'months' })  // => P1M2D
+d1.until(d2, { largestUnit: 'months' })  // => P1M2D
 
 // same result, but calling the method directly:
-Temporal.Calendar.from('chinese').dateDifference(
-    Temporal.Date.from('2020-08-29'),
+Temporal.Calendar.from('chinese').dateUntil(
     Temporal.Date.from('2020-07-29'),
+    Temporal.Date.from('2020-08-29'),
     { largestUnit: 'months' }
 )  // => P1M2D
 ```
