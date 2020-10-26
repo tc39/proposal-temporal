@@ -492,21 +492,31 @@ export class DateTime {
       microseconds,
       nanoseconds
     } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
+      -years,
+      -months,
+      -weeks,
+      -days,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds,
       roundingIncrement,
       smallestUnit,
-      roundingMode,
+      ES.NegateTemporalRoundingMode(roundingMode),
       this
     ));
+    years = -years;
+    months = -months;
+    weeks = -weeks;
+    days = -days;
+    hours = -hours;
+    minutes = -minutes;
+    seconds = -seconds;
+    milliseconds = -milliseconds;
+    microseconds = -microseconds;
+    nanoseconds = -nanoseconds;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,

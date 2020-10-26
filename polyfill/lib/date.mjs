@@ -207,10 +207,10 @@ export class Date {
       GetSlot(this, CALENDAR)
     );
     ({ years, months, weeks, days } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
+      -years,
+      -months,
+      -weeks,
+      -days,
       0,
       0,
       0,
@@ -219,12 +219,12 @@ export class Date {
       0,
       roundingIncrement,
       smallestUnit,
-      roundingMode,
+      ES.NegateTemporalRoundingMode(roundingMode),
       relativeTo
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

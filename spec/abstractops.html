@@ -145,6 +145,23 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-negatetemporalroundingmode" aoid="NegateTemporalRoundingMode">
+    <h1>NegateTemporalRoundingMode ( _roundingMode_ )</h1>
+    <p>
+      The abstract operation ToTemporalRoundingMode returns the correct rounding mode to use when rounding the negative of a value that was originally given with _roundingMode_.
+    </p>
+    <emu-note type="editor">
+      <p>
+        The rounding modes accepted by this abstract operation (and therefore in the Temporal API) are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </emu-note>
+    <emu-alg>
+      1. If _roundingMode_ is *"ceil"*, return *"floor"*.
+      1. If _roundingMode_ is *"floor"*, return *"ceil"*.
+      1. Return _roundingMode_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
     <h1>ToTemporalRoundingIncrement ( _normalizedOptions_, _dividend_, _inclusive_ )</h1>
     <emu-alg>
