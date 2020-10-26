@@ -7680,8 +7680,8 @@
         return result;
       }
     }, {
-      key: "difference",
-      value: function difference(other) {
+      key: "since",
+      value: function since(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalInstant(other, Instant);
@@ -8089,8 +8089,8 @@
         return result;
       }
     }, {
-      key: "difference",
-      value: function difference(other) {
+      key: "since",
+      value: function since(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalDate(other, Date);
@@ -8648,8 +8648,8 @@
         return result;
       }
     }, {
-      key: "difference",
-      value: function difference(other) {
+      key: "since",
+      value: function since(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalDateTime(other, DateTime);
@@ -9973,8 +9973,8 @@
         return result;
       }
     }, {
-      key: "difference",
-      value: function difference(other) {
+      key: "since",
+      value: function since(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalTime(other, Time);
@@ -10362,8 +10362,8 @@
         return result;
       }
     }, {
-      key: "difference",
-      value: function difference(other) {
+      key: "since",
+      value: function since(other) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalYearMonth(other, YearMonth);

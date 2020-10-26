@@ -360,9 +360,9 @@ earlier <span class="token operator">=</span> Temporal<span class="token punctua
   <span class="token comment">// => 2020-03-08T01:30-08:00[America/Los_Angeles] (1:30 clock time; still in Standard Time)</span>
 later <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>props<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'later'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-03-08T03:30-07:00[America/Los_Angeles] ('later' is same as 'compatible' for backwards transitions)</span>
-later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT2H  (2 hour difference in clock time...</span>
-later<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+later<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT1H   ... but 1 hour later in real-world time)</span></code></pre><!-- prettier-ignore-end -->
 
 <p>Likewise, at the end of DST, clocks move backward an hour.
@@ -386,10 +386,10 @@ later <span class="token operator">=</span> Temporal<span class="token punctuati
   <span class="token comment">// => 2020-11-01T01:30-08:00[America/Los_Angeles] </span>
   <span class="token comment">// Same clock time, but one hour later.</span>
   <span class="token comment">// -08:00 offset indicates Standard Time.</span>
-later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+later<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>earlier<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT0S  </span>
   <span class="token comment">// (same clock time...</span>
-later<span class="token punctuation">.</span><span class="token function">difference</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
+later<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>earlier<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT1H   </span>
   <span class="token comment">// ... but 1 hour later in real-world time)</span></code></pre><!-- prettier-ignore-end -->
 
