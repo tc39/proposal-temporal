@@ -6900,6 +6900,15 @@ li.menu-search-result-term:before {
 
   <emu-clause id="sec-temporal-totemporalroundingmode" aoid="ToTemporalRoundingMode">
     <h1><span class="secnum">15.11</span> ToTemporalRoundingMode ( <var>normalizedOptions</var>, <var>fallback</var> )</h1>
+    <p>
+      The abstract operation ToTemporalRoundingMode extracts the value of the property named <emu-val>"roundingMode"</emu-val> from <var>normalizedOptions</var> and makes sure it is a valid value for the option.
+      The value <var>fallback</var> is returned if the property is not present.
+    </p>
+    <emu-note type="editor"><span class="note">Editor's Note</span><div class="note-contents">
+      <p>
+        The rounding modes accepted by this abstract operation (and therefore in the Temporal API) are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </div></emu-note>
     <emu-alg><ol><li>Return ?&nbsp;<emu-xref aoid="GetOption" id="_ref_1326"><a href="#sec-getoption">GetOption</a></emu-xref>(<var>normalizedOptions</var>, <emu-val>"roundingMode"</emu-val>, <emu-val>"string"</emu-val>, « <emu-val>"ceil"</emu-val>, <emu-val>"floor"</emu-val>, <emu-val>"trunc"</emu-val>, <emu-val>"nearest"</emu-val> », <var>fallback</var>).</li></ol></emu-alg>
   </emu-clause>
 
@@ -7112,6 +7121,15 @@ li.menu-search-result-term:before {
 
   <emu-clause id="sec-temporal-roundnumbertoincrement" aoid="RoundNumberToIncrement">
     <h1><span class="secnum">15.29</span> RoundNumberToIncrement ( <var>x</var>, <var>increment</var>, <var>roundingMode</var> )</h1>
+    <p>
+      The abstract operation RoundNumberToIncrement rounds the <emu-xref href="#mathematical-value"><a href="https://tc39.es/ecma262/#mathematical-value">mathematical value</a></emu-xref> <var>x</var> to the nearest multiple of the <emu-xref href="#integer"><a href="https://tc39.es/ecma262/#integer">integer</a></emu-xref> <var>increment</var>.
+      It rounds up or down according to <var>roundingMode</var>.
+    </p>
+    <emu-note type="editor"><span class="note">Editor's Note</span><div class="note-contents">
+      <p>
+        The rounding modes accepted by this abstract operation are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </div></emu-note>
     <emu-alg><ol><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <var>x</var> and <var>increment</var> are mathematical values.</li><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <var>roundingMode</var> is <emu-val>"ceil"</emu-val>, <emu-val>"floor"</emu-val>, <emu-val>"trunc"</emu-val>, or <emu-val>"nearest"</emu-val>.</li><li>Let <var>quotient</var> be <var>x</var> / <var>increment</var>.</li><li>If <var>roundingMode</var> is <emu-val>"ceil"</emu-val>, then<ol><li>Let <var>rounded</var> be −<emu-xref aoid="floor"><a href="https://tc39.es/ecma262/#eqn-floor">floor</a></emu-xref>(−<var>quotient</var>).</li></ol></li><li>Else if <var>roundingMode</var> is <emu-val>"floor"</emu-val>, then<ol><li>Let <var>rounded</var> be <emu-xref aoid="floor"><a href="https://tc39.es/ecma262/#eqn-floor">floor</a></emu-xref>(<var>quotient</var>).</li></ol></li><li>Else if <var>roundingMode</var> is <emu-val>"trunc"</emu-val>, then<ol><li>Let <var>rounded</var> be the integral part of <var>quotient</var>, removing any fractional digits.</li></ol></li><li>Else,<ol><li>Let <var>rounded</var> be !&nbsp;<emu-xref aoid="RoundHalfAwayFromZero" id="_ref_1355"><a href="#sec-temporal-roundhalfawayfromzero">RoundHalfAwayFromZero</a></emu-xref>(<var>quotient</var>).</li></ol></li><li>Return <var>rounded</var> × <var>increment</var>.</li></ol></emu-alg>
   </emu-clause>
 
