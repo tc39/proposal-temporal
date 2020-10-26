@@ -144,10 +144,6 @@
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#custom-time-zones">Custom time zones</a>
-<ul>
-<li><a href="#protocol">Protocol</a>
-</li>
-</ul>
 </li>
 <li><a href="#constructor">Constructor</a>
 <ul>
@@ -201,17 +197,20 @@
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
 <p>Since <code>Temporal.Instant</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <h2 id="custom-time-zones">Custom time zones</h2>
-<p>For specialized applications where you need to do calculations in a time zone that is not supported by <code>Intl</code>, you can also implement your own <code>Temporal.TimeZone</code> object.
-To do this, create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier, and implement the methods <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, <code>getNextTransition()</code>, and <code>getPreviousTransition()</code>.
-Any subclass of <code>Temporal.TimeZone</code> will be accepted in Temporal APIs where a built-in <code>Temporal.TimeZone</code> would work.</p>
+<p>For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
+There are two ways to do this.</p>
+<p>The recommended way is to create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier string, and implement the methods <code>getOffsetNanosecondsFor()</code> and <code>getPossibleInstantsFor()</code>, and optionally <code>getNextTransition()</code> and <code>getPreviousTransition()</code>.
+You don&#39;t need to implement any other methods because other properties and methods will use the base class&#39;s default implementations.</p>
+<p>The other, more difficult, way to create a custom time zone is to create a plain object implementing the <code>Temporal.TimeZone</code> protocol, without subclassing.
+The object must have at least <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> methods.
+Any object with those three methods will return the correct output from any Temporal property or method.
+However, most other code will assume that custom time zones act like built-in <code>Temporal.TimeZone</code> objects.
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>id</code>, <code>getOffsetStringFor()</code>, <code>getDateTimeFor()</code>, <code>getZonedDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>, and <code>toJSON()</code>.
+Your object must not have a <code>timeZone</code> property, so that it can be distinguished in <code>Temporal.TimeZone.from()</code> from other Temporal objects that have a time zone.</p>
 <p>The identifier of a custom time zone must consist of one or more components separated by slashes (<code>/</code>), as described in the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming">tzdata documentation</a>.
 Each component must consist of between one and 14 characters.
 Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_</code>.
 <code>-</code> may not appear as the first character of a component, and a component may not be a single dot <code>.</code> or two dots <code>..</code>.</p>
-<h3 id="protocol"><a class="heading-link" href="#protocol"></a>Protocol</h3><p>It&#39;s also possible for a plain object to be a custom time zone, without subclassing.
-The object must have <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> methods.
-It must not have a <code>timeZone</code> property, so that it can be distinguished in <code>Temporal.TimeZone.from()</code> from other Temporal objects that have a time zone.
-It is possible to pass such an object into any Temporal API that would normally take a built-in <code>Temporal.TimeZone</code>.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-TimeZone"><a class="heading-link" href="#new-Temporal-TimeZone"></a><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -278,6 +277,7 @@ tz2 <span class="token operator">=</span> Temporal<span class="token punctuation
 <span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00[America/Vancouver]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ISO 8601 string without date-time part, throws</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="id"><a class="heading-link" href="#id"></a>timeZone.<strong>id</strong> : string</h3><p>The <code>id</code> property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this property doesn&#39;t need to be overridden because the default implementation gives the result of calling <code>toString()</code>.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="getOffsetNanosecondsFor"><a class="heading-link" href="#getOffsetNanosecondsFor"></a>timeZone.<strong>getOffsetNanosecondsFor</strong>(<em>instant</em>: Temporal.Instant | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -312,6 +312,7 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 <p>This method is similar to <code>timeZone.getOffsetNanosecondsFor()</code>, but returns the offset formatted as a string, with sign, hours, and minutes.</p>
 <p>If <code>timeZone</code> is a UTC offset time zone, the return value of this method is effectively the same as <code>timeZone.id</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates an offset string using the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Getting the UTC offset for a time zone at a particular time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -329,6 +330,7 @@ The default is to use the ISO 8601 calendar.</li>
 <p><strong>Returns:</strong> A <code>Temporal.ZonedDateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.ZonedDateTime</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation gives a result equivalent to calling <code>new Temporal.ZonedDateTime(instant.epochNanoseconds, timeZone, calendar)</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting a specific exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -347,6 +349,7 @@ The default is to use the ISO 8601 calendar.</li>
 <p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates a <code>Temporal.DateTime</code> from <code>instant</code> using a UTC offset which is the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting an exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -384,6 +387,7 @@ This mode also matches the behavior of cross-platform standards like <a href="ht
 This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation calls <code>timeZone.getPossibleInstantsFor()</code>, and if there is more than one possible instant, uses <code>disambiguation</code> to pick which one to return.</p>
 <h3 id="getPossibleInstantsFor"><a class="heading-link" href="#getPossibleInstantsFor"></a>timeZone.<strong>getPossibleInstantsFor</strong>(<em>dateTime</em>: Temporal.DateTime | object | string) : array&lt;Temporal.Instant&gt;</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.DateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
@@ -404,6 +408,8 @@ During &quot;skipped&quot; clock time like the hour after DST starts in the Spri
 <p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, this method will return <code>null</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
+Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the next DST change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -419,6 +425,8 @@ duration<span class="token punctuation">.</span><span class="token function">toL
 <p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
 In that case, this method will return <code>null</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
+Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the previous DST change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -433,6 +441,7 @@ It is usually not called directly, but it can be called automatically by <code>J
 <p>The reverse operation, recovering a <code>Temporal.TimeZone</code> object from a string, is <code>Temporal.TimeZone.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
 If you need to rebuild a <code>Temporal.TimeZone</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.TimeZone</code>s.
 In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation returns the result of calling <code>timeZone.toString()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span>
   id<span class="token operator">:</span> <span class="token number">775</span><span class="token punctuation">,</span>
