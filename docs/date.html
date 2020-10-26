@@ -678,7 +678,7 @@ date<span class="token punctuation">.</span><span class="token function">toYearM
 date<span class="token punctuation">.</span><span class="token function">toMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 08-24</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>date.<strong>getFields</strong>() : { year: number, month: number, day: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>date</code>.</p>
 <p>This method can be used to convert a <code>Temporal.Date</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
-<p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>
+<p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as <code>era</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The possible values for the <code>month</code> property of the returned object start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
