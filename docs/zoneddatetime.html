@@ -205,13 +205,11 @@
 </li>
 <li><a href="#monthsInYear">monthsInYear</a>
 </li>
-<li><a href="#isLeapYear">isLeapYear</a>
+<li><a href="#inLeapYear">inLeapYear</a>
 </li>
 <li><a href="#hoursInDay">hoursInDay</a>
 </li>
 <li><a href="#startOfDay">startOfDay</a>
-</li>
-<li><a href="#isOffsetTransition">isOffsetTransition</a>
 </li>
 <li><a href="#offsetNanoseconds">offsetNanoseconds</a>
 </li>
@@ -600,16 +598,16 @@ percent <span class="token operator">=</span> zdt<span class="token punctuation"
 For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1900-01-01T12:00+09:00[Asia/Tokyo]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>zonedDateTime.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year of this <code>Temporal.ZonedDateTime</code> is a leap year.
+zdt<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span></code></pre><h3 id="inLeapYear"><a class="heading-link" href="#inLeapYear"></a>zonedDateTime.<strong>inLeapYear</strong> : boolean</h3><p>The <code>inLeapYear</code> read-only property tells whether the year of this <code>Temporal.ZonedDateTime</code> is a leap year.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>For the ISO calendar, leap years are years evenly divisible by 4, except years evenly divisible by 100 but not evenly divisible by 400.
 Other calendar systems may calculate leap years differently.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Is this year a leap year?</span>
 zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
+zdt<span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h3 id="hoursInDay"><a class="heading-link" href="#hoursInDay"></a>zonedDateTime.<strong>hoursInDay</strong> : number</h3><p>The <code>hoursInDay</code> read-only property returns the number of real-world hours between the start of the current day (usually midnight) in <code>zonedDateTime.timeZone</code> to the start of the next calendar day in the same time zone.
+zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h3 id="hoursInDay"><a class="heading-link" href="#hoursInDay"></a>zonedDateTime.<strong>hoursInDay</strong> : number</h3><p>The <code>hoursInDay</code> read-only property returns the number of real-world hours between the start of the current day (usually midnight) in <code>zonedDateTime.timeZone</code> to the start of the next calendar day in the same time zone.
 Normally days will be 24 hours long, but on days where there are DST changes or other time zone transitions, this property may return 23 or 25.
 In rare cases, other integers or even non-integer values may be returned, e.g. when time zone definitions change by less than one hour.</p>
 <p>If a time zone offset transition happens exactly at midnight, the transition will impact the previous day&#39;s length.</p>
@@ -635,15 +633,6 @@ zdt <span class="token operator">=</span> Temporal<span class="token punctuation
   <span class="token comment">// => 2018-11-04T01:00-02:00[America/Sao_Paulo]</span>
   <span class="token comment">// Note the 1:00AM start time because the first clock hour was skipped due to DST transition</span>
   <span class="token comment">// that started at midnight.</span></code></pre><!-- prettier-ignore-end -->
-
-<h3 id="isOffsetTransition"><a class="heading-link" href="#isOffsetTransition"></a>zonedDateTime.<strong>isOffsetTransition</strong> : boolean</h3><p>The <code>isOffsetTransition</code> read-only property is <code>true</code> if this <code>Temporal.ZonedDateTime</code> instance is immediately after a DST transition or other change in time zone offset, <code>false</code> otherwise.</p>
-<p>&quot;Immediately after&quot; means that subtracting one nanosecond would yield a <code>Temporal.ZonedDateTime</code> instance that has a different value for <code>offsetNanoseconds</code>.
-In the ISO 8601 calendar, to calculate if a DST transition happens on the same day (but not necessarily at the same time), use <code>.hoursInDay() !== 24</code>.</p>
-<!-- prettier-ignore-start -->
-<pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-01T01:00-07:00[America/Denver]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isOffsetTransition<span class="token punctuation">;</span>
-  <span class="token comment">// => true (DST ended right before this time)</span>
-zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-01T01:00-07:00[America/Phoenix]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isOffsetTransition<span class="token punctuation">;</span>
-  <span class="token comment">// => false (Phoenix doesn't observe DST)</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="offsetNanoseconds"><a class="heading-link" href="#offsetNanoseconds"></a>zonedDateTime.<strong>offsetNanoseconds</strong> : number</h3><p>The <code>offsetNanoseconds</code> read-only property is the offset (in nanoseconds) relative to UTC of <code>zonedDateTime</code>.</p>
 <p>The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.</p>

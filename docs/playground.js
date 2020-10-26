@@ -6527,8 +6527,8 @@
         throw new Error('not implemented');
       }
     }, {
-      key: "isLeapYear",
-      value: function isLeapYear(date) {
+      key: "inLeapYear",
+      value: function inLeapYear(date) {
         throw new Error('not implemented');
       }
     }, {
@@ -6793,8 +6793,8 @@
         return 12;
       }
     }, {
-      key: "isLeapYear",
-      value: function isLeapYear(date) {
+      key: "inLeapYear",
+      value: function inLeapYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         return ES.LeapYear(GetSlot(date, ISO_YEAR));
       }
@@ -8305,10 +8305,10 @@
         return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
-      key: "isLeapYear",
+      key: "inLeapYear",
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).isLeapYear(this);
+        return GetSlot(this, CALENDAR).inLeapYear(this);
       }
     }], [{
       key: "from",
@@ -9013,10 +9013,10 @@
         return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
-      key: "isLeapYear",
+      key: "inLeapYear",
       get: function get() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).isLeapYear(this);
+        return GetSlot(this, CALENDAR).inLeapYear(this);
       }
     }], [{
       key: "from",
@@ -9172,12 +9172,6 @@
         var result = new Construct(Math.abs(GetSlot(this, YEARS)), Math.abs(GetSlot(this, MONTHS)), Math.abs(GetSlot(this, WEEKS)), Math.abs(GetSlot(this, DAYS)), Math.abs(GetSlot(this, HOURS)), Math.abs(GetSlot(this, MINUTES)), Math.abs(GetSlot(this, SECONDS)), Math.abs(GetSlot(this, MILLISECONDS)), Math.abs(GetSlot(this, MICROSECONDS)), Math.abs(GetSlot(this, NANOSECONDS)));
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
         return result;
-      }
-    }, {
-      key: "isZero",
-      value: function isZero() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
       }
     }, {
       key: "add",
@@ -9459,6 +9453,12 @@
       get: function get() {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
         return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
+      }
+    }, {
+      key: "blank",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
       }
     }], [{
       key: "from",
@@ -10525,10 +10525,10 @@
         return GetSlot(this, CALENDAR).monthsInYear(this);
       }
     }, {
-      key: "isLeapYear",
+      key: "inLeapYear",
       get: function get() {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).isLeapYear(this);
+        return GetSlot(this, CALENDAR).inLeapYear(this);
       }
     }], [{
       key: "from",

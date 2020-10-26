@@ -250,7 +250,7 @@ However, we have taken a future-proof approach so that if a use case presents it
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
-    <span class="token function">isLeapYear</span><span class="token punctuation">(</span>
+    <span class="token function">inLeapYear</span><span class="token punctuation">(</span>
         input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date
     <span class="token punctuation">)</span> <span class="token operator">:</span> boolean<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre><p>The corresponding fields on Temporal.Date.prototype should forward requests to the calendar as discussed in <a href="https://github.com/tc39/proposal-temporal/issues/291">#291</a>:</p>
@@ -296,7 +296,7 @@ We are not aware of this being necessary for any built-in calendars.</p>
 <li>.weekOfYear</li>
 <li>.daysInMonth</li>
 <li>.daysInYear</li>
-<li>.isLeapYear</li>
+<li>.inLeapYear</li>
 <li>.year</li>
 <li>.month</li>
 <li>.day</li>

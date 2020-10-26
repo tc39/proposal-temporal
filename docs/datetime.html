@@ -195,7 +195,7 @@
 </li>
 <li><a href="#monthsInYear">monthsInYear</a>
 </li>
-<li><a href="#isLeapYear">isLeapYear</a>
+<li><a href="#inLeapYear">inLeapYear</a>
 </li>
 </ul>
 </li>
@@ -460,14 +460,14 @@ percent <span class="token operator">=</span> dt<span class="token punctuation">
 For the ISO 8601 calendar, this is always 12, but in other calendar systems it may differ from year to year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1900-01-01T12:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span></code></pre><h3 id="isLeapYear"><a class="heading-link" href="#isLeapYear"></a>datetime.<strong>isLeapYear</strong> : boolean</h3><p>The <code>isLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
+dt<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span></code></pre><h3 id="inLeapYear"><a class="heading-link" href="#inLeapYear"></a>datetime.<strong>inLeapYear</strong> : boolean</h3><p>The <code>inLeapYear</code> read-only property tells whether the year that the date falls in is a leap year or not.
 Its value is <code>true</code> if the year is a leap year, and <code>false</code> if not.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Is this year a leap year?</span>
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
+dt<span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>datetime.<strong>with</strong>(<em>dateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTimeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.DateTime</code>, or an ISO string.</li>
