@@ -189,7 +189,7 @@ export class Date {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const result = calendar.dateDifference(this, other, { largestUnit });
+    const result = calendar.dateUntil(this, other, { largestUnit });
     if (smallestUnit === 'days' && roundingIncrement === 1) return result;
 
     let { years, months, weeks, days } = result;
@@ -246,7 +246,7 @@ export class Date {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const result = calendar.dateDifference(other, this, { largestUnit });
+    const result = calendar.dateUntil(other, this, { largestUnit });
     if (smallestUnit === 'days' && roundingIncrement === 1) return result;
 
     let { years, months, weeks, days } = result;

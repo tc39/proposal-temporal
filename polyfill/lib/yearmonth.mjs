@@ -170,7 +170,7 @@ export class YearMonth {
     const otherDate = calendar.dateFromFields({ ...otherFields, day: 1 }, {}, TemporalDate);
     const thisDate = calendar.dateFromFields({ ...thisFields, day: 1 }, {}, TemporalDate);
 
-    const result = calendar.dateDifference(thisDate, otherDate, { largestUnit });
+    const result = calendar.dateUntil(thisDate, otherDate, { largestUnit });
     if (smallestUnit === 'months' && roundingIncrement === 1) return result;
 
     let { years, months } = result;
@@ -241,7 +241,7 @@ export class YearMonth {
     const otherDate = calendar.dateFromFields({ ...otherFields, day: 1 }, {}, TemporalDate);
     const thisDate = calendar.dateFromFields({ ...thisFields, day: 1 }, {}, TemporalDate);
 
-    const result = calendar.dateDifference(otherDate, thisDate, { largestUnit });
+    const result = calendar.dateUntil(otherDate, thisDate, { largestUnit });
     if (smallestUnit === 'months' && roundingIncrement === 1) return result;
 
     let { years, months } = result;

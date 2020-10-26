@@ -99,7 +99,7 @@ class Temporal.Calendar {
 	) : Temporal.Date;
 
 	/** Returns larger minus smaller, which are dates in the same calendar. */
-	dateDifference(
+	dateUntil(
 		smaller: Temporal.Date,
 		larger: Temporal.Date,
 		options: /* options bag */
@@ -616,12 +616,12 @@ Temporal.Date.prototype.add = function(duration, options) {
 	return this.calendar.dateAdd(this, duration, options, constructor);
 }
 
-Temporal.Date.prototype.since = function(other, options) {
+Temporal.Date.prototype.until = function(other, options) {
 	if (other.calendar !== this.calendar) {
 		// Note: call intrinsic versions of this method
 		other = other.withCalendar(this.calendar);
 	}
-	return this.calendar.dateDifference(this, other, options);
+	return this.calendar.dateUntil(this, other, options);
 }
 
 Temporal.Date.prototype.with = function(overrides) {

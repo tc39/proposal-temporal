@@ -477,9 +477,8 @@ export class DateTime {
     );
     const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    const dateDifference = calendar.dateDifference(adjustedDate, otherDate, dateOptions);
+    let { years, months, weeks, days } = calendar.dateUntil(adjustedDate, otherDate, dateOptions);
 
-    let { years, months, weeks, days } = dateDifference;
     ({
       years,
       months,
@@ -580,9 +579,8 @@ export class DateTime {
     );
     const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
     const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    const dateDifference = calendar.dateDifference(otherDate, adjustedDate, dateOptions);
+    let { years, months, weeks, days } = calendar.dateUntil(otherDate, adjustedDate, dateOptions);
 
-    let { years, months, weeks, days } = dateDifference;
     ({
       years,
       months,

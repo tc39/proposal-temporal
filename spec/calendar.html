@@ -59,11 +59,11 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardatedifference" aoid="CalendarDateDifference">
-      <h1>CalendarDateDifference ( _calendar_, _one_, _two_, _options_ )</h1>
+    <emu-clause id="sec-temporal-calendardateuntil" aoid="CalendarDateUntil">
+      <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ )</h1>
       <emu-alg>
-        1. Let _dateDifference_ be ? Get(_calendar_, *"dateDifference"*).
-        1. Return ? Call(_dateDifference_ , _calendar_, « _one_, _two_, _options_ »).
+        1. Let _dateUntil_ be ? Get(_calendar_, *"dateUntil"*).
+        1. Return ? Call(_dateUntil_ , _calendar_, « _one_, _two_, _options_ »).
       </emu-alg>
     </emu-clause>
 
@@ -292,10 +292,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.calendar.prototype.datedifference">
-      <h1>Temporal.Calendar.prototype.dateDifference ( _one_, _two_, _options_ )</h1>
+    <emu-clause id="sec-temporal.calendar.prototype.dateuntil">
+      <h1>Temporal.Calendar.prototype.dateUntil ( _one_, _two_, _options_ )</h1>
       <p>
-        The `dateDifference` method takes three arguments, _one_, _two_, and _options_.
+        The `dateUntil` method takes three arguments, _one_, _two_, and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
