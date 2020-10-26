@@ -188,8 +188,8 @@ export class YearMonth {
       calendar
     );
     ({ years, months } = ES.RoundDuration(
-      years,
-      months,
+      -years,
+      -months,
       0,
       0,
       0,
@@ -200,12 +200,12 @@ export class YearMonth {
       0,
       roundingIncrement,
       smallestUnit,
-      roundingMode,
+      ES.NegateTemporalRoundingMode(roundingMode),
       relativeTo
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
+    return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

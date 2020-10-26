@@ -310,16 +310,22 @@ export class Time {
       0,
       0,
       0,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds,
       roundingIncrement,
       smallestUnit,
-      roundingMode
+      ES.NegateTemporalRoundingMode(roundingMode)
     ));
+    hours = -hours;
+    minutes = -minutes;
+    seconds = -seconds;
+    milliseconds = -milliseconds;
+    microseconds = -microseconds;
+    nanoseconds = -nanoseconds;
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,
       hours,

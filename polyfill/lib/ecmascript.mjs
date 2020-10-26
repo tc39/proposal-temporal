@@ -508,6 +508,16 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalRoundingMode: (options, fallback) => {
     return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], fallback);
   },
+  NegateTemporalRoundingMode: (roundingMode) => {
+    switch (roundingMode) {
+      case 'ceil':
+        return 'floor';
+      case 'floor':
+        return 'ceil';
+      default:
+        return roundingMode;
+    }
+  },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
     let maximum = Infinity;
     if (dividend !== undefined) maximum = dividend;
