@@ -3205,6 +3205,8 @@
   var YEAR_MIN = -271821;
   var YEAR_MAX = 275760;
   var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+
+  var BUILTIN_FIELDS = new Set(['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
   var ES2020 = {
     Call: Call,
     SpeciesConstructor: SpeciesConstructor,
@@ -4112,11 +4114,10 @@
           if (value !== undefined) {
             any = any || {};
 
-            if (property === 'era') {
-              // FIXME: this is terrible
-              any.era = value;
-            } else {
+            if (BUILTIN_FIELDS.has(property)) {
               any[property] = ES.ToInteger(value);
+            } else {
+              any[property] = value;
             }
           }
         }
@@ -4153,11 +4154,10 @@
             value = defaultValue;
           }
 
-          if (property === 'era') {
-            // FIXME: this is terrible
-            result.era = value;
-          } else {
+          if (BUILTIN_FIELDS.has(property)) {
             result[property] = ES.ToInteger(value);
+          } else {
+            result[property] = value;
           }
         }
       } catch (err) {
