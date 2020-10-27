@@ -66,11 +66,13 @@ describe('Intl', () => {
         second: 30,
         calendar: 'japanese'
       });
-      equal(`${dt.toLocaleString('en-US-u-ca-japanese')}`, '11/18/51, 3:23:30 PM');
+      const result = dt.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/18/51, 3:23:30 PM' || result === '11/18/51 S, 3:23:30 PM');
     });
     it("adopts the locale's calendar when the object's calendar is ISO", () => {
       const dt = Temporal.DateTime.from('1976-11-18T15:23:30');
-      equal(`${dt.toLocaleString('en-US-u-ca-japanese')}`, '11/18/51, 3:23:30 PM');
+      const result = dt.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/18/51, 3:23:30 PM' || result === '11/18/51 S, 3:23:30 PM');
     });
     it('throws when the calendars are different and not ISO', () => {
       const dt = Temporal.DateTime.from({
@@ -115,11 +117,13 @@ describe('Intl', () => {
     });
     it("works when the object's calendar is the same as the locale's calendar", () => {
       const d = Temporal.Date.from({ era: 'showa', year: 51, month: 11, day: 18, calendar: 'japanese' });
-      equal(`${d.toLocaleString('en-US-u-ca-japanese')}`, '11/18/51');
+      const result = d.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/18/51' || result === '11/18/51 S');
     });
     it("adopts the locale's calendar when the object's calendar is ISO", () => {
       const d = Temporal.Date.from('1976-11-18');
-      equal(`${d.toLocaleString('en-US-u-ca-japanese')}`, '11/18/51');
+      const result = d.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/18/51' || result === '11/18/51 S');
     });
     it('throws when the calendars are different and not ISO', () => {
       const d = Temporal.Date.from({ year: 1976, month: 11, day: 18, calendar: 'gregory' });
@@ -143,7 +147,8 @@ describe('Intl', () => {
     });
     it("works when the object's calendar is the same as the locale's calendar", () => {
       const ym = Temporal.YearMonth.from({ era: 'showa', year: 51, month: 11, calendar: 'japanese' });
-      equal(`${ym.toLocaleString('en-US-u-ca-japanese')}`, '11/51');
+      const result = ym.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/51' || result === '11/51 S');
     });
     it('throws when the calendar is not equal to the locale calendar', () => {
       const ymISO = Temporal.YearMonth.from({ year: 1976, month: 11 });
