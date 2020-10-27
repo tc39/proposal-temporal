@@ -411,6 +411,12 @@ describe('Date', () => {
       equal(`${earlier.until(later, { largestUnit: 'day' })}`, `${earlier.until(later, { largestUnit: 'days' })}`);
       equal(`${earlier.until(later, { smallestUnit: 'day' })}`, `${earlier.until(later, { smallestUnit: 'days' })}`);
     });
+    it('rounds relative to the receiver', () => {
+      const date1 = Temporal.Date.from('2019-01-01');
+      const date2 = Temporal.Date.from('2019-02-15');
+      equal(`${date1.until(date2, { smallestUnit: 'months' })}`, 'P2M');
+      equal(`${date2.until(date1, { smallestUnit: 'months' })}`, '-P1M');
+    });
   });
   describe('date.since() works', () => {
     const date = new Date(1976, 11, 18);
@@ -625,6 +631,12 @@ describe('Date', () => {
       );
       equal(`${later.since(earlier, { largestUnit: 'day' })}`, `${later.since(earlier, { largestUnit: 'days' })}`);
       equal(`${later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier, { smallestUnit: 'days' })}`);
+    });
+    it('rounds relative to the receiver', () => {
+      const date1 = Date.from('2019-01-01');
+      const date2 = Date.from('2019-02-15');
+      equal(`${date2.since(date1, { smallestUnit: 'months' })}`, 'P1M');
+      equal(`${date1.since(date2, { smallestUnit: 'months' })}`, '-P2M');
     });
   });
   describe('date.add() works', () => {

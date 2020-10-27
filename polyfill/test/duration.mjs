@@ -941,10 +941,17 @@ describe('Duration', () => {
       equal(`${d.round({ smallestUnit: 'years', relativeTo })}`, 'P6Y');
       equal(`${d.negated().round({ smallestUnit: 'years', relativeTo })}`, '-P6Y');
     });
-    it('balances differently depending on relativeTo', () => {
+    it('balances up differently depending on relativeTo', () => {
       const fortyDays = Duration.from({ days: 40 });
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-01-01' })}`, 'P1M9D');
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-02-01' })}`, 'P1M11D');
+      equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-03-01' })}`, 'P1M9D');
+      equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-04-01' })}`, 'P1M10D');
+      const minusForty = Duration.from({ days: -40 });
+      equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-02-01' })}`, '-P1M9D');
+      equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-01-01' })}`, '-P1M9D');
+      equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-03-01' })}`, '-P1M11D');
+      equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-04-01' })}`, '-P1M9D');
     });
     it('balances up to the next unit after rounding', () => {
       const almostWeek = Duration.from({ days: 6, hours: 20 });
@@ -957,6 +964,14 @@ describe('Duration', () => {
     it('does not balance up to weeks if largestUnit is larger than weeks', () => {
       const monthAlmostWeek = Duration.from({ months: 1, days: 6, hours: 20 });
       equal(`${monthAlmostWeek.round({ smallestUnit: 'days', relativeTo: '2020-01-01' })}`, 'P1M7D');
+    });
+    it('balances down differently depending on relativeTo', () => {
+      const oneYear = Duration.from({ years: 1 });
+      equal(`${oneYear.round({ largestUnit: 'days', relativeTo: '2019-01-01' })}`, 'P365D');
+      equal(`${oneYear.round({ largestUnit: 'days', relativeTo: '2019-07-01' })}`, 'P366D');
+      const minusYear = Duration.from({ years: -1 });
+      equal(`${minusYear.round({ largestUnit: 'days', relativeTo: '2020-01-01' })}`, '-P365D');
+      equal(`${minusYear.round({ largestUnit: 'days', relativeTo: '2020-07-01' })}`, '-P366D');
     });
     it('rounds to an increment of hours', () => {
       equal(`${d.round({ smallestUnit: 'hours', roundingIncrement: 3, relativeTo })}`, 'P5Y5M5W5DT6H');
@@ -1063,6 +1078,18 @@ describe('Duration', () => {
         `${d.round({ smallestUnit: 'nanosecond', relativeTo })}`,
         `${d.round({ smallestUnit: 'nanoseconds', relativeTo })}`
       );
+    });
+    it('counts the correct number of days when rounding relative to a date', () => {
+      const days = Duration.from({ days: 45 });
+      equal(`${days.round({ relativeTo: '2019-01-01', smallestUnit: 'months' })}`, 'P2M');
+      equal(`${days.negated().round({ relativeTo: '2019-02-15', smallestUnit: 'months' })}`, '-P1M');
+      const yearAndHalf = Duration.from({ days: 547, hours: 12 });
+      equal(`${yearAndHalf.round({ relativeTo: '2018-01-01', smallestUnit: 'years' })}`, 'P2Y');
+      equal(`${yearAndHalf.round({ relativeTo: '2018-07-01', smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${yearAndHalf.round({ relativeTo: '2019-01-01', smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${yearAndHalf.round({ relativeTo: '2019-07-01', smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${yearAndHalf.round({ relativeTo: '2020-01-01', smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${yearAndHalf.round({ relativeTo: '2020-07-01', smallestUnit: 'years' })}`, 'P2Y');
     });
   });
 });
