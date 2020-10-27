@@ -7,16 +7,16 @@ import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   CALENDAR,
   EPOCHNANOSECONDS,
-  HOUR,
+  ISO_HOUR,
   INSTANT,
   ISO_DAY,
   ISO_MONTH,
   ISO_YEAR,
-  MICROSECOND,
-  MILLISECOND,
-  MINUTE,
-  NANOSECOND,
-  SECOND,
+  ISO_MICROSECOND,
+  ISO_MILLISECOND,
+  ISO_MINUTE,
+  ISO_NANOSECOND,
+  ISO_SECOND,
   TIME_ZONE,
   CreateSlots,
   GetSlot,
@@ -73,27 +73,27 @@ export class ZonedDateTime {
   }
   get hour() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), HOUR);
+    return GetSlot(dateTime(this), ISO_HOUR);
   }
   get minute() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), MINUTE);
+    return GetSlot(dateTime(this), ISO_MINUTE);
   }
   get second() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), SECOND);
+    return GetSlot(dateTime(this), ISO_SECOND);
   }
   get millisecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), MILLISECOND);
+    return GetSlot(dateTime(this), ISO_MILLISECOND);
   }
   get microsecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), MICROSECOND);
+    return GetSlot(dateTime(this), ISO_MICROSECOND);
   }
   get nanosecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(dateTime(this), NANOSECOND);
+    return GetSlot(dateTime(this), ISO_NANOSECOND);
   }
   get epochSeconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -347,16 +347,16 @@ export class ZonedDateTime {
     const tz = GetSlot(this, TIME_ZONE);
     return {
       calendar: GetSlot(this, CALENDAR),
-      hour: GetSlot(dt, HOUR),
       isoDay: GetSlot(dt, ISO_DAY),
+      isoHour: GetSlot(dt, ISO_HOUR),
+      isoMicrosecond: GetSlot(dt, ISO_MICROSECOND),
+      isoMillisecond: GetSlot(dt, ISO_MILLISECOND),
+      isoMinute: GetSlot(dt, ISO_MINUTE),
       isoMonth: GetSlot(dt, ISO_MONTH),
+      isoNanosecond: GetSlot(dt, ISO_NANOSECOND),
+      isoSecond: GetSlot(dt, ISO_SECOND),
       isoYear: GetSlot(dt, ISO_YEAR),
-      microsecond: GetSlot(dt, MICROSECOND),
-      millisecond: GetSlot(dt, MILLISECOND),
-      minute: GetSlot(dt, MINUTE),
-      nanosecond: GetSlot(dt, NANOSECOND),
       offset: ES.GetOffsetStringFor(tz, GetSlot(this, INSTANT)),
-      second: GetSlot(dt, SECOND),
       timeZone: tz
     };
   }
@@ -398,12 +398,12 @@ function zonedDateTimeToString(zdt, precision, options = undefined) {
   let year = GetSlot(dt, ISO_YEAR);
   let month = GetSlot(dt, ISO_MONTH);
   let day = GetSlot(dt, ISO_DAY);
-  let hour = GetSlot(dt, HOUR);
-  let minute = GetSlot(dt, MINUTE);
-  let second = GetSlot(dt, SECOND);
-  let millisecond = GetSlot(dt, MILLISECOND);
-  let microsecond = GetSlot(dt, MICROSECOND);
-  let nanosecond = GetSlot(dt, NANOSECOND);
+  let hour = GetSlot(dt, ISO_HOUR);
+  let minute = GetSlot(dt, ISO_MINUTE);
+  let second = GetSlot(dt, ISO_SECOND);
+  let millisecond = GetSlot(dt, ISO_MILLISECOND);
+  let microsecond = GetSlot(dt, ISO_MICROSECOND);
+  let nanosecond = GetSlot(dt, ISO_NANOSECOND);
 
   if (options) {
     const { unit, increment, roundingMode } = options;

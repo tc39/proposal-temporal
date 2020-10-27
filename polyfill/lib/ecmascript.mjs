@@ -32,12 +32,12 @@ import {
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
-  HOUR,
-  MINUTE,
-  SECOND,
-  MILLISECOND,
-  MICROSECOND,
-  NANOSECOND,
+  ISO_HOUR,
+  ISO_MINUTE,
+  ISO_SECOND,
+  ISO_MILLISECOND,
+  ISO_MICROSECOND,
+  ISO_NANOSECOND,
   DATE_BRAND,
   YEAR_MONTH_BRAND,
   MONTH_DAY_BRAND,
@@ -104,10 +104,21 @@ export const ES = ObjectAssign({}, ES2020, {
     HasSlot(item, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS),
   IsTemporalDate: (item) => HasSlot(item, DATE_BRAND),
   IsTemporalTime: (item) =>
-    HasSlot(item, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND) &&
+    HasSlot(item, ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND) &&
     !HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY),
   IsTemporalDateTime: (item) =>
-    HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
+    HasSlot(
+      item,
+      ISO_YEAR,
+      ISO_MONTH,
+      ISO_DAY,
+      ISO_HOUR,
+      ISO_MINUTE,
+      ISO_SECOND,
+      ISO_MILLISECOND,
+      ISO_MICROSECOND,
+      ISO_NANOSECOND
+    ),
   IsTemporalYearMonth: (item) => HasSlot(item, YEAR_MONTH_BRAND),
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
   IsTemporalZonedDateTime: (item) => HasSlot(item, EPOCHNANOSECONDS, TIME_ZONE, CALENDAR),
@@ -174,7 +185,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // Not an IANA name, may be a custom ID, pass through unchanged
       }
     }
-    const calendar = match[20] || undefined;
+    const calendar = match[20];
     return {
       year,
       month,
@@ -205,7 +216,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ParseTemporalTimeString: (isoString) => {
     const match = PARSE.time.exec(isoString);
-    let hour, minute, second, millisecond, microsecond, nanosecond;
+    let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (match) {
       hour = ES.ToInteger(match[1]);
       minute = ES.ToInteger(match[2] || match[5]);
@@ -215,12 +226,13 @@ export const ES = ObjectAssign({}, ES2020, {
       millisecond = ES.ToInteger(fraction.slice(0, 3));
       microsecond = ES.ToInteger(fraction.slice(3, 6));
       nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      calendar = match[15];
     } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseISODateTime(isoString, {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseISODateTime(isoString, {
         zoneRequired: false
       }));
     }
-    return { hour, minute, second, millisecond, microsecond, nanosecond };
+    return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
   },
   ParseTemporalYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
@@ -230,7 +242,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
       year = ES.ToInteger(yearString);
       month = ES.ToInteger(match[2]);
-      calendar = match[3] || null;
+      calendar = match[3];
     } else {
       ({ year, month, calendar, day: referenceISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
       if (!calendar) referenceISODay = undefined;
@@ -921,16 +933,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
 
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = fields;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
+    const TemporalTime = GetIntrinsic('%Temporal.Time%');
+    const time = calendar.timeFromFields(fields, { overflow }, TemporalTime);
+    const hour = GetSlot(time, ISO_HOUR);
+    const minute = GetSlot(time, ISO_MINUTE);
+    const second = GetSlot(time, ISO_SECOND);
+    const millisecond = GetSlot(time, ISO_MILLISECOND);
+    const microsecond = GetSlot(time, ISO_MICROSECOND);
+    const nanosecond = GetSlot(time, ISO_NANOSECOND);
 
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
@@ -938,9 +948,11 @@ export const ES = ObjectAssign({}, ES2020, {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDateTime(item)) return item;
+
       calendar = item.calendar;
       if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
+
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       ({
@@ -1059,23 +1071,31 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   ToTemporalTime: (item, constructor, overflow = 'constrain') => {
-    let hour, minute, second, millisecond, microsecond, nanosecond;
+    let result;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
+      let calendar = item.calendar;
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      const fields = ES.ToTemporalTimeRecord(item);
+      result = calendar.timeFromFields(fields, { overflow }, constructor);
     } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ParseTemporalTimeString(ES.ToString(item)));
+      let { hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
+        ES.ToString(item)
+      );
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        overflow
+      ));
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
-    const result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   },
@@ -1169,12 +1189,12 @@ export const ES = ObjectAssign({}, ES2020, {
           GetSlot(dt, ISO_YEAR),
           GetSlot(dt, ISO_MONTH),
           GetSlot(dt, ISO_DAY),
-          GetSlot(dt, HOUR),
-          GetSlot(dt, MINUTE),
-          GetSlot(dt, SECOND),
-          GetSlot(dt, MILLISECOND),
-          GetSlot(dt, MICROSECOND),
-          GetSlot(dt, NANOSECOND)
+          GetSlot(dt, ISO_HOUR),
+          GetSlot(dt, ISO_MINUTE),
+          GetSlot(dt, ISO_SECOND),
+          GetSlot(dt, ISO_MILLISECOND),
+          GetSlot(dt, ISO_MICROSECOND),
+          GetSlot(dt, ISO_NANOSECOND)
         );
         if (epochNs === null) throw new RangeError('ZonedDateTime outside of supported range');
         const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -1246,6 +1266,17 @@ export const ES = ObjectAssign({}, ES2020, {
     const cal2 = ES.CalendarToString(two);
     return cal1 === cal2;
   },
+  ConsolidateCalendars: (one, two) => {
+    const sOne = ES.CalendarToString(one);
+    const sTwo = ES.CalendarToString(two);
+    if (sOne === sTwo || sOne === 'iso8601') {
+      return two;
+    } else if (two === 'iso8601') {
+      return one;
+    } else {
+      throw new RangeError('irreconcilable calendars');
+    }
+  },
   TimeZoneFrom: (temporalTimeZoneLike) => {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     let from = TemporalTimeZone.from;
@@ -1283,12 +1314,12 @@ export const ES = ObjectAssign({}, ES2020, {
   TemporalDateTimeToTime: (dateTime) => {
     const Time = GetIntrinsic('%Temporal.Time%');
     return new Time(
-      GetSlot(dateTime, HOUR),
-      GetSlot(dateTime, MINUTE),
-      GetSlot(dateTime, SECOND),
-      GetSlot(dateTime, MILLISECOND),
-      GetSlot(dateTime, MICROSECOND),
-      GetSlot(dateTime, NANOSECOND)
+      GetSlot(dateTime, ISO_HOUR),
+      GetSlot(dateTime, ISO_MINUTE),
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND)
     );
   },
   GetOffsetNanosecondsFor: (timeZone, instant) => {

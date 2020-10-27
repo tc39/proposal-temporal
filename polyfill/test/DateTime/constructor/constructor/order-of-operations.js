@@ -46,6 +46,12 @@ const calendar = {
   year(d) { return d.getISOFields().isoYear; },
   month(d) { return d.getISOFields().isoMonth; },
   day(d) { return d.getISOFields().isoDay; },
+  hour(t) { return t.getISOFields().isoHour; },
+  minute(t) { return t.getISOFields().isoMinute; },
+  second(t) { return t.getISOFields().isoSecond; },
+  millisecond(t) { return t.getISOFields().isoMillisecond; },
+  microsecond(t) { return t.getISOFields().isoMicrosecond; },
+  nanosecond(t) { return t.getISOFields().isoNanosecond; },
 };
 
 Object.defineProperty(Temporal.Calendar, "from", {
