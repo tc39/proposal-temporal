@@ -6653,12 +6653,15 @@
       key: "dateAdd",
       value: function dateAdd(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+        duration = ES.ToTemporalDuration(duration, GetIntrinsic$1('%Temporal.Duration%'));
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        var years = duration.years,
-            months = duration.months,
-            weeks = duration.weeks,
-            days = duration.days;
+        var _duration = duration,
+            years = _duration.years,
+            months = _duration.months,
+            weeks = _duration.weeks,
+            days = _duration.days;
         ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var year = GetSlot(date, ISO_YEAR);
@@ -6685,12 +6688,15 @@
       key: "dateSubtract",
       value: function dateSubtract(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+        duration = ES.ToTemporalDuration(duration, GetIntrinsic$1('%Temporal.Duration%'));
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        var years = duration.years,
-            months = duration.months,
-            weeks = duration.weeks,
-            days = duration.days;
+        var _duration2 = duration,
+            years = _duration2.years,
+            months = _duration2.months,
+            weeks = _duration2.weeks,
+            days = _duration2.days;
         ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var year = GetSlot(date, ISO_YEAR);
@@ -6717,6 +6723,8 @@
       key: "dateDifference",
       value: function dateDifference(one, two, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        one = ES.ToTemporalDate(one, GetIntrinsic$1('%Temporal.Date%'));
+        two = ES.ToTemporalDate(two, GetIntrinsic$1('%Temporal.Date%'));
         options = ES.NormalizeOptionsObject(options);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
@@ -6733,69 +6741,85 @@
       key: "year",
       value: function year(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return GetSlot(date, ISO_YEAR);
       }
     }, {
       key: "month",
       value: function month(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return GetSlot(date, ISO_MONTH);
       }
     }, {
       key: "day",
       value: function day(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return GetSlot(date, ISO_DAY);
       }
     }, {
       key: "era",
       value: function era(date) {
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return undefined;
       }
     }, {
       key: "dayOfWeek",
       value: function dayOfWeek(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return ES.DayOfWeek(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
       }
     }, {
       key: "dayOfYear",
       value: function dayOfYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
       }
     }, {
       key: "weekOfYear",
       value: function weekOfYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
       }
     }, {
       key: "daysInWeek",
       value: function daysInWeek(date) {
+        ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return 7;
       }
     }, {
       key: "daysInMonth",
       value: function daysInMonth(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+
+        if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH)) {
+          date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+        }
+
         return ES.DaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
       }
     }, {
       key: "daysInYear",
       value: function daysInYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
       }
     }, {
       key: "monthsInYear",
       value: function monthsInYear(date) {
+        if (!HasSlot(date, ISO_YEAR)) ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return 12;
       }
     }, {
       key: "inLeapYear",
       value: function inLeapYear(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return ES.LeapYear(GetSlot(date, ISO_YEAR));
       }
     }]);
@@ -6830,11 +6854,13 @@
     _createClass(Gregorian, [{
       key: "era",
       value: function era(date) {
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
       }
     }, {
       key: "year",
       value: function year(date) {
+        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
         var isoYear = GetSlot(date, ISO_YEAR);
         return isoYear < 1 ? -isoYear + 1 : isoYear;
       }
@@ -6946,11 +6972,19 @@
     _createClass(Japanese, [{
       key: "era",
       value: function era(date) {
+        if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
+          date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+        }
+
         return jpn.eraNames[jpn.findEra(date)];
       }
     }, {
       key: "year",
       value: function year(date) {
+        if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
+          date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+        }
+
         var eraIdx = jpn.findEra(date);
         return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
       }
