@@ -7,6 +7,7 @@ includes: [compareArray.js]
 ---*/
 
 const expected = [
+  "get calendar",
   "get hour",
   "valueOf hour",
   "get microsecond",
@@ -33,6 +34,9 @@ const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
     const result = target[key];
+    if (key === "calendar") {
+      return undefined;
+    }
     return {
       valueOf() {
         actual.push(`valueOf ${key}`);

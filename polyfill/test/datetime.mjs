@@ -1654,12 +1654,12 @@ describe('DateTime', () => {
       equal(fields.isoYear, 1976);
       equal(fields.isoMonth, 11);
       equal(fields.isoDay, 18);
-      equal(fields.hour, 15);
-      equal(fields.minute, 23);
-      equal(fields.second, 30);
-      equal(fields.millisecond, 123);
-      equal(fields.microsecond, 456);
-      equal(fields.nanosecond, 789);
+      equal(fields.isoHour, 15);
+      equal(fields.isoMinute, 23);
+      equal(fields.isoSecond, 30);
+      equal(fields.isoMillisecond, 123);
+      equal(fields.isoMicrosecond, 456);
+      equal(fields.isoNanosecond, 789);
       equal(fields.calendar.id, 'iso8601');
     });
     it('enumerable', () => {
@@ -1667,12 +1667,12 @@ describe('DateTime', () => {
       equal(fields2.isoYear, 1976);
       equal(fields2.isoMonth, 11);
       equal(fields2.isoDay, 18);
-      equal(fields2.hour, 15);
-      equal(fields2.minute, 23);
-      equal(fields2.second, 30);
-      equal(fields2.millisecond, 123);
-      equal(fields2.microsecond, 456);
-      equal(fields2.nanosecond, 789);
+      equal(fields2.isoHour, 15);
+      equal(fields2.isoMinute, 23);
+      equal(fields2.isoSecond, 30);
+      equal(fields2.isoMillisecond, 123);
+      equal(fields2.isoMicrosecond, 456);
+      equal(fields2.isoNanosecond, 789);
       equal(fields2.calendar, fields.calendar);
     });
     it('as input to constructor', () => {
@@ -1680,12 +1680,12 @@ describe('DateTime', () => {
         fields.isoYear,
         fields.isoMonth,
         fields.isoDay,
-        fields.hour,
-        fields.minute,
-        fields.second,
-        fields.millisecond,
-        fields.microsecond,
-        fields.nanosecond,
+        fields.isoHour,
+        fields.isoMinute,
+        fields.isoSecond,
+        fields.isoMillisecond,
+        fields.isoMicrosecond,
+        fields.isoNanosecond,
         fields.calendar
       );
       assert(dt2.equals(dt1));

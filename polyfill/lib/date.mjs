@@ -8,12 +8,12 @@ import {
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
-  HOUR,
-  MINUTE,
-  SECOND,
-  MILLISECOND,
-  MICROSECOND,
-  NANOSECOND,
+  ISO_HOUR,
+  ISO_MINUTE,
+  ISO_SECOND,
+  ISO_MILLISECOND,
+  ISO_MICROSECOND,
+  ISO_NANOSECOND,
   DATE_BRAND,
   CALENDAR,
   EPOCHNANOSECONDS,
@@ -310,18 +310,21 @@ export class Date {
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
     const day = GetSlot(this, ISO_DAY);
-    const calendar = GetSlot(this, CALENDAR);
+    const dateCalendar = GetSlot(this, CALENDAR);
     const DateTime = GetIntrinsic('%Temporal.DateTime%');
 
-    if (temporalTime === undefined) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
+    if (temporalTime === undefined) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, dateCalendar);
 
     temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.Time%'));
-    const hour = GetSlot(temporalTime, HOUR);
-    const minute = GetSlot(temporalTime, MINUTE);
-    const second = GetSlot(temporalTime, SECOND);
-    const millisecond = GetSlot(temporalTime, MILLISECOND);
-    const microsecond = GetSlot(temporalTime, MICROSECOND);
-    const nanosecond = GetSlot(temporalTime, NANOSECOND);
+    const hour = GetSlot(temporalTime, ISO_HOUR);
+    const minute = GetSlot(temporalTime, ISO_MINUTE);
+    const second = GetSlot(temporalTime, ISO_SECOND);
+    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
+    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
+    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+    const timeCalendar = GetSlot(temporalTime, CALENDAR);
+
+    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   toZonedDateTime(timeZoneLike, temporalTime = undefined, options = undefined) {
@@ -344,12 +347,12 @@ export class Date {
       nanosecond = 0;
     if (temporalTime !== undefined) {
       temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.Time%'));
-      hour = GetSlot(temporalTime, HOUR);
-      minute = GetSlot(temporalTime, MINUTE);
-      second = GetSlot(temporalTime, SECOND);
-      millisecond = GetSlot(temporalTime, MILLISECOND);
-      microsecond = GetSlot(temporalTime, MICROSECOND);
-      nanosecond = GetSlot(temporalTime, NANOSECOND);
+      hour = GetSlot(temporalTime, ISO_HOUR);
+      minute = GetSlot(temporalTime, ISO_MINUTE);
+      second = GetSlot(temporalTime, ISO_SECOND);
+      millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
+      microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
+      nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
     }
 
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);

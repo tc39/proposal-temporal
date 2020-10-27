@@ -5,12 +5,12 @@ import {
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
-  HOUR,
-  MINUTE,
-  SECOND,
-  MILLISECOND,
-  MICROSECOND,
-  NANOSECOND,
+  ISO_HOUR,
+  ISO_MINUTE,
+  ISO_SECOND,
+  ISO_MILLISECOND,
+  ISO_MICROSECOND,
+  ISO_NANOSECOND,
   CALENDAR
 } from './slots.mjs';
 import { TimeZone } from './timezone.mjs';
@@ -223,12 +223,12 @@ function extractOverrides(temporalObj, main) {
   const DateTime = GetIntrinsic('%Temporal.DateTime%');
 
   if (ES.IsTemporalTime(temporalObj)) {
-    const hour = GetSlot(temporalObj, HOUR);
-    const minute = GetSlot(temporalObj, MINUTE);
-    const second = GetSlot(temporalObj, SECOND);
-    const millisecond = GetSlot(temporalObj, MILLISECOND);
-    const microsecond = GetSlot(temporalObj, MICROSECOND);
-    const nanosecond = GetSlot(temporalObj, NANOSECOND);
+    const hour = GetSlot(temporalObj, ISO_HOUR);
+    const minute = GetSlot(temporalObj, ISO_MINUTE);
+    const second = GetSlot(temporalObj, ISO_SECOND);
+    const millisecond = GetSlot(temporalObj, ISO_MILLISECOND);
+    const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
+    const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
     return {
       instant: main[TIMEZONE].getInstantFor(datetime),
@@ -289,12 +289,12 @@ function extractOverrides(temporalObj, main) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const hour = GetSlot(temporalObj, HOUR);
-    const minute = GetSlot(temporalObj, MINUTE);
-    const second = GetSlot(temporalObj, SECOND);
-    const millisecond = GetSlot(temporalObj, MILLISECOND);
-    const microsecond = GetSlot(temporalObj, MICROSECOND);
-    const nanosecond = GetSlot(temporalObj, NANOSECOND);
+    const hour = GetSlot(temporalObj, ISO_HOUR);
+    const minute = GetSlot(temporalObj, ISO_MINUTE);
+    const second = GetSlot(temporalObj, ISO_SECOND);
+    const millisecond = GetSlot(temporalObj, ISO_MILLISECOND);
+    const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
+    const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
       throw new RangeError(`cannot format Date with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`);

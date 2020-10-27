@@ -9,12 +9,12 @@ import {
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
-  HOUR,
-  MINUTE,
-  SECOND,
-  MILLISECOND,
-  MICROSECOND,
-  NANOSECOND,
+  ISO_HOUR,
+  ISO_MINUTE,
+  ISO_SECOND,
+  ISO_MILLISECOND,
+  ISO_MICROSECOND,
+  ISO_NANOSECOND,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -121,12 +121,12 @@ export class TimeZone {
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
       GetSlot(dateTime, ISO_DAY),
-      GetSlot(dateTime, HOUR),
-      GetSlot(dateTime, MINUTE),
-      GetSlot(dateTime, SECOND),
-      GetSlot(dateTime, MILLISECOND),
-      GetSlot(dateTime, MICROSECOND),
-      GetSlot(dateTime, NANOSECOND)
+      GetSlot(dateTime, ISO_HOUR),
+      GetSlot(dateTime, ISO_MINUTE),
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND)
     );
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const dayBefore = new Instant(utcns.minus(86400e9));
@@ -164,12 +164,12 @@ export class TimeZone {
         GetSlot(dateTime, ISO_YEAR),
         GetSlot(dateTime, ISO_MONTH),
         GetSlot(dateTime, ISO_DAY),
-        GetSlot(dateTime, HOUR),
-        GetSlot(dateTime, MINUTE),
-        GetSlot(dateTime, SECOND),
-        GetSlot(dateTime, MILLISECOND),
-        GetSlot(dateTime, MICROSECOND),
-        GetSlot(dateTime, NANOSECOND)
+        GetSlot(dateTime, ISO_HOUR),
+        GetSlot(dateTime, ISO_MINUTE),
+        GetSlot(dateTime, ISO_SECOND),
+        GetSlot(dateTime, ISO_MILLISECOND),
+        GetSlot(dateTime, ISO_MICROSECOND),
+        GetSlot(dateTime, ISO_NANOSECOND)
       );
       if (epochNs === null) throw new RangeError('DateTime outside of supported range');
       return [new Instant(epochNs.minus(offsetNs))];
@@ -180,12 +180,12 @@ export class TimeZone {
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
       GetSlot(dateTime, ISO_DAY),
-      GetSlot(dateTime, HOUR),
-      GetSlot(dateTime, MINUTE),
-      GetSlot(dateTime, SECOND),
-      GetSlot(dateTime, MILLISECOND),
-      GetSlot(dateTime, MICROSECOND),
-      GetSlot(dateTime, NANOSECOND)
+      GetSlot(dateTime, ISO_HOUR),
+      GetSlot(dateTime, ISO_MINUTE),
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND)
     );
     return possibleEpochNs.map((ns) => new Instant(ns));
   }
