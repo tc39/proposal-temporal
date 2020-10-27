@@ -805,6 +805,12 @@ describe('DateTime', () => {
         `${earlier.until(later, { smallestUnit: 'nanoseconds' })}`
       );
     });
+    it('rounds relative to the receiver', () => {
+      const dt1 = DateTime.from('2019-01-01');
+      const dt2 = DateTime.from('2020-07-02');
+      equal(`${dt1.until(dt2, { smallestUnit: 'years' })}`, 'P2Y');
+      equal(`${dt2.until(dt1, { smallestUnit: 'years' })}`, '-P1Y');
+    });
   });
   describe('DateTime.since()', () => {
     const dt = DateTime.from('1976-11-18T15:23:30.123456789');
@@ -1104,6 +1110,12 @@ describe('DateTime', () => {
         `${later.since(earlier, { smallestUnit: 'nanosecond' })}`,
         `${later.since(earlier, { smallestUnit: 'nanoseconds' })}`
       );
+    });
+    it('rounds relative to the receiver', () => {
+      const dt1 = DateTime.from('2019-01-01');
+      const dt2 = DateTime.from('2020-07-02');
+      equal(`${dt2.since(dt1, { smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${dt1.since(dt2, { smallestUnit: 'years' })}`, '-P2Y');
     });
   });
   describe('DateTime.round works', () => {
