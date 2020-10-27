@@ -2405,6 +2405,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
       calendar = GetSlot(relativeTo, CALENDAR);
     }
+    let remainder;
     switch (unit) {
       case 'years': {
         if (!calendar) throw new RangeError('A starting point is required for years rounding');
@@ -2444,6 +2445,7 @@ export const ES = ObjectAssign({}, ES2020, {
           oneYearDays = calendar.daysInYear(relativeTo);
         }
         years += days / oneYearDays;
+        remainder = years % 1;
 
         years = ES.RoundNumberToIncrement(years, increment, roundingMode);
         months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -2485,6 +2487,7 @@ export const ES = ObjectAssign({}, ES2020, {
           oneMonthDays = calendar.daysInMonth(relativeTo);
         }
         months += days / oneMonthDays;
+        remainder = months % 1;
 
         months = ES.RoundNumberToIncrement(months, increment, roundingMode);
         weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -2508,6 +2511,7 @@ export const ES = ObjectAssign({}, ES2020, {
           oneWeekDays = calendar.daysInWeek(relativeTo);
         }
         weeks += days / oneWeekDays;
+        remainder = weeks % 1;
 
         weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
         days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -2516,41 +2520,48 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'days':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+        remainder = days % 1;
         days = ES.RoundNumberToIncrement(days, increment, roundingMode);
         hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'hours':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         hours += (minutes + seconds / 60) / 60;
+        remainder = hours % 1;
         hours = ES.RoundNumberToIncrement(hours, increment, roundingMode);
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'minutes':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         minutes += seconds / 60;
+        remainder = minutes % 1;
         minutes = ES.RoundNumberToIncrement(minutes, increment, roundingMode);
         seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'seconds':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+        remainder = seconds % 1;
         seconds = ES.RoundNumberToIncrement(seconds, increment, roundingMode);
         milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'milliseconds':
         milliseconds += microseconds * 1e-3 + nanoseconds * 1e-6;
+        remainder = milliseconds % 1;
         milliseconds = ES.RoundNumberToIncrement(milliseconds, increment, roundingMode);
         microseconds = nanoseconds = 0;
         break;
       case 'microseconds':
         microseconds += nanoseconds * 1e-3;
+        remainder = microseconds % 1;
         microseconds = ES.RoundNumberToIncrement(microseconds, increment, roundingMode);
         nanoseconds = 0;
         break;
       case 'nanoseconds':
+        remainder = 0;
         nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
         break;
     }
-    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, remainder };
   },
 
   CompareTemporalDate: (y1, m1, d1, y2, m2, d2) => {

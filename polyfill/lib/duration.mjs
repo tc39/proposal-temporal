@@ -483,6 +483,73 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
+  total(options) {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    let years = GetSlot(this, YEARS);
+    let months = GetSlot(this, MONTHS);
+    let weeks = GetSlot(this, WEEKS);
+    let days = GetSlot(this, DAYS);
+    let hours = GetSlot(this, HOURS);
+    let minutes = GetSlot(this, MINUTES);
+    let seconds = GetSlot(this, SECONDS);
+    let milliseconds = GetSlot(this, MILLISECONDS);
+    let microseconds = GetSlot(this, MICROSECONDS);
+    let nanoseconds = GetSlot(this, NANOSECONDS);
+
+    options = ES.NormalizeOptionsObject(options);
+    if (options.unit === undefined) throw new RangeError('unit option is required');
+    const unit = ES.ToSmallestTemporalDurationUnit({ smallestUnit: options.unit }, undefined);
+    const relativeTo = ES.ToRelativeTemporalObject(options);
+
+    ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
+    // UnbalanceDurationRelative only goes down to days. If the unit we're
+    // totalling is smaller, we'll need to convert days down to that unit before
+    // we can round units smaller than that.
+    if (['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
+      hours += days * 24;
+      days = 0;
+    }
+    if (['minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
+      minutes += hours * 60;
+      hours = 0;
+    }
+    if (['seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
+      seconds += minutes * 60;
+      minutes = 0;
+    }
+    if (['milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
+      milliseconds += seconds * 1000;
+      seconds = 0;
+    }
+    if (['microseconds', 'nanoseconds'].includes(unit)) {
+      microseconds += milliseconds * 1000;
+      milliseconds = 0;
+    }
+    if (unit === 'nanoseconds') {
+      nanoseconds += microseconds * 1000;
+      return nanoseconds; // no need to round because no remainder possible
+    }
+
+    const rounded = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      1,
+      unit,
+      'trunc',
+      relativeTo
+    );
+    const whole = rounded[unit];
+    const { remainder } = rounded;
+    return whole + remainder;
+  }
   getFields() {
     const fields = ES.ToRecord(this, [
       ['days'],
