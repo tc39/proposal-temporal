@@ -432,32 +432,32 @@
           1. Throw a *RangeError* exception.
         1. Else,
           1. TODO: Let _revisedOptions_ be { smallestUnit: options.unit }.
-          1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_revisedOptions_, *undefined*).
+          1. Let _unit_ be ? ToSmallestTemporalDurationUnit(_revisedOptions_, *undefined*).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_years_, _months_, _weeks_, _days_, _unit_, _relativeTo_).
-        1. If 'unit' is "hours", "minutes", "seconds", "milliseconds", "microseconds", "nanoseconds", then
+        1. If _unit_ is "hours", "minutes", "seconds", "milliseconds", "microseconds", or "nanoseconds", then
           1. Set _hours_ to _hours_ + _days_ * 24.
           1. Set _days_ to 0.
-        1. If 'unit' is "hours", "minutes", "seconds", "milliseconds", "microseconds", or "nanoseconds", then
+        1. If _unit_ is "hours", "minutes", "seconds", "milliseconds", "microseconds", or "nanoseconds", then
           1. Set _hours_ to _hours_ + _days_ * 24.
           1. Set _days_ to 0.
-        1. If 'unit' is "minutes", "seconds", "milliseconds", "microseconds", or "nanoseconds", then
+        1. If _unit_ is "minutes", "seconds", "milliseconds", "microseconds", or "nanoseconds", then
           1. Set _minutes_ to _minutes_ + _hours_ * 60.
           1. Set _hours_ to 0.
-        1. If 'unit' is "seconds", "milliseconds", "microseconds", or "nanoseconds", then
+        1. If _unit_ is "seconds", "milliseconds", "microseconds", or "nanoseconds", then
           1. Set _seconds_ to _seconds_ + _minutes_ * 60.
           1. Set _minutes_ to 0.
-        1. If 'unit' is "milliseconds", "microseconds", or "nanoseconds", then
+        1. If _unit_ is "milliseconds", "microseconds", or "nanoseconds", then
           1. Set _milliseconds_ to _milliseconds_ + _seconds_ * 1000.
           1. Set _seconds_ to 0.
-        1. If 'unit' is "microseconds" or "nanoseconds", then
+        1. If _unit_ is "microseconds" or "nanoseconds", then
           1. Set _microseconds_ to _microseconds_ + _milliseconds_ * 1000.
           1. Set _milliseconds_ to 0.
-        1. If 'unit' is "nanoseconds", then
+        1. If _unit_ is "nanoseconds", then
           1. Set _nanoseconds_ to _nanoseconds_ + _microseconds_ * 1000.
           1. Return _nanoseconds_.
         1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]],
         _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _hours_, _minutes_, _seconds_, _milliseconds_,
-        _microseconds_, _nanoseconds_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+        _microseconds_, _nanoseconds_, _roundingIncrement_, _unit_, _roundingMode_, _relativeTo_).
         1. Let _whole_ be ? Get(_roundResult_, _unit_).
         1. Return _whole_ + _roundResult_.[[Remainder]].
       </emu-alg>
