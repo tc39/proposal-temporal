@@ -248,7 +248,6 @@ export class Duration {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
@@ -304,7 +303,6 @@ export class Duration {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
