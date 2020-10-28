@@ -536,7 +536,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.Time` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.Time.compare()` for this, or `time.equals()` for equality.
 
-### time.**toZonedDateTime**(_timeZone_?: Temporal.TimeZone | object | string, _date_: Temporal.Date | object | string) : Temporal.ZonedDateTime
+### time.**toZonedDateTime**(_timeZone_?: Temporal.TimeZone | object | string, _date_: Temporal.Date | object | string, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
