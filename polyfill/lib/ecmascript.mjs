@@ -752,6 +752,34 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
   },
+  DefaultTemporalLargestUnit: (
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  ) => {
+    for (const [prop, v] of Object.entries({
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    })) {
+      if (v !== 0) return prop;
+    }
+    return 'nanoseconds';
+  },
   LargerOfTwoTemporalDurationUnits: (unit1, unit2) => {
     const validUnits = [
       'years',
