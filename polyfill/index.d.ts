@@ -649,7 +649,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    toDateTime(temporalTime: Temporal.Time | TimeLike | string): Temporal.DateTime;
+    toDateTime(temporalTime?: Temporal.Time | TimeLike | string): Temporal.DateTime;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
