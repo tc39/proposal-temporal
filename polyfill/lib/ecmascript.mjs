@@ -476,25 +476,13 @@ export const ES = ObjectAssign({}, ES2020, {
       record = ES.ParseTemporalDurationString(str);
     }
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = record;
-    const duration = ES.RegulateDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'reject'
-    );
+    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     for (const property of disallowedProperties) {
-      if (duration[property] !== 0) {
+      if (record[property] !== 0) {
         throw new RangeError(`invalid duration field ${property}`);
       }
     }
-    return duration;
+    return record;
   },
   ToTemporalDurationOverflow: (options) => {
     return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
@@ -1976,6 +1964,14 @@ export const ES = ObjectAssign({}, ES2020, {
   RejectDurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
     for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+      const propSign = Math.sign(prop);
+      if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
+    }
+  },
+  RejectDuration: (y, mon, w, d, h, min, s, ms, µs, ns) => {
+    const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
+    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
       const propSign = Math.sign(prop);
       if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
     }
