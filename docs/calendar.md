@@ -282,7 +282,7 @@ date.toString()  // => 2020-06-28[c=islamic]
 
 **Returns:** a `Temporal.Duration` representing the time elapsed after `one` and until `two`.
 
-If either of `smaller` or `larger` are not `Temporal.Date` objects, then they will be converted to one as if they were passed to `Temporal.Date.from()`.
+If either of `one` or `two` are not `Temporal.Date` objects, then they will be converted to one as if they were passed to `Temporal.Date.from()`.
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `until()` and `since()` methods of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
