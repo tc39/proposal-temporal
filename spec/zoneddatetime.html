@@ -691,15 +691,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
-        1. If _smallestUnit_ is *"day"*, then
-          1. Let _maximum_ be 1.
-        1. Else if _smallestUnit_ is *"hour"*, then
-          1. Let _maximum_ be 24.
-        1. Else if _smallestUnit_ is *"minute"* or *"second"*, then
-          1. Let _maximum_ be 60.
-        1. Else,
-          1. Let _maximum_ be 1000.
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _maximum_, *false*).
         1. <mark>TODO</mark>.
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
       </emu-alg>
