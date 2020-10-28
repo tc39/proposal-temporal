@@ -2200,7 +2200,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  DurationArithmetic: (
+  AddDuration: (
     y1,
     mon1,
     w1,
