@@ -35,7 +35,10 @@
         1. Let _millisecond_ be ? ToInteger(_millisecond_).
         1. Let _microsecond_ be ? ToInteger(_microsecond_).
         1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
-        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. If _calendarLike_ is *undefined*, then
+          1. Set _calendar_ to ? GetISO8601Calendar().
+        1. Else,
+          1. Set _calendar_ to ? ToTemporalCalendar(_calendarLike_).
         1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, NewTarget).
       </emu-alg>
     </emu-clause>

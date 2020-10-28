@@ -181,8 +181,8 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _s_ be RoundTowardsZero(_ns_ / 1,000,000,000<sub>ℝ</sub>).
-        1. Return the Number value for _s_.
+        1. Let _s_ be RoundTowardsZero(ℝ(_ns_) / 1,000,000,000<sub>ℝ</sub>).
+        1. Return 𝔽(_s_).
       </emu-alg>
     </emu-clause>
 
@@ -196,8 +196,8 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _ms_ be RoundTowardsZero(_ns_ / 1,000,000<sub>ℝ</sub>).
-        1. Return the Number value for _ms_.
+        1. Let _ms_ be RoundTowardsZero(ℝ(_ns_) / 1,000,000<sub>ℝ</sub>).
+        1. Return 𝔽(_ms_).
       </emu-alg>
     </emu-clause>
 
@@ -211,8 +211,8 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _mcs_ be RoundTowardsZero(_ns_ / 1,000<sub>ℝ</sub>).
-        1. Return _mcs_.
+        1. Let _µs_ be RoundTowardsZero(ℝ(_ns_) / 1,000<sub>ℝ</sub>).
+        1. Return ℤ(_µs_).
       </emu-alg>
     </emu-clause>
 
