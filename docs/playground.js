@@ -10737,9 +10737,11 @@
         other = ES.ToTemporalYearMonth(other, YearMonth);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
+        var calendarID = ES.CalendarToString(calendar);
+        var otherCalendarID = ES.CalendarToString(otherCalendar);
 
-        if (calendar.id !== otherCalendar.id) {
-          throw new RangeError("cannot compute difference between months of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
+        if (calendarID !== otherCalendarID) {
+          throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
         }
 
         options = ES.NormalizeOptionsObject(options);
@@ -10783,9 +10785,11 @@
         other = ES.ToTemporalYearMonth(other, YearMonth);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
+        var calendarID = ES.CalendarToString(calendar);
+        var otherCalendarID = ES.CalendarToString(otherCalendar);
 
-        if (calendar.id !== otherCalendar.id) {
-          throw new RangeError("cannot compute difference between months of ".concat(calendar.id, " and ").concat(otherCalendar.id, " calendars"));
+        if (calendarID !== otherCalendarID) {
+          throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
         }
 
         options = ES.NormalizeOptionsObject(options);
