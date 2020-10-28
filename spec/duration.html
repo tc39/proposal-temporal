@@ -399,7 +399,7 @@
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"nanoseconds"*).
-        1. Let _defaultLargestUnit_ be ! DefaultTemporalLargestUnitForRounding(_duration_).
+        1. Let _defaultLargestUnit_ be ! DefaultTemporalLargestUnit(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _defaultLargestUnit_ to ! LargerOfTwoTemporalDurationUnits(_defaultLargestUnit_, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _defaultLargestUnit_).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
@@ -722,22 +722,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-defaulttemporallargestunitforrounding" aoid="DefaultTemporalLargestUnitForRounding">
-      <h1>DefaultTemporalLargestUnitForRounding ( _duration_ )</h1>
+    <emu-clause id="sec-temporal-defaulttemporallargestunit" aoid="DefaultTemporalLargestUnit">
+      <h1>DefaultTemporalLargestUnit ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <p>
-        The abstract operation DefaultTemporalLargestUnitForRounding implements the logic used in the `Temporal.Duration.prototype.round()` method, where the `largestUnit` option, if not given explicitly, is set to the largest non-zero unit in the input Temporal.Duration.
+        The abstract operation DefaultTemporalLargestUnit implements the logic used in the `Temporal.Duration.prototype.round()` method and elsewhere, where the `largestUnit` option, if not given explicitly, is set to the largest non-zero unit in the input Temporal.Duration.
       </p>
       <emu-alg>
-        1. Assert: _duration_ has an [[InitializedTemporalDuration]] internal slot.
-        1. If _duration_.[[Years]] is not zero, return *"years"*.
-        1. If _duration_.[[Months]] is not zero, return *"months"*.
-        1. If _duration_.[[Weeks]] is not zero, return *"weeks"*.
-        1. If _duration_.[[Days]] is not zero, return *"days"*.
-        1. If _duration_.[[Hours]] is not zero, return *"hours"*.
-        1. If _duration_.[[Minutes]] is not zero, return *"minutes"*.
-        1. If _duration_.[[Seconds]] is not zero, return *"seconds"*.
-        1. If _duration_.[[Milliseconds]] is not zero, return *"milliseconds"*.
-        1. If _duration_.[[Microseconds]] is not zero, return *"microseconds"*.
+        1. If _years_ is not zero, return *"years"*.
+        1. If _months_ is not zero, return *"months"*.
+        1. If _weeks_ is not zero, return *"weeks"*.
+        1. If _days_ is not zero, return *"days"*.
+        1. If _hours_ is not zero, return *"hours"*.
+        1. If _minutes_ is not zero, return *"minutes"*.
+        1. If _seconds_ is not zero, return *"seconds"*.
+        1. If _milliseconds_ is not zero, return *"milliseconds"*.
+        1. If _microseconds_ is not zero, return *"microseconds"*.
         1. Return *"nanoseconds"*.
       </emu-alg>
     </emu-clause>

@@ -357,8 +357,7 @@ export class Duration {
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
-    let defaultLargestUnit = 'nanoseconds';
-    for (const [prop, v] of Object.entries({
+    let defaultLargestUnit = ES.DefaultTemporalLargestUnit(
       years,
       months,
       weeks,
@@ -367,14 +366,9 @@ export class Duration {
       minutes,
       seconds,
       milliseconds,
-      microseconds
-    })) {
-      if (v !== 0) {
-        defaultLargestUnit = prop;
-        break;
-      }
-    }
-
+      microseconds,
+      nanoseconds
+    );
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
