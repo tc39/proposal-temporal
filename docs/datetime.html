@@ -209,6 +209,8 @@
 </li>
 <li><a href="#subtract">subtract</a>
 </li>
+<li><a href="#until">until</a>
+</li>
 <li><a href="#since">since</a>
 </li>
 <li><a href="#round">round</a>
@@ -578,7 +580,72 @@ dt<span class="token punctuation">.</span><span class="token function">subtract<
 
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-02-28T15:30</span>
-dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="since"><a class="heading-link" href="#since"></a>datetime.<strong>since</strong>(<em>other</em>: Temporal.DateTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h3 id="until"><a class="heading-link" href="#until"></a>datetime.<strong>until</strong>(<em>other</em>: Temporal.DateTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>other</code> (<code>Temporal.DateTime</code> or value convertible to one): Another date/time until when to compute the difference.</li>
+<li><code>options</code> (optional object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+<li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
+The default is 1.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
+Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+The default is <code>&#39;nearest&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time after <code>datetime</code> and until <code>other</code>.</p>
+<p>This method computes the difference between the two times represented by <code>datetime</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
+If <code>other</code> is earlier than <code>datetime</code> then the resulting duration will be negative.</p>
+<p>If <code>other</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
+<p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
+The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.
+A value of <code>&#39;auto&#39;</code> means <code>&#39;days&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, or <code>&#39;weeks&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
+<p>By default, the largest unit in the result is days.
+This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
+<p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
+These behave as in the <code>Temporal.Duration.round()</code> method, but increments of days and larger are allowed.
+Because rounding to an increment expressed in days or larger units requires a reference point, <code>datetime</code> is used as the starting point in that case.
+The default is to do no rounding.</p>
+<p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
+For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
+Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.</p>
+<p>Computing the difference between two dates in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>datetime.withCalendar()</code>.</p>
+<p>Usage example:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>    P8456DT12H5M29.999996500S</span>
+dt1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt2<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => P23Y1M24DT12H5M29.999996500S</span>
+dt2<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => -P23Y1M24DT12H5M29.999996500S</span>
+dt1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt2<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanoseconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// =>       PT730641929.999996544S (precision lost)</span>
+
+<span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
+dt1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt2<span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => P8456DT12H5M30S</span>
+
+<span class="token comment">// Months and years can be different lengths</span>
+<span class="token punctuation">[</span>jan1<span class="token punctuation">,</span> feb1<span class="token punctuation">,</span> mar1<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">month</span><span class="token punctuation">)</span> <span class="token operator">=></span>
+  Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>feb1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P31D</span>
+jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>feb1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
+feb1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P29D</span>
+feb1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
+jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P121D</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="since"><a class="heading-link" href="#since"></a>datetime.<strong>since</strong>(<em>other</em>: Temporal.DateTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.DateTime</code> or value convertible to one): Another date/time since when to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -600,50 +667,12 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time before <code>datetime</code> and since <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>datetime</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>datetime</code> then the resulting duration will be negative.</p>
-<p>If <code>other</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
-<p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
-The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
-A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
-However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.
-A value of <code>&#39;auto&#39;</code> means <code>&#39;days&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, or <code>&#39;weeks&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
-<p>By default, the largest unit in the result is days.
-This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>
-<p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
-These behave as in the <code>Temporal.Duration.round()</code> method, but increments of days and larger are allowed.
-Since rounding to an increment expressed in days or larger units requires a reference point, <code>datetime</code> is used as the reference point in that case.
-The default is to do no rounding.</p>
-<p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
-For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
-Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.</p>
-<p>Computing the difference between two dates in different calendar systems is not supported.
-If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>datetime.withCalendar()</code>.</p>
+<p>This method does the same thing as the <code>Temporal.DateTime.prototype.until()</code> method, but reversed, and rounding takes place relative to <code>datetime</code> as an ending point instead of a starting point.
+With the default options, the outcome of <code>dt1.since(dt2)</code> is the same as <code>dt1.until(dt2).negated()</code>.</p>
 <p>Usage example:</p>
-<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31T15:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt2<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// =>    P8456DT12H5M29.999996500S</span>
-dt2<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P23Y1M24DT12H5M29.999996500S</span>
-dt1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt2<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => -P23Y1M24DT12H5M29.999996500S</span>
-dt2<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanoseconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// =>       PT730641929.999996544S (precision lost)</span>
-
-<span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
-dt2<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt1<span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P8456DT12H5M30S</span>
-
-<span class="token comment">// Months and years can be different lengths</span>
-<span class="token punctuation">[</span>jan1<span class="token punctuation">,</span> feb1<span class="token punctuation">,</span> mar1<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">month</span><span class="token punctuation">)</span> <span class="token operator">=></span>
-  Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-feb1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>jan1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P31D</span>
-feb1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>jan1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
-mar1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>feb1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P29D</span>
-mar1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>feb1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
-mar1<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>jan1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P121D</span></code></pre><!-- prettier-ignore-end -->
-
-<h3 id="round"><a class="heading-link" href="#round"></a>datetime.<strong>round</strong>(<em>options</em>: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+dt2<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>dt1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P8456DT12H5M29.999996500S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>datetime.<strong>round</strong>(<em>options</em>: object) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
