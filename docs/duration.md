@@ -501,9 +501,8 @@ quarters; // => 3
 **Returns:** a floating-point number representing the number of desired units in the `Temporal.Duration`.
 
 Calculates the number of units of time that can fit in a particular `Temporal.Duration`.
-If the duration is not evenly divisible by the desired unit, then a fractional remainder will be included.
-If not, then the result is an integer.
-In that case, the integer result will be the same unit value returned from `round()` when `smallestUnit` and `largestUnit` are identical.
+If the duration IS NOT evenly divisible by the desired unit, then a fractional remainder will be present in the result.
+If the duration IS evenly divisible by the desired unit, then the integer result will be identical to `duration.round({ smallestUnit: unit, largestUnit: unit, relativeTo })[unit]`.
 
 Interpreting years, months, or weeks requires a reference point.
 Therefore, `unit` is `'years'`, `'months'`, or `'weeks'`, or the duration has nonzero 'years', 'months', or 'weeks', then the `relativeTo` option is required.
@@ -524,12 +523,12 @@ d.total({ largestUnit: 'minutes' }); // => 469200
 d = Temporal.Duration.from('PT123456789S');
 d.total({ unit: 'days' }); // 1428.8980208333332
 
-// Find totals in days, with and without taking DST into account
+// Find totals in months, with and without taking DST into account
 d = Temporal.Duration.from({ hours: 1756 });
 // FIXME: write this example after ZonedDateTime is added
 // d.round({
 //   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
-//   largestUnit: 'years'
+//   largestUnit: 'months'
 // }); // => ???
 d.total({
   unit: 'months',

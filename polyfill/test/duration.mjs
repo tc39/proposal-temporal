@@ -1080,13 +1080,19 @@ describe('Duration', () => {
     it('accepts datetime string equivalents or fields for relativeTo', () => {
       ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
-          const end = Temporal.DateTime.from(relativeTo).add(d);
-          const { year, month, daysInMonth } = end;
-          const endMonth = Temporal.DateTime.from({ year, month, day: 1 });
-          const remainderNanos = end.since(endMonth, { largestUnit: 'nanoseconds' }).nanoseconds;
-          const partialMonth = remainderNanos / (3.6e12 * 24 * daysInMonth);
+          const daysPastJuly1 = 5 * 7 + 5 - 30; // 5 weeks + 5 days - 30 days in June
+          const partialDayNanos =
+            d.hours * 3.6e12 +
+            d.minutes * 6e10 +
+            d.seconds * 1e9 +
+            d.milliseconds * 1e6 +
+            d.microseconds * 1e3 +
+            d.nanoseconds;
+          const partialDay = partialDayNanos / (3.6e12 * 24);
+          const partialMonth = (daysPastJuly1 + partialDay) / 31;
+          const totalMonths = 5 * 12 + 5 + 1 + partialMonth; // +1 for 5 weeks
           const total = d.total({ unit: 'months', relativeTo });
-          equal(total, 66 + partialMonth);
+          equal(total, totalMonths); // 66.32930780242619
         }
       );
     });
@@ -1128,7 +1134,14 @@ describe('Duration', () => {
       throws(() => d.total({ unit: 'microseconds' }), RangeError);
       throws(() => d.total({ unit: 'nanoseconds' }), RangeError);
     });
-    const d2Nanoseconds = d2.round({ largestUnit: 'nanoseconds', smallestUnit: 'nanoseconds' }).nanoseconds;
+    const d2Nanoseconds =
+      d2.days * 24 * 3.6e12 +
+      d2.hours * 3.6e12 +
+      d2.minutes * 6e10 +
+      d2.seconds * 1e9 +
+      d2.milliseconds * 1e6 +
+      d2.microseconds * 1e3 +
+      d2.nanoseconds;
     const totalD2 = {
       days: d2Nanoseconds / (24 * 3.6e12),
       hours: d2Nanoseconds / 3.6e12,
@@ -1138,7 +1151,7 @@ describe('Duration', () => {
       microseconds: d2Nanoseconds / 1e3,
       nanoseconds: d2Nanoseconds
     };
-    it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
+    it('relativeTo not required to round fixed-length units in durations without variable units', () => {
       equal(d2.total({ unit: 'days' }), totalD2.days);
       equal(d2.total({ unit: 'hours' }), totalD2.hours);
       equal(d2.total({ unit: 'minutes' }), totalD2.minutes);
@@ -1147,15 +1160,26 @@ describe('Duration', () => {
       equal(d2.total({ unit: 'microseconds' }), totalD2.microseconds);
       equal(d2.total({ unit: 'nanoseconds' }), totalD2.nanoseconds);
     });
+    it('relativeTo not required to round fixed-length units in durations without variable units (negative)', () => {
+      const negativeD2 = d2.negated();
+      equal(negativeD2.total({ unit: 'days' }), -totalD2.days);
+      equal(negativeD2.total({ unit: 'hours' }), -totalD2.hours);
+      equal(negativeD2.total({ unit: 'minutes' }), -totalD2.minutes);
+      equal(negativeD2.total({ unit: 'seconds' }), -totalD2.seconds);
+      equal(negativeD2.total({ unit: 'milliseconds' }), -totalD2.milliseconds);
+      equal(negativeD2.total({ unit: 'microseconds' }), -totalD2.microseconds);
+      equal(negativeD2.total({ unit: 'nanoseconds' }), -totalD2.nanoseconds);
+    });
+
     const endpoint = relativeTo.add(d);
     const options = (unit) => ({ largestUnit: unit, smallestUnit: unit, roundingMode: 'trunc' });
-    const fullYears = 6;
+    const fullYears = 5;
     const fullDays = endpoint.since(relativeTo, options('days')).days;
     const fullMilliseconds = endpoint.since(relativeTo, options('milliseconds')).milliseconds;
     const partialDayMilliseconds = fullMilliseconds - fullDays * 24 * 3.6e6 + 0.005005;
     const fractionalDay = partialDayMilliseconds / (24 * 3.6e6);
-    const partialYearDays = fullDays - fullYears * 365 + 2;
-    const fractionalYear = partialYearDays / 365 + fractionalDay / 365;
+    const partialYearDays = fullDays - (fullYears * 365 + 2);
+    const fractionalYear = partialYearDays / 365 + fractionalDay / 365; // split to avoid precision loss
     const fractionalMonths = ((endpoint.day - 1) * (24 * 3.6e6) + partialDayMilliseconds) / (31 * 24 * 3.6e6);
 
     const totalResults = {
@@ -1182,16 +1206,29 @@ describe('Duration', () => {
     }
     it('balances differently depending on relativeTo', () => {
       const fortyDays = Duration.from({ days: 40 });
+      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }), 1 + 11 / 31);
       equal(fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }), 1 + 9 / 29);
-      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }), 1 + 9 / 31);
+    });
+    it('balances differently depending on relativeTo (negative)', () => {
+      const negativeFortyDays = Duration.from({ days: -40 });
+      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }), -1 - 11 / 31);
+      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }), -1 - 9 / 29);
     });
     it('balances up to the next unit after rounding', () => {
       const almostWeek = Duration.from({ days: 6, hours: 20 });
       equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), (6 + 20 / 24) / 7);
     });
+    it('balances up to the next unit after rounding (negative)', () => {
+      const almostWeek = Duration.from({ days: -6, hours: -20 });
+      equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), -((6 + 20 / 24) / 7));
+    });
     it('balances days up to both years and months', () => {
       const twoYears = Duration.from({ months: 11, days: 396 });
       equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), 2);
+    });
+    it('balances days up to both years and months (negative)', () => {
+      const twoYears = Duration.from({ months: -11, days: -396 });
+      equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), -2);
     });
     it('accepts singular units', () => {
       equal(d.total({ unit: 'year', relativeTo }), d.total({ unit: 'years', relativeTo }));

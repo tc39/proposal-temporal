@@ -654,6 +654,27 @@ export const ES = ObjectAssign({}, ES2020, {
     if (plural.has(value)) return plural.get(value);
     return value;
   },
+  ToTemporalDurationTotalUnit: (options) => {
+    // This AO is identical to ToSmallestTemporalDurationUnit, except:
+    // - default is always `undefined` (caller will throw if omitted)
+    // - option is named `unit` (not `smallestUnit`)
+    // - all units are valid (no `disallowedStrings`)
+    const plural = new Map([
+      ['year', 'years'],
+      ['month', 'months'],
+      ['day', 'days'],
+      ['hour', 'hours'],
+      ['minute', 'minutes'],
+      ['second', 'seconds'],
+      ['millisecond', 'milliseconds'],
+      ['microsecond', 'microseconds'],
+      ['nanosecond', 'nanoseconds']
+    ]);
+    // "week" doesn't exist in Temporal as a non-plural unit, so don't allow it
+    const value = ES.GetOption(options, 'unit', [...plural.values(), ...plural.keys(), 'weeks'], undefined);
+    if (plural.has(value)) return plural.get(value);
+    return value;
+  },
   ToRelativeTemporalObject: (options) => {
     const relativeTo = options.relativeTo;
     if (relativeTo === undefined) return relativeTo;
@@ -2445,9 +2466,10 @@ export const ES = ObjectAssign({}, ES2020, {
           oneYearDays = calendar.daysInYear(relativeTo);
         }
         years += days / oneYearDays;
-        remainder = years % 1;
 
+        remainder = years;
         years = ES.RoundNumberToIncrement(years, increment, roundingMode);
+        remainder -= years;
         months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       }
@@ -2487,9 +2509,10 @@ export const ES = ObjectAssign({}, ES2020, {
           oneMonthDays = calendar.daysInMonth(relativeTo);
         }
         months += days / oneMonthDays;
-        remainder = months % 1;
 
+        remainder = months;
         months = ES.RoundNumberToIncrement(months, increment, roundingMode);
+        remainder -= months;
         weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       }
@@ -2511,49 +2534,56 @@ export const ES = ObjectAssign({}, ES2020, {
           oneWeekDays = calendar.daysInWeek(relativeTo);
         }
         weeks += days / oneWeekDays;
-        remainder = weeks % 1;
 
+        remainder = weeks;
         weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
+        remainder -= weeks;
         days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       }
       case 'days':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         days += ((seconds / 60 + minutes) / 60 + hours) / 24;
-        remainder = days % 1;
+        remainder = days;
         days = ES.RoundNumberToIncrement(days, increment, roundingMode);
+        remainder -= days;
         hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'hours':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         hours += (minutes + seconds / 60) / 60;
-        remainder = hours % 1;
+        remainder = hours;
         hours = ES.RoundNumberToIncrement(hours, increment, roundingMode);
+        remainder -= hours;
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'minutes':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         minutes += seconds / 60;
-        remainder = minutes % 1;
+        remainder = minutes;
         minutes = ES.RoundNumberToIncrement(minutes, increment, roundingMode);
+        remainder -= minutes;
         seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'seconds':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        remainder = seconds % 1;
+        remainder = seconds;
         seconds = ES.RoundNumberToIncrement(seconds, increment, roundingMode);
+        remainder -= seconds;
         milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'milliseconds':
         milliseconds += microseconds * 1e-3 + nanoseconds * 1e-6;
-        remainder = milliseconds % 1;
+        remainder = milliseconds;
         milliseconds = ES.RoundNumberToIncrement(milliseconds, increment, roundingMode);
+        remainder -= milliseconds;
         microseconds = nanoseconds = 0;
         break;
       case 'microseconds':
         microseconds += nanoseconds * 1e-3;
-        remainder = microseconds % 1;
+        remainder = microseconds;
         microseconds = ES.RoundNumberToIncrement(microseconds, increment, roundingMode);
+        remainder -= microseconds;
         nanoseconds = 0;
         break;
       case 'nanoseconds':

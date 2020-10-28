@@ -497,39 +497,24 @@ export class Duration {
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
     options = ES.NormalizeOptionsObject(options);
-    if (options.unit === undefined) throw new RangeError('unit option is required');
-    const unit = ES.ToSmallestTemporalDurationUnit({ smallestUnit: options.unit }, undefined);
+    const unit = ES.ToTemporalDurationTotalUnit(options, undefined);
+    if (unit === undefined) throw new RangeError('unit option is required');
     const relativeTo = ES.ToRelativeTemporalObject(options);
 
+    // Convert larger units down to days
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
-    // UnbalanceDurationRelative only goes down to days. If the unit we're
-    // totalling is smaller, we'll need to convert days down to that unit before
-    // we can round units smaller than that.
-    if (['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
-      hours += days * 24;
-      days = 0;
-    }
-    if (['minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
-      minutes += hours * 60;
-      hours = 0;
-    }
-    if (['seconds', 'milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
-      seconds += minutes * 60;
-      minutes = 0;
-    }
-    if (['milliseconds', 'microseconds', 'nanoseconds'].includes(unit)) {
-      milliseconds += seconds * 1000;
-      seconds = 0;
-    }
-    if (['microseconds', 'nanoseconds'].includes(unit)) {
-      microseconds += milliseconds * 1000;
-      milliseconds = 0;
-    }
-    if (unit === 'nanoseconds') {
-      nanoseconds += microseconds * 1000;
-      return nanoseconds; // no need to round because no remainder possible
-    }
-
+    // If the unit we're totalling is smaller than `days`, convert days down to that unit.
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      unit
+    ));
+    // Finally, truncate to the correct unit and calculate remainder
     const rounded = ES.RoundDuration(
       years,
       months,
@@ -546,9 +531,7 @@ export class Duration {
       'trunc',
       relativeTo
     );
-    const whole = rounded[unit];
-    const { remainder } = rounded;
-    return whole + remainder;
+    return rounded[unit] + rounded.remainder;
   }
   getFields() {
     const fields = ES.ToRecord(this, [
