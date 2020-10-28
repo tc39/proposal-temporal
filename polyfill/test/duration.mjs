@@ -385,36 +385,33 @@ describe('Duration', () => {
     });
     it('symmetric with regard to negative durations', () => {
       equal(`${Duration.from('P3DT10M').add({ days: -2, minutes: -5 })}`, 'P1DT5M');
-      equal(`${Duration.from('P1DT12H5M30S').add({ hours: -12, seconds: -30 }, { overflow: 'balance' })}`, 'P1DT5M');
+      equal(`${Duration.from('P1DT12H5M30S').add({ hours: -12, seconds: -30 })}`, 'P1DT5M');
     });
-    it('does not balance units', () => {
+    it('balances time units even if both operands are positive', () => {
       const d = Duration.from('P50M50W50DT50H50M50.500500500S');
       const result = d.add(d);
       equal(result.months, 100);
       equal(result.weeks, 100);
-      equal(result.days, 100);
-      equal(result.hours, 100);
-      equal(result.minutes, 100);
-      equal(result.seconds, 100);
-      equal(result.milliseconds, 1000);
-      equal(result.microseconds, 1000);
-      equal(result.nanoseconds, 1000);
+      equal(result.days, 104);
+      equal(result.hours, 5);
+      equal(result.minutes, 41);
+      equal(result.seconds, 41);
+      equal(result.milliseconds, 1);
+      equal(result.microseconds, 1);
+      equal(result.nanoseconds, 0);
+    });
+    it('balances correctly if adding different units flips the overall sign', () => {
+      const d1 = Duration.from({ hours: -1, seconds: -60 });
+      equal(`${d1.add({ minutes: 122 })}`, 'PT1H1M');
+      const d2 = Duration.from({ hours: -1, seconds: -3721 });
+      equal(`${d2.add({ minutes: 61, nanoseconds: 3722000000001 })}`, 'PT1M1.000000001S');
     });
     const max = new Duration(...Array(10).fill(Number.MAX_VALUE));
     it('always throws when addition overflows', () => {
-      ['constrain', 'balance'].forEach((overflow) => {
-        throws(() => max.add(max, { overflow }), RangeError);
-      });
-    });
-    it('throws on invalid overflow', () => {
-      ['', 'CONSTRAIN', 'reject', 3, null].forEach((overflow) =>
-        throws(() => duration.add(duration, { overflow }), RangeError)
-      );
+      throws(() => max.add(max), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance'].forEach((overflow) =>
-        throws(() => duration.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-      );
+      throws(() => duration.add({ hours: 1, minutes: -30 }), RangeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
@@ -455,10 +452,10 @@ describe('Duration', () => {
       equal(`${new Duration().subtract({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
       equal(`${Duration.from('PT1H10M').subtract({ days: -3 })}`, 'P3DT1H10M');
       equal(`${Duration.from('P3DT1H').subtract({ minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT55M').subtract({ minutes: -15 }, { overflow: 'balance' })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H9M30S').subtract({ seconds: -30 }, { overflow: 'balance' })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT55M').subtract({ minutes: -15 })}`, 'P3DT1H10M');
+      equal(`${Duration.from('P3DT1H9M30S').subtract({ seconds: -30 })}`, 'P3DT1H10M');
     });
-    it('never balances positive units in constrain mode', () => {
+    it('balances positive units up to the largest nonzero unit', () => {
       const d = Duration.from({
         minutes: 100,
         seconds: 100,
@@ -473,38 +470,8 @@ describe('Duration', () => {
         microseconds: 500,
         nanoseconds: 500
       });
-      let result = d.subtract(less);
-      equal(result.minutes, 90);
-      equal(result.seconds, 90);
-      equal(result.milliseconds, 1500);
-      equal(result.microseconds, 1500);
-      equal(result.nanoseconds, 1500);
-
-      result = d.subtract(less, { overflow: 'constrain' });
-      equal(result.minutes, 90);
-      equal(result.seconds, 90);
-      equal(result.milliseconds, 1500);
-      equal(result.microseconds, 1500);
-      equal(result.nanoseconds, 1500);
-    });
-    it('balances positive units in balance mode', () => {
-      const d = Duration.from({
-        minutes: 100,
-        seconds: 100,
-        milliseconds: 2000,
-        microseconds: 2000,
-        nanoseconds: 2000
-      });
-      const less = Duration.from({
-        minutes: 10,
-        seconds: 10,
-        milliseconds: 500,
-        microseconds: 500,
-        nanoseconds: 500
-      });
-      const result = d.subtract(less, { overflow: 'balance' });
-      equal(result.hours, 1);
-      equal(result.minutes, 31);
+      const result = d.subtract(less);
+      equal(result.minutes, 91);
       equal(result.seconds, 31);
       equal(result.milliseconds, 501);
       equal(result.microseconds, 501);
@@ -524,25 +491,22 @@ describe('Duration', () => {
       result = tenMinutes.subtract({ minutes: 15 });
       equal(result.minutes, -5);
     });
-    it('throws if result cannot be determined to be positive or negative', () => {
-      ['constrain', 'balance'].forEach((overflow) => {
-        throws(() => tenYears.subtract({ months: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.subtract({ weeks: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.subtract({ days: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.subtract({ hours: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.subtract({ minutes: 5 }, { overflow }), RangeError);
-        throws(() => tenYears.subtract({ seconds: 5 }, { overflow }), RangeError);
-      });
+    it('balances correctly if subtracting different units flips the overall sign', () => {
+      const d1 = Duration.from({ hours: 1, seconds: 60 });
+      equal(`${d1.subtract({ minutes: 122 })}`, '-PT1H1M');
+      const d2 = Duration.from({ hours: 1, seconds: 3721 });
+      equal(`${d2.subtract({ minutes: 61, nanoseconds: 3722000000001 })}`, '-PT1M1.000000001S');
     });
-    it('throws on invalid overflow', () => {
-      ['', 'BALANCE', 'reject', 'xyz', 3, null].forEach((overflow) =>
-        throws(() => duration.subtract(duration, { overflow }), RangeError)
-      );
+    it('throws if result cannot be determined to be positive or negative', () => {
+      throws(() => tenYears.subtract({ months: 5 }), RangeError);
+      throws(() => tenYears.subtract({ weeks: 5 }), RangeError);
+      throws(() => tenYears.subtract({ days: 5 }), RangeError);
+      throws(() => tenYears.subtract({ hours: 5 }), RangeError);
+      throws(() => tenYears.subtract({ minutes: 5 }), RangeError);
+      throws(() => tenYears.subtract({ seconds: 5 }), RangeError);
     });
     it('mixed positive and negative values always throw', () => {
-      ['constrain', 'balance'].forEach((overflow) =>
-        throws(() => duration.subtract({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-      );
+      throws(() => duration.subtract({ hours: 1, minutes: -30 }), RangeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>

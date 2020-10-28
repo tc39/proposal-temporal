@@ -421,8 +421,8 @@ export namespace Temporal {
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
     with(durationLike: DurationLike): Temporal.Duration;
-    add(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
-    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
+    add(other: Temporal.Duration | DurationLike | string, options?: DurationRoundOptions): Temporal.Duration;
+    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationRoundOptions): Temporal.Duration;
     round(options: DurationRoundOptions): Temporal.Duration;
     total(options: DurationTotalOptions): number;
     getFields(): DurationFields;

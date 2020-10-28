@@ -208,9 +208,7 @@ duration = duration.with({ years, months });
 - `other` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (string): How to deal with additions that result in mixed-sign values or values that are larger than the next highest unit.
-    Allowed values are `constrain` and `balance`.
-    The default is `constrain`.
+  - (TODO)
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
 
@@ -219,14 +217,7 @@ This method adds `other` to `duration`, resulting in a longer duration.
 The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `other` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
-In order to be valid, the resulting duration must not have fields with mixed signs.
-However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
-For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `overflow` option tells what to do in this case:
-
-- In `constrain` mode (the default), additions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
-- In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
-
+In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
 No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
@@ -276,9 +267,7 @@ monthsToYears(result); // => P3Y
 - `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
-  - `overflow` (string): How to deal with subtractions that result in values with mixed signs or values that are larger than the next highest unit.
-    Allowed values are `constrain` and `balance`.
-    The default is `constrain`.
+  - (TODO)
 
 **Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
 
@@ -289,15 +278,8 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 
 If `other` is larger than `duration` and the subtraction would result in a negative duration, the method will throw a `RangeError`.
 
-In order to be valid, the resulting duration must not have fields with mixed signs.
-However, before the result is balanced, it's possible that the intermediate result will have one or more negative fields while the overall duration is positive, or vice versa.
-For example, "4 hours and 15 minutes" minus "2 hours and 30 minutes" results in "2 hours and &minus;15 minutes".
-The `overflow` argument tells what to do in this case:
-
-- In `constrain` mode (the default), subtractions that result in mixed-sign fields will balance those fields with the next-highest field so that all the fields of the result are constrained to have the same sign.
-- In `balance` mode, all fields are balanced with the next highest field, no matter if they have mixed signs or not.
-
-For usage examples and a more complete explanation of how balancing works and why it is necessary, especially for subtracting `Temporal.Duration`, see [Duration balancing](./balancing.md#duration-arithmetic).
+In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
+For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md#duration-arithmetic).
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 

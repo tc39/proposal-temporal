@@ -421,52 +421,6 @@ export const ES = ObjectAssign({}, ES2020, {
     } = props;
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  RegulateDuration: (
-    years,
-    months,
-    weeks,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds,
-    overflow
-  ) => {
-    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-    }
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    if (overflow === 'balance') {
-      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        'days'
-      ));
-      for (const prop of [
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      ]) {
-        if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-      }
-    }
-
-    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
-  },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
     let record;
     if (ES.Type(item) === 'Object') {
@@ -2224,29 +2178,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  AddDuration: (
-    y1,
-    mon1,
-    w1,
-    d1,
-    h1,
-    min1,
-    s1,
-    ms1,
-    µs1,
-    ns1,
-    y2,
-    mon2,
-    w2,
-    d2,
-    h2,
-    min2,
-    s2,
-    ms2,
-    µs2,
-    ns2,
-    overflow
-  ) => {
+  AddDuration: (y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2) => {
     let years = y1 + y2;
     let months = mon1 + mon2;
     let weeks = w1 + w2;
@@ -2258,7 +2190,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let microseconds = µs1 + µs2;
     let nanoseconds = ns1 + ns2;
 
-    const sign = ES.DurationSign(
+    const largestUnit = ES.DefaultTemporalLargestUnit(
       years,
       months,
       weeks,
@@ -2270,61 +2202,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds,
       nanoseconds
     );
-    years *= sign;
-    months *= sign;
-    weeks *= sign;
-    days *= sign;
-    hours *= sign;
-    minutes *= sign;
-    seconds *= sign;
-    milliseconds *= sign;
-    microseconds *= sign;
-    nanoseconds *= sign;
-
-    if (nanoseconds < 0) {
-      microseconds += Math.floor(nanoseconds / 1000);
-      nanoseconds = ES.NonNegativeModulo(nanoseconds, 1000);
-    }
-    if (microseconds < 0) {
-      milliseconds += Math.floor(microseconds / 1000);
-      microseconds = ES.NonNegativeModulo(microseconds, 1000);
-    }
-    if (milliseconds < 0) {
-      seconds += Math.floor(milliseconds / 1000);
-      milliseconds = ES.NonNegativeModulo(milliseconds, 1000);
-    }
-    if (seconds < 0) {
-      minutes += Math.floor(seconds / 60);
-      seconds = ES.NonNegativeModulo(seconds, 60);
-    }
-    if (minutes < 0) {
-      hours += Math.floor(minutes / 60);
-      minutes = ES.NonNegativeModulo(minutes, 60);
-    }
-    if (hours < 0) {
-      days += Math.floor(hours / 24);
-      hours = ES.NonNegativeModulo(hours, 24);
-    }
-
-    for (const prop of [months, weeks, days]) {
-      if (prop < 0) throw new RangeError('mixed sign not allowed in duration fields');
-    }
-
-    years *= sign;
-    months *= sign;
-    weeks *= sign;
-    days *= sign;
-    hours *= sign;
-    minutes *= sign;
-    seconds *= sign;
-    milliseconds *= sign;
-    microseconds *= sign;
-    nanoseconds *= sign;
-
-    return ES.RegulateDuration(
-      years,
-      months,
-      weeks,
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
       minutes,
@@ -2332,8 +2210,11 @@ export const ES = ObjectAssign({}, ES2020, {
       milliseconds,
       microseconds,
       nanoseconds,
-      overflow
-    );
+      largestUnit
+    ));
+
+    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   RoundNumberToIncrement: (quantity, increment, mode) => {
     const quotient = quantity / increment;
