@@ -3095,6 +3095,7 @@
     }
 
     DefineIntrinsic(name, Class);
+    DefineIntrinsic("".concat(name, ".prototype"), Class.prototype);
   }
   function DefineIntrinsic(name, value) {
     var key = "%".concat(name, "%");
@@ -6539,11 +6540,6 @@
         throw new Error('not implemented');
       }
     }, {
-      key: "era",
-      value: function era(date) {
-        throw new Error('not implemented');
-      }
-    }, {
       key: "dayOfWeek",
       value: function dayOfWeek(date) {
         throw new Error('not implemented');
@@ -6811,12 +6807,6 @@
         return GetSlot(date, ISO_DAY);
       }
     }, {
-      key: "era",
-      value: function era(date) {
-        if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
-        return undefined;
-      }
-    }, {
       key: "dayOfWeek",
       value: function dayOfWeek(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -6882,7 +6872,16 @@
   MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar'); // Note: other built-in calendars than iso8601 are not part of the Temporal
   // proposal for ECMA-262. These calendars will be standardized as part of
   // ECMA-402.
-  // Implementation details for Gregorian calendar
+
+  function addCustomPropertyGetter(type, name) {
+    Object.defineProperty(GetIntrinsic$1("%Temporal.".concat(type, ".prototype%")), name, {
+      get: function get() {
+        return this.calendar[name](this);
+      },
+      configurable: true
+    });
+  } // Implementation details for Gregorian calendar
+
 
   var gre = {
     isoYear: function isoYear(year, era) {
@@ -6898,9 +6897,15 @@
     var _super2 = _createSuper(Gregorian);
 
     function Gregorian() {
+      var _this;
+
       _classCallCheck(this, Gregorian);
 
-      return _super2.call(this, 'gregory');
+      _this = _super2.call(this, 'gregory');
+      addCustomPropertyGetter('Date', 'era');
+      addCustomPropertyGetter('DateTime', 'era');
+      addCustomPropertyGetter('YearMonth', 'era');
+      return _this;
     }
 
     _createClass(Gregorian, [{
@@ -7016,9 +7021,15 @@
     var _super3 = _createSuper(Japanese);
 
     function Japanese() {
+      var _this2;
+
       _classCallCheck(this, Japanese);
 
-      return _super3.call(this, 'japanese');
+      _this2 = _super3.call(this, 'japanese');
+      addCustomPropertyGetter('Date', 'era');
+      addCustomPropertyGetter('DateTime', 'era');
+      addCustomPropertyGetter('YearMonth', 'era');
+      return _this2;
     }
 
     _createClass(Japanese, [{
@@ -8444,12 +8455,6 @@
         return GetSlot(this, CALENDAR);
       }
     }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).era(this);
-      }
-    }, {
       key: "year",
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -9271,12 +9276,6 @@
       get: function get() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, NANOSECOND);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).era(this);
       }
     }, {
       key: "dayOfWeek",
@@ -10914,12 +10913,6 @@
       get: function get() {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).era(this);
       }
     }, {
       key: "daysInMonth",
