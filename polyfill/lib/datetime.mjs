@@ -260,8 +260,7 @@ export class DateTime {
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    calendar = TemporalCalendar.from(calendar);
+    calendar = ES.ToTemporalCalendar(calendar);
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
       GetSlot(this, ISO_YEAR),
