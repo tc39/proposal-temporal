@@ -1668,69 +1668,66 @@ export const ES = ObjectAssign({}, ES2020, {
     return { year, month, years, months };
   },
   BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
-    const sign = ES.DurationSign(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    days *= sign;
-    hours *= sign;
-    minutes *= sign;
-    seconds *= sign;
-    milliseconds *= sign;
-    microseconds *= sign;
-    nanoseconds *= sign;
-
-    let deltaDays;
-    ({
-      deltaDays,
-      hour: hours,
-      minute: minutes,
-      second: seconds,
-      millisecond: milliseconds,
-      microsecond: microseconds,
-      nanosecond: nanoseconds
-    } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
-    days += deltaDays;
+    hours = bigInt(hours).add(bigInt(days).multiply(24));
+    minutes = bigInt(minutes).add(hours.multiply(60));
+    seconds = bigInt(seconds).add(minutes.multiply(60));
+    milliseconds = bigInt(milliseconds).add(seconds.multiply(1000));
+    microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
+    nanoseconds = bigInt(nanoseconds).add(microseconds.multiply(1000));
+    const sign = nanoseconds.lesser(0) ? -1 : 1;
+    nanoseconds = nanoseconds.abs();
+    microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
 
     switch (largestUnit) {
-      case 'hours':
-        hours += 24 * days;
-        days = 0;
-        break;
-      case 'minutes':
-        minutes += 60 * (hours + 24 * days);
-        hours = days = 0;
-        break;
-      case 'seconds':
-        seconds += 60 * (minutes + 60 * (hours + 24 * days));
-        minutes = hours = days = 0;
-        break;
-      case 'milliseconds':
-        milliseconds += 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)));
-        seconds = minutes = hours = days = 0;
-        break;
-      case 'microseconds':
-        microseconds += 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days))));
-        milliseconds = seconds = minutes = hours = days = 0;
-        break;
-      case 'nanoseconds':
-        nanoseconds +=
-          1000 * (microseconds + 1000 * (milliseconds + 1000 * (seconds + 60 * (minutes + 60 * (hours + 24 * days)))));
-        microseconds = milliseconds = seconds = minutes = hours = days = 0;
-        break;
       case 'years':
       case 'months':
       case 'weeks':
       case 'days':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+        ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
+        ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
+        ({ quotient: hours, remainder: minutes } = minutes.divmod(60));
+        ({ quotient: days, remainder: hours } = hours.divmod(24));
+        break;
+      case 'hours':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+        ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
+        ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
+        ({ quotient: hours, remainder: minutes } = minutes.divmod(60));
+        break;
+      case 'minutes':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+        ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
+        ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
+        break;
+      case 'seconds':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+        ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
+        break;
+      case 'milliseconds':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+        break;
+      case 'microseconds':
+        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+        break;
+      case 'nanoseconds':
         break;
       default:
         throw new Error('assert not reached');
     }
 
-    days *= sign;
-    hours *= sign;
-    minutes *= sign;
-    seconds *= sign;
-    milliseconds *= sign;
-    microseconds *= sign;
-    nanoseconds *= sign;
+    days = days.toJSNumber() * sign;
+    hours = hours.toJSNumber() * sign;
+    minutes = minutes.toJSNumber() * sign;
+    seconds = seconds.toJSNumber() * sign;
+    milliseconds = milliseconds.toJSNumber() * sign;
+    microseconds = microseconds.toJSNumber() * sign;
+    nanoseconds = nanoseconds.toJSNumber() * sign;
 
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
