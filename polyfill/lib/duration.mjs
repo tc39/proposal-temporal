@@ -251,18 +251,7 @@ export class Duration {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.DurationArithmetic(
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
       GetSlot(this, WEEKS),
@@ -318,18 +307,7 @@ export class Duration {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalDurationOverflow(options);
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.DurationArithmetic(
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
       GetSlot(this, WEEKS),
