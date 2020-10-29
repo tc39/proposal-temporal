@@ -75,6 +75,9 @@ describe('Time', () => {
       it('Time.prototype.getFields is a Function', () => {
         equal(typeof Time.prototype.getFields, 'function');
       });
+      it('Time.prototype.getISOFields is a Function', () => {
+        equal(typeof Time.prototype.getISOFields, 'function');
+      });
       it('Time.prototype.toString is a Function', () => {
         equal(typeof Time.prototype.toString, 'function');
       });
@@ -1320,6 +1323,40 @@ describe('Time', () => {
     it('as input to with()', () => {
       const t2 = Time.from('20:18:32').with(fields);
       equal(Time.compare(t1, t2), 0);
+    });
+  });
+  describe('time.getISOFields() works', () => {
+    const t1 = Time.from('15:23:30.123456789');
+    const fields = t1.getISOFields();
+    it('fields', () => {
+      equal(fields.isoHour, 15);
+      equal(fields.isoMinute, 23);
+      equal(fields.isoSecond, 30);
+      equal(fields.isoMillisecond, 123);
+      equal(fields.isoMicrosecond, 456);
+      equal(fields.isoNanosecond, 789);
+      equal(fields.calendar.id, 'iso8601');
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.isoHour, 15);
+      equal(fields2.isoMinute, 23);
+      equal(fields2.isoSecond, 30);
+      equal(fields2.isoMillisecond, 123);
+      equal(fields2.isoMicrosecond, 456);
+      equal(fields2.calendar.id, 'iso8601');
+    });
+    it('as input to constructor', () => {
+      const t2 = new Time(
+        fields.isoHour,
+        fields.isoMinute,
+        fields.isoSecond,
+        fields.isoMillisecond,
+        fields.isoMicrosecond,
+        fields.isoNanosecond,
+        fields.calendar
+      );
+      assert(t1.equals(t2));
     });
   });
 });
