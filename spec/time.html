@@ -397,6 +397,25 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.time.prototype.tozoneddatetime">
+      <h1>Temporal.Time.prototype.toZonedDateTime ( _timeZoneLike_, _temporalDate_ [ , _options_ ] )</h1>
+      <p>
+        The `toZonedDateTime` method takes three arguments, _timeZoneLike_, _temporalDate_, and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. Set _temporalDate_ to ? ToTemporalTime(_temporalDate_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _temporalDate_.[[Calendar]]).
+        1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _temporalDateTime_, _disambiguation_).
+        1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.time.prototype.getfields">
       <h1>Temporal.Time.prototype.getFields ( )</h1>
       <p>

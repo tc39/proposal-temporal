@@ -16,6 +16,7 @@ import {
   MICROSECOND,
   NANOSECOND,
   CALENDAR,
+  EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -719,6 +720,15 @@ export class DateTime {
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
+  }
+  toZonedDateTime(temporalTimeZoneLike, options = undefined) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    options = ES.NormalizeOptionsObject(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const instant = ES.GetTemporalInstantFor(timeZone, this, disambiguation);
+    const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   toDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

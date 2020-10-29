@@ -657,6 +657,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.datetime.prototype.tozoneddatetime">
+      <h1>Temporal.DateTime.prototype.toZonedDateTime ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
+      <p>
+        The `toZonedDateTime` method takes two arguments, _temporalTimeZoneLike_ and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _dateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.datetime.prototype.todate">
       <h1>Temporal.DateTime.prototype.toDate ( )</h1>
       <p>

@@ -69,6 +69,9 @@ describe('Time', () => {
       it('Time.prototype.toDateTime is a Function', () => {
         equal(typeof Time.prototype.toDateTime, 'function');
       });
+      it('Time.prototype.toZonedDateTime is a Function', () => {
+        equal(typeof Time.prototype.toZonedDateTime, 'function');
+      });
       it('Time.prototype.getFields is a Function', () => {
         equal(typeof Time.prototype.getFields, 'function');
       });
@@ -235,6 +238,50 @@ describe('Time', () => {
     });
     it('object must contain at least the required properties', () => {
       throws(() => time.toDateTime({ year: 1976 }), TypeError);
+    });
+  });
+  describe('time.toZonedDateTime()', function () {
+    it('works', () => {
+      const time = Time.from('12:00');
+      const date = Temporal.Date.from('2020-01-01');
+      const tz = Temporal.TimeZone.from('America/Los_Angeles');
+      equal(`${time.toZonedDateTime(tz, date)}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
+    });
+    it('works with disambiguation option', () => {
+      const time = Time.from('02:00');
+      const date = Temporal.Date.from('2020-03-08');
+      const tz = Temporal.TimeZone.from('America/Los_Angeles');
+      const zdt = time.toZonedDateTime(tz, date, { disambiguation: 'earlier' });
+      equal(`${zdt}`, '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
+    });
+    it('casts first argument', () => {
+      const time = Time.from('12:00');
+      const date = Temporal.Date.from('2020-07-08');
+      const zdt = time.toZonedDateTime('America/Los_Angeles', date);
+      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
+    });
+    it('casts second argument', () => {
+      const time = Time.from('12:00');
+      const tz = Temporal.TimeZone.from('America/Los_Angeles');
+      const zdt = time.toZonedDateTime(tz, '2020-07-08');
+      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
+    });
+    it('throws on bad disambiguation', () => {
+      ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
+        throws(() => Time.from('12:00').toZonedDateTime('UTC', '2019-10-29', { disambiguation }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      const time = Time.from('10:46:38');
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => time.toZonedDateTime('America/Sao_Paulo', '2019-10-29', badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(
+          `${time.toZonedDateTime('America/Sao_Paulo', '2019-10-29', options)}`,
+          '2019-10-29T10:46:38-03:00[America/Sao_Paulo]'
+        )
+      );
     });
   });
   describe('time.until() works', () => {

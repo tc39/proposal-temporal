@@ -16,6 +16,7 @@ import {
   NANOSECOND,
   DATE_BRAND,
   CALENDAR,
+  EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -322,6 +323,39 @@ export class Date {
     const microsecond = GetSlot(temporalTime, MICROSECOND);
     const nanosecond = GetSlot(temporalTime, NANOSECOND);
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+  }
+  toZonedDateTime(timeZoneLike, temporalTime = undefined, options = undefined) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+    options = ES.NormalizeOptionsObject(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+
+    const year = GetSlot(this, ISO_YEAR);
+    const month = GetSlot(this, ISO_MONTH);
+    const day = GetSlot(this, ISO_DAY);
+    const calendar = GetSlot(this, CALENDAR);
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+
+    let hour = 0,
+      minute = 0,
+      second = 0,
+      millisecond = 0,
+      microsecond = 0,
+      nanosecond = 0;
+    if (temporalTime !== undefined) {
+      temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.Time%'));
+      hour = GetSlot(temporalTime, HOUR);
+      minute = GetSlot(temporalTime, MINUTE);
+      second = GetSlot(temporalTime, SECOND);
+      millisecond = GetSlot(temporalTime, MILLISECOND);
+      microsecond = GetSlot(temporalTime, MICROSECOND);
+      nanosecond = GetSlot(temporalTime, NANOSECOND);
+    }
+
+    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
