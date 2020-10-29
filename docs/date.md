@@ -555,6 +555,118 @@ date.equals(other); // => false
 date.equals(date); // => true
 ```
 
+### date.**lessThan**(_other_: Temporal.Date | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Date` or value convertible to one): Another date to compare.
+
+**Returns:** `true` if `date` is earlier than `other`, or `false` if not.
+
+Compares two `Temporal.Date` objects to check if `date` is earlier than `other`.
+
+This function exists because it's not possible to compare using `date < other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Date.compare(date, other) < 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
+
+Example usage:
+
+```javascript
+date = Temporal.Date.from('2006-08-24');
+other = Temporal.Date.from('2019-01-31');
+date.lessThan(other); // => true
+date.lessThan('2000-01-01'); // => false
+date.lessThan(date); // => false
+```
+
+### date.**greaterThan**(_other_: Temporal.Date | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Date` or value convertible to one): Another date to compare.
+
+**Returns:** `true` if `date` is later than `other`, or `false` if not.
+
+Compares two `Temporal.Date` objects to check if `date` is later than `other`.
+
+This function exists because it's not possible to compare using `date > other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Date.compare(date, other) > 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
+
+Example usage:
+
+```javascript
+date = Temporal.Date.from('2006-08-24');
+other = Temporal.Date.from('2019-01-31');
+date.greaterThan(other); // => false
+date.greaterThan('2000-01-01'); // => true
+date.greaterThan(date); // => false
+```
+
+### date.**lessEquals**(_other_: Temporal.Date | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Date` or value convertible to one): Another date to compare.
+
+**Returns:** `true` if `date` is earlier than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Date` objects to check if `date` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `date <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Date.compare(date, other) <= 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
+
+Example usage:
+
+```javascript
+date = Temporal.Date.from('2006-08-24');
+other = Temporal.Date.from('2019-01-31');
+date.lessEquals(other); // => true
+date.lessEquals('2000-01-01'); // => false
+date.lessEquals(date); // => true
+```
+
+### date.**greaterEquals**(_other_: Temporal.Date | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Date` or value convertible to one): Another date to compare.
+
+**Returns:** `true` if `date` is later than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Date` objects to check if `date` is later than or equal to `other`.
+
+This function exists because it's not possible to compare using `date >= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Date.compare(date, other) >= 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
+
+Example usage:
+
+```javascript
+date = Temporal.Date.from('2006-08-24');
+other = Temporal.Date.from('2019-01-31');
+date.greaterThan(other); // => false
+date.greaterThan('2000-01-01'); // => true
+date.greaterThan(date); // => true
+```
+
 ### date.**toString**() : string
 
 **Returns:** a string in the ISO 8601 date format representing `date`.

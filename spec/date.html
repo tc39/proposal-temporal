@@ -503,6 +503,66 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.date.prototype.lessthan">
+      <h1>Temporal.Date.prototype.lessThan ( _other_ )</h1>
+      <p>
+        The `lessThan` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
+        1. Set _two_ to ? ToTemporalDate(_other_).
+        1. Let _comparison_ be ? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]]).
+        1. If _comparison_ &lt; *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.date.prototype.greaterthan">
+      <h1>Temporal.Date.prototype.greaterThan ( _other_ )</h1>
+      <p>
+        The `greaterThan` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
+        1. Set _two_ to ? ToTemporalDate(_other_).
+        1. Let _comparison_ be ? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]]).
+        1. If _comparison_ &gt; *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.date.prototype.lessequals">
+      <h1>Temporal.Date.prototype.lessEquals ( _other_ )</h1>
+      <p>
+        The `lessEquals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
+        1. Set _two_ to ? ToTemporalDate(_other_).
+        1. Let _comparison_ be ? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]]).
+        1. If _comparison_ ≤ *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.date.prototype.greaterequals">
+      <h1>Temporal.Date.prototype.greaterEquals ( _other_ )</h1>
+      <p>
+        The `greaterEquals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalDate]]).
+        1. Set _two_ to ? ToTemporalDate(_other_).
+        1. Let _comparison_ be ? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]]).
+        1. If _comparison_ ≥ *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.date.prototype.todatetime">
       <h1>Temporal.Date.prototype.toDateTime ( [ _temporalTime_ ] )</h1>
       <p>

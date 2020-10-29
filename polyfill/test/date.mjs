@@ -909,6 +909,70 @@ describe('Date', () => {
       throws(() => Date.compare(d1, { year: 2019 }), TypeError);
     });
   });
+  describe('Date.lessThan works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(d1.lessThan(d1), false));
+    it('smaller/larger', () => equal(d1.lessThan(d2), true));
+    it('larger/smaller', () => equal(d2.lessThan(d1), false));
+    it('compares calendars lexically', () => {
+      equal(d1.withCalendar('japanese').lessThan(d1), false);
+    });
+    it('casts argument', () => {
+      equal(d2.lessThan({ year: 1976, month: 11, day: 18 }), false);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => d1.lessThan({ year: 2019 }), TypeError);
+    });
+  });
+  describe('Date.greaterThan works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(d1.greaterThan(d1), false));
+    it('smaller/larger', () => equal(d1.greaterThan(d2), false));
+    it('larger/smaller', () => equal(d2.greaterThan(d1), true));
+    it('compares calendars lexically', () => {
+      equal(d1.withCalendar('japanese').greaterThan(d1), true);
+    });
+    it('casts argument', () => {
+      equal(d2.greaterThan({ year: 1976, month: 11, day: 18 }), true);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => d1.greaterThan({ year: 2019 }), TypeError);
+    });
+  });
+  describe('Date.lessEquals works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(d1.lessEquals(d1), true));
+    it('smaller/larger', () => equal(d1.lessEquals(d2), true));
+    it('larger/smaller', () => equal(d2.lessEquals(d1), false));
+    it('compares calendars lexically', () => {
+      equal(d1.withCalendar('japanese').lessEquals(d1), false);
+    });
+    it('casts argument', () => {
+      equal(d2.lessEquals({ year: 1976, month: 11, day: 18 }), false);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => d1.lessEquals({ year: 2019 }), TypeError);
+    });
+  });
+  describe('Date.greaterEquals works', () => {
+    const d1 = Date.from('1976-11-18');
+    const d2 = Date.from('2019-06-30');
+    it('equal', () => equal(d1.greaterEquals(d1), true));
+    it('smaller/larger', () => equal(d1.greaterEquals(d2), false));
+    it('larger/smaller', () => equal(d2.greaterEquals(d1), true));
+    it('compares calendars lexically', () => {
+      equal(d1.withCalendar('japanese').greaterEquals(d1), true);
+    });
+    it('casts argument', () => {
+      equal(d2.greaterEquals({ year: 1976, month: 11, day: 18 }), true);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => d1.greaterEquals({ year: 2019 }), TypeError);
+    });
+  });
   describe('Date.equal works', () => {
     const d1 = Date.from('1976-11-18');
     const d2 = Date.from('2019-06-30');

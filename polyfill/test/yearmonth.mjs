@@ -189,6 +189,44 @@ describe('YearMonth', () => {
       equal(YearMonth.compare(ym1, ym2), -1);
     });
   });
+  describe('YearMonth.lessThan() works', () => {
+    const nov94 = YearMonth.from('1994-11');
+    const jun13 = YearMonth.from('2013-06');
+    it('equal', () => equal(nov94.lessThan(nov94), false));
+    it('smaller/larger', () => equal(nov94.lessThan(jun13), true));
+    it('larger/smaller', () => equal(jun13.lessThan(nov94), false));
+    it('casts argument', () => {
+      equal(jun13.lessThan('1994-11'), false);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => nov94.lessThan({ year: 2013 }), TypeError);
+    });
+    it('takes [[ISODay]] into account', () => {
+      const iso = Temporal.Calendar.from('iso8601');
+      const ym1 = new YearMonth(2000, 1, iso, 1);
+      const ym2 = new YearMonth(2000, 1, iso, 2);
+      equal(ym1.lessThan(ym2), true);
+    });
+  });
+  describe('YearMonth.greaterThan() works', () => {
+    const nov94 = YearMonth.from('1994-11');
+    const jun13 = YearMonth.from('2013-06');
+    it('equal', () => equal(nov94.greaterThan(nov94), false));
+    it('smaller/larger', () => equal(nov94.greaterThan(jun13), false));
+    it('larger/smaller', () => equal(jun13.greaterThan(nov94), true));
+    it('casts argument', () => {
+      equal(jun13.greaterThan('1994-11'), true);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => nov94.greaterThan({ year: 2013 }), TypeError);
+    });
+    it('takes [[ISODay]] into account', () => {
+      const iso = Temporal.Calendar.from('iso8601');
+      const ym1 = new YearMonth(2000, 1, iso, 1);
+      const ym2 = new YearMonth(2000, 1, iso, 2);
+      equal(ym1.greaterThan(ym2), false);
+    });
+  });
   describe('YearMonth.equals() works', () => {
     const nov94 = YearMonth.from('1994-11');
     const jun13 = YearMonth.from('2013-06');

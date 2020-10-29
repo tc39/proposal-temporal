@@ -288,6 +288,46 @@ export class YearMonth {
     }
     return ES.CalendarEquals(this, other);
   }
+  lessThan(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) < 0;
+  }
+  greaterThan(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) > 0;
+  }
+  lessEquals(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) <= 0;
+  }
+  greaterEquals(other) {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalYearMonth(other, YearMonth);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) >= 0;
+  }
   toString() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return YearMonthToString(this);

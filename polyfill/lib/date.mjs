@@ -289,6 +289,62 @@ export class Date {
     }
     return ES.CalendarEquals(this, other);
   }
+  lessThan(other) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDate(other, Date);
+    let result = ES.CompareTemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY)
+    );
+    if (!result) result = ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
+    return result < 0;
+  }
+  greaterThan(other) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDate(other, Date);
+    let result = ES.CompareTemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY)
+    );
+    if (!result) result = ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
+    return result > 0;
+  }
+  lessEquals(other) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDate(other, Date);
+    let result = ES.CompareTemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY)
+    );
+    if (!result) result = ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
+    return result <= 0;
+  }
+  greaterEquals(other) {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDate(other, Date);
+    let result = ES.CompareTemporalDate(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY)
+    );
+    if (!result) result = ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
+    return result >= 0;
+  }
   toString() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return TemporalDateToString(this);

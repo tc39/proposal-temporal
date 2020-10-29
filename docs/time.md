@@ -414,7 +414,7 @@ Compares two `Temporal.Time` objects for equality.
 
 This function exists because it's not possible to compare using `time == other` or `time === other`, due to ambiguity in the primitive representation and between Temporal types.
 
-If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
+If you don't need to know the order in which the two times occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
 
 If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
@@ -425,6 +425,110 @@ time = Temporal.Time.from('19:39:09.068346205');
 other = Temporal.Time.from('20:13:20.971398099');
 time.equals(other); // => false
 time.equals(time); // => true
+```
+
+### time.**lessThan**(_other_: Temporal.Time | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Time` or value convertible to one): Another time to compare.
+
+**Returns:** `true` if `time` is earlier than `other`, or `false` if not.
+
+Compares two `Temporal.Time` objects to check if `time` is earlier than `other`.
+
+This function exists because it's not possible to compare using `time < other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Time.compare(time, other) < 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
+
+Example usage:
+
+```javascript
+time = Temporal.Time.from('19:39:09.068346205');
+other = Temporal.Time.from('20:13:20.971398099');
+time.lessThan(other); // => true
+time.lessThan('08:00'); // => false
+time.lessThan(time); // => false
+```
+
+### time.**greaterThan**(_other_: Temporal.Time | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Time` or value convertible to one): Another time to compare.
+
+**Returns:** `true` if `time` is later than `other`, or `false` if not.
+
+Compares two `Temporal.Time` objects to check if `time` is later than `other`.
+
+This function exists because it's not possible to compare using `time > other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Time.compare(time, other) > 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
+
+Example usage:
+
+```javascript
+time = Temporal.Time.from('19:39:09.068346205');
+other = Temporal.Time.from('20:13:20.971398099');
+time.greaterThan(other); // => false
+time.greaterThan('02:00'); // => true
+time.greaterThan(time); // => false
+```
+
+### time.**lessEquals**(_other_: Temporal.Time | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Time` or value convertible to one): Another time to compare.
+
+**Returns:** `true` if `time` is earlier than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Time` objects to check if `time` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `time <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Time.compare(time, other) <= 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
+
+Example usage:
+
+```javascript
+time = Temporal.Time.from('19:39:09.068346205');
+other = Temporal.Time.from('20:13:20.971398099');
+time.lessEquals(other); // => true
+time.lessEquals('08:00'); // => false
+time.lessEquals(time); // => true
+```
+
+### time.**greaterEquals**(_other_: Temporal.Time | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Time` or value convertible to one): Another time to compare.
+
+**Returns:** `true` if `time` is later than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Time` objects to check if `time` is later than or equal to `other`.
+
+This function exists because it's not possible to compare using `time >= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Time.compare(time, other) >= 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
+
+Example usage:
+
+```javascript
+time = Temporal.Time.from('19:39:09.068346205');
+other = Temporal.Time.from('20:13:20.971398099');
+time.greaterEquals(other); // => false
+time.greaterEquals('02:00'); // => true
+time.greaterEquals(time); // => true
 ```
 
 ### time.**toString**(_options_?: object) : string
@@ -456,6 +560,7 @@ Note that rounding may change the value of other units as well.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 time = Temporal.Time.from('19:39:09.068346205');
 time.toString(); // => 19:39:09.068346205
@@ -463,9 +568,10 @@ time.toString(); // => 19:39:09.068346205
 time.toString({ smallestUnit: 'minute' }); // => 19:39
 time.toString({ fractionalSecondDigits: 0 }); // => 19:39:09
 time.toString({ fractionalSecondDigits: 4 }); // => 19:39:09.0683
-time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' })
+time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' });
   // => 19:39:09.06835
 ```
+<!-- prettier-ignore-end -->
 
 ### time.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 

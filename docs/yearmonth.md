@@ -436,7 +436,7 @@ This function exists because it's not possible to compare using `yearMonth == ot
 
 If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
 
-Note that equality of two months from different calendar systems only makes sense in a few cases, such as when the two calendar systems both use the Gregorian year.
+Note that equality of two `Temporal.YearMonth` objects in different calendar systems only makes sense when the definitions of months and years are the same in both calendars, such as when both calendars use Gregorian years and months.
 
 Even if you are using the same calendar system, if you don't need to know the order in which the two months occur, then this function may be less typing and more efficient than `Temporal.YearMonth.compare`.
 
@@ -447,6 +447,118 @@ ym = Temporal.YearMonth.from('2019-06');
 other = Temporal.YearMonth.from('2006-08');
 ym.equals(other); // => false
 ym.equals(ym); // => true
+```
+
+### yearMonth.**lessThan**(_other_: Temporal.YearMonth | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month to compare.
+
+**Returns:** `true` if `yearMonth` is earlier than `other`, or `false` if not.
+
+Compares two `Temporal.YearMonth` objects to check if `yearMonth` is earlier than `other`.
+
+This function exists because it's not possible to compare using `yearMonth < other` due to ambiguity in the primitive representation and between Temporal types.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
+
+Note that comparison of two `Temporal.YearMonth` objects in different calendar systems only makes sense when the definitions of months and years are the same in both calendars, such as when both calendars use Gregorian years and months.
+
+This function returns the same result as `Temporal.YearMonth.compare(date, other) < 0` but is easier to understand and shorter to type.
+
+Example usage:
+
+```javascript
+ym = Temporal.YearMonth.from('2019-06');
+other = Temporal.YearMonth.from('2006-08');
+ym.lessThan(other); // => false
+ym.lessThan('2020-03'); // => true
+ym.lessThan(ym); // => false
+```
+
+### yearMonth.**greaterThan**(_other_: Temporal.YearMonth | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month to compare.
+
+**Returns:** `true` if `yearMonth` is later than `other`, or `false` if not.
+
+Compares two `Temporal.YearMonth` objects to check if `yearMonth` is later than `other`.
+
+This function exists because it's not possible to compare using `yearMonth > other` due to ambiguity in the primitive representation and between Temporal types.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
+
+Note that comparison of two `Temporal.YearMonth` objects in different calendar systems only makes sense when the definitions of months and years are the same in both calendars, such as when both calendars use Gregorian years and months.
+
+This function returns the same result as `Temporal.YearMonth.compare(date, other) > 0` but is easier to understand and shorter to type.
+
+Example usage:
+
+```javascript
+ym = Temporal.YearMonth.from('2019-06');
+other = Temporal.YearMonth.from('2006-08');
+ym.greaterThan(other); // => true
+ym.greaterThan('2020-03'); // => false
+ym.greaterThan(ym); // => false
+```
+
+### yearMonth.**lessEquals**(_other_: Temporal.YearMonth | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month to compare.
+
+**Returns:** `true` if `yearMonth` is earlier than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.YearMonth` objects to check if `yearMonth` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `yearMonth <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
+
+Note that comparison of two `Temporal.YearMonth` objects in different calendar systems only makes sense when the definitions of months and years are the same in both calendars, such as when both calendars use Gregorian years and months.
+
+This function returns the same result as `Temporal.YearMonth.compare(date, other) <= 0` but is easier to understand and shorter to type.
+
+Example usage:
+
+```javascript
+ym = Temporal.YearMonth.from('2019-06');
+other = Temporal.YearMonth.from('2006-08');
+ym.lessEquals(other); // => false
+ym.lessEquals('2020-03'); // => true
+ym.lessEquals(ym); // => true
+```
+
+### yearMonth.**greaterEquals**(_other_: Temporal.YearMonth | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.YearMonth` or value convertible to one): Another month to compare.
+
+**Returns:** `true` if `yearMonth` is later than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.YearMonth` objects to check if `yearMonth` is later than or equal to `other`.
+
+This function exists because it's not possible to compare using `yearMonth >= other` due to ambiguity in the primitive representation and between Temporal types.
+
+If `other` is not a `Temporal.YearMonth` object, then it will be converted to one as if it were passed to `Temporal.YearMonth.from()`.
+
+Note that comparison of two `Temporal.YearMonth` objects in different calendar systems only makes sense when the definitions of months and years are the same in both calendars, such as when both calendars use Gregorian years and months.
+
+This function returns the same result as `Temporal.YearMonth.compare(date, other) >= 0` but is easier to understand and shorter to type.
+
+Example usage:
+
+```javascript
+ym = Temporal.YearMonth.from('2019-06');
+other = Temporal.YearMonth.from('2006-08');
+ym.greaterEquals(other); // => true
+ym.greaterEquals('2020-03'); // => false
+ym.greaterEquals(ym); // => true
 ```
 
 ### yearMonth.**toString**() : string

@@ -216,6 +216,34 @@ export class Instant {
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);
   }
+  lessThan(other) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalInstant(other, Instant);
+    const one = GetSlot(this, EPOCHNANOSECONDS);
+    const two = GetSlot(other, EPOCHNANOSECONDS);
+    return bigInt(one).lesser(two);
+  }
+  greaterThan(other) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalInstant(other, Instant);
+    const one = GetSlot(this, EPOCHNANOSECONDS);
+    const two = GetSlot(other, EPOCHNANOSECONDS);
+    return bigInt(one).greater(two);
+  }
+  lessEquals(other) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalInstant(other, Instant);
+    const one = GetSlot(this, EPOCHNANOSECONDS);
+    const two = GetSlot(other, EPOCHNANOSECONDS);
+    return bigInt(one).lesserOrEquals(two);
+  }
+  greaterEquals(other) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalInstant(other, Instant);
+    const one = GetSlot(this, EPOCHNANOSECONDS);
+    const two = GetSlot(other, EPOCHNANOSECONDS);
+    return bigInt(one).greaterOrEquals(two);
+  }
   toString(temporalTimeZoneLike = 'UTC', options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);

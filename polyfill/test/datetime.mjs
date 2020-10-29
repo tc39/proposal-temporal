@@ -360,6 +360,70 @@ describe('DateTime', () => {
       throws(() => DateTime.compare(dt1, { year: 2019 }), TypeError);
     });
   });
+  describe('DateTime.lessThan works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => equal(dt1.lessThan(dt1), false));
+    it('smaller/larger', () => equal(dt1.lessThan(dt2), true));
+    it('larger/smaller', () => equal(dt2.lessThan(dt1), false));
+    it('compares calendars lexically', () => {
+      equal(dt1.withCalendar('japanese').lessThan(dt1), false);
+    });
+    it('casts argument', () => {
+      equal(dt2.lessThan({ year: 1976, month: 11, day: 18, hour: 15 }), false);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => dt1.lessThan({ year: 2019 }), TypeError);
+    });
+  });
+  describe('DateTime.greaterThan works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => equal(dt1.greaterThan(dt1), false));
+    it('smaller/larger', () => equal(dt1.greaterThan(dt2), false));
+    it('larger/smaller', () => equal(dt2.greaterThan(dt1), true));
+    it('compares calendars lexically', () => {
+      equal(dt1.withCalendar('japanese').greaterThan(dt1), true);
+    });
+    it('casts argument', () => {
+      equal(dt2.greaterThan({ year: 1976, month: 11, day: 18, hour: 15 }), true);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => dt1.greaterThan({ year: 2019 }), TypeError);
+    });
+  });
+  describe('DateTime.lessEquals works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => equal(dt1.lessEquals(dt1), true));
+    it('smaller/larger', () => equal(dt1.lessEquals(dt2), true));
+    it('larger/smaller', () => equal(dt2.lessEquals(dt1), false));
+    it('compares calendars lexically', () => {
+      equal(dt1.withCalendar('japanese').lessEquals(dt1), false);
+    });
+    it('casts argument', () => {
+      equal(dt2.lessEquals({ year: 1976, month: 11, day: 18, hour: 15 }), false);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => dt1.lessEquals({ year: 2019 }), TypeError);
+    });
+  });
+  describe('DateTime.greaterEquals works', () => {
+    const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
+    const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');
+    it('equal', () => equal(dt1.greaterEquals(dt1), true));
+    it('smaller/larger', () => equal(dt1.greaterEquals(dt2), false));
+    it('larger/smaller', () => equal(dt2.greaterEquals(dt1), true));
+    it('compares calendars lexically', () => {
+      equal(dt1.withCalendar('japanese').greaterEquals(dt1), true);
+    });
+    it('casts argument', () => {
+      equal(dt2.greaterEquals({ year: 1976, month: 11, day: 18, hour: 15 }), true);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => dt1.greaterEquals({ year: 2019 }), TypeError);
+    });
+  });
   describe('DateTime.equals() works', () => {
     const dt1 = DateTime.from('1976-11-18T15:23:30.123456789');
     const dt2 = DateTime.from('2019-10-29T10:46:38.271986102');

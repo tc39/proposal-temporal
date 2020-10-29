@@ -448,6 +448,46 @@ export class Time {
     }
     return true;
   }
+  lessThan(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalTime(other, Time);
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return false;
+  }
+  greaterThan(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalTime(other, Time);
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return false;
+  }
+  lessEquals(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalTime(other, Time);
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return true;
+  }
+  greaterEquals(other) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalTime(other, Time);
+    for (const slot of [HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return true;
+  }
 
   toString(options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

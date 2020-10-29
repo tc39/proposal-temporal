@@ -611,6 +611,110 @@ one.equals(two); // => false
 one.equals(one); // => true
 ```
 
+### instant.**lessThan**(_other_: Temporal.Instant | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time to compare.
+
+**Returns:** `true` if `instant` is earlier than `other`, or `false` if not.
+
+Compares two `Temporal.Instant` objects to check if `instant` is earlier than `other`.
+
+This function exists because it's not possible to compare using `instant < other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Instant.compare(instant, other) < 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+Example usage:
+
+```javascript
+one = Temporal.Instant.fromEpochSeconds(1.0e9);
+two = Temporal.Instant.fromEpochSeconds(1.1e9);
+one.lessThan(two); // => true
+two.lessThan(one); // => false
+one.lessThan(one); // => false
+```
+
+### instant.**greaterThan**(_other_: Temporal.Instant | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time to compare.
+
+**Returns:** `true` if `instant` is later than `other`, or `false` if not.
+
+Compares two `Temporal.Instant` objects to check if `instant` is later than `other`.
+
+This function exists because it's not possible to compare using `instant > other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Instant.compare(instant, other) > 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+Example usage:
+
+```javascript
+one = Temporal.Instant.fromEpochSeconds(1.0e9);
+two = Temporal.Instant.fromEpochSeconds(1.1e9);
+one.greaterThan(two); // => false
+two.greaterThan(one); // => true
+one.greaterThan(one); // => false
+```
+
+### instant.**lessEquals**(_other_: Temporal.Instant | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time to compare.
+
+**Returns:** `true` if `instant` is earlier than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Instant` objects to check if `instant` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `instant <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Instant.compare(instant, other) <= 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+Example usage:
+
+```javascript
+one = Temporal.Instant.fromEpochSeconds(1.0e9);
+two = Temporal.Instant.fromEpochSeconds(1.1e9);
+one.lessEquals(two); // => true
+two.lessEquals(one); // => false
+one.lessEquals(one); // => true
+```
+
+### instant.**greaterEquals**(_other_: Temporal.Instant | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.Instant` or value convertible to one): Another exact time to compare.
+
+**Returns:** `true` if `instant` is later than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.Instant` objects to check if `instant` is later than or equal to `other`.
+
+This function exists because it's not possible to compare using `instant >= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.Instant.compare(instant, other) >= 0` but is easier to understand and shorter to type.
+
+If `other` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
+
+Example usage:
+
+```javascript
+one = Temporal.Instant.fromEpochSeconds(1.0e9);
+two = Temporal.Instant.fromEpochSeconds(1.1e9);
+one.greaterEquals(two); // => false
+two.greaterEquals(one); // => true
+one.greaterEquals(one); // => true
+```
+
 ### instant.**toString**(_timeZone_?: object | string, _options_?: object) : string
 
 **Parameters:**
@@ -642,6 +746,7 @@ Note that rounding may change the value of other units as well.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => 2019-11-18T10:52:01.816Z
@@ -657,6 +762,7 @@ instant.toString(undefined, { fractionalSecondDigits: 4 });
 instant.toString(undefined, { smallestUnit: 'second', roundingMode: 'nearest' });
   // => 2019-11-18T10:52:02Z
 ```
+<!-- prettier-ignore-end -->
 
 ### instant.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 

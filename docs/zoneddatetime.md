@@ -1049,7 +1049,7 @@ If you don't need to know the order in which two events occur, then this functio
 But both methods do the same thing, so a `0` returned from `compare` implies a `true` result from `equals`, and vice-versa.
 
 Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
-In this case, the two instances will have different `offsetNanoseconds` field values.
+In this case, the two instances will have different `offset` and `offsetNanoseconds` field values.
 
 To ignore calendars, convert both instances to use the ISO 8601 calendar:
 
@@ -1060,7 +1060,7 @@ zdt.withCalendar('iso8601').equals(other.withCalendar('iso8601'));
 To ignore both time zones and calendars, compare the instants of both:
 
 ```javascript
-zdt.toInstant().equals(other.toInstant()));
+zdt.toInstant().equals(other.toInstant());
 ```
 
 Example usage:
@@ -1070,6 +1070,186 @@ zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/P
 zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
 zdt1.equals(zdt2); // => false (same offset but different time zones)
 zdt1.equals(zdt1); // => true
+```
+
+### zonedDateTime.**lessThan**(_other_: Temporal.ZonedDateTime) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.ZonedDateTime`): Another date/time to compare.
+
+**Returns:** `true` if `zonedDateTime` is earlier than `other` (using calendar ID and time zone ID as tie-breakers if the two objects represent the same instant), or `false` otherwise.
+
+Compares two `Temporal.ZonedDateTime` objects to check if `zonedDateTime` is earlier than `other`.
+
+This function exists because it's not possible to compare using `zonedDateTime < other` due to ambiguity in the primitive representation and between Temporal types.
+
+Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
+Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
+
+If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
+If those are equal too, then `.timeZone.id` will be compared lexicographically.
+
+This function returns the same result as `Temporal.ZonedDateTime.compare(date, other) < 0` but is easier to understand and shorter to type.
+
+Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
+In this case, the two instances will have different `offset` and `offsetNanoseconds` field values.
+
+To ignore calendars, convert both instances to use the ISO 8601 calendar:
+
+```javascript
+zdt.withCalendar('iso8601').lessThan(other.withCalendar('iso8601'));
+```
+
+To ignore both time zones and calendars, compare the instants of both:
+
+```javascript
+zdt.toInstant().lessThan(other.toInstant());
+```
+
+Example usage:
+
+```javascript
+zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]');
+zdt1.lessThan('2000-01-01T00:00-08:00[America/Los_Angeles]'); // => true
+zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
+zdt2.lessThan(zdt1); // => true (same instant but "Europe/Brussels" < "Europe/Paris" as text)
+zdt1.lessThan(zdt1); // => false
+```
+
+### zonedDateTime.**greaterThan**(_other_: Temporal.ZonedDateTime) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.ZonedDateTime`): Another date/time to compare.
+
+**Returns:** `true` if `zonedDateTime` is earlier than `other` (using calendar ID and time zone ID as tie-breakers if the two objects represent the same instant), or `false` otherwise.
+
+Compares two `Temporal.ZonedDateTime` objects to check if `zonedDateTime` is earlier than `other`.
+
+This function exists because it's not possible to compare using `zonedDateTime < other` due to ambiguity in the primitive representation and between Temporal types.
+
+Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
+Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
+
+If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
+If those are equal too, then `.timeZone.id` will be compared lexicographically.
+
+This function returns the same result as `Temporal.ZonedDateTime.compare(date, other) < 0` but is easier to understand and shorter to type.
+
+Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
+In this case, the two instances will have different `offset` and `offsetNanoseconds` field values.
+
+To ignore calendars, convert both instances to use the ISO 8601 calendar:
+
+```javascript
+zdt.withCalendar('iso8601').greaterThan(other.withCalendar('iso8601'));
+```
+
+To ignore both time zones and calendars, compare the instants of both:
+
+```javascript
+zdt.toInstant().greaterThan(other.toInstant());
+```
+
+Example usage:
+
+```javascript
+zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]');
+zdt1.greaterThan('2000-01-01T00:00-08:00[America/Los_Angeles]'); // => false
+zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
+zdt1.greaterThan(zdt2); // => true (same instant but "Europe/Paris" > "Europe/Brussels" as text)
+zdt1.greaterThan(zdt1); // => false
+```
+
+### zonedDateTime.**lessEquals**(_other_: Temporal.ZonedDateTime) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.ZonedDateTime`): Another date/time to compare.
+
+**Returns:** `true` if `zonedDateTime` is earlier than or equal to `other` (using calendar ID and time zone ID as tie-breakers if the two objects represent the same instant), or `false` otherwise.
+
+Compares two `Temporal.ZonedDateTime` objects to check if `zonedDateTime` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `zonedDateTime <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
+Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
+
+If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
+If those are equal too, then `.timeZone.id` will be compared lexicographically.
+
+This function returns the same result as `Temporal.ZonedDateTime.compare(date, other) <= 0` but is easier to understand and shorter to type.
+
+Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
+In this case, the two instances will have different `offset` and `offsetNanoseconds` field values.
+
+To ignore calendars, convert both instances to use the ISO 8601 calendar:
+
+```javascript
+zdt.withCalendar('iso8601').lessEquals(other.withCalendar('iso8601'));
+```
+
+To ignore both time zones and calendars, compare the instants of both:
+
+```javascript
+zdt.toInstant().lessEquals(other.toInstant());
+```
+
+Example usage:
+
+```javascript
+zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]');
+zdt1.lessEquals('2000-01-01T00:00-08:00[America/Los_Angeles]'); // => true
+zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
+zdt2.lessEquals(zdt1); // => true (same instant but "Europe/Brussels" < "Europe/Paris" as text)
+zdt1.lessEquals(zdt1); // => true
+```
+
+### zonedDateTime.**greaterEquals**(_other_: Temporal.ZonedDateTime) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.ZonedDateTime`): Another date/time to compare.
+
+**Returns:** `true` if `zonedDateTime` is earlier than or equal to `other` (using calendar ID and time zone ID as tie-breakers if the two objects represent the same instant), or `false` otherwise.
+
+Compares two `Temporal.ZonedDateTime` objects to check if `zonedDateTime` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `zonedDateTime <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
+Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
+
+If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
+If those are equal too, then `.timeZone.id` will be compared lexicographically.
+
+This function returns the same result as `Temporal.ZonedDateTime.compare(date, other) <= 0` but is easier to understand and shorter to type.
+
+Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
+In this case, the two instances will have different `offset` and `offsetNanoseconds` field values.
+
+To ignore calendars, convert both instances to use the ISO 8601 calendar:
+
+```javascript
+zdt.withCalendar('iso8601').greaterThan(other.withCalendar('iso8601'));
+```
+
+To ignore both time zones and calendars, compare the instants of both:
+
+```javascript
+zdt.toInstant().greaterThan(other.toInstant());
+```
+
+Example usage:
+
+```javascript
+zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]');
+zdt1.greaterThan('2000-01-01T00:00-08:00[America/Los_Angeles]'); // => false
+zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
+zdt1.greaterThan(zdt2); // => true (same instant but "Europe/Paris" > "Europe/Brussels" as text)
+zdt1.greaterThan(zdt1); // => true
 ```
 
 ### zonedDateTime.**toString**() : string

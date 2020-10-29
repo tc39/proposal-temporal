@@ -721,6 +721,90 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.lessthan">
+      <h1>Temporal.ZonedDateTime.prototype.lessThan ( _other_ )</h1>
+      <p>
+        The `lessThan` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _two_ to ? ToTemporalZonedDateTime(_other_).
+        1. Let _comparison_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ &lt; *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ &lt; *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+        1. If _comparison_ &lt; *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.greaterthan">
+      <h1>Temporal.ZonedDateTime.prototype.greaterThan ( _other_ )</h1>
+      <p>
+        The `greaterThan` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _two_ to ? ToTemporalZonedDateTime(_other_).
+        1. Let _comparison_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ &gt; *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ &gt; *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+        1. If _comparison_ &gt; *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.lessequals">
+      <h1>Temporal.ZonedDateTime.prototype.lessEquals ( _other_ )</h1>
+      <p>
+        The `lessEquals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _two_ to ? ToTemporalZonedDateTime(_other_).
+        1. Let _comparison_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ ≤ *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ ≤ *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+        1. If _comparison_ ≤ *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.greaterequals">
+      <h1>Temporal.ZonedDateTime.prototype.greaterEquals ( _other_ )</h1>
+      <p>
+        The `greaterEquals` method takes one argument _other_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _one_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_one_, [[InitializedTemporalZonedDateTime]]).
+        1. Set _two_ to ? ToTemporalZonedDateTime(_other_).
+        1. Let _comparison_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ ≥ *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
+        1. If _comparison_ ≠ 0, then
+          1. If _comparison_ ≥ *+0* then return *true* else return *false*.
+        1. Set _comparison_ to ? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+        1. If _comparison_ ≥ *+0* then return *true* else return *false*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tostring">
       <h1>Temporal.ZonedDateTime.prototype.toString ( )</h1>
       <p>

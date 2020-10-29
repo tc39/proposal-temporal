@@ -693,6 +693,118 @@ dt1.equals(dt2); // => false
 dt1.equals(dt1); // => true
 ```
 
+### datetime.**lessThan**(_other_: Temporal.DateTime | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.DateTime`): Another date/time to compare.
+
+**Returns:** `true` if `datetime` is earlier than `other`, or `false` if not.
+
+Compares two `Temporal.DateTime` objects to check if `datetime` is earlier than `other`.
+
+This function exists because it's not possible to compare using `datetime < other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.DateTime.compare(datetime, other) < 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+
+Example usage:
+
+```javascript
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.lessThan(dt2); // => true
+dt1.lessThan('1999-12-31'); // => false
+dt1.lessThan(dt1); // => false
+```
+
+### datetime.**greaterThan**(_other_: Temporal.DateTime | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.DateTime`): Another date/time to compare.
+
+**Returns:** `true` if `datetime` is later than `other`, or `false` if not.
+
+Compares two `Temporal.DateTime` objects to check if `datetime` is later than `other`.
+
+This function exists because it's not possible to compare using `datetime > other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.DateTime.compare(datetime, other) > 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+
+Example usage:
+
+```javascript
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.greaterThan(dt2); // => false
+dt1.greaterThan('1999-12-31'); // => true
+dt1.greaterThan(dt1); // => false
+```
+
+### datetime.**lessEquals**(_other_: Temporal.DateTime | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.DateTime`): Another date/time to compare.
+
+**Returns:** `true` if `datetime` is earlier than or equal to`other`, or `false` if not.
+
+Compares two `Temporal.DateTime` objects to check if `datetime` is earlier than or equal to `other`.
+
+This function exists because it's not possible to compare using `datetime <= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.DateTime.compare(datetime, other) <= 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+
+Example usage:
+
+```javascript
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.lessEquals(dt2); // => true
+dt1.lessEquals('1999-12-31'); // => false
+dt1.lessEquals(dt1); // => true
+```
+
+### datetime.**greaterEquals**(_other_: Temporal.DateTime | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.DateTime`): Another date/time to compare.
+
+**Returns:** `true` if `datetime` is later than or equal to `other`, or `false` if not.
+
+Compares two `Temporal.DateTime` objects to check if `datetime` is later than or equal to `other`.
+
+This function exists because it's not possible to compare using `datetime >= other` due to ambiguity in the primitive representation and between Temporal types.
+
+This function returns the same result as `Temporal.DateTime.compare(datetime, other) >= 0` but is easier to understand and shorter to type.
+
+Note that this function ignores calendar systems by converting both values to the ISO 8601 calendar before comparing.
+
+If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+
+Example usage:
+
+```javascript
+dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1.greaterEquals(dt2); // => false
+dt1.greaterEquals('1999-12-31'); // => true
+dt1.greaterEquals(dt1); // => true
+```
+
 ### datetime.**toString**(_options_?: object) : string
 
 **Parameters:**
@@ -722,6 +834,7 @@ Note that rounding may change the value of other units as well.
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 dt = Temporal.DateTime.from({
   year: 1999,
@@ -742,6 +855,7 @@ dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
 dt.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
   // => 2000-01-01T00:00:00.00000000
 ```
+<!-- prettier-ignore-end -->
 
 ### datetime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 

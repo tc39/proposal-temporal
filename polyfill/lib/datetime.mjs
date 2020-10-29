@@ -695,6 +695,46 @@ export class DateTime {
     }
     return ES.CalendarEquals(this, other);
   }
+  lessThan(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDateTime(other, DateTime);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) < 0;
+  }
+  greaterThan(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDateTime(other, DateTime);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) > 0;
+  }
+  lessEquals(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDateTime(other, DateTime);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 < val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) <= 0;
+  }
+  greaterEquals(other) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    other = ES.ToTemporalDateTime(other, DateTime);
+    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND]) {
+      const val1 = GetSlot(this, slot);
+      const val2 = GetSlot(other, slot);
+      if (val1 !== val2) return val1 > val2;
+    }
+    return ES.CalendarCompare(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR)) >= 0;
+  }
   toString(options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);

@@ -564,6 +564,70 @@ describe('Instant', () => {
       throws(() => Instant.compare({}, i2), RangeError);
     });
   });
+  describe('Instant.lessThan works', () => {
+    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(i1.lessThan(Instant.from(i1)), false));
+    it('epoch equal', () => equal(i2.lessThan(Instant.from(i2)), false));
+    it('cross epoch smaller/larger', () => equal(i1.lessThan(i2), true));
+    it('cross epoch larger/smaller', () => equal(i2.lessThan(i1), false));
+    it('epoch smaller/larger', () => equal(i2.lessThan(i3), true));
+    it('epoch larger/smaller', () => equal(i3.lessThan(i2), false));
+    it('casts argument', () => equal(i2.lessThan(i3.toString()), true));
+    it('only casts from a string', () => {
+      throws(() => i1.lessThan(i2.epochNanoseconds), RangeError);
+      throws(() => i1.lessThan({}), RangeError);
+    });
+  });
+  describe('Instant.greaterThan works', () => {
+    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(i1.greaterThan(Instant.from(i1)), false));
+    it('epoch equal', () => equal(i2.greaterThan(Instant.from(i2)), false));
+    it('cross epoch smaller/larger', () => equal(i1.greaterThan(i2), false));
+    it('cross epoch larger/smaller', () => equal(i2.greaterThan(i1), true));
+    it('epoch smaller/larger', () => equal(i2.greaterThan(i3), false));
+    it('epoch larger/smaller', () => equal(i3.greaterThan(i2), true));
+    it('casts argument', () => equal(i3.greaterThan(i2.toString()), true));
+    it('only casts from a string', () => {
+      throws(() => i1.greaterThan(i2.epochNanoseconds), RangeError);
+      throws(() => i1.greaterThan({}), RangeError);
+    });
+  });
+  describe('Instant.lessEquals works', () => {
+    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(i1.lessEquals(Instant.from(i1)), true));
+    it('epoch equal', () => equal(i2.lessEquals(Instant.from(i2)), true));
+    it('cross epoch smaller/larger', () => equal(i1.lessEquals(i2), true));
+    it('cross epoch larger/smaller', () => equal(i2.lessEquals(i1), false));
+    it('epoch smaller/larger', () => equal(i2.lessEquals(i3), true));
+    it('epoch larger/smaller', () => equal(i3.lessEquals(i2), false));
+    it('casts argument', () => equal(i2.lessEquals(i3.toString()), true));
+    it('only casts from a string', () => {
+      throws(() => i1.lessEquals(i2.epochNanoseconds), RangeError);
+      throws(() => i1.lessEquals({}), RangeError);
+    });
+  });
+  describe('Instant.greaterEquals works', () => {
+    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(i1.greaterEquals(Instant.from(i1)), true));
+    it('epoch equal', () => equal(i2.greaterEquals(Instant.from(i2)), true));
+    it('cross epoch smaller/larger', () => equal(i1.greaterEquals(i2), false));
+    it('cross epoch larger/smaller', () => equal(i2.greaterEquals(i1), true));
+    it('epoch smaller/larger', () => equal(i2.greaterEquals(i3), false));
+    it('epoch larger/smaller', () => equal(i3.greaterEquals(i2), true));
+    it('casts argument', () => equal(i3.greaterEquals(i2.toString()), true));
+    it('only casts from a string', () => {
+      throws(() => i1.greaterEquals(i2.epochNanoseconds), RangeError);
+      throws(() => i1.greaterEquals({}), RangeError);
+    });
+  });
   describe('Instant.equals works', () => {
     const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
     const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');

@@ -885,6 +885,62 @@ describe('Time', () => {
       throws(() => Time.compare(t1, { hours: 16 }), TypeError);
     });
   });
+  describe('Time.lessThan() works', () => {
+    const t1 = Time.from('08:44:15.321');
+    const t2 = Time.from('14:23:30.123');
+    it('equal', () => equal(t1.lessThan(t1), false));
+    it('smaller/larger', () => equal(t1.lessThan(t2), true));
+    it('larger/smaller', () => equal(t2.lessThan(t1), false));
+    it('casts argument', () => {
+      equal(t1.lessThan({ hour: 16, minute: 34 }), true);
+      equal(t1.lessThan('16:34'), true);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => t1.lessThan({ hours: 16 }), TypeError);
+    });
+  });
+  describe('Time.greaterThan() works', () => {
+    const t1 = Time.from('08:44:15.321');
+    const t2 = Time.from('14:23:30.123');
+    it('equal', () => equal(t1.greaterThan(t1), false));
+    it('smaller/larger', () => equal(t1.greaterThan(t2), false));
+    it('larger/smaller', () => equal(t2.greaterThan(t1), true));
+    it('casts argument', () => {
+      equal(t1.greaterThan({ hour: 16, minute: 34 }), false);
+      equal(t1.greaterThan('16:34'), false);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => t1.greaterThan({ hours: 16 }), TypeError);
+    });
+  });
+  describe('Time.lessEquals() works', () => {
+    const t1 = Time.from('08:44:15.321');
+    const t2 = Time.from('14:23:30.123');
+    it('equal', () => equal(t1.lessEquals(t1), true));
+    it('smaller/larger', () => equal(t1.lessEquals(t2), true));
+    it('larger/smaller', () => equal(t2.lessEquals(t1), false));
+    it('casts argument', () => {
+      equal(t1.lessEquals({ hour: 16, minute: 34 }), true);
+      equal(t1.lessEquals('16:34'), true);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => t1.lessEquals({ hours: 16 }), TypeError);
+    });
+  });
+  describe('Time.greaterEquals() works', () => {
+    const t1 = Time.from('08:44:15.321');
+    const t2 = Time.from('14:23:30.123');
+    it('equal', () => equal(t1.greaterEquals(t1), true));
+    it('smaller/larger', () => equal(t1.greaterEquals(t2), false));
+    it('larger/smaller', () => equal(t2.greaterEquals(t1), true));
+    it('casts argument', () => {
+      equal(t1.greaterEquals({ hour: 16, minute: 34 }), false);
+      equal(t1.greaterEquals('16:34'), false);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => t1.greaterEquals({ hours: 16 }), TypeError);
+    });
+  });
   describe('time.equals() works', () => {
     const t1 = Time.from('08:44:15.321');
     const t2 = Time.from('14:23:30.123');
