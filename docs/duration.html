@@ -197,6 +197,8 @@
 </li>
 <li><a href="#round">round</a>
 </li>
+<li><a href="#total">total</a>
+</li>
 <li><a href="#getFields">getFields</a>
 </li>
 <li><a href="#toString">toString</a>
@@ -599,7 +601,49 @@ d <span class="token operator">=</span> d<span class="token punctuation">.</span
   relativeTo<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 quarters <span class="token operator">=</span> d<span class="token punctuation">.</span>months <span class="token operator">/</span> <span class="token number">3</span><span class="token punctuation">;</span>
-quarters<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>duration.<strong>getFields</strong>() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>duration</code>.</p>
+quarters<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre><h3 id="total"><a class="heading-link" href="#total"></a>duration.<strong>total</strong>(<em>options</em>: object) : number</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>options</code> (object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>unit</code> (string): The unit of time that will be returned.
+Valid values are <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, <code>&#39;weeks&#39;</code>, <code>&#39;days&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+There is no default; <code>unit</code> is required.</li>
+<li><code>relativeTo</code> (<code>Temporal.DateTime</code>): The starting point to use when converting between years, months, weeks, and days.
+It must be a <code>Temporal.DateTime</code>, or a value that can be passed to <code>Temporal.DateTime.from()</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a floating-point number representing the number of desired units in the <code>Temporal.Duration</code>.</p>
+<p>Calculates the number of units of time that can fit in a particular <code>Temporal.Duration</code>.
+If the duration IS NOT evenly divisible by the desired unit, then a fractional remainder will be present in the result.
+If the duration IS evenly divisible by the desired unit, then the integer result will be identical to <code>duration.round({ smallestUnit: unit, largestUnit: unit, relativeTo })[unit]</code>.</p>
+<p>Interpreting years, months, or weeks requires a reference point.
+Therefore, <code>unit</code> is <code>&#39;years&#39;</code>, <code>&#39;months&#39;</code>, or <code>&#39;weeks&#39;</code>, or the duration has nonzero &#39;years&#39;, &#39;months&#39;, or &#39;weeks&#39;, then the <code>relativeTo</code> option is required.</p>
+<p>The <code>relativeTo</code> option gives the starting point used when converting between or rounding to years, months, weeks, or days.
+It is a <code>Temporal.DateTime</code> instance.
+If any other type is provided, then it will be converted to a <code>Temporal.DateTime</code> as if it were passed to <code>Temporal.DateTime.from(..., { overflow: &#39;reject&#39; })</code>.
+A <code>Temporal.Date</code> or a date string like <code>2020-01-01</code> is also accepted because time is optional when creating a <code>Temporal.DateTime</code>.</p>
+<p>Example usage:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How many seconds in 18 hours and 20 minutes?</span>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">130</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">20</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'minutes'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span>
+
+<span class="token comment">// How many 24-hour days is 123456789 seconds?</span>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'PT123456789S'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1428.8980208333332</span>
+
+<span class="token comment">// Find totals in months, with and without taking DST into account</span>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1756</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// FIXME: write this example after ZonedDateTime is added</span>
+<span class="token comment">// d.round({</span>
+<span class="token comment">//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',</span>
+<span class="token comment">//   largestUnit: 'months'</span>
+<span class="token comment">// }); // => ???</span>
+d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  unit<span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">,</span>
+  relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2.39247311827957</span>
+<span class="token comment">// FIXME: update the result above after duration rounding is fixed</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>duration.<strong>getFields</strong>() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>duration</code>.</p>
 <p>This method can be used to convert a <code>Temporal.Duration</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Usage example:</p>

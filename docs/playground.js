@@ -4009,6 +4009,17 @@
       if (plural.has(value)) return plural.get(value);
       return value;
     },
+    ToTemporalDurationTotalUnit: function ToTemporalDurationTotalUnit(options) {
+      // This AO is identical to ToSmallestTemporalDurationUnit, except:
+      // - default is always `undefined` (caller will throw if omitted)
+      // - option is named `unit` (not `smallestUnit`)
+      // - all units are valid (no `disallowedStrings`)
+      var plural = new Map([['year', 'years'], ['month', 'months'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']]); // "week" doesn't exist in Temporal as a non-plural unit, so don't allow it
+
+      var value = ES.GetOption(options, 'unit', [].concat(_toConsumableArray(plural.values()), _toConsumableArray(plural.keys()), ['weeks']), undefined);
+      if (plural.has(value)) return plural.get(value);
+      return value;
+    },
     ToRelativeTemporalObject: function ToRelativeTemporalObject(options) {
       var relativeTo = options.relativeTo;
       if (relativeTo === undefined) return relativeTo;
@@ -6191,6 +6202,8 @@
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
+      var remainder;
+
       switch (unit) {
         case 'years':
           {
@@ -6230,7 +6243,9 @@
             }
 
             years += days / Math.abs(oneYearDays);
+            remainder = years;
             years = ES.RoundNumberToIncrement(years, increment, roundingMode);
+            remainder -= years;
             months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
           }
@@ -6275,7 +6290,9 @@
             }
 
             months += days / Math.abs(oneMonthDays);
+            remainder = months;
             months = ES.RoundNumberToIncrement(months, increment, roundingMode);
+            remainder -= months;
             weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
           }
@@ -6308,7 +6325,9 @@
             }
 
             weeks += days / Math.abs(oneWeekDays);
+            remainder = weeks;
             weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
+            remainder -= weeks;
             days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
           }
@@ -6316,43 +6335,56 @@
         case 'days':
           seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
           days += ((seconds / 60 + minutes) / 60 + hours) / 24;
+          remainder = days;
           days = ES.RoundNumberToIncrement(days, increment, roundingMode);
+          remainder -= days;
           hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
           break;
 
         case 'hours':
           seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
           hours += (minutes + seconds / 60) / 60;
+          remainder = hours;
           hours = ES.RoundNumberToIncrement(hours, increment, roundingMode);
+          remainder -= hours;
           minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
           break;
 
         case 'minutes':
           seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
           minutes += seconds / 60;
+          remainder = minutes;
           minutes = ES.RoundNumberToIncrement(minutes, increment, roundingMode);
+          remainder -= minutes;
           seconds = milliseconds = microseconds = nanoseconds = 0;
           break;
 
         case 'seconds':
           seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
+          remainder = seconds;
           seconds = ES.RoundNumberToIncrement(seconds, increment, roundingMode);
+          remainder -= seconds;
           milliseconds = microseconds = nanoseconds = 0;
           break;
 
         case 'milliseconds':
           milliseconds += microseconds * 1e-3 + nanoseconds * 1e-6;
+          remainder = milliseconds;
           milliseconds = ES.RoundNumberToIncrement(milliseconds, increment, roundingMode);
+          remainder -= milliseconds;
           microseconds = nanoseconds = 0;
           break;
 
         case 'microseconds':
           microseconds += nanoseconds * 1e-3;
+          remainder = microseconds;
           microseconds = ES.RoundNumberToIncrement(microseconds, increment, roundingMode);
+          remainder -= microseconds;
           nanoseconds = 0;
           break;
 
         case 'nanoseconds':
+          remainder = 0;
           nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
           break;
       }
@@ -6367,7 +6399,8 @@
         seconds: seconds,
         milliseconds: milliseconds,
         microseconds: microseconds,
-        nanoseconds: nanoseconds
+        nanoseconds: nanoseconds,
+        remainder: remainder
       };
     },
     CompareTemporalDate: function CompareTemporalDate(y1, m1, d1, y2, m2, d2) {
@@ -9736,6 +9769,45 @@
         var result = new Construct(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
         return result;
+      }
+    }, {
+      key: "total",
+      value: function total(options) {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        var years = GetSlot(this, YEARS);
+        var months = GetSlot(this, MONTHS);
+        var weeks = GetSlot(this, WEEKS);
+        var days = GetSlot(this, DAYS);
+        var hours = GetSlot(this, HOURS);
+        var minutes = GetSlot(this, MINUTES);
+        var seconds = GetSlot(this, SECONDS);
+        var milliseconds = GetSlot(this, MILLISECONDS);
+        var microseconds = GetSlot(this, MICROSECONDS);
+        var nanoseconds = GetSlot(this, NANOSECONDS);
+        options = ES.NormalizeOptionsObject(options);
+        var unit = ES.ToTemporalDurationTotalUnit(options, undefined);
+        if (unit === undefined) throw new RangeError('unit option is required');
+        var relativeTo = ES.ToRelativeTemporalObject(options); // Convert larger units down to days
+
+        var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo);
+
+        years = _ES$UnbalanceDuration2.years;
+        months = _ES$UnbalanceDuration2.months;
+        weeks = _ES$UnbalanceDuration2.weeks;
+        days = _ES$UnbalanceDuration2.days;
+
+        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit);
+
+        days = _ES$BalanceDuration2.days;
+        hours = _ES$BalanceDuration2.hours;
+        minutes = _ES$BalanceDuration2.minutes;
+        seconds = _ES$BalanceDuration2.seconds;
+        milliseconds = _ES$BalanceDuration2.milliseconds;
+        microseconds = _ES$BalanceDuration2.microseconds;
+        nanoseconds = _ES$BalanceDuration2.nanoseconds;
+        // Finally, truncate to the correct unit and calculate remainder
+        var rounded = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, unit, 'trunc', relativeTo);
+        return rounded[unit] + rounded.remainder;
       }
     }, {
       key: "getFields",
