@@ -14,6 +14,28 @@ const timezoneNames = new Set(timezoneData.reduce((list, entry) => list.concat(e
 const bad = ['Antarctica/McMurdo', 'CST6CDT', 'EST5EDT', 'MST7MDT', 'PST8PDT'];
 bad.forEach((name) => timezoneNames.delete(name));
 
+const calendarNames = [
+  'buddhist',
+  'chinese',
+  'coptic',
+  'dangi',
+  'ethioaa',
+  'ethiopic',
+  'gregory',
+  'hebrew',
+  'indian',
+  'islamic',
+  'islamic-umalqura',
+  'islamic-tbla',
+  'islamic-civil',
+  'islamic-rgsa',
+  'iso8601',
+  'japanese',
+  'persian',
+  'roc',
+  'islamicc'
+];
+
 function toProduction(productionLike) {
   if (typeof productionLike === 'string') return new Literal(productionLike);
   if (Array.isArray(productionLike)) {
@@ -247,6 +269,8 @@ const timeZone = withCode(
 const temporalTimeZoneIdentifier = withCode(choice(timeZoneUTCOffset, timeZoneIANAName), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });
+const calendarName = withCode(choice(...calendarNames), (data, result) => (data.calendar = result));
+const calendar = seq('[c=', calendarName, ']');
 const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
@@ -257,6 +281,7 @@ const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
 const time = seq(timeSpec, [timeZone]);
 const dateTime = choice(date, seq(date, dateTimeSeparator, time));
+const calendarDateTime = seq(dateTime, [calendar]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -312,7 +337,7 @@ const instant = seq(date, dateTimeSeparator, timeSpec, timeZone);
 // goal elements
 const goals = {
   Instant: instant,
-  Date: dateTime,
+  Date: calendarDateTime,
   DateTime: dateTime,
   Duration: duration,
   MonthDay: choice(dateSpecMonthDay, dateTime),
@@ -325,7 +350,7 @@ const dateItems = ['year', 'month', 'day'];
 const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 const comparisonItems = {
   Instant: [...dateItems, ...timeItems, 'offset', 'ianaName'],
-  Date: dateItems,
+  Date: [...dateItems, 'calendar'],
   DateTime: [...dateItems, ...timeItems],
   Duration: ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],
   MonthDay: ['month', 'day'],
@@ -343,7 +368,7 @@ for (let count = 0; count < 1000; count++) {
     const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
     for (let prop of comparisonItems[mode]) {
       let expected = generatedData[prop];
-      if (prop !== 'ianaName' && prop !== 'offset') expected = expected || 0;
+      if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
       assert.equal(parsed[prop], expected);
     }
     console.log(`${fuzzed} => ok`);
