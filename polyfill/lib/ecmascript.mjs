@@ -114,7 +114,7 @@ export const ES = ObjectAssign({}, ES2020, {
   TemporalTimeZoneFromString: (stringIdent) => {
     const { ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(ianaName || offset);
-    if (offset && ianaName) {
+    if (offset && ianaName && ianaName !== offset) {
       const ns = ES.ParseTemporalInstant(stringIdent);
       const offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
       if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {

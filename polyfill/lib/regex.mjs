@@ -1,5 +1,8 @@
 const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
-export const timeZoneID = new RegExp(`(?:${tzComponent.source}(?:\\/(?:${tzComponent.source}))*|Etc/GMT[-+]\\d{1,2})`);
+const offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
+export const timeZoneID = new RegExp(
+  `(?:${tzComponent.source}(?:\\/(?:${tzComponent.source}))*|Etc/GMT[-+]\\d{1,2}|${offsetNoCapture.source})`
+);
 
 const calComponent = /[A-Za-z0-9]{3,8}/;
 export const calendarID = new RegExp(`(?:${calComponent.source}(?:-${calComponent.source})*)`);
