@@ -112,7 +112,8 @@ export const ES = ObjectAssign({}, ES2020, {
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
   IsTemporalZonedDateTime: (item) => HasSlot(item, EPOCHNANOSECONDS, TIME_ZONE, CALENDAR),
   TemporalTimeZoneFromString: (stringIdent) => {
-    const { ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
+    let { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
+    if (z) ianaName = 'UTC';
     const result = ES.GetCanonicalTimeZoneIdentifier(ianaName || offset);
     if (offset && ianaName && ianaName !== offset) {
       const ns = ES.ParseTemporalInstant(stringIdent);
@@ -145,8 +146,11 @@ export const ES = ObjectAssign({}, ES2020, {
     const millisecond = ES.ToInteger(fraction.slice(0, 3));
     const microsecond = ES.ToInteger(fraction.slice(3, 6));
     const nanosecond = ES.ToInteger(fraction.slice(6, 9));
-    let offset;
-    if (match[14] && match[15]) {
+    let offset, z;
+    if (match[13]) {
+      offset = '+00:00';
+      z = 'Z';
+    } else if (match[14] && match[15]) {
       const offsetSign = match[14] === '-' || match[14] === '\u2212' ? '-' : '+';
       const offsetHours = match[15] || '00';
       const offsetMinutes = match[16] || '00';
@@ -161,7 +165,7 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       if (offset === '-00:00') offset = '+00:00';
     }
-    let ianaName = match[13] ? 'UTC' : match[19];
+    let ianaName = match[19];
     if (ianaName) {
       try {
         // Canonicalize name if it is an IANA link name or is capitalized wrong
@@ -183,6 +187,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond,
       ianaName,
       offset,
+      z,
       calendar
     };
   },

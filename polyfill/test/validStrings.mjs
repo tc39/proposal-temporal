@@ -189,7 +189,8 @@ const durationTimeDesignator = character('Tt');
 const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
-  data.ianaName = 'UTC';
+  data.z = 'Z';
+  data.offset = '+00:00';
 });
 const timeFractionalPart = between(1, 9, digit());
 const fraction = seq(decimalSeparator, timeFractionalPart);
@@ -228,7 +229,7 @@ const timeZoneUTCOffsetFraction = withCode(fraction, (data, result) => {
   const fraction = result.padEnd(9, '0');
   data.offsetFraction = +fraction;
 });
-const timeZoneUTCOffset = withCode(
+const timeZoneNumericUTCOffset = withCode(
   seq(
     timeZoneUTCOffsetSign,
     timeZoneUTCOffsetHour,
@@ -254,6 +255,7 @@ const timeZoneUTCOffset = withCode(
     }
   }
 );
+const timeZoneUTCOffset = choice(utcDesignator, timeZoneNumericUTCOffset);
 const timeZoneUTCOffsetName = seq(
   sign,
   hour,
@@ -268,12 +270,12 @@ const timeZoneIANAName = withCode(
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
 const timeZone = withCode(
-  choice(utcDesignator, timeZoneUTCOffset, seq([timeZoneUTCOffset], '[', timeZoneBracketedName, ']')),
+  choice(timeZoneUTCOffset, seq([timeZoneNumericUTCOffset], '[', timeZoneBracketedName, ']')),
   (data) => {
     if (!('offset' in data)) data.offset = undefined;
   }
 );
-const temporalTimeZoneIdentifier = withCode(choice(timeZoneUTCOffset, timeZoneIANAName), (data) => {
+const temporalTimeZoneIdentifier = withCode(choice(timeZoneNumericUTCOffset, timeZoneIANAName), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });
 const calendarName = withCode(choice(...calendarNames), (data, result) => (data.calendar = result));
