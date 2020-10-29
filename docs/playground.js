@@ -5300,10 +5300,6 @@
       var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
       var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-      years *= sign;
-      months *= sign;
-      weeks *= sign;
-      days *= sign;
       var calendar;
 
       if (relativeTo) {
@@ -5311,9 +5307,9 @@
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
-      var oneYear = new TemporalDuration(1);
-      var oneMonth = new TemporalDuration(0, 1);
-      var oneWeek = new TemporalDuration(0, 0, 1);
+      var oneYear = new TemporalDuration(sign);
+      var oneMonth = new TemporalDuration(0, sign);
+      var oneWeek = new TemporalDuration(0, 0, sign);
 
       switch (largestUnit) {
         case 'years':
@@ -5323,11 +5319,14 @@
         case 'months':
           if (!calendar) throw new RangeError('a starting point is required for months balancing'); // balance years down to months
 
-          while (years > 0) {
-            var oneYearMonths = calendar.monthsInYear(relativeTo);
+          while (Math.abs(years) > 0) {
+            var newRelativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+            var oneYearMonths = calendar.dateUntil(relativeTo, newRelativeTo, {
+              largestUnit: 'months'
+            }).months;
+            relativeTo = newRelativeTo;
             months += oneYearMonths;
-            years--;
-            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+            years -= sign;
           }
 
           break;
@@ -5335,62 +5334,76 @@
         case 'weeks':
           if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance years down to days
 
-          while (years > 0) {
-            var oneYearDays = calendar.daysInYear(relativeTo);
+          while (Math.abs(years) > 0) {
+            var oneYearDays = void 0;
+
+            var _ES$MoveRelativeDate = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+            relativeTo = _ES$MoveRelativeDate.relativeTo;
+            oneYearDays = _ES$MoveRelativeDate.days;
             days += oneYearDays;
-            years--;
-            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+            years -= sign;
           } // balance months down to days
 
 
-          while (months > 0) {
-            var oneMonthDays = calendar.daysInMonth(relativeTo);
+          while (Math.abs(months) > 0) {
+            var oneMonthDays = void 0;
+
+            var _ES$MoveRelativeDate2 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+            relativeTo = _ES$MoveRelativeDate2.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate2.days;
             days += oneMonthDays;
-            months--;
-            relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+            months -= sign;
           }
 
           break;
 
         default:
           // balance years down to days
-          while (years > 0) {
+          while (Math.abs(years) > 0) {
             if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
 
-            var _oneYearDays = calendar.daysInYear(relativeTo);
+            var _oneYearDays = void 0;
 
+            var _ES$MoveRelativeDate3 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+            relativeTo = _ES$MoveRelativeDate3.relativeTo;
+            _oneYearDays = _ES$MoveRelativeDate3.days;
             days += _oneYearDays;
-            years--;
-            relativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+            years -= sign;
           } // balance months down to days
 
 
-          while (months > 0) {
+          while (Math.abs(months) > 0) {
             if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
 
-            var _oneMonthDays = calendar.daysInMonth(relativeTo);
+            var _oneMonthDays = void 0;
 
+            var _ES$MoveRelativeDate4 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+            relativeTo = _ES$MoveRelativeDate4.relativeTo;
+            _oneMonthDays = _ES$MoveRelativeDate4.days;
             days += _oneMonthDays;
-            months--;
-            relativeTo = calendar.dateAdd(relativeTo, oneMonth, {}, TemporalDate);
+            months -= sign;
           } // balance weeks down to days
 
 
-          while (weeks > 0) {
+          while (Math.abs(weeks) > 0) {
             if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
-            var oneWeekDays = calendar.daysInWeek(relativeTo);
+            var oneWeekDays = void 0;
+
+            var _ES$MoveRelativeDate5 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+
+            relativeTo = _ES$MoveRelativeDate5.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate5.days;
             days += oneWeekDays;
-            weeks--;
-            relativeTo = calendar.dateAdd(relativeTo, oneWeek, {}, TemporalDate);
+            weeks -= sign;
           }
 
           break;
       }
 
-      years *= sign;
-      months *= sign;
-      weeks *= sign;
-      days *= sign;
       return {
         years: years,
         months: months,
@@ -5402,10 +5415,6 @@
       var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
       var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-      years *= sign;
-      months *= sign;
-      weeks *= sign;
-      days *= sign;
       var calendar;
 
       if (relativeTo) {
@@ -5413,42 +5422,66 @@
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
-      var oneYear = new TemporalDuration(1);
-      var oneMonth = new TemporalDuration(0, 1);
-      var oneWeek = new TemporalDuration(0, 0, 1);
+      var oneYear = new TemporalDuration(sign);
+      var oneMonth = new TemporalDuration(0, sign);
+      var oneWeek = new TemporalDuration(0, 0, sign);
 
       switch (largestUnit) {
         case 'years':
           {
             if (!calendar) throw new RangeError('a starting point is required for years balancing'); // balance days up to years
 
-            var oneYearDays = calendar.daysInYear(relativeTo);
+            var newRelativeTo, oneYearDays;
 
-            while (days >= oneYearDays) {
+            var _ES$MoveRelativeDate6 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+            newRelativeTo = _ES$MoveRelativeDate6.relativeTo;
+            oneYearDays = _ES$MoveRelativeDate6.days;
+
+            while (Math.abs(days) >= Math.abs(oneYearDays)) {
               days -= oneYearDays;
-              years++;
-              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
-              oneYearDays = calendar.daysInYear(relativeTo);
+              years += sign;
+              relativeTo = newRelativeTo;
+
+              var _ES$MoveRelativeDate7 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+              newRelativeTo = _ES$MoveRelativeDate7.relativeTo;
+              oneYearDays = _ES$MoveRelativeDate7.days;
             } // balance days up to months
 
 
-            var oneMonthDays = calendar.daysInMonth(relativeTo);
+            var oneMonthDays;
 
-            while (days >= oneMonthDays) {
+            var _ES$MoveRelativeDate8 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+            newRelativeTo = _ES$MoveRelativeDate8.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate8.days;
+
+            while (Math.abs(days) >= Math.abs(oneMonthDays)) {
               days -= oneMonthDays;
-              months++;
-              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
-              oneMonthDays = calendar.daysInMonth(relativeTo);
+              months += sign;
+              relativeTo = newRelativeTo;
+
+              var _ES$MoveRelativeDate9 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+              newRelativeTo = _ES$MoveRelativeDate9.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate9.days;
             } // balance months up to years
 
 
-            var oneYearMonths = calendar.monthsInYear(relativeTo);
+            newRelativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+            var oneYearMonths = calendar.dateUntil(relativeTo, newRelativeTo, {
+              largestUnit: 'months'
+            }).months;
 
-            while (months >= oneYearMonths) {
+            while (Math.abs(months) >= Math.abs(oneYearMonths)) {
               months -= oneYearMonths;
-              years++;
-              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
-              oneYearMonths = calendar.monthsInYear(relativeTo);
+              years += sign;
+              relativeTo = newRelativeTo;
+              newRelativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
+              oneYearMonths = calendar.dateUntil(relativeTo, newRelativeTo, {
+                largestUnit: 'months'
+              }).months;
             }
 
             break;
@@ -5458,13 +5491,22 @@
           {
             if (!calendar) throw new RangeError('a starting point is required for months balancing'); // balance days up to months
 
-            var _oneMonthDays2 = calendar.daysInMonth(relativeTo);
+            var _newRelativeTo, _oneMonthDays2;
 
-            while (days >= _oneMonthDays2) {
+            var _ES$MoveRelativeDate10 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+            _newRelativeTo = _ES$MoveRelativeDate10.relativeTo;
+            _oneMonthDays2 = _ES$MoveRelativeDate10.days;
+
+            while (Math.abs(days) >= Math.abs(_oneMonthDays2)) {
               days -= _oneMonthDays2;
-              months++;
-              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
-              _oneMonthDays2 = calendar.daysInMonth(relativeTo);
+              months += sign;
+              relativeTo = _newRelativeTo;
+
+              var _ES$MoveRelativeDate11 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+              _newRelativeTo = _ES$MoveRelativeDate11.relativeTo;
+              _oneMonthDays2 = _ES$MoveRelativeDate11.days;
             }
 
             break;
@@ -5474,23 +5516,28 @@
           {
             if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance days up to weeks
 
-            var oneWeekDays = calendar.daysInWeek(relativeTo);
+            var _newRelativeTo2, oneWeekDays;
 
-            while (days >= oneWeekDays) {
+            var _ES$MoveRelativeDate12 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+
+            _newRelativeTo2 = _ES$MoveRelativeDate12.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate12.days;
+
+            while (Math.abs(days) >= Math.abs(oneWeekDays)) {
               days -= oneWeekDays;
-              weeks++;
-              relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
-              oneWeekDays = calendar.daysInWeek(relativeTo);
+              weeks += sign;
+              relativeTo = _newRelativeTo2;
+
+              var _ES$MoveRelativeDate13 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+
+              _newRelativeTo2 = _ES$MoveRelativeDate13.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate13.days;
             }
 
             break;
           }
       }
 
-      years *= sign;
-      months *= sign;
-      weeks *= sign;
-      days *= sign;
       return {
         years: years,
         months: months,
@@ -6122,6 +6169,18 @@
           return ES.BalanceTime(hour, minute, second, millisecond, microsecond, result);
       }
     },
+    DaysUntil: function DaysUntil(earlier, later) {
+      return ES.DifferenceDate(GetSlot(earlier, ISO_YEAR), GetSlot(earlier, ISO_MONTH), GetSlot(earlier, ISO_DAY), GetSlot(later, ISO_YEAR), GetSlot(later, ISO_MONTH), GetSlot(later, ISO_DAY), 'days').days;
+    },
+    MoveRelativeDate: function MoveRelativeDate(calendar, relativeTo, duration) {
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var later = calendar.dateAdd(relativeTo, duration, {}, TemporalDate);
+      var days = ES.DaysUntil(relativeTo, later);
+      return {
+        relativeTo: later,
+        days: days
+      };
+    },
     RoundDuration: function RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode, relativeTo) {
       var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
       var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
@@ -6136,33 +6195,41 @@
         case 'years':
           {
             if (!calendar) throw new RangeError('A starting point is required for years rounding'); // convert months and weeks to days by calculating difference(
-            // relativeTo - years, relativeTo - { years, months, weeks })
+            // relativeTo + years, relativeTo + { years, months, weeks })
 
-            var yearsBefore = calendar.dateSubtract(relativeTo, new TemporalDuration(years), {}, TemporalDate);
+            var yearsLater = calendar.dateAdd(relativeTo, new TemporalDuration(years), {}, TemporalDate);
             var yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-            var yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
-            var monthsWeeksInDays = ES.DifferenceDate(GetSlot(yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsBefore, ISO_YEAR), GetSlot(yearsBefore, ISO_MONTH), GetSlot(yearsBefore, ISO_DAY), 'days');
+            var yearsMonthsWeeksLater = calendar.dateAdd(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
+            var monthsWeeksInDays = ES.DaysUntil(yearsLater, yearsMonthsWeeksLater);
+            relativeTo = yearsLater;
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-            days += monthsWeeksInDays.days;
+            days += monthsWeeksInDays;
             days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Years may be different lengths of days depending on the calendar, so
             // we need to convert days to years in a loop. We get the number of days
-            // in the one-year period preceding the relativeTo date, and convert
-            // that number of days to one year, repeating until the number of days
-            // is less than a year.
+            // in the one-year period after (or preceding, depending on the sign of
+            // the duration) the relativeTo date, and convert that number of days to
+            // one year, repeating until the number of days is less than a year.
 
-            var oneYear = new TemporalDuration(1);
             var sign = Math.sign(days);
-            relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
-            var oneYearDays = calendar.daysInYear(relativeTo);
+            var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
+            var oneYearDays;
 
-            while (Math.abs(days) > oneYearDays) {
+            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+            relativeTo = _ES$MoveRelativeDate14.relativeTo;
+            oneYearDays = _ES$MoveRelativeDate14.days;
+
+            while (Math.abs(days) >= Math.abs(oneYearDays)) {
               years += sign;
-              days -= oneYearDays * sign;
-              relativeTo = calendar.dateSubtract(relativeTo, oneYear, {}, TemporalDate);
-              oneYearDays = calendar.daysInYear(relativeTo);
+              days -= oneYearDays;
+
+              var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
+              relativeTo = _ES$MoveRelativeDate15.relativeTo;
+              oneYearDays = _ES$MoveRelativeDate15.days;
             }
 
-            years += days / oneYearDays;
+            years += days / Math.abs(oneYearDays);
             years = ES.RoundNumberToIncrement(years, increment, roundingMode);
             months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
@@ -6170,37 +6237,44 @@
 
         case 'months':
           {
-            if (!calendar) throw new RangeError('A starting point is required for months rounding'); // convert weeks to days by calculating difference(relativeTo -
-            //   { years, months }, relativeTo - { years, months, weeks })
+            if (!calendar) throw new RangeError('A starting point is required for months rounding'); // convert weeks to days by calculating difference(relativeTo +
+            //   { years, months }, relativeTo + { years, months, weeks })
 
             var yearsMonths = new TemporalDuration(years, months);
-            var yearsMonthsBefore = calendar.dateSubtract(relativeTo, yearsMonths, {}, TemporalDate);
+            var yearsMonthsLater = calendar.dateAdd(relativeTo, yearsMonths, {}, TemporalDate);
 
             var _yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
 
-            var _yearsMonthsWeeksBefore = calendar.dateSubtract(relativeTo, _yearsMonthsWeeks, {}, TemporalDate);
+            var _yearsMonthsWeeksLater = calendar.dateAdd(relativeTo, _yearsMonthsWeeks, {}, TemporalDate);
 
-            var weeksInDays = ES.DifferenceDate(GetSlot(_yearsMonthsWeeksBefore, ISO_YEAR), GetSlot(_yearsMonthsWeeksBefore, ISO_MONTH), GetSlot(_yearsMonthsWeeksBefore, ISO_DAY), GetSlot(yearsMonthsBefore, ISO_YEAR), GetSlot(yearsMonthsBefore, ISO_MONTH), GetSlot(yearsMonthsBefore, ISO_DAY), 'days');
+            var weeksInDays = ES.DaysUntil(yearsMonthsLater, _yearsMonthsWeeksLater);
+            relativeTo = yearsMonthsLater;
             seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-            days += weeksInDays.days;
+            days += weeksInDays;
             days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Months may be different lengths of days depending on the calendar,
             // convert days to months in a loop as described above under 'years'.
 
-            var oneMonth = new TemporalDuration(0, 1);
-
             var _sign = Math.sign(days);
 
-            relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
-            var oneMonthDays = calendar.daysInMonth(relativeTo);
+            var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
+            var oneMonthDays;
 
-            while (Math.abs(days) > oneMonthDays) {
+            var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+            relativeTo = _ES$MoveRelativeDate16.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate16.days;
+
+            while (Math.abs(days) >= Math.abs(oneMonthDays)) {
               months += _sign;
-              days -= oneMonthDays * _sign;
-              relativeTo = calendar.dateSubtract(relativeTo, oneMonth, {}, TemporalDate);
-              oneMonthDays = calendar.daysInMonth(relativeTo);
+              days -= oneMonthDays;
+
+              var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+
+              relativeTo = _ES$MoveRelativeDate17.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate17.days;
             }
 
-            months += days / oneMonthDays;
+            months += days / Math.abs(oneMonthDays);
             months = ES.RoundNumberToIncrement(months, increment, roundingMode);
             weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
@@ -6213,21 +6287,27 @@
             days += ((seconds / 60 + minutes) / 60 + hours) / 24; // Weeks may be different lengths of days depending on the calendar,
             // convert days to weeks in a loop as described above under 'years'.
 
-            var oneWeek = new TemporalDuration(0, 0, 1);
-
             var _sign2 = Math.sign(days);
 
-            relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
-            var oneWeekDays = calendar.daysInWeek(relativeTo);
+            var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
+            var oneWeekDays;
 
-            while (Math.abs(days) > oneWeekDays) {
+            var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+
+            relativeTo = _ES$MoveRelativeDate18.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate18.days;
+
+            while (Math.abs(days) >= Math.abs(oneWeekDays)) {
               weeks += _sign2;
-              days -= oneWeekDays * _sign2;
-              relativeTo = calendar.dateSubtract(relativeTo, oneWeek, {}, TemporalDate);
-              oneWeekDays = calendar.daysInWeek(relativeTo);
+              days -= oneWeekDays;
+
+              var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+
+              relativeTo = _ES$MoveRelativeDate19.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate19.days;
             }
 
-            weeks += days / oneWeekDays;
+            weeks += days / Math.abs(oneWeekDays);
             weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
             days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
             break;
