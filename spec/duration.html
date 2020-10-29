@@ -417,6 +417,46 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.duration.prototype.total">
+      <h1>Temporal.Duration.prototype.total ( _options_ )</h1>
+      <p>
+        The `total` method takes one argument _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _duration_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
+        1. If _unit_ is not given, then
+          1. Throw a *RangeError* exception.
+        1. Else,
+          1. Let _unit_ be ? ToTemporalDurationTotalUnit(_revisedOptions_).
+        1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_years_, _months_, _weeks_, _days_, _unit_, _relativeTo_).
+        1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _unbalanceResult_.[[Hours]], _unbalanceResult_.[[Minutes]], _unbalanceResult_.[[Seconds]], _unbalanceResult_.[[Milliseconds]], _unbalanceResult_.[[Microseconds]], _unbalanceResult_.[[Nanoseconds]], _unit_).
+        1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], *1*, _unit_, *"trunc"*, _relativeTo_).
+        1. If _unit_ is *"years"*, then
+          1. Let _whole_ be _roundResult_.[[Years]].
+        1. If _unit_ is *"months"*, then
+          1. Let _whole_ be _roundResult_.[[Months]].
+        1. If _unit_ is *"weeks"*, then
+          1. Let _whole_ be _roundResult_.[[Weeks]].
+        1. If _unit_ is *"days"*, then
+          1. Let _whole_ be _roundResult_.[[Days]].
+        1. If _unit_ is *"hours"*, then
+          1. Let _whole_ be _roundResult_.[[Hours]].
+        1. If _unit_ is *"minutes"*, then
+          1. Let _whole_ be _roundResult_.[[Minutes]].
+        1. If _unit_ is *"seconds"*, then
+          1. Let _whole_ be _roundResult_.[[Seconds]].
+        1. If _unit_ is *"milliseconds"*, then
+          1. Let _whole_ be _roundResult_.[[Milliseconds]].
+        1. If _unit_ is *"microseconds"*, then
+          1. Let _whole_ be _roundResult_.[[Microseconds]].
+        1. Return _whole_ + _roundResult_.[[Remainder]].
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.duration.prototype.getfields">
       <h1>Temporal.Duration.prototype.getFields ( )</h1>
       <p>
@@ -1126,6 +1166,7 @@
             1. Let _options_ be ? ObjectCreate(%Object.prototype%).
         1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>−9</sup> + _microseconds_ × 10<sup>−6</sup> + _milliseconds_ × 10<sup>−3</sup> + _seconds_.
         1. Let _fractionalDays_ be ((_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_) / 24 + _days_.
+        1. Let _remainder_ be *undefined*.
         1. If _unit_ is *"years"*, then
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _yearsLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsDuration_, _options_, %Temporal.Date%).
@@ -1148,6 +1189,7 @@
             1. Set _oneYearDays_ to _moveResult_.[[Days]].
           1. Let _fractionalYears_ be _years_ + _days_ / abs(_oneYearDays_).
           1. Set _years_ to ? RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalYears_ - _years_.
           1. Set _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"months"*, then
           1. Let _yearsMonths_ be ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
@@ -1171,6 +1213,7 @@
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _fractionalMonths_ be _months_ + _days_ / abs(_oneMonthDays_).
           1. Set _months_ to ? RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalMonths_ - _months_.
           1. Set _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"weeks"*, then
           1. Let _sign_ be ! Sign(_days_).
@@ -1187,31 +1230,39 @@
             1. Set _oneWeekDays_ to _moveResult_.[[Days]].
           1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_ / abs(_oneWeekDays_).
           1. Set _weeks_ to ? RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalWeeks_ - _weeks_.
           1. Set _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"days"*, then
           1. Set _days_ to ? RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalDays_ - _days_.
           1. Set _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"hours"*, then
           1. Let _fractionalHours_ be (_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_.
           1. Set _hours_ to ? RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalHours_ - _hours_.
           1. Set _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"minutes"*, then
           1. Let _fractionalMinutes_ be _fractionalSeconds_ / 60 + _minutes_.
           1. Set _minutes_ to ? RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalMinutes_ - _minutes_.
           1. Set _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"seconds"*, then
           1. Set _seconds_ to ? RoundNumberToIncrement(_fractionalSeconds_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalSeconds_ - _seconds_.
           1. Set _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"milliseconds"*, then
           1. Let _fractionalMilliseconds_ be _nanoseconds_ × 10<sup>−6</sup> + _microseconds_ × 10<sup>−3</sup> + _milliseconds_.
           1. Set _milliseconds_ to ? RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalMilliseconds_ - _milliseconds_.
           1. Set _microseconds_ and _nanoseconds_ to 0.
         1. Else if _unit_ is *"microseconds"*, then
           1. Let _fractionalMicroseconds_ be _nanoseconds_ × 10<sup>−3</sup> + _microseconds_.
           1. Set _microseconds_ to ? RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _fractionalMicroseconds_ - _microseconds_.
           1. Set _nanoseconds_ to 0.
         1. Else,
           1. Assert: _unit_ is *"nanoseconds"*.
+          1. Set _remainder_ to 0.
           1. Set _nanoseconds_ to ? RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
         1. Return the new Record {
           [[Years]]: _years_,
@@ -1223,7 +1274,8 @@
           [[Seconds]]: _seconds_,
           [[Milliseconds]]: _milliseconds_,
           [[Microseconds]]: _microseconds_,
-          [[Nanoseconds]]: _nanoseconds_
+          [[Nanoseconds]]: _nanoseconds_,
+          [[Remainder]]: _remainder_
           }.
       </emu-alg>
     </emu-clause>

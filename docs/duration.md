@@ -486,6 +486,57 @@ quarters = d.months / 3;
 quarters; // => 3
 ```
 
+### duration.**total**(_options_: object) : number
+
+**Parameters:**
+
+- `options` (object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `unit` (string): The unit of time that will be returned.
+    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    There is no default; `unit` is required.
+  - `relativeTo` (`Temporal.DateTime`): The starting point to use when converting between years, months, weeks, and days.
+    It must be a `Temporal.DateTime`, or a value that can be passed to `Temporal.DateTime.from()`.
+
+**Returns:** a floating-point number representing the number of desired units in the `Temporal.Duration`.
+
+Calculates the number of units of time that can fit in a particular `Temporal.Duration`.
+If the duration IS NOT evenly divisible by the desired unit, then a fractional remainder will be present in the result.
+If the duration IS evenly divisible by the desired unit, then the integer result will be identical to `duration.round({ smallestUnit: unit, largestUnit: unit, relativeTo })[unit]`.
+
+Interpreting years, months, or weeks requires a reference point.
+Therefore, `unit` is `'years'`, `'months'`, or `'weeks'`, or the duration has nonzero 'years', 'months', or 'weeks', then the `relativeTo` option is required.
+
+The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
+It is a `Temporal.DateTime` instance.
+If any other type is provided, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(..., { overflow: 'reject' })`.
+A `Temporal.Date` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.DateTime`.
+
+Example usage:
+
+```javascript
+// How many seconds in 18 hours and 20 minutes?
+d = Temporal.Duration.from({ hours: 130, minutes: 20 });
+d.total({ largestUnit: 'minutes' }); // => 469200
+
+// How many 24-hour days is 123456789 seconds?
+d = Temporal.Duration.from('PT123456789S');
+d.total({ unit: 'days' }); // 1428.8980208333332
+
+// Find totals in months, with and without taking DST into account
+d = Temporal.Duration.from({ hours: 1756 });
+// FIXME: write this example after ZonedDateTime is added
+// d.round({
+//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
+//   largestUnit: 'months'
+// }); // => ???
+d.total({
+  unit: 'months',
+  relativeTo: '2020-01-01'
+}); // => 2.39247311827957
+// FIXME: update the result above after duration rounding is fixed
+```
+
 ### duration.**getFields**() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }
 
 **Returns:** a plain object with properties equal to the fields of `duration`.

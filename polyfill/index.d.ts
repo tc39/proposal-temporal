@@ -293,9 +293,79 @@ export namespace Temporal {
     roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
 
     /**
-     * The starting point to use when converting between or rounding to years,
-     * months, weeks, and days. It must be a Temporal.DateTime, or a value that
-     * can be passed to Temporal.DateTime.from(), like a `Temporal.Date`.
+     * The starting point to use for rounding and conversions when
+     * variable-length units (years, months, weeks depending on the calendar)
+     * are involved. This option is required if any of the following are true:
+     * - `unit` is `'weeks'` or larger units
+     * - `this` has a nonzero value for `weeks` or larger units
+     *
+     * This value must be either a `Temporal.DateTime`, a
+     * `Temporal.ZonedDateTime`, or a string or object value that can be passed
+     * to `from()` of those types. Examples:
+     * - `'2020-01'01T00:00-08:00[America/Los_Angeles]'`
+     * - `'2020-01'01'`
+     * - `Temporal.Date.from('2020-01-01')`
+     *
+     * `Temporal.ZonedDateTime` will be tried first because it's more
+     * specific, with `Temporal.DateTime` as a fallback.
+     *
+     * If the value resolves to a `Temporal.ZonedDateTime`, then operation will
+     * adjust for DST and other time zone transitions. Otherwise (including if
+     * this option is omitted), then the operation will ignore time zone
+     * transitions and all days will be assumed to be 24 hours long.
+     */
+    relativeTo?: Temporal.DateTime | DateTimeLike | string;
+  }
+
+  /**
+   * Options to control behavior of `Duration.prototype.total()`
+   */
+  export interface DurationTotalOptions {
+    /**
+     * The unit to convert the duration to. This option is required.
+     */
+    unit:
+      | 'years'
+      | 'months'
+      | 'weeks'
+      | 'days'
+      | 'hours'
+      | 'minutes'
+      | 'seconds'
+      | 'milliseconds'
+      | 'microseconds'
+      | 'nanoseconds'
+      | /** @deprecated */ 'year'
+      | /** @deprecated */ 'month'
+      | /** @deprecated */ 'day'
+      | /** @deprecated */ 'hour'
+      | /** @deprecated */ 'minute'
+      | /** @deprecated */ 'second'
+      | /** @deprecated */ 'millisecond'
+      | /** @deprecated */ 'microsecond'
+      | /** @deprecated */ 'nanosecond';
+
+    /**
+     * The starting point to use when variable-length units (years, months,
+     * weeks depending on the calendar) are involved. This option is required if
+     * any of the following are true:
+     * - `unit` is `'weeks'` or larger units
+     * - `this` has a nonzero value for `weeks` or larger units
+     *
+     * This value must be either a `Temporal.DateTime`, a
+     * `Temporal.ZonedDateTime`, or a string or object value that can be passed
+     * to `from()` of those types. Examples:
+     * - `'2020-01'01T00:00-08:00[America/Los_Angeles]'`
+     * - `'2020-01'01'`
+     * - `Temporal.Date.from('2020-01-01')`
+     *
+     * `Temporal.ZonedDateTime` will be tried first because it's more
+     * specific, with `Temporal.DateTime` as a fallback.
+     *
+     * If the value resolves to a `Temporal.ZonedDateTime`, then operation will
+     * adjust for DST and other time zone transitions. Otherwise (including if
+     * this option is omitted), then the operation will ignore time zone
+     * transitions and all days will be assumed to be 24 hours long.
      */
     relativeTo?: Temporal.DateTime | DateTimeLike | string;
   }
@@ -354,6 +424,7 @@ export namespace Temporal {
     add(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     subtract(other: Temporal.Duration | DurationLike | string, options?: DurationOptions): Temporal.Duration;
     round(options: DurationRoundOptions): Temporal.Duration;
+    total(options: DurationTotalOptions): number;
     getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

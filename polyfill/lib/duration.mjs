@@ -483,6 +483,56 @@ export class Duration {
     if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
     return result;
   }
+  total(options) {
+    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    let years = GetSlot(this, YEARS);
+    let months = GetSlot(this, MONTHS);
+    let weeks = GetSlot(this, WEEKS);
+    let days = GetSlot(this, DAYS);
+    let hours = GetSlot(this, HOURS);
+    let minutes = GetSlot(this, MINUTES);
+    let seconds = GetSlot(this, SECONDS);
+    let milliseconds = GetSlot(this, MILLISECONDS);
+    let microseconds = GetSlot(this, MICROSECONDS);
+    let nanoseconds = GetSlot(this, NANOSECONDS);
+
+    options = ES.NormalizeOptionsObject(options);
+    const unit = ES.ToTemporalDurationTotalUnit(options, undefined);
+    if (unit === undefined) throw new RangeError('unit option is required');
+    const relativeTo = ES.ToRelativeTemporalObject(options);
+
+    // Convert larger units down to days
+    ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
+    // If the unit we're totalling is smaller than `days`, convert days down to that unit.
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      unit
+    ));
+    // Finally, truncate to the correct unit and calculate remainder
+    const rounded = ES.RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      1,
+      unit,
+      'trunc',
+      relativeTo
+    );
+    return rounded[unit] + rounded.remainder;
+  }
   getFields() {
     const fields = ES.ToRecord(this, [
       ['days'],

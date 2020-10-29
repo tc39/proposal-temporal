@@ -1092,6 +1092,184 @@ describe('Duration', () => {
       equal(`${yearAndHalf.round({ relativeTo: '2020-07-01', smallestUnit: 'years' })}`, 'P2Y');
     });
   });
+  describe('Duration.total()', () => {
+    const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
+    const relativeTo = Temporal.DateTime.from('2020-01-01T00:00');
+    it('options may only be an object', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
+    });
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'nonsense'].forEach((unit) => {
+        throws(() => d.total({ unit }), RangeError);
+      });
+    });
+    it('accepts datetime string equivalents or fields for relativeTo', () => {
+      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
+        (relativeTo) => {
+          const daysPastJuly1 = 5 * 7 + 5 - 30; // 5 weeks + 5 days - 30 days in June
+          const partialDayNanos =
+            d.hours * 3.6e12 +
+            d.minutes * 6e10 +
+            d.seconds * 1e9 +
+            d.milliseconds * 1e6 +
+            d.microseconds * 1e3 +
+            d.nanoseconds;
+          const partialDay = partialDayNanos / (3.6e12 * 24);
+          const partialMonth = (daysPastJuly1 + partialDay) / 31;
+          const totalMonths = 5 * 12 + 5 + 1 + partialMonth; // +1 for 5 weeks
+          const total = d.total({ unit: 'months', relativeTo });
+          equal(total, totalMonths); // 66.32930780242619
+        }
+      );
+    });
+    it("throws on relativeTo that can't be converted to datetime string", () => {
+      throws(() => d.total({ unit: 'months', relativeTo: Symbol('foo') }), TypeError);
+    });
+    it('throws on relativeTo that converts to an invalid datetime string', () => {
+      [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
+        throws(() => d.total({ unit: 'months', relativeTo }), RangeError);
+      });
+    });
+    it('relativeTo object must contain at least the required correctly-spelled properties', () => {
+      throws(() => d.total({ unit: 'months', relativeTo: {} }), TypeError);
+      throws(() => d.total({ unit: 'months', relativeTo: { years: 2020, month: 1, day: 1 } }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored in relativeTo', () => {
+      const oneMonth = Duration.from({ months: 1 });
+      equal(oneMonth.total({ unit: 'months', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } }), 1);
+    });
+    it('throws if unit is missing', () => {
+      [undefined, {}, () => {}, { roundingMode: 'ceil' }].forEach((options) =>
+        throws(() => d.total(options), RangeError)
+      );
+    });
+    it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
+      throws(() => d2.total({ unit: 'years' }), RangeError);
+      throws(() => d2.total({ unit: 'months' }), RangeError);
+      throws(() => d2.total({ unit: 'weeks' }), RangeError);
+    });
+    it('relativeTo is required for rounding durations with calendar units', () => {
+      throws(() => d.total({ unit: 'years' }), RangeError);
+      throws(() => d.total({ unit: 'months' }), RangeError);
+      throws(() => d.total({ unit: 'weeks' }), RangeError);
+      throws(() => d.total({ unit: 'days' }), RangeError);
+      throws(() => d.total({ unit: 'hours' }), RangeError);
+      throws(() => d.total({ unit: 'minutes' }), RangeError);
+      throws(() => d.total({ unit: 'seconds' }), RangeError);
+      throws(() => d.total({ unit: 'milliseconds' }), RangeError);
+      throws(() => d.total({ unit: 'microseconds' }), RangeError);
+      throws(() => d.total({ unit: 'nanoseconds' }), RangeError);
+    });
+    const d2Nanoseconds =
+      d2.days * 24 * 3.6e12 +
+      d2.hours * 3.6e12 +
+      d2.minutes * 6e10 +
+      d2.seconds * 1e9 +
+      d2.milliseconds * 1e6 +
+      d2.microseconds * 1e3 +
+      d2.nanoseconds;
+    const totalD2 = {
+      days: d2Nanoseconds / (24 * 3.6e12),
+      hours: d2Nanoseconds / 3.6e12,
+      minutes: d2Nanoseconds / 6e10,
+      seconds: d2Nanoseconds / 1e9,
+      milliseconds: d2Nanoseconds / 1e6,
+      microseconds: d2Nanoseconds / 1e3,
+      nanoseconds: d2Nanoseconds
+    };
+    it('relativeTo not required to round fixed-length units in durations without variable units', () => {
+      equal(d2.total({ unit: 'days' }), totalD2.days);
+      equal(d2.total({ unit: 'hours' }), totalD2.hours);
+      equal(d2.total({ unit: 'minutes' }), totalD2.minutes);
+      equal(d2.total({ unit: 'seconds' }), totalD2.seconds);
+      equal(d2.total({ unit: 'milliseconds' }), totalD2.milliseconds);
+      equal(d2.total({ unit: 'microseconds' }), totalD2.microseconds);
+      equal(d2.total({ unit: 'nanoseconds' }), totalD2.nanoseconds);
+    });
+    it('relativeTo not required to round fixed-length units in durations without variable units (negative)', () => {
+      const negativeD2 = d2.negated();
+      equal(negativeD2.total({ unit: 'days' }), -totalD2.days);
+      equal(negativeD2.total({ unit: 'hours' }), -totalD2.hours);
+      equal(negativeD2.total({ unit: 'minutes' }), -totalD2.minutes);
+      equal(negativeD2.total({ unit: 'seconds' }), -totalD2.seconds);
+      equal(negativeD2.total({ unit: 'milliseconds' }), -totalD2.milliseconds);
+      equal(negativeD2.total({ unit: 'microseconds' }), -totalD2.microseconds);
+      equal(negativeD2.total({ unit: 'nanoseconds' }), -totalD2.nanoseconds);
+    });
+
+    const endpoint = relativeTo.add(d);
+    const options = (unit) => ({ largestUnit: unit, smallestUnit: unit, roundingMode: 'trunc' });
+    const fullYears = 5;
+    const fullDays = endpoint.since(relativeTo, options('days')).days;
+    const fullMilliseconds = endpoint.since(relativeTo, options('milliseconds')).milliseconds;
+    const partialDayMilliseconds = fullMilliseconds - fullDays * 24 * 3.6e6 + 0.005005;
+    const fractionalDay = partialDayMilliseconds / (24 * 3.6e6);
+    const partialYearDays = fullDays - (fullYears * 365 + 2);
+    const fractionalYear = partialYearDays / 365 + fractionalDay / 365; // split to avoid precision loss
+    const fractionalMonths = ((endpoint.day - 1) * (24 * 3.6e6) + partialDayMilliseconds) / (31 * 24 * 3.6e6);
+
+    const totalResults = {
+      years: fullYears + fractionalYear,
+      months: 66 + fractionalMonths,
+      weeks: (fullDays + fractionalDay) / 7,
+      days: fullDays + fractionalDay,
+      hours: fullDays * 24 + partialDayMilliseconds / 3.6e6,
+      minutes: fullDays * 24 * 60 + partialDayMilliseconds / 60000,
+      seconds: fullDays * 24 * 60 * 60 + partialDayMilliseconds / 1000,
+      milliseconds: fullMilliseconds + 0.005005,
+      microseconds: fullMilliseconds * 1000 + 5.005,
+      nanoseconds: fullMilliseconds * 1e6 + 5005
+    };
+    for (const [unit, expected] of Object.entries(totalResults)) {
+      it(`total(${unit}) = ${expected}`, () => {
+        equal(d.total({ unit, relativeTo }), expected);
+      });
+    }
+    for (const unit of ['microseconds', 'nanoseconds']) {
+      it(`total(${unit}) may lose precision below ms`, () => {
+        assert(d.total({ unit, relativeTo }).toString().startsWith('174373505005'));
+      });
+    }
+    it('balances differently depending on relativeTo', () => {
+      const fortyDays = Duration.from({ days: 40 });
+      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }), 1 + 11 / 31);
+      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }), 1 + 9 / 29);
+    });
+    it('balances differently depending on relativeTo (negative)', () => {
+      const negativeFortyDays = Duration.from({ days: -40 });
+      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }), -1 - 11 / 31);
+      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }), -1 - 9 / 29);
+    });
+    it('balances up to the next unit after rounding', () => {
+      const almostWeek = Duration.from({ days: 6, hours: 20 });
+      equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), (6 + 20 / 24) / 7);
+    });
+    it('balances up to the next unit after rounding (negative)', () => {
+      const almostWeek = Duration.from({ days: -6, hours: -20 });
+      equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), -((6 + 20 / 24) / 7));
+    });
+    it('balances days up to both years and months', () => {
+      const twoYears = Duration.from({ months: 11, days: 396 });
+      equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), 2);
+    });
+    it('balances days up to both years and months (negative)', () => {
+      const twoYears = Duration.from({ months: -11, days: -396 });
+      equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), -2);
+    });
+    it('accepts singular units', () => {
+      equal(d.total({ unit: 'year', relativeTo }), d.total({ unit: 'years', relativeTo }));
+      equal(d.total({ unit: 'month', relativeTo }), d.total({ unit: 'months', relativeTo }));
+      equal(d.total({ unit: 'day', relativeTo }), d.total({ unit: 'days', relativeTo }));
+      equal(d.total({ unit: 'hour', relativeTo }), d.total({ unit: 'hours', relativeTo }));
+      equal(d.total({ unit: 'minute', relativeTo }), d.total({ unit: 'minutes', relativeTo }));
+      equal(d.total({ unit: 'second', relativeTo }), d.total({ unit: 'seconds', relativeTo }));
+      equal(d.total({ unit: 'second', relativeTo }), d.total({ unit: 'seconds', relativeTo }));
+      equal(d.total({ unit: 'millisecond', relativeTo }), d.total({ unit: 'milliseconds', relativeTo }));
+      equal(d.total({ unit: 'microsecond', relativeTo }), d.total({ unit: 'microseconds', relativeTo }));
+      equal(d.total({ unit: 'nanosecond', relativeTo }), d.total({ unit: 'nanoseconds', relativeTo }));
+    });
+  });
 });
 
 import { normalize } from 'path';
