@@ -791,12 +791,16 @@
       TimeZoneUTCOffsetFraction :
           Fraction
 
-      TimeZoneUTCOffset :
+      TimeZoneNumericUTCOffset :
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+
+      TimeZoneUTCOffset :
+          TimeZoneNumericUTCOffset
+          UTCDesignator
 
       TimeZoneUTCOffsetName :
           Sign Hour
@@ -829,9 +833,8 @@
           TimeZoneUTCOffsetName
 
       TimeZone :
-          UTCDesignator
           TimeZoneUTCOffset
-          TimeZoneUTCOffset? `[` TimeZoneBracketedName `]`
+          TimeZoneNumericUTCOffset? `[` TimeZoneBracketedName `]`
 
       CalChar :
           Alpha
@@ -924,7 +927,7 @@
           DateTime
 
       TemporalTimeZoneIdentifier :
-          TimeZoneUTCOffset
+          TimeZoneNumericUTCOffset
           TimeZoneIANAName
 
       TemporalTimeZoneString :
@@ -1022,6 +1025,7 @@
         [[Millisecond]]: _result_.[[Millisecond]],
         [[Microsecond]]: _result_.[[Microsecond]],
         [[Nanosecond]]: _result_.[[Nanosecond]],
+        [[TimeZoneZ]]: _timeZoneResult_.[[Z]],
         [[TimeZoneOffsetString]]: _timeZoneResult_.[[OffsetString]],
         [[TimeZoneName]]: _timeZoneResult_.[[Name]]
         }.
@@ -1186,6 +1190,7 @@
       1. Let _z_, _sign_, _hours_, _minutes_, _seconds_, _fraction_ and _name_ be the parts of _isoString_ produced respectively by the |UTCDesignator|, |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute|, |TimeZoneUTCOffsetSecond|, |TimeZoneUTCOffsetFraction|, and |TimeZoneIANAName| productions, or *undefined* if not present.
       1. If _z_ is not *undefined*, then
         1. Return the new Record: {
+          [[Z]]: *"Z"*,
           [[OffsetString]]: *"+00:00"*,
           [[Name]]: *undefined*
           }.
@@ -1212,6 +1217,7 @@
         1. Assert: ! IsValidTimeZoneName(_name_) is *true*.
         1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
       1. Return the new Record: {
+        [[Z]]: *undefined*,
         [[OffsetString]]: _offsetString_,
         [[Name]]: _name_
         }.

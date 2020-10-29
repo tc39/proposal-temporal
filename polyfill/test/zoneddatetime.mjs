@@ -260,6 +260,10 @@ describe('ZonedDateTime', () => {
       const zdt = ZonedDateTime.from('2020-03-08T01:00-08:00[-08:00]');
       equal(zdt.toString(), '2020-03-08T01:00:00-08:00[-08:00]');
     });
+    it('throws if no brackets', () => {
+      throws(() => ZonedDateTime.from('2020-03-08T01:00-08:00'), RangeError);
+      throws(() => ZonedDateTime.from('2020-03-08T01:00Z'), RangeError);
+    });
   });
 
   describe('ZonedDateTime.withTimeZone()', () => {
