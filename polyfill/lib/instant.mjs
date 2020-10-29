@@ -252,6 +252,20 @@ export class Instant {
     const calendar = GetISO8601Calendar();
     return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
   }
+  toZonedDateTime(temporalTimeZoneLike, calendarLike) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const calendar = ES.ToTemporalCalendar(calendarLike);
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
+  }
+  toZonedDateTimeISO(temporalTimeZoneLike) {
+    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const calendar = GetISO8601Calendar();
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
+  }
 
   static fromEpochSeconds(epochSeconds) {
     epochSeconds = ES.ToNumber(epochSeconds);

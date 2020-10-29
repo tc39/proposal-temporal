@@ -41,6 +41,7 @@ import {
   DATE_BRAND,
   YEAR_MONTH_BRAND,
   MONTH_DAY_BRAND,
+  TIME_ZONE,
   CALENDAR,
   YEARS,
   MONTHS,
@@ -96,7 +97,7 @@ const ES2020 = {
 };
 
 export const ES = ObjectAssign({}, ES2020, {
-  IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS),
+  IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
   IsTemporalDuration: (item) =>
@@ -109,6 +110,7 @@ export const ES = ObjectAssign({}, ES2020, {
     HasSlot(item, ISO_YEAR, ISO_MONTH, ISO_DAY, HOUR, MINUTE, SECOND, MILLISECOND, MICROSECOND, NANOSECOND),
   IsTemporalYearMonth: (item) => HasSlot(item, YEAR_MONTH_BRAND),
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
+  IsTemporalZonedDateTime: (item) => HasSlot(item, EPOCHNANOSECONDS, TIME_ZONE, CALENDAR),
   TemporalTimeZoneFromString: (stringIdent) => {
     const { ianaName, offset } = ES.ParseTemporalTimeZoneString(stringIdent);
     const result = ES.GetCanonicalTimeZoneIdentifier(ianaName || offset);
@@ -185,6 +187,9 @@ export const ES = ObjectAssign({}, ES2020, {
     };
   },
   ParseTemporalInstantString: (isoString) => {
+    return ES.ParseISODateTime(isoString, { zoneRequired: true });
+  },
+  ParseTemporalZonedDateTimeString: (isoString) => {
     return ES.ParseISODateTime(isoString, { zoneRequired: true });
   },
   ParseTemporalDateTimeString: (isoString) => {
@@ -459,6 +464,9 @@ export const ES = ObjectAssign({}, ES2020, {
       default:
         return roundingMode;
     }
+  },
+  ToTemporalOffset: (options, fallback) => {
+    return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
   },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
     let maximum = Infinity;
@@ -1035,6 +1043,61 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   },
+  ToTemporalZonedDateTime: (
+    item,
+    constructor,
+    overflow = 'constrain',
+    disambiguation = 'compatible',
+    offsetOpt = 'reject'
+  ) => {
+    let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+    if (ES.Type(item) === 'Object') {
+      if (ES.IsTemporalZonedDateTime(item)) return item;
+      calendar = item.calendar;
+      if (calendar === undefined) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      timeZone = ES.ToTemporalTimeZone(item.timeZone);
+      offset = item.offset;
+      if (offset !== undefined) offset = ES.ToString(offset);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalDateTimeFields(
+        item,
+        fieldNames
+      ));
+    } else {
+      let ianaName;
+      ({
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        ianaName,
+        offset,
+        calendar
+      } = ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
+      if (!ianaName) throw new RangeError('named time zone required');
+      timeZone = ES.TimeZoneFrom(ianaName);
+      if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+    }
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+
+    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    void overflow;
+    void offset;
+    void offsetOpt;
+    // TODO: implement overflow and offset options
+
+    const result = new constructor(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
+  },
 
   CalendarFrom: (calendarLike) => {
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
@@ -1091,6 +1154,16 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
     return ES.TimeZoneFrom(identifier);
+  },
+  TimeZoneCompare: (one, two) => {
+    const tz1 = ES.TimeZoneToString(one);
+    const tz2 = ES.TimeZoneToString(two);
+    return tz1 < tz2 ? -1 : tz1 > tz2 ? 1 : 0;
+  },
+  TimeZoneEquals: (one, two) => {
+    const tz1 = ES.TimeZoneToString(one);
+    const tz2 = ES.TimeZoneToString(two);
+    return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {
     const Date = GetIntrinsic('%Temporal.Date%');

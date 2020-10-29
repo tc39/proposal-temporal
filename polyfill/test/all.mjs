@@ -20,6 +20,7 @@ import './exports.mjs';
 import './now.mjs';
 import './timezone.mjs';
 import './instant.mjs';
+import './zoneddatetime.mjs';
 import './date.mjs';
 import './time.mjs';
 import './datetime.mjs';

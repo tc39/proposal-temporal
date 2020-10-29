@@ -8,3 +8,4 @@ export { now } from './now.mjs';
 export { Time } from './time.mjs';
 export { TimeZone } from './timezone.mjs';
 export { YearMonth } from './yearmonth.mjs';
+export { ZonedDateTime } from './zoneddatetime.mjs';

@@ -70,6 +70,46 @@ export namespace Temporal {
     disambiguation: 'compatible' | 'earlier' | 'later' | 'reject';
   };
 
+  type OffsetDisambiguationOptions = {
+    /**
+     * Time zone definitions can change. If an application stores data about
+     * events in the future, then stored data about future events may become
+     * ambiguous, for example if a country permanently abolishes DST. The
+     * `offset` option controls this unusual case.
+     *
+     * - `'use'` always uses the offset (if it's provided) to calculate the
+     *   instant. This ensures that the result will match the instant that was
+     *   originally stored, even if local clock time is different.
+     * - `'prefer'` uses the offset if it's valid for the date/time in this time
+     *   zone, but if it's not valid then the time zone will be used as a
+     *   fallback to calculate the instant.
+     * - `'ignore'` will disregard any provided offset. Instead, the time zone
+     *    and date/time value are used to calculate the instant. This will keep
+     *    local clock time unchanged but may result in a different real-world
+     *    instant.
+     * - `'reject'` acts like `'prefer'`, except it will throw a RangeError if
+     *   the offset is not valid for the given time zone identifier and
+     *   date/time value.
+     *
+     * If the ISO string ends in 'Z' then this option is ignored because there
+     * is no possibility of ambiguity.
+     *
+     * If a time zone offset is not present in the input, then this option is
+     * ignored because the time zone will always be used to calculate the
+     * offset.
+     *
+     * If the offset is not used, and if the date/time and time zone don't
+     * uniquely identify a single instant, then the `disambiguation` option will
+     * be used to choose the correct instant. However, if the offset is used
+     * then the `disambiguation` option will be ignored.
+     */
+    offset: 'use' | 'prefer' | 'ignore' | 'reject';
+  };
+
+  export type ZonedDateTimeAssignmentOptions = Partial<
+    AssignmentOptions & ToInstantOptions & OffsetDisambiguationOptions
+  >;
+
   /**
    * Options for arithmetic operations like `add()` and `subtract()`
    * */
@@ -512,6 +552,8 @@ export namespace Temporal {
     ): Temporal.Instant;
     toDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.DateTime;
     toDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.DateTime;
+    toZonedDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
+    toZonedDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(tzLike?: TimeZoneProtocol | string, options?: ToStringOptions): string;
@@ -721,6 +763,11 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     toDateTime(temporalTime?: Temporal.Time | TimeLike | string): Temporal.DateTime;
+    toZonedDateTime(
+      timeZone: TimeZoneProtocol | string,
+      temporalTime?: Temporal.Time | TimeLike | string,
+      options?: ToInstantOptions
+    ): Temporal.ZonedDateTime;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
@@ -888,6 +935,7 @@ export namespace Temporal {
       >
     ): Temporal.DateTime;
     toInstant(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.Instant;
+    toZonedDateTime(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.ZonedDateTime;
     toDate(): Temporal.Date;
     toYearMonth(): Temporal.YearMonth;
     toMonthDay(): Temporal.MonthDay;
@@ -1047,6 +1095,11 @@ export namespace Temporal {
       >
     ): Temporal.Time;
     toDateTime(temporalDate: Temporal.Date | DateLike | string): Temporal.DateTime;
+    toZonedDateTime(
+      timeZoneLike: TimeZoneProtocol | string,
+      temporalDate: Temporal.Date | DateLike | string,
+      options?: ToInstantOptions
+    ): Temporal.ZonedDateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1147,6 +1200,180 @@ export namespace Temporal {
     toDateOnDay(day: number): Temporal.Date;
     getFields(): YearMonthFields;
     getISOFields(): DateISOFields;
+    toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
+    toJSON(): string;
+    toString(): string;
+    valueOf(): never;
+  }
+
+  export type ZonedDateTimeLike = {
+    year?: number;
+    month?: number;
+    day?: number;
+    hour?: number;
+    minute?: number;
+    second?: number;
+    millisecond?: number;
+    microsecond?: number;
+    nanosecond?: number;
+    offset?: string;
+    timeZone?: TimeZoneProtocol | string;
+    calendar?: CalendarProtocol | string;
+  };
+
+  type ZonedDateTimeFields = {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+    millisecond: number;
+    microsecond: number;
+    nanosecond: number;
+    offset: string;
+    timeZone: TimeZoneProtocol;
+    calendar: CalendarProtocol;
+  };
+
+  type ZonedDateTimeISOFields = {
+    isoYear: number;
+    isoMonth: number;
+    isoDay: number;
+    hour: number;
+    minute: number;
+    second: number;
+    millisecond: number;
+    microsecond: number;
+    nanosecond: number;
+    offsetNanoseconds: number;
+    timeZone: TimeZoneProtocol;
+    calendar: CalendarProtocol;
+  };
+
+  export class ZonedDateTime {
+    static from(
+      item: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
+      options?: ZonedDateTimeAssignmentOptions
+    ): ZonedDateTime;
+    static compare(
+      one: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
+      two: Temporal.ZonedDateTime | ZonedDateTimeLike | string
+    ): ComparisonResult;
+    constructor(epochNanoseconds: bigint, timeZone: TimeZoneProtocol | string, calendar?: CalendarProtocol | string);
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    readonly hour: number;
+    readonly minute: number;
+    readonly second: number;
+    readonly millisecond: number;
+    readonly microsecond: number;
+    readonly nanosecond: number;
+    readonly timeZone: TimeZoneProtocol;
+    readonly calendar: CalendarProtocol;
+    readonly dayOfWeek: number;
+    readonly dayOfYear: number;
+    readonly weekOfYear: number;
+    readonly hoursInDay: number;
+    readonly daysInWeek: number;
+    readonly daysInMonth: number;
+    readonly daysInYear: number;
+    readonly monthsInYear: number;
+    readonly inLeapYear: boolean;
+    readonly startOfDay: Temporal.ZonedDateTime;
+    readonly offsetNanoseconds: number;
+    readonly offset: string;
+    readonly epochSeconds: number;
+    readonly epochMilliseconds: number;
+    readonly epochMicroseconds: bigint;
+    readonly epochNanoseconds: bigint;
+    equals(other: Temporal.ZonedDateTime | ZonedDateTimeLike | string): boolean;
+    with(
+      zonedDateTimeLike: ZonedDateTimeLike | string,
+      options?: ZonedDateTimeAssignmentOptions
+    ): Temporal.ZonedDateTime;
+    withCalendar(calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
+    withTimeZone(timeZone: TimeZoneProtocol | string): Temporal.ZonedDateTime;
+    add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
+    subtract(
+      durationLike: Temporal.Duration | DurationLike | string,
+      options?: ArithmeticOptions
+    ): Temporal.ZonedDateTime;
+    until(
+      other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
+      options?: Temporal.DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
+      >
+    ): Temporal.Duration;
+    since(
+      other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
+      options?: Temporal.DifferenceOptions<
+        | 'years'
+        | 'months'
+        | 'weeks'
+        | 'days'
+        | 'hours'
+        | 'minutes'
+        | 'seconds'
+        | 'milliseconds'
+        | 'microseconds'
+        | 'nanoseconds'
+        | /** @deprecated */ 'year'
+        | /** @deprecated */ 'month'
+        | /** @deprecated */ 'day'
+        | /** @deprecated */ 'hour'
+        | /** @deprecated */ 'minute'
+        | /** @deprecated */ 'second'
+        | /** @deprecated */ 'millisecond'
+        | /** @deprecated */ 'microsecond'
+        | /** @deprecated */ 'nanosecond'
+      >
+    ): Temporal.Duration;
+    round(
+      options: Temporal.RoundOptions<
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
+      >
+    ): Temporal.ZonedDateTime;
+    toInstant(): Temporal.Instant;
+    toDateTime(): Temporal.DateTime;
+    toDate(): Temporal.Date;
+    toYearMonth(): Temporal.YearMonth;
+    toMonthDay(): Temporal.MonthDay;
+    toTime(): Temporal.Time;
+    getFields(): ZonedDateTimeFields;
+    getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;

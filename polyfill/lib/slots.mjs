@@ -20,6 +20,10 @@ export const DATE_BRAND = 'slot-date-brand';
 export const YEAR_MONTH_BRAND = 'slot-year-month-brand';
 export const MONTH_DAY_BRAND = 'slot-month-day-brand';
 
+// ZonedDateTime
+export const INSTANT = 'slot-cached-instant';
+export const TIME_ZONE = 'slot-time-zone';
+
 // Duration
 export const YEARS = 'slot-years';
 export const MONTHS = 'slot-months';

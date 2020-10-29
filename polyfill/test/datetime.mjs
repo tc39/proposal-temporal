@@ -93,6 +93,9 @@ describe('DateTime', () => {
       it('DateTime.prototype.toInstant is a Function', () => {
         equal(typeof DateTime.prototype.toInstant, 'function');
       });
+      it('DateTime.prototype.toZonedDateTime is a Function', () => {
+        equal(typeof DateTime.prototype.toZonedDateTime, 'function');
+      });
       it('DateTime.prototype.toDate is a Function', () => {
         equal(typeof DateTime.prototype.toDate, 'function');
       });
@@ -1423,6 +1426,73 @@ describe('DateTime', () => {
       );
       [{}, () => {}, undefined].forEach((options) =>
         equal(`${dt.toInstant('America/Sao_Paulo', options)}`, '2019-10-29T13:46:38.271986102Z')
+      );
+    });
+  });
+  describe('DateTime.toZonedDateTime()', () => {
+    it('works', () => {
+      const dt = Temporal.DateTime.from('2020-01-01T00:00');
+      const zdt = dt.toZonedDateTime('America/Los_Angeles');
+      equal(zdt.toString(), '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
+    });
+    it('works with disambiguation option', () => {
+      const dt = Temporal.DateTime.from('2020-03-08T02:00');
+      const zdt = dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'earlier' });
+      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
+    });
+    it('datetime with multiple instants - Fall DST in Brazil', () => {
+      const dt = DateTime.from('2019-02-16T23:45');
+      equal(`${dt.toZonedDateTime('America/Sao_Paulo')}`, '2019-02-16T23:45:00-02:00[America/Sao_Paulo]');
+      equal(
+        `${dt.toZonedDateTime('America/Sao_Paulo', { disambiguation: 'compatible' })}`,
+        '2019-02-16T23:45:00-02:00[America/Sao_Paulo]'
+      );
+      equal(
+        `${dt.toZonedDateTime('America/Sao_Paulo', { disambiguation: 'earlier' })}`,
+        '2019-02-16T23:45:00-02:00[America/Sao_Paulo]'
+      );
+      equal(
+        `${dt.toZonedDateTime('America/Sao_Paulo', { disambiguation: 'later' })}`,
+        '2019-02-16T23:45:00-03:00[America/Sao_Paulo]'
+      );
+      throws(() => dt.toZonedDateTime('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
+    });
+    it('datetime with multiple instants - Spring DST in Los Angeles', () => {
+      const dt = DateTime.from('2020-03-08T02:30');
+      equal(`${dt.toZonedDateTime('America/Los_Angeles')}`, '2020-03-08T03:30:00-07:00[America/Los_Angeles]');
+      equal(
+        `${dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'compatible' })}`,
+        '2020-03-08T03:30:00-07:00[America/Los_Angeles]'
+      );
+      equal(
+        `${dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'earlier' })}`,
+        '2020-03-08T01:30:00-08:00[America/Los_Angeles]'
+      );
+      equal(
+        `${dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'later' })}`,
+        '2020-03-08T03:30:00-07:00[America/Los_Angeles]'
+      );
+      throws(() => dt.toZonedDateTime('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
+    });
+    it('outside of Instant range', () => {
+      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+      throws(() => max.toZonedDateTime('America/Godthab'), RangeError);
+    });
+    it('throws on bad disambiguation', () => {
+      ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
+        throws(() => DateTime.from('2019-10-29T10:46').toZonedDateTime('UTC', { disambiguation }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      const dt = DateTime.from('2019-10-29T10:46:38.271986102');
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => dt.toZonedDateTime('America/Sao_Paulo', badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(
+          `${dt.toZonedDateTime('America/Sao_Paulo', options)}`,
+          '2019-10-29T10:46:38.271986102-03:00[America/Sao_Paulo]'
+        )
       );
     });
   });
