@@ -175,6 +175,8 @@ function seq(...productions) {
 
 // characters
 const sign = character('+-−');
+const hour = zeroPaddedInclusive(0, 23, 2);
+const minuteSecond = zeroPaddedInclusive(0, 59, 2);
 const decimalSeparator = character('.,');
 const daysDesignator = character('Dd');
 const hoursDesignator = character('Hh');
@@ -189,6 +191,8 @@ const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
   data.ianaName = 'UTC';
 });
+const timeFractionalPart = between(1, 9, digit());
+const fraction = seq(decimalSeparator, timeFractionalPart);
 
 const dateFourDigitYear = repeat(4, digit());
 const dateExtendedYear = seq(sign, repeat(6, digit()));
@@ -199,37 +203,31 @@ const dateYear = withCode(
 const dateMonth = withCode(zeroPaddedInclusive(1, 12, 2), (data, result) => (data.month = +result));
 const dateDay = withCode(zeroPaddedInclusive(1, 31, 2), (data, result) => (data.day = +result));
 
-const timeHour = withCode(zeroPaddedInclusive(0, 23, 2), (data, result) => (data.hour = +result));
-const timeMinute = withCode(zeroPaddedInclusive(0, 59, 2), (data, result) => (data.minute = +result));
-const timeSecond = withCode(zeroPaddedInclusive(0, 60, 2), (data, result) => {
+const timeHour = withCode(hour, (data, result) => (data.hour = +result));
+const timeMinute = withCode(minuteSecond, (data, result) => (data.minute = +result));
+const timeSecond = withCode(choice(minuteSecond, '60'), (data, result) => {
   data.second = +result;
   if (data.second === 60) data.second = 59;
 });
-const timeFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
+const timeFraction = withCode(fraction, (data, result) => {
+  result = result.slice(1);
   const fraction = result.padEnd(9, '0');
   data.millisecond = +fraction.slice(0, 3);
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
-const timeFraction = seq(decimalSeparator, timeFractionalPart);
 const timeZoneUTCOffsetSign = withCode(
   sign,
   (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
 );
-const timeZoneUTCOffsetHour = withCode(zeroPaddedInclusive(0, 23, 2), (data, result) => (data.offsetHour = +result));
-const timeZoneUTCOffsetMinute = withCode(
-  zeroPaddedInclusive(0, 59, 2),
-  (data, result) => (data.offsetMinute = +result)
-);
-const timeZoneUTCOffsetSecond = withCode(
-  zeroPaddedInclusive(0, 59, 2),
-  (data, result) => (data.offsetSecond = +result)
-);
-const timeZoneUTCOffsetFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
+const timeZoneUTCOffsetHour = withCode(hour, (data, result) => (data.offsetHour = +result));
+const timeZoneUTCOffsetMinute = withCode(minuteSecond, (data, result) => (data.offsetMinute = +result));
+const timeZoneUTCOffsetSecond = withCode(minuteSecond, (data, result) => (data.offsetSecond = +result));
+const timeZoneUTCOffsetFraction = withCode(fraction, (data, result) => {
+  result = result.slice(1);
   const fraction = result.padEnd(9, '0');
   data.offsetFraction = +fraction;
 });
-const timeZoneUTCOffsetFraction = seq(decimalSeparator, timeZoneUTCOffsetFractionalPart);
 const timeZoneUTCOffset = withCode(
   seq(
     timeZoneUTCOffsetSign,
@@ -256,12 +254,21 @@ const timeZoneUTCOffset = withCode(
     }
   }
 );
+const timeZoneUTCOffsetName = seq(
+  sign,
+  hour,
+  choice([minuteSecond, [minuteSecond, [fraction]]], seq(':', minuteSecond, [':', minuteSecond, [fraction]]))
+);
+const timeZoneBracketedName = withCode(
+  choice(timeZoneUTCOffsetName, ...timezoneNames),
+  (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
+);
 const timeZoneIANAName = withCode(
   choice(...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
 const timeZone = withCode(
-  choice(utcDesignator, timeZoneUTCOffset, seq([timeZoneUTCOffset], '[', timeZoneIANAName, ']')),
+  choice(utcDesignator, timeZoneUTCOffset, seq([timeZoneUTCOffset], '[', timeZoneBracketedName, ']')),
   (data) => {
     if (!('offset' in data)) data.offset = undefined;
   }

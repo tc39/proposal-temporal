@@ -667,6 +667,22 @@
           ASCIISign
           U+2212
 
+      Hour :
+          `0` Digit
+          `1` Digit
+          `20`
+          `21`
+          `22`
+          `23`
+
+      MinuteSecond :
+          `0` Digit
+          `1` Digit
+          `2` Digit
+          `3` Digit
+          `4` Digit
+          `5` Digit
+
       DecimalSeparator : one of
           `.` `,`
 
@@ -742,65 +758,38 @@
           DateYear DateMonth DateDay
 
       TimeHour :
-          `0` Digit
-          `1` Digit
-          `20`
-          `21`
-          `22`
-          `23`
+          Hour
 
       TimeMinute :
-          `0` Digit
-          `1` Digit
-          `2` Digit
-          `3` Digit
-          `4` Digit
-          `5` Digit
+          MinuteSecond
 
       TimeSecond :
-          `0` Digit
-          `1` Digit
-          `2` Digit
-          `3` Digit
-          `4` Digit
-          `5` Digit
+          MinuteSecond
           `60`
 
       TimeFractionalPart :
           Digit Digit? Digit? Digit? Digit? Digit? Digit? Digit? Digit?
 
-      TimeFraction :
+      Fraction :
           DecimalSeparator TimeFractionalPart
+
+      TimeFraction :
+          Fraction
 
       TimeZoneUTCOffsetSign :
           Sign
 
       TimeZoneUTCOffsetHour :
-          `0` Digit
-          `1` Digit
-          `20`
-          `21`
-          `22`
-          `23`
+          Hour
 
       TimeZoneUTCOffsetMinute :
-          `0` Digit
-          `1` Digit
-          `2` Digit
-          `3` Digit
-          `4` Digit
-          `5` Digit
+          MinuteSecond
 
       TimeZoneUTCOffsetSecond :
-          `0` Digit
-          `1` Digit
-          `2` Digit
-          `3` Digit
-          `4` Digit
-          `5` Digit
+          MinuteSecond
 
       TimeZoneUTCOffsetFraction :
-          DecimalSeparator TimeFractionalPart
+          Fraction
 
       TimeZoneUTCOffset :
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour
@@ -808,6 +797,13 @@
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
           TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+
+      TimeZoneUTCOffsetName :
+          Sign Hour
+          Sign Hour `:` MinuteSecond
+          Sign Hour MinuteSecond
+          Sign Hour `:` MinuteSecond `:` MinuteSecond Fraction?
+          Sign Hour MinuteSecond MinuteSecond Fraction?
 
       TZLeadingChar :
           Alpha
@@ -826,12 +822,16 @@
       TimeZoneIANAName :
           TimeZoneIANANameComponent
           TimeZoneIANANameComponent `/` TimeZoneIANAName
-          `Etc/GMT` ASCIISign TimeZoneUTCOffsetHour
+
+      TimeZoneBracketedName :
+          TimeZoneIANAName
+          `Etc/GMT` ASCIISign Hour
+          TimeZoneUTCOffsetName
 
       TimeZone :
           UTCDesignator
           TimeZoneUTCOffset
-          TimeZoneUTCOffset? `[` TimeZoneIANAName `]`
+          TimeZoneUTCOffset? `[` TimeZoneBracketedName `]`
 
       CalChar :
           Alpha

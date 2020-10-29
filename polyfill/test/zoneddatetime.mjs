@@ -256,6 +256,10 @@ describe('ZonedDateTime', () => {
       const zdt = ZonedDateTime.from('2020-03-08T02:30[America/Los_Angeles]', { disambiguation: 'earlier' });
       equal(zdt.toString(), '2020-03-08T01:30:00-08:00[America/Los_Angeles]');
     });
+    it('parses with an offset in brackets', () => {
+      const zdt = ZonedDateTime.from('2020-03-08T01:00-08:00[-08:00]');
+      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[-08:00]');
+    });
   });
 
   describe('ZonedDateTime.withTimeZone()', () => {
