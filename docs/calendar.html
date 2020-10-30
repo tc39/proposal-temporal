@@ -395,7 +395,7 @@ The default is <code>&#39;auto&#39;</code>.</li>
 </li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the time elapsed after <code>one</code> and until <code>two</code>.</p>
-<p>If either of <code>smaller</code> or <code>larger</code> are not <code>Temporal.Date</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Date.from()</code>.</p>
+<p>If either of <code>one</code> or <code>two</code> are not <code>Temporal.Date</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Date.from()</code>.</p>
 <p>This method does not need to be called directly except in specialized code.
 It is called indirectly when using the <code>until()</code> and <code>since()</code> methods of <code>Temporal.DateTime</code>, <code>Temporal.Date</code>, and <code>Temporal.YearMonth</code>.</p>
 <p>If <code>one</code> is later than <code>two</code>, then the resulting duration should be negative.</p>
