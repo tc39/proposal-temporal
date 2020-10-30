@@ -150,10 +150,6 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).inLeapYear(dateTime(this));
   }
-  get startOfDay() {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    throw new Error('startOfDay not implemented yet');
-  }
   get offset() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
@@ -299,6 +295,10 @@ export class ZonedDateTime {
   }
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.ZonedDateTime');
+  }
+  startOfDay() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    throw new Error('startOfDay() not implemented yet');
   }
   toInstant() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
