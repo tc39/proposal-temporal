@@ -285,7 +285,7 @@ describe('ZonedDateTime', () => {
     it('casts its argument', () => {
       equal(`${zdt.withCalendar('japanese')}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][c=japanese]');
     });
-    it('keeps instant and calendar the same', () => {
+    it('keeps instant and time zone the same', () => {
       const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][c=gregory]');
       const zdt2 = zdt.withCalendar('japanese');
       equal(zdt.epochNanoseconds, zdt2.epochNanoseconds);
