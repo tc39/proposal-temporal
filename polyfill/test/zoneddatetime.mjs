@@ -965,6 +965,65 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('ZonedDateTime.getFields()', () => {
+    const calendar = Temporal.Calendar.from('iso8601');
+    const timeZone = Temporal.TimeZone.from('Asia/Shanghai');
+    const zdt1 = ZonedDateTime.from({
+      year: 1976,
+      month: 11,
+      day: 18,
+      hour: 15,
+      minute: 23,
+      second: 30,
+      millisecond: 123,
+      microsecond: 456,
+      nanosecond: 789,
+      offset: '+08:00',
+      timeZone,
+      calendar
+    });
+    const fields = zdt1.getFields();
+    it('fields', () => {
+      equal(fields.year, 1976);
+      equal(fields.month, 11);
+      equal(fields.day, 18);
+      equal(fields.hour, 15);
+      equal(fields.minute, 23);
+      equal(fields.second, 30);
+      equal(fields.millisecond, 123);
+      equal(fields.microsecond, 456);
+      equal(fields.nanosecond, 789);
+      equal(fields.offset, '+08:00');
+      equal(fields.timeZone, timeZone);
+      equal(fields.calendar, calendar);
+    });
+    it('enumerable', () => {
+      const fields2 = { ...fields };
+      equal(fields2.year, 1976);
+      equal(fields2.month, 11);
+      equal(fields2.day, 18);
+      equal(fields2.hour, 15);
+      equal(fields2.minute, 23);
+      equal(fields2.second, 30);
+      equal(fields2.millisecond, 123);
+      equal(fields2.microsecond, 456);
+      equal(fields2.nanosecond, 789);
+      equal(fields2.offset, '+08:00');
+      equal(fields2.timeZone, timeZone);
+      equal(fields2.calendar, calendar);
+    });
+    it('as input to from()', () => {
+      const zdt2 = ZonedDateTime.from(fields);
+      assert(zdt1.equals(zdt2));
+    });
+    it('does not include era for ISO calendar', () => {
+      assert(!('era' in fields));
+    });
+    it('includes era for calendars that use it', () => {
+      const zdt3 = ZonedDateTime.from('1976-11-18T15:23:30.123456789+08:00[Asia/Shanghai][c=gregory]');
+      equal(zdt3.getFields().era, 'ad');
+    });
+  });
   describe('ZonedDateTime.getISOFields()', () => {
     const zdt1 = ZonedDateTime.from('1976-11-18T15:23:30.123456789+08:00[Asia/Shanghai]');
     const fields = zdt1.getISOFields();

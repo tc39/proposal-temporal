@@ -855,7 +855,12 @@
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
-        1. <mark>TODO</mark>.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+        1. Let _fields_ be ? ToTemporalZonedDateTimeFields(_zonedDateTime_, _fieldNames_).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
+        1. Return _fields_.
       </emu-alg>
     </emu-clause>
 

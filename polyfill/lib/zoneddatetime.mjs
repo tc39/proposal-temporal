@@ -337,8 +337,9 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    void fieldNames;
-    throw new Error('getFields() not implemented yet');
+    const fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+    fields.calendar = calendar;
+    return fields;
   }
   getISOFields() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
