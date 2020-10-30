@@ -342,6 +342,16 @@ const duration = seq(
 );
 
 const instant = seq(date, dateTimeSeparator, timeSpec, timeZone);
+const zonedDateTime = seq(
+  date,
+  dateTimeSeparator,
+  timeSpec,
+  [timeZoneNumericUTCOffset],
+  '[',
+  timeZoneBracketedName,
+  ']',
+  [calendar]
+);
 
 // goal elements
 const goals = {
@@ -352,7 +362,8 @@ const goals = {
   MonthDay: choice(dateSpecMonthDay, dateTime),
   Time: choice(time, dateTime),
   TimeZone: choice(temporalTimeZoneIdentifier, instant),
-  YearMonth: choice(dateSpecYearMonth, dateTime)
+  YearMonth: choice(dateSpecYearMonth, dateTime),
+  ZonedDateTime: zonedDateTime
 };
 
 const dateItems = ['year', 'month', 'day'];
@@ -365,7 +376,8 @@ const comparisonItems = {
   MonthDay: ['month', 'day'],
   Time: timeItems,
   TimeZone: ['offset', 'ianaName'],
-  YearMonth: ['year', 'month']
+  YearMonth: ['year', 'month'],
+  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'ianaName', 'calendar']
 };
 
 const mode = 'Instant';
