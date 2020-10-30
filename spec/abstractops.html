@@ -1003,9 +1003,7 @@
         [[Millisecond]]: _result_.[[Millisecond]],
         [[Microsecond]]: _result_.[[Microsecond]],
         [[Nanosecond]]: _result_.[[Nanosecond]],
-        [[TimeZoneOffsetSign]]: _timeZoneResult_.[[OffsetSign]],
-        [[TimeZoneOffsetHour]]: _timeZoneResult_.[[OffsetHour]],
-        [[TimeZoneOffsetMinute]]: _timeZoneResult_.[[OffsetMinute]],
+        [[TimeZoneOffsetString]]: _timeZoneResult_.[[OffsetString]],
         [[TimeZoneName]]: _timeZoneResult_.[[Name]]
         }.
     </emu-alg>
@@ -1166,31 +1164,36 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalTimeZoneString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _z_, _sign_, _hour_, _minute_, and _name_ be the parts of _isoString_ produced respectively by the |UTCDesignator|, |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute| and |TimeZoneIANAName| productions, or *undefined* if not present.
+      1. Let _z_, _sign_, _hours_, _minutes_, _seconds_, _fraction_ and _name_ be the parts of _isoString_ produced respectively by the |UTCDesignator|, |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute|, |TimeZoneUTCOffsetSecond|, |TimeZoneUTCOffsetFraction|, and |TimeZoneIANAName| productions, or *undefined* if not present.
       1. If _z_ is not *undefined*, then
         1. Return the new Record: {
-          [[OffsetSign]]: 1,
-          [[OffsetHour]]: 0,
-          [[OffsetMinute]]: 0,
-          [[Name]]: `"UTC"`
+          [[OffsetString]]: *"+00:00"*,
+          [[Name]]: *undefined*
           }.
-      1. If _hour_ is not *undefined*, then
+      1. If _hours_ is *undefined*, then
+        1. Let _offsetString_ be *undefined*.
+      1. Else,
         1. Assert: _sign_ is not *undefined*.
-        1. Set _hour_ to ! ToInteger(_hour_).
+        1. Set _hours_ to ! ToInteger(_hours_).
         1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or the code unit 0x2212 (MINUS SIGN), then
           1. Set _sign_ to −1.
         1. Else,
           1. Set _sign_ to 1.
-        1. Set _minute_ to ! ToInteger(_minute_).
-        1. If _name_ is *undefined*, then
-          1. Let _offsetNanoseconds_ be ℝ(_sign_ × (_hour_ × 60 + _minute_) × 60 × 10<sup>9</sup>).
-          1. Let _name_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
-      1. Assert: ! IsValidTimeZoneName(_name_) is *true*.
-      1. Let _name_ be ! CanonicalizeTimeZoneName(_name_).
+        1. Set _minutes_ to ! ToInteger(_minute_).
+        1. Set _seconds_ to ! ToInteger(_seconds_).
+        1. If _fraction_ is not *undefined*, then
+          1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
+          1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 9 (exclusive).
+          1. Set _nanoseconds_ to ! ToInteger(_nanoseconds_).
+        1. Else,
+          1. Let _nanoseconds_ be 0.
+        1. Let _offsetNanoseconds_ be _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).
+        1. Let _offsetString_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
+      1. If _name_ is not *undefined*, then
+        1. Assert: ! IsValidTimeZoneName(_name_) is *true*.
+        1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
       1. Return the new Record: {
-        [[OffsetSign]]: _sign_,
-        [[OffsetHour]]: _hour_,
-        [[OffsetMinute]]: _minute_,
+        [[OffsetString]]: _offsetString_,
         [[Name]]: _name_
         }.
     </emu-alg>
