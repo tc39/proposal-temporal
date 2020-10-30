@@ -3,7 +3,19 @@
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import * as REGEX from './regex.mjs';
-import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlot, SetSlot } from './slots.mjs';
+import {
+  CALENDAR,
+  CALENDAR_ID,
+  INSTANT,
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
+  TIME_ZONE,
+  CreateSlots,
+  GetSlot,
+  HasSlot,
+  SetSlot
+} from './slots.mjs';
 
 const ID_REGEX = new RegExp(`^${REGEX.calendarID.source}$`);
 
@@ -299,7 +311,21 @@ MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar');
 function addCustomPropertyGetter(type, name) {
   Object.defineProperty(GetIntrinsic(`%Temporal.${type}.prototype%`), name, {
     get() {
-      return this.calendar[name](this);
+      return GetSlot(this, CALENDAR)[name](this);
+    },
+    configurable: true
+  });
+}
+
+function addEraProperties() {
+  addCustomPropertyGetter('Date', 'era');
+  addCustomPropertyGetter('DateTime', 'era');
+  addCustomPropertyGetter('YearMonth', 'era');
+  Object.defineProperty(GetIntrinsic('%Temporal.ZonedDateTime.prototype%'), 'era', {
+    get() {
+      const calendar = GetSlot(this, CALENDAR);
+      const dateTime = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
+      return calendar.era(dateTime);
     },
     configurable: true
   });
@@ -318,9 +344,7 @@ const gre = {
 class Gregorian extends ISO8601Calendar {
   constructor() {
     super('gregory');
-    addCustomPropertyGetter('Date', 'era');
-    addCustomPropertyGetter('DateTime', 'era');
-    addCustomPropertyGetter('YearMonth', 'era');
+    addEraProperties();
   }
 
   era(date) {
@@ -418,9 +442,7 @@ const jpn = {
 class Japanese extends ISO8601Calendar {
   constructor() {
     super('japanese');
-    addCustomPropertyGetter('Date', 'era');
-    addCustomPropertyGetter('DateTime', 'era');
-    addCustomPropertyGetter('YearMonth', 'era');
+    addEraProperties();
   }
 
   era(date) {
