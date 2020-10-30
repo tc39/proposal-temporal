@@ -329,6 +329,11 @@ describe('ZonedDateTime', () => {
       );
     });
     it('at least the required properties must be present', () => {
+      assert(!zdt.equals({ year: 1969, month: 12, day: 31, timeZone: 'America/New_York' }));
+      throws(() => zdt.equals({ month: 12, day: 31, timeZone: 'America/New_York' }), TypeError);
+      throws(() => zdt.equals({ year: 1969, day: 31, timeZone: 'America/New_York' }), TypeError);
+      throws(() => zdt.equals({ year: 1969, month: 12, timeZone: 'America/New_York' }), TypeError);
+      throws(() => zdt.equals({ year: 1969, month: 12, day: 31 }), TypeError);
       throws(
         () => zdt.equals({ years: 1969, months: 12, days: 31, timeZone: 'America/New_York', calendar: 'gregory' }),
         TypeError
@@ -573,10 +578,20 @@ describe('ZonedDateTime', () => {
       equal(ZonedDateTime.compare(zdt1, '2019-10-29T10:46:38.271986102+01:00[Europe/Vienna]'), -1);
     });
     it('object must contain at least the required properties', () => {
+      equal(ZonedDateTime.compare({ year: 1976, month: 11, day: 18, timeZone: 'Europe/Vienna' }, zdt2), -1);
+      throws(() => ZonedDateTime.compare({ month: 11, day: 18, timeZone: 'Europe/Vienna' }, zdt2), TypeError);
+      throws(() => ZonedDateTime.compare({ year: 1976, day: 18, timeZone: 'Europe/Vienna' }, zdt2), TypeError);
+      throws(() => ZonedDateTime.compare({ year: 1976, month: 11, timeZone: 'Europe/Vienna' }, zdt2), TypeError);
+      throws(() => ZonedDateTime.compare({ year: 1976, month: 11, day: 18 }, zdt2), TypeError);
       throws(
-        () => ZonedDateTime.compare({ years: 1976, months: 11, day: 19, hours: 15, timeZone: 'Europe/Vienna' }, zdt2),
+        () => ZonedDateTime.compare({ years: 1976, months: 11, days: 19, hours: 15, timeZone: 'Europe/Vienna' }, zdt2),
         TypeError
       );
+      equal(ZonedDateTime.compare(zdt1, { year: 2019, month: 10, day: 29, timeZone: 'Europe/Vienna' }), -1);
+      throws(() => ZonedDateTime.compare(zdt1, { month: 10, day: 29, timeZone: 'Europe/Vienna' }), TypeError);
+      throws(() => ZonedDateTime.compare(zdt1, { year: 2019, day: 29, timeZone: 'Europe/Vienna' }), TypeError);
+      throws(() => ZonedDateTime.compare(zdt1, { year: 2019, month: 10, timeZone: 'Europe/Vienna' }), TypeError);
+      throws(() => ZonedDateTime.compare(zdt1, { year: 2019, month: 10, day: 29 }), TypeError);
       throws(
         () => ZonedDateTime.compare(zdt1, { years: 2019, months: 10, days: 29, hours: 10, timeZone: 'Europe/Vienna' }),
         TypeError
