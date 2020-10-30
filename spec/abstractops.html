@@ -420,7 +420,7 @@
           1. Set _calendar_ to ! GetISO8601Calendar().
         1. Else,
           1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalDateTimeFields(_value_, _fieldNames_).
         1. Let _dateFromFields_ be ? Get(_calendar_, *"dateFromFields"*).
         1. Let _dateOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).

@@ -396,7 +396,7 @@
           1. Let _isoString_ be ? ToString(_temporalDateTimeLike_).
           1. Set _temporalDateTimeLike_ to ? RelevantTemporalObjectFromString(_isoString_).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Let _partialDateTime_ be ? ToPartialDateTime(_temporalDateTimeLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
@@ -695,7 +695,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalDateFields(_dateTime_, _fieldNames_).
         1. <mark>Create via calendar.yearMonthFromFields.</mark>
           Return ? CreateTemporalYearMonth(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]]).
@@ -711,7 +711,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalDateFields(_dateTime_, _fieldNames_).
         1. <mark>Create via calendar.monthDayFromFields.</mark>
           Return ? CreateTemporalMonthDay(_dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]]).
@@ -739,7 +739,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"era"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalDateTimeFields(_dateTime_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
         1. Return _fields_.
