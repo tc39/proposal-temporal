@@ -1080,7 +1080,7 @@ export const ES = ObjectAssign({}, ES2020, {
         offset,
         calendar
       } = ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
-      if (!ianaName) throw new RangeError('named time zone required');
+      if (!ianaName) throw new RangeError('time zone ID required in brackets');
       timeZone = ES.TimeZoneFrom(ianaName);
       if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
