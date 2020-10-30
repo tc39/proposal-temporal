@@ -128,7 +128,7 @@ export namespace Temporal {
   /**
    * Options for outputting precision in toString() on types with seconds
    */
-  export type ToStringOptions = {
+  export type ToStringPrecisionOptions = {
     fractionalSecondDigits?: 'auto' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
     smallestUnit?:
       | 'minute'
@@ -158,6 +158,12 @@ export namespace Temporal {
      */
     roundingMode?: RoundingMode;
   };
+
+  export type ShowCalendarOption = {
+    calendar: 'auto' | 'always' | 'never';
+  };
+
+  export type CalendarTypeToStringOptions = Partial<ToStringPrecisionOptions & ShowCalendarOption>;
 
   /**
    * Options to control the result of `until()` and `since()` methods in
@@ -554,7 +560,7 @@ export namespace Temporal {
     toZonedDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(tzLike?: TimeZoneProtocol | string, options?: ToStringOptions): string;
+    toString(tzLike?: TimeZoneProtocol | string, options?: ToStringPrecisionOptions): string;
     valueOf(): never;
   }
 
@@ -772,7 +778,7 @@ export namespace Temporal {
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ShowCalendarOption): string;
     valueOf(): never;
   }
 
@@ -941,7 +947,7 @@ export namespace Temporal {
     getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(options?: ToStringOptions): string;
+    toString(options?: CalendarTypeToStringOptions): string;
     valueOf(): never;
   }
 
@@ -977,7 +983,7 @@ export namespace Temporal {
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ShowCalendarOption): string;
     valueOf(): never;
   }
 
@@ -1100,7 +1106,7 @@ export namespace Temporal {
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(options?: ToStringOptions): string;
+    toString(options?: CalendarTypeToStringOptions): string;
     valueOf(): never;
   }
 
@@ -1199,7 +1205,7 @@ export namespace Temporal {
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ShowCalendarOption): string;
     valueOf(): never;
   }
 

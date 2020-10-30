@@ -660,7 +660,7 @@
         1. Assert: Type(_instant_) is Object.
         1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _dateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _precision_).
+        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], *undefined*, _precision_, *"never"*).
         1. Let _timeZoneString_ be ? ISOTimeZoneString(_timeZone_, _instant_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>

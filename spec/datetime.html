@@ -598,8 +598,9 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
         1. Let _result_ be ? RoundDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return ? TemporalDateTimeToString(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]], _precision_.[[Precision]]).
+        1. Return ? TemporalDateTimeToString(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]], _precision_.[[Precision]], _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -613,7 +614,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _dateTime_.[[Calendar]], *"auto"*).
+          1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _dateTime_.[[Calendar]], *"auto"*, *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _dateTime_).
       </emu-alg>
@@ -627,7 +628,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _dateTime_.[[Calendar]], *"auto"*).
+        1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _dateTime_.[[Calendar]], *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -1138,7 +1139,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaldatetimetostring" aoid="TemporalDateTimeToString">
-      <h1>TemporalDateTimeToString ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_ )</h1>
+      <h1>TemporalDateTimeToString ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
       <emu-alg>
         1. Let _year_ be ! PadYear(_isoYear_).
         1. Let _month_ be _isoMonth_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
@@ -1146,8 +1147,8 @@
         1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _minute_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
-        1. Let _calendar_ be ? FormatCalendarAnnotation(_dateTime_.[[Calendar]]).
-        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendar_.
+        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendar_, _showCalendar_).
+        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendarString_.
       </emu-alg>
     </emu-clause>
 

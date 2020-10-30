@@ -283,7 +283,8 @@ export class ZonedDateTime {
     options = ES.NormalizeOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    return zonedDateTimeToString(this, precision, { unit, increment, roundingMode });
+    const showCalendar = ES.ToShowCalendarOption(options);
+    return zonedDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -393,7 +394,7 @@ function dateTime(zdt) {
   return ES.GetTemporalDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
 }
 
-function zonedDateTimeToString(zdt, precision, options = undefined) {
+function zonedDateTimeToString(zdt, precision, showCalendar = 'auto', options = undefined) {
   const dt = dateTime(zdt);
   let year = GetSlot(dt, ISO_YEAR);
   let month = GetSlot(dt, ISO_MONTH);
@@ -432,6 +433,6 @@ function zonedDateTimeToString(zdt, precision, options = undefined) {
   const tz = GetSlot(zdt, TIME_ZONE);
   const offset = ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
   const zone = ES.TimeZoneToString(tz);
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${offset}[${zone}]${calendar}`;
 }

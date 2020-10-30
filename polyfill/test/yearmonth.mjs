@@ -29,6 +29,9 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.equals is a Function', () => {
         equal(typeof YearMonth.prototype.equals, 'function');
       });
+      it('YearMonth.prototype.toString is a Function', () => {
+        equal(typeof YearMonth.prototype.toString, 'function');
+      });
       it('YearMonth.prototype.getFields is a Function', () => {
         equal(typeof YearMonth.prototype.getFields, 'function');
       });
@@ -695,6 +698,30 @@ describe('YearMonth', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         throws(() => YearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { overflow }), RangeError)
       );
+    });
+  });
+  describe('YearMonth.toString()', () => {
+    const ym1 = YearMonth.from('1976-11');
+    const ym2 = YearMonth.from({ year: 1976, month: 11, calendar: 'gregory' });
+    it('shows only non-ISO calendar if calendar = auto', () => {
+      equal(ym1.toString({ calendar: 'auto' }), '1976-11');
+      equal(ym2.toString({ calendar: 'auto' }), '1976-11-01[c=gregory]');
+    });
+    it('shows ISO calendar if calendar = always', () => {
+      equal(ym1.toString({ calendar: 'always' }), '1976-11[c=iso8601]');
+    });
+    it('omits non-ISO calendar, but not day, if calendar = never', () => {
+      equal(ym1.toString({ calendar: 'never' }), '1976-11');
+      equal(ym2.toString({ calendar: 'never' }), '1976-11-01');
+    });
+    it('default is calendar = auto', () => {
+      equal(ym1.toString(), '1976-11');
+      equal(ym2.toString(), '1976-11-01[c=gregory]');
+    });
+    it('throws on invalid calendar', () => {
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
+        throws(() => ym1.toString({ calendar }), RangeError);
+      });
     });
   });
   describe('yearMonth.getFields() works', () => {

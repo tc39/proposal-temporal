@@ -1635,6 +1635,25 @@ describe('DateTime', () => {
       equal(dt2.toString(), '1976-11-18T15:23:30');
       equal(dt3.toString(), '1976-11-18T15:23:30.1234');
     });
+    it('shows only non-ISO calendar if calendar = auto', () => {
+      equal(dt1.toString({ calendar: 'auto' }), '1976-11-18T15:23:00');
+      equal(dt1.withCalendar('gregory').toString({ calendar: 'auto' }), '1976-11-18T15:23:00[c=gregory]');
+    });
+    it('shows ISO calendar if calendar = always', () => {
+      equal(dt1.toString({ calendar: 'always' }), '1976-11-18T15:23:00[c=iso8601]');
+    });
+    it('omits non-ISO calendar if calendar = never', () => {
+      equal(dt1.withCalendar('gregory').toString({ calendar: 'never' }), '1976-11-18T15:23:00');
+    });
+    it('default is calendar = auto', () => {
+      equal(dt1.toString(), '1976-11-18T15:23:00');
+      equal(dt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00[c=gregory]');
+    });
+    it('throws on invalid calendar', () => {
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
+        throws(() => dt1.toString({ calendar }), RangeError);
+      });
+    });
     it('truncates to minute', () => {
       [dt1, dt2, dt3].forEach((dt) => equal(dt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23'));
     });

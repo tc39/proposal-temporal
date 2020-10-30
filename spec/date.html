@@ -545,14 +545,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.date.prototype.tostring">
-      <h1>Temporal.Date.prototype.toString ( )</h1>
+      <h1>Temporal.Date.prototype.toString ( [ _options_ ] )</h1>
       <p>
+        The `toString` method takes one argument _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? TemporalDateToString(_temporalDate_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
+        1. Return ? TemporalDateToString(_temporalDate_, _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -566,7 +569,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalDateToString(_temporalDate_).
+          1. Return ? TemporalDateToString(_temporalDate_, *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _temporalDate_).
       </emu-alg>
@@ -580,7 +583,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? TemporalDateToString(_temporalDate_).
+        1. Return ? TemporalDateToString(_temporalDate_, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -956,14 +959,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaldatetostring" aoid="TemporalDateToString">
-      <h1>TemporalDateToString ( _temporalDate_ )</h1>
+      <h1>TemporalDateToString ( _temporalDate_, _showCalendar_ )</h1>
       <emu-alg>
         1. Assert: Type(_temporalDate_) is Object.
         1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
         1. Let _year_ be ! PadYear(_temporalDate_.[[ISOYear]]).
         1. Let _month_ be _temporalDate_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _temporalDate_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _calendar_ be ? FormatCalendarAnnotation(_temporalDate_.[[Calendar]]).
+        1. Let _calendar_ be ? FormatCalendarAnnotation(_temporalDate_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, and _calendar_.
       </emu-alg>
     </emu-clause>

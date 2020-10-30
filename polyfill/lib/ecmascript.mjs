@@ -135,9 +135,10 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return result;
   },
-  FormatCalendarAnnotation: (calendar) => {
+  FormatCalendarAnnotation: (calendar, showCalendar) => {
+    if (showCalendar === 'never') return '';
     const id = ES.CalendarToString(calendar);
-    if (id === 'iso8601') return '';
+    if (showCalendar === 'auto' && id === 'iso8601') return '';
     return `[c=${id}]`;
   },
   ParseISODateTime: (isoString, { zoneRequired }) => {
@@ -476,6 +477,9 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ToTemporalOffset: (options, fallback) => {
     return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
+  },
+  ToShowCalendarOption: (options) => {
+    return ES.GetOption(options, 'calendar', ['auto', 'always', 'never'], 'auto');
   },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
     let maximum = Infinity;

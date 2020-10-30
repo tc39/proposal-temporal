@@ -555,12 +555,24 @@ date.equals(other); // => false
 date.equals(date); // => true
 ```
 
-### date.**toString**() : string
+### date.**toString**(_options_?: object) : string
+
+**Parameters:**
+
+- `options` (optional object): An object with properties influencing the formatting.
+  The following options are recognized:
+  - `calendar` (string): Whether to show the calendar annotation in the return value.
+    Valid values are `'auto'`, `'always'`, and `'never'`.
+    The default is `'auto'`.
 
 **Returns:** a string in the ISO 8601 date format representing `date`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `date`.
 The string can be passed to `Temporal.Date.from()` to create a new `Temporal.Date` object.
+
+Normally, a calendar annotation is shown when `date`'s calendar is not the ISO 8601 calendar.
+By setting the `calendar` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
 
 Example usage:
 

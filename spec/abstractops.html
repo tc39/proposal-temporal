@@ -173,6 +173,20 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-toshowcalendaroption" aoid="ToShowCalendarOption">
+    <h1>ToShowCalendarOption ( _normalizedOptions_ )</h1>
+    <p>
+      The abstract operation ToShowCalendarOption extracts the value of the property named *"calendar"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+    </p>
+    <emu-note>
+      This property is used in `toString` methods in Temporal.
+      It is different from the `calendar` property passed to `from` methods.
+    </emu-note>
+    <emu-alg>
+      1. Return ? GetOption(_normalizedOptions_, *"calendar"*, *"string"*, « *"auto"*, *"always"*, *"never"* », *"auto"*).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
     <h1>ToTemporalRoundingIncrement ( _normalizedOptions_, _dividend_, _inclusive_ )</h1>
     <emu-alg>
