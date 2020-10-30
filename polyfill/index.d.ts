@@ -1281,7 +1281,6 @@ export namespace Temporal {
     readonly daysInYear: number;
     readonly monthsInYear: number;
     readonly inLeapYear: boolean;
-    readonly startOfDay: Temporal.ZonedDateTime;
     readonly offsetNanoseconds: number;
     readonly offset: string;
     readonly epochSeconds: number;
@@ -1366,6 +1365,7 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.ZonedDateTime;
+    startOfDay(): Temporal.ZonedDateTime;
     toInstant(): Temporal.Instant;
     toDateTime(): Temporal.DateTime;
     toDate(): Temporal.Date;

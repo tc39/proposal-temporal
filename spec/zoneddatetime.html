@@ -516,19 +516,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.startofday">
-      <h1>get Temporal.ZonedDateTime.prototype.startOfDay</h1>
-      <p>
-        `Temporal.ZonedDateTime.prototype.startOfDay` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return <mark>TODO</mark>.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.offset">
       <h1>get Temporal.ZonedDateTime.prototype.offset</h1>
       <p>
@@ -760,6 +747,18 @@
       </p>
       <emu-alg>
         1. Throw a *TypeError* exception.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.startofday">
+      <h1>Temporal.ZonedDateTime.prototype.startOfDay ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return <mark>TODO</mark>.
       </emu-alg>
     </emu-clause>
 
