@@ -430,19 +430,7 @@ export class DateTime {
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
-    const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(this, HOUR),
@@ -532,19 +520,7 @@ export class DateTime {
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
-    const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(other, HOUR),
