@@ -481,6 +481,12 @@ export const ES = ObjectAssign({}, ES2020, {
   ToShowCalendarOption: (options) => {
     return ES.GetOption(options, 'calendar', ['auto', 'always', 'never'], 'auto');
   },
+  ToShowTimeZoneOption: (options) => {
+    return ES.GetOption(options, 'timeZone', ['auto', 'never'], 'auto');
+  },
+  ToShowOffsetOption: (options) => {
+    return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
+  },
   ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
     let maximum = Infinity;
     if (dividend !== undefined) maximum = dividend;

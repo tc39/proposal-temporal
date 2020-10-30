@@ -284,7 +284,13 @@ export class ZonedDateTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const showCalendar = ES.ToShowCalendarOption(options);
-    return zonedDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
+    const showTimeZone = ES.ToShowTimeZoneOption(options);
+    const showOffset = ES.ToShowOffsetOption(options);
+    return zonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
+      unit,
+      increment,
+      roundingMode
+    });
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -394,7 +400,14 @@ function dateTime(zdt) {
   return ES.GetTemporalDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
 }
 
-function zonedDateTimeToString(zdt, precision, showCalendar = 'auto', options = undefined) {
+function zonedDateTimeToString(
+  zdt,
+  precision,
+  showCalendar = 'auto',
+  showTimeZone = 'auto',
+  showOffset = 'auto',
+  options = undefined
+) {
   const dt = dateTime(zdt);
   let year = GetSlot(dt, ISO_YEAR);
   let month = GetSlot(dt, ISO_MONTH);
@@ -431,8 +444,9 @@ function zonedDateTimeToString(zdt, precision, showCalendar = 'auto', options = 
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
   const tz = GetSlot(zdt, TIME_ZONE);
-  const offset = ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
-  const zone = ES.TimeZoneToString(tz);
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
-  return `${year}-${month}-${day}T${hour}:${minute}${seconds}${offset}[${zone}]${calendar}`;
+  let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
+  if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
+  if (showTimeZone !== 'never') result += `[${ES.TimeZoneToString(tz)}]`;
+  result += ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+  return result;
 }

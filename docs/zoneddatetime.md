@@ -1078,6 +1078,12 @@ zdt1.equals(zdt1); // => true
 
 - `options` (optional object): An object with properties influencing the formatting.
   The following options are recognized:
+  - `offset` (string): Whether to show the time zone offset in the return value.
+    Valid values are `'auto'` and `'never'`.
+    The default is `'auto'`.
+  - `timeZone` (string): Whether to show the time zone name annotation in the return value.
+    Valid values are `'auto'` and `'never'`.
+    The default is `'auto'`.
   - `calendar` (string): Whether to show the calendar annotation in the return value.
     Valid values are `'auto'`, `'always'`, and `'never'`.
     The default is `'auto'`.
@@ -1111,6 +1117,8 @@ Note that rounding may change the value of other units as well.
 Normally, a calendar annotation is shown when `zonedDateTime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendar` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
 For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
+
+Likewise, passing `'never'` to the `timeZone` or `offset` options controls whether the time zone offset (`+01:00`) or name annotation (`[Europe/Paris]`) are shown.
 
 The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output.
 For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).

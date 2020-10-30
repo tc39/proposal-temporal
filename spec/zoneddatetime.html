@@ -713,7 +713,9 @@
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
-        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _showTimeZone_ be ? ToShowTimeZoneOption(_options_).
+        1. Let _showOffset_ be ? ToShowOffsetOption(_options_).
+        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _showTimeZone, _showOffset_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
       </emu-alg>
     </emu-clause>
 
@@ -727,7 +729,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*).
+          1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _zonedDateTime_).
       </emu-alg>
@@ -741,7 +743,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*).
+        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -1166,7 +1168,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporalzoneddatetimetostring" aoid="TemporalZonedDateTimeToString">
-      <h1>TemporalZonedDateTimeToString ( _zonedDateTime_, _precision_, _showCalendar_ [ , _increment_, _unit_, _roundingMode_ ] )</h1>
+      <h1>TemporalZonedDateTimeToString ( _zonedDateTime_, _precision_, _showCalendar_, _showTimeZone_, _showOffset_ [ , _increment_, _unit_, _roundingMode_ ] )</h1>
       <p>
         The abstract operation TemporalZonedDateTimeToString returns an ISO 8601 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
       </p>
@@ -1182,8 +1184,14 @@
         1. <mark>TODO: Do something if _result_ is a nonexistent wall-clock time</mark>.
         1. Let _isoCalendar_ be ? GetISO8601Calendar().
         1. Let _dateTimeString_ be ? TemporalDateTimeToString(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _isoCalendar_, _precision_, *"never"*).
-        1. Let _offsetString_ be ? GetOffsetStringFor(_timeZone_, _instant_).
-        1. Let _timeZoneString_ be ? TimeZoneToString(_timeZone_).
+        1. If _showOffset_ is *"never"*, then
+          1. Let _offsetString_ be the empty String.
+        1. Else,
+          1. Let _offsetString_ be ? GetOffsetStringFor(_timeZone_, _instant_).
+        1. If _showTimeZone_ is *"never"*, then
+          1. Let _timeZoneString_ be the empty String.
+        1. Else,
+          1. Let _timeZoneString_ be ? TimeZoneToString(_timeZone_).
         1. Let _calendarString_ be ? FormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, the code unit 0x005B (LEFT SQUARE BRACKET), _timeZoneString_, the code unit 0x005D (RIGHT SQUARE BRACKET), and _calendarString_.
       </emu-alg>

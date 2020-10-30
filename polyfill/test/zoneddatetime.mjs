@@ -807,6 +807,25 @@ describe('ZonedDateTime', () => {
         throws(() => zdt1.toString({ calendar }), RangeError);
       });
     });
+    it('shows time zone if timeZone = auto', () => {
+      equal(zdt1.toString({ timeZone: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+    });
+    it('omits time zone if timeZone = never', () => {
+      equal(zdt1.toString({ timeZone: 'never' }), '1976-11-18T15:23:00+01:00');
+    });
+    it('shows offset if offset = auto', () => {
+      equal(zdt1.toString({ offset: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+    });
+    it('omits offset if offset = never', () => {
+      equal(zdt1.toString({ offset: 'never' }), '1976-11-18T15:23:00[Europe/Vienna]');
+    });
+    it('combinations of calendar, time zone, and offset', () => {
+      const zdt = zdt1.withCalendar('gregory');
+      equal(zdt.toString({ timeZone: 'never', calendar: 'never' }), '1976-11-18T15:23:00+01:00');
+      equal(zdt.toString({ offset: 'never', calendar: 'never' }), '1976-11-18T15:23:00[Europe/Vienna]');
+      equal(zdt.toString({ offset: 'never', timeZone: 'never' }), '1976-11-18T15:23:00[c=gregory]');
+      equal(zdt.toString({ offset: 'never', timeZone: 'never', calendar: 'never' }), '1976-11-18T15:23:00');
+    });
     it('truncates to minute', () => {
       [zdt1, zdt2, zdt3].forEach((zdt) =>
         equal(zdt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23+01:00[Europe/Vienna]')
