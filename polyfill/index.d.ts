@@ -1373,7 +1373,7 @@ export namespace Temporal {
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ToStringPrecisionOptions): string;
     valueOf(): never;
   }
 

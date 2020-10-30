@@ -1072,7 +1072,21 @@ zdt1.equals(zdt2); // => false (same offset but different time zones)
 zdt1.equals(zdt1); // => true
 ```
 
-### zonedDateTime.**toString**() : string
+### zonedDateTime.**toString**(_options_?: object) : string
+
+**Parameters:**
+
+- `options` (optional object): An object with properties influencing the formatting.
+  The following options are recognized:
+  - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
+    Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to include in the output string.
+    This option overrides `fractionalSecondDigits` if both are given.
+    Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'trunc'`.
 
 **Returns:** a string containing an ISO 8601 date+time+offset format, a bracketed time zone suffix, and (if the calendar is not `iso8601`) a calendar suffix.
 
@@ -1084,6 +1098,12 @@ Examples:
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `zonedDateTime`.
 The string is "round-trippable".
 This means that it can be passed to `Temporal.ZonedDateTime.from()` to create a new `Temporal.ZonedDateTime` object with the same field values as the original.
+
+The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
+If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
+
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+Note that rounding may change the value of other units as well.
 
 The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar is `iso8601`.
 For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).
