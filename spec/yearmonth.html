@@ -209,7 +209,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"era"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _partialYearMonth_ be ? ToPartialYearMonth(_temporalYearMonthLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
@@ -415,7 +415,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"era"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Let _d_ be ? ToInteger(_day_).
         1. Perform ! Set(_fields_, *"day"*, _d_, *false*).
@@ -433,7 +433,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"era"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
         1. Return _fields_.
