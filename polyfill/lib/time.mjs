@@ -22,7 +22,7 @@ import {
   SetSlot
 } from './slots.mjs';
 
-function TemporalTimeToString(time, precision, options = undefined) {
+function TemporalTimeToString(time, precision, showCalendar = 'auto', options = undefined) {
   let hour = GetSlot(time, ISO_HOUR);
   let minute = GetSlot(time, ISO_MINUTE);
   let second = GetSlot(time, ISO_SECOND);
@@ -48,7 +48,8 @@ function TemporalTimeToString(time, precision, options = undefined) {
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  return `${hour}:${minute}${seconds}`;
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(time, CALENDAR), showCalendar);
+  return `${hour}:${minute}${seconds}${calendar}`;
 }
 
 export class Time {
@@ -346,7 +347,8 @@ export class Time {
     options = ES.NormalizeOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
+    const showCalendar = ES.ToShowCalendarOption(options);
+    return TemporalTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

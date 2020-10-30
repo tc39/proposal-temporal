@@ -23,6 +23,9 @@ describe('MonthDay', () => {
       it('MonthDay.prototype.equals is a Function', () => {
         equal(typeof MonthDay.prototype.equals, 'function');
       });
+      it('MonthDay.prototype.toString is a Function', () => {
+        equal(typeof MonthDay.prototype.toString, 'function');
+      });
       it('MonthDay.prototype.getFields is a Function', () => {
         equal(typeof MonthDay.prototype.getFields, 'function');
       });
@@ -210,6 +213,30 @@ describe('MonthDay', () => {
     it("can also reject if the MonthDay doesn't exist in the year", () => {
       const leapDay = MonthDay.from('02-29');
       throws(() => leapDay.toDateInYear(2019, { overflow: 'reject' }));
+    });
+  });
+  describe('MonthDay.toString()', () => {
+    const md1 = MonthDay.from('11-18');
+    const md2 = MonthDay.from({ month: 11, day: 18, calendar: 'gregory' });
+    it('shows only non-ISO calendar if calendar = auto', () => {
+      equal(md1.toString({ calendar: 'auto' }), '11-18');
+      equal(md2.toString({ calendar: 'auto' }), '1972-11-18[c=gregory]');
+    });
+    it('shows ISO calendar if calendar = always', () => {
+      equal(md1.toString({ calendar: 'always' }), '11-18[c=iso8601]');
+    });
+    it('omits non-ISO calendar, but not year, if calendar = never', () => {
+      equal(md1.toString({ calendar: 'never' }), '11-18');
+      equal(md2.toString({ calendar: 'never' }), '1972-11-18');
+    });
+    it('default is calendar = auto', () => {
+      equal(md1.toString(), '11-18');
+      equal(md2.toString(), '1972-11-18[c=gregory]');
+    });
+    it('throws on invalid calendar', () => {
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
+        throws(() => md1.toString({ calendar }), RangeError);
+      });
     });
   });
   describe('monthDay.getFields() works', () => {

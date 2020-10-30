@@ -785,6 +785,28 @@ describe('ZonedDateTime', () => {
       equal(zdt2.toString(), '1976-11-18T15:23:30+01:00[Europe/Vienna]');
       equal(zdt3.toString(), '1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
     });
+    it('shows only non-ISO calendar if calendar = auto', () => {
+      equal(zdt1.toString({ calendar: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+      equal(
+        zdt1.withCalendar('gregory').toString({ calendar: 'auto' }),
+        '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]'
+      );
+    });
+    it('shows ISO calendar if calendar = always', () => {
+      equal(zdt1.toString({ calendar: 'always' }), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=iso8601]');
+    });
+    it('omits non-ISO calendar if calendar = never', () => {
+      equal(zdt1.withCalendar('gregory').toString({ calendar: 'never' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+    });
+    it('default is calendar = auto', () => {
+      equal(zdt1.toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+      equal(zdt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]');
+    });
+    it('throws on invalid calendar', () => {
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
+        throws(() => zdt1.toString({ calendar }), RangeError);
+      });
+    });
     it('truncates to minute', () => {
       [zdt1, zdt2, zdt3].forEach((zdt) =>
         equal(zdt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23+01:00[Europe/Vienna]')

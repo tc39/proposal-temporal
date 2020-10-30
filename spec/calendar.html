@@ -90,10 +90,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-formatcalendarannotation" aoid="FormatCalendarAnnotation">
-      <h1>FormatCalendarAnnotation ( _calendar_ )</h1>
+      <h1>FormatCalendarAnnotation ( _calendar_, _showCalendar_ )</h1>
       <emu-alg>
+        1. Assert: _showCalendar_ is *"auto"*, *"always"*, or *"never"*.
+        1. If _showCalendar_ is *"never"*, return the empty String.
         1. Let _id_ be ? CalendarToString(_calendar_).
-        1. If _id_ is *"iso8601"*, return the empty String.
+        1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
         1. Return the string-concatenation of *"[c="*, _id_, and *"]"*.
       </emu-alg>
     </emu-clause>

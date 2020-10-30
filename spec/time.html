@@ -445,8 +445,9 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
         1. Let _roundResult_ be ? RoundTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return ! TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
+        1. Return ? TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _temporalTime_.[[Calendar]], _precision_.[[Precision]], _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -460,7 +461,7 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], *"auto"*).
+          1. Return ? TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _temporalTime_.[[Calendar]], *"auto"*, *"auto"*).
         1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
         1. Return ? FormatDateTime(_dateFormat_, _temporalTime_).
       </emu-alg>
@@ -474,7 +475,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ! TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], *"auto"*).
+        1. Return ? TemporalTimeToString(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _temporalTime_.[[Calendar]], *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -847,12 +848,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaltimetostring" aoid="TemporalTimeToString">
-      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
+      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
       <emu-alg>
         1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _hour_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
-        1. Return the string-concatenation of _hour_, the code unit 0x003A (COLON), _minute_, and _seconds_.
+        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendar_, _showCalendar_).
+        1. Return the string-concatenation of _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendarString_.
       </emu-alg>
     </emu-clause>
 

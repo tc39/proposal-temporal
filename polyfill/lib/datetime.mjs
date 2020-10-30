@@ -24,7 +24,7 @@ import {
 
 const ObjectAssign = Object.assign;
 
-function DateTimeToString(dateTime, precision, options = undefined) {
+function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = undefined) {
   let year = GetSlot(dateTime, ISO_YEAR);
   let month = GetSlot(dateTime, ISO_MONTH);
   let day = GetSlot(dateTime, ISO_DAY);
@@ -59,7 +59,7 @@ function DateTimeToString(dateTime, precision, options = undefined) {
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
 }
 
@@ -662,8 +662,9 @@ export class DateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
+    const showCalendar = ES.ToShowCalendarOption(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    return DateTimeToString(this, precision, { unit, increment, roundingMode });
+    return DateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

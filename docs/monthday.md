@@ -181,10 +181,22 @@ dt1.equals(dt1)  // => true
 
 ### monthDay.**toString**() : string
 
+**Parameters:**
+
+- `options` (optional object): An object with properties influencing the formatting.
+  The following options are recognized:
+  - `calendar` (string): Whether to show the calendar annotation in the return value.
+    Valid values are `'auto'`, `'always'`, and `'never'`.
+    The default is `'auto'`.
+
 **Returns:** a string in the ISO 8601 date format representing `monthDay`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `monthDay`.
 The string can be passed to `Temporal.MonthDay.from()` to create a new `Temporal.MonthDay` object.
+
+Normally, a calendar annotation is shown when `monthDay`'s calendar is not the ISO 8601 calendar.
+By setting the `calendar` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
 
 Example usage:
 ```js

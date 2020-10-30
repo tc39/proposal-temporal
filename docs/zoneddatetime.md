@@ -1078,6 +1078,9 @@ zdt1.equals(zdt1); // => true
 
 - `options` (optional object): An object with properties influencing the formatting.
   The following options are recognized:
+  - `calendar` (string): Whether to show the calendar annotation in the return value.
+    Valid values are `'auto'`, `'always'`, and `'never'`.
+    The default is `'auto'`.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
     The default is `'auto'`.
@@ -1105,7 +1108,11 @@ If no options are given, the default is `fractionalSecondDigits: 'auto'`, which 
 The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
 Note that rounding may change the value of other units as well.
 
-The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar is `iso8601`.
+Normally, a calendar annotation is shown when `zonedDateTime`'s calendar is not the ISO 8601 calendar.
+By setting the `calendar` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
+
+The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output.
 For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).
 
 Example usage:

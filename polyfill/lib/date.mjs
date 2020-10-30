@@ -24,11 +24,11 @@ import {
 
 const ObjectAssign = Object.assign;
 
-function TemporalDateToString(date) {
+function TemporalDateToString(date, showCalendar = 'auto') {
   const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
   const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
   const day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
   return `${year}-${month}-${day}${calendar}`;
 }
 
@@ -290,9 +290,11 @@ export class Date {
     }
     return ES.CalendarEquals(this, other);
   }
-  toString() {
+  toString(options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return TemporalDateToString(this);
+    options = ES.NormalizeOptionsObject(options);
+    const showCalendar = ES.ToShowCalendarOption(options);
+    return TemporalDateToString(this, showCalendar);
   }
   toJSON() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

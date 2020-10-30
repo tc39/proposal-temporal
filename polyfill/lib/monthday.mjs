@@ -4,19 +4,31 @@ import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  ISO_MONTH,
+  ISO_DAY,
+  ISO_YEAR,
+  CALENDAR,
+  CALENDAR_ID,
+  MONTH_DAY_BRAND,
+  CreateSlots,
+  GetSlot,
+  SetSlot
+} from './slots.mjs';
 
 const ObjectAssign = Object.assign;
 
-function MonthDayToString(monthDay) {
+function MonthDayToString(monthDay, showCalendar = 'auto') {
   const month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
   const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
   let resultString = `${month}-${day}`;
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR));
-  if (calendar) {
+  const calendar = GetSlot(monthDay, CALENDAR);
+  if (!(ES.IsTemporalCalendar(calendar) && GetSlot(calendar, CALENDAR_ID) === 'iso8601')) {
     const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
-    resultString = `${year}-${resultString}${calendar}`;
+    resultString = `${year}-${resultString}`;
   }
+  const calendarString = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR), showCalendar);
+  if (calendarString) resultString += calendarString;
   return resultString;
 }
 
@@ -87,9 +99,11 @@ export class MonthDay {
     }
     return ES.CalendarEquals(this, other);
   }
-  toString() {
+  toString(options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    return MonthDayToString(this);
+    options = ES.NormalizeOptionsObject(options);
+    const showCalendar = ES.ToShowCalendarOption(options);
+    return MonthDayToString(this, showCalendar);
   }
   toJSON() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
