@@ -50,7 +50,7 @@ export class Date {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${this}>`,
+        value: `${this[Symbol.toStringTag]} <${TemporalDateToString(this)}>`,
         writable: false,
         enumerable: false,
         configurable: false
