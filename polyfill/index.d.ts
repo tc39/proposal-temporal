@@ -165,6 +165,13 @@ export namespace Temporal {
 
   export type CalendarTypeToStringOptions = Partial<ToStringPrecisionOptions & ShowCalendarOption>;
 
+  export type ZonedDateTimeToStringOptions = Partial<
+    CalendarTypeToStringOptions & {
+      timeZone: 'auto' | 'never';
+      offset: 'auto' | 'never';
+    }
+  >;
+
   /**
    * Options to control the result of `until()` and `since()` methods in
    * `Temporal` types.
@@ -1379,7 +1386,7 @@ export namespace Temporal {
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(options?: ToStringPrecisionOptions): string;
+    toString(options?: ZonedDateTimeToStringOptions): string;
     valueOf(): never;
   }
 
