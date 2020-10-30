@@ -971,15 +971,33 @@
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
           1. Let _offsetString_ be ? Get(_fields_, *"offset"*).
           1. If _offsetString_ is not *undefined*, set it to ? ToString(_offsetString_).
-          1. Let _result_ be <mark>TODO: this is replaced in a following commit anyway</mark>.
+          1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _item_, _overflow_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalInstantString(_string_).
+          1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
+          1. If _result_.[[TimeZoneName]] is *undefined*, throw a *RangeError* exception.
+          1. Let _timeZone_ be ? TimeZoneFrom(_result_.[[TimeZoneName]]).
+          1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
           1. Let _calendar_ be _result_.[[Calendar]].
           1. If _calendar_ is *undefined*, set _calendar_ to ! GetISO8601Calendar().
           1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-        1. <mark>TODO</mark>.
-        1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, <mark>TODO</mark>, _timeZone_ , _calendar_).
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]]. _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
+        1. If _offsetString_ is *undefined*, or _offset_ is *"ignore"*, then
+          1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Else,
+          1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
+          1. If _offset_ is *"use"*, then
+            1. Let _epochNanoseconds_ be ? GetEpochFromParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+            1. Let _instant_ be ? CreateTemporalInstant(_epochNanoseconds_ − _offsetNanoseconds_).
+          1. Else,
+            1. Assert: _offset_ is *"prefer"* or *"reject"*.
+            1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
+            1. If there exists an element _candidate_ of _possibleInstants_ for which ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
+              1. Let _instant_ be _candidate_.
+            1. Else,
+              1. If _offset_ is *"reject"*, throw a *RangeError* exception.
+              1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, _instant_.[[Nanoseconds]], _timeZone_ , _calendar_).
       </emu-alg>
     </emu-clause>
 
