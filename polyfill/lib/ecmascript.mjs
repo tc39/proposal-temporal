@@ -478,6 +478,21 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return increment;
   },
+  ToTemporalDateTimeRoundingIncrement: (options, smallestUnit) => {
+    const maximumIncrements = {
+      years: undefined,
+      months: undefined,
+      weeks: undefined,
+      days: undefined,
+      hours: 24,
+      minutes: 60,
+      seconds: 60,
+      milliseconds: 1000,
+      microseconds: 1000,
+      nanoseconds: 1000
+    };
+    return ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+  },
   ToSecondsStringPrecision: (options) => {
     const singular = new Map([
       ['minutes', 'minute'],

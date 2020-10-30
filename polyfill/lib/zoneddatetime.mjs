@@ -226,19 +226,7 @@ export class ZonedDateTime {
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
-    const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
     void roundingMode;
     void roundingIncrement;
     throw new Error('until() not implemented yet');
@@ -260,19 +248,7 @@ export class ZonedDateTime {
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
     void roundingMode;
     void roundingIncrement;
     throw new Error('since() not implemented yet');
