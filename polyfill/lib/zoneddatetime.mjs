@@ -44,7 +44,7 @@ export class ZonedDateTime {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${zonedDateTimeToString(this)}>`,
+        value: `${this[Symbol.toStringTag]} <${zonedDateTimeToString(this, 'auto')}>`,
         writable: false,
         enumerable: false,
         configurable: false
