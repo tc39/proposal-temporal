@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.instant.prototype.todatetime
+esid: sec-temporal.instant.prototype.tozoneddatetime
 ---*/
 
 const values = [
@@ -24,13 +24,13 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const dateTime = instant.toDateTime("UTC", input);
+  const zdt = instant.toZonedDateTime("UTC", input);
   assert.sameValue(called, 1);
-  assert.sameValue(dateTime.calendar, calendar);
+  assert.sameValue(zdt.calendar, calendar);
 }
 
 Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => instant.toDateTime("UTC", Symbol()));
+assert.throws(TypeError, () => instant.toZonedDateTime("UTC", Symbol()));

@@ -2,10 +2,9 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.instant.prototype.todatetime
+esid: sec-temporal.zoneddatetime.prototype.todatetime
 ---*/
 
-const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const calendar = Temporal.Calendar.from("iso8601");
 
 const invalidValues = [
@@ -25,12 +24,12 @@ for (const dateTime of invalidValues) {
   const timeZone = {
     getDateTimeFor(instantArg, calendarArg) {
       assert.sameValue(instantArg instanceof Temporal.Instant, true, "Instant");
-      assert.sameValue(instantArg, instant);
       assert.sameValue(calendarArg instanceof Temporal.Calendar, true, "Calendar");
       assert.sameValue(calendarArg, calendar);
       return dateTime;
     },
   };
 
-  assert.throws(TypeError, () => instant.toDateTime(timeZone, calendar));
+  const zdt = new Temporal.ZonedDateTime(160583136123456789n, timeZone, calendar);
+  assert.throws(TypeError, () => zdt.toDateTime(timeZone, calendar));
 }

@@ -2,24 +2,19 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.instant.prototype.todatetime
+esid: sec-temporal.instant.prototype.tozoneddatetime
 includes: [compareArray.js]
 ---*/
 
 const actual = [];
-const expected = [
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
-];
+const expected = [];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 const calendar = {};
 const timeZone = new Proxy({
-  getDateTimeFor(instant, calendarArg) {
+  getDateTimeFor() {
     actual.push("call timeZone.getDateTimeFor");
-    assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
-    assert.sameValue(calendarArg, calendar);
     return dateTime;
   },
 }, {
@@ -40,7 +35,8 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = instant.toDateTime(timeZone, calendar);
-assert.sameValue(result, dateTime);
+const result = instant.toZonedDateTime(timeZone, calendar);
+assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
+assert.sameValue(result.calendar, calendar);
 
 assert.compareArray(actual, expected);

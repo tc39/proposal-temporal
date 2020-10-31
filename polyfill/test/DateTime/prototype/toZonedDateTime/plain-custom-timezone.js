@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.prototype.toinstant
+esid: sec-temporal.datetime.prototype.tozoneddatetime
 includes: [compareArray.js]
 ---*/
 
@@ -67,7 +67,9 @@ const timeZone = new Proxy({
   },
 });
 
-const result = dateTime.toInstant(timeZone, options);
-assert.sameValue(result, instant);
+const result = dateTime.toZonedDateTime(timeZone, options);
+assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
+assert.sameValue(result.timeZone, timeZone);
+assert.sameValue(result.calendar, dateTime.calendar);
 
 assert.compareArray(actual, expected);

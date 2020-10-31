@@ -464,36 +464,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.instant.prototype.todatetime">
-      <h1>Temporal.Instant.prototype.toDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
-      <p>
-        The `toDateTime` method takes two arguments, _temporalTimeZoneLike_ and _calendarLike_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.instant.prototype.todatetimeiso">
-      <h1>Temporal.Instant.prototype.toDateTimeISO ( _temporalTimeZoneLike_ )</h1>
-      <p>
-        The `toDateTimeISO` method takes one argument _temporalTimeZoneLike_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetime">
       <h1>Temporal.Instant.prototype.toZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <p>

@@ -362,7 +362,7 @@ Map localized trip departure and arrival times into trip duration in units no la
 {{cookbook/getTripDurationInHrMinSec.mjs}}
 ```
 
-Map localized departure time and duration into localized arrival time.
+Given a departure time with time zone and a flight duration, get an arrival time in the destination time zone, using time zone-aware math.
 
 ```javascript
 {{cookbook/getLocalizedArrival.mjs}}

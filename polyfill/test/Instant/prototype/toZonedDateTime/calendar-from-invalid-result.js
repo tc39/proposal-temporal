@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.instant.prototype.todatetime
+esid: sec-temporal.instant.prototype.tozoneddatetime
 ---*/
 
 const values = [
@@ -26,6 +26,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => instant.toDateTime(timeZone, "test"), description);
+  assert.throws(TypeError, () => instant.toZonedDateTime(timeZone, "test"), description);
   assert.sameValue(called, 1);
 }

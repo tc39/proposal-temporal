@@ -15,7 +15,8 @@ describe('fromString regex', () => {
       it(isoString, () => {
         const [y, mon, d, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0] = components;
         const instant = Temporal.Instant.from(isoString);
-        const datetime = instant.toDateTimeISO('UTC');
+        const utc = Temporal.TimeZone.from('UTC');
+        const datetime = utc.getDateTimeFor(instant);
         equal(datetime.year, y);
         equal(datetime.month, mon);
         equal(datetime.day, d);

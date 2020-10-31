@@ -9,7 +9,7 @@
  */
 function* calculateDailyOccurrence(startDate, time, timeZone) {
   for (let date = startDate; ; date = date.add({ days: 1 })) {
-    yield date.toDateTime(time).toInstant(timeZone);
+    yield date.toDateTime(time).toZonedDateTime(timeZone);
   }
 }
 
