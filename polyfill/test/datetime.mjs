@@ -90,9 +90,6 @@ describe('DateTime', () => {
       it('DateTime.prototype.equals is a Function', () => {
         equal(typeof DateTime.prototype.equals, 'function');
       });
-      it('DateTime.prototype.toInstant is a Function', () => {
-        equal(typeof DateTime.prototype.toInstant, 'function');
-      });
       it('DateTime.prototype.toZonedDateTime is a Function', () => {
         equal(typeof DateTime.prototype.toZonedDateTime, 'function');
       });
@@ -1371,64 +1368,6 @@ describe('DateTime', () => {
       equal(`${DateTime.from({ year: 1976, month: 11, day: 18, hours: 12 })}`, '1976-11-18T00:00:00');
     });
   });
-  describe('DateTime.toInstant() works', () => {
-    it('recent date', () => {
-      const dt = DateTime.from('2019-10-29T10:46:38.271986102');
-      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(`${dt.toInstant(tz)}`, '2019-10-29T09:46:38.271986102Z');
-      equal(`${dt.toInstant('Europe/Amsterdam')}`, '2019-10-29T09:46:38.271986102Z');
-    });
-    it('year ≤ 99', () => {
-      const dt = DateTime.from('+000098-10-29T10:46:38.271986102');
-      equal(`${dt.toInstant('+06:00')}`, '+000098-10-29T04:46:38.271986102Z');
-    });
-    it('year < 1', () => {
-      let dt = DateTime.from('+000000-10-29T10:46:38.271986102');
-      equal(`${dt.toInstant('+06:00')}`, '+000000-10-29T04:46:38.271986102Z');
-      dt = DateTime.from('-001000-10-29T10:46:38.271986102');
-      equal(`${dt.toInstant('+06:00')}`, '-001000-10-29T04:46:38.271986102Z');
-    });
-    it('year 0 leap day', () => {
-      const dt = Temporal.DateTime.from('+000000-02-29T00:00');
-      const tz = Temporal.TimeZone.from('Europe/London');
-      equal(`${dt.toInstant(tz)}`, '+000000-02-29T00:01:15Z');
-    });
-    it('datetime with multiple instants - Fall DST in Brazil', () => {
-      const dt = DateTime.from('2019-02-16T23:45');
-      equal(`${dt.toInstant('America/Sao_Paulo')}`, '2019-02-17T01:45:00Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'compatible' })}`, '2019-02-17T01:45:00Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'earlier' })}`, '2019-02-17T01:45:00Z');
-      equal(`${dt.toInstant('America/Sao_Paulo', { disambiguation: 'later' })}`, '2019-02-17T02:45:00Z');
-      throws(() => dt.toInstant('America/Sao_Paulo', { disambiguation: 'reject' }), RangeError);
-    });
-    it('datetime with multiple instants - Spring DST in Los Angeles', () => {
-      const dt = DateTime.from('2020-03-08T02:30');
-      equal(`${dt.toInstant('America/Los_Angeles')}`, '2020-03-08T10:30:00Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'compatible' })}`, '2020-03-08T10:30:00Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'earlier' })}`, '2020-03-08T09:30:00Z');
-      equal(`${dt.toInstant('America/Los_Angeles', { disambiguation: 'later' })}`, '2020-03-08T10:30:00Z');
-      throws(() => dt.toInstant('America/Los_Angeles', { disambiguation: 'reject' }), RangeError);
-    });
-    it('outside of Instant range', () => {
-      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      throws(() => max.toInstant('-01:00'), RangeError);
-      throws(() => max.toInstant('America/Godthab'), RangeError);
-    });
-    it('throws on bad disambiguation', () => {
-      ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => DateTime.from('2019-10-29T10:46').toInstant('UTC', { disambiguation }), RangeError)
-      );
-    });
-    it('options may only be an object or undefined', () => {
-      const dt = DateTime.from('2019-10-29T10:46:38.271986102');
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => dt.toInstant('America/Sao_Paulo', badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${dt.toInstant('America/Sao_Paulo', options)}`, '2019-10-29T13:46:38.271986102Z')
-      );
-    });
-  });
   describe('DateTime.toZonedDateTime()', () => {
     it('works', () => {
       const dt = Temporal.DateTime.from('2020-01-01T00:00');
@@ -1541,9 +1480,11 @@ describe('DateTime', () => {
     });
     it('converting from Instant', () => {
       const min = Temporal.Instant.from('-271821-04-20T00:00Z');
+      const offsetMin = Temporal.TimeZone.from('-23:59');
+      equal(`${offsetMin.getDateTimeFor(min, 'iso8601')}`, '-271821-04-19T00:01:00');
       const max = Temporal.Instant.from('+275760-09-13T00:00Z');
-      equal(`${min.toDateTimeISO('-23:59')}`, '-271821-04-19T00:01:00');
-      equal(`${max.toDateTimeISO('+23:59')}`, '+275760-09-13T23:59:00');
+      const offsetMax = Temporal.TimeZone.from('+23:59');
+      equal(`${offsetMax.getDateTimeFor(max, 'iso8601')}`, '+275760-09-13T23:59:00');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.Time.from('00:00');
@@ -1573,22 +1514,6 @@ describe('DateTime', () => {
         throws(() => min.round({ smallestUnit, roundingMode: 'floor' }), RangeError);
         throws(() => max.round({ smallestUnit, roundingMode: 'ceil' }), RangeError);
       });
-    });
-  });
-  describe('DateTime.toInstant() works', () => {
-    const dt = DateTime.from('1976-11-18T15:23:30.123456789');
-    it('without parameter', () => {
-      throws(() => dt.toInstant(), RangeError);
-    });
-    it('time zone parameter UTC', () => {
-      const tz = Temporal.TimeZone.from('UTC');
-      const inst = dt.toInstant(tz);
-      equal(`${inst}`, '1976-11-18T15:23:30.123456789Z');
-    });
-    it('time zone parameter non-UTC', () => {
-      const tz = Temporal.TimeZone.from('America/New_York');
-      const inst = dt.toInstant(tz);
-      equal(`${inst}`, '1976-11-18T20:23:30.123456789Z');
     });
   });
   describe('dateTime.getFields() works', () => {

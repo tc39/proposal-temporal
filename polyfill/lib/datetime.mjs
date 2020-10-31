@@ -677,13 +677,6 @@ export class DateTime {
     throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
   }
 
-  toInstant(temporalTimeZoneLike, options = undefined) {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    options = ES.NormalizeOptionsObject(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
-    return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
-  }
   toZonedDateTime(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);

@@ -641,22 +641,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.datetime.prototype.toinstant">
-      <h1>Temporal.DateTime.prototype.toInstant ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
-      <p>
-        The `toInstant` method takes two arguments, _temporalTimeZoneLike_ and _options_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _dateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Return ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.datetime.prototype.tozoneddatetime">
       <h1>Temporal.DateTime.prototype.toZonedDateTime ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
       <p>

@@ -5,14 +5,14 @@
 includes: [propertyHelper.js]
 ---*/
 
-const { Instant } = Temporal;
+const { ZonedDateTime } = Temporal;
 assert.sameValue(
-  typeof Instant.prototype.toDateTime,
+  typeof ZonedDateTime.prototype.toDateTime,
   "function",
-  "`typeof Instant.prototype.toDateTime` is `function`"
+  "`typeof ZonedDateTime.prototype.toDateTime` is `function`"
 );
 
-verifyProperty(Instant.prototype, "toDateTime", {
+verifyProperty(ZonedDateTime.prototype, "toDateTime", {
   writable: true,
   enumerable: false,
   configurable: true,

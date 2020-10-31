@@ -31,8 +31,9 @@ const tc39meetings = [
 const localTimeZone = Temporal.TimeZone.from('Asia/Tokyo');
 const localTimes = tc39meetings.map(({ dateTime, timeZone }) => {
   return Temporal.DateTime.from(dateTime)
-    .toInstant(timeZone, { disambiguation: 'reject' })
-    .toDateTimeISO(localTimeZone);
+    .toZonedDateTime(timeZone, { disambiguation: 'reject' })
+    .withTimeZone(localTimeZone)
+    .toDateTime();
 });
 
 assert.deepEqual(

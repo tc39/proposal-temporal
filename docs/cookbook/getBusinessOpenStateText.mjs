@@ -4,10 +4,11 @@
  * is open, closed, opening soon, or closing soon. The length of "soon" can be
  * controlled using the `soonWindow` parameter.
  *
- * @param {Temporal.Instant} now - Exact time at which to consider whether the
- *  business is open
- * @param {Temporal.TimeZone} timeZone - Time zone in which the business is
- *  located
+ * FIXME: This example should stop using TimeZone.getInstantFor as soon as the
+ * ZonedDateTime.with(), add(), and subtract() methods get implemented.
+ *
+ * @param {Temporal.ZonedDateTime} now - Date and Time at which to consider
+ *  whether the business is open
  * @param {(Object|null)[]} businessHours - Array of length 7 indicating
  *  business hours during the week
  * @param {Temporal.Time} businessHours[].open - Time at which the business
@@ -19,12 +20,12 @@
  *  soon" or "closing soon"
  * @returns {string} "open", "closed", "opening soon", or "closing soon"
  */
-function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
+function getBusinessOpenStateText(now, businessHours, soonWindow) {
   function inRange(i, start, end) {
     return Temporal.Instant.compare(i, start) >= 0 && Temporal.Instant.compare(i, end) < 0;
   }
 
-  const dateTime = now.toDateTimeISO(timeZone);
+  const dateTime = now.toDateTime();
   const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
 
   // Because of times wrapping around at midnight, we may need to consider
@@ -42,8 +43,8 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = yesterdayHours;
     if (Temporal.Time.compare(close, open) < 0) {
       businessHoursOverlappingToday.push({
-        open: yesterday.toDateTime(open).toInstant(timeZone),
-        close: today.toDateTime(close).toInstant(timeZone)
+        open: now.timeZone.getInstantFor(yesterday.toDateTime(open)),
+        close: now.timeZone.getInstantFor(today.toDateTime(close))
       });
     }
   }
@@ -52,17 +53,18 @@ function getBusinessOpenStateText(now, timeZone, businessHours, soonWindow) {
     const { open, close } = todayHours;
     const todayOrTomorrow = Temporal.Time.compare(close, open) >= 0 ? today : tomorrow;
     businessHoursOverlappingToday.push({
-      open: today.toDateTime(open).toInstant(timeZone),
-      close: todayOrTomorrow.toDateTime(close).toInstant(timeZone)
+      open: now.timeZone.getInstantFor(today.toDateTime(open)),
+      close: now.timeZone.getInstantFor(todayOrTomorrow.toDateTime(close))
     });
   }
 
   // Check if any of the candidate business hours include the given time
-  const soon = now.add(soonWindow);
+  const nowInstant = now.toInstant();
+  const soon = nowInstant.add(soonWindow);
   let openNow = false;
   let openSoon = false;
   for (const { open, close } of businessHoursOverlappingToday) {
-    openNow = openNow || inRange(now, open, close);
+    openNow = openNow || inRange(nowInstant, open, close);
     openSoon = openSoon || inRange(soon, open, close);
   }
 
@@ -86,8 +88,7 @@ const businessHours = [
   /* Sat */ { open: Temporal.Time.from('11:00'), close: Temporal.Time.from('02:00') }
 ];
 
-const now = Temporal.Instant.from('2019-04-07T00:00+01:00[Europe/Berlin]');
-const tz = Temporal.TimeZone.from('Europe/Berlin');
+const now = Temporal.ZonedDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
-const saturdayNightState = getBusinessOpenStateText(now, tz, businessHours, soonWindow);
+const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);
 assert.equal(saturdayNightState, 'open');

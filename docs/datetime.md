@@ -850,39 +850,6 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### datetime.**toInstant**(_timeZone_ : object | string, _options_?: object) : Temporal.Instant
-
-**Parameters:**
-
-- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
-    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
-    The default is `'compatible'`.
-
-**Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
-
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
-It is identical to [`(Temporal.TimeZone.from(timeZone || 'UTC')).getInstantFor(dateTime, disambiguation)`](./timezone.html#getInstantFor).
-
-In the case of ambiguity, the `disambiguation` option controls what exact time to return:
-
-- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
-- `'earlier'`: The earlier of two possible exact times.
-- `'later'`: The later of two possible exact times.
-- `'reject'`: Throw a `RangeError` instead.
-
-When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
-This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
-
-During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
-
-For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
-
-If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
-
 ### datetime.**toDate**() : Temporal.Date
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.

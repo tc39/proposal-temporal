@@ -111,11 +111,6 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(instant, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('instant.toDateTime()', () => {
-      const inst = Temporal.Instant.fromEpochSeconds(0);
-      const dt = inst.toDateTime('UTC', obj);
-      equal(dt.calendar.id, obj.id);
-    });
     it('Temporal.now.dateTime()', () => {
       const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
@@ -202,11 +197,6 @@ describe('Userland calendar', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
         const dt = tz.getDateTimeFor(inst, 'zero-based');
-        equal(dt.calendar.id, 'zero-based');
-      });
-      it('works for Instant.toDateTime', () => {
-        const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = inst.toDateTime('UTC', 'zero-based');
         equal(dt.calendar.id, 'zero-based');
       });
       it('works for Temporal.now.dateTime', () => {
@@ -428,11 +418,6 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(inst, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('instant.toDateTime()', () => {
-      const inst = Temporal.Instant.fromEpochSeconds(0);
-      const dt = inst.toDateTime('UTC', obj);
-      equal(dt.calendar.id, obj.id);
-    });
     it('Temporal.now.dateTime()', () => {
       const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
@@ -519,11 +504,6 @@ describe('Userland calendar', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
         const dt = tz.getDateTimeFor(inst, 'decimal');
-        equal(dt.calendar.id, 'decimal');
-      });
-      it('works for Instant.toDateTime', () => {
-        const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = inst.toDateTime('UTC', 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Temporal.now.dateTime', () => {
