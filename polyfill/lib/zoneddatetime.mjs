@@ -309,9 +309,78 @@ export class ZonedDateTime {
       nanosecond: 1000
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
-    void roundingMode;
-    void roundingIncrement;
-    throw new Error('round() not implemented yet');
+
+    // first, round the underlying DateTime fields
+    const dt = dateTime(this);
+    let year = GetSlot(dt, ISO_YEAR);
+    let month = GetSlot(dt, ISO_MONTH);
+    let day = GetSlot(dt, ISO_DAY);
+    let hour = GetSlot(dt, ISO_HOUR);
+    let minute = GetSlot(dt, ISO_MINUTE);
+    let second = GetSlot(dt, ISO_SECOND);
+    let millisecond = GetSlot(dt, ISO_MILLISECOND);
+    let microsecond = GetSlot(dt, ISO_MICROSECOND);
+    let nanosecond = GetSlot(dt, ISO_NANOSECOND);
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      roundingIncrement,
+      smallestUnit,
+      roundingMode
+    ));
+
+    // TODO: there's a case not yet implemented here: if there's a DST
+    // transition during the current day, then it's ignored by rounding. For
+    // example, using the `nearest` mode a time of 11:45 would round up in
+    // DateTime rounding but should round down if the day is 23 hours long.
+    // The since()/until() implementation will show one way to do this rounding.
+
+    // Now reset all DateTime fields but leave the TimeZone. The offset will
+    // also be retained if the new date/time values are still OK with the old
+    // offset. Otherwise the offset will be changed to be compatible with the
+    // new date/time values. If DST disambiguation is required, the `compatible`
+    // disambiguation algorithm will be used.
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const calendar = GetSlot(this, CALENDAR);
+    const rounded = new DateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
+
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
+
+    // See the 'prefer' algorithm in ToTemporalZonedDateTime
+    let instant;
+    const possibleInstants = timeZone.getPossibleInstantsFor(rounded);
+    for (const candidate of possibleInstants) {
+      const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
+      if (candidateOffset === offsetNs) {
+        instant = candidate;
+        break;
+      }
+    }
+    if (!instant) instant = ES.GetTemporalInstantFor(timeZone, rounded, 'compatible');
+
+    const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+    const result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   equals(other) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

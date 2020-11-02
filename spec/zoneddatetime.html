@@ -693,9 +693,21 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_).
-        1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _maximum_, *false*).
-        1. <mark>TODO</mark>.
-        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
+        1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _smallestUnit_).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
+        1. Let _roundResult_ be ? RoundDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. <mark>TODO: handle non-24-hour days with difference algorithm</mark>.
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _rounded_ be ? CreateTemporalDateTime(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _calendar_).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _rounded_).
+        1. If there exists an element _candidate_ of _possibleInstants_ for which ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
+          1. Let _roundedInstant_ be _candidate_.
+        1. Else,
+          1. Let _roundedInstant_ be ? GetTemporalInstantFor(_timeZone_, _rounded_, *"compatible"*).
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _roundedInstant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
