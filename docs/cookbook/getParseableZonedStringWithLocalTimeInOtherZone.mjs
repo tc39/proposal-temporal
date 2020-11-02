@@ -27,7 +27,6 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
     .toZonedDateTime(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy })
     .withTimeZone(targetTimeZone)
     .toString();
-  return zonedDateTime.withTimeZone(targetTimeZone).toString();
 }
 
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
