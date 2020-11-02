@@ -186,7 +186,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. If _calendarLike_ is *undefined*, then
-          1. Let _calendar_ be ! GetISO8601Calendar().
+          1. Let _calendar_ be ? GetISO8601Calendar().
         1. Else,
           1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
