@@ -167,7 +167,7 @@ export namespace Temporal {
 
   export type ZonedDateTimeToStringOptions = Partial<
     CalendarTypeToStringOptions & {
-      timeZone: 'auto' | 'never';
+      timeZoneName: 'auto' | 'never';
       offset: 'auto' | 'never';
     }
   >;

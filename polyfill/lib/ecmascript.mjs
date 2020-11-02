@@ -481,8 +481,8 @@ export const ES = ObjectAssign({}, ES2020, {
   ToShowCalendarOption: (options) => {
     return ES.GetOption(options, 'calendar', ['auto', 'always', 'never'], 'auto');
   },
-  ToShowTimeZoneOption: (options) => {
-    return ES.GetOption(options, 'timeZone', ['auto', 'never'], 'auto');
+  ToShowTimeZoneNameOption: (options) => {
+    return ES.GetOption(options, 'timeZoneName', ['auto', 'never'], 'auto');
   },
   ToShowOffsetOption: (options) => {
     return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
