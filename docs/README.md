@@ -50,7 +50,7 @@ See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
 
 ### **Temporal.ZonedDateTime**
 
-_NOTE: this type is not checked into the polyfill yet, but is planned to land in late October 2020._
+_NOTE: Not all methods of this type are available in the polyfill yet._
 
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular exact time from the perspective of a particular region on Earth.
 This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
