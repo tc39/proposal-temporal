@@ -1099,6 +1099,30 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  const hourBeforeDstStart = ZonedDateTime.from({ ...new Temporal.DateTime(2020, 3, 8, 1).getFields(), timeZone: tz });
+  const dayBeforeDstStart = ZonedDateTime.from({
+    ...new Temporal.DateTime(2020, 3, 7, 2, 30).getFields(),
+    timeZone: tz
+  });
+  describe('properties around DST', () => {
+    it('startOfDay works', () => {
+      const start = dayBeforeDstStart.startOfDay();
+      equal(`${start.toDate()}`, `${dayBeforeDstStart.toDate()}`);
+      equal(`${start.toTime()}`, '00:00:00');
+    });
+    it('startOfDay works when day starts at 1:00 due to DST start at midnight', () => {
+      const zdt = ZonedDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      equal(`${zdt.startOfDay().toTime()}`, '01:00:00');
+    });
+
+    const dayAfterSamoaDateLineChange = ZonedDateTime.from('2011-12-31T22:00+14:00[Pacific/Apia]');
+    const dayBeforeSamoaDateLineChange = ZonedDateTime.from('2011-12-29T22:00-10:00[Pacific/Apia]');
+    it('startOfDay works after Samoa date line change', () => {
+      const start = dayAfterSamoaDateLineChange.startOfDay();
+      equal(`${start.toTime()}`, '00:00:00');
+    });
+  });
+
   describe('ZonedDateTime.compare()', () => {
     const zdt1 = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
     const zdt2 = ZonedDateTime.from('2019-10-29T10:46:38.271986102+01:00[Europe/Vienna]');

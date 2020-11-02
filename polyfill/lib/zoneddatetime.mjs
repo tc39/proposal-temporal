@@ -305,7 +305,15 @@ export class ZonedDateTime {
   }
   startOfDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    throw new Error('startOfDay() not implemented yet');
+    const dt = dateTime(this);
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const instant = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
+    const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+    const result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   toInstant() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
