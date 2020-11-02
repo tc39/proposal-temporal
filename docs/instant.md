@@ -545,14 +545,14 @@ one.equals(two); // => false
 one.equals(one); // => true
 ```
 
-### instant.**toString**(_timeZone_?: object | string, _options_?: object) : string
+### instant.**toString**(_options_?: object) : string
 
 **Parameters:**
 
-- `timeZone` (optional string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
-  The default is to use UTC.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
+  - `timeZone` (string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+    The default is to use UTC.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
     The default is `'auto'`.
@@ -574,13 +574,17 @@ If no options are given, the default is `fractionalSecondDigits: 'auto'`, which 
 The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
 Note that rounding may change the value of other units as well.
 
+If the `timeZone` option is given, then the string will express the time in the given time zone, and contain the time zone's UTC offset.
+
 Example usage:
 
 ```js
 instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => 2019-11-18T10:52:01.816Z
-instant.toString(Temporal.TimeZone.from('UTC')); // => 2019-11-18T10:52:01.816Z
-instant.toString('Asia/Seoul'); // => 2019-11-18T19:52:01.816+09:00[Asia/Seoul]
+instant.toString({ timeZone: Temporal.TimeZone.from('UTC') });
+  // => 2019-11-18T10:52:01.816+00:00
+instant.toString({ timeZone: 'Asia/Seoul' });
+  // => 2019-11-18T19:52:01.816+09:00
 
 instant.toString(undefined, { smallestUnit: 'minute' });
   // => 2019-11-18T10:52Z

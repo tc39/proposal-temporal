@@ -58,8 +58,11 @@ describe('Userland time zone', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.id));
-    it('prints in instant.toString', () =>
-      equal(inst.toString(obj), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Subclass]'));
+    it('offset prints in instant.toString', () => equal(inst.toString({ timeZone: obj }), '1970-01-01T00:00:00+00:00'));
+    it('prints in zdt.toString', () => {
+      const zdt = new Temporal.ZonedDateTime(0n, obj);
+      equal(zdt.toString(), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Subclass]');
+    });
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
@@ -98,7 +101,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString('Etc/Custom/UTC_Subclass'), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Subclass]');
+        equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Subclass' }), '1970-01-01T00:00:00+00:00');
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.DateTime);
@@ -144,8 +147,11 @@ describe('Userland time zone', () => {
     it('converts to Instant', () => {
       equal(`${Temporal.TimeZone.prototype.getInstantFor.call(obj, dt)}`, '1976-11-18T15:23:30.123456789Z');
     });
-    it('prints in instant.toString', () =>
-      equal(inst.toString(obj), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]'));
+    it('offset prints in instant.toString', () => equal(inst.toString({ timeZone: obj }), '1970-01-01T00:00:00+00:00'));
+    it('prints in zdt.toString', () => {
+      const zdt = new Temporal.ZonedDateTime(0n, obj);
+      equal(zdt.toString(), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
+    });
     it('works in Temporal.now', () => {
       assert(Temporal.now.dateTimeISO(obj) instanceof Temporal.DateTime);
       assert(Temporal.now.dateTime('gregory', obj) instanceof Temporal.DateTime);
@@ -182,7 +188,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString('Etc/Custom/UTC_Protocol'), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
+        equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Protocol' }), '1970-01-01T00:00:00+00:00');
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.DateTime);
@@ -239,8 +245,12 @@ describe('Userland time zone', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.2345679Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.id));
-    it('prints in instant.toString', () =>
-      equal(inst.toString(obj), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]'));
+    it('offset prints in instant.toString', () =>
+      equal(inst.toString({ timeZone: obj }), '1969-12-31T23:59:58.888888889-00:00:01.111111111'));
+    it('prints in zdt.toString', () => {
+      const zdt = new Temporal.ZonedDateTime(0n, obj);
+      equal(zdt.toString(), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
+    });
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
@@ -279,7 +289,7 @@ describe('Userland time zone', () => {
       });
       it('works for Instant.toString', () => {
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString('Custom/Subminute'), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
+        equal(inst.toString({ timeZone: 'Custom/Subminute' }), '1969-12-31T23:59:58.888888889-00:00:01.111111111');
       });
       it('works for Temporal.now', () => {
         assert(Temporal.now.dateTimeISO('Custom/Subminute') instanceof Temporal.DateTime);

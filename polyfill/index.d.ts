@@ -172,6 +172,12 @@ export namespace Temporal {
     }
   >;
 
+  export type InstantToStringOptions = Partial<
+    ToStringPrecisionOptions & {
+      timeZone: TimeZoneProtocol | string;
+    }
+  >;
+
   /**
    * Options to control the result of `until()` and `since()` methods in
    * `Temporal` types.
@@ -567,7 +573,7 @@ export namespace Temporal {
     toZonedDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(tzLike?: TimeZoneProtocol | string, options?: ToStringPrecisionOptions): string;
+    toString(options?: InstantToStringOptions): string;
     valueOf(): never;
   }
 

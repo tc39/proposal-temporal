@@ -93,20 +93,19 @@ describe('Instant', () => {
       equal(`${instant}`, iso);
     });
     it('optional time zone parameter UTC', () => {
-      const iso = '1976-11-18T14:23:30.123456789Z';
-      const inst = Instant.from(iso);
-      const tz = Temporal.TimeZone.from('UTC');
-      equal(inst.toString(tz), iso);
+      const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
+      const timeZone = Temporal.TimeZone.from('UTC');
+      equal(inst.toString({ timeZone }), '1976-11-18T14:23:30.123456789+00:00');
     });
     it('optional time zone parameter non-UTC', () => {
       const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
-      const tz = Temporal.TimeZone.from('America/New_York');
-      equal(inst.toString(tz), '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
+      const timeZone = Temporal.TimeZone.from('America/New_York');
+      equal(inst.toString({ timeZone }), '1976-11-18T09:23:30.123456789-05:00');
     });
     it('sub-minute offset', () => {
       const inst = Instant.from('1900-01-01T12:00Z');
-      const tz = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(inst.toString(tz), '1900-01-01T12:19:32+00:19:32[Europe/Amsterdam]');
+      const timeZone = Temporal.TimeZone.from('Europe/Amsterdam');
+      equal(inst.toString({ timeZone }), '1900-01-01T12:19:32+00:19:32');
     });
     const i1 = Instant.from('1976-11-18T15:23Z');
     const i2 = Instant.from('1976-11-18T15:23:30Z');
@@ -117,103 +116,82 @@ describe('Instant', () => {
       equal(i3.toString(), '1976-11-18T15:23:30.1234Z');
     });
     it('truncates to minute', () => {
-      [i1, i2, i3].forEach((i) => equal(i.toString(undefined, { smallestUnit: 'minute' }), '1976-11-18T15:23Z'));
+      [i1, i2, i3].forEach((i) => equal(i.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23Z'));
     });
     it('other smallestUnits are aliases for fractional digits', () => {
-      equal(i3.toString(undefined, { smallestUnit: 'second' }), i3.toString(undefined, { fractionalSecondDigits: 0 }));
-      equal(
-        i3.toString(undefined, { smallestUnit: 'millisecond' }),
-        i3.toString(undefined, { fractionalSecondDigits: 3 })
-      );
-      equal(
-        i3.toString(undefined, { smallestUnit: 'microsecond' }),
-        i3.toString(undefined, { fractionalSecondDigits: 6 })
-      );
-      equal(
-        i3.toString(undefined, { smallestUnit: 'nanosecond' }),
-        i3.toString(undefined, { fractionalSecondDigits: 9 })
-      );
+      equal(i3.toString({ smallestUnit: 'second' }), i3.toString({ fractionalSecondDigits: 0 }));
+      equal(i3.toString({ smallestUnit: 'millisecond' }), i3.toString({ fractionalSecondDigits: 3 }));
+      equal(i3.toString({ smallestUnit: 'microsecond' }), i3.toString({ fractionalSecondDigits: 6 }));
+      equal(i3.toString({ smallestUnit: 'nanosecond' }), i3.toString({ fractionalSecondDigits: 9 }));
     });
     it('throws on invalid or disallowed smallestUnit', () => {
       ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
-        throws(() => i1.toString(undefined, { smallestUnit }), RangeError)
+        throws(() => i1.toString({ smallestUnit }), RangeError)
       );
     });
     it('accepts plural units', () => {
-      equal(i3.toString(undefined, { smallestUnit: 'minutes' }), i3.toString(undefined, { smallestUnit: 'minute' }));
-      equal(i3.toString(undefined, { smallestUnit: 'seconds' }), i3.toString(undefined, { smallestUnit: 'second' }));
-      equal(
-        i3.toString(undefined, { smallestUnit: 'milliseconds' }),
-        i3.toString(undefined, { smallestUnit: 'millisecond' })
-      );
-      equal(
-        i3.toString(undefined, { smallestUnit: 'microseconds' }),
-        i3.toString(undefined, { smallestUnit: 'microsecond' })
-      );
-      equal(
-        i3.toString(undefined, { smallestUnit: 'nanoseconds' }),
-        i3.toString(undefined, { smallestUnit: 'nanosecond' })
-      );
+      equal(i3.toString({ smallestUnit: 'minutes' }), i3.toString({ smallestUnit: 'minute' }));
+      equal(i3.toString({ smallestUnit: 'seconds' }), i3.toString({ smallestUnit: 'second' }));
+      equal(i3.toString({ smallestUnit: 'milliseconds' }), i3.toString({ smallestUnit: 'millisecond' }));
+      equal(i3.toString({ smallestUnit: 'microseconds' }), i3.toString({ smallestUnit: 'microsecond' }));
+      equal(i3.toString({ smallestUnit: 'nanoseconds' }), i3.toString({ smallestUnit: 'nanosecond' }));
     });
     it('truncates or pads to 2 places', () => {
       const options = { fractionalSecondDigits: 2 };
-      equal(i1.toString(undefined, options), '1976-11-18T15:23:00.00Z');
-      equal(i2.toString(undefined, options), '1976-11-18T15:23:30.00Z');
-      equal(i3.toString(undefined, options), '1976-11-18T15:23:30.12Z');
+      equal(i1.toString(options), '1976-11-18T15:23:00.00Z');
+      equal(i2.toString(options), '1976-11-18T15:23:30.00Z');
+      equal(i3.toString(options), '1976-11-18T15:23:30.12Z');
     });
     it('pads to 7 places', () => {
       const options = { fractionalSecondDigits: 7 };
-      equal(i1.toString(undefined, options), '1976-11-18T15:23:00.0000000Z');
-      equal(i2.toString(undefined, options), '1976-11-18T15:23:30.0000000Z');
-      equal(i3.toString(undefined, options), '1976-11-18T15:23:30.1234000Z');
+      equal(i1.toString(options), '1976-11-18T15:23:00.0000000Z');
+      equal(i2.toString(options), '1976-11-18T15:23:30.0000000Z');
+      equal(i3.toString(options), '1976-11-18T15:23:30.1234000Z');
     });
     it('auto is the default', () => {
-      [i1, i2, i3].forEach((i) => equal(i.toString(undefined, { fractionalSecondDigits: 'auto' }), i.toString()));
+      [i1, i2, i3].forEach((i) => equal(i.toString({ fractionalSecondDigits: 'auto' }), i.toString()));
     });
     it('throws on out of range or invalid fractionalSecondDigits', () => {
       [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
-        throws(() => i1.toString(undefined, { fractionalSecondDigits }), RangeError)
+        throws(() => i1.toString({ fractionalSecondDigits }), RangeError)
       );
     });
     it('accepts and truncates fractional fractionalSecondDigits', () => {
-      equal(i3.toString(undefined, { fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340Z');
+      equal(i3.toString({ fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340Z');
     });
     it('smallestUnit overrides fractionalSecondDigits', () => {
-      equal(i3.toString(undefined, { smallestUnit: 'minute', fractionalSecondDigits: 9 }), '1976-11-18T15:23Z');
+      equal(i3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }), '1976-11-18T15:23Z');
     });
     it('throws on invalid roundingMode', () => {
-      throws(() => i1.toString(undefined, { roundingMode: 'cile' }), RangeError);
+      throws(() => i1.toString({ roundingMode: 'cile' }), RangeError);
     });
     it('rounds to nearest', () => {
-      equal(i2.toString(undefined, { smallestUnit: 'minute', roundingMode: 'nearest' }), '1976-11-18T15:24Z');
-      equal(i3.toString(undefined, { fractionalSecondDigits: 3, roundingMode: 'nearest' }), '1976-11-18T15:23:30.123Z');
+      equal(i2.toString({ smallestUnit: 'minute', roundingMode: 'nearest' }), '1976-11-18T15:24Z');
+      equal(i3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }), '1976-11-18T15:23:30.123Z');
     });
     it('rounds up', () => {
-      equal(i2.toString(undefined, { smallestUnit: 'minute', roundingMode: 'ceil' }), '1976-11-18T15:24Z');
-      equal(i3.toString(undefined, { fractionalSecondDigits: 3, roundingMode: 'ceil' }), '1976-11-18T15:23:30.124Z');
+      equal(i2.toString({ smallestUnit: 'minute', roundingMode: 'ceil' }), '1976-11-18T15:24Z');
+      equal(i3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), '1976-11-18T15:23:30.124Z');
     });
     it('rounds down', () => {
       ['floor', 'trunc'].forEach((roundingMode) => {
-        equal(i2.toString(undefined, { smallestUnit: 'minute', roundingMode }), '1976-11-18T15:23Z');
-        equal(i3.toString(undefined, { fractionalSecondDigits: 3, roundingMode }), '1976-11-18T15:23:30.123Z');
+        equal(i2.toString({ smallestUnit: 'minute', roundingMode }), '1976-11-18T15:23Z');
+        equal(i3.toString({ fractionalSecondDigits: 3, roundingMode }), '1976-11-18T15:23:30.123Z');
       });
     });
     it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
       const i4 = Instant.from('-000099-12-15T12:00:00.5Z');
-      equal(i4.toString(undefined, { smallestUnit: 'second', roundingMode: 'floor' }), '-000099-12-15T12:00:00Z');
+      equal(i4.toString({ smallestUnit: 'second', roundingMode: 'floor' }), '-000099-12-15T12:00:00Z');
     });
     it('rounding can affect all units', () => {
       const i5 = Instant.from('1999-12-31T23:59:59.999999999Z');
-      equal(
-        i5.toString(undefined, { fractionalSecondDigits: 8, roundingMode: 'nearest' }),
-        '2000-01-01T00:00:00.00000000Z'
-      );
+      equal(i5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }), '2000-01-01T00:00:00.00000000Z');
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => i1.toString(undefined, badOptions), TypeError)
+        throws(() => i1.toString(badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) => equal(i1.toString(undefined, options), '1976-11-18T15:23:00Z'));
+      [{}, () => {}, undefined].forEach((options) => equal(i1.toString(options), '1976-11-18T15:23:00Z'));
     });
   });
   describe('Instant.toJSON() works', () => {

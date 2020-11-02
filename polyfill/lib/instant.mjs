@@ -210,10 +210,11 @@ export class Instant {
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);
   }
-  toString(temporalTimeZoneLike = 'UTC', options = undefined) {
+  toString(options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     options = ES.NormalizeOptionsObject(options);
+    let timeZone = options.timeZone;
+    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const ns = GetSlot(this, EPOCHNANOSECONDS);
@@ -223,9 +224,7 @@ export class Instant {
   }
   toJSON() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    const timeZone = new TemporalTimeZone('UTC');
-    return ES.TemporalInstantToString(this, timeZone, 'auto');
+    return ES.TemporalInstantToString(this, undefined, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
