@@ -89,10 +89,13 @@ An example of combining a day on the calendar (`Temporal.MonthDay`) and a year i
 
 ### Zoned instant from instant and time zone
 
-Use the optional parameter of `Temporal.Instant.prototype.toString()` to map an exact-time Temporal.Instant instance and a time zone name, into a string serialization of the wall-clock time in that time zone corresponding to the exact time.
+To serialize an exact-time Temporal.Instant into a string, use `toString()`.
+Without any arguments, this gives you a string in UTC time.
 
-Without the parameter, `Temporal.Instant.prototype.toString()` gives a serialization in UTC time.
-Using the parameter is useful if you need your serialized strings to be in a specific time zone.
+If you need your string to include a UTC offset, then use the `timeZone` option of `Temporal.Instant.prototype.toString()` which will return a string serialization of the wall-clock time in that time zone corresponding to the exact time.
+
+This loses the information about which time zone the string was in, because it only preserves the UTC offset from the time zone at that particular exact time.
+If you need your string to include the time zone name, use Temporal.ZonedDateTime instead, which retains this information.
 
 ```javascript
 {{cookbook/getParseableZonedStringAtInstant.mjs}}

@@ -1,19 +1,22 @@
 const instant = Temporal.Instant.from('2020-01-03T10:41:51Z');
 
-const result = instant.toString('Europe/Paris');
+const result = instant.toString();
 
-assert.equal(result, '2020-01-03T11:41:51+01:00[Europe/Paris]');
+assert.equal(result, '2020-01-03T10:41:51Z');
 assert(instant.equals(Temporal.Instant.from(result)));
 
-// With an offset:
+// Include the UTC offset of a particular time zone:
 
-const result2 = instant.toString('-07:00');
+const result2 = instant.toString({ timeZone: 'America/Yellowknife' });
 
 assert.equal(result2, '2020-01-03T03:41:51-07:00');
+assert(instant.equals(Temporal.Instant.from(result2)));
 
-// With a Temporal.TimeZone object:
+// Include the UTC offset as well as preserving the time zone name:
 
-const timeZone = Temporal.TimeZone.from('Asia/Seoul');
-const result3 = instant.toString(timeZone);
+const zoned = instant.toZonedDateTimeISO('Asia/Seoul');
+const result3 = zoned.toString();
 
 assert.equal(result3, '2020-01-03T19:41:51+09:00[Asia/Seoul]');
+assert(instant.equals(Temporal.Instant.from(result3)));
+assert(zoned.equals(Temporal.ZonedDateTime.from(result3)));

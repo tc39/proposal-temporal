@@ -52,15 +52,15 @@ const germany = Temporal.TimeZone.from('Europe/Berlin');
 const nonexistentGermanWallTime = Temporal.DateTime.from('2019-03-31T02:45');
 
 const germanResults = {
-  earlier: /*     */ '2019-03-31T01:45:00+01:00[Europe/Berlin]',
-  later: /*       */ '2019-03-31T03:45:00+02:00[Europe/Berlin]',
-  compatible: /*  */ '2019-03-31T03:45:00+02:00[Europe/Berlin]',
-  clipEarlier: /* */ '2019-03-31T01:59:59.999999999+01:00[Europe/Berlin]',
-  clipLater: /*   */ '2019-03-31T03:00:00+02:00[Europe/Berlin]'
+  earlier: /*     */ '2019-03-31T01:45:00+01:00',
+  later: /*       */ '2019-03-31T03:45:00+02:00',
+  compatible: /*  */ '2019-03-31T03:45:00+02:00',
+  clipEarlier: /* */ '2019-03-31T01:59:59.999999999+01:00',
+  clipLater: /*   */ '2019-03-31T03:00:00+02:00'
 };
 for (const [disambiguation, result] of Object.entries(germanResults)) {
   assert.equal(
-    getInstantWithLocalTimeInZone(nonexistentGermanWallTime, germany, disambiguation).toString(germany),
+    getInstantWithLocalTimeInZone(nonexistentGermanWallTime, germany, disambiguation).toString({ timeZone: germany }),
     result
   );
 }
@@ -69,15 +69,17 @@ const brazilEast = Temporal.TimeZone.from('America/Sao_Paulo');
 const doubleEasternBrazilianWallTime = Temporal.DateTime.from('2019-02-16T23:45');
 
 const brazilianResults = {
-  earlier: /*     */ '2019-02-16T23:45:00-02:00[America/Sao_Paulo]',
-  later: /*       */ '2019-02-16T23:45:00-03:00[America/Sao_Paulo]',
-  compatible: /*  */ '2019-02-16T23:45:00-02:00[America/Sao_Paulo]',
-  clipEarlier: /* */ '2019-02-16T23:45:00-02:00[America/Sao_Paulo]',
-  clipLater: /*   */ '2019-02-16T23:45:00-03:00[America/Sao_Paulo]'
+  earlier: /*     */ '2019-02-16T23:45:00-02:00',
+  later: /*       */ '2019-02-16T23:45:00-03:00',
+  compatible: /*  */ '2019-02-16T23:45:00-02:00',
+  clipEarlier: /* */ '2019-02-16T23:45:00-02:00',
+  clipLater: /*   */ '2019-02-16T23:45:00-03:00'
 };
 for (const [disambiguation, result] of Object.entries(brazilianResults)) {
   assert.equal(
-    getInstantWithLocalTimeInZone(doubleEasternBrazilianWallTime, brazilEast, disambiguation).toString(brazilEast),
+    getInstantWithLocalTimeInZone(doubleEasternBrazilianWallTime, brazilEast, disambiguation).toString({
+      timeZone: brazilEast
+    }),
     result
   );
 }
