@@ -128,7 +128,51 @@ export class ZonedDateTime {
   }
   get hoursInDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    throw new Error('hoursInDay not implemented yet');
+    const dt = dateTime(this);
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const year = GetSlot(dt, ISO_YEAR);
+    const month = GetSlot(dt, ISO_MONTH);
+    const day = GetSlot(dt, ISO_DAY);
+    const today = new DateTime(year, month, day, 0, 0, 0, 0, 0, 0);
+    const tomorrowFields = ES.AddDate(year, month, day, 0, 0, 0, 1, 'reject');
+    const tomorrow = new DateTime(tomorrowFields.year, tomorrowFields.month, tomorrowFields.day, 0, 0, 0, 0, 0, 0);
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
+    const tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
+    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+      todayNs,
+      tomorrowNs,
+      1,
+      'nanoseconds',
+      'nearest'
+    );
+    let hours, minutes, remainder;
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      0,
+      0,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'hours'
+    ));
+    ({ hours, remainder } = ES.RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      1,
+      'hours',
+      'trunc'
+    ));
+    return hours + remainder;
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
