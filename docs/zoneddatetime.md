@@ -5,8 +5,7 @@
 <!-- toc -->
 </details>
 
-> **NOTE**: This type has been approved and will be merged soon (targeting late October 2020), but it's not in current builds yet.
-> If you have feedback about this new type, visit https://github.com/tc39/proposal-temporal/issues/700.
+> **NOTE**: The `with()`, `until()`, and `since()` methods of this type are not available in the polyfill yet.
 
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant from the perspective of a particular region on Earth.
 As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
