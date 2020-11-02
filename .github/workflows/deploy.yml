@@ -1,0 +1,24 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: use node.js v15.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 15.x
+    - run: npm ci
+    - run: npm run build
+    - uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: out
+        CLEAN: true
