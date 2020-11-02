@@ -412,7 +412,7 @@ describe('Instant', () => {
         BigInt(Date.UTC(1900, 0, 1, 12)) * BigInt(1e6)
       );
     });
-    it('throws when offset unavailable to disambiguate', () => {
+    it('throws when offset not provided', () => {
       throws(() => Instant.from('2019-02-16T23:45[America/Sao_Paulo]'), RangeError);
     });
     it('ignores the bracketed IANA time zone when the offset is incorrect', () => {
