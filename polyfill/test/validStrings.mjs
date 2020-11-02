@@ -265,12 +265,19 @@ const timeZoneBracketedName = withCode(
   choice(timeZoneUTCOffsetName, ...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
+const timeZoneBracketedAnnotation = seq('[', timeZoneBracketedName, ']');
 const timeZoneIANAName = withCode(
   choice(...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
 const timeZone = withCode(
-  choice(timeZoneUTCOffset, seq([timeZoneNumericUTCOffset], '[', timeZoneBracketedName, ']')),
+  choice(timeZoneUTCOffset, seq([timeZoneNumericUTCOffset], timeZoneBracketedAnnotation)),
+  (data) => {
+    if (!('offset' in data)) data.offset = undefined;
+  }
+);
+const timeZoneOffsetRequired = withCode(
+  choice(utcDesignator, seq(timeZoneNumericUTCOffset, [timeZoneBracketedAnnotation])),
   (data) => {
     if (!('offset' in data)) data.offset = undefined;
   }
@@ -341,17 +348,10 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, dateTimeSeparator, timeSpec, timeZone);
-const zonedDateTime = seq(
-  date,
-  dateTimeSeparator,
-  timeSpec,
-  [timeZoneNumericUTCOffset],
-  '[',
-  timeZoneBracketedName,
-  ']',
-  [calendar]
-);
+const instant = seq(date, dateTimeSeparator, timeSpec, timeZoneOffsetRequired);
+const zonedDateTime = seq(date, dateTimeSeparator, timeSpec, [timeZoneNumericUTCOffset], timeZoneBracketedAnnotation, [
+  calendar
+]);
 
 // goal elements
 const goals = {
@@ -369,7 +369,7 @@ const goals = {
 const dateItems = ['year', 'month', 'day'];
 const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 const comparisonItems = {
-  Instant: [...dateItems, ...timeItems, 'offset', 'ianaName'],
+  Instant: [...dateItems, ...timeItems, 'offset'],
   Date: [...dateItems, 'calendar'],
   DateTime: [...dateItems, ...timeItems],
   Duration: ['years', 'months', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],

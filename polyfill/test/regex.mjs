@@ -42,7 +42,6 @@ describe('fromString regex', () => {
       generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
       generateTest('1976-11-18T15:23', `+01:00[${zoneString}]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
     });
-    generateTest('1976-11-18T15:23', '[Europe/Vienna]', [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
     // Time zone with only offset
     ['-04:00', '-04', '-0400', '-04:00:00', '-040000', '-04:00:00.000000000', '-040000.0'].forEach((zoneString) =>
       generateTest('1976-11-18T15:23', zoneString, [1976, 11, 18, 19, 23, 30, 123, 456, 789])

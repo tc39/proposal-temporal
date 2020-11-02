@@ -832,9 +832,16 @@
           `Etc/GMT` ASCIISign Hour
           TimeZoneUTCOffsetName
 
+      TimeZoneBracketedAnnotation :
+          `[` TimeZoneBracketedName `]`
+
       TimeZone :
           TimeZoneUTCOffset
-          TimeZoneNumericUTCOffset? `[` TimeZoneBracketedName `]`
+          TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation
+
+      TimeZoneOffsetRequired :
+          UTCDesignator
+          TimeZoneNumericUTCOffset TimeZoneBracketedAnnotation?
 
       CalChar :
           Alpha
@@ -907,7 +914,7 @@
           Sign? DurationDesignator DurationTime
 
       TemporalInstantString :
-          Date DateTimeSeparator TimeSpec TimeZone
+          Date DateTimeSeparator TimeSpec TimeZoneOffsetRequired
 
       TemporalDateString :
           CalendarDateTime
@@ -939,7 +946,7 @@
           DateTime
 
       TemporalZonedDateTimeString :
-          Date DateTimeSeparator TimeSpec TimeZoneNumericUTCOffset? `[` TimeZoneBracketedName `]` Calendar?
+          Date DateTimeSeparator TimeSpec TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
 
       TemporalCalendarString :
           CalendarName
