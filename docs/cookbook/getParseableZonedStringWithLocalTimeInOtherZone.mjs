@@ -23,7 +23,10 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
   targetTimeZone,
   sourceDisambiguationPolicy = 'reject'
 ) {
-  const zonedDateTime = sourceDateTime.toZonedDateTime(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy });
+  return sourceDateTime
+    .toZonedDateTime(sourceTimeZone, { disambiguation: sourceDisambiguationPolicy })
+    .withTimeZone(targetTimeZone)
+    .toString();
   return zonedDateTime.withTimeZone(targetTimeZone).toString();
 }
 
