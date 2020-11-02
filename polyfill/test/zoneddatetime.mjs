@@ -1105,6 +1105,30 @@ describe('ZonedDateTime', () => {
     timeZone: tz
   });
   describe('properties around DST', () => {
+    it('hoursInDay works with DST start', () => {
+      equal(hourBeforeDstStart.hoursInDay, 23);
+    });
+    it('hoursInDay works with non-DST days', () => {
+      equal(dayBeforeDstStart.hoursInDay, 24);
+    });
+    it('hoursInDay works with DST end', () => {
+      const dstEnd = ZonedDateTime.from('2020-11-01T01:00-08:00[America/Los_Angeles]');
+      equal(dstEnd.hoursInDay, 25);
+    });
+    it('hoursInDay works with non-hour DST change', () => {
+      const zdt1 = ZonedDateTime.from('2020-10-04T12:00[Australia/Lord_Howe]');
+      equal(zdt1.hoursInDay, 23.5);
+      const zdt2 = ZonedDateTime.from('2020-04-05T12:00[Australia/Lord_Howe]');
+      equal(zdt2.hoursInDay, 24.5);
+    });
+    it('hoursInDay works with non-half-hour DST change', () => {
+      const zdt = ZonedDateTime.from('1933-01-01T12:00[Asia/Singapore]');
+      assert(Math.abs(zdt.hoursInDay - 23.6666666666666666) < Number.EPSILON);
+    });
+    it('hoursInDay works when day starts at 1:00 due to DST start at midnight', () => {
+      const zdt = ZonedDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
+      equal(zdt.hoursInDay, 23);
+    });
     it('startOfDay works', () => {
       const start = dayBeforeDstStart.startOfDay();
       equal(`${start.toDate()}`, `${dayBeforeDstStart.toDate()}`);
@@ -1120,6 +1144,12 @@ describe('ZonedDateTime', () => {
     it('startOfDay works after Samoa date line change', () => {
       const start = dayAfterSamoaDateLineChange.startOfDay();
       equal(`${start.toTime()}`, '00:00:00');
+    });
+    it('hoursInDay works after Samoa date line change', () => {
+      equal(dayAfterSamoaDateLineChange.hoursInDay, 24);
+    });
+    it('hoursInDay works before Samoa date line change', () => {
+      equal(dayBeforeSamoaDateLineChange.hoursInDay, 24);
     });
   });
 
