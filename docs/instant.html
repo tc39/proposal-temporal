@@ -183,10 +183,6 @@
 </li>
 <li><a href="#toZonedDateTime">toZonedDateTime</a>
 </li>
-<li><a href="#toDateTimeISO">toDateTimeISO</a>
-</li>
-<li><a href="#toDateTime">toDateTime</a>
-</li>
 <li><a href="#add">add</a>
 </li>
 <li><a href="#subtract">subtract</a>
@@ -379,48 +375,6 @@ cal <span class="token operator">=</span> Temporal<span class="token punctuation
 zdt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 45 showa</span></code></pre><!-- prettier-ignore-end -->
-
-<h3 id="toDateTimeISO"><a class="heading-link" href="#toDateTimeISO"></a>instant.<strong>toDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
-</ul>
-<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object representing the calendar date, wall-clock time in <code>timeZone</code>, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by <code>instant</code>.</p>
-<p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
-A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
-<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.
-It is the same as <code>toDateTime()</code>, but always uses the ISO 8601 calendar.
-Use this method if you are not doing computations in other calendars.</p>
-<p>Example usage:</p>
-<pre class="language-js"><code class="language-js"><span class="token comment">// Converting an exact time to a calendar date / wall-clock time</span>
-timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45</span>
-timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T00:45</span>
-timestamp<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T16:45</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>instant.<strong>toDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
-<li><code>calendar</code> (object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.</li>
-</ul>
-<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the instant time indicated by <code>instant</code>.</p>
-<p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
-A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
-<p>For a list of calendar identifiers, see the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters">Intl.DateTimeFormat</a>.</p>
-<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
-<p>If you only want to use the ISO 8601 calendar, use <code>toDateTimeISO()</code>.</p>
-<p>Example usage:</p>
-<!-- prettier-ignore-start -->
-<pre class="language-js"><code class="language-js"><span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?</span>
-epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token string">'gregory'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 1969-12-31T19:00[c=gregory]</span>
-
-<span class="token comment">// What time was the Unix epoch in Tokyo in the Japanese calendar?</span>
-tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 1970-01-01T09:00[c=japanese]</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>dt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> dt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 45 showa</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="add"><a class="heading-link" href="#add"></a>instant.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
