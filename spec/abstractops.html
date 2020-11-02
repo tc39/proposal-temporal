@@ -187,17 +187,17 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-toshowtimezoneoption" aoid="ToShowTimeZoneOption">
-    <h1>ToShowTimeZoneOption ( _normalizedOptions_ )</h1>
+  <emu-clause id="sec-temporal-toshowtimezonenameoption" aoid="ToShowTimeZoneNameOption">
+    <h1>ToShowTimeZoneNameOption ( _normalizedOptions_ )</h1>
     <p>
-      The abstract operation ToShowTimeZoneOption extracts the value of the property named *"timeZone"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+      The abstract operation ToShowTimeZoneNameOption extracts the value of the property named *"timeZoneName"* from _normalizedOptions_ and makes sure it is a valid value for the option.
     </p>
     <emu-note>
       This property is used in `Temporal.ZonedDateTime.prototype.toString()`.
-      It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()`.
+      It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()` and from the `timeZone` property in the options passed to `Temporal.Instant.prototype.toString()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"timeZone"*, *"string"*, « *"auto"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, *"string"*, « *"auto"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 

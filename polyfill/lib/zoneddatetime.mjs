@@ -284,7 +284,7 @@ export class ZonedDateTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const showCalendar = ES.ToShowCalendarOption(options);
-    const showTimeZone = ES.ToShowTimeZoneOption(options);
+    const showTimeZone = ES.ToShowTimeZoneNameOption(options);
     const showOffset = ES.ToShowOffsetOption(options);
     return zonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
       unit,
