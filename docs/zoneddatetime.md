@@ -560,7 +560,7 @@ The local time of the result is almost always `00:00`, but in rare cases it coul
 
 ```javascript
 const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
-zdt.startOfDay; // => 2015-10-18T01:00-02:00[America/Sao_Paulo]
+zdt.startOfDay(); // => 2015-10-18T01:00:00-02:00[America/Sao_Paulo]
 ```
 
 Also note that some calendar systems (e.g. `ethiopic`) may not start days at `00:00`.
