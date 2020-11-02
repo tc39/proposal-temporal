@@ -242,7 +242,8 @@ turnOfTheCentury <span class="token operator">=</span> <span class="token keywor
 <p>This static method creates a new <code>Temporal.Instant</code> object from another value.
 If the value is another <code>Temporal.Instant</code> object, a new object representing the same exact time is returned.</p>
 <p>Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
-The time zone name, if given, is ignored; only the time zone offset is taken into account.</p>
+If the exact time cannot be uniquely determined from the string, then this function throws an exception.
+This includes the case when <code>thing</code> is a validly-formatted ISO 8601 string denoting a time that doesn&#39;t exist, for example because it was skipped in a daylight saving time transition.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45:00+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -252,7 +253,9 @@ instant <span class="token operator">===</span> Temporal<span class="token punct
 
 <span class="token comment">// Not enough information to denote an exact time:</span>
 <span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// no time; throws</span>
-<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// no time zone; throws</span></code></pre><!-- prettier-ignore-end -->
+<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03-30T01:45'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// no time zone; throws</span>
+<span class="token comment">/* WRONG */</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-03031T02:45+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// time skipped in DST transition; throws</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="fromEpochSeconds"><a class="heading-link" href="#fromEpochSeconds"></a>Temporal.Instant.<strong>fromEpochSeconds</strong>(<em>epochSeconds</em>: number) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>

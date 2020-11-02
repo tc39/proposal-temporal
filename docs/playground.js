@@ -3533,13 +3533,31 @@
           millisecond = _ES$ParseTemporalInst.millisecond,
           microsecond = _ES$ParseTemporalInst.microsecond,
           nanosecond = _ES$ParseTemporalInst.nanosecond,
-          offset = _ES$ParseTemporalInst.offset;
+          offset = _ES$ParseTemporalInst.offset,
+          ianaName = _ES$ParseTemporalInst.ianaName;
 
-      var epochNs = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-      if (!offset) throw new RangeError('Temporal.Instant requires a time zone offset');
-      var offsetNs = ES.ParseOffsetString(offset);
-      return epochNs.subtract(offsetNs);
+      var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+      var tz = ES.TimeZoneFrom(ianaName || offset);
+      var possibleInstants = tz.getPossibleInstantsFor(dt);
+      if (possibleInstants.length === 1) return GetSlot(possibleInstants[0], EPOCHNANOSECONDS);
+
+      var _iterator = _createForOfIteratorHelper(possibleInstants),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var instant = _step.value;
+          var possibleOffsetNs = tz.getOffsetNanosecondsFor(instant);
+          if (ES.FormatTimeZoneOffsetString(possibleOffsetNs) === offset) return GetSlot(instant, EPOCHNANOSECONDS);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      throw new RangeError("'".concat(isoString, "' doesn't uniquely identify a Temporal.Instant"));
     },
     RegulateDateTime: function RegulateDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
       switch (overflow) {
@@ -3739,21 +3757,21 @@
           nanoseconds = _record.nanoseconds;
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-      var _iterator = _createForOfIteratorHelper(disallowedProperties),
-          _step;
+      var _iterator2 = _createForOfIteratorHelper(disallowedProperties),
+          _step2;
 
       try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var property = _step.value;
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var property = _step2.value;
 
           if (record[property] !== 0) {
             throw new RangeError("invalid duration field ".concat(property));
           }
         }
       } catch (err) {
-        _iterator.e(err);
+        _iterator2.e(err);
       } finally {
-        _iterator.f();
+        _iterator2.f();
       }
 
       return record;
@@ -3916,18 +3934,18 @@
       }));
       var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
-      var _iterator2 = _createForOfIteratorHelper(disallowedStrings),
-          _step2;
+      var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
+          _step3;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var s = _step2.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var s = _step3.value;
           allowed.delete(s);
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator2.f();
+        _iterator3.f();
       }
 
       var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(allowed), _toConsumableArray(plural.keys())), 'auto');
@@ -3945,18 +3963,18 @@
       }));
       var allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
 
-      var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
-          _step3;
+      var _iterator4 = _createForOfIteratorHelper(disallowedStrings),
+          _step4;
 
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var s = _step3.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var s = _step4.value;
           allowed.delete(s);
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator3.f();
+        _iterator4.f();
       }
 
       var value = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(singular.keys())), undefined);
@@ -3974,18 +3992,18 @@
       }));
       var allowed = new Set(['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
-      var _iterator4 = _createForOfIteratorHelper(disallowedStrings),
-          _step4;
+      var _iterator5 = _createForOfIteratorHelper(disallowedStrings),
+          _step5;
 
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var s = _step4.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var s = _step5.value;
           allowed.delete(s);
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator4.f();
+        _iterator5.f();
       }
 
       var value = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(plural.keys())), fallback);
@@ -4132,12 +4150,12 @@
       if (ES.Type(bag) !== 'Object') return false;
       var any;
 
-      var _iterator5 = _createForOfIteratorHelper(fields),
-          _step5;
+      var _iterator6 = _createForOfIteratorHelper(fields),
+          _step6;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var property = _step5.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var property = _step6.value;
           var value = bag[property];
 
           if (value !== undefined) {
@@ -4151,9 +4169,9 @@
           }
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator5.f();
+        _iterator6.f();
       }
 
       return any ? any : false;
@@ -4162,12 +4180,12 @@
       if (ES.Type(bag) !== 'Object') return false;
       var result = {};
 
-      var _iterator6 = _createForOfIteratorHelper(fields),
-          _step6;
+      var _iterator7 = _createForOfIteratorHelper(fields),
+          _step7;
 
       try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var fieldRecord = _step6.value;
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var fieldRecord = _step7.value;
 
           var _fieldRecord = _slicedToArray(fieldRecord, 2),
               property = _fieldRecord[0],
@@ -4190,9 +4208,9 @@
           }
         }
       } catch (err) {
-        _iterator6.e(err);
+        _iterator7.e(err);
       } finally {
-        _iterator6.f();
+        _iterator7.f();
       }
 
       return result;
@@ -4631,12 +4649,12 @@
           // "prefer" or "reject"
           var possibleInstants = timeZone.getPossibleInstantsFor(dt);
 
-          var _iterator7 = _createForOfIteratorHelper(possibleInstants),
-              _step7;
+          var _iterator8 = _createForOfIteratorHelper(possibleInstants),
+              _step8;
 
           try {
-            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-              var candidate = _step7.value;
+            for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+              var candidate = _step8.value;
               var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
 
               if (candidateOffset === offsetNs) {
@@ -4645,9 +4663,9 @@
               }
             }
           } catch (err) {
-            _iterator7.e(err);
+            _iterator8.e(err);
           } finally {
-            _iterator7.f();
+            _iterator8.f();
           }
 
           if (!instant) {
