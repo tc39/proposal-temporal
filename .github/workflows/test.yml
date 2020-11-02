@@ -1,0 +1,45 @@
+name: Run tests
+on: pull_request
+jobs:
+  test-polyfill:
+    strategy:
+      matrix:
+        node: [10.x, 12.x, 14.x, 15.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: use node.js ${{ matrix.node }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm run codecov:tests
+  test-test262:
+    strategy:
+      matrix:
+        node: [10.x, 12.x, 14.x, 15.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: use node.js ${{ matrix.node }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm run codecov:test262
+  test-cookbook:
+    strategy:
+      matrix:
+        node: [10.x, 12.x, 14.x, 15.x]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: use node.js ${{ matrix.node }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm ci
+    - run: npm run test-cookbook
