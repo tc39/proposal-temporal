@@ -8606,22 +8606,6 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Instant');
       }
     }, {
-      key: "toDateTime",
-      value: function toDateTime(temporalTimeZoneLike, calendarLike) {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        var calendar = ES.ToTemporalCalendar(calendarLike);
-        return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
-      }
-    }, {
-      key: "toDateTimeISO",
-      value: function toDateTimeISO(temporalTimeZoneLike) {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        var calendar = GetISO8601Calendar();
-        return ES.GetTemporalDateTimeFor(timeZone, this, calendar);
-      }
-    }, {
       key: "toZonedDateTime",
       value: function toZonedDateTime(temporalTimeZoneLike, calendarLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -9785,16 +9769,6 @@
       key: "valueOf",
       value: function valueOf() {
         throw new TypeError('use compare() or equals() to compare Temporal.DateTime');
-      }
-    }, {
-      key: "toInstant",
-      value: function toInstant(temporalTimeZoneLike) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        options = ES.NormalizeOptionsObject(options);
-        var disambiguation = ES.ToTemporalDisambiguation(options);
-        return ES.GetTemporalInstantFor(timeZone, this, disambiguation);
       }
     }, {
       key: "toZonedDateTime",

@@ -225,8 +225,6 @@
 </li>
 <li><a href="#toZonedDateTime">toZonedDateTime</a>
 </li>
-<li><a href="#toInstant">toInstant</a>
-</li>
 <li><a href="#toDate">toDate</a>
 </li>
 <li><a href="#toYearMonth">toYearMonth</a>
@@ -848,33 +846,6 @@ This mode also matches the behavior of cross-platform standards like <a href="ht
 This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
-<h3 id="toInstant"><a class="heading-link" href="#toInstant"></a>datetime.<strong>toInstant</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
-<li><code>options</code> (optional object): An object with properties representing options for the operation.
-The following options are recognized:<ul>
-<li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
-Allowed values are <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code>.
-The default is <code>&#39;compatible&#39;</code>.</li>
-</ul>
-</li>
-</ul>
-<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the exact time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
-<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Instant</code>.
-It is identical to <a href="./timezone.html#getInstantFor"><code>(Temporal.TimeZone.from(timeZone || &#39;UTC&#39;)).getInstantFor(dateTime, disambiguation)</code></a>.</p>
-<p>In the case of ambiguity, the <code>disambiguation</code> option controls what exact time to return:</p>
-<ul>
-<li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
-<li><code>&#39;earlier&#39;</code>: The earlier of two possible exact times.</li>
-<li><code>&#39;later&#39;</code>: The later of two possible exact times.</li>
-<li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> instead.</li>
-</ul>
-<p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
-This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
-<p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
-This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
-<p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
-<p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <h3 id="toDate"><a class="heading-link" href="#toDate"></a>datetime.<strong>toDate</strong>() : Temporal.Date</h3><p><strong>Returns:</strong> a <code>Temporal.Date</code> object that is the same as the date portion of <code>datetime</code>.</p>
 <h3 id="toYearMonth"><a class="heading-link" href="#toYearMonth"></a>datetime.<strong>toYearMonth</strong>() : Temporal.YearMonth</h3><p><strong>Returns:</strong> a <code>Temporal.YearMonth</code> object that is the same as the year and month of <code>datetime</code>.</p>
 <h3 id="toMonthDay"><a class="heading-link" href="#toMonthDay"></a>datetime.<strong>toMonthDay</strong>() : Temporal.MonthDay</h3><p><strong>Returns:</strong> a <code>Temporal.MonthDay</code> object that is the same as the month and day of <code>datetime</code>.</p>
