@@ -730,6 +730,185 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('ZonedDateTime.round()', () => {
+    const zdt = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
+    it('throws without parameter', () => {
+      throws(() => zdt.round(), TypeError);
+    });
+    it('throws without required smallestUnit parameter', () => {
+      throws(() => zdt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
+    });
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => zdt.round({ smallestUnit }), RangeError);
+      });
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => zdt.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['day', '1976-11-19T00:00:00+01:00[Europe/Vienna]'],
+      ['hour', '1976-11-18T15:00:00+01:00[Europe/Vienna]'],
+      ['minute', '1976-11-18T15:24:00+01:00[Europe/Vienna]'],
+      ['second', '1976-11-18T15:23:30+01:00[Europe/Vienna]'],
+      ['millisecond', '1976-11-18T15:23:30.123+01:00[Europe/Vienna]'],
+      ['microsecond', '1976-11-18T15:23:30.123457+01:00[Europe/Vienna]'],
+      ['nanosecond', '1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      it(`rounds to nearest ${smallestUnit}`, () =>
+        equal(`${zdt.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
+    });
+    const incrementOneCeil = [
+      ['day', '1976-11-19T00:00:00+01:00[Europe/Vienna]'],
+      ['hour', '1976-11-18T16:00:00+01:00[Europe/Vienna]'],
+      ['minute', '1976-11-18T15:24:00+01:00[Europe/Vienna]'],
+      ['second', '1976-11-18T15:23:31+01:00[Europe/Vienna]'],
+      ['millisecond', '1976-11-18T15:23:30.124+01:00[Europe/Vienna]'],
+      ['microsecond', '1976-11-18T15:23:30.123457+01:00[Europe/Vienna]'],
+      ['nanosecond', '1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expected]) => {
+      it(`rounds up to ${smallestUnit}`, () => equal(`${zdt.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
+    });
+    const incrementOneFloor = [
+      ['day', '1976-11-18T00:00:00+01:00[Europe/Vienna]'],
+      ['hour', '1976-11-18T15:00:00+01:00[Europe/Vienna]'],
+      ['minute', '1976-11-18T15:23:00+01:00[Europe/Vienna]'],
+      ['second', '1976-11-18T15:23:30+01:00[Europe/Vienna]'],
+      ['millisecond', '1976-11-18T15:23:30.123+01:00[Europe/Vienna]'],
+      ['microsecond', '1976-11-18T15:23:30.123456+01:00[Europe/Vienna]'],
+      ['nanosecond', '1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expected]) => {
+      it(`rounds down to ${smallestUnit}`, () =>
+        equal(`${zdt.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
+      it(`truncates to ${smallestUnit}`, () =>
+        equal(`${zdt.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
+    });
+    it('nearest is the default', () => {
+      equal(`${zdt.round({ smallestUnit: 'minute' })}`, '1976-11-18T15:24:00+01:00[Europe/Vienna]');
+      equal(`${zdt.round({ smallestUnit: 'second' })}`, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
+    });
+    it('rounding down is towards the Big Bang, not towards the epoch', () => {
+      const zdt2 = ZonedDateTime.from('1969-12-15T12:00:00.5+00:00[UTC]');
+      const smallestUnit = 'second';
+      equal(`${zdt2.round({ smallestUnit, roundingMode: 'ceil' })}`, '1969-12-15T12:00:01+00:00[UTC]');
+      equal(`${zdt2.round({ smallestUnit, roundingMode: 'floor' })}`, '1969-12-15T12:00:00+00:00[UTC]');
+      equal(`${zdt2.round({ smallestUnit, roundingMode: 'trunc' })}`, '1969-12-15T12:00:00+00:00[UTC]');
+      equal(`${zdt2.round({ smallestUnit, roundingMode: 'nearest' })}`, '1969-12-15T12:00:01+00:00[UTC]');
+    });
+    it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
+      const zdt3 = ZonedDateTime.from('-000099-12-15T12:00:00.5+00:00[UTC]');
+      const smallestUnit = 'second';
+      equal(`${zdt3.round({ smallestUnit, roundingMode: 'ceil' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
+      equal(`${zdt3.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
+      equal(`${zdt3.round({ smallestUnit, roundingMode: 'trunc' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
+      equal(`${zdt3.round({ smallestUnit, roundingMode: 'nearest' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
+    });
+    it('rounds to an increment of hours', () => {
+      equal(`${zdt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00+01:00[Europe/Vienna]');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(
+        `${zdt.round({ smallestUnit: 'minute', roundingIncrement: 15 })}`,
+        '1976-11-18T15:30:00+01:00[Europe/Vienna]'
+      );
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(
+        `${zdt.round({ smallestUnit: 'second', roundingIncrement: 30 })}`,
+        '1976-11-18T15:23:30+01:00[Europe/Vienna]'
+      );
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(
+        `${zdt.round({ smallestUnit: 'millisecond', roundingIncrement: 10 })}`,
+        '1976-11-18T15:23:30.12+01:00[Europe/Vienna]'
+      );
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(
+        `${zdt.round({ smallestUnit: 'microsecond', roundingIncrement: 10 })}`,
+        '1976-11-18T15:23:30.12346+01:00[Europe/Vienna]'
+      );
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(
+        `${zdt.round({ smallestUnit: 'nanosecond', roundingIncrement: 10 })}`,
+        '1976-11-18T15:23:30.12345679+01:00[Europe/Vienna]'
+      );
+    });
+    it('1 day is a valid increment', () => {
+      equal(`${zdt.round({ smallestUnit: 'day', roundingIncrement: 1 })}`, '1976-11-19T00:00:00+01:00[Europe/Vienna]');
+    });
+    it('valid hour increments divide into 24', () => {
+      const smallestUnit = 'hour';
+      [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+        assert(zdt.round({ smallestUnit, roundingIncrement }) instanceof ZonedDateTime);
+      });
+    });
+    ['minute', 'second'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 60`, () => {
+        [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+          assert(zdt.round({ smallestUnit, roundingIncrement }) instanceof ZonedDateTime);
+        });
+      });
+    });
+    ['millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+        [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+          assert(zdt.round({ smallestUnit, roundingIncrement }) instanceof ZonedDateTime);
+        });
+      });
+    });
+    it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => zdt.round({ smallestUnit: 'day', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'hour', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'minute', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'second', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'millisecond', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'microsecond', roundingIncrement: 29 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
+    });
+    it('throws on increments that are equal to the next highest', () => {
+      throws(() => zdt.round({ smallestUnit: 'hour', roundingIncrement: 24 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'minute', roundingIncrement: 60 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'second', roundingIncrement: 60 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'millisecond', roundingIncrement: 1000 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'microsecond', roundingIncrement: 1000 }), RangeError);
+      throws(() => zdt.round({ smallestUnit: 'nanosecond', roundingIncrement: 1000 }), RangeError);
+    });
+    const bal = ZonedDateTime.from('1976-11-18T23:59:59.999999999+01:00[Europe/Vienna]');
+    ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond'].forEach((smallestUnit) => {
+      it(`balances to next ${smallestUnit}`, () => {
+        equal(`${bal.round({ smallestUnit })}`, '1976-11-19T00:00:00+01:00[Europe/Vienna]');
+      });
+    });
+    it('accepts plural units', () => {
+      assert(zdt.round({ smallestUnit: 'hours' }).equals(zdt.round({ smallestUnit: 'hour' })));
+      assert(zdt.round({ smallestUnit: 'minutes' }).equals(zdt.round({ smallestUnit: 'minute' })));
+      assert(zdt.round({ smallestUnit: 'seconds' }).equals(zdt.round({ smallestUnit: 'second' })));
+      assert(zdt.round({ smallestUnit: 'milliseconds' }).equals(zdt.round({ smallestUnit: 'millisecond' })));
+      assert(zdt.round({ smallestUnit: 'microseconds' }).equals(zdt.round({ smallestUnit: 'microsecond' })));
+      assert(zdt.round({ smallestUnit: 'nanoseconds' }).equals(zdt.round({ smallestUnit: 'nanosecond' })));
+    });
+    it.skip('rounds correctly to a 25-hour day', () => {
+      const options = { smallestUnit: 'day' };
+      const roundMeDown = ZonedDateTime.from('2020-11-01T12:29:59-08:00[America/Vancouver]');
+      equal(`${roundMeDown.round(options)}`, '2020-11-01T00:00:00-07:00[America/Vancouver]');
+      const roundMeUp = ZonedDateTime.from('2020-11-01T12:30:01-08:00[America/Vancouver]');
+      equal(`${roundMeUp.round(options)}`, '2020-11-02T00:00:00-08:00[America/Vancouver]');
+    });
+    it.skip('rounds correctly to a 23-hour day', () => {
+      const options = { smallestUnit: 'day' };
+      const roundMeDown = ZonedDateTime.from('2020-03-08T11:29:59-07:00[America/Vancouver]');
+      equal(`${roundMeDown.round(options)}`, '2020-03-08T00:00:00-08:00[America/Vancouver]');
+      const roundMeUp = ZonedDateTime.from('2020-03-08T11:30:01-07:00[America/Vancouver]');
+      equal(`${roundMeUp.round(options)}`, '2020-03-09T00:00:00-07:00[America/Vancouver]');
+    });
+  });
+
   describe('ZonedDateTime.equals()', () => {
     const tz = Temporal.TimeZone.from('America/New_York');
     const cal = Temporal.Calendar.from('gregory');

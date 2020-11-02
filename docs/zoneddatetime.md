@@ -1023,13 +1023,14 @@ Example usage:
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500-08:00[America/Los_Angeles]');
 
 // Round to a particular unit
-zdt.round({ smallestUnit: 'hour' }); // => 1995-12-07T03:00-08:00[America/Los_Angeles]
+zdt.round({ smallestUnit: 'hour' });
+  // => 1995-12-07T03:00:00-08:00[America/Los_Angeles]
 // Round to an increment of a unit, e.g. half an hour:
 zdt.round({ roundingIncrement: 30, smallestUnit: 'minute' });
-  // => 1995-12-07T03:30-08:00[America/Los_Angeles]
+  // => 1995-12-07T03:30:00-08:00[America/Los_Angeles]
 // Round to the same increment but round down instead:
 zdt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' });
-  // => 1995-12-07T03:00-08:00[America/Los_Angeles]
+  // => 1995-12-07T03:00:00-08:00[America/Los_Angeles]
 ```
 <!-- prettier-ignore-end -->
 
