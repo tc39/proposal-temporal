@@ -557,7 +557,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
-        1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _maximum_, *false*).
+        1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _smallestUnit_).
         1. Let _result_ be ? RoundDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]]).
       </emu-alg>
