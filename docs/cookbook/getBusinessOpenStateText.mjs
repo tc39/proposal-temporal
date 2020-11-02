@@ -88,7 +88,7 @@ const businessHours = [
   /* Sat */ { open: Temporal.Time.from('11:00'), close: Temporal.Time.from('02:00') }
 ];
 
-const now = Temporal.ZonedDateTime.from('2019-04-07T00:00+01:00[Europe/Berlin]');
+const now = Temporal.ZonedDateTime.from('2019-04-07T00:00+02:00[Europe/Berlin]');
 const soonWindow = Temporal.Duration.from({ minutes: 30 });
 const saturdayNightState = getBusinessOpenStateText(now, businessHours, soonWindow);
 assert.equal(saturdayNightState, 'open');
