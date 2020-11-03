@@ -241,14 +241,7 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _ns_ be _instant_.[[Nanoseconds]] +
-            _duration_.[[Nanoseconds]] +
-            _duration_.[[Microseconds]] × 1000 +
-            _duration_.[[Milliseconds]] × 1,000,000 +
-            _duration_.[[Seconds]] × 1,000,000,000 +
-            _duration_.[[Minutes]] × 60,000,000,000 +
-            _duration_.[[Hours]] × 3,600,000,000,000.
-        1. Perform ? RejectInstant(_ns_).
+        1. Let _ns_ be ! AddInstant(_instant_.[[EpochNanoseconds]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Return ? CreateTemporalInstantFromInstance(_instant_, _ns_).
       </emu-alg>
     </emu-clause>
@@ -264,14 +257,7 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _ns_ be _instant_.[[Nanoseconds]] −
-            _duration_.[[Nanoseconds]] −
-            _duration_.[[Microseconds]] × 1000 −
-            _duration_.[[Milliseconds]] × 1,000,000 −
-            _duration_.[[Seconds]] × 1,000,000,000 −
-            _duration_.[[Minutes]] × 60,000,000,000 −
-            _duration_.[[Hours]] × 3,600,000,000,000.
-        1. Perform ? RejectInstant(_ns_).
+        1. Let _ns_ be ! AddInstant(_instant_.[[EpochNanoseconds]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
         1. Return ? CreateTemporalInstantFromInstance(_instant_, _ns_).
       </emu-alg>
     </emu-clause>
@@ -629,6 +615,23 @@
         1. If _epochNanosecondsOne_ &gt; _epochNanosecondsTwo_, return 1.
         1. If _epochNanosecondsOne_ &lt; _epochNanosecondsTwo_, return -1.
         1. Return 0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-addinstant" aoid="AddInstant">
+      <h1>AddInstant ( _epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+      <p>
+        The abstract operation AddInstant adds a duration in various time units to a number of nanoseconds since the Unix epoch.
+      </p>
+      <emu-alg>
+        1. Let _result_ be _epochNanoseconds_ + _nanoseconds_ +
+            _microseconds_ × 1000 +
+            _milliseconds_ × 1,000,000 +
+            _seconds_ × 1,000,000,000 +
+            _minutes_ × 60,000,000,000 +
+            _hours_ × 3,600,000,000,000.
+        1. Perform ? RejectInstant(_result_).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

@@ -2428,6 +2428,19 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
+  AddInstant: (epochNanoseconds, h, min, s, ms, µs, ns) => {
+    let sum = bigInt(0);
+    sum = sum.plus(bigInt(ns));
+    sum = sum.plus(bigInt(µs).multiply(1e3));
+    sum = sum.plus(bigInt(ms).multiply(1e6));
+    sum = sum.plus(bigInt(s).multiply(1e9));
+    sum = sum.plus(bigInt(min).multiply(60 * 1e9));
+    sum = sum.plus(bigInt(h).multiply(60 * 60 * 1e9));
+
+    const result = bigInt(epochNanoseconds).plus(sum);
+    ES.RejectInstantRange(result);
+    return result;
+  },
   RoundNumberToIncrement: (quantity, increment, mode) => {
     const quotient = quantity / increment;
     let round;
