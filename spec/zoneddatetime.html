@@ -435,9 +435,7 @@
         1. Let _todayInstant_ be ? GetTemporalInstantFor(_timeZone_, _today_, *"compatible"*).
         1. Let _tomorrowInstant_ be ? GetTemporalInstantFor(_timeZone_, _tomorrow_, *"compatible"*).
         1. Let _diffNs_ be _tomorrowInstant_.[[Nanoseconds]] − _todayInstant_.[[Nanoseconds]].
-        1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, *"hours"*).
-        1. Let _roundResult_ be ? RoundDuration(0, 0, 0, 0, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], *1*, *"hours"*, *"trunc"*).
-        1. Return 𝔽(_roundResult_.[[Hours]] + _roundResult_.[[Remainder]]).
+        1. Return 𝔽(_diffNs_ ÷ (3.6 × 10<sup>12</sup>)).
       </emu-alg>
     </emu-clause>
 

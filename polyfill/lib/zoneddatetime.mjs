@@ -139,40 +139,8 @@ export class ZonedDateTime {
     const timeZone = GetSlot(this, TIME_ZONE);
     const todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
     const tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
-      todayNs,
-      tomorrowNs,
-      1,
-      'nanoseconds',
-      'nearest'
-    );
-    let hours, minutes, remainder;
-    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      0,
-      0,
-      0,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'hours'
-    ));
-    ({ hours, remainder } = ES.RoundDuration(
-      0,
-      0,
-      0,
-      0,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      1,
-      'hours',
-      'trunc'
-    ));
-    return hours + remainder;
+    const { quotient, remainder } = tomorrowNs.subtract(todayNs).divmod(3.6e12);
+    return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
