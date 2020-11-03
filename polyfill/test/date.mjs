@@ -1053,10 +1053,10 @@ describe('Date', () => {
     it('converting from YearMonth', () => {
       const min = Temporal.YearMonth.from('-271821-04');
       const max = Temporal.YearMonth.from('+275760-09');
-      throws(() => min.toDateOnDay(1), RangeError);
-      throws(() => max.toDateOnDay(30), RangeError);
-      equal(`${min.toDateOnDay(19)}`, '-271821-04-19');
-      equal(`${max.toDateOnDay(13)}`, '+275760-09-13');
+      throws(() => min.toDate({ day: 1 }), RangeError);
+      throws(() => max.toDate({ day: 30 }), RangeError);
+      equal(`${min.toDate({ day: 19 })}`, '-271821-04-19');
+      equal(`${max.toDate({ day: 13 })}`, '+275760-09-13');
     });
     it('converting from MonthDay', () => {
       const jan1 = Temporal.MonthDay.from('01-01');

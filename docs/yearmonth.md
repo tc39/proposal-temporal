@@ -9,7 +9,7 @@ A `Temporal.YearMonth` represents a particular month on the calendar.
 For example, it could be used to represent a particular instance of a monthly recurring event, like "the June 2019 meeting".
 
 `Temporal.YearMonth` refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use `Temporal.Date` or even `Temporal.DateTime`.
-A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it with a day of the month, using the `toDateOnDay()` method.
+A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it with a day of the month, using the `toDate()` method.
 
 ## Constructor
 
@@ -251,7 +251,7 @@ If the result is earlier or later than the range of dates that `Temporal.YearMon
 
 > **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `yearMonthLike`.
 > It is not possible to convert a `Temporal.YearMonth` to another calendar system without knowing the day of the month.
-> If you need to do this, use `yearMonth.toDateOnDay(day).withCalendar(calendar).toYearMonth()`.
+> If you need to do this, use `yearMonth.toDate({ day }).withCalendar(calendar).toYearMonth()`.
 
 Usage example:
 
@@ -383,7 +383,7 @@ other.until(ym, { largestUnit: 'months' }); // => -P154M
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.toDateOnDay(1).until(other.toDateOnDay(1), { largestUnit: 'days' }); // => P4687D
+ym.toDate({ day: 1 }).until(other.toDate({ day: 1 }), { largestUnit: 'days' }); // => P4687D
 ```
 <!-- prettier-ignore-end -->
 
@@ -560,11 +560,11 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.YearMonth` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.YearMonth.compare()` for this, or `yearMonth.equals()` for equality.
 
-### yearMonth.**toDateOnDay**(_day_: number) : Temporal.Date
+### yearMonth.**toDate**(_day_: object) : Temporal.Date
 
 **Parameters:**
 
-- `day` (number): A day of the month, which must be a valid day of `yearMonth`.
+- `day` (object): An object with a `'day'` property, which must be a valid day of `yearMonth`.
 
 **Returns:** a `Temporal.Date` object that represents the calendar date of `day` in `yearMonth`.
 
@@ -575,7 +575,7 @@ Usage example:
 
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
-ym.toDateOnDay(24); // => 2019-06-24
+ym.toDate({ day: 24 }); // => 2019-06-24
 ```
 
 ### yearMonth.**getFields**() : { year: number, month: number, calendar: object, [propName: string]: unknown }

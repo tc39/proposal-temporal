@@ -6,7 +6,7 @@
  */
 function getFirstTuesday(queriedMonth) {
   // We first need to convert to a date
-  const firstOfMonth = queriedMonth.toDateOnDay(1);
+  const firstOfMonth = queriedMonth.toDate({ day: 1 });
 
   // We have Monday = 1, Sunday = 7, and we want to add a positive number
   // smaller than 7 to get to the first Tuesday.
@@ -24,12 +24,12 @@ assert.equal(firstTuesdayOfMonth.toString(), '2020-02-04');
 assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);
 
 // Similarly, to get the second Tuesday:
-const secondWeek = myMonth.toDateOnDay(8);
+const secondWeek = myMonth.toDate({ day: 8 });
 const secondTuesday = secondWeek.add({ days: [1, 0, 6, 5, 4, 3, 2][secondWeek.dayOfWeek - 1] });
 assert.equal(secondTuesday.day, firstTuesdayOfMonth.day + 7);
 
 // And the last Tuesday:
-const lastOfMonth = myMonth.toDateOnDay(myMonth.daysInMonth);
+const lastOfMonth = myMonth.toDate({ day: myMonth.daysInMonth });
 const lastTuesday = lastOfMonth.subtract({ days: [6, 0, 1, 2, 3, 4, 5][lastOfMonth.dayOfWeek - 1] });
 assert.equal(lastTuesday.toString(), '2020-02-25');
 assert.equal(lastTuesday.dayOfWeek, 2);

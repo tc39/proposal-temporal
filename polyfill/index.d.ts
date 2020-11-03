@@ -1213,7 +1213,7 @@ export namespace Temporal {
       other: Temporal.YearMonth | YearMonthLike | string,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
     ): Temporal.Duration;
-    toDateOnDay(day: number): Temporal.Date;
+    toDate(day: { day: number }): Temporal.Date;
     getFields(): YearMonthFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
