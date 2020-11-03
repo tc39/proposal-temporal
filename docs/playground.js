@@ -3273,9 +3273,10 @@
 
       return result;
     },
-    FormatCalendarAnnotation: function FormatCalendarAnnotation(calendar) {
+    FormatCalendarAnnotation: function FormatCalendarAnnotation(calendar, showCalendar) {
+      if (showCalendar === 'never') return '';
       var id = ES.CalendarToString(calendar);
-      if (id === 'iso8601') return '';
+      if (showCalendar === 'auto' && id === 'iso8601') return '';
       return "[c=".concat(id, "]");
     },
     ParseISODateTime: function ParseISODateTime(isoString, _ref) {
@@ -3784,6 +3785,15 @@
     },
     ToTemporalOffset: function ToTemporalOffset(options, fallback) {
       return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
+    },
+    ToShowCalendarOption: function ToShowCalendarOption(options) {
+      return ES.GetOption(options, 'calendar', ['auto', 'always', 'never'], 'auto');
+    },
+    ToShowTimeZoneNameOption: function ToShowTimeZoneNameOption(options) {
+      return ES.GetOption(options, 'timeZoneName', ['auto', 'never'], 'auto');
+    },
+    ToShowOffsetOption: function ToShowOffsetOption(options) {
+      return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
     },
     ToTemporalRoundingIncrement: function ToTemporalRoundingIncrement(options, dividend, inclusive) {
       var maximum = Infinity;
@@ -6817,7 +6827,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(id, ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -7715,7 +7725,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(timeZoneIdentifier, ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -8706,10 +8716,11 @@
   var ObjectAssign$2 = Object.assign;
 
   function TemporalDateToString(date) {
+    var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
     var month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
     var day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-    var calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR));
+    var calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
     return "".concat(year, "-").concat(month, "-").concat(day).concat(calendar);
   }
 
@@ -8734,7 +8745,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(TemporalDateToString(this), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -8960,8 +8971,11 @@
     }, {
       key: "toString",
       value: function toString() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return TemporalDateToString(this);
+        options = ES.NormalizeOptionsObject(options);
+        var showCalendar = ES.ToShowCalendarOption(options);
+        return TemporalDateToString(this, showCalendar);
       }
     }, {
       key: "toJSON",
@@ -9190,7 +9204,8 @@
   var ObjectAssign$3 = Object.assign;
 
   function DateTimeToString(dateTime, precision) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+    var showCalendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'auto';
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
     var year = GetSlot(dateTime, ISO_YEAR);
     var month = GetSlot(dateTime, ISO_MONTH);
     var day = GetSlot(dateTime, ISO_DAY);
@@ -9225,7 +9240,7 @@
     hour = ES.ISODateTimePartString(hour);
     minute = ES.ISODateTimePartString(minute);
     var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-    var calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR));
+    var calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
     return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
   }
 
@@ -9267,7 +9282,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(DateTimeToString(this, 'auto'), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -9726,8 +9741,9 @@
             unit = _ES$ToSecondsStringPr.unit,
             increment = _ES$ToSecondsStringPr.increment;
 
+        var showCalendar = ES.ToShowCalendarOption(options);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-        return DateTimeToString(this, precision, {
+        return DateTimeToString(this, precision, showCalendar, {
           unit: unit,
           increment: increment,
           roundingMode: roundingMode
@@ -10025,7 +10041,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(ES.TemporalDurationToString(this), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -10416,16 +10432,19 @@
   var ObjectAssign$4 = Object.assign;
 
   function MonthDayToString(monthDay) {
+    var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
     var day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
     var resultString = "".concat(month, "-").concat(day);
-    var calendar = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR));
+    var calendar = GetSlot(monthDay, CALENDAR);
 
-    if (calendar) {
+    if (!(ES.IsTemporalCalendar(calendar) && GetSlot(calendar, CALENDAR_ID) === 'iso8601')) {
       var year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
-      resultString = "".concat(year, "-").concat(resultString).concat(calendar);
+      resultString = "".concat(year, "-").concat(resultString);
     }
 
+    var calendarString = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR), showCalendar);
+    if (calendarString) resultString += calendarString;
     return resultString;
   }
 
@@ -10451,7 +10470,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(MonthDayToString(this), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -10502,8 +10521,11 @@
     }, {
       key: "toString",
       value: function toString() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        return MonthDayToString(this);
+        options = ES.NormalizeOptionsObject(options);
+        var showCalendar = ES.ToShowCalendarOption(options);
+        return MonthDayToString(this, showCalendar);
       }
     }, {
       key: "toJSON",
@@ -10674,7 +10696,8 @@
   }
 
   function TemporalTimeToString(time, precision) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+    var showCalendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'auto';
+    var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
     var hour = GetSlot(time, ISO_HOUR);
     var minute = GetSlot(time, ISO_MINUTE);
     var second = GetSlot(time, ISO_SECOND);
@@ -10700,7 +10723,8 @@
     hour = ES.ISODateTimePartString(hour);
     minute = ES.ISODateTimePartString(minute);
     var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-    return "".concat(hour, ":").concat(minute).concat(seconds);
+    var calendar = ES.FormatCalendarAnnotation(GetSlot(time, CALENDAR), showCalendar);
+    return "".concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
   }
 
   var Time = /*#__PURE__*/function () {
@@ -10734,7 +10758,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(TemporalTimeToString(this, 'auto'), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -11018,7 +11042,8 @@
             increment = _ES$ToSecondsStringPr.increment;
 
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-        return TemporalTimeToString(this, precision, {
+        var showCalendar = ES.ToShowCalendarOption(options);
+        return TemporalTimeToString(this, precision, showCalendar, {
           unit: unit,
           increment: increment,
           roundingMode: roundingMode
@@ -11192,16 +11217,19 @@
   var ObjectAssign$5 = Object.assign;
 
   function YearMonthToString(yearMonth) {
+    var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var year = ES.ISOYearString(GetSlot(yearMonth, ISO_YEAR));
     var month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
     var resultString = "".concat(year, "-").concat(month);
-    var calendar = ES.FormatCalendarAnnotation(GetSlot(yearMonth, CALENDAR));
+    var calendar = GetSlot(yearMonth, CALENDAR);
 
-    if (calendar) {
+    if (!(ES.IsTemporalCalendar(calendar) && GetSlot(calendar, CALENDAR_ID) === 'iso8601')) {
       var day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
-      resultString = "".concat(resultString, "-").concat(day).concat(calendar);
+      resultString += "-".concat(day);
     }
 
+    var calendarString = ES.FormatCalendarAnnotation(calendar, showCalendar);
+    if (calendarString) resultString += calendarString;
     return resultString;
   }
 
@@ -11227,7 +11255,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(this, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(YearMonthToString(this), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -11450,8 +11478,11 @@
     }, {
       key: "toString",
       value: function toString() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return YearMonthToString(this);
+        options = ES.NormalizeOptionsObject(options);
+        var showCalendar = ES.ToShowCalendarOption(options);
+        return YearMonthToString(this, showCalendar);
       }
     }, {
       key: "toJSON",
@@ -11609,7 +11640,7 @@
 
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(zonedDateTimeToString(this), ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(zonedDateTimeToString(this, 'auto'), ">"),
           writable: false,
           enumerable: false,
           configurable: false
@@ -11789,7 +11820,10 @@
             increment = _ES$ToSecondsStringPr.increment;
 
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-        return zonedDateTimeToString(this, precision, {
+        var showCalendar = ES.ToShowCalendarOption(options);
+        var showTimeZone = ES.ToShowTimeZoneNameOption(options);
+        var showOffset = ES.ToShowOffsetOption(options);
+        return zonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
           unit: unit,
           increment: increment,
           roundingMode: roundingMode
@@ -12092,7 +12126,10 @@
   }
 
   function zonedDateTimeToString(zdt, precision) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+    var showCalendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'auto';
+    var showTimeZone = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'auto';
+    var showOffset = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'auto';
+    var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
     var dt = dateTime$1(zdt);
     var year = GetSlot(dt, ISO_YEAR);
     var month = GetSlot(dt, ISO_MONTH);
@@ -12129,10 +12166,11 @@
     minute = ES.ISODateTimePartString(minute);
     var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
     var tz = GetSlot(zdt, TIME_ZONE);
-    var offset = ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
-    var zone = ES.TimeZoneToString(tz);
-    var calendar = ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR));
-    return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(offset, "[").concat(zone, "]").concat(calendar);
+    var result = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds);
+    if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
+    if (showTimeZone !== 'never') result += "[".concat(ES.TimeZoneToString(tz), "]");
+    result += ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+    return result;
   }
 
   var Temporal = /*#__PURE__*/Object.freeze({

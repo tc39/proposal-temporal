@@ -520,6 +520,9 @@ time<span class="token punctuation">.</span><span class="token function">equals<
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
+<li><code>calendar</code> (string): Whether to show the calendar annotation in the return value.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;always&#39;</code>, and <code>&#39;never&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
 Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
 The default is <code>&#39;auto&#39;</code>.</li>
@@ -539,6 +542,9 @@ The string can be passed to <code>Temporal.Time.from()</code> to create a new <c
 If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
 <p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.DateTime.round()</code>.
 Note that rounding may change the value of other units as well.</p>
+<p>Normally, a calendar annotation is shown when <code>time</code>&#39;s calendar is not the ISO 8601 calendar.
+By setting the <code>calendar</code> option to <code>&#39;always&#39;</code> or <code>&#39;never&#39;</code> this can be overridden to always or never show the annotation, respectively.
+For more information on the calendar annotation, see <a href="./iso-string-ext.html#calendar-systems">ISO string extensions</a>.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.068346205</span>

@@ -1018,7 +1018,32 @@ In this case, the two instances will have different <code>offsetNanoseconds</cod
 <pre class="language-javascript"><code class="language-javascript">zdt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500+01:00[Europe/Paris]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>zdt2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false (same offset but different time zones)</span>
-zdt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>zdt1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>zonedDateTime.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> a string containing an ISO 8601 date+time+offset format, a bracketed time zone suffix, and (if the calendar is not <code>iso8601</code>) a calendar suffix.</p>
+zdt1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>zdt1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>zonedDateTime.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>options</code> (optional object): An object with properties influencing the formatting.
+The following options are recognized:<ul>
+<li><code>offset</code> (string): Whether to show the time zone offset in the return value.
+Valid values are <code>&#39;auto&#39;</code> and <code>&#39;never&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>timeZoneName</code> (string): Whether to show the time zone name annotation in the return value.
+Valid values are <code>&#39;auto&#39;</code> and <code>&#39;never&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>calendar</code> (string): Whether to show the calendar annotation in the return value.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;always&#39;</code>, and <code>&#39;never&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
+Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+The default is <code>&#39;auto&#39;</code>.</li>
+<li><code>smallestUnit</code> (string): The smallest unit of time to include in the output string.
+This option overrides <code>fractionalSecondDigits</code> if both are given.
+Valid values are <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
+<li><code>roundingMode</code> (string): How to handle the remainder.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+The default is <code>&#39;trunc&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a string containing an ISO 8601 date+time+offset format, a bracketed time zone suffix, and (if the calendar is not <code>iso8601</code>) a calendar suffix.</p>
 <p>Examples:</p>
 <ul>
 <li><code>2011-12-03T10:15:30+01:00[Europe/Paris]</code></li>
@@ -1027,7 +1052,15 @@ zdt1<span class="token punctuation">.</span><span class="token function">equals<
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>zonedDateTime</code>.
 The string is &quot;round-trippable&quot;.
 This means that it can be passed to <code>Temporal.ZonedDateTime.from()</code> to create a new <code>Temporal.ZonedDateTime</code> object with the same field values as the original.</p>
-<p>The string format output by this method can be parsed by <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html"><code>java.time.ZonedDateTime</code></a> as long as the calendar is <code>iso8601</code>.
+<p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
+If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
+<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.DateTime.round()</code>.
+Note that rounding may change the value of other units as well.</p>
+<p>Normally, a calendar annotation is shown when <code>zonedDateTime</code>&#39;s calendar is not the ISO 8601 calendar.
+By setting the <code>calendar</code> option to <code>&#39;always&#39;</code> or <code>&#39;never&#39;</code> this can be overridden to always or never show the annotation, respectively.
+For more information on the calendar annotation, see <a href="./iso-string-ext.html#calendar-systems">ISO string extensions</a>.</p>
+<p>Likewise, passing <code>&#39;never&#39;</code> to the <code>timeZoneName</code> or <code>offset</code> options controls whether the time zone offset (<code>+01:00</code>) or name annotation (<code>[Europe/Paris]</code>) are shown.</p>
+<p>The string format output by this method can be parsed by <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html"><code>java.time.ZonedDateTime</code></a> as long as the calendar annotation is not output.
 For more information on <code>Temporal</code>&#39;s extensions to the ISO string format and the progress towards becoming a published standard, see <a href="./iso-string-ext.html">ISO standard extensions</a>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2019</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> timeZone<span class="token operator">:</span> <span class="token string">'Africa/Lagos'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
