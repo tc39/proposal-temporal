@@ -772,13 +772,13 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('2020-03-08T00:00-08:00[America/Los_Angeles]');
 // Add a day to get midnight on the day after DST starts
 laterDay = zdt.add({ days: 1 });
-  // => 2020-03-09T00:00-07:00[America/Los_Angeles];
+  // => 2020-03-09T00:00:00-07:00[America/Los_Angeles];
   // Note that the new offset is different, indicating the result is adjusted for DST.
 laterDay.since(zdt, { largestUnit: 'hours' }).hours;
   // => 23, because one clock hour lost to DST
 
 laterHours = zdt.add({ hours: 24 });
-  // => 2020-03-09T01:00-07:00[America/Los_Angeles]
+  // => 2020-03-09T01:00:00-07:00[America/Los_Angeles]
   // Adding time units doesn't adjust for DST. Result is 1:00AM: 24 real-world
   // hours later because a clock hour was skipped by DST.
 laterHours.since(zdt, { largestUnit: 'hours' }).hours; // => 24
@@ -836,13 +836,13 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]');
 // Add a day to get midnight on the day after DST starts
 earlierDay = zdt.subtract({ days: 1 });
-  // => 2020-03-08T00:00-08:00[America/Los_Angeles]
+  // => 2020-03-08T00:00:00-08:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
 earlierDay.since(zdt, { largestUnit: 'hours' }).hours;
   // => -23, because one clock hour lost to DST
 
 earlierHours = zdt.subtract({ hours: 24 });
-  // => 2020-03-07T23:00-08:00[America/Los_Angeles]
+  // => 2020-03-07T23:00:00-08:00[America/Los_Angeles]
   // Subtracting time units doesn't adjust for DST. Result is 11:00PM: 24 real-world
   // hours earlier because a clock hour was skipped by DST.
 earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24

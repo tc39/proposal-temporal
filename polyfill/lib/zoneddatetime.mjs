@@ -237,8 +237,28 @@ export class ZonedDateTime {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    void overflow;
-    throw new Error('add() not implemented yet');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const calendar = GetSlot(this, CALENDAR);
+    const epochNanoseconds = ES.AddZonedDateTime(
+      GetSlot(this, INSTANT),
+      timeZone,
+      calendar,
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      overflow
+    );
+    const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+    const result = new Construct(epochNanoseconds, timeZone, calendar);
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -247,8 +267,28 @@ export class ZonedDateTime {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    void overflow;
-    throw new Error('subtract() not implemented yet');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const calendar = GetSlot(this, CALENDAR);
+    const epochNanoseconds = ES.SubtractZonedDateTime(
+      GetSlot(this, INSTANT),
+      timeZone,
+      calendar,
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      overflow
+    );
+    const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+    const result = new Construct(epochNanoseconds, timeZone, calendar);
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

@@ -605,7 +605,9 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. <mark>TODO</mark>.
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -623,7 +625,9 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. <mark>TODO</mark>.
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _epochNanoseconds_ be ? SubtractZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1227,6 +1231,36 @@
           1. Let _timeZoneString_ be ? TimeZoneToString(_timeZone_).
         1. Let _calendarString_ be ? FormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, the code unit 0x005B (LEFT SQUARE BRACKET), _timeZoneString_, the code unit 0x005D (RIGHT SQUARE BRACKET), and _calendarString_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-addzoneddatetime" aoid="AddZonedDateTime">
+      <h1>AddZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _overflow_ )</h1>
+      <p>
+        The abstract operation AddZonedDateTime adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the Unix epoch, subject to the rules of _timeZone_ and _calendar_.
+        As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
+      </p>
+      <emu-alg>
+        1. If all of _years_, _months_, _weeks_, and _days_ are 0, then
+          1. Return ! AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _instant_ be ? CreateTemporalInstant(_epochNanoseconds_).
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. Let _datePart_ be ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
+        1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
+        1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, _overflow_).
+        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _dateDuration_, _options_, %Temporal.Date% »).
+        1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
+        1. Let _intermediateInstant_ be ? GetTemporalInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
+        1. Return ! AddInstant(_intermediateInstant_.[[Nanoseconds]], _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-subtractzoneddatetime" aoid="SubtractZonedDateTime">
+      <h1>SubtractZonedDateTime ( )</h1>
+      <emu-alg>
+        1. <mark>TODO: this will be subsumed into AddZonedDateTime by <a href="https://github.com/tc39/proposal-temporal/issues/993">issue 993</a></mark>.
       </emu-alg>
     </emu-clause>
   </emu-clause>

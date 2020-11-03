@@ -2441,6 +2441,72 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectInstantRange(result);
     return result;
   },
+  AddZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) => {
+    // If only time is to be added, then use Instant math. It's not OK to fall
+    // through to the date/time code below because compatible disambiguation in
+    // the PlainDateTime=>Instant conversion will change the offset of any
+    // ZonedDateTtime in the repeated clock time after a backwards transition.
+    // When adding/subtracting time units and not dates, this disambiguation is
+    // not expected and so is avoided below via a fast path for time-only
+    // arithmetic.
+    // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+    if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
+      return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
+    }
+
+    // RFC 5545 requires the date portion to be added in calendar days and the
+    // time portion to be added in exact time.
+    // FIXME: "op" and the dateAdd/dateSubtract conditional will not be needed
+    // after #993 lands, changing the order of operations to be the same for
+    // both addition and subtraction.
+    let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
+    const addedDate = calendar.dateAdd(datePart, { years, months, weeks, days }, { overflow }, TemporalDate);
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const dtIntermediate = new TemporalDateTime(
+      GetSlot(addedDate, ISO_YEAR),
+      GetSlot(addedDate, ISO_MONTH),
+      GetSlot(addedDate, ISO_DAY),
+      GetSlot(dt, ISO_HOUR),
+      GetSlot(dt, ISO_MINUTE),
+      GetSlot(dt, ISO_SECOND),
+      GetSlot(dt, ISO_MILLISECOND),
+      GetSlot(dt, ISO_MICROSECOND),
+      GetSlot(dt, ISO_NANOSECOND),
+      calendar
+    );
+
+    // Note that 'compatible' is used below because this disambiguation behavior
+    // is required by RFC 5545.
+    const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+    return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
+  },
+  SubtractZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) => {
+    // FIXME: to be consolidated into AddZonedDateTime by #993
+    if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
+      return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
+    }
+    let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
+    const subtractedDate = calendar.dateSubtract(datePart, { years, months, weeks, days }, { overflow }, TemporalDate);
+    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const dtIntermediate = new TemporalDateTime(
+      GetSlot(subtractedDate, ISO_YEAR),
+      GetSlot(subtractedDate, ISO_MONTH),
+      GetSlot(subtractedDate, ISO_DAY),
+      GetSlot(dt, ISO_HOUR),
+      GetSlot(dt, ISO_MINUTE),
+      GetSlot(dt, ISO_SECOND),
+      GetSlot(dt, ISO_MILLISECOND),
+      GetSlot(dt, ISO_MICROSECOND),
+      GetSlot(dt, ISO_NANOSECOND),
+      calendar
+    );
+    const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+    return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
+  },
   RoundNumberToIncrement: (quantity, increment, mode) => {
     const quotient = quantity / increment;
     let round;

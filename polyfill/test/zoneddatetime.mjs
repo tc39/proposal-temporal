@@ -730,6 +730,138 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('date/time maths: hours overflow', () => {
+    it('subtract result', () => {
+      const later = ZonedDateTime.from('2019-10-29T10:46:38.271986102-03:00[America/Santiago]');
+      const earlier = later.subtract({ hours: 12 });
+      equal(`${earlier}`, '2019-10-28T22:46:38.271986102-03:00[America/Santiago]');
+    });
+    it('add result', () => {
+      const earlier = ZonedDateTime.from('2020-05-31T23:12:38.271986102-04:00[America/Santiago]');
+      const later = earlier.add({ hours: 2 });
+      equal(`${later}`, '2020-06-01T01:12:38.271986102-04:00[America/Santiago]');
+    });
+    it('symmetrical with regard to negative durations', () => {
+      equal(
+        `${ZonedDateTime.from('2019-10-29T10:46:38.271986102-03:00[America/Santiago]').add({ hours: -12 })}`,
+        '2019-10-28T22:46:38.271986102-03:00[America/Santiago]'
+      );
+      equal(
+        `${ZonedDateTime.from('2020-05-31T23:12:38.271986102-04:00[America/Santiago]').subtract({ hours: -2 })}`,
+        '2020-06-01T01:12:38.271986102-04:00[America/Santiago]'
+      );
+    });
+  });
+  describe('ZonedDateTime.add()', () => {
+    const zdt = ZonedDateTime.from('1969-12-25T12:23:45.678901234+00:00[UTC]');
+    describe('cross epoch in ms', () => {
+      const one = zdt.subtract({ hours: 240, nanoseconds: 800 });
+      const two = zdt.add({ hours: 240, nanoseconds: 800 });
+      const three = two.subtract({ hours: 480, nanoseconds: 1600 });
+      const four = one.add({ hours: 480, nanoseconds: 1600 });
+      it(`(${zdt}).subtract({ hours: 240, nanoseconds: 800 }) = ${one}`, () =>
+        equal(`${one}`, '1969-12-15T12:23:45.678900434+00:00[UTC]'));
+      it(`(${zdt}).add({ hours: 240, nanoseconds: 800 }) = ${two}`, () =>
+        equal(`${two}`, '1970-01-04T12:23:45.678902034+00:00[UTC]'));
+      it(`(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
+      it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
+    });
+    it('zdt.add(durationObj)', () => {
+      const later = zdt.add(Temporal.Duration.from('PT240H0.000000800S'));
+      equal(`${later}`, '1970-01-04T12:23:45.678902034+00:00[UTC]');
+    });
+    it('casts argument', () => {
+      equal(`${zdt.add('PT240H0.000000800S')}`, '1970-01-04T12:23:45.678902034+00:00[UTC]');
+    });
+    const jan31 = ZonedDateTime.from('2020-01-31T15:00-08:00[America/Vancouver]');
+    it('constrain when ambiguous result', () => {
+      equal(`${jan31.add({ months: 1 })}`, '2020-02-29T15:00:00-08:00[America/Vancouver]');
+      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29T15:00:00-08:00[America/Vancouver]');
+    });
+    it('symmetrical with regard to negative durations in the time part', () => {
+      equal(`${jan31.add({ minutes: -30 })}`, '2020-01-31T14:30:00-08:00[America/Vancouver]');
+      equal(`${jan31.add({ seconds: -30 })}`, '2020-01-31T14:59:30-08:00[America/Vancouver]');
+    });
+    it('throw when ambiguous result with reject', () => {
+      throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
+    });
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => zdt.add({ months: 1 }, { overflow }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => zdt.add({ years: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${zdt.add({ years: 1 }, options)}`, '1970-12-25T12:23:45.678901234+00:00[UTC]')
+      );
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => zdt.add({}), TypeError);
+      throws(() => zdt.add({ hour: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${zdt.add({ hour: 1, minutes: 1 })}`, '1969-12-25T12:24:45.678901234+00:00[UTC]');
+    });
+  });
+  describe('ZonedDateTime.subtract()', () => {
+    const zdt = ZonedDateTime.from('1969-12-25T12:23:45.678901234+00:00[UTC]');
+    it('inst.subtract(durationObj)', () => {
+      const earlier = zdt.subtract(Temporal.Duration.from('PT240H0.000000800S'));
+      equal(`${earlier}`, '1969-12-15T12:23:45.678900434+00:00[UTC]');
+    });
+    it('casts argument', () => {
+      equal(`${zdt.subtract('PT240H0.000000800S')}`, '1969-12-15T12:23:45.678900434+00:00[UTC]');
+    });
+    const mar31 = ZonedDateTime.from('2020-03-31T15:00-07:00[America/Vancouver]');
+    it('constrain when ambiguous result', () => {
+      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29T15:00:00-08:00[America/Vancouver]');
+      equal(
+        `${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`,
+        '2020-02-29T15:00:00-08:00[America/Vancouver]'
+      );
+    });
+    it('symmetrical with regard to negative durations in the time part', () => {
+      equal(`${mar31.subtract({ minutes: -30 })}`, '2020-03-31T15:30:00-07:00[America/Vancouver]');
+      equal(`${mar31.subtract({ seconds: -30 })}`, '2020-03-31T15:00:30-07:00[America/Vancouver]');
+    });
+    it('throw when ambiguous result with reject', () => {
+      throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
+    });
+    it('invalid overflow', () => {
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        throws(() => zdt.subtract({ months: 1 }, { overflow }), RangeError)
+      );
+    });
+    it('mixed positive and negative values always throw', () => {
+      ['constrain', 'reject'].forEach((overflow) =>
+        throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+      );
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => zdt.subtract({ years: 1 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${zdt.subtract({ years: 1 }, options)}`, '1968-12-25T12:23:45.678901234+00:00[UTC]')
+      );
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => zdt.subtract({}), TypeError);
+      throws(() => zdt.subtract({ hour: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${zdt.subtract({ hour: 1, minutes: 1 })}`, '1969-12-25T12:22:45.678901234+00:00[UTC]');
+    });
+  });
+
   describe('ZonedDateTime.round()', () => {
     const zdt = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
     it('throws without parameter', () => {
@@ -1329,6 +1461,71 @@ describe('ZonedDateTime', () => {
     });
     it('hoursInDay works before Samoa date line change', () => {
       equal(dayBeforeSamoaDateLineChange.hoursInDay, 24);
+    });
+  });
+
+  describe('math order of operations and options', () => {
+    const breakoutUnits = (op, zdt, d, options) =>
+      zdt[op]({ years: d.years }, options)
+        [op]({ months: d.months }, options)
+        [op]({ weeks: d.weeks }, options)
+        [op]({ days: d.days }, options)
+        [op](
+          {
+            hours: d.hours,
+            minutes: d.minutes,
+            seconds: d.seconds,
+            milliseconds: d.milliseconds,
+            microseconds: d.microseconds,
+            nanoseconds: d.nanoseconds
+          },
+
+          options
+        );
+
+    it('order of operations: add / none', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = undefined;
+      const result = zdt.add(d, options);
+      equal(result.toString(), '2020-03-01T00:00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('add', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: add / constrain', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = { overflow: 'constrain' };
+      const result = zdt.add(d, options);
+      equal(result.toString(), '2020-03-01T00:00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('add', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: add / reject', () => {
+      const zdt = ZonedDateTime.from('2020-01-31T00:00-08:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = { overflow: 'reject' };
+      throws(() => zdt.add(d, options), RangeError);
+    });
+    it.skip('order of operations: subtract / none', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = undefined;
+      const result = zdt.subtract(d, options);
+      equal(result.toString(), '2020-02-28T00:00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('subtract', zdt, d, options).toString(), result.toString());
+    });
+    it.skip('order of operations: subtract / constrain', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = { overflow: 'constrain' };
+      const result = zdt.subtract(d, options);
+      equal(result.toString(), '2020-02-28T00:00:00-08:00[America/Los_Angeles]');
+      equal(breakoutUnits('subtract', zdt, d, options).toString(), result.toString());
+    });
+    it('order of operations: subtract / reject', () => {
+      const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
+      const d = Temporal.Duration.from({ months: 1, days: 1 });
+      const options = { overflow: 'reject' };
+      throws(() => zdt.subtract(d, options), RangeError);
     });
   });
 
