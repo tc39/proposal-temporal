@@ -2480,6 +2480,67 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectInstantRange(result);
     return result;
   },
+  AddDateTime: (
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond,
+    calendar,
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    overflow
+  ) => {
+    // Add the time part
+    // FIXME: use calendar.timeAdd()
+    let deltaDays = 0;
+    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    ));
+    days += deltaDays;
+
+    // Delegate the date part addition to the calendar
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+    const datePart = new TemporalDate(year, month, day, calendar);
+    const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const addedDate = calendar.dateAdd(datePart, dateDuration, { overflow }, TemporalDate);
+
+    return {
+      year: GetSlot(addedDate, ISO_YEAR),
+      month: GetSlot(addedDate, ISO_MONTH),
+      day: GetSlot(addedDate, ISO_DAY),
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    };
+  },
   AddZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) => {
     // If only time is to be added, then use Instant math. It's not OK to fall
     // through to the date/time code below because compatible disambiguation in
