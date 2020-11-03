@@ -6264,6 +6264,76 @@
         nanoseconds: nanoseconds
       };
     },
+    AddInstant: function AddInstant(epochNanoseconds, h, min, s, ms, µs, ns) {
+      var sum = BigInteger(0);
+      sum = sum.plus(BigInteger(ns));
+      sum = sum.plus(BigInteger(µs).multiply(1e3));
+      sum = sum.plus(BigInteger(ms).multiply(1e6));
+      sum = sum.plus(BigInteger(s).multiply(1e9));
+      sum = sum.plus(BigInteger(min).multiply(60 * 1e9));
+      sum = sum.plus(BigInteger(h).multiply(60 * 60 * 1e9));
+      var result = BigInteger(epochNanoseconds).plus(sum);
+      ES.RejectInstantRange(result);
+      return result;
+    },
+    AddZonedDateTime: function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) {
+      // If only time is to be added, then use Instant math. It's not OK to fall
+      // through to the date/time code below because compatible disambiguation in
+      // the PlainDateTime=>Instant conversion will change the offset of any
+      // ZonedDateTtime in the repeated clock time after a backwards transition.
+      // When adding/subtracting time units and not dates, this disambiguation is
+      // not expected and so is avoided below via a fast path for time-only
+      // arithmetic.
+      // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+      if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
+        return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
+      } // RFC 5545 requires the date portion to be added in calendar days and the
+      // time portion to be added in exact time.
+      // FIXME: "op" and the dateAdd/dateSubtract conditional will not be needed
+      // after #993 lands, changing the order of operations to be the same for
+      // both addition and subtraction.
+
+
+      var dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
+      var addedDate = calendar.dateAdd(datePart, {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      }, {
+        overflow: overflow
+      }, TemporalDate);
+      var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      var dtIntermediate = new TemporalDateTime(GetSlot(addedDate, ISO_YEAR), GetSlot(addedDate, ISO_MONTH), GetSlot(addedDate, ISO_DAY), GetSlot(dt, ISO_HOUR), GetSlot(dt, ISO_MINUTE), GetSlot(dt, ISO_SECOND), GetSlot(dt, ISO_MILLISECOND), GetSlot(dt, ISO_MICROSECOND), GetSlot(dt, ISO_NANOSECOND), calendar); // Note that 'compatible' is used below because this disambiguation behavior
+      // is required by RFC 5545.
+
+      var instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+      return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
+    },
+    SubtractZonedDateTime: function SubtractZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) {
+      // FIXME: to be consolidated into AddZonedDateTime by #993
+      if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
+        return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
+      }
+
+      var dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
+      var subtractedDate = calendar.dateSubtract(datePart, {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      }, {
+        overflow: overflow
+      }, TemporalDate);
+      var TemporalDateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      var dtIntermediate = new TemporalDateTime(GetSlot(subtractedDate, ISO_YEAR), GetSlot(subtractedDate, ISO_MONTH), GetSlot(subtractedDate, ISO_DAY), GetSlot(dt, ISO_HOUR), GetSlot(dt, ISO_MINUTE), GetSlot(dt, ISO_SECOND), GetSlot(dt, ISO_MILLISECOND), GetSlot(dt, ISO_MICROSECOND), GetSlot(dt, ISO_NANOSECOND), calendar);
+      var instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+      return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
+    },
     RoundNumberToIncrement: function RoundNumberToIncrement(quantity, increment, mode) {
       var quotient = quantity / increment;
       var round;
@@ -8393,15 +8463,7 @@
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
         ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var sum = BigInteger(0);
-        sum = sum.plus(BigInteger(nanoseconds));
-        sum = sum.plus(BigInteger(microseconds).multiply(1e3));
-        sum = sum.plus(BigInteger(milliseconds).multiply(1e6));
-        sum = sum.plus(BigInteger(seconds).multiply(1e9));
-        sum = sum.plus(BigInteger(minutes).multiply(60 * 1e9));
-        sum = sum.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).plus(sum);
-        ES.RejectInstantRange(ns);
+        var ns = ES.AddInstant(GetSlot(this, EPOCHNANOSECONDS), hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable$1(ns));
         if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
@@ -8421,15 +8483,7 @@
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
         ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var sum = BigInteger(0);
-        sum = sum.plus(BigInteger(nanoseconds));
-        sum = sum.plus(BigInteger(microseconds).multiply(1e3));
-        sum = sum.plus(BigInteger(milliseconds).multiply(1e6));
-        sum = sum.plus(BigInteger(seconds).multiply(1e9));
-        sum = sum.plus(BigInteger(minutes).multiply(60 * 1e9));
-        sum = sum.plus(BigInteger(hours).multiply(60 * 60 * 1e9));
-        var ns = BigInteger(GetSlot(this, EPOCHNANOSECONDS)).minus(sum);
-        ES.RejectInstantRange(ns);
+        var ns = ES.AddInstant(GetSlot(this, EPOCHNANOSECONDS), -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
         var Construct = ES.SpeciesConstructor(this, Instant);
         var result = new Construct(bigIntIfAvailable$1(ns));
         if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
@@ -11704,7 +11758,13 @@
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        throw new Error('add() not implemented yet');
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var calendar = GetSlot(this, CALENDAR);
+        var epochNanoseconds = ES.AddZonedDateTime(GetSlot(this, INSTANT), timeZone, calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        var result = new Construct(epochNanoseconds, timeZone, calendar);
+        if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "subtract",
@@ -11725,7 +11785,13 @@
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        throw new Error('subtract() not implemented yet');
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var calendar = GetSlot(this, CALENDAR);
+        var epochNanoseconds = ES.SubtractZonedDateTime(GetSlot(this, INSTANT), timeZone, calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow);
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        var result = new Construct(epochNanoseconds, timeZone, calendar);
+        if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "until",
@@ -11793,8 +11859,73 @@
           microsecond: 1000,
           nanosecond: 1000
         };
-        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
-        throw new Error('round() not implemented yet');
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false); // first, round the underlying DateTime fields
+
+        var dt = dateTime$1(this);
+        var year = GetSlot(dt, ISO_YEAR);
+        var month = GetSlot(dt, ISO_MONTH);
+        var day = GetSlot(dt, ISO_DAY);
+        var hour = GetSlot(dt, ISO_HOUR);
+        var minute = GetSlot(dt, ISO_MINUTE);
+        var second = GetSlot(dt, ISO_SECOND);
+        var millisecond = GetSlot(dt, ISO_MILLISECOND);
+        var microsecond = GetSlot(dt, ISO_MICROSECOND);
+        var nanosecond = GetSlot(dt, ISO_NANOSECOND);
+
+        var _ES$RoundDateTime = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode);
+
+        year = _ES$RoundDateTime.year;
+        month = _ES$RoundDateTime.month;
+        day = _ES$RoundDateTime.day;
+        hour = _ES$RoundDateTime.hour;
+        minute = _ES$RoundDateTime.minute;
+        second = _ES$RoundDateTime.second;
+        millisecond = _ES$RoundDateTime.millisecond;
+        microsecond = _ES$RoundDateTime.microsecond;
+        nanosecond = _ES$RoundDateTime.nanosecond;
+        // TODO: there's a case not yet implemented here: if there's a DST
+        // transition during the current day, then it's ignored by rounding. For
+        // example, using the `nearest` mode a time of 11:45 would round up in
+        // DateTime rounding but should round down if the day is 23 hours long.
+        // The since()/until() implementation will show one way to do this rounding.
+        // Now reset all DateTime fields but leave the TimeZone. The offset will
+        // also be retained if the new date/time values are still OK with the old
+        // offset. Otherwise the offset will be changed to be compatible with the
+        // new date/time values. If DST disambiguation is required, the `compatible`
+        // disambiguation algorithm will be used.
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        var calendar = GetSlot(this, CALENDAR);
+        var rounded = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT)); // See the 'prefer' algorithm in ToTemporalZonedDateTime
+
+        var instant;
+        var possibleInstants = timeZone.getPossibleInstantsFor(rounded);
+
+        var _iterator = _createForOfIteratorHelper(possibleInstants),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var candidate = _step.value;
+            var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
+
+            if (candidateOffset === offsetNs) {
+              instant = candidate;
+              break;
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        if (!instant) instant = ES.GetTemporalInstantFor(timeZone, rounded, 'compatible');
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        var result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+        if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "equals",
@@ -11852,7 +11983,15 @@
       key: "startOfDay",
       value: function startOfDay() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        throw new Error('startOfDay() not implemented yet');
+        var dt = dateTime$1(this);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        var dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var instant = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        var result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+        if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "toInstant",
@@ -12045,7 +12184,40 @@
       key: "hoursInDay",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        throw new Error('hoursInDay not implemented yet');
+        var dt = dateTime$1(this);
+        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+        var year = GetSlot(dt, ISO_YEAR);
+        var month = GetSlot(dt, ISO_MONTH);
+        var day = GetSlot(dt, ISO_DAY);
+        var today = new DateTime(year, month, day, 0, 0, 0, 0, 0, 0);
+        var tomorrowFields = ES.AddDate(year, month, day, 0, 0, 0, 1, 'reject');
+        var tomorrow = new DateTime(tomorrowFields.year, tomorrowFields.month, tomorrowFields.day, 0, 0, 0, 0, 0, 0);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
+        var tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
+
+        var _ES$DifferenceInstant = ES.DifferenceInstant(todayNs, tomorrowNs, 1, 'nanoseconds', 'nearest'),
+            seconds = _ES$DifferenceInstant.seconds,
+            milliseconds = _ES$DifferenceInstant.milliseconds,
+            microseconds = _ES$DifferenceInstant.microseconds,
+            nanoseconds = _ES$DifferenceInstant.nanoseconds;
+
+        var hours, minutes, remainder;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, 'hours');
+
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
+
+        var _ES$RoundDuration = ES.RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, 'hours', 'trunc');
+
+        hours = _ES$RoundDuration.hours;
+        remainder = _ES$RoundDuration.remainder;
+        return hours + remainder;
       }
     }, {
       key: "daysInWeek",
@@ -12146,17 +12318,17 @@
           increment = options.increment,
           roundingMode = options.roundingMode;
 
-      var _ES$RoundDateTime = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode);
+      var _ES$RoundDateTime2 = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode);
 
-      year = _ES$RoundDateTime.year;
-      month = _ES$RoundDateTime.month;
-      day = _ES$RoundDateTime.day;
-      hour = _ES$RoundDateTime.hour;
-      minute = _ES$RoundDateTime.minute;
-      second = _ES$RoundDateTime.second;
-      millisecond = _ES$RoundDateTime.millisecond;
-      microsecond = _ES$RoundDateTime.microsecond;
-      nanosecond = _ES$RoundDateTime.nanosecond;
+      year = _ES$RoundDateTime2.year;
+      month = _ES$RoundDateTime2.month;
+      day = _ES$RoundDateTime2.day;
+      hour = _ES$RoundDateTime2.hour;
+      minute = _ES$RoundDateTime2.minute;
+      second = _ES$RoundDateTime2.second;
+      millisecond = _ES$RoundDateTime2.millisecond;
+      microsecond = _ES$RoundDateTime2.microsecond;
+      nanosecond = _ES$RoundDateTime2.nanosecond;
     }
 
     year = ES.ISOYearString(year);
