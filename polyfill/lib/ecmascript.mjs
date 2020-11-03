@@ -2447,9 +2447,6 @@ export const ES = ObjectAssign({}, ES2020, {
 
     // RFC 5545 requires the date portion to be added in calendar days and the
     // time portion to be added in exact time.
-    // FIXME: "op" and the dateAdd/dateSubtract conditional will not be needed
-    // after #993 lands, changing the order of operations to be the same for
-    // both addition and subtraction.
     let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
     const TemporalDate = GetIntrinsic('%Temporal.Date%');
     const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
