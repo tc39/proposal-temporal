@@ -4831,20 +4831,6 @@
 
       return ES.ToString(ES.Call(toString, timeZone));
     },
-    ISOTimeZoneString: function ISOTimeZoneString(timeZone, instant) {
-      var name = ES.TimeZoneToString(timeZone);
-      var offset = ES.GetOffsetStringFor(timeZone, instant);
-
-      if (name === 'UTC') {
-        return 'Z';
-      }
-
-      if (name === offset) {
-        return offset;
-      }
-
-      return "".concat(offset, "[").concat(name, "]");
-    },
     ISOYearString: function ISOYearString(year) {
       var yearString;
 
@@ -4881,14 +4867,21 @@
       return "".concat(secs, ".").concat(fraction);
     },
     TemporalInstantToString: function TemporalInstantToString(instant, timeZone, precision) {
-      var dateTime = ES.GetTemporalDateTimeFor(timeZone, instant);
+      var outputTimeZone = timeZone;
+
+      if (outputTimeZone === undefined) {
+        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
+        outputTimeZone = new TemporalTimeZone('UTC');
+      }
+
+      var dateTime = ES.GetTemporalDateTimeFor(outputTimeZone, instant, 'iso8601');
       var year = ES.ISOYearString(dateTime.year);
       var month = ES.ISODateTimePartString(dateTime.month);
       var day = ES.ISODateTimePartString(dateTime.day);
       var hour = ES.ISODateTimePartString(dateTime.hour);
       var minute = ES.ISODateTimePartString(dateTime.minute);
       var seconds = ES.FormatSecondsStringPart(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, precision);
-      var timeZoneString = ES.ISOTimeZoneString(timeZone, instant);
+      var timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
     TemporalDurationToString: function TemporalDurationToString(duration) {
@@ -8613,11 +8606,11 @@
     }, {
       key: "toString",
       value: function toString() {
-        var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'UTC';
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         options = ES.NormalizeOptionsObject(options);
+        var timeZone = options.timeZone;
+        if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
 
         var _ES$ToSecondsStringPr = ES.ToSecondsStringPrecision(options),
             precision = _ES$ToSecondsStringPr.precision,
@@ -8634,9 +8627,7 @@
       key: "toJSON",
       value: function toJSON() {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        var timeZone = new TemporalTimeZone('UTC');
-        return ES.TemporalInstantToString(this, timeZone, 'auto');
+        return ES.TemporalInstantToString(this, undefined, 'auto');
       }
     }, {
       key: "toLocaleString",
