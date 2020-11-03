@@ -429,26 +429,39 @@ export class DateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-    let { days: deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(
-      this.toTime(),
-      other.toTime()
-    );
-    let year = GetSlot(this, ISO_YEAR);
-    let month = GetSlot(this, ISO_MONTH);
-    let day = GetSlot(this, ISO_DAY) + deltaDays;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
-
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const adjustedDate = new TemporalDate(year, month, day, calendar);
-    const otherDate = new TemporalDate(
+    let {
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.DifferenceDateTime(
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
       GetSlot(other, ISO_YEAR),
       GetSlot(other, ISO_MONTH),
       GetSlot(other, ISO_DAY),
-      calendar
+      GetSlot(other, ISO_HOUR),
+      GetSlot(other, ISO_MINUTE),
+      GetSlot(other, ISO_SECOND),
+      GetSlot(other, ISO_MILLISECOND),
+      GetSlot(other, ISO_MICROSECOND),
+      GetSlot(other, ISO_NANOSECOND),
+      calendar,
+      largestUnit
     );
-    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
-    const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    let { years, months, weeks, days } = calendar.dateUntil(adjustedDate, otherDate, dateOptions);
 
     ({
       years,
@@ -509,26 +522,39 @@ export class DateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-    let { days: deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(
-      other.toTime(),
-      this.toTime()
-    );
-    let year = GetSlot(this, ISO_YEAR);
-    let month = GetSlot(this, ISO_MONTH);
-    let day = GetSlot(this, ISO_DAY) + deltaDays;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
-
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const adjustedDate = new TemporalDate(year, month, day, calendar);
-    const otherDate = new TemporalDate(
+    let {
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.DifferenceDateTime(
       GetSlot(other, ISO_YEAR),
       GetSlot(other, ISO_MONTH),
       GetSlot(other, ISO_DAY),
-      calendar
+      GetSlot(other, ISO_HOUR),
+      GetSlot(other, ISO_MINUTE),
+      GetSlot(other, ISO_SECOND),
+      GetSlot(other, ISO_MILLISECOND),
+      GetSlot(other, ISO_MICROSECOND),
+      GetSlot(other, ISO_NANOSECOND),
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
+      calendar,
+      largestUnit
     );
-    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
-    const dateOptions = ObjectAssign({}, options, { largestUnit: dateLargestUnit });
-    let { years, months, weeks, days } = calendar.dateUntil(otherDate, adjustedDate, dateOptions);
 
     ({
       years,
