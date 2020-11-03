@@ -327,53 +327,32 @@ export class DateTime {
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    // For a negative duration, BalanceDuration() subtracts from days to make
-    // all other units positive, so it's not needed to switch on the sign below
-    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'days'
-    ));
-    duration = { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
-
-    // Subtract the time part
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = this;
-    let deltaDays = 0;
-    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
-    duration.days -= deltaDays;
-
-    // Delegate the date part subtraction to the calendar
+    options = ES.NormalizeOptionsObject(options);
+    const overflow = ES.ToTemporalOverflow(options);
     const calendar = GetSlot(this, CALENDAR);
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const datePart = new TemporalDate(
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
       GetSlot(this, ISO_DAY),
-      calendar
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
+      calendar,
+      -years,
+      -months,
+      -weeks,
+      -days,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds,
+      overflow
     );
-    const subtractedDate = calendar.dateSubtract(datePart, duration, options, TemporalDate);
-    let year = GetSlot(subtractedDate, ISO_YEAR);
-    let month = GetSlot(subtractedDate, ISO_MONTH);
-    let day = GetSlot(subtractedDate, ISO_DAY);
-
     const Construct = ES.SpeciesConstructor(this, DateTime);
     const result = new Construct(
       year,

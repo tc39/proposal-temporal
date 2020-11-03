@@ -325,55 +325,26 @@ class ISO8601Calendar extends Calendar {
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    const sign = ES.DurationSign(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
     let hour = GetSlot(time, ISO_HOUR);
     let minute = GetSlot(time, ISO_MINUTE);
     let second = GetSlot(time, ISO_SECOND);
     let millisecond = GetSlot(time, ISO_MILLISECOND);
     let microsecond = GetSlot(time, ISO_MICROSECOND);
     let nanosecond = GetSlot(time, ISO_NANOSECOND);
-    if (sign < 0) {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        -hours,
-        -minutes,
-        -seconds,
-        -milliseconds,
-        -microseconds,
-        -nanoseconds
-      ));
-    } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      ));
-    }
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    ));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -393,55 +364,26 @@ class ISO8601Calendar extends Calendar {
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    const sign = ES.DurationSign(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
     let hour = GetSlot(time, ISO_HOUR);
     let minute = GetSlot(time, ISO_MINUTE);
     let second = GetSlot(time, ISO_SECOND);
     let millisecond = GetSlot(time, ISO_MILLISECOND);
     let microsecond = GetSlot(time, ISO_MICROSECOND);
     let nanosecond = GetSlot(time, ISO_NANOSECOND);
-    if (sign < 0) {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        -hours,
-        -minutes,
-        -seconds,
-        -milliseconds,
-        -microseconds,
-        -nanoseconds
-      ));
-    } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.SubtractTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      ));
-    }
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds
+    ));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,

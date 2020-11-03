@@ -2398,37 +2398,6 @@ export const ES = ObjectAssign({}, ES2020, {
     ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
     return { year, month, day };
   },
-  SubtractTime: (
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  ) => {
-    hour -= hours;
-    minute -= minutes;
-    second -= seconds;
-    millisecond -= milliseconds;
-    microsecond -= microseconds;
-    nanosecond -= nanoseconds;
-    let deltaDays = 0;
-    ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    ));
-    return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
-  },
   AddDuration: (y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2) => {
     let years = y1 + y2;
     let months = mon1 + mon2;
