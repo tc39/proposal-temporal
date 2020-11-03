@@ -707,9 +707,12 @@
         1. Let _rounded_ be ? CreateTemporalDateTime(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _calendar_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _rounded_).
-        1. If there exists an element _candidate_ of _possibleInstants_ for which ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
-          1. Let _roundedInstant_ be _candidate_.
-        1. Else,
+        1. Let _match_ be *false*.
+        1. For each element _candidate_ of _possibleInstants_, do
+          1. If ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
+            1. Let _roundedInstant_ be _candidate_.
+            1. Set _match_ to *true*.
+        1. If _match_ is *false*, then
           1. Let _roundedInstant_ be ? GetTemporalInstantFor(_timeZone_, _rounded_, *"compatible"*).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _roundedInstant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
@@ -1041,9 +1044,12 @@
           1. Else,
             1. Assert: _offset_ is *"prefer"* or *"reject"*.
             1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
-            1. If there exists an element _candidate_ of _possibleInstants_ for which ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
-              1. Let _instant_ be _candidate_.
-            1. Else,
+            1. Let _match_ be *false*.
+            1. For each element _candidate_ of _possibleInstants_, do
+              1. If ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
+                1. Let _instant_ be _candidate_.
+                1. Set _match_ to *true*.
+            1. If _match_ is *false*, then
               1. If _offset_ is *"reject"*, throw a *RangeError* exception.
               1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
         1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, _instant_.[[Nanoseconds]], _timeZone_ , _calendar_).
