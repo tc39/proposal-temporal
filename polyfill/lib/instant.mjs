@@ -58,18 +58,15 @@ export class Instant {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
     ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-    let sum = bigInt(0);
-    sum = sum.plus(bigInt(nanoseconds));
-    sum = sum.plus(bigInt(microseconds).multiply(1e3));
-    sum = sum.plus(bigInt(milliseconds).multiply(1e6));
-    sum = sum.plus(bigInt(seconds).multiply(1e9));
-    sum = sum.plus(bigInt(minutes).multiply(60 * 1e9));
-    sum = sum.plus(bigInt(hours).multiply(60 * 60 * 1e9));
-
-    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).plus(sum);
-    ES.RejectInstantRange(ns);
-
+    const ns = ES.AddInstant(
+      GetSlot(this, EPOCHNANOSECONDS),
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     const Construct = ES.SpeciesConstructor(this, Instant);
     const result = new Construct(bigIntIfAvailable(ns));
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
@@ -86,18 +83,15 @@ export class Instant {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
     ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-    let sum = bigInt(0);
-    sum = sum.plus(bigInt(nanoseconds));
-    sum = sum.plus(bigInt(microseconds).multiply(1e3));
-    sum = sum.plus(bigInt(milliseconds).multiply(1e6));
-    sum = sum.plus(bigInt(seconds).multiply(1e9));
-    sum = sum.plus(bigInt(minutes).multiply(60 * 1e9));
-    sum = sum.plus(bigInt(hours).multiply(60 * 60 * 1e9));
-
-    const ns = bigInt(GetSlot(this, EPOCHNANOSECONDS)).minus(sum);
-    ES.RejectInstantRange(ns);
-
+    const ns = ES.AddInstant(
+      GetSlot(this, EPOCHNANOSECONDS),
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds
+    );
     const Construct = ES.SpeciesConstructor(this, Instant);
     const result = new Construct(bigIntIfAvailable(ns));
     if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
