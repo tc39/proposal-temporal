@@ -116,24 +116,23 @@ export class MonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
   }
-  toDateInYear(item, options = undefined) {
+  toDate(item, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
+
     const receiverFieldNames = ES.CalendarFields(calendar, ['day', 'month']);
-    const fields = ES.ToTemporalMonthDayFields(this, [receiverFieldNames]);
-    if (ES.Type(item) === 'Object') {
-      const inputFieldNames = ES.CalendarFields(calendar, ['year']);
-      const entries = [['year']];
-      // Add extra fields from the calendar at the end
-      inputFieldNames.forEach((fieldName) => {
-        if (!entries.some(([name]) => name === fieldName)) {
-          entries.push([fieldName, undefined]);
-        }
-      });
-      ObjectAssign(fields, ES.ToRecord(item, entries));
-    } else {
-      fields.year = ES.ToInteger(item);
-    }
+    const fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
+
+    const inputFieldNames = ES.CalendarFields(calendar, ['year']);
+    const entries = [['year']];
+    // Add extra fields from the calendar at the end
+    inputFieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    ObjectAssign(fields, ES.ToRecord(item, entries));
+
     const Date = GetIntrinsic('%Temporal.Date%');
     return calendar.dateFromFields(fields, options, Date);
   }

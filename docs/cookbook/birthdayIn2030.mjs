@@ -1,6 +1,6 @@
 const birthday = Temporal.MonthDay.from('12-15');
 
-const birthdayIn2030 = birthday.toDateInYear(2030);
+const birthdayIn2030 = birthday.toDate({ year: 2030 });
 birthdayIn2030.dayOfWeek; // => 7
 
 assert(birthdayIn2030 instanceof Temporal.Date);

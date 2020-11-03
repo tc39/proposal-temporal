@@ -8,7 +8,7 @@
  * @returns {Temporal.Date[]} List of dates to be taken off work
  */
 function bridgePublicHolidays(holiday, year) {
-  const date = holiday.toDateInYear(year);
+  const date = holiday.toDate({ year });
   switch (date.dayOfWeek) {
     case 1: // Mon
     case 3: // Wed
