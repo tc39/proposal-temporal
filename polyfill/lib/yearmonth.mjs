@@ -317,13 +317,25 @@ export class YearMonth {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
   }
-  toDateOnDay(day) {
+  toDate(item) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+
+    const receiverFieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
+
+    const inputFieldNames = ES.CalendarFields(calendar, ['day']);
+    const entries = [['day']];
+    // Add extra fields from the calendar at the end
+    inputFieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    ObjectAssign(fields, ES.ToRecord(item, entries));
+
     const Date = GetIntrinsic('%Temporal.Date%');
-    return calendar.dateFromFields({ ...fields, day }, { overflow: 'reject' }, Date);
+    return calendar.dateFromFields(fields, { overflow: 'reject' }, Date);
   }
   getFields() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

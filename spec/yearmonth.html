@@ -408,20 +408,27 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.yearmonth.prototype.todateonday">
-      <h1>Temporal.YearMonth.prototype.toDateOnDay ( _day_ )</h1>
+    <emu-clause id="sec-temporal.yearmonth.prototype.todate">
+      <h1>Temporal.YearMonth.prototype.toDate ( _item_ )</h1>
       <p>
-        The `toDateOnDay` method takes one argument _day_.
+        The `toDate` method takes one argument _day_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
+        1. If Type(_item_) is not Object, then
+          1. Throw a *TypeError* exception.
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
-        1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
-        1. Let _d_ be ? ToInteger(_day_).
-        1. Perform ! Set(_fields_, *"day"*, _d_, *false*).
+        1. Let _receiverFieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
+        1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _receiverFieldNames_).
+        1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"day"* »).
+        1. For each value _property_ of _inputFieldNames_, do
+          1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
+          1. If _property_ is *"day"*, and _value_ is *undefined*, then
+            1. Throw a *TypeError* exception.
+          1. Let _value_ be ? ToInteger(_value_).
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
         1. <mark>TODO: create via calendar.dateFromFields.</mark>
           Return ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _d_).
       </emu-alg>
