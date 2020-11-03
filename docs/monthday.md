@@ -9,7 +9,7 @@ A `Temporal.MonthDay` represents a particular day on the calendar, but without a
 For example, it could be used to represent a yearly recurring event, like "Bastille Day is on the 14th of July."
 
 If you need to refer to a certain instance of a calendar event, in a particular year, use `Temporal.Date` or even `Temporal.DateTime`.
-A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it with a year, using the `toDateInYear()` method.
+A `Temporal.MonthDay` can be converted into a `Temporal.Date` by combining it with a year, using the `toDate()` method.
 
 ## Constructor
 
@@ -146,7 +146,7 @@ Since `Temporal.MonthDay` objects are immutable, use this method instead of modi
 
 > **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `monthDayLike`.
 > It is not possible to convert a `Temporal.MonthDay` to another calendar system without knowing the year.
-> If you need to do this, use `monthDay.toDateInYear(year).withCalendar(calendar).toMonthDay()`.
+> If you need to do this, use `monthDay.toDate({ year }).withCalendar(calendar).toMonthDay()`.
 
 Usage example:
 ```javascript
@@ -283,10 +283,10 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.MonthDay` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Instead, use `monthDay.equals()` to check for equality.
 
-### monthDay.**toDateInYear**(_year_: number | object, _options_?: object) : Temporal.Date
+### monthDay.**toDate**(_year_: object, _options_?: object) : Temporal.Date
 
 **Parameters:**
-- `year` (number | object): A year, which must have a day corresponding to `monthDay`. Additionally, an object with a `'year'` property is also accepted.
+- `year` (object): An object with a `'year'` property, which must have a day corresponding to `monthDay`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -301,16 +301,15 @@ The converted object carries a copy of all the relevant fields of `monthDay`.
 Usage example:
 ```javascript
 md = Temporal.MonthDay.from('08-24');
-md.toDateInYear(2017)  // => 2017-08-24
-md.toDateInYear({ year: 2017 })  // equivalent to above
+md.toDate({ year: 2017 })  // => 2017-08-24
 
 md = Temporal.MonthDay.from('02-29');
-md.toDateInYear(2020)  // => 2020-02-29
-md.toDateInYear(2017)  // => 2017-02-28
-md.toDateInYear(2017, { overflow: 'reject' })  // throws
+md.toDate({ year: 2020 })  // => 2020-02-29
+md.toDate({ year: 2017 })  // => 2017-02-28
+md.toDate({ year: 2017 }, { overflow: 'reject' })  // throws
 ```
 
-In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass an object to `toDateInYear()` that contains the necessary properties.
+In calendars where more information than just the year is needed to convert a `Temporal.MonthDay` to a `Temporal.Date`, you can pass the necessary properties in the _year_ object.
 
 Example:
 ```javascript
@@ -320,7 +319,7 @@ md = Temporal.MonthDay.from({
   day: 1
 });
 
-date = md.toDateInYear({ era: 'reiwa', year: 2 });
+date = md.toDate({ era: 'reiwa', year: 2 });
 ```
 
 ### monthDay.**getFields**() : { month: number, day: number, calendar: object, [propName: string]: unknown }

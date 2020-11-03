@@ -190,29 +190,27 @@ describe('MonthDay', () => {
     it('<=', () => throws(() => md1 <= md2));
     it('>=', () => throws(() => md1 >= md2));
   });
-  describe('MonthDay.toDateInYear()', () => {
+  describe('MonthDay.toDate()', () => {
     const md = MonthDay.from('01-22');
-    it('takes a number argument', () => {
-      equal(`${md.toDateInYear(2002)}`, '2002-01-22');
+    it("doesn't take a primitive argument", () => {
+      throws(() => md.toDate(2002), TypeError);
+      throws(() => md.toDate('2002'), TypeError);
+      throws(() => md.toDate(null), TypeError);
     });
     it('takes an object argument with year property', () => {
-      equal(`${md.toDateInYear({ year: 2002 })}`, '2002-01-22');
+      equal(`${md.toDate({ year: 2002 })}`, '2002-01-22');
     });
     it('needs at least a year property on the object in the ISO calendar', () => {
-      throws(() => md.toDateInYear({ something: 'nothing' }), TypeError);
-    });
-    it('converts a non-object argument to integer', () => {
-      equal(`${md.toDateInYear('2002')}`, '2002-01-22');
-      equal(`${md.toDateInYear(null)}`, '+000000-01-22');
+      throws(() => md.toDate({ something: 'nothing' }), TypeError);
     });
     it("constrains if the MonthDay doesn't exist in the year", () => {
       const leapDay = MonthDay.from('02-29');
-      equal(`${leapDay.toDateInYear(2019)}`, '2019-02-28');
-      equal(`${leapDay.toDateInYear(2019, { overflow: 'constrain' })}`, '2019-02-28');
+      equal(`${leapDay.toDate({ year: 2019 })}`, '2019-02-28');
+      equal(`${leapDay.toDate({ year: 2019 }, { overflow: 'constrain' })}`, '2019-02-28');
     });
     it("can also reject if the MonthDay doesn't exist in the year", () => {
       const leapDay = MonthDay.from('02-29');
-      throws(() => leapDay.toDateInYear(2019, { overflow: 'reject' }));
+      throws(() => leapDay.toDate({ year: 2019 }, { overflow: 'reject' }));
     });
   });
   describe('MonthDay.toString()', () => {
