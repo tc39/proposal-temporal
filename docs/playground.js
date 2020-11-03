@@ -11543,16 +11543,28 @@
         throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
       }
     }, {
-      key: "toDateOnDay",
-      value: function toDateOnDay(day) {
+      key: "toDate",
+      value: function toDate(item) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
-        var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+        var receiverFieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
+        var inputFieldNames = ES.CalendarFields(calendar, ['day']);
+        var entries = [['day']]; // Add extra fields from the calendar at the end
+
+        inputFieldNames.forEach(function (fieldName) {
+          if (!entries.some(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 1),
+                name = _ref2[0];
+
+            return name === fieldName;
+          })) {
+            entries.push([fieldName, undefined]);
+          }
+        });
+        ObjectAssign$5(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.Date%');
-        return calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
-          day: day
-        }), {
+        return calendar.dateFromFields(fields, {
           overflow: 'reject'
         }, Date);
       }
