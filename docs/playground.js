@@ -10601,33 +10601,27 @@
         throw new TypeError('use equals() to compare Temporal.MonthDay');
       }
     }, {
-      key: "toDateInYear",
-      value: function toDateInYear(item) {
+      key: "toDate",
+      value: function toDate(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
         var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'month']);
-        var fields = ES.ToTemporalMonthDayFields(this, [receiverFieldNames]);
+        var fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
+        var inputFieldNames = ES.CalendarFields(calendar, ['year']);
+        var entries = [['year']]; // Add extra fields from the calendar at the end
 
-        if (ES.Type(item) === 'Object') {
-          var inputFieldNames = ES.CalendarFields(calendar, ['year']);
-          var entries = [['year']]; // Add extra fields from the calendar at the end
+        inputFieldNames.forEach(function (fieldName) {
+          if (!entries.some(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 1),
+                name = _ref2[0];
 
-          inputFieldNames.forEach(function (fieldName) {
-            if (!entries.some(function (_ref) {
-              var _ref2 = _slicedToArray(_ref, 1),
-                  name = _ref2[0];
-
-              return name === fieldName;
-            })) {
-              entries.push([fieldName, undefined]);
-            }
-          });
-          ObjectAssign$4(fields, ES.ToRecord(item, entries));
-        } else {
-          fields.year = ES.ToInteger(item);
-        }
-
+            return name === fieldName;
+          })) {
+            entries.push([fieldName, undefined]);
+          }
+        });
+        ObjectAssign$4(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.Date%');
         return calendar.dateFromFields(fields, options, Date);
       }
