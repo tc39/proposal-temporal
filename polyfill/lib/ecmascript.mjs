@@ -2299,6 +2299,54 @@ export const ES = ObjectAssign({}, ES2020, {
     const seconds = +roundedDiff.divide(1e9);
     return { seconds, milliseconds, microseconds, nanoseconds };
   },
+  DifferenceDateTime: (
+    y1,
+    mon1,
+    d1,
+    h1,
+    min1,
+    s1,
+    ms1,
+    µs1,
+    ns1,
+    y2,
+    mon2,
+    d2,
+    h2,
+    min2,
+    s2,
+    ms2,
+    µs2,
+    ns2,
+    calendar,
+    largestUnit
+  ) => {
+    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalTime = GetIntrinsic('%Temporal.Time%');
+    const time1 = new TemporalTime(h1, min1, s1, ms1, µs1, ns1, calendar);
+    const time2 = new TemporalTime(h2, min2, s2, ms2, µs2, ns2, calendar);
+    let { days: deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(
+      time1,
+      time2
+    );
+    ({ year: y1, month: mon1, day: d1 } = ES.BalanceDate(y1, mon1, d1 + deltaDays));
+    const date1 = new TemporalDate(y1, mon1, d1, calendar);
+    const date2 = new TemporalDate(y2, mon2, d2, calendar);
+    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+    let { years, months, weeks, days } = calendar.dateUntil(date1, date2, { largestUnit: dateLargestUnit });
+    // Signs of date part and time part may not agree; balance them together
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit
+    ));
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
   AddDate: (year, month, day, years, months, weeks, days, overflow) => {
     year += years;
     month += months;
