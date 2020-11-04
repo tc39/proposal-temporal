@@ -959,6 +959,29 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('Reversibility of differences', () => {
+    const earlier = ZonedDateTime.from('1976-11-18T15:23:30.123456789-03:00[America/Santiago]');
+    const later = ZonedDateTime.from('2019-10-29T10:46:38.271986102-03:00[America/Santiago]');
+    // The interchangeability of since() and until() holds for time units only
+    ['hours', 'minutes', 'seconds'].forEach((largestUnit) => {
+      const diff = later.since(earlier, { largestUnit });
+      it(`earlier.since(later, ${largestUnit}) == later.since(earlier, ${largestUnit}).negated()`, () =>
+        equal(`${earlier.since(later, { largestUnit })}`, `${diff.negated()}`));
+      it(`earlier.until(later, ${largestUnit}) == later.since(earlier, ${largestUnit})`, () =>
+        equal(`${earlier.until(later, { largestUnit })}`, `${diff}`));
+      it(`${largestUnit} difference symmetrical with regard to negative durations`, () => {
+        assert(earlier.subtract(diff.negated()).equals(later));
+        assert(later.add(diff.negated()).equals(earlier));
+      });
+    });
+    // For all units, add() undoes until() and subtract() undoes since()
+    ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].forEach((largestUnit) => {
+      const diff1 = earlier.until(later, { largestUnit });
+      const diff2 = later.since(earlier, { largestUnit });
+      it(`earlier.add(${diff1}) == later`, () => assert(earlier.add(diff1).equals(later)));
+      it(`later.subtract(${diff2}) == earlier`, () => assert(later.subtract(diff2).equals(earlier)));
+    });
+  });
   describe('date/time maths: hours overflow', () => {
     it('subtract result', () => {
       const later = ZonedDateTime.from('2019-10-29T10:46:38.271986102-03:00[America/Santiago]');
@@ -1088,6 +1111,640 @@ describe('ZonedDateTime', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${zdt.subtract({ hour: 1, minutes: 1 })}`, '1969-12-25T12:22:45.678901234+00:00[UTC]');
+    });
+  });
+
+  describe('ZonedDateTime.until()', () => {
+    const zdt = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
+    it('zdt.until(later) === later.since(zdt) with default options', () => {
+      const later = ZonedDateTime.from({ year: 2016, month: 3, day: 3, hour: 18, timeZone: 'Europe/Vienna' });
+      equal(`${zdt.until(later)}`, `${later.since(zdt)}`);
+    });
+    it('casts argument', () => {
+      equal(
+        `${zdt.until({ year: 2019, month: 10, day: 29, hour: 10, timeZone: 'Europe/Vienna' })}`,
+        'PT376434H36M29.876543211S'
+      );
+      equal(`${zdt.until('2019-10-29T10:46:38.271986102+01:00[Europe/Vienna]')}`, 'PT376435H23M8.148529313S');
+    });
+    const feb20 = ZonedDateTime.from('2020-02-01T00:00+01:00[Europe/Vienna]');
+    const feb21 = ZonedDateTime.from('2021-02-01T00:00+01:00[Europe/Vienna]');
+    it('defaults to returning hours', () => {
+      equal(`${feb20.until(feb21)}`, 'PT8784H');
+      equal(`${feb20.until(feb21, { largestUnit: 'auto' })}`, 'PT8784H');
+      equal(`${feb20.until(feb21, { largestUnit: 'hours' })}`, 'PT8784H');
+      equal(
+        `${feb20.until(ZonedDateTime.from('2021-02-01T00:00:00.000000001+01:00[Europe/Vienna]'))}`,
+        'PT8784H0.000000001S'
+      );
+      equal(
+        `${ZonedDateTime.from('2020-02-01T00:00:00.000000001+01:00[Europe/Vienna]').until(feb21)}`,
+        'PT8783H59M59.999999999S'
+      );
+    });
+    it('can return lower or higher units', () => {
+      equal(`${feb20.until(feb21, { largestUnit: 'years' })}`, 'P1Y');
+      equal(`${feb20.until(feb21, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${feb20.until(feb21, { largestUnit: 'weeks' })}`, 'P52W2D');
+      equal(`${feb20.until(feb21, { largestUnit: 'days' })}`, 'P366D');
+      equal(`${feb20.until(feb21, { largestUnit: 'minutes' })}`, 'PT527040M');
+      equal(`${feb20.until(feb21, { largestUnit: 'seconds' })}`, 'PT31622400S');
+    });
+    it('can return subseconds', () => {
+      const later = feb20.add({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+      const msDiff = feb20.until(later, { largestUnit: 'milliseconds' });
+      equal(msDiff.seconds, 0);
+      equal(msDiff.milliseconds, 86400250);
+      equal(msDiff.microseconds, 250);
+      equal(msDiff.nanoseconds, 250);
+
+      const µsDiff = feb20.until(later, { largestUnit: 'microseconds' });
+      equal(µsDiff.milliseconds, 0);
+      equal(µsDiff.microseconds, 86400250250);
+      equal(µsDiff.nanoseconds, 250);
+
+      const nsDiff = feb20.until(later, { largestUnit: 'nanoseconds' });
+      equal(nsDiff.microseconds, 0);
+      equal(nsDiff.nanoseconds, 86400250250250);
+    });
+    it('does not include higher units than necessary', () => {
+      const lastFeb20 = ZonedDateTime.from('2020-02-29T00:00+01:00[Europe/Vienna]');
+      const lastJan21 = ZonedDateTime.from('2021-01-31T00:00+01:00[Europe/Vienna]');
+      equal(`${lastFeb20.until(lastJan21)}`, 'PT8088H');
+      equal(`${lastFeb20.until(lastJan21, { largestUnit: 'months' })}`, 'P11M2D');
+      equal(`${lastFeb20.until(lastJan21, { largestUnit: 'years' })}`, 'P11M2D');
+    });
+    it('weeks and months are mutually exclusive', () => {
+      const laterDateTime = zdt.add({ days: 42, hours: 3 });
+      const weeksDifference = zdt.until(laterDateTime, { largestUnit: 'weeks' });
+      notEqual(weeksDifference.weeks, 0);
+      equal(weeksDifference.months, 0);
+      const monthsDifference = zdt.until(laterDateTime, { largestUnit: 'months' });
+      equal(monthsDifference.weeks, 0);
+      notEqual(monthsDifference.months, 0);
+    });
+    it('no two different calendars', () => {
+      const zdt1 = new ZonedDateTime(0n, 'UTC');
+      const zdt2 = new ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
+      throws(() => zdt1.until(zdt2), RangeError);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb20.until(feb21, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb20.until(feb21, options)}`, 'PT8784H'));
+    });
+    const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
+    const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => earlier.until(later, { smallestUnit }), RangeError);
+      });
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      const units = [
+        'years',
+        'months',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ];
+      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+          const largestUnit = units[largestIdx];
+          const smallestUnit = units[smallestIdx];
+          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
+        }
+      }
+    });
+    it('assumes a different default for largestUnit if smallestUnit is larger than hours', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${earlier.until(later, { smallestUnit: 'months' })}`, 'P32M');
+      equal(`${earlier.until(later, { smallestUnit: 'weeks' })}`, 'P139W');
+      equal(`${earlier.until(later, { smallestUnit: 'days' })}`, 'P973D');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['years', 'P3Y'],
+      ['months', 'P32M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D'],
+      ['hours', 'PT23356H'],
+      ['minutes', 'PT23356H17M'],
+      ['seconds', 'PT23356H17M5S'],
+      ['milliseconds', 'PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864198S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'nearest';
+      it(`rounds to nearest ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    const incrementOneCeil = [
+      ['years', 'P3Y', '-P2Y'],
+      ['months', 'P32M', '-P31M'],
+      ['weeks', 'P140W', '-P139W'],
+      ['days', 'P974D', '-P973D'],
+      ['hours', 'PT23357H', '-PT23356H'],
+      ['minutes', 'PT23356H18M', '-PT23356H17M'],
+      ['seconds', 'PT23356H17M5S', '-PT23356H17M4S'],
+      ['milliseconds', 'PT23356H17M4.865S', '-PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864198S', '-PT23356H17M4.864197S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S', '-PT23356H17M4.864197532S']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'ceil';
+      it(`rounds up to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneFloor = [
+      ['years', 'P2Y', '-P3Y'],
+      ['months', 'P31M', '-P32M'],
+      ['weeks', 'P139W', '-P140W'],
+      ['days', 'P973D', '-P974D'],
+      ['hours', 'PT23356H', '-PT23357H'],
+      ['minutes', 'PT23356H17M', '-PT23356H18M'],
+      ['seconds', 'PT23356H17M4S', '-PT23356H17M5S'],
+      ['milliseconds', 'PT23356H17M4.864S', '-PT23356H17M4.865S'],
+      ['microseconds', 'PT23356H17M4.864197S', '-PT23356H17M4.864198S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S', '-PT23356H17M4.864197532S']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'floor';
+      it(`rounds down to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneTrunc = [
+      ['years', 'P2Y'],
+      ['months', 'P31M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D'],
+      ['hours', 'PT23356H'],
+      ['minutes', 'PT23356H17M'],
+      ['seconds', 'PT23356H17M4S'],
+      ['milliseconds', 'PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864197S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S']
+    ];
+    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'trunc';
+      it(`truncates to ${smallestUnit}`, () => {
+        equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
+        equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    it('nearest is the default', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'PT23356H17M');
+      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'PT23356H17M5S');
+    });
+    it('rounds to an increment of hours', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT23355H');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT23356H30M');
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT23356H17M');
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'PT23356H17M4.860S');
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'PT23356H17M4.864200S');
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(
+        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        'PT23356H17M4.864197530S'
+      );
+    });
+    it('valid hour increments divide into 24', () => {
+      [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+        const options = { smallestUnit: 'hours', roundingIncrement };
+        assert(earlier.until(later, options) instanceof Temporal.Duration);
+      });
+    });
+    ['minutes', 'seconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 60`, () => {
+        [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(earlier.until(later, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+        [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(earlier.until(later, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 29 }), RangeError);
+    });
+    it('throws on increments that are equal to the next highest', () => {
+      throws(() => earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
+    });
+    it('accepts singular units', () => {
+      equal(`${earlier.until(later, { largestUnit: 'year' })}`, `${earlier.until(later, { largestUnit: 'years' })}`);
+      equal(`${earlier.until(later, { smallestUnit: 'year' })}`, `${earlier.until(later, { smallestUnit: 'years' })}`);
+      equal(`${earlier.until(later, { largestUnit: 'month' })}`, `${earlier.until(later, { largestUnit: 'months' })}`);
+      equal(
+        `${earlier.until(later, { smallestUnit: 'month' })}`,
+        `${earlier.until(later, { smallestUnit: 'months' })}`
+      );
+      equal(`${earlier.until(later, { largestUnit: 'day' })}`, `${earlier.until(later, { largestUnit: 'days' })}`);
+      equal(`${earlier.until(later, { smallestUnit: 'day' })}`, `${earlier.until(later, { smallestUnit: 'days' })}`);
+      equal(`${earlier.until(later, { largestUnit: 'hour' })}`, `${earlier.until(later, { largestUnit: 'hours' })}`);
+      equal(`${earlier.until(later, { smallestUnit: 'hour' })}`, `${earlier.until(later, { smallestUnit: 'hours' })}`);
+      equal(
+        `${earlier.until(later, { largestUnit: 'minute' })}`,
+        `${earlier.until(later, { largestUnit: 'minutes' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'minute' })}`,
+        `${earlier.until(later, { smallestUnit: 'minutes' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'second' })}`,
+        `${earlier.until(later, { largestUnit: 'seconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'second' })}`,
+        `${earlier.until(later, { smallestUnit: 'seconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'millisecond' })}`,
+        `${earlier.until(later, { largestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'millisecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'microsecond' })}`,
+        `${earlier.until(later, { largestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'microsecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { largestUnit: 'nanosecond' })}`,
+        `${earlier.until(later, { largestUnit: 'nanoseconds' })}`
+      );
+      equal(
+        `${earlier.until(later, { smallestUnit: 'nanosecond' })}`,
+        `${earlier.until(later, { smallestUnit: 'nanoseconds' })}`
+      );
+    });
+    it('rounds relative to the receiver', () => {
+      const dt1 = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
+      const dt2 = ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
+      equal(`${dt1.until(dt2, { smallestUnit: 'years' })}`, 'P2Y');
+      equal(`${dt2.until(dt1, { smallestUnit: 'years' })}`, '-P1Y');
+    });
+  });
+  describe('ZonedDateTime.since()', () => {
+    const zdt = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
+    it('zdt.since(earlier) === earlier.until(zdt) with default options', () => {
+      const earlier = ZonedDateTime.from({ year: 1966, month: 3, day: 3, hour: 18, timeZone: 'Europe/Vienna' });
+      equal(`${zdt.since(earlier)}`, `${earlier.until(zdt)}`);
+    });
+    it('casts argument', () => {
+      equal(
+        `${zdt.since({ year: 2019, month: 10, day: 29, hour: 10, timeZone: 'Europe/Vienna' })}`,
+        '-PT376434H36M29.876543211S'
+      );
+      equal(`${zdt.since('2019-10-29T10:46:38.271986102+01:00[Europe/Vienna]')}`, '-PT376435H23M8.148529313S');
+    });
+    const feb20 = ZonedDateTime.from('2020-02-01T00:00+01:00[Europe/Vienna]');
+    const feb21 = ZonedDateTime.from('2021-02-01T00:00+01:00[Europe/Vienna]');
+    it('defaults to returning hours', () => {
+      equal(`${feb21.since(feb20)}`, 'PT8784H');
+      equal(`${feb21.since(feb20, { largestUnit: 'auto' })}`, 'PT8784H');
+      equal(`${feb21.since(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
+      equal(
+        `${ZonedDateTime.from('2021-02-01T00:00:00.000000001+01:00[Europe/Vienna]').since(feb20)}`,
+        'PT8784H0.000000001S'
+      );
+      equal(
+        `${feb21.since(ZonedDateTime.from('2020-02-01T00:00:00.000000001+01:00[Europe/Vienna]'))}`,
+        'PT8783H59M59.999999999S'
+      );
+    });
+    it('can return lower or higher units', () => {
+      equal(`${feb21.since(feb20, { largestUnit: 'years' })}`, 'P1Y');
+      equal(`${feb21.since(feb20, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${feb21.since(feb20, { largestUnit: 'weeks' })}`, 'P52W2D');
+      equal(`${feb21.since(feb20, { largestUnit: 'days' })}`, 'P366D');
+      equal(`${feb21.since(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
+      equal(`${feb21.since(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
+    });
+    it('can return subseconds', () => {
+      const later = feb20.add({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+      const msDiff = later.since(feb20, { largestUnit: 'milliseconds' });
+      equal(msDiff.seconds, 0);
+      equal(msDiff.milliseconds, 86400250);
+      equal(msDiff.microseconds, 250);
+      equal(msDiff.nanoseconds, 250);
+
+      const µsDiff = later.since(feb20, { largestUnit: 'microseconds' });
+      equal(µsDiff.milliseconds, 0);
+      equal(µsDiff.microseconds, 86400250250);
+      equal(µsDiff.nanoseconds, 250);
+
+      const nsDiff = later.since(feb20, { largestUnit: 'nanoseconds' });
+      equal(nsDiff.microseconds, 0);
+      equal(nsDiff.nanoseconds, 86400250250250);
+    });
+    it('does not include higher units than necessary', () => {
+      const lastFeb20 = ZonedDateTime.from('2020-02-29T00:00+01:00[Europe/Vienna]');
+      const lastFeb21 = ZonedDateTime.from('2021-02-28T00:00+01:00[Europe/Vienna]');
+      equal(`${lastFeb21.since(lastFeb20)}`, 'PT8760H');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M28D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M28D');
+    });
+    it('weeks and months are mutually exclusive', () => {
+      const laterDateTime = zdt.add({ days: 42, hours: 3 });
+      const weeksDifference = laterDateTime.since(zdt, { largestUnit: 'weeks' });
+      notEqual(weeksDifference.weeks, 0);
+      equal(weeksDifference.months, 0);
+      const monthsDifference = laterDateTime.since(zdt, { largestUnit: 'months' });
+      equal(monthsDifference.weeks, 0);
+      notEqual(monthsDifference.months, 0);
+    });
+    it('no two different calendars', () => {
+      const zdt1 = new ZonedDateTime(0n, 'UTC');
+      const zdt2 = new ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
+      throws(() => zdt1.since(zdt2), RangeError);
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => feb21.since(feb20, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'PT8784H'));
+    });
+    const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
+    const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
+    it('throws on disallowed or invalid smallestUnit', () => {
+      ['era', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => later.since(earlier, { smallestUnit }), RangeError);
+      });
+    });
+    it('throws if smallestUnit is larger than largestUnit', () => {
+      const units = [
+        'years',
+        'months',
+        'weeks',
+        'days',
+        'hours',
+        'minutes',
+        'seconds',
+        'milliseconds',
+        'microseconds',
+        'nanoseconds'
+      ];
+      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+          const largestUnit = units[largestIdx];
+          const smallestUnit = units[smallestIdx];
+          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
+        }
+      }
+    });
+    it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P3Y');
+      equal(`${later.since(earlier, { smallestUnit: 'months' })}`, 'P32M');
+      equal(`${later.since(earlier, { smallestUnit: 'weeks' })}`, 'P139W');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
+    });
+    const incrementOneNearest = [
+      ['years', 'P3Y'],
+      ['months', 'P32M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D'],
+      ['hours', 'PT23356H'],
+      ['minutes', 'PT23356H17M'],
+      ['seconds', 'PT23356H17M5S'],
+      ['milliseconds', 'PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864198S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S']
+    ];
+    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'nearest';
+      it(`rounds to nearest ${smallestUnit}`, () => {
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    const incrementOneCeil = [
+      ['years', 'P3Y', '-P2Y'],
+      ['months', 'P32M', '-P31M'],
+      ['weeks', 'P140W', '-P139W'],
+      ['days', 'P974D', '-P973D'],
+      ['hours', 'PT23357H', '-PT23356H'],
+      ['minutes', 'PT23356H18M', '-PT23356H17M'],
+      ['seconds', 'PT23356H17M5S', '-PT23356H17M4S'],
+      ['milliseconds', 'PT23356H17M4.865S', '-PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864198S', '-PT23356H17M4.864197S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S', '-PT23356H17M4.864197532S']
+    ];
+    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'ceil';
+      it(`rounds up to ${smallestUnit}`, () => {
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneFloor = [
+      ['years', 'P2Y', '-P3Y'],
+      ['months', 'P31M', '-P32M'],
+      ['weeks', 'P139W', '-P140W'],
+      ['days', 'P973D', '-P974D'],
+      ['hours', 'PT23356H', '-PT23357H'],
+      ['minutes', 'PT23356H17M', '-PT23356H18M'],
+      ['seconds', 'PT23356H17M4S', '-PT23356H17M5S'],
+      ['milliseconds', 'PT23356H17M4.864S', '-PT23356H17M4.865S'],
+      ['microseconds', 'PT23356H17M4.864197S', '-PT23356H17M4.864198S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S', '-PT23356H17M4.864197532S']
+    ];
+    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+      const roundingMode = 'floor';
+      it(`rounds down to ${smallestUnit}`, () => {
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
+      });
+    });
+    const incrementOneTrunc = [
+      ['years', 'P2Y'],
+      ['months', 'P31M'],
+      ['weeks', 'P139W'],
+      ['days', 'P973D'],
+      ['hours', 'PT23356H'],
+      ['minutes', 'PT23356H17M'],
+      ['seconds', 'PT23356H17M4S'],
+      ['milliseconds', 'PT23356H17M4.864S'],
+      ['microseconds', 'PT23356H17M4.864197S'],
+      ['nanoseconds', 'PT23356H17M4.864197532S']
+    ];
+    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+      const roundingMode = 'trunc';
+      it(`truncates to ${smallestUnit}`, () => {
+        equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
+        equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+      });
+    });
+    it('nearest is the default', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'PT23356H17M');
+      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'PT23356H17M5S');
+    });
+    it('rounds to an increment of hours', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT23355H');
+    });
+    it('rounds to an increment of minutes', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT23356H30M');
+    });
+    it('rounds to an increment of seconds', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT23356H17M');
+    });
+    it('rounds to an increment of milliseconds', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'PT23356H17M4.860S');
+    });
+    it('rounds to an increment of microseconds', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'PT23356H17M4.864200S');
+    });
+    it('rounds to an increment of nanoseconds', () => {
+      equal(
+        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        'PT23356H17M4.864197530S'
+      );
+    });
+    it('valid hour increments divide into 24', () => {
+      [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+        const options = { smallestUnit: 'hours', roundingIncrement };
+        assert(later.since(earlier, options) instanceof Temporal.Duration);
+      });
+    });
+    ['minutes', 'seconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 60`, () => {
+        [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(later.since(earlier, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
+      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+        [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+          const options = { smallestUnit, roundingIncrement };
+          assert(later.since(earlier, options) instanceof Temporal.Duration);
+        });
+      });
+    });
+    it('throws on increments that do not divide evenly into the next highest', () => {
+      throws(() => later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 29 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 29 }), RangeError);
+    });
+    it('throws on increments that are equal to the next highest', () => {
+      throws(() => later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
+      throws(() => later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
+    });
+    it('accepts singular units', () => {
+      equal(`${later.since(earlier, { largestUnit: 'year' })}`, `${later.since(earlier, { largestUnit: 'years' })}`);
+      equal(`${later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier, { smallestUnit: 'years' })}`);
+      equal(`${later.since(earlier, { largestUnit: 'month' })}`, `${later.since(earlier, { largestUnit: 'months' })}`);
+      equal(
+        `${later.since(earlier, { smallestUnit: 'month' })}`,
+        `${later.since(earlier, { smallestUnit: 'months' })}`
+      );
+      equal(`${later.since(earlier, { largestUnit: 'day' })}`, `${later.since(earlier, { largestUnit: 'days' })}`);
+      equal(`${later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier, { smallestUnit: 'days' })}`);
+      equal(`${later.since(earlier, { largestUnit: 'hour' })}`, `${later.since(earlier, { largestUnit: 'hours' })}`);
+      equal(`${later.since(earlier, { smallestUnit: 'hour' })}`, `${later.since(earlier, { smallestUnit: 'hours' })}`);
+      equal(
+        `${later.since(earlier, { largestUnit: 'minute' })}`,
+        `${later.since(earlier, { largestUnit: 'minutes' })}`
+      );
+      equal(
+        `${later.since(earlier, { smallestUnit: 'minute' })}`,
+        `${later.since(earlier, { smallestUnit: 'minutes' })}`
+      );
+      equal(
+        `${later.since(earlier, { largestUnit: 'second' })}`,
+        `${later.since(earlier, { largestUnit: 'seconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { smallestUnit: 'second' })}`,
+        `${later.since(earlier, { smallestUnit: 'seconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { largestUnit: 'millisecond' })}`,
+        `${later.since(earlier, { largestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { smallestUnit: 'millisecond' })}`,
+        `${later.since(earlier, { smallestUnit: 'milliseconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { largestUnit: 'microsecond' })}`,
+        `${later.since(earlier, { largestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { smallestUnit: 'microsecond' })}`,
+        `${later.since(earlier, { smallestUnit: 'microseconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { largestUnit: 'nanosecond' })}`,
+        `${later.since(earlier, { largestUnit: 'nanoseconds' })}`
+      );
+      equal(
+        `${later.since(earlier, { smallestUnit: 'nanosecond' })}`,
+        `${later.since(earlier, { smallestUnit: 'nanoseconds' })}`
+      );
+    });
+    it('rounds relative to the receiver', () => {
+      const dt1 = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
+      const dt2 = ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
+      equal(`${dt2.since(dt1, { smallestUnit: 'years' })}`, 'P1Y');
+      equal(`${dt1.since(dt2, { smallestUnit: 'years' })}`, '-P2Y');
     });
   });
 
@@ -1705,6 +2362,266 @@ describe('ZonedDateTime', () => {
     });
     it('hoursInDay works before Samoa date line change', () => {
       equal(dayBeforeSamoaDateLineChange.hoursInDay, 24);
+    });
+  });
+
+  describe('math around DST', () => {
+    it('add 1 hour to get to DST start', () => {
+      const added = hourBeforeDstStart.add({ hours: 1 });
+      equal(added.hour, 3);
+      const diff = hourBeforeDstStart.until(added, { largestUnit: 'hours' });
+      equal(`${diff}`, 'PT1H');
+      equal(`${diff}`, `${added.since(hourBeforeDstStart, { largestUnit: 'hours' })}`);
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${hourBeforeDstStart}`);
+    });
+
+    it('add 2 hours to get to DST start +1', () => {
+      const added = hourBeforeDstStart.add({ hours: 2 });
+      equal(added.hour, 4);
+      const diff = hourBeforeDstStart.until(added, { largestUnit: 'hours' });
+      equal(`${diff}`, 'PT2H');
+      equal(`${diff}`, `${added.since(hourBeforeDstStart, { largestUnit: 'hours' })}`);
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${hourBeforeDstStart}`);
+    });
+
+    it('add 1.5 hours to get to 0.5 hours after DST start', () => {
+      const added = hourBeforeDstStart.add({ hours: 1, minutes: 30 });
+      equal(added.hour, 3);
+      equal(added.minute, 30);
+      const diff = hourBeforeDstStart.until(added, { largestUnit: 'hours' });
+      equal(`${diff}`, 'PT1H30M');
+      equal(`${diff}`, `${added.since(hourBeforeDstStart, { largestUnit: 'hours' })}`);
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${hourBeforeDstStart}`);
+    });
+
+    it('Samoa date line change (add): 10:00PM 29 Dec 2011 -> 11:00PM 31 Dec 2011', () => {
+      const timeZone = Temporal.TimeZone.from('Pacific/Apia');
+      const dayBeforeSamoaDateLineChangeAbs = timeZone.getInstantFor(new Temporal.PlainDateTime(2011, 12, 29, 22));
+      const start = dayBeforeSamoaDateLineChangeAbs.toZonedDateTimeISO(timeZone);
+      const added = start.add({ days: 1, hours: 1 });
+      equal(added.day, 31);
+      equal(added.hour, 23);
+      equal(added.minute, 0);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P2DT1H');
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${start}`);
+    });
+
+    it('Samoa date line change (subtract): 11:00PM 31 Dec 2011 -> 10:00PM 29 Dec 2011', () => {
+      const timeZone = Temporal.TimeZone.from('Pacific/Apia');
+      const dayAfterSamoaDateLineChangeAbs = timeZone.getInstantFor(new Temporal.PlainDateTime(2011, 12, 31, 23));
+      const start = dayAfterSamoaDateLineChangeAbs.toZonedDateTimeISO(timeZone);
+      const skipped = start.subtract({ days: 1, hours: 1 });
+      equal(skipped.day, 31);
+      equal(skipped.hour, 22);
+      equal(skipped.minute, 0);
+      const end = start.subtract({ days: 2, hours: 1 });
+      equal(end.day, 29);
+      equal(end.hour, 22);
+      equal(end.minute, 0);
+      const diff = end.since(start, { largestUnit: 'days' });
+      equal(`${diff}`, '-P2DT1H');
+      const undo = start.add(diff);
+      equal(`${undo}`, `${end}`);
+    });
+
+    it('3:30 day before DST start -> 3:30 day of DST start', () => {
+      const start = dayBeforeDstStart.add({ hours: 1 }); // 3:30AM
+      const added = start.add({ days: 1 });
+      equal(added.day, 8);
+      equal(added.hour, 3);
+      equal(added.minute, 30);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1D');
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${start}`);
+    });
+
+    it('2:30 day before DST start -> 3:30 day of DST start', () => {
+      const added = dayBeforeDstStart.add({ days: 1 });
+      equal(added.day, 8);
+      equal(added.hour, 3);
+      equal(added.minute, 30);
+      const diff = dayBeforeDstStart.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1D');
+      const undo = dayBeforeDstStart.add(diff);
+      equal(`${undo}`, `${added}`);
+    });
+
+    it('1:30 day DST starts -> 4:30 day DST starts', () => {
+      const start = dayBeforeDstStart.add({ hours: 23 }); // 1:30AM
+      const added = start.add({ hours: 2 });
+      equal(added.day, 8);
+      equal(added.hour, 4);
+      equal(added.minute, 30);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'PT2H');
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${start}`);
+    });
+
+    it('2:00 day before DST starts -> 3:00 day DST starts', () => {
+      const start = hourBeforeDstStart.subtract({ days: 1 }).add({ hours: 1 }); // 2:00AM
+      const added = start.add({ days: 1 });
+      equal(added.day, 8);
+      equal(added.hour, 3);
+      equal(added.minute, 0);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1D');
+      const undo = start.add(diff);
+      equal(`${undo}`, `${added}`);
+    });
+
+    it('1:00AM day DST starts -> (add 24 hours) -> 2:00AM day after DST starts', () => {
+      const start = hourBeforeDstStart; // 1:00AM
+      const added = start.add({ hours: 24 });
+      equal(added.day, 9);
+      equal(added.hour, 2);
+      equal(added.minute, 0);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1DT1H');
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${start}`);
+    });
+
+    it('12:00AM day DST starts -> (add 24 hours) -> 1:00AM day after DST starts', () => {
+      const start = hourBeforeDstStart.subtract({ hours: 1 }); // 1:00AM
+      const added = start.add({ hours: 24 });
+      equal(added.day, 9);
+      equal(added.hour, 1);
+      equal(added.minute, 0);
+      const diff = start.until(added, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1DT1H');
+      const undo = added.subtract(diff);
+      equal(`${undo}`, `${start}`);
+    });
+
+    it('Difference can return day length > 24 hours', () => {
+      const start = ZonedDateTime.from('2020-10-30T01:45-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-11-02T01:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days' });
+      equal(`${diff}`, 'P2DT24H30M');
+      const undo = start.add(diff);
+      equal(`${undo}`, `${end}`);
+    });
+
+    it('Difference rounding (nearest day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { smallestUnit: 'days' }); // roundingMode: 'nearest'
+      equal(`${diff}`, '-P3D');
+    });
+
+    it('Difference rounding (ceil day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { smallestUnit: 'days', roundingMode: 'ceil' });
+      equal(`${diff}`, '-P2D');
+    });
+
+    it('Difference rounding (trunc day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { smallestUnit: 'days', roundingMode: 'trunc' });
+      equal(`${diff}`, '-P2D');
+    });
+
+    it('Difference rounding (floor day) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { smallestUnit: 'days', roundingMode: 'floor' });
+      equal(`${diff}`, '-P3D');
+    });
+
+    it('Difference rounding (nearest hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours' }); // roundingMode: 'nearest'
+      equal(`${diff}`, '-P2DT12H');
+    });
+
+    it('Difference rounding (ceil hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'ceil' });
+      equal(`${diff}`, '-P2DT12H');
+    });
+
+    it('Difference rounding (trunc hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'trunc' });
+      equal(`${diff}`, '-P2DT12H');
+    });
+
+    it('Difference rounding (floor hour) is DST-aware', () => {
+      const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'floor' });
+      equal(`${diff}`, '-P2DT13H');
+    });
+
+    it('Difference when date portion ends inside a DST-skipped period', () => {
+      const start = ZonedDateTime.from('2020-03-07T02:30-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-03-08T03:15-07:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days' });
+      equal(`${diff}`, 'PT23H45M');
+    });
+
+    it("Difference when date portion ends inside day skipped by Samoa's 24hr 2011 transition", () => {
+      const end = ZonedDateTime.from('2011-12-31T05:00+14:00[Pacific/Apia]');
+      const start = ZonedDateTime.from('2011-12-28T10:00-10:00[Pacific/Apia]');
+      const diff = start.until(end, { largestUnit: 'days' });
+      equal(`${diff}`, 'P1DT19H');
+    });
+
+    it('Rounding up to hours causes one more day of overflow (positive)', () => {
+      const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours' });
+      equal(`${diff}`, 'P3D');
+    });
+
+    it('Rounding up to hours causes one more day of overflow (negative)', () => {
+      const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
+      const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
+      const diff = end.until(start, { largestUnit: 'days', smallestUnit: 'hours' });
+      equal(`${diff}`, '-P3D');
+    });
+
+    it('addition and difference work near DST start', () => {
+      // Test the difference between different distances near DST start
+      const stepsPerHour = 2;
+      const minutesPerStep = 60 / stepsPerHour;
+      const hoursUntilEnd = 26;
+      const startHourRange = 3;
+      for (let i = 0; i < startHourRange * stepsPerHour; i++) {
+        const start = hourBeforeDstStart.add({ minutes: minutesPerStep * i });
+        for (let j = 0; j < hoursUntilEnd * stepsPerHour; j++) {
+          const end = start.add({ minutes: j * minutesPerStep });
+          const diff = start.until(end, { largestUnit: 'days' });
+          const expectedMinutes = minutesPerStep * (j % stepsPerHour);
+          equal(diff.minutes, expectedMinutes);
+          const diff60 = Math.floor(j / stepsPerHour);
+          if (i >= stepsPerHour) {
+            // DST transition already happened
+            const expectedDays = diff60 < 24 ? 0 : diff60 < 48 ? 1 : 2;
+            const expectedHours = diff60 < 24 ? diff60 : diff60 < 48 ? diff60 - 24 : diff60 - 48;
+            equal(diff.hours, expectedHours);
+            equal(diff.days, expectedDays);
+          } else {
+            // DST transition hasn't happened yet
+            const expectedDays = diff60 < 23 ? 0 : diff60 < 47 ? 1 : 2;
+            const expectedHours = diff60 < 23 ? diff60 : diff60 < 47 ? diff60 - 23 : diff60 - 47;
+            equal(diff.hours, expectedHours);
+            equal(diff.days, expectedDays);
+          }
+        }
+      }
     });
   });
 

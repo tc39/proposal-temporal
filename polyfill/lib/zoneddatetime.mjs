@@ -326,14 +326,86 @@ export class ZonedDateTime {
     }
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
-    void roundingMode;
-    void roundingIncrement;
-    throw new Error('until() not implemented yet');
+
+    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+    if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
+      // The user is only asking for a time difference, so return difference of instants.
+      years = 0;
+      months = 0;
+      weeks = 0;
+      ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+        GetSlot(this, EPOCHNANOSECONDS),
+        GetSlot(other, EPOCHNANOSECONDS),
+        roundingIncrement,
+        smallestUnit,
+        roundingMode
+      ));
+      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        0,
+        0,
+        0,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        largestUnit
+      ));
+    } else {
+      if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+        throw new RangeError(
+          "When calculating difference between time zones, largestUnit must be 'hours' " +
+            'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
+        );
+      }
+      ({
+        years = 0,
+        months = 0,
+        weeks = 0,
+        days = 0,
+        hours = 0,
+        minutes = 0,
+        seconds = 0,
+        milliseconds = 0,
+        microseconds = 0,
+        nanoseconds = 0
+      } = ES.DifferenceZonedDateTime(this, other, largestUnit, roundingIncrement, smallestUnit, roundingMode));
+      const relativeTo = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
+      ({
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.RoundDuration(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        relativeTo
+      ));
+    }
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -347,15 +419,98 @@ export class ZonedDateTime {
     }
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
-    void roundingMode;
-    void roundingIncrement;
-    throw new Error('since() not implemented yet');
+
+    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+    if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
+      // The user is only asking for a time difference, so return difference of instants.
+      years = 0;
+      months = 0;
+      weeks = 0;
+      ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+        GetSlot(this, EPOCHNANOSECONDS),
+        GetSlot(other, EPOCHNANOSECONDS),
+        roundingIncrement,
+        smallestUnit,
+        roundingMode
+      ));
+      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        0,
+        0,
+        0,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        largestUnit
+      ));
+    } else {
+      if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+        throw new RangeError(
+          "When calculating difference between time zones, largestUnit must be 'hours' " +
+            'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
+        );
+      }
+      ({
+        years = 0,
+        months = 0,
+        weeks = 0,
+        days = 0,
+        hours = 0,
+        minutes = 0,
+        seconds = 0,
+        milliseconds = 0,
+        microseconds = 0,
+        nanoseconds = 0
+      } = ES.DifferenceZonedDateTime(this, other, largestUnit, roundingIncrement, smallestUnit, roundingMode));
+      const relativeTo = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
+      ({
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.RoundDuration(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        relativeTo
+      ));
+    }
+
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(
+      -years,
+      -months,
+      -weeks,
+      -days,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds
+    );
   }
   round(options) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
