@@ -7,9 +7,7 @@ includes: [compareArray.js]
 ---*/
 
 const actual = [];
-const expected = [
-  "get timeZone.toString",
-];
+const expected = [];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789+02:00");
 const timeZone = new Temporal.TimeZone("UTC");
@@ -27,5 +25,5 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-assert.sameValue(instant.toString(timeZone), "1975-02-02T12:25:36.123456789Z");
+assert.sameValue(instant.toString({ timeZone }), "1975-02-02T12:25:36.123456789+00:00");
 assert.compareArray(actual, expected);

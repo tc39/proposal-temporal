@@ -10,10 +10,6 @@ const actual = [];
 const expected = [
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
-  "get timeZone.toString",
-  "call timeZone.toString",
-  "get name.toString",
-  "call name.toString",
   "get timeZone.getOffsetStringFor",
   "call timeZone.getOffsetStringFor",
   "get offset.toString",
@@ -74,5 +70,5 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-assert.sameValue(instant.toString(timeZone), "1963-07-02T12:00:00.987654321+02:59[Custom/TimeZone]");
+assert.sameValue(instant.toString({ timeZone }), "1963-07-02T12:00:00.987654321+02:59");
 assert.compareArray(actual, expected);
