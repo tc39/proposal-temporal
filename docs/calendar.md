@@ -133,7 +133,7 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 
 ### calendar.**day**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.MonthDay | object | string) : number
 
-### calendar.**era**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : string | undefined
+
 
 ### calendar.**dayOfWeek**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
