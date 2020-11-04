@@ -233,16 +233,33 @@ export class Instant {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Instant');
   }
-  toZonedDateTime(temporalTimeZoneLike, calendarLike) {
+  toZonedDateTime(item) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    if (ES.Type(item) !== 'Object') {
+      throw new TypeError('invalid argument in toZonedDateTime');
+    }
+    const calendarLike = item.calendar;
+    if (calendarLike === undefined) {
+      throw new TypeError('missing calendar property in toZonedDateTime');
+    }
     const calendar = ES.ToTemporalCalendar(calendarLike);
+    const temporalTimeZoneLike = item.timeZone;
+    if (temporalTimeZoneLike === undefined) {
+      throw new TypeError('missing timeZone property in toZonedDateTime');
+    }
+    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
-  toZonedDateTimeISO(temporalTimeZoneLike) {
+  toZonedDateTimeISO(item) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    if (ES.Type(item) === 'Object') {
+      const timeZoneProperty = item.timeZone;
+      if (timeZoneProperty !== undefined) {
+        item = timeZoneProperty;
+      }
+    }
+    const timeZone = ES.ToTemporalTimeZone(item);
     const calendar = GetISO8601Calendar();
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);

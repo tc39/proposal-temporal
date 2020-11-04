@@ -26,6 +26,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => instant.toZonedDateTime(timeZone, "test"), description);
+  assert.throws(TypeError, () => instant.toZonedDateTime({ timeZone, calendar: "test" }), description);
   assert.sameValue(called, 1);
 }
