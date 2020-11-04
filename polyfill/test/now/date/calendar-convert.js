@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.date
+esid: sec-temporal.now.plaindate
 ---*/
 
 const values = [
@@ -22,7 +22,7 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const date = Temporal.now.date(input, "UTC");
+  const date = Temporal.now.plainDate(input, "UTC");
   assert.sameValue(called, 1);
   assert.sameValue(date.calendar, calendar);
 }
@@ -31,4 +31,4 @@ Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => Temporal.now.date(Symbol(), "UTC"));
+assert.throws(TypeError, () => Temporal.now.plainDate(Symbol(), "UTC"));

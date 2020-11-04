@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.datetime
+esid: sec-temporal.now.plaindatetime
 includes: [compareArray.js]
 ---*/
 
@@ -40,7 +40,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.dateTime("japanese", timeZone);
+const result = Temporal.now.plainDateTime("japanese", timeZone);
 assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

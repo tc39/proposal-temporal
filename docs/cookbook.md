@@ -322,7 +322,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
   // Do initialization that doesn't necessarily need to be included in
   // the example; see 'Calendar input element'
   const futureDatePicker = document.querySelector('input[name="futuredate"]');
-  const today = Temporal.now.date();
+  const today = Temporal.now.plainDate();
   futureDatePicker.min = today;
   futureDatePicker.value = today.add({ months: 1 });
 }

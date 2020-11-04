@@ -127,9 +127,9 @@ financialCentres = {
   'London': 'Europe/London',
   'Tokyo': 'Asia/Tokyo',
 };
-console.log(`Here: ${Temporal.now.dateTimeISO()}`);
+console.log(`Here: ${Temporal.now.plainDateTimeISO()}`);
 Object.entries(financialCentres).forEach(([name, timeZone]) => {
-  console.log(`${name}: ${Temporal.now.dateTimeISO(timeZone)}`);
+  console.log(`${name}: ${Temporal.now.plainDateTimeISO(timeZone)}`);
 });
 // example output:
 // Here: 2020-01-24T21:51:02.142905166
@@ -152,7 +152,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 This method gets the current calendar date and wall-clock time according to the system settings.
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
 
-If you only want to use the ISO 8601 calendar, use `Temporal.now.dateTimeISO()`.
+If you only want to use the ISO 8601 calendar, use `Temporal.now.plainDateTimeISO()`.
 
 ### Temporal.now.**dateISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 
@@ -172,7 +172,7 @@ Example usage:
 
 ```js
 // Is it New Year in the ISO 8601 calendar?
-date = Temporal.now.dateISO();
+date = Temporal.now.plainDateISO();
 if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
 
@@ -189,15 +189,15 @@ if (date.month === 1 && date.day === 1) console.log('New year!');
 This method gets the current calendar date according to the system settings.
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.
 
-If you only want to use the ISO 8601 calendar, use `Temporal.now.dateISO()`.
+If you only want to use the ISO 8601 calendar, use `Temporal.now.plainDateISO()`.
 
 ```js
 // Is it Nowruz (New Year in the Persian calendar)?
-date = Temporal.now.date('persian');
+date = Temporal.now.plainDate('persian');
 if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
 
-### Temporal.now.**timeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
+### Temporal.now.**plainTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Time
 
 **Parameters:**
 
@@ -213,6 +213,6 @@ Example usage:
 
 ```js
 // Is it lunchtime?
-time = Temporal.now.timeISO();
+time = Temporal.now.plainTimeISO();
 if (time.hour === 12) console.log('Lunchtime!');
 ```

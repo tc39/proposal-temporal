@@ -294,7 +294,7 @@ Usage example:
 // Attempt to write some mnemonic poetry
 const monthsByDays = {};
 for (let month = 1; month <= 12; month++) {
-  const dt = Temporal.now.dateTime().with({ month });
+  const dt = Temporal.now.plainDateTime().with({ month });
   monthsByDays[dt.daysInMonth] = (monthsByDays[dt.daysInMonth] || []).concat(dt);
 }
 
@@ -315,7 +315,7 @@ For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is 
 Usage example:
 
 ```javascript
-dt = Temporal.now.dateTime();
+dt = Temporal.now.plainDateTime();
 percent = dt.dayOfYear / dt.daysInYear;
 `The year is ${percent.toLocaleString('en', { style: 'percent' })} over!`;
 // example output: "The year is 10% over!"
@@ -342,7 +342,7 @@ Usage example:
 
 ```javascript
 // Is this year a leap year?
-dt = Temporal.now.dateTime();
+dt = Temporal.now.plainDateTime();
 dt.inLeapYear; // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
 dt.with({ year: 2100 }).inLeapYear; // => false

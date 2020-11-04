@@ -11,7 +11,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   timeZone: Temporal.now.timeZone()
 });
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
-const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toPlainDateTime().toInstant(tankTimeZone);
+const tankMidnight = Temporal.now.plainDate(browserCalendar, tankTimeZone).toPlainDateTime().toInstant(tankTimeZone);
 const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));

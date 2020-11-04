@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.date
+esid: sec-temporal.now.plaindate
 ---*/
 
 const invalidValues = [
@@ -28,5 +28,5 @@ for (const dateTime of invalidValues) {
     },
   };
 
-  assert.throws(TypeError, () => Temporal.now.date("iso8601", timeZone));
+  assert.throws(TypeError, () => Temporal.now.plainDate("iso8601", timeZone));
 }

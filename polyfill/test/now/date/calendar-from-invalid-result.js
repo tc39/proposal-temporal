@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.date
+esid: sec-temporal.now.plaindate
 ---*/
 
 const values = [
@@ -25,6 +25,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => Temporal.now.date("test", timeZone), description);
+  assert.throws(TypeError, () => Temporal.now.plainDate("test", timeZone), description);
   assert.sameValue(called, 1);
 }
