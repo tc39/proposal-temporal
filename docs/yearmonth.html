@@ -197,7 +197,7 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#toDate">toDate</a>
+<li><a href="#toPlainDate">toPlainDate</a>
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
@@ -211,7 +211,7 @@
 <p>A <code>Temporal.YearMonth</code> represents a particular month on the calendar.
 For example, it could be used to represent a particular instance of a monthly recurring event, like &quot;the June 2019 meeting&quot;.</p>
 <p><code>Temporal.YearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.Date</code> or even <code>Temporal.DateTime</code>.
-A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>toDate()</code> method.</p>
+A <code>Temporal.YearMonth</code> can be converted into a <code>Temporal.Date</code> by combining it with a day of the month, using the <code>toPlainDate()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-YearMonth"><a class="heading-link" href="#new-Temporal-YearMonth"></a><strong>new Temporal.YearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: object, <em>referenceISODay</em>: number = 1) : Temporal.YearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -226,7 +226,7 @@ You can omit this parameter unless using a non-ISO-8601 calendar.</li>
 Otherwise, <code>Temporal.YearMonth.from()</code>, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>referenceISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
-<p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#toYearMonth"><code>toYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
+<p>The range of allowed values for this type is exactly enough that calling <a href="./date.html#toPlainYearMonth"><code>toPlainYearMonth()</code></a> on any valid <code>Temporal.Date</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -376,7 +376,7 @@ The default is <code>constrain</code>.</li>
 <blockquote>
 <p><strong>NOTE</strong>: Unlike in <code>Temporal.Date.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>yearMonthLike</code>.
 It is not possible to convert a <code>Temporal.YearMonth</code> to another calendar system without knowing the day of the month.
-If you need to do this, use <code>yearMonth.toDate({ day }).withCalendar(calendar).toYearMonth()</code>.</p>
+If you need to do this, use <code>yearMonth.toPlainDate({ day }).withCalendar(calendar).toPlainYearMonth()</code>.</p>
 </blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -472,7 +472,7 @@ other<span class="token punctuation">.</span><span class="token function">until<
 <span class="token comment">// day of the month (and if applicable, the time of that day) from which</span>
 <span class="token comment">// you want to reckon the difference. For example, using the first of</span>
 <span class="token comment">// the month to calculate a number of days:</span>
-ym<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P4687D</span></code></pre><!-- prettier-ignore-end -->
+ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P4687D</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>yearMonth.<strong>since</strong>(<em>other</em>: Temporal.YearMonth | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -590,7 +590,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>yearMonth.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.YearMonth</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.YearMonth.compare()</code> for this, or <code>yearMonth.equals()</code> for equality.</p>
-<h3 id="toDate"><a class="heading-link" href="#toDate"></a>yearMonth.<strong>toDate</strong>(<em>day</em>: object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
+<h3 id="toPlainDate"><a class="heading-link" href="#toPlainDate"></a>yearMonth.<strong>toPlainDate</strong>(<em>day</em>: object) : Temporal.Date</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>day</code> (object): An object with a <code>&#39;day&#39;</code> property, which must be a valid day of <code>yearMonth</code>.</li>
 </ul>
@@ -599,7 +599,7 @@ Use <code>Temporal.YearMonth.compare()</code> for this, or <code>yearMonth.equal
 The converted object carries a copy of all the relevant fields of <code>yearMonth</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">toDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>yearMonth.<strong>getFields</strong>() : { year: number, month: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>yearMonth</code>.</p>
+ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>yearMonth.<strong>getFields</strong>() : { year: number, month: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>yearMonth</code>.</p>
 <p>This method can be used to convert a <code>Temporal.YearMonth</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as <code>era</code>.</p>

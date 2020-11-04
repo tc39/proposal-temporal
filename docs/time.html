@@ -203,7 +203,7 @@
 </li>
 <li><a href="#toZonedDateTime">toZonedDateTime</a>
 </li>
-<li><a href="#toDateTime">toDateTime</a>
+<li><a href="#toPlainDateTime">toPlainDateTime</a>
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
@@ -218,7 +218,7 @@
 &quot;Wall-clock time&quot; refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
 <p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
-A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toDateTime()</code> method.</p>
+A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toPlainDateTime()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -655,19 +655,19 @@ This behavior avoids exceptions when converting non-existent date/time values to
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toDateTime"><a class="heading-link" href="#toDateTime"></a>time.<strong>toDateTime</strong>(<em>date</em>: Temporal.Date | object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toPlainDateTime"><a class="heading-link" href="#toPlainDateTime"></a>time.<strong>toPlainDateTime</strong>(<em>date</em>: Temporal.Date | object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>date</code> (<code>Temporal.Date</code> or value convertible to one): A calendar date on which to place <code>time</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code>.</p>
 <p>This method can be used to convert <code>Temporal.Time</code> into a <code>Temporal.DateTime</code>, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.</p>
-<p>This has identical results to <a href="./date.html#toDateTime"><code>Temporal.Date.from(date).toDateTime(time)</code></a>.</p>
+<p>This has identical results to <a href="./date.html#toPlainDateTime"><code>Temporal.Date.from(date).toPlainDateTime(time)</code></a>.</p>
 <p>If <code>date</code> is not a <code>Temporal.Date</code> object, then it will be converted to one as if it were passed to <code>Temporal.Date.from()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
+time<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
 <p>This method can be used to convert a <code>Temporal.Time</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.</p>

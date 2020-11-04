@@ -9103,8 +9103,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Date');
       }
     }, {
-      key: "toDateTime",
-      value: function toDateTime() {
+      key: "toPlainDateTime",
+      value: function toPlainDateTime() {
         var temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var year = GetSlot(this, ISO_YEAR);
@@ -9161,8 +9161,8 @@
         return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
       }
     }, {
-      key: "toYearMonth",
-      value: function toYearMonth() {
+      key: "toPlainYearMonth",
+      value: function toPlainYearMonth() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
         var calendar = GetSlot(this, CALENDAR);
@@ -9171,8 +9171,8 @@
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
-      key: "toMonthDay",
-      value: function toMonthDay() {
+      key: "toPlainMonthDay",
+      value: function toPlainMonthDay() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
         var calendar = GetSlot(this, CALENDAR);
@@ -9775,14 +9775,14 @@
         return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
       }
     }, {
-      key: "toDate",
-      value: function toDate() {
+      key: "toPlainDate",
+      value: function toPlainDate() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return ES.TemporalDateTimeToDate(this);
       }
     }, {
-      key: "toYearMonth",
-      value: function toYearMonth() {
+      key: "toPlainYearMonth",
+      value: function toPlainYearMonth() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
         var calendar = GetSlot(this, CALENDAR);
@@ -9791,8 +9791,8 @@
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
-      key: "toMonthDay",
-      value: function toMonthDay() {
+      key: "toPlainMonthDay",
+      value: function toPlainMonthDay() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
         var calendar = GetSlot(this, CALENDAR);
@@ -9801,8 +9801,8 @@
         return calendar.monthDayFromFields(fields, {}, MonthDay);
       }
     }, {
-      key: "toTime",
-      value: function toTime() {
+      key: "toPlainTime",
+      value: function toPlainTime() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return ES.TemporalDateTimeToTime(this);
       }
@@ -10541,8 +10541,8 @@
         throw new TypeError('use equals() to compare Temporal.MonthDay');
       }
     }, {
-      key: "toDate",
-      value: function toDate(item) {
+      key: "toPlainDate",
+      value: function toPlainDate(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
@@ -11057,8 +11057,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.Time');
       }
     }, {
-      key: "toDateTime",
-      value: function toDateTime(temporalDate) {
+      key: "toPlainDateTime",
+      value: function toPlainDateTime(temporalDate) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic$1('%Temporal.Date%'));
         var year = GetSlot(temporalDate, ISO_YEAR);
@@ -11492,8 +11492,8 @@
         throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
       }
     }, {
-      key: "toDate",
-      value: function toDate(item) {
+      key: "toPlainDate",
+      value: function toPlainDate(item) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
         var receiverFieldNames = ES.CalendarFields(calendar, ['month', 'year']);
@@ -11947,26 +11947,26 @@
         return new TemporalInstant(GetSlot(this, EPOCHNANOSECONDS));
       }
     }, {
-      key: "toDate",
-      value: function toDate() {
+      key: "toPlainDate",
+      value: function toPlainDate() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         return ES.TemporalDateTimeToDate(dateTime$1(this));
       }
     }, {
-      key: "toTime",
-      value: function toTime() {
+      key: "toPlainTime",
+      value: function toPlainTime() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         return ES.TemporalDateTimeToTime(dateTime$1(this));
       }
     }, {
-      key: "toDateTime",
-      value: function toDateTime() {
+      key: "toPlainDateTime",
+      value: function toPlainDateTime() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         return dateTime$1(this);
       }
     }, {
-      key: "toYearMonth",
-      value: function toYearMonth() {
+      key: "toPlainYearMonth",
+      value: function toPlainYearMonth() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.YearMonth%');
         var calendar = GetSlot(this, CALENDAR);
@@ -11975,8 +11975,8 @@
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
-      key: "toMonthDay",
-      value: function toMonthDay() {
+      key: "toPlainMonthDay",
+      value: function toPlainMonthDay() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.MonthDay%');
         var calendar = GetSlot(this, CALENDAR);
