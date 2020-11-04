@@ -14,21 +14,25 @@ A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it wi
 
 ## Constructor
 
-### **new Temporal.Time**(_hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0) : Temporal.Time
+### **new Temporal.Time**(_isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.Time
 
 **Parameters:**
 
-- `hour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
-- `minute` (optional number): A minute, ranging between 0 and 59 inclusive.
-- `second` (optional number): A second, ranging between 0 and 59 inclusive.
-- `millisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
-- `microsecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
-- `nanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
+- `isoHour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
+- `isoMinute` (optional number): A minute, ranging between 0 and 59 inclusive.
+- `isoSecond` (optional number): A second, ranging between 0 and 59 inclusive.
+- `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
+- `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
+- `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the time into.
 
 **Returns:** a new `Temporal.Time` object.
 
-Use this constructor if you have the correct parameters for the time already as individual number values.
-Otherwise, `Temporal.Time.from()`, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.
+Use this constructor if you have the correct parameters for the time already as individual number values in the ISO 8601 calendar.
+Otherwise, `Temporal.Time.from()`, which accepts more kinds of input, allows inputting times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+
+All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+Together, `isoHour`, `isoMinute`, `isoSecond`, `isoMillisecond`, `isoMicrosecond`, and `isoNanosecond` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 Usage examples:
 
@@ -54,8 +58,10 @@ time = new Temporal.Time(13, 37); // => 13:37
 
 This static method creates a new `Temporal.Time` object from another value.
 If the value is another `Temporal.Time` object, a new object representing the same time is returned.
-If the value is any other object, a `Temporal.Time` will be constructed from the values of any `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
-Any missing ones will be assumed to be 0.
+If the value is any other object, a `Temporal.Time` will be constructed from the values of any `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
+Any missing ones except `calendar` will be assumed to be 0.
+
+If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.
@@ -164,6 +170,10 @@ time.nanosecond;  // => 205
 ```
 <!-- prettier-ignore-end -->
 
+### time.**calendar**: object
+
+The `calendar` read-only property gives the calendar that the `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties are interpreted in.
+
 ## Methods
 
 ### time.**with**(_timeLike_: object | string, _options_?: object) : Temporal.Time
@@ -198,6 +208,21 @@ time.add({ hours: 1 }).with({
   microsecond: 0,
   nanosecond: 0
 }); // => 20:00
+```
+
+### time.**withCalendar**(_calendar_: object | string) : Temporal.Time
+
+**Parameters:**
+
+- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `time`.
+
+**Returns:** a new `Temporal.Time` object which is the time indicated by `time`, projected into `calendar`.
+
+Usage example:
+
+```javascript
+time = Temporal.Time.from('03:20:00[c=ethiopic]');
+time.withCalendar('iso8601'); // => 03:20:00
 ```
 
 ### time.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.Time
@@ -297,6 +322,9 @@ A value of `'auto'` means `'hours'`.
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method.
 The default is to do no rounding.
+
+Computing the difference between two times in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the times with `time.withCalendar()`.
 
 Usage example:
 
@@ -414,7 +442,7 @@ Compares two `Temporal.Time` objects for equality.
 
 This function exists because it's not possible to compare using `time == other` or `time === other`, due to ambiguity in the primitive representation and between Temporal types.
 
-If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
+If you don't need to know the order in which the two times occur, then this function may be less typing and more efficient than `Temporal.Time.compare`.
 
 If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
@@ -622,10 +650,39 @@ time.toDateTime(date); // => 2006-08-24T15:23:30.003
 This method can be used to convert a `Temporal.Time` into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
+Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.
+
 Usage example:
 
 ```javascript
 time = Temporal.Time.from('15:23:30.003');
 Object.assign({}, time).minute; // => undefined
 Object.assign({}, time.getFields()).minute; // => 23
+```
+
+### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }
+
+**Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar, as well as the value of `time.calendar`.
+
+This method is mainly useful if you are implementing a custom calendar.
+Most code will not need to use it.
+Use `time.getFields()` instead, or `time.withCalendar('iso8601').getFields()`.
+
+Usage example:
+
+```javascript
+time = Temporal.Time.from('03:20:00');
+f = time.getISOFields();
+f.isoHour; // => 3
+// Fields correspond exactly to constructor arguments:
+time2 = new Temporal.Time(f.isoHour, f.isoMinute, f.isoSecond, f.isoMillisecond, f.isoMicrosecond, f.isoNanosecond, f.calendar);
+time.equals(time2); // => true
+
+// Time in other calendar
+time = time.withCalendar('ethiopic');
+time.getFields().hour; // => 9
+time.getISOFields().isoHour; // => 3
+
+// Most likely what you need is this:
+time.withCalendar('iso8601').hour; // => 3
 ```
