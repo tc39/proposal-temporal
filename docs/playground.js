@@ -6109,6 +6109,61 @@
         nanoseconds: nanoseconds
       };
     },
+    DifferenceDateTime: function DifferenceDateTime(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendar, largestUnit) {
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var TemporalTime = GetIntrinsic$1('%Temporal.Time%');
+      var time1 = new TemporalTime(h1, min1, s1, ms1, µs1, ns1, calendar);
+      var time2 = new TemporalTime(h2, min2, s2, ms2, µs2, ns2, calendar);
+
+      var _calendar$timeUntil = calendar.timeUntil(time1, time2),
+          deltaDays = _calendar$timeUntil.days,
+          hours = _calendar$timeUntil.hours,
+          minutes = _calendar$timeUntil.minutes,
+          seconds = _calendar$timeUntil.seconds,
+          milliseconds = _calendar$timeUntil.milliseconds,
+          microseconds = _calendar$timeUntil.microseconds,
+          nanoseconds = _calendar$timeUntil.nanoseconds;
+
+      var _ES$BalanceDate2 = ES.BalanceDate(y1, mon1, d1 + deltaDays);
+
+      y1 = _ES$BalanceDate2.year;
+      mon1 = _ES$BalanceDate2.month;
+      d1 = _ES$BalanceDate2.day;
+      var date1 = new TemporalDate(y1, mon1, d1, calendar);
+      var date2 = new TemporalDate(y2, mon2, d2, calendar);
+      var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+
+      var _calendar$dateUntil = calendar.dateUntil(date1, date2, {
+        largestUnit: dateLargestUnit
+      }),
+          years = _calendar$dateUntil.years,
+          months = _calendar$dateUntil.months,
+          weeks = _calendar$dateUntil.weeks,
+          days = _calendar$dateUntil.days; // Signs of date part and time part may not agree; balance them together
+
+
+      var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+      days = _ES$BalanceDuration.days;
+      hours = _ES$BalanceDuration.hours;
+      minutes = _ES$BalanceDuration.minutes;
+      seconds = _ES$BalanceDuration.seconds;
+      milliseconds = _ES$BalanceDuration.milliseconds;
+      microseconds = _ES$BalanceDuration.microseconds;
+      nanoseconds = _ES$BalanceDuration.nanoseconds;
+      return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
     AddDate: function AddDate(year, month, day, years, months, weeks, days, overflow) {
       year += years;
       month += months;
@@ -6126,11 +6181,11 @@
       days += 7 * weeks;
       day += days;
 
-      var _ES$BalanceDate2 = ES.BalanceDate(year, month, day);
+      var _ES$BalanceDate3 = ES.BalanceDate(year, month, day);
 
-      year = _ES$BalanceDate2.year;
-      month = _ES$BalanceDate2.month;
-      day = _ES$BalanceDate2.day;
+      year = _ES$BalanceDate3.year;
+      month = _ES$BalanceDate3.month;
+      day = _ES$BalanceDate3.day;
       return {
         year: year,
         month: month,
@@ -6169,11 +6224,11 @@
       days += 7 * weeks;
       day -= days;
 
-      var _ES$BalanceDate3 = ES.BalanceDate(year, month, day);
+      var _ES$BalanceDate4 = ES.BalanceDate(year, month, day);
 
-      year = _ES$BalanceDate3.year;
-      month = _ES$BalanceDate3.month;
-      day = _ES$BalanceDate3.day;
+      year = _ES$BalanceDate4.year;
+      month = _ES$BalanceDate4.month;
+      day = _ES$BalanceDate4.day;
       month -= months;
       year -= years;
 
@@ -6193,34 +6248,6 @@
         day: day
       };
     },
-    SubtractTime: function SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
-      hour -= hours;
-      minute -= minutes;
-      second -= seconds;
-      millisecond -= milliseconds;
-      microsecond -= microseconds;
-      nanosecond -= nanoseconds;
-      var deltaDays = 0;
-
-      var _ES$BalanceTime4 = ES.BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-
-      deltaDays = _ES$BalanceTime4.deltaDays;
-      hour = _ES$BalanceTime4.hour;
-      minute = _ES$BalanceTime4.minute;
-      second = _ES$BalanceTime4.second;
-      millisecond = _ES$BalanceTime4.millisecond;
-      microsecond = _ES$BalanceTime4.microsecond;
-      nanosecond = _ES$BalanceTime4.nanosecond;
-      return {
-        deltaDays: deltaDays,
-        hour: hour,
-        minute: minute,
-        second: second,
-        millisecond: millisecond,
-        microsecond: microsecond,
-        nanosecond: nanosecond
-      };
-    },
     AddDuration: function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2) {
       var years = y1 + y2;
       var months = mon1 + mon2;
@@ -6234,15 +6261,15 @@
       var nanoseconds = ns1 + ns2;
       var largestUnit = ES.DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-      var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+      var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
-      days = _ES$BalanceDuration.days;
-      hours = _ES$BalanceDuration.hours;
-      minutes = _ES$BalanceDuration.minutes;
-      seconds = _ES$BalanceDuration.seconds;
-      milliseconds = _ES$BalanceDuration.milliseconds;
-      microseconds = _ES$BalanceDuration.microseconds;
-      nanoseconds = _ES$BalanceDuration.nanoseconds;
+      days = _ES$BalanceDuration2.days;
+      hours = _ES$BalanceDuration2.hours;
+      minutes = _ES$BalanceDuration2.minutes;
+      seconds = _ES$BalanceDuration2.seconds;
+      milliseconds = _ES$BalanceDuration2.milliseconds;
+      microseconds = _ES$BalanceDuration2.microseconds;
+      nanoseconds = _ES$BalanceDuration2.nanoseconds;
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
@@ -6269,6 +6296,41 @@
       ES.RejectInstantRange(result);
       return result;
     },
+    AddDateTime: function AddDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow) {
+      // Add the time part
+      // FIXME: use calendar.timeAdd()
+      var deltaDays = 0;
+
+      var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+      deltaDays = _ES$AddTime.deltaDays;
+      hour = _ES$AddTime.hour;
+      minute = _ES$AddTime.minute;
+      second = _ES$AddTime.second;
+      millisecond = _ES$AddTime.millisecond;
+      microsecond = _ES$AddTime.microsecond;
+      nanosecond = _ES$AddTime.nanosecond;
+      days += deltaDays; // Delegate the date part addition to the calendar
+
+      var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
+      var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
+      var datePart = new TemporalDate(year, month, day, calendar);
+      var dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      var addedDate = calendar.dateAdd(datePart, dateDuration, {
+        overflow: overflow
+      }, TemporalDate);
+      return {
+        year: GetSlot(addedDate, ISO_YEAR),
+        month: GetSlot(addedDate, ISO_MONTH),
+        day: GetSlot(addedDate, ISO_DAY),
+        hour: hour,
+        minute: minute,
+        second: second,
+        millisecond: millisecond,
+        microsecond: microsecond,
+        nanosecond: nanosecond
+      };
+    },
     AddZonedDateTime: function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) {
       // If only time is to be added, then use Instant math. It's not OK to fall
       // through to the date/time code below because compatible disambiguation in
@@ -6282,9 +6344,6 @@
         return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
       } // RFC 5545 requires the date portion to be added in calendar days and the
       // time portion to be added in exact time.
-      // FIXME: "op" and the dateAdd/dateSubtract conditional will not be needed
-      // after #993 lands, changing the order of operations to be the same for
-      // both addition and subtraction.
 
 
       var dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
@@ -6394,11 +6453,11 @@
       microsecond = _ES$RoundTime.microsecond;
       nanosecond = _ES$RoundTime.nanosecond;
 
-      var _ES$BalanceDate4 = ES.BalanceDate(year, month, day + deltaDays);
+      var _ES$BalanceDate5 = ES.BalanceDate(year, month, day + deltaDays);
 
-      year = _ES$BalanceDate4.year;
-      month = _ES$BalanceDate4.month;
-      day = _ES$BalanceDate4.day;
+      year = _ES$BalanceDate5.year;
+      month = _ES$BalanceDate5.month;
+      day = _ES$BalanceDate5.day;
       return {
         year: year,
         month: month,
@@ -7290,7 +7349,6 @@
             microseconds = _duration3.microseconds,
             nanoseconds = _duration3.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var hour = GetSlot(time, ISO_HOUR);
         var minute = GetSlot(time, ISO_MINUTE);
         var second = GetSlot(time, ISO_SECOND);
@@ -7298,25 +7356,14 @@
         var microsecond = GetSlot(time, ISO_MICROSECOND);
         var nanosecond = GetSlot(time, ISO_NANOSECOND);
 
-        if (sign < 0) {
-          var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
+        var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
-          hour = _ES$SubtractTime.hour;
-          minute = _ES$SubtractTime.minute;
-          second = _ES$SubtractTime.second;
-          millisecond = _ES$SubtractTime.millisecond;
-          microsecond = _ES$SubtractTime.microsecond;
-          nanosecond = _ES$SubtractTime.nanosecond;
-        } else {
-          var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-          hour = _ES$AddTime.hour;
-          minute = _ES$AddTime.minute;
-          second = _ES$AddTime.second;
-          millisecond = _ES$AddTime.millisecond;
-          microsecond = _ES$AddTime.microsecond;
-          nanosecond = _ES$AddTime.nanosecond;
-        }
+        hour = _ES$AddTime.hour;
+        minute = _ES$AddTime.minute;
+        second = _ES$AddTime.second;
+        millisecond = _ES$AddTime.millisecond;
+        microsecond = _ES$AddTime.microsecond;
+        nanosecond = _ES$AddTime.nanosecond;
 
         var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
@@ -7348,7 +7395,6 @@
             microseconds = _duration4.microseconds,
             nanoseconds = _duration4.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         var hour = GetSlot(time, ISO_HOUR);
         var minute = GetSlot(time, ISO_MINUTE);
         var second = GetSlot(time, ISO_SECOND);
@@ -7356,25 +7402,14 @@
         var microsecond = GetSlot(time, ISO_MICROSECOND);
         var nanosecond = GetSlot(time, ISO_NANOSECOND);
 
-        if (sign < 0) {
-          var _ES$AddTime2 = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
+        var _ES$AddTime2 = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
 
-          hour = _ES$AddTime2.hour;
-          minute = _ES$AddTime2.minute;
-          second = _ES$AddTime2.second;
-          millisecond = _ES$AddTime2.millisecond;
-          microsecond = _ES$AddTime2.microsecond;
-          nanosecond = _ES$AddTime2.nanosecond;
-        } else {
-          var _ES$SubtractTime2 = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-          hour = _ES$SubtractTime2.hour;
-          minute = _ES$SubtractTime2.minute;
-          second = _ES$SubtractTime2.second;
-          millisecond = _ES$SubtractTime2.millisecond;
-          microsecond = _ES$SubtractTime2.microsecond;
-          nanosecond = _ES$SubtractTime2.nanosecond;
-        }
+        hour = _ES$AddTime2.hour;
+        minute = _ES$AddTime2.minute;
+        second = _ES$AddTime2.second;
+        millisecond = _ES$AddTime2.millisecond;
+        microsecond = _ES$AddTime2.microsecond;
+        nanosecond = _ES$AddTime2.nanosecond;
 
         var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
@@ -9405,68 +9440,32 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var _duration = duration,
-            years = _duration.years,
-            months = _duration.months,
-            weeks = _duration.weeks,
-            days = _duration.days,
-            hours = _duration.hours,
-            minutes = _duration.minutes,
-            seconds = _duration.seconds,
-            milliseconds = _duration.milliseconds,
-            microseconds = _duration.microseconds,
-            nanoseconds = _duration.nanoseconds;
-        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds); // For a negative duration, BalanceDuration() subtracts from days to make
-        // all other units positive, so it's not needed to switch on the sign below
-
-        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
-
-        days = _ES$BalanceDuration.days;
-        hours = _ES$BalanceDuration.hours;
-        minutes = _ES$BalanceDuration.minutes;
-        seconds = _ES$BalanceDuration.seconds;
-        milliseconds = _ES$BalanceDuration.milliseconds;
-        microseconds = _ES$BalanceDuration.microseconds;
-        nanoseconds = _ES$BalanceDuration.nanoseconds;
-        duration = {
-          years: years,
-          months: months,
-          weeks: weeks,
-          days: days,
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
-          milliseconds: milliseconds,
-          microseconds: microseconds,
-          nanoseconds: nanoseconds
-        }; // Add the time part
-
-        var hour = this.hour,
-            minute = this.minute,
-            second = this.second,
-            millisecond = this.millisecond,
-            microsecond = this.microsecond,
-            nanosecond = this.nanosecond;
-        var deltaDays = 0;
-
-        var _ES$AddTime = ES.AddTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-        deltaDays = _ES$AddTime.deltaDays;
-        hour = _ES$AddTime.hour;
-        minute = _ES$AddTime.minute;
-        second = _ES$AddTime.second;
-        millisecond = _ES$AddTime.millisecond;
-        microsecond = _ES$AddTime.microsecond;
-        nanosecond = _ES$AddTime.nanosecond;
-        duration.days += deltaDays; // Delegate the date part addition to the calendar
-
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var calendar = GetSlot(this, CALENDAR);
-        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var addedDate = calendar.dateAdd(datePart, duration, options, TemporalDate);
-        var year = GetSlot(addedDate, ISO_YEAR);
-        var month = GetSlot(addedDate, ISO_MONTH);
-        var day = GetSlot(addedDate, ISO_DAY);
+
+        var _ES$AddDateTime = ES.AddDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, overflow),
+            year = _ES$AddDateTime.year,
+            month = _ES$AddDateTime.month,
+            day = _ES$AddDateTime.day,
+            hour = _ES$AddDateTime.hour,
+            minute = _ES$AddDateTime.minute,
+            second = _ES$AddDateTime.second,
+            millisecond = _ES$AddDateTime.millisecond,
+            microsecond = _ES$AddDateTime.microsecond,
+            nanosecond = _ES$AddDateTime.nanosecond;
+
         var Construct = ES.SpeciesConstructor(this, DateTime);
         var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
         if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
@@ -9478,68 +9477,32 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        var _duration2 = duration,
-            years = _duration2.years,
-            months = _duration2.months,
-            weeks = _duration2.weeks,
-            days = _duration2.days,
-            hours = _duration2.hours,
-            minutes = _duration2.minutes,
-            seconds = _duration2.seconds,
-            milliseconds = _duration2.milliseconds,
-            microseconds = _duration2.microseconds,
-            nanoseconds = _duration2.nanoseconds;
-        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds); // For a negative duration, BalanceDuration() subtracts from days to make
-        // all other units positive, so it's not needed to switch on the sign below
-
-        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
-
-        days = _ES$BalanceDuration2.days;
-        hours = _ES$BalanceDuration2.hours;
-        minutes = _ES$BalanceDuration2.minutes;
-        seconds = _ES$BalanceDuration2.seconds;
-        milliseconds = _ES$BalanceDuration2.milliseconds;
-        microseconds = _ES$BalanceDuration2.microseconds;
-        nanoseconds = _ES$BalanceDuration2.nanoseconds;
-        duration = {
-          years: years,
-          months: months,
-          weeks: weeks,
-          days: days,
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
-          milliseconds: milliseconds,
-          microseconds: microseconds,
-          nanoseconds: nanoseconds
-        }; // Subtract the time part
-
-        var hour = this.hour,
-            minute = this.minute,
-            second = this.second,
-            millisecond = this.millisecond,
-            microsecond = this.microsecond,
-            nanosecond = this.nanosecond;
-        var deltaDays = 0;
-
-        var _ES$SubtractTime = ES.SubtractTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-        deltaDays = _ES$SubtractTime.deltaDays;
-        hour = _ES$SubtractTime.hour;
-        minute = _ES$SubtractTime.minute;
-        second = _ES$SubtractTime.second;
-        millisecond = _ES$SubtractTime.millisecond;
-        microsecond = _ES$SubtractTime.microsecond;
-        nanosecond = _ES$SubtractTime.nanosecond;
-        duration.days -= deltaDays; // Delegate the date part subtraction to the calendar
-
+        var years = duration.years,
+            months = duration.months,
+            weeks = duration.weeks,
+            days = duration.days,
+            hours = duration.hours,
+            minutes = duration.minutes,
+            seconds = duration.seconds,
+            milliseconds = duration.milliseconds,
+            microseconds = duration.microseconds,
+            nanoseconds = duration.nanoseconds;
+        ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var calendar = GetSlot(this, CALENDAR);
-        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var datePart = new TemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        var subtractedDate = calendar.dateSubtract(datePart, duration, options, TemporalDate);
-        var year = GetSlot(subtractedDate, ISO_YEAR);
-        var month = GetSlot(subtractedDate, ISO_MONTH);
-        var day = GetSlot(subtractedDate, ISO_DAY);
+
+        var _ES$AddDateTime2 = ES.AddDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar, -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, overflow),
+            year = _ES$AddDateTime2.year,
+            month = _ES$AddDateTime2.month,
+            day = _ES$AddDateTime2.day,
+            hour = _ES$AddDateTime2.hour,
+            minute = _ES$AddDateTime2.minute,
+            second = _ES$AddDateTime2.second,
+            millisecond = _ES$AddDateTime2.millisecond,
+            microsecond = _ES$AddDateTime2.microsecond,
+            nanosecond = _ES$AddDateTime2.nanosecond;
+
         var Construct = ES.SpeciesConstructor(this, DateTime);
         var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
         if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
@@ -9568,37 +9531,17 @@
         var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-        var _calendar$timeUntil = calendar.timeUntil(this.toTime(), other.toTime()),
-            deltaDays = _calendar$timeUntil.days,
-            hours = _calendar$timeUntil.hours,
-            minutes = _calendar$timeUntil.minutes,
-            seconds = _calendar$timeUntil.seconds,
-            milliseconds = _calendar$timeUntil.milliseconds,
-            microseconds = _calendar$timeUntil.microseconds,
-            nanoseconds = _calendar$timeUntil.nanoseconds;
-
-        var year = GetSlot(this, ISO_YEAR);
-        var month = GetSlot(this, ISO_MONTH);
-        var day = GetSlot(this, ISO_DAY) + deltaDays;
-
-        var _ES$BalanceDate = ES.BalanceDate(year, month, day);
-
-        year = _ES$BalanceDate.year;
-        month = _ES$BalanceDate.month;
-        day = _ES$BalanceDate.day;
-        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var adjustedDate = new TemporalDate(year, month, day, calendar);
-        var otherDate = new TemporalDate(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
-        var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
-        var dateOptions = ObjectAssign$3({}, options, {
-          largestUnit: dateLargestUnit
-        });
-
-        var _calendar$dateUntil = calendar.dateUntil(adjustedDate, otherDate, dateOptions),
-            years = _calendar$dateUntil.years,
-            months = _calendar$dateUntil.months,
-            weeks = _calendar$dateUntil.weeks,
-            days = _calendar$dateUntil.days;
+        var _ES$DifferenceDateTim = ES.DifferenceDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, largestUnit),
+            years = _ES$DifferenceDateTim.years,
+            months = _ES$DifferenceDateTim.months,
+            weeks = _ES$DifferenceDateTim.weeks,
+            days = _ES$DifferenceDateTim.days,
+            hours = _ES$DifferenceDateTim.hours,
+            minutes = _ES$DifferenceDateTim.minutes,
+            seconds = _ES$DifferenceDateTim.seconds,
+            milliseconds = _ES$DifferenceDateTim.milliseconds,
+            microseconds = _ES$DifferenceDateTim.microseconds,
+            nanoseconds = _ES$DifferenceDateTim.nanoseconds;
 
         var _ES$RoundDuration = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, this);
 
@@ -9613,15 +9556,15 @@
         microseconds = _ES$RoundDuration.microseconds;
         nanoseconds = _ES$RoundDuration.nanoseconds;
 
-        var _ES$BalanceDuration3 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
-        days = _ES$BalanceDuration3.days;
-        hours = _ES$BalanceDuration3.hours;
-        minutes = _ES$BalanceDuration3.minutes;
-        seconds = _ES$BalanceDuration3.seconds;
-        milliseconds = _ES$BalanceDuration3.milliseconds;
-        microseconds = _ES$BalanceDuration3.microseconds;
-        nanoseconds = _ES$BalanceDuration3.nanoseconds;
+        days = _ES$BalanceDuration.days;
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
         var Duration = GetIntrinsic$1('%Temporal.Duration%');
         return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       }
@@ -9648,37 +9591,17 @@
         var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-        var _calendar$timeUntil2 = calendar.timeUntil(other.toTime(), this.toTime()),
-            deltaDays = _calendar$timeUntil2.days,
-            hours = _calendar$timeUntil2.hours,
-            minutes = _calendar$timeUntil2.minutes,
-            seconds = _calendar$timeUntil2.seconds,
-            milliseconds = _calendar$timeUntil2.milliseconds,
-            microseconds = _calendar$timeUntil2.microseconds,
-            nanoseconds = _calendar$timeUntil2.nanoseconds;
-
-        var year = GetSlot(this, ISO_YEAR);
-        var month = GetSlot(this, ISO_MONTH);
-        var day = GetSlot(this, ISO_DAY) + deltaDays;
-
-        var _ES$BalanceDate2 = ES.BalanceDate(year, month, day);
-
-        year = _ES$BalanceDate2.year;
-        month = _ES$BalanceDate2.month;
-        day = _ES$BalanceDate2.day;
-        var TemporalDate = GetIntrinsic$1('%Temporal.Date%');
-        var adjustedDate = new TemporalDate(year, month, day, calendar);
-        var otherDate = new TemporalDate(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), calendar);
-        var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
-        var dateOptions = ObjectAssign$3({}, options, {
-          largestUnit: dateLargestUnit
-        });
-
-        var _calendar$dateUntil2 = calendar.dateUntil(otherDate, adjustedDate, dateOptions),
-            years = _calendar$dateUntil2.years,
-            months = _calendar$dateUntil2.months,
-            weeks = _calendar$dateUntil2.weeks,
-            days = _calendar$dateUntil2.days;
+        var _ES$DifferenceDateTim2 = ES.DifferenceDateTime(GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar, largestUnit),
+            years = _ES$DifferenceDateTim2.years,
+            months = _ES$DifferenceDateTim2.months,
+            weeks = _ES$DifferenceDateTim2.weeks,
+            days = _ES$DifferenceDateTim2.days,
+            hours = _ES$DifferenceDateTim2.hours,
+            minutes = _ES$DifferenceDateTim2.minutes,
+            seconds = _ES$DifferenceDateTim2.seconds,
+            milliseconds = _ES$DifferenceDateTim2.milliseconds,
+            microseconds = _ES$DifferenceDateTim2.microseconds,
+            nanoseconds = _ES$DifferenceDateTim2.nanoseconds;
 
         var _ES$RoundDuration2 = ES.RoundDuration(-years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, roundingIncrement, smallestUnit, ES.NegateTemporalRoundingMode(roundingMode), this);
 
@@ -9703,15 +9626,15 @@
         microseconds = -microseconds;
         nanoseconds = -nanoseconds;
 
-        var _ES$BalanceDuration4 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
-        days = _ES$BalanceDuration4.days;
-        hours = _ES$BalanceDuration4.hours;
-        minutes = _ES$BalanceDuration4.minutes;
-        seconds = _ES$BalanceDuration4.seconds;
-        milliseconds = _ES$BalanceDuration4.milliseconds;
-        microseconds = _ES$BalanceDuration4.microseconds;
-        nanoseconds = _ES$BalanceDuration4.nanoseconds;
+        days = _ES$BalanceDuration2.days;
+        hours = _ES$BalanceDuration2.hours;
+        minutes = _ES$BalanceDuration2.minutes;
+        seconds = _ES$BalanceDuration2.seconds;
+        milliseconds = _ES$BalanceDuration2.milliseconds;
+        microseconds = _ES$BalanceDuration2.microseconds;
+        nanoseconds = _ES$BalanceDuration2.nanoseconds;
         var Duration = GetIntrinsic$1('%Temporal.Duration%');
         return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       }
@@ -12193,28 +12116,11 @@
         var todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
         var tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
 
-        var _ES$DifferenceInstant = ES.DifferenceInstant(todayNs, tomorrowNs, 1, 'nanoseconds', 'nearest'),
-            seconds = _ES$DifferenceInstant.seconds,
-            milliseconds = _ES$DifferenceInstant.milliseconds,
-            microseconds = _ES$DifferenceInstant.microseconds,
-            nanoseconds = _ES$DifferenceInstant.nanoseconds;
+        var _tomorrowNs$subtract$ = tomorrowNs.subtract(todayNs).divmod(3.6e12),
+            quotient = _tomorrowNs$subtract$.quotient,
+            remainder = _tomorrowNs$subtract$.remainder;
 
-        var hours, minutes, remainder;
-
-        var _ES$BalanceDuration = ES.BalanceDuration(0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, 'hours');
-
-        hours = _ES$BalanceDuration.hours;
-        minutes = _ES$BalanceDuration.minutes;
-        seconds = _ES$BalanceDuration.seconds;
-        milliseconds = _ES$BalanceDuration.milliseconds;
-        microseconds = _ES$BalanceDuration.microseconds;
-        nanoseconds = _ES$BalanceDuration.nanoseconds;
-
-        var _ES$RoundDuration = ES.RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, 'hours', 'trunc');
-
-        hours = _ES$RoundDuration.hours;
-        remainder = _ES$RoundDuration.remainder;
-        return hours + remainder;
+        return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
       }
     }, {
       key: "daysInWeek",
