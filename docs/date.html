@@ -267,11 +267,9 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.Date</code> object.</p>
 <p>This static method creates a new <code>Temporal.Date</code> object from another value.
 If the value is another <code>Temporal.Date</code> object, a new object representing the same date is returned.
-If the value is any other object, it must have <code>year</code>, <code>month</code>, and <code>day</code> properties, and optionally <code>era</code> and <code>calendar</code> properties.
-If <code>calendar</code> is a calendar that requires <code>era</code> (such as the Japanese calendar), then the <code>era</code> property must also be present.
+If the value is any other object, it must have <code>year</code>, <code>month</code>, and <code>day</code> properties, and optionally the <code>calendar</code> property.
 A <code>Temporal.Date</code> will be constructed from these properties.</p>
-<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-In this calendar, <code>era</code> is ignored.</p>
+<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.
 If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>

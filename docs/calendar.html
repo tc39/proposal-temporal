@@ -173,8 +173,6 @@
 </li>
 <li><a href="#day">day</a>
 </li>
-<li><a href="#era">era</a>
-</li>
 <li><a href="#dayOfWeek">dayOfWeek</a>
 </li>
 <li><a href="#dayOfYear">dayOfYear</a>
@@ -191,7 +189,21 @@
 </li>
 <li><a href="#inLeapYear">inLeapYear</a>
 </li>
+<li><a href="#hour">hour</a>
+</li>
+<li><a href="#minute">minute</a>
+</li>
+<li><a href="#second">second</a>
+</li>
+<li><a href="#millisecond">millisecond</a>
+</li>
+<li><a href="#microsecond">microsecond</a>
+</li>
+<li><a href="#nanosecond">nanosecond</a>
+</li>
 <li><a href="#dateFromFields">dateFromFields</a>
+</li>
+<li><a href="#timeFromFields">timeFromFields</a>
 </li>
 <li><a href="#yearMonthFromFields">yearMonthFromFields</a>
 </li>
@@ -201,7 +213,13 @@
 </li>
 <li><a href="#dateSubtract">dateSubtract</a>
 </li>
+<li><a href="#timeAdd">timeAdd</a>
+</li>
+<li><a href="#timeSubtract">timeSubtract</a>
+</li>
 <li><a href="#dateUntil">dateUntil</a>
+</li>
+<li><a href="#timeUntil">timeUntil</a>
 </li>
 <li><a href="#fields">fields</a>
 </li>
@@ -290,7 +308,7 @@ cal <span class="token operator">=</span> Temporal<span class="token punctuation
 Effectively, this is whatever <code>calendarIdentifier</code> was passed as a parameter to the constructor.</p>
 <p>When subclassing <code>Temporal.Calendar</code>, this property doesn&#39;t need to be overridden because the default implementation gives the result of calling <code>toString()</code>.</p>
 <h2 id="methods">Methods</h2>
-<h3 id="year"><a class="heading-link" href="#year"></a>calendar.<strong>year</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>calendar.<strong>month</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | Temporal.MonthDay | object | string) : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>calendar.<strong>day</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.MonthDay | object | string) : number</h3><h3 id="era"><a class="heading-link" href="#era"></a>calendar.<strong>era</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : string | undefined</h3><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>calendar.<strong>dayOfWeek</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="dayOfYear"><a class="heading-link" href="#dayOfYear"></a>calendar.<strong>dayOfYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="weekOfYear"><a class="heading-link" href="#weekOfYear"></a>calendar.<strong>weekOfYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="daysInWeek"><a class="heading-link" href="#daysInWeek"></a>calendar.<strong>daysInWeek</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>calendar.<strong>daysInMonth</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="daysInYear"><a class="heading-link" href="#daysInYear"></a>calendar.<strong>daysInYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="monthsInYear"><a class="heading-link" href="#monthsInYear"></a>calendar.<strong>monthsInYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="inLeapYear"><a class="heading-link" href="#inLeapYear"></a>calendar.<strong>inLeapYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): boolean</h3><p>The above methods are all similar.
+<h3 id="year"><a class="heading-link" href="#year"></a>calendar.<strong>year</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string) : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>calendar.<strong>month</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | Temporal.MonthDay | object | string) : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>calendar.<strong>day</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.MonthDay | object | string) : number</h3><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>calendar.<strong>dayOfWeek</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="dayOfYear"><a class="heading-link" href="#dayOfYear"></a>calendar.<strong>dayOfYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="weekOfYear"><a class="heading-link" href="#weekOfYear"></a>calendar.<strong>weekOfYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="daysInWeek"><a class="heading-link" href="#daysInWeek"></a>calendar.<strong>daysInWeek</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number</h3><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>calendar.<strong>daysInMonth</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="daysInYear"><a class="heading-link" href="#daysInYear"></a>calendar.<strong>daysInYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="monthsInYear"><a class="heading-link" href="#monthsInYear"></a>calendar.<strong>monthsInYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): number</h3><h3 id="inLeapYear"><a class="heading-link" href="#inLeapYear"></a>calendar.<strong>inLeapYear</strong>(<em>date</em>: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | object | string): boolean</h3><p>The above methods are all similar.
 They provide a way to query properties of a particular date in the calendar&#39;s date reckoning.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -305,11 +323,24 @@ They are called indirectly when reading the various properties of <code>Temporal
 date<span class="token punctuation">.</span>year  <span class="token comment">// => 5780</span>
 date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">year</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// same result, but calling the method directly</span>
 date<span class="token punctuation">.</span>daysInYear  <span class="token comment">// => 355</span>
-date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">daysInYear</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// same result, but calling the method directly</span></code></pre><h3 id="dateFromFields"><a class="heading-link" href="#dateFromFields"></a>calendar.<strong>dateFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.Date</h3><h3 id="yearMonthFromFields"><a class="heading-link" href="#yearMonthFromFields"></a>calendar.<strong>yearMonthFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.YearMonth</h3><h3 id="monthDayFromFields"><a class="heading-link" href="#monthDayFromFields"></a>calendar.<strong>monthDayFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.MonthDay</h3><p>The above three methods are similar.
-They provide a way to construct other Temporal objects from values in the calendar&#39;s date reckoning.</p>
+date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">daysInYear</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span>  <span class="token comment">// same result, but calling the method directly</span></code></pre><h3 id="hour"><a class="heading-link" href="#hour"></a>calendar.<strong>hour</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>calendar.<strong>minute</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><h3 id="second"><a class="heading-link" href="#second"></a>calendar.<strong>second</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>calendar.<strong>millisecond</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>calendar.<strong>microsecond</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>calendar.<strong>nanosecond</strong>(<em>time</em>: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number</h3><p>The above methods are all similar.
+They provide a way to query properties of a particular time in the calendar&#39;s time reckoning.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>fields</code> (object): An object with properties similar to what is passed to <code>Temporal.Date.from()</code>, <code>Temporal.YearMonth.from()</code>, or <code>Temporal.MonthDay.from()</code>, respectively.</li>
+<li><code>time</code> (<code>Temporal.Time</code>, or value convertible to one): A time.</li>
+</ul>
+<p><strong>Returns:</strong> some piece of data (hour, minute, second, etc., depending on the method) associated with <code>time</code>, in <code>calendar</code>&#39;s calendar system.</p>
+<p>If <code>time</code> is not one of the appropriate Temporal objects, then it will be converted to a <code>Temporal.Time</code> as if it were passed to <code>Temporal.Time.from()</code>.</p>
+<p>None of the above methods need to be called directly except in specialized code.
+They are called indirectly when reading the various properties of <code>Temporal.ZonedDateTime</code>, <code>Temporal.DateTime</code>, <code>Temporal.Time</code>.</p>
+<p>For example:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span>hour  <span class="token comment">// => 9</span>
+time<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">hour</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span>  <span class="token comment">// same result, but calling the method directly</span></code></pre><h3 id="dateFromFields"><a class="heading-link" href="#dateFromFields"></a>calendar.<strong>dateFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.Date</h3><h3 id="timeFromFields"><a class="heading-link" href="#timeFromFields"></a>calendar.<strong>timeFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.Time</h3><h3 id="yearMonthFromFields"><a class="heading-link" href="#yearMonthFromFields"></a>calendar.<strong>yearMonthFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.YearMonth</h3><h3 id="monthDayFromFields"><a class="heading-link" href="#monthDayFromFields"></a>calendar.<strong>monthDayFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.MonthDay</h3><p>The above three methods are similar.
+They provide a way to construct other Temporal objects from values in the calendar&#39;s date or time reckoning.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fields</code> (object): An object with properties similar to what is passed to <code>Temporal.Date.from()</code>, <code>Temporal.Time.from()</code>, <code>Temporal.YearMonth.from()</code>, or <code>Temporal.MonthDay.from()</code>, respectively.</li>
 <li><code>options</code>: (object): An object with properties representing options for constructing the Temporal object.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values in <code>fields</code>.
@@ -322,7 +353,7 @@ This is used when subclassing Temporal objects.</li>
 </ul>
 <p><strong>Returns:</strong> a new object of the type of <code>constructor</code>.</p>
 <p>None of the above methods need to be called directly except in specialized code.
-They are called indirectly when using <code>Temporal.Date.from()</code>, <code>Temporal.DateTime.from()</code>, <code>Temporal.YearMonth.from()</code>, and <code>Temporal.MonthDay.from()</code>.</p>
+They are called indirectly when using <code>Temporal.Date.from()</code>, <code>Temporal.Time.from()</code>, <code>Temporal.DateTime.from()</code>, <code>Temporal.YearMonth.from()</code>, and <code>Temporal.MonthDay.from()</code>.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>
     <span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5780</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> calendar<span class="token operator">:</span> <span class="token string">'hebrew'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -382,7 +413,47 @@ date <span class="token operator">=</span> Temporal<span class="token punctuatio
 date<span class="token punctuation">.</span>year        <span class="token comment">// => 1441</span>
 date<span class="token punctuation">.</span>month       <span class="token comment">// => 11</span>
 date<span class="token punctuation">.</span>day         <span class="token comment">// => 7</span>
-date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-06-28[c=islamic]</span></code></pre><h3 id="dateUntil"><a class="heading-link" href="#dateUntil"></a>calendar.<strong>dateUntil</strong>(<em>one</em>: Temporal.Date | object | string, <em>two</em>: Temporal.Date | object | string, <em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// => 2020-06-28[c=islamic]</span></code></pre><h3 id="timeAdd"><a class="heading-link" href="#timeAdd"></a>calendar.<strong>timeAdd</strong>(<em>time</em>: Temporal.Time | object | string, <em>duration</em>: Temporal.Duration | object | string, <em>options</em>: object, <em>constructor</em>: function) : Temporal.Date</h3><h3 id="timeSubtract"><a class="heading-link" href="#timeSubtract"></a>calendar.<strong>timeSubtract</strong>(<em>time</em>: Temporal.Time | object | string, <em>duration</em>: Temporal.Duration | object | string, <em>options</em>: object, <em>constructor</em>: function) : Temporal.Date</h3><p>The above two methods are similar.
+They provide a way to do time arithmetic in the calendar&#39;s time reckoning.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>time</code> (<code>Temporal.Time</code>, or value convertible to one): A time.</li>
+<li><code>duration</code> (<code>Temporal.Duration</code>, or value convertible to one): A duration to add or subtract from <code>time</code>.</li>
+<li><code>options</code> (object): An object with properties representing options for performing the addition or subtraction.
+The following options are recognized:<ul>
+<li><code>overflow</code> (string): How to deal with out-of-range values in the result of the addition or subtraction.
+Allowed values are <code>constrain</code> and <code>reject</code>.
+The default is <code>constrain</code>.</li>
+</ul>
+</li>
+<li><code>constructor</code> (function): The constructor function of the Temporal type to construct.
+This is used when subclassing Temporal objects.</li>
+</ul>
+<p><strong>Returns:</strong> a new object of the type of <code>constructor</code>.</p>
+<p>If <code>time</code> is not a <code>Temporal.Time</code> object, or <code>duration</code> not a <code>Temporal.Duration</code> object, then they will be converted to one as if they were passed to <code>Temporal.Time.from()</code> or <code>Temporal.Duration.from()</code>, respectively.</p>
+<p>Neither of the above methods need to be called directly except in specialized code.
+They are called indirectly when using the <code>add()</code> and <code>subtract()</code> methods, respectively, of <code>Temporal.DateTime</code>, and <code>Temporal.Time</code>.</p>
+<p>For example:</p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>
+    Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span>hour       <span class="token comment">// => 9</span>
+time<span class="token punctuation">.</span>minute     <span class="token comment">// => 21</span>
+time<span class="token punctuation">.</span>second     <span class="token comment">// => 0</span>
+time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// => 03:21:00[c=ethiopic]</span>
+
+<span class="token comment">// same result, but calling the method directly:</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">timeAdd</span><span class="token punctuation">(</span>
+    Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    Temporal<span class="token punctuation">.</span>Time
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span>hour       <span class="token comment">// => 9</span>
+time<span class="token punctuation">.</span>minute     <span class="token comment">// => 21</span>
+time<span class="token punctuation">.</span>second     <span class="token comment">// => 0</span>
+time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// => 03:20:00[c=ethiopic]</span></code></pre><h3 id="dateUntil"><a class="heading-link" href="#dateUntil"></a>calendar.<strong>dateUntil</strong>(<em>one</em>: Temporal.Date | object | string, <em>two</em>: Temporal.Date | object | string, <em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>one</code> (<code>Temporal.Date</code>, or value convertible to one): A date.</li>
 <li><code>two</code> (<code>Temporal.Date</code>, or value convertible to one): Another date.</li>
@@ -410,14 +481,42 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
     Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span>
-<span class="token punctuation">)</span>  <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(fields: array<string>) : array<string></h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">)</span>  <span class="token comment">// => P1M2D</span></code></pre><h3 id="timeUntil"><a class="heading-link" href="#timeUntil"></a>calendar.<strong>timeUntil</strong>(<em>one</em>: Temporal.Time | object | string, <em>two</em>: Temporal.Time | object | string, <em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>one</code> (<code>Temporal.Time</code>, or value convertible to one): A time.</li>
+<li><code>two</code> (<code>Temporal.Time</code>, or value convertible to one): Another time.</li>
+<li><code>options</code> (object): An object with properties representing options for the operation.
+The following options are recognized:<ul>
+<li><code>largestUnit</code> (optional string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>microseconds&#39;</code> and <code>&#39;nanoseconds&#39;</code>.
+The default is <code>&#39;auto&#39;</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the time elapsed after <code>one</code> and until <code>two</code>.</p>
+<p>If either of <code>one</code> or <code>two</code> are not <code>Temporal.Time</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Time.from()</code>.</p>
+<p>This method does not need to be called directly except in specialized code.
+It is called indirectly when using the <code>until()</code> and <code>since()</code> methods of <code>Temporal.DateTime</code>, and <code>Temporal.Time</code>.</p>
+<p>If <code>one</code> is later than <code>two</code>, then the resulting duration should be negative.</p>
+<p>The default <code>largestUnit</code> value of <code>&#39;auto&#39;</code> is the same as <code>&#39;hours&#39;</code>.</p>
+<p>For example:</p>
+<pre class="language-javascript"><code class="language-javascript">t1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:10:00'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+t2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:30:00'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+t1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>t2<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'minutes'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// => PT20M</span>
+
+<span class="token comment">// same result, but calling the method directly:</span>
+Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">timeUntil</span><span class="token punctuation">(</span>
+    Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:10:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:30:00'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'minutes'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span>  <span class="token comment">// => PT20M</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(fields: array<string>) : array<string></h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>fields</code> (array of strings): A list of field names.</li>
 </ul>
 <p><strong>Returns:</strong> a new list of field names.</p>
 <p>This method does not need to be called directly except in specialized code.
-It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.DateTime</code>, <code>Temporal.Date</code>, and <code>Temporal.YearMonth</code>.</p>
-<p>Custom calendars should override this method if they require more fields with which to denote the date than the standard <code>year</code>, <code>month</code>, and <code>day</code> (for example, <code>era</code>).
+It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.DateTime</code>, <code>Temporal.Date</code>, <code>Temporal.Time</code>, and <code>Temporal.YearMonth</code>.</p>
+<p>Custom calendars should override this method if they require more fields with which to denote the date than the standard <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> (for example, <code>era</code>).
 The input array contains the field names that are necessary for a particular operation (for example, <code>&#39;month&#39;</code> and <code>&#39;day&#39;</code> for <code>Temporal.MonthDay.prototype.with()</code>), and the method should make a copy of the array and add whichever extra fields are necessary.</p>
 <p>When subclassing <code>Temporal.Calendar</code>, this method doesn&#39;t need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of <code>fields</code>.</p>
 <p>Usage example:</p>

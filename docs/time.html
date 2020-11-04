@@ -171,11 +171,15 @@
 </li>
 <li><a href="#nanosecond">nanosecond</a>
 </li>
+<li><a href="#calendar">calendar</a>
+</li>
 </ul>
 </li>
 <li><a href="#methods">Methods</a>
 <ul>
 <li><a href="#with">with</a>
+</li>
+<li><a href="#withCalendar">withCalendar</a>
 </li>
 <li><a href="#add">add</a>
 </li>
@@ -203,6 +207,8 @@
 </li>
 <li><a href="#getFields">getFields</a>
 </li>
+<li><a href="#getISOFields">getISOFields</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -214,18 +220,21 @@ For example, it could be used to represent an event that happens daily at a cert
 <p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
 A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toDateTime()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>hour</em>: number = 0, <em>minute</em>: number = 0, <em>second</em>: number = 0, <em>millisecond</em>: number = 0, <em>microsecond</em>: number = 0, <em>nanosecond</em>: number = 0) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>hour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
-<li><code>minute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
-<li><code>second</code> (optional number): A second, ranging between 0 and 59 inclusive.</li>
-<li><code>millisecond</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
-<li><code>microsecond</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
-<li><code>nanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>isoHour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
+<li><code>isoMinute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
+<li><code>isoSecond</code> (optional number): A second, ranging between 0 and 59 inclusive.</li>
+<li><code>isoMillisecond</code> (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>isoMicrosecond</code> (optional number): A number of microseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>isoNanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
+<li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the time into.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
-<p>Use this constructor if you have the correct parameters for the time already as individual number values.
-Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.</p>
+<p>Use this constructor if you have the correct parameters for the time already as individual number values in the ISO 8601 calendar.
+Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input, allows inputting times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+Together, <code>isoHour</code>, <code>isoMinute</code>, <code>isoSecond</code>, <code>isoMillisecond</code>, <code>isoMicrosecond</code>, and <code>isoNanosecond</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
 time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods">Static methods</h2>
@@ -243,8 +252,9 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
 <p>This static method creates a new <code>Temporal.Time</code> object from another value.
 If the value is another <code>Temporal.Time</code> object, a new object representing the same time is returned.
-If the value is any other object, a <code>Temporal.Time</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
-Any missing ones will be assumed to be 0.</p>
+If the value is any other object, a <code>Temporal.Time</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and <code>calendar</code> properties that are present.
+Any missing ones except <code>calendar</code> will be assumed to be 0.</p>
+<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.</p>
 <p>The <code>overflow</code> option works as follows:</p>
@@ -321,6 +331,7 @@ time<span class="token punctuation">.</span>millisecond<span class="token punctu
 time<span class="token punctuation">.</span>microsecond<span class="token punctuation">;</span> <span class="token comment">// => 346</span>
 time<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 205</span></code></pre><!-- prettier-ignore-end -->
 
+<h3 id="calendar"><a class="heading-link" href="#calendar"></a>time.<strong>calendar</strong>: object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties are interpreted in.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -347,7 +358,14 @@ time<span class="token punctuation">.</span><span class="token function">add</sp
   millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   nanosecond<span class="token operator">:</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>time.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>time</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code>, projected into <code>calendar</code>.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00[c=ethiopic]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -420,6 +438,8 @@ A value of <code>&#39;auto&#39;</code> means <code>&#39;hours&#39;</code>.</p>
 <p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
 These behave as in the <code>Temporal.Duration.round()</code> method.
 The default is to do no rounding.</p>
+<p>Computing the difference between two times in different calendar systems is not supported.
+If you need to do this, choose the calendar in which the computation takes place by converting one of the times with <code>time.withCalendar()</code>.</p>
 <p>Usage example:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -510,7 +530,7 @@ time<span class="token punctuation">.</span><span class="token function">round</
 <p><strong>Returns:</strong> <code>true</code> if <code>time</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
 <p>Compares two <code>Temporal.Time</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>time == other</code> or <code>time === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
-<p>If you don&#39;t need to know the order in which the two dates occur, then this function may be less typing and more efficient than <code>Temporal.Time.compare</code>.</p>
+<p>If you don&#39;t need to know the order in which the two times occur, then this function may be less typing and more efficient than <code>Temporal.Time.compare</code>.</p>
 <p>If <code>other</code> is not a <code>Temporal.Time</code> object, then it will be converted to one as if it were passed to <code>Temporal.Time.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -650,10 +670,29 @@ date <span class="token operator">=</span> Temporal<span class="token punctuatio
 time<span class="token punctuation">.</span><span class="token function">toDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
 <p>This method can be used to convert a <code>Temporal.Time</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
+<p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">.</span>minute<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>minute<span class="token punctuation">;</span> <span class="token comment">// => 23</span></code></pre>    <footer>
+Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>minute<span class="token punctuation">;</span> <span class="token comment">// => 23</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>time.<strong>getISOFields</strong>(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>time</code> in the ISO 8601 calendar, as well as the value of <code>time.calendar</code>.</p>
+<p>This method is mainly useful if you are implementing a custom calendar.
+Most code will not need to use it.
+Use <code>time.getFields()</code> instead, or <code>time.withCalendar(&#39;iso8601&#39;).getFields()</code>.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+f <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+f<span class="token punctuation">.</span>isoHour<span class="token punctuation">;</span> <span class="token comment">// => 3</span>
+<span class="token comment">// Fields correspond exactly to constructor arguments:</span>
+time2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>isoHour<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMinute<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoSecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMillisecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMicrosecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoNanosecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>time2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
+
+<span class="token comment">// Time in other calendar</span>
+time <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'ethiopic'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>hour<span class="token punctuation">;</span> <span class="token comment">// => 9</span>
+time<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoHour<span class="token punctuation">;</span> <span class="token comment">// => 3</span>
+
+<span class="token comment">// Most likely what you need is this:</span>
+time<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>hour<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
