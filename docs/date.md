@@ -10,7 +10,7 @@ A `Temporal.Date` represents a calendar date.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it's happening in.
 
 `Temporal.Date` refers to the whole of a specific day; if you need to refer to a specific time on that day, use `Temporal.DateTime`.
-A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Time` using the `toDateTime()` method.
+A `Temporal.Date` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Time` using the `toPlainDateTime()` method.
 
 `Temporal.YearMonth` and `Temporal.MonthDay` carry less information than `Temporal.Date` and should be used when complete information is not required.
 
@@ -33,7 +33,7 @@ Otherwise, `Temporal.Date.from()`, which accepts more kinds of input, allows inp
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
-The range of allowed values for this type is exactly enough that calling [`toDate()`](./datetime.html#toDate) on any valid `Temporal.DateTime` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toPlainDate()`](./datetime.html#toPlainDate) on any valid `Temporal.DateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -486,7 +486,7 @@ later.until(earlier, { largestUnit: 'years' }); // => -P12Y5M7D
 // point in time from which you want to reckon the difference. For
 // example, using noon:
 noon = Temporal.Time.from('12:00');
-earlier.toDateTime(noon).until(later.toDateTime(noon), { largestUnit: 'hours' });
+earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 'hours' });
   // => PT109032H
 ```
 <!-- prettier-ignore-end -->
@@ -696,7 +696,7 @@ date.toZonedDateTime('America/Los_Angeles', time); // => 2006-08-24T15:23:30.003
 date.toZonedDateTime('America/Los_Angeles'); // => 2006-08-24T00:00-07:00[America/Los_Angeles]
 ```
 
-### date.**toDateTime**(_time_?: Temporal.Time | object | string) : Temporal.DateTime
+### date.**toPlainDateTime**(_time_?: Temporal.Time | object | string) : Temporal.DateTime
 
 **Parameters:**
 
@@ -708,7 +708,7 @@ This method can be used to convert `Temporal.Date` into a `Temporal.DateTime`, b
 The default `time`, if it is not given, is midnight (00:00).
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-If `time` is given, this is equivalent to [`Temporal.Time.from(time).toDateTime(date)`](./time.html#toDateTime).
+If `time` is given, this is equivalent to [`Temporal.Time.from(time).toPlainDateTime(date)`](./time.html#toPlainDateTime).
 
 If `time` is given and is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
@@ -717,27 +717,27 @@ Usage example:
 ```javascript
 date = Temporal.Date.from('2006-08-24');
 time = Temporal.Time.from('15:23:30.003');
-date.toDateTime(time); // => 2006-08-24T15:23:30.003
-date.toDateTime(); // => 2006-08-24T00:00
+date.toPlainDateTime(time); // => 2006-08-24T15:23:30.003
+date.toPlainDateTime(); // => 2006-08-24T00:00
 ```
 
-### date.**toYearMonth**() : Temporal.YearMonth
+### date.**toPlainYearMonth**() : Temporal.YearMonth
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `date`.
 
-### date.**toMonthDay**() : Temporal.MonthDay
+### date.**toPlainMonthDay**() : Temporal.MonthDay
 
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `date`.
 
 The above two methods can be used to convert `Temporal.Date` into a `Temporal.YearMonth` or `Temporal.MonthDay` respectively.
-The converted object carries a copy of all the relevant fields of `date` (for example, in `toYearMonth()`, the `year` and `month` properties are copied.)
+The converted object carries a copy of all the relevant fields of `date` (for example, in `toPlainYearMonth()`, the `year` and `month` properties are copied.)
 
 Usage example:
 
 ```javascript
 date = Temporal.Date.from('2006-08-24');
-date.toYearMonth(); // => 2006-08
-date.toMonthDay(); // => 08-24
+date.toPlainYearMonth(); // => 2006-08
+date.toPlainMonthDay(); // => 08-24
 ```
 
 ### date.**getFields**() : { year: number, month: number, day: number, calendar: object, [propName: string]: unknown }

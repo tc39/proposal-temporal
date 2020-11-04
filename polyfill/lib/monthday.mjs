@@ -116,7 +116,7 @@ export class MonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.MonthDay');
   }
-  toDate(item, options = undefined) {
+  toPlainDate(item, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
 

@@ -15,11 +15,11 @@ const expected = [
 ];
 const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
 
-Object.defineProperty(Temporal.DateTime.prototype, "toDate", {
+Object.defineProperty(Temporal.DateTime.prototype, "toPlainDate", {
   get() {
-    actual.push("get Temporal.DateTime.prototype.toDate");
+    actual.push("get Temporal.DateTime.prototype.toPlainDate");
     return function() {
-      actual.push("call Temporal.DateTime.prototype.toDate");
+      actual.push("call Temporal.DateTime.prototype.toPlainDate");
     };
   },
 });

@@ -317,7 +317,7 @@ export class YearMonth {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.YearMonth');
   }
-  toDate(item) {
+  toPlainDate(item) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
 

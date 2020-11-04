@@ -2,13 +2,13 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-description: Temporal.MonthDay.prototype.toDate throws a RangeError if the argument is Infinity
-esid: sec-temporal.monthday.prototype.todate
+description: Temporal.MonthDay.prototype.toPlainDate throws a RangeError if the argument is Infinity
+esid: sec-temporal.monthday.prototype.toplaindate
 ---*/
 
 const instance = new Temporal.MonthDay(5, 2);
 
-assert.throws(RangeError, () => instance.toDate({ year: Infinity }));
+assert.throws(RangeError, () => instance.toPlainDate({ year: Infinity }));
 
 let calls = 0;
 const fields = {
@@ -29,5 +29,5 @@ const obj = new Proxy(fields, {
   },
 });
 
-assert.throws(RangeError, () => instance.toDate(obj));
+assert.throws(RangeError, () => instance.toPlainDate(obj));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");

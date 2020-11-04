@@ -7,12 +7,12 @@ includes: [propertyHelper.js]
 
 const { ZonedDateTime } = Temporal;
 assert.sameValue(
-  typeof ZonedDateTime.prototype.toDateTime,
+  typeof ZonedDateTime.prototype.toPlainDateTime,
   "function",
-  "`typeof ZonedDateTime.prototype.toDateTime` is `function`"
+  "`typeof ZonedDateTime.prototype.toPlainDateTime` is `function`"
 );
 
-verifyProperty(ZonedDateTime.prototype, "toDateTime", {
+verifyProperty(ZonedDateTime.prototype, "toPlainDateTime", {
   writable: true,
   enumerable: false,
   configurable: true,

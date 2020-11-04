@@ -5,7 +5,7 @@
 esid: sec-temporal.date.prototype.toyearmonth
 ---*/
 
-const toYearMonth = Temporal.Date.prototype.toYearMonth;
+const toYearMonth = Temporal.Date.prototype.toPlainYearMonth;
 
 assert.sameValue(typeof toYearMonth, "function");
 

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.prototype.todate
+esid: sec-temporal.monthday.prototype.toplaindate
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named
@@ -15,7 +15,7 @@ info: |
 includes: [propertyHelper.js]
 ---*/
 
-verifyProperty(Temporal.MonthDay.prototype.toDate, "length", {
+verifyProperty(Temporal.MonthDay.prototype.toPlainDate, "length", {
   value: 1,
   writable: false,
   enumerable: false,

@@ -307,7 +307,7 @@ export class Date {
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.Date');
   }
-  toDateTime(temporalTime = undefined) {
+  toPlainDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
@@ -362,7 +362,7 @@ export class Date {
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
-  toYearMonth() {
+  toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
@@ -370,7 +370,7 @@ export class Date {
     const fields = ES.ToTemporalDateFields(this, fieldNames);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
-  toMonthDay() {
+  toPlainMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);

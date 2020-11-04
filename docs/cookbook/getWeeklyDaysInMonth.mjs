@@ -7,7 +7,7 @@
  * @returns {Temporal.Date[]} Array of dates
  */
 function getWeeklyDaysInMonth(yearMonth, dayNumberOfTheWeek) {
-  const firstOfMonth = yearMonth.toDate({ day: 1 });
+  const firstOfMonth = yearMonth.toPlainDate({ day: 1 });
   let nextWeekday = firstOfMonth.add({ days: (7 + dayNumberOfTheWeek - firstOfMonth.dayOfWeek) % 7 });
   const result = [];
   while (nextWeekday.month === yearMonth.month) {

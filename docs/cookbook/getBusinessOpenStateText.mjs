@@ -25,12 +25,12 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     return Temporal.Instant.compare(i, start) >= 0 && Temporal.Instant.compare(i, end) < 0;
   }
 
-  const dateTime = now.toDateTime();
+  const dateTime = now.toPlainDateTime();
   const weekday = dateTime.dayOfWeek % 7; // convert to 0-based, for array indexing
 
   // Because of times wrapping around at midnight, we may need to consider
   // yesterday's and tomorrow's hours as well
-  const today = dateTime.toDate();
+  const today = dateTime.toPlainDate();
   const yesterday = today.subtract({ days: 1 });
   const tomorrow = today.add({ days: 1 });
 
@@ -43,8 +43,8 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     const { open, close } = yesterdayHours;
     if (Temporal.Time.compare(close, open) < 0) {
       businessHoursOverlappingToday.push({
-        open: now.timeZone.getInstantFor(yesterday.toDateTime(open)),
-        close: now.timeZone.getInstantFor(today.toDateTime(close))
+        open: now.timeZone.getInstantFor(yesterday.toPlainDateTime(open)),
+        close: now.timeZone.getInstantFor(today.toPlainDateTime(close))
       });
     }
   }
@@ -53,8 +53,8 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     const { open, close } = todayHours;
     const todayOrTomorrow = Temporal.Time.compare(close, open) >= 0 ? today : tomorrow;
     businessHoursOverlappingToday.push({
-      open: now.timeZone.getInstantFor(today.toDateTime(open)),
-      close: now.timeZone.getInstantFor(todayOrTomorrow.toDateTime(close))
+      open: now.timeZone.getInstantFor(today.toPlainDateTime(open)),
+      close: now.timeZone.getInstantFor(todayOrTomorrow.toPlainDateTime(close))
     });
   }
 

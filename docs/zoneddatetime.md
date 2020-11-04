@@ -255,7 +255,7 @@ one = Temporal.ZonedDateTime.from('2020-11-01T01:45-07:00[America/Los_Angeles]')
 two = Temporal.ZonedDateTime.from('2020-11-01T01:15-08:00[America/Los_Angeles]');
 Temporal.ZonedDateTime.compare(one, two);
   // => -1, because `one` is earlier in the real world
-Temporal.DateTime.compare(one.toDateTime(), two.toDateTime());
+Temporal.DateTime.compare(one.toPlainDateTime(), two.toPlainDateTime());
   // => 1, because `one` is later in clock time
 Temporal.Instant.compare(one.toInstant(), two.toInstant());
   // => -1, because `Temporal.Instant` and `Temporal.ZonedDateTime` both compare real-world exact times
@@ -659,13 +659,13 @@ If the result is earlier or later than the range of dates that `Temporal.ZonedDa
 
 If a `timeZone` and/or `calendar` field is included with a different ID than the current object's fields, then `with` will first convert all existing fields to the new time zone and/or calendar and then fields in the input will be played on top of the new time zone or calendar.
 This makes `.with({timeZone})` is an easy way to convert to a new time zone while updating the clock time.
-However, to keep clock time as-is while resetting the time zone, use the `.toDateTime()` method instead. Examples:
+However, to keep clock time as-is while resetting the time zone, use the `.toPlainDateTime()` method instead. Examples:
 
 ```javascript
 // update local time to match new time zone
 const sameInstantInOtherTz = zdt.with({ timeZone: 'Europe/London' });
 // create instance with same local time in a new time zone
-const newTzSameLocalTime = zdt.toDateTime().toZonedDateTime('Europe/London');
+const newTzSameLocalTime = zdt.toPlainDateTime().toZonedDateTime('Europe/London');
 ```
 
 Some input values can cause conflict between the `offsetNanoseconds` field and the `timeZone` field.
@@ -896,8 +896,8 @@ Examples:
 
 If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.until()` was used.
 If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.until()` was used.
-To calculate the difference between calendar dates only, use `.toDate().until(other.toDate())`.
-To calculate the difference between clock times only, use `.toTime().until(other.toTime())`.
+To calculate the difference between calendar dates only, use `.toPlainDate().until(other.toPlainDate())`.
+To calculate the difference between clock times only, use `.toPlainTime().until(other.toPlainTime())`.
 
 If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
 Therefore, a `RangeError` will be thrown if `largestUnit` is `'days'` or larger and the two instances' time zones have different `id` fields.
@@ -1213,15 +1213,15 @@ Use `Temporal.ZonedDateTime.compare()` for this, or `zonedDateTime.equals()` for
 
 **Returns:** A `Temporal.Instant` object that represents the same instant as `zonedDateTime`.
 
-### zonedDateTime.**toDate**() : Temporal.Date
+### zonedDateTime.**toPlainDate**() : Temporal.Date
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `zonedDateTime`.
 
-### zonedDateTime.**toTime**() : Temporal.Time
+### zonedDateTime.**toPlainTime**() : Temporal.Time
 
 **Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `zonedDateTime`.
 
-### zonedDateTime.**toDateTime**() : Temporal.DateTime
+### zonedDateTime.**toPlainDateTime**() : Temporal.DateTime
 
 **Returns:** a `Temporal.DateTime` object that is the same as the date and time portion of `zonedDateTime`.
 
@@ -1230,27 +1230,27 @@ Use `Temporal.ZonedDateTime.compare()` for this, or `zonedDateTime.equals()` for
 > However, unless you perform those operations across a time zone offset transition, it's impossible to notice the difference.
 > Therefore, be very careful when performing this conversion because subsequent results may look correct most of the time while failing around time zone transitions like when DST starts or ends.
 
-### zonedDateTime.**toYearMonth**() : Temporal.YearMonth
+### zonedDateTime.**toPlainYearMonth**() : Temporal.YearMonth
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `zonedDateTime`.
 
-### zonedDateTime.**toMonthDay**() : Temporal.MonthDay
+### zonedDateTime.**toPlainMonthDay**() : Temporal.MonthDay
 
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `zonedDateTime`.
 
 The above six methods can be used to convert `Temporal.ZonedDateTime` into a `Temporal.Instant`, `Temporal.Date`, `Temporal.Time`, `Temporal.DateTime`, `Temporal.YearMonth`, or `Temporal.MonthDay` respectively.
-The converted object carries a copy of all the relevant data of `zonedDateTime` (for example, in `toDate()`, the `year`, `month`, and `day` properties are the same.)
+The converted object carries a copy of all the relevant data of `zonedDateTime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are the same.)
 
 Usage example:
 
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Johannesburg]');
 zdt.toInstant(); // => 1995-12-07T01:24:30Z
-zdt.toDateTime(); // => 1995-12-07T03:24:30
-zdt.toDate(); // => 1995-12-07
-zdt.toYearMonth(); // => 1995-12
-zdt.toMonthDay(); // => 12-07
-zdt.toTime(); // => 03:24:30
+zdt.toPlainDateTime(); // => 1995-12-07T03:24:30
+zdt.toPlainDate(); // => 1995-12-07
+zdt.toPlainYearMonth(); // => 1995-12
+zdt.toPlainMonthDay(); // => 12-07
+zdt.toPlainTime(); // => 03:24:30
 ```
 
 ### zonedDateTime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object, [propName: string]: unknown }

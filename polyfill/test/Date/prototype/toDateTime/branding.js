@@ -2,10 +2,10 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.todatetime
+esid: sec-temporal.date.prototype.toplaindatetime
 ---*/
 
-const toDateTime = Temporal.Date.prototype.toDateTime;
+const toDateTime = Temporal.Date.prototype.toPlainDateTime;
 
 assert.sameValue(typeof toDateTime, "function");
 

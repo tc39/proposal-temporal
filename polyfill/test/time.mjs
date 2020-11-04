@@ -66,8 +66,8 @@ describe('Time', () => {
       it('Time.prototype.equals is a Function', () => {
         equal(typeof Time.prototype.equals, 'function');
       });
-      it('Time.prototype.toDateTime is a Function', () => {
-        equal(typeof Time.prototype.toDateTime, 'function');
+      it('Time.prototype.toPlainDateTime is a Function', () => {
+        equal(typeof Time.prototype.toPlainDateTime, 'function');
       });
       it('Time.prototype.toZonedDateTime is a Function', () => {
         equal(typeof Time.prototype.toZonedDateTime, 'function');
@@ -230,17 +230,17 @@ describe('Time', () => {
       throws(() => time.with('2019-05-17'), TypeError);
     });
   });
-  describe('time.toDateTime() works', () => {
+  describe('time.toPlainDateTime() works', () => {
     const time = Time.from('11:30:23.123456789');
-    const dt = time.toDateTime(Temporal.Date.from('1976-11-18'));
+    const dt = time.toPlainDateTime(Temporal.Date.from('1976-11-18'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23.123456789'));
     it('casts argument', () => {
-      equal(`${time.toDateTime({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T11:30:23.123456789');
-      equal(`${time.toDateTime('1976-11-18')}`, '1976-11-18T11:30:23.123456789');
+      equal(`${time.toPlainDateTime({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T11:30:23.123456789');
+      equal(`${time.toPlainDateTime('1976-11-18')}`, '1976-11-18T11:30:23.123456789');
     });
     it('object must contain at least the required properties', () => {
-      throws(() => time.toDateTime({ year: 1976 }), TypeError);
+      throws(() => time.toPlainDateTime({ year: 1976 }), TypeError);
     });
   });
   describe('time.toZonedDateTime()', function () {
@@ -1211,7 +1211,7 @@ describe('Time', () => {
     });
     it('Time.from(dateTime) returns the same time properties', () => {
       const dt = DateTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
-      deepEqual(Time.from(dt).getFields(), dt.toTime().getFields());
+      deepEqual(Time.from(dt).getFields(), dt.toPlainTime().getFields());
     });
     it('Time.from(time) is not the same object', () => {
       const t = Time.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');

@@ -2,10 +2,10 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.tomonthday
+esid: sec-temporal.date.prototype.toplainmonthday
 ---*/
 
-const toMonthDay = Temporal.Date.prototype.toMonthDay;
+const toMonthDay = Temporal.Date.prototype.toPlainMonthDay;
 
 assert.sameValue(typeof toMonthDay, "function");
 

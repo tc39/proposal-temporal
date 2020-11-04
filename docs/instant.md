@@ -259,7 +259,7 @@ A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki
 
 For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
 
-If you only want to use the ISO 8601 calendar, use `toDateTimeISO()`.
+If you only want to use the ISO 8601 calendar, use `toPlainDateTimeISO()`.
 
 Example usage:
 
@@ -425,7 +425,7 @@ ns.add({ nanoseconds: 1 });
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:
 utc = Temporal.TimeZone.from('UTC');
-epoch.toDateTime(utc).until(billion.toDateTime(utc), { largestUnit: 'years' });
+epoch.toPlainDateTime(utc).until(billion.toPlainDateTime(utc), { largestUnit: 'years' });
   // => P31Y8M8DT1H46M40S
 ```
 <!-- prettier-ignore-end -->
