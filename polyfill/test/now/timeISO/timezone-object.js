@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.timeiso
+esid: sec-temporal.nowplaintimeiso
 includes: [compareArray.js]
 ---*/
 
@@ -39,7 +39,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const result = Temporal.now.timeISO(timeZone);
+const result = Temporal.now.plainTimeISO(timeZone);
 assert.sameValue(result instanceof Temporal.Time, true);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], dateTime[property], property);

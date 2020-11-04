@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.now.date
+esid: sec-temporal.now.plaindate
 includes: [compareArray.js]
 ---*/
 
@@ -39,7 +39,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const result = Temporal.now.date("iso8601", timeZone);
+const result = Temporal.now.plainDate("iso8601", timeZone);
 assert.sameValue(result instanceof Temporal.Date, true);
 for (const property of ["year", "month", "day"]) {
   assert.sameValue(result[property], dateTime[property], property);

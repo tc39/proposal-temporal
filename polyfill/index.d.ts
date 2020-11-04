@@ -1503,7 +1503,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function timeISO(tzLike?: TimeZoneProtocol | string): Temporal.Time;
+    export function plainTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.Time;
 
     /**
      * Get the environment's current time zone.

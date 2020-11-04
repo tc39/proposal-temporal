@@ -21,48 +21,49 @@ describe('Temporal.now', () => {
     it('Temporal.now is an object', () => equal(typeof Temporal.now, 'object'));
     it('Temporal.now has 7 properties', () => equal(Object.keys(Temporal.now).length, 7));
     it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
-    it('Temporal.now.dateTime is a function', () => equal(typeof Temporal.now.dateTime, 'function'));
-    it('Temporal.now.dateTimeISO is a function', () => equal(typeof Temporal.now.dateTimeISO, 'function'));
-    it('Temporal.now.date is a function', () => equal(typeof Temporal.now.date, 'function'));
-    it('Temporal.now.dateISO is a function', () => equal(typeof Temporal.now.dateISO, 'function'));
-    it('Temporal.now.timeISO is a function', () => equal(typeof Temporal.now.timeISO, 'function'));
+    it('Temporal.now.plainDateTime is a function', () => equal(typeof Temporal.now.plainDateTime, 'function'));
+    it('Temporal.now.plainDateTimeISO is a function', () => equal(typeof Temporal.now.plainDateTimeISO, 'function'));
+    it('Temporal.now.plainDate is a function', () => equal(typeof Temporal.now.plainDate, 'function'));
+    it('Temporal.now.plainDateISO is a function', () => equal(typeof Temporal.now.plainDateISO, 'function'));
+    it('Temporal.now.plainTimeISO is a function', () => equal(typeof Temporal.now.plainTimeISO, 'function'));
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
   });
   describe('Temporal.now.instant()', () => {
     it('Temporal.now.instant() returns an Instant', () => assert(Temporal.now.instant() instanceof Temporal.Instant));
   });
-  describe('Temporal.now.dateTimeISO()', () => {
+  describe('Temporal.now.plainDateTimeISO()', () => {
     it('returns a DateTime in the ISO calendar', () => {
-      const dt = Temporal.now.dateTimeISO();
+      const dt = Temporal.now.plainDateTimeISO();
       assert(dt instanceof Temporal.DateTime);
       equal(dt.calendar.id, 'iso8601');
     });
   });
-  describe('Temporal.now.dateTime()', () => {
+  describe('Temporal.now.plainDateTime()', () => {
     it('returns a DateTime in the correct calendar', () => {
-      const dt = Temporal.now.dateTime('gregory');
+      const dt = Temporal.now.plainDateTime('gregory');
       assert(dt instanceof Temporal.DateTime);
       equal(dt.calendar.id, 'gregory');
     });
-    it('requires a calendar', () => throws(() => Temporal.now.dateTime(), RangeError));
+    it('requires a calendar', () => throws(() => Temporal.now.plainDateTime(), RangeError));
   });
-  describe('Temporal.now.dateISO()', () => {
+  describe('Temporal.now.plainDateISO()', () => {
     it('returns a Date in the ISO calendar', () => {
-      const d = Temporal.now.dateISO();
+      const d = Temporal.now.plainDateISO();
       assert(d instanceof Temporal.Date);
       equal(d.calendar.id, 'iso8601');
     });
   });
-  describe('Temporal.now.date()', () => {
+  describe('Temporal.now.plainDate()', () => {
     it('returns a Date in the correct calendar', () => {
-      const d = Temporal.now.date('gregory');
+      const d = Temporal.now.plainDate('gregory');
       assert(d instanceof Temporal.Date);
       equal(d.calendar.id, 'gregory');
     });
-    it('requires a calendar', () => throws(() => Temporal.now.date(), RangeError));
+    it('requires a calendar', () => throws(() => Temporal.now.plainDate(), RangeError));
   });
-  describe('Temporal.now.timeISO()', () => {
-    it('Temporal.now.timeISO() returns a Time', () => assert(Temporal.now.timeISO() instanceof Temporal.Time));
+  describe('Temporal.now.plainTimeISO()', () => {
+    it('Temporal.now.plainTimeISO() returns a Time', () =>
+      assert(Temporal.now.plainTimeISO() instanceof Temporal.Time));
   });
 });
 

@@ -111,12 +111,12 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(instant, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('Temporal.now.dateTime()', () => {
-      const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
+    it('Temporal.now.plainDateTime()', () => {
+      const nowDateTime = Temporal.now.plainDateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
     });
-    it('Temporal.now.date()', () => {
-      const nowDate = Temporal.now.date(obj, 'UTC');
+    it('Temporal.now.plainDate()', () => {
+      const nowDate = Temporal.now.plainDate(obj, 'UTC');
       equal(nowDate.calendar.id, obj.id);
     });
     describe('Making available globally', () => {
@@ -199,12 +199,12 @@ describe('Userland calendar', () => {
         const dt = tz.getDateTimeFor(inst, 'zero-based');
         equal(dt.calendar.id, 'zero-based');
       });
-      it('works for Temporal.now.dateTime', () => {
-        const nowDateTime = Temporal.now.dateTime('zero-based', 'UTC');
+      it('works for Temporal.now.plainDateTime', () => {
+        const nowDateTime = Temporal.now.plainDateTime('zero-based', 'UTC');
         equal(nowDateTime.calendar.id, 'zero-based');
       });
-      it('works for Temporal.now.date', () => {
-        const nowDate = Temporal.now.date('zero-based', 'UTC');
+      it('works for Temporal.now.plainDate', () => {
+        const nowDate = Temporal.now.plainDate('zero-based', 'UTC');
         equal(nowDate.calendar.id, 'zero-based');
       });
       after(() => {
@@ -418,12 +418,12 @@ describe('Userland calendar', () => {
       const dt = tz.getDateTimeFor(inst, obj);
       equal(dt.calendar.id, obj.id);
     });
-    it('Temporal.now.dateTime()', () => {
-      const nowDateTime = Temporal.now.dateTime(obj, 'UTC');
+    it('Temporal.now.plainDateTime()', () => {
+      const nowDateTime = Temporal.now.plainDateTime(obj, 'UTC');
       equal(nowDateTime.calendar.id, obj.id);
     });
-    it('Temporal.now.date()', () => {
-      const nowDate = Temporal.now.date(obj, 'UTC');
+    it('Temporal.now.plainDate()', () => {
+      const nowDate = Temporal.now.plainDate(obj, 'UTC');
       equal(nowDate.calendar.id, obj.id);
     });
     describe('Making available globally', () => {
@@ -506,12 +506,12 @@ describe('Userland calendar', () => {
         const dt = tz.getDateTimeFor(inst, 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
-      it('works for Temporal.now.dateTime', () => {
-        const nowDateTime = Temporal.now.dateTime('decimal', 'UTC');
+      it('works for Temporal.now.plainDateTime', () => {
+        const nowDateTime = Temporal.now.plainDateTime('decimal', 'UTC');
         equal(nowDateTime.calendar.id, 'decimal');
       });
-      it('works for Temporal.now.date', () => {
-        const nowDate = Temporal.now.date('decimal', 'UTC');
+      it('works for Temporal.now.plainDate', () => {
+        const nowDate = Temporal.now.plainDate('decimal', 'UTC');
         equal(nowDate.calendar.id, 'decimal');
       });
       after(() => {
