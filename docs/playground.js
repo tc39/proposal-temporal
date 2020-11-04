@@ -8679,18 +8679,44 @@
       }
     }, {
       key: "toZonedDateTime",
-      value: function toZonedDateTime(temporalTimeZoneLike, calendarLike) {
+      value: function toZonedDateTime(item) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+
+        if (ES.Type(item) !== 'Object') {
+          throw new TypeError('invalid argument in toZonedDateTime');
+        }
+
+        var calendarLike = item.calendar;
+
+        if (calendarLike === undefined) {
+          throw new TypeError('missing calendar property in toZonedDateTime');
+        }
+
         var calendar = ES.ToTemporalCalendar(calendarLike);
+        var temporalTimeZoneLike = item.timeZone;
+
+        if (temporalTimeZoneLike === undefined) {
+          throw new TypeError('missing timeZone property in toZonedDateTime');
+        }
+
+        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
         var TemporalZonedDateTime = GetIntrinsic$1('%Temporal.ZonedDateTime%');
         return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
       }
     }, {
       key: "toZonedDateTimeISO",
-      value: function toZonedDateTimeISO(temporalTimeZoneLike) {
+      value: function toZonedDateTimeISO(item) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+
+        if (ES.Type(item) === 'Object') {
+          var timeZoneProperty = item.timeZone;
+
+          if (timeZoneProperty !== undefined) {
+            item = timeZoneProperty;
+          }
+        }
+
+        var timeZone = ES.ToTemporalTimeZone(item);
         var calendar = GetISO8601Calendar();
         var TemporalZonedDateTime = GetIntrinsic$1('%Temporal.ZonedDateTime%');
         return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
