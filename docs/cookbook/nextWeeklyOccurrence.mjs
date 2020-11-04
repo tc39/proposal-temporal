@@ -12,16 +12,16 @@
  * @returns {Temporal.DateTime} Local date and time of next occurrence
  */
 function nextWeeklyOccurrence(now, weekday, eventTime, eventTimeZone) {
-  const dateTime = now.withTimeZone(eventTimeZone).toDateTime();
-  const nextDate = dateTime.toDate().add({ days: (weekday + 7 - dateTime.dayOfWeek) % 7 });
-  let nextOccurrence = nextDate.toDateTime(eventTime);
+  const dateTime = now.withTimeZone(eventTimeZone).toPlainDateTime();
+  const nextDate = dateTime.toPlainDate().add({ days: (weekday + 7 - dateTime.dayOfWeek) % 7 });
+  let nextOccurrence = nextDate.toPlainDateTime(eventTime);
 
   // Handle the case where the event is today but already happened
   if (Temporal.DateTime.compare(dateTime, nextOccurrence) > 0) {
     nextOccurrence = nextOccurrence.add({ days: 7 });
   }
 
-  return eventTimeZone.getInstantFor(nextOccurrence).toZonedDateTime(now).toDateTime();
+  return eventTimeZone.getInstantFor(nextOccurrence).toZonedDateTime(now).toPlainDateTime();
 }
 
 // "Weekly on Thursdays at 08:45 California time":

@@ -98,8 +98,8 @@ now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
 before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
 after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
-console.log(`On ${nextTransition.toDateTime(tz)} the clock will change from UTC ${before} to ${after}`);
-nextTransition.toDateTime(tz);
+console.log(`On ${nextTransition.toPlainDateTime(tz)} the clock will change from UTC ${before} to ${after}`);
+nextTransition.toPlainDateTime(tz);
 // example output:
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```

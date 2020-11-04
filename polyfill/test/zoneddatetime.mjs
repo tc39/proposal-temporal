@@ -149,20 +149,20 @@ describe('ZonedDateTime', () => {
       it('ZonedDateTime.prototype.toInstant is a Function', () => {
         equal(typeof ZonedDateTime.prototype.toInstant, 'function');
       });
-      it('ZonedDateTime.prototype.toDate is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toDate, 'function');
+      it('ZonedDateTime.prototype.toPlainDate is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toPlainDate, 'function');
       });
-      it('ZonedDateTime.prototype.toTime is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toTime, 'function');
+      it('ZonedDateTime.prototype.toPlainTime is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toPlainTime, 'function');
       });
-      it('ZonedDateTime.prototype.toDateTime is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toDateTime, 'function');
+      it('ZonedDateTime.prototype.toPlainDateTime is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toPlainDateTime, 'function');
       });
-      it('ZonedDateTime.prototype.toYearMonth is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toDateTime, 'function');
+      it('ZonedDateTime.prototype.toPlainYearMonth is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toPlainYearMonth, 'function');
       });
-      it('ZonedDateTime.prototype.toMonthDay is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toDateTime, 'function');
+      it('ZonedDateTime.prototype.toPlainMonthDay is a Function', () => {
+        equal(typeof ZonedDateTime.prototype.toPlainMonthDay, 'function');
       });
       it('ZonedDateTime.prototype.getFields is a Function', () => {
         equal(typeof ZonedDateTime.prototype.getFields, 'function');
@@ -709,7 +709,7 @@ describe('ZonedDateTime', () => {
       equal(zdt.epochNanoseconds, zdt2.epochNanoseconds);
       equal(zdt2.calendar.id, 'gregory');
       equal(zdt2.timeZone.id, 'America/Vancouver');
-      notEqual(`${zdt.toDateTime()}`, `${zdt2.toDateTime()}`);
+      notEqual(`${zdt.toPlainDateTime()}`, `${zdt2.toPlainDateTime()}`);
     });
   });
   describe('ZonedDateTime.withCalendar()', () => {
@@ -1280,49 +1280,49 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.toInstant()}`, '+000000-02-29T00:01:15Z');
     });
   });
-  describe('ZonedDateTime.toDate()', () => {
+  describe('ZonedDateTime.toPlainDate()', () => {
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
-      equal(`${zdt.toDate()}`, '2019-10-29');
+      equal(`${zdt.toPlainDate()}`, '2019-10-29');
     });
     it('preserves the calendar', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
         timeZone: tz,
         calendar: 'gregory'
       });
-      equal(zdt.toDate().calendar.id, 'gregory');
+      equal(zdt.toPlainDate().calendar.id, 'gregory');
     });
   });
-  describe('ZonedDateTime.toTime()', () => {
+  describe('ZonedDateTime.toPlainTime()', () => {
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
-      equal(`${zdt.toTime()}`, '02:46:38.271986102');
+      equal(`${zdt.toPlainTime()}`, '02:46:38.271986102');
     });
   });
-  describe('ZonedDateTime.toYearMonth()', () => {
+  describe('ZonedDateTime.toPlainYearMonth()', () => {
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
-      equal(`${zdt.toYearMonth()}`, '2019-10');
+      equal(`${zdt.toPlainYearMonth()}`, '2019-10');
     });
     it('preserves the calendar', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
         timeZone: tz,
         calendar: 'gregory'
       });
-      equal(zdt.toYearMonth().calendar.id, 'gregory');
+      equal(zdt.toPlainYearMonth().calendar.id, 'gregory');
     });
   });
-  describe('ZonedDateTime.toMonthDay()', () => {
+  describe('ZonedDateTime.toPlainMonthDay()', () => {
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
-      equal(`${zdt.toMonthDay()}`, '10-29');
+      equal(`${zdt.toPlainMonthDay()}`, '10-29');
     });
     it('preserves the calendar', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
         timeZone: tz,
         calendar: 'gregory'
       });
-      equal(zdt.toMonthDay().calendar.id, 'gregory');
+      equal(zdt.toPlainMonthDay().calendar.id, 'gregory');
     });
   });
 
@@ -1451,19 +1451,19 @@ describe('ZonedDateTime', () => {
     });
     it('startOfDay works', () => {
       const start = dayBeforeDstStart.startOfDay();
-      equal(`${start.toDate()}`, `${dayBeforeDstStart.toDate()}`);
-      equal(`${start.toTime()}`, '00:00:00');
+      equal(`${start.toPlainDate()}`, `${dayBeforeDstStart.toPlainDate()}`);
+      equal(`${start.toPlainTime()}`, '00:00:00');
     });
     it('startOfDay works when day starts at 1:00 due to DST start at midnight', () => {
       const zdt = ZonedDateTime.from('2015-10-18T12:00:00-02:00[America/Sao_Paulo]');
-      equal(`${zdt.startOfDay().toTime()}`, '01:00:00');
+      equal(`${zdt.startOfDay().toPlainTime()}`, '01:00:00');
     });
 
     const dayAfterSamoaDateLineChange = ZonedDateTime.from('2011-12-31T22:00+14:00[Pacific/Apia]');
     const dayBeforeSamoaDateLineChange = ZonedDateTime.from('2011-12-29T22:00-10:00[Pacific/Apia]');
     it('startOfDay works after Samoa date line change', () => {
       const start = dayAfterSamoaDateLineChange.startOfDay();
-      equal(`${start.toTime()}`, '00:00:00');
+      equal(`${start.toPlainTime()}`, '00:00:00');
     });
     it('hoursInDay works after Samoa date line change', () => {
       equal(dayAfterSamoaDateLineChange.hoursInDay, 24);
@@ -1582,7 +1582,7 @@ describe('ZonedDateTime', () => {
       const clockBefore = ZonedDateTime.from('1999-12-31T23:30-08:00[America/Vancouver]');
       const clockAfter = ZonedDateTime.from('2000-01-01T01:30-04:00[America/Halifax]');
       equal(ZonedDateTime.compare(clockBefore, clockAfter), 1);
-      equal(Temporal.DateTime.compare(clockBefore.toDateTime(), clockAfter.toDateTime()), -1);
+      equal(Temporal.DateTime.compare(clockBefore.toPlainDateTime(), clockAfter.toPlainDateTime()), -1);
     });
   });
 });

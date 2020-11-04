@@ -33,7 +33,7 @@ const localTimes = tc39meetings.map(({ dateTime, timeZone }) => {
   return Temporal.DateTime.from(dateTime)
     .toZonedDateTime(timeZone, { disambiguation: 'reject' })
     .withTimeZone(localTimeZone)
-    .toDateTime();
+    .toPlainDateTime();
 });
 
 assert.deepEqual(

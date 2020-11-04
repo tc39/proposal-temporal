@@ -10,7 +10,7 @@ const timeZones = [
 
 // Start the table at midnight local time
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const calendarNow = now.toDateTime(here, browserCalendar);
+const calendarNow = now.toPlainDateTime(here, browserCalendar);
 const startTime = calendarNow
   .with(Temporal.Time.from('00:00')) // midnight
   .toInstant(here);
@@ -27,7 +27,7 @@ timeZones.forEach(({ name, tz }) => {
   for (let hours = 0; hours < 24; hours++) {
     const cell = document.createElement('td');
 
-    const dt = startTime.add({ hours }).toDateTime(tz);
+    const dt = startTime.add({ hours }).toPlainDateTime(tz);
     cell.className = `time-${dt.hour}`;
 
     // Highlight the current hour in each row

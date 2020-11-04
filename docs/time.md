@@ -10,7 +10,7 @@ A `Temporal.Time` represents a wall-clock time, with a precision in nanoseconds,
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.
 
 `Temporal.Time` refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use `Temporal.DateTime`.
-A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Date` using the `toDateTime()` method.
+A `Temporal.Time` can be converted into a `Temporal.DateTime` by combining it with a `Temporal.Date` using the `toPlainDateTime()` method.
 
 ## Constructor
 
@@ -620,7 +620,7 @@ date = Temporal.Date.from('2006-08-24');
 time.toZonedDateTime('America/Los_Angeles', date); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
 ```
 
-### time.**toDateTime**(_date_: Temporal.Date | object | string) : Temporal.DateTime
+### time.**toPlainDateTime**(_date_: Temporal.Date | object | string) : Temporal.DateTime
 
 **Parameters:**
 
@@ -631,7 +631,7 @@ time.toZonedDateTime('America/Los_Angeles', date); // => 2006-08-24T15:23:30.003
 This method can be used to convert `Temporal.Time` into a `Temporal.DateTime`, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-This has identical results to [`Temporal.Date.from(date).toDateTime(time)`](./date.html#toDateTime).
+This has identical results to [`Temporal.Date.from(date).toPlainDateTime(time)`](./date.html#toPlainDateTime).
 
 If `date` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
 
@@ -640,7 +640,7 @@ Usage example:
 ```javascript
 time = Temporal.Time.from('15:23:30.003');
 date = Temporal.Date.from('2006-08-24');
-time.toDateTime(date); // => 2006-08-24T15:23:30.003
+time.toPlainDateTime(date); // => 2006-08-24T15:23:30.003
 ```
 
 ### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }

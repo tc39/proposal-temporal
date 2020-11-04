@@ -248,7 +248,7 @@ describe('Userland calendar', () => {
       const seconds = hour * 100 + minute * 10 + second;
       const date = new Temporal.Date(1970, 1, 1, 'iso8601').add({ days });
       const time = new Temporal.Time().add({ seconds });
-      return date.toDateTime(time);
+      return date.toPlainDateTime(time);
     }
     function isoToDecimal(datetime) {
       const {

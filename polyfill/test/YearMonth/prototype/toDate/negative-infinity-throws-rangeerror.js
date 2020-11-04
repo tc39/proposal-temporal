@@ -2,13 +2,13 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-description: Temporal.YearMonth.prototype.toDate throws a RangeError if the argument is -Infinity
-esid: sec-temporal.yearmonth.prototype.todate
+description: Temporal.YearMonth.prototype.toPlainDate throws a RangeError if the argument is -Infinity
+esid: sec-temporal.yearmonth.prototype.toplaindate
 ---*/
 
 const instance = new Temporal.YearMonth(2000, 5);
 
-assert.throws(RangeError, () => instance.toDate({ day: -Infinity }));
+assert.throws(RangeError, () => instance.toPlainDate({ day: -Infinity }));
 
 let calls = 0;
 const obj = {
@@ -20,5 +20,5 @@ const obj = {
   }
 };
 
-assert.throws(RangeError, () => instance.toDate(obj));
+assert.throws(RangeError, () => instance.toPlainDate(obj));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");

@@ -69,17 +69,17 @@ describe('Date', () => {
       it('Date.prototype.equals is a Function', () => {
         equal(typeof Date.prototype.equals, 'function');
       });
-      it('Date.prototype.toDateTime is a Function', () => {
-        equal(typeof Date.prototype.toDateTime, 'function');
+      it('Date.prototype.toPlainDateTime is a Function', () => {
+        equal(typeof Date.prototype.toPlainDateTime, 'function');
       });
       it('Date.prototype.toZonedDateTime is a Function', () => {
         equal(typeof Date.prototype.toZonedDateTime, 'function');
       });
-      it('Date.prototype.toYearMonth is a Function', () => {
-        equal(typeof Date.prototype.toYearMonth, 'function');
+      it('Date.prototype.toPlainYearMonth is a Function', () => {
+        equal(typeof Date.prototype.toPlainYearMonth, 'function');
       });
-      it('Date.prototype.toMonthDay is a Function', () => {
-        equal(typeof Date.prototype.toMonthDay, 'function');
+      it('Date.prototype.toPlainMonthDay is a Function', () => {
+        equal(typeof Date.prototype.toPlainMonthDay, 'function');
       });
       it('Date.prototype.getFields is a Function', () => {
         equal(typeof Date.prototype.getFields, 'function');
@@ -186,21 +186,21 @@ describe('Date', () => {
       throws(() => original.with('18:05:42.577'), TypeError);
     });
   });
-  describe('Date.toDateTime() works', () => {
+  describe('Date.toPlainDateTime() works', () => {
     const date = Date.from('1976-11-18');
-    const dt = date.toDateTime(Temporal.Time.from('11:30:23'));
+    const dt = date.toPlainDateTime(Temporal.Time.from('11:30:23'));
     it('returns a Temporal.DateTime', () => assert(dt instanceof Temporal.DateTime));
     it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23'));
     it('casts argument', () => {
-      equal(`${date.toDateTime({ hour: 11, minute: 30, second: 23 })}`, '1976-11-18T11:30:23');
-      equal(`${date.toDateTime('11:30:23')}`, '1976-11-18T11:30:23');
+      equal(`${date.toPlainDateTime({ hour: 11, minute: 30, second: 23 })}`, '1976-11-18T11:30:23');
+      equal(`${date.toPlainDateTime('11:30:23')}`, '1976-11-18T11:30:23');
     });
     it('object must contain at least one correctly-spelled property', () => {
-      throws(() => date.toDateTime({}), TypeError);
-      throws(() => date.toDateTime({ minutes: 30 }), TypeError);
+      throws(() => date.toPlainDateTime({}), TypeError);
+      throws(() => date.toPlainDateTime({ minutes: 30 }), TypeError);
     });
     it('optional argument defaults to midnight', () => {
-      equal(`${date.toDateTime()}`, '1976-11-18T00:00:00');
+      equal(`${date.toPlainDateTime()}`, '1976-11-18T00:00:00');
     });
   });
   describe('Date.toZonedDateTime()', function () {
@@ -1047,26 +1047,26 @@ describe('Date', () => {
     it('converting from DateTime', () => {
       const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
       const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
-      equal(`${min.toDate()}`, '-271821-04-19');
-      equal(`${max.toDate()}`, '+275760-09-13');
+      equal(`${min.toPlainDate()}`, '-271821-04-19');
+      equal(`${max.toPlainDate()}`, '+275760-09-13');
     });
     it('converting from YearMonth', () => {
       const min = Temporal.YearMonth.from('-271821-04');
       const max = Temporal.YearMonth.from('+275760-09');
-      throws(() => min.toDate({ day: 1 }), RangeError);
-      throws(() => max.toDate({ day: 30 }), RangeError);
-      equal(`${min.toDate({ day: 19 })}`, '-271821-04-19');
-      equal(`${max.toDate({ day: 13 })}`, '+275760-09-13');
+      throws(() => min.toPlainDate({ day: 1 }), RangeError);
+      throws(() => max.toPlainDate({ day: 30 }), RangeError);
+      equal(`${min.toPlainDate({ day: 19 })}`, '-271821-04-19');
+      equal(`${max.toPlainDate({ day: 13 })}`, '+275760-09-13');
     });
     it('converting from MonthDay', () => {
       const jan1 = Temporal.MonthDay.from('01-01');
       const dec31 = Temporal.MonthDay.from('12-31');
       const minYear = -271821;
       const maxYear = 275760;
-      throws(() => jan1.toDate({ year: minYear }), RangeError);
-      throws(() => dec31.toDate({ year: maxYear }), RangeError);
-      equal(`${jan1.toDate({ year: minYear + 1 })}`, '-271820-01-01');
-      equal(`${dec31.toDate({ year: maxYear - 1 })}`, '+275759-12-31');
+      throws(() => jan1.toPlainDate({ year: minYear }), RangeError);
+      throws(() => dec31.toPlainDate({ year: maxYear }), RangeError);
+      equal(`${jan1.toPlainDate({ year: minYear + 1 })}`, '-271820-01-01');
+      equal(`${dec31.toPlainDate({ year: maxYear - 1 })}`, '+275759-12-31');
     });
     it('adding and subtracting beyond limit', () => {
       const min = Date.from('-271821-04-19');

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.zoneddatetime.prototype.todatetime
+esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
 includes: [compareArray.js]
 ---*/
 
@@ -30,7 +30,7 @@ const timeZone = new Proxy({
 });
 
 const zdt = new Temporal.ZonedDateTime(160583136123456789n, timeZone);
-const result = zdt.toDateTime();
+const result = zdt.toPlainDateTime();
 assert.sameValue(result, dateTime);
 
 assert.compareArray(actual, expected);

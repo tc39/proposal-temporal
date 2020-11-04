@@ -1,16 +1,16 @@
 // Copyright (C) 2020 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
-const toDateTime = Temporal.ZonedDateTime.prototype.toDateTime;
+const toPlainDateTime = Temporal.ZonedDateTime.prototype.toPlainDateTime;
 
-assert.sameValue(typeof toDateTime, "function");
+assert.sameValue(typeof toPlainDateTime, "function");
 
-assert.throws(TypeError, () => toDateTime.call(undefined), "undefined");
-assert.throws(TypeError, () => toDateTime.call(null), "null");
-assert.throws(TypeError, () => toDateTime.call(true), "true");
-assert.throws(TypeError, () => toDateTime.call(""), "empty string");
-assert.throws(TypeError, () => toDateTime.call(Symbol()), "symbol");
-assert.throws(TypeError, () => toDateTime.call(1), "1");
-assert.throws(TypeError, () => toDateTime.call({}), "plain object");
-assert.throws(TypeError, () => toDateTime.call(Temporal.ZonedDateTime), "Temporal.ZonedDateTime");
-assert.throws(TypeError, () => toDateTime.call(Temporal.ZonedDateTime.prototype), "Temporal.ZonedDateTime.prototype");
+assert.throws(TypeError, () => toPlainDateTime.call(undefined), "undefined");
+assert.throws(TypeError, () => toPlainDateTime.call(null), "null");
+assert.throws(TypeError, () => toPlainDateTime.call(true), "true");
+assert.throws(TypeError, () => toPlainDateTime.call(""), "empty string");
+assert.throws(TypeError, () => toPlainDateTime.call(Symbol()), "symbol");
+assert.throws(TypeError, () => toPlainDateTime.call(1), "1");
+assert.throws(TypeError, () => toPlainDateTime.call({}), "plain object");
+assert.throws(TypeError, () => toPlainDateTime.call(Temporal.ZonedDateTime), "Temporal.ZonedDateTime");
+assert.throws(TypeError, () => toPlainDateTime.call(Temporal.ZonedDateTime.prototype), "Temporal.ZonedDateTime.prototype");

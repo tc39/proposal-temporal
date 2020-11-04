@@ -779,14 +779,14 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    toDateTime(temporalTime?: Temporal.Time | TimeLike | string): Temporal.DateTime;
+    toPlainDateTime(temporalTime?: Temporal.Time | TimeLike | string): Temporal.DateTime;
     toZonedDateTime(
       timeZone: TimeZoneProtocol | string,
       temporalTime?: Temporal.Time | TimeLike | string,
       options?: ToInstantOptions
     ): Temporal.ZonedDateTime;
-    toYearMonth(): Temporal.YearMonth;
-    toMonthDay(): Temporal.MonthDay;
+    toPlainYearMonth(): Temporal.YearMonth;
+    toPlainMonthDay(): Temporal.MonthDay;
     getFields(): DateFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -952,10 +952,10 @@ export namespace Temporal {
       >
     ): Temporal.DateTime;
     toZonedDateTime(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.ZonedDateTime;
-    toDate(): Temporal.Date;
-    toYearMonth(): Temporal.YearMonth;
-    toMonthDay(): Temporal.MonthDay;
-    toTime(): Temporal.Time;
+    toPlainDate(): Temporal.Date;
+    toPlainYearMonth(): Temporal.YearMonth;
+    toPlainMonthDay(): Temporal.MonthDay;
+    toPlainTime(): Temporal.Time;
     getFields(): DateTimeFields;
     getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -991,7 +991,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.MonthDay | MonthDayLike | string): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.MonthDay;
-    toDate(year: { year: number }, options?: AssignmentOptions): Temporal.Date;
+    toPlainDate(year: { year: number }, options?: AssignmentOptions): Temporal.Date;
     getFields(): MonthDayFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -1029,7 +1029,7 @@ export namespace Temporal {
    * need to refer to a specific time on a specific day, use
    * `Temporal.DateTime`. A `Temporal.Time` can be converted into a
    * `Temporal.DateTime` by combining it with a `Temporal.Date` using the
-   * `toDateTime()` method.
+   * `toPlainDateTime()` method.
    *
    * See https://tc39.es/proposal-temporal/docs/time.html for more details.
    */
@@ -1110,7 +1110,7 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Time;
-    toDateTime(temporalDate: Temporal.Date | DateLike | string): Temporal.DateTime;
+    toPlainDateTime(temporalDate: Temporal.Date | DateLike | string): Temporal.DateTime;
     toZonedDateTime(
       timeZoneLike: TimeZoneProtocol | string,
       temporalDate: Temporal.Date | DateLike | string,
@@ -1213,7 +1213,7 @@ export namespace Temporal {
       other: Temporal.YearMonth | YearMonthLike | string,
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
     ): Temporal.Duration;
-    toDate(day: { day: number }): Temporal.Date;
+    toPlainDate(day: { day: number }): Temporal.Date;
     getFields(): YearMonthFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -1383,11 +1383,11 @@ export namespace Temporal {
     ): Temporal.ZonedDateTime;
     startOfDay(): Temporal.ZonedDateTime;
     toInstant(): Temporal.Instant;
-    toDateTime(): Temporal.DateTime;
-    toDate(): Temporal.Date;
-    toYearMonth(): Temporal.YearMonth;
-    toMonthDay(): Temporal.MonthDay;
-    toTime(): Temporal.Time;
+    toPlainDateTime(): Temporal.DateTime;
+    toPlainDate(): Temporal.Date;
+    toPlainYearMonth(): Temporal.YearMonth;
+    toPlainMonthDay(): Temporal.MonthDay;
+    toPlainTime(): Temporal.Time;
     getFields(): ZonedDateTimeFields;
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;

@@ -174,7 +174,7 @@ inst = dt.toInstantISO('America/Sao_Paulo'); // can be ambiguous
 // the offset is lost when converting from an exact type to a non-exact type
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]');
   // => 2020-11-01T01:30-08:00[America/Los_Angeles]
-dt = zdt.toDateTime(); // offset is lost!
+dt = zdt.toPlainDateTime(); // offset is lost!
   // => 2020-11-01T01:30
 zdtAmbiguous = dt.toZonedDateTime('America/Los_Angeles'); // can be ambiguous
   // => 2020-11-01T01:30-07:00[America/Los_Angeles]
@@ -239,7 +239,7 @@ earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
   // => 2020-03-08T01:30-08:00[America/Los_Angeles] (1:30 clock time; still in Standard Time)
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-03-08T03:30-07:00[America/Los_Angeles] ('later' is same as 'compatible' for backwards transitions)
-later.toDateTime().since(earlier.toDateTime());
+later.toPlainDateTime().since(earlier.toPlainDateTime());
   // => PT2H  (2 hour difference in clock time...
 later.since(earlier);
   // => PT1H   ... but 1 hour later in real-world time)
@@ -269,7 +269,7 @@ later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-11-01T01:30-08:00[America/Los_Angeles] 
   // Same clock time, but one hour later.
   // -08:00 offset indicates Standard Time.
-later.toDateTime().since(earlier.toDateTime());
+later.toPlainDateTime().since(earlier.toPlainDateTime());
   // => PT0S  
   // (same clock time...
 later.since(earlier);

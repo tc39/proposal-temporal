@@ -47,7 +47,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
 
-The range of allowed values for this type is exactly enough that calling [`toDateTime()`](./instant.html#toDateTime) on any valid `Temporal.Instant` with any valid `Temporal.TimeZone` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toPlainDateTime()`](./instant.html#toPlainDateTime) on any valid `Temporal.Instant` with any valid `Temporal.TimeZone` will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -857,33 +857,33 @@ For usage examples and a more complete explanation of how this disambiguation wo
 
 If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### datetime.**toDate**() : Temporal.Date
+### datetime.**toPlainDate**() : Temporal.Date
 
 **Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.
 
-### datetime.**toYearMonth**() : Temporal.YearMonth
+### datetime.**toPlainYearMonth**() : Temporal.YearMonth
 
 **Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `datetime`.
 
-### datetime.**toMonthDay**() : Temporal.MonthDay
+### datetime.**toPlainMonthDay**() : Temporal.MonthDay
 
 **Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `datetime`.
 
-### datetime.**toTime**() : Temporal.Time
+### datetime.**toPlainTime**() : Temporal.Time
 
 **Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `datetime`.
 
 The above four methods can be used to convert `Temporal.DateTime` into a `Temporal.Date`, `Temporal.YearMonth`, `Temporal.MonthDay`, or `Temporal.Time` respectively.
-The converted object carries a copy of all the relevant fields of `datetime` (for example, in `toDate()`, the `year`, `month`, and `day` properties are copied.)
+The converted object carries a copy of all the relevant fields of `datetime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are copied.)
 
 Usage example:
 
 ```javascript
 dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt.toDate(); // => 1995-12-07
-dt.toYearMonth(); // => 1995-12
-dt.toMonthDay(); // => 12-07
-dt.toTime(); // => 03:24:30.000003500
+dt.toPlainDate(); // => 1995-12-07
+dt.toPlainYearMonth(); // => 1995-12
+dt.toPlainMonthDay(); // => 12-07
+dt.toPlainTime(); // => 03:24:30.000003500
 ```
 
 ### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }

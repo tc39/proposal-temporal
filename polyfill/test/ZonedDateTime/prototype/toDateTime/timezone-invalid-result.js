@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.zoneddatetime.prototype.todatetime
+esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
 ---*/
 
 const calendar = Temporal.Calendar.from("iso8601");
@@ -31,5 +31,5 @@ for (const dateTime of invalidValues) {
   };
 
   const zdt = new Temporal.ZonedDateTime(160583136123456789n, timeZone, calendar);
-  assert.throws(TypeError, () => zdt.toDateTime(timeZone, calendar));
+  assert.throws(TypeError, () => zdt.toPlainDateTime(timeZone, calendar));
 }

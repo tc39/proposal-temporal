@@ -9,7 +9,7 @@ A `Temporal.YearMonth` represents a particular month on the calendar.
 For example, it could be used to represent a particular instance of a monthly recurring event, like "the June 2019 meeting".
 
 `Temporal.YearMonth` refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use `Temporal.Date` or even `Temporal.DateTime`.
-A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it with a day of the month, using the `toDate()` method.
+A `Temporal.YearMonth` can be converted into a `Temporal.Date` by combining it with a day of the month, using the `toPlainDate()` method.
 
 ## Constructor
 
@@ -31,7 +31,7 @@ Otherwise, `Temporal.YearMonth.from()`, which accepts more kinds of input, allow
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
-The range of allowed values for this type is exactly enough that calling [`toYearMonth()`](./date.html#toYearMonth) on any valid `Temporal.Date` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./date.html#toPlainYearMonth) on any valid `Temporal.Date` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -251,7 +251,7 @@ If the result is earlier or later than the range of dates that `Temporal.YearMon
 
 > **NOTE**: Unlike in `Temporal.Date.prototype.with()`, a `calendar` property is not allowed on `yearMonthLike`.
 > It is not possible to convert a `Temporal.YearMonth` to another calendar system without knowing the day of the month.
-> If you need to do this, use `yearMonth.toDate({ day }).withCalendar(calendar).toYearMonth()`.
+> If you need to do this, use `yearMonth.toPlainDate({ day }).withCalendar(calendar).toPlainYearMonth()`.
 
 Usage example:
 
@@ -383,7 +383,7 @@ other.until(ym, { largestUnit: 'months' }); // => -P154M
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.toDate({ day: 1 }).until(other.toDate({ day: 1 }), { largestUnit: 'days' }); // => P4687D
+ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: 'days' }); // => P4687D
 ```
 <!-- prettier-ignore-end -->
 
@@ -560,7 +560,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.YearMonth` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.YearMonth.compare()` for this, or `yearMonth.equals()` for equality.
 
-### yearMonth.**toDate**(_day_: object) : Temporal.Date
+### yearMonth.**toPlainDate**(_day_: object) : Temporal.Date
 
 **Parameters:**
 
@@ -575,7 +575,7 @@ Usage example:
 
 ```javascript
 ym = Temporal.YearMonth.from('2019-06');
-ym.toDate({ day: 24 }); // => 2019-06-24
+ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
 
 ### yearMonth.**getFields**() : { year: number, month: number, calendar: object, [propName: string]: unknown }

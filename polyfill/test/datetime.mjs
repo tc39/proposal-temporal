@@ -93,11 +93,11 @@ describe('DateTime', () => {
       it('DateTime.prototype.toZonedDateTime is a Function', () => {
         equal(typeof DateTime.prototype.toZonedDateTime, 'function');
       });
-      it('DateTime.prototype.toDate is a Function', () => {
-        equal(typeof DateTime.prototype.toDate, 'function');
+      it('DateTime.prototype.toPlainDate is a Function', () => {
+        equal(typeof DateTime.prototype.toPlainDate, 'function');
       });
-      it('DateTime.prototype.toTime is a Function', () => {
-        equal(typeof DateTime.prototype.toTime, 'function');
+      it('DateTime.prototype.toPlainTime is a Function', () => {
+        equal(typeof DateTime.prototype.toPlainTime, 'function');
       });
       it('DateTime.prototype.getFields is a Function', () => {
         equal(typeof DateTime.prototype.getFields, 'function');
@@ -1492,12 +1492,12 @@ describe('DateTime', () => {
       const lastNs = Temporal.Time.from('23:59:59.999999999');
       const min = Temporal.Date.from('-271821-04-19');
       const max = Temporal.Date.from('+275760-09-13');
-      throws(() => min.toDateTime(midnight), RangeError);
-      throws(() => midnight.toDateTime(min), RangeError);
-      equal(`${min.toDateTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${firstNs.toDateTime(min)}`, '-271821-04-19T00:00:00.000000001');
-      equal(`${max.toDateTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
-      equal(`${lastNs.toDateTime(max)}`, '+275760-09-13T23:59:59.999999999');
+      throws(() => min.toPlainDateTime(midnight), RangeError);
+      throws(() => midnight.toPlainDateTime(min), RangeError);
+      equal(`${min.toPlainDateTime(firstNs)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${firstNs.toPlainDateTime(min)}`, '-271821-04-19T00:00:00.000000001');
+      equal(`${max.toPlainDateTime(lastNs)}`, '+275760-09-13T23:59:59.999999999');
+      equal(`${lastNs.toPlainDateTime(max)}`, '+275760-09-13T23:59:59.999999999');
     });
     it('adding and subtracting beyond limit', () => {
       const min = DateTime.from('-271821-04-19T00:00:00.000000001');

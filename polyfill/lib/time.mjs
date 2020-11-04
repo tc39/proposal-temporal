@@ -362,7 +362,7 @@ export class Time {
     throw new TypeError('use compare() or equals() to compare Temporal.Time');
   }
 
-  toDateTime(temporalDate) {
+  toPlainDateTime(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
 
     temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.Date%'));

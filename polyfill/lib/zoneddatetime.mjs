@@ -441,19 +441,19 @@ export class ZonedDateTime {
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     return new TemporalInstant(GetSlot(this, EPOCHNANOSECONDS));
   }
-  toDate() {
+  toPlainDate() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToDate(dateTime(this));
   }
-  toTime() {
+  toPlainTime() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToTime(dateTime(this));
   }
-  toDateTime() {
+  toPlainDateTime() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return dateTime(this);
   }
-  toYearMonth() {
+  toPlainYearMonth() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.YearMonth%');
     const calendar = GetSlot(this, CALENDAR);
@@ -461,7 +461,7 @@ export class ZonedDateTime {
     const fields = ES.ToTemporalDateFields(this, fieldNames);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
-  toMonthDay() {
+  toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.MonthDay%');
     const calendar = GetSlot(this, CALENDAR);
