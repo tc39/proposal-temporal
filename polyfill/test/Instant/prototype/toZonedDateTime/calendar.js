@@ -8,10 +8,10 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get Temporal.TimeZone.from",
-  "call Temporal.TimeZone.from",
   "get Temporal.Calendar.from",
   "call Temporal.Calendar.from",
+  "get Temporal.TimeZone.from",
+  "call Temporal.TimeZone.from",
 ];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
@@ -57,7 +57,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = instant.toZonedDateTime("UTC", "iso8601");
+const result = instant.toZonedDateTime({ timeZone: "UTC", calendar: "iso8601" });
 assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
 assert.sameValue(result.calendar, calendar);
 

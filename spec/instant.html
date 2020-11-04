@@ -446,30 +446,42 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetime">
-      <h1>Temporal.Instant.prototype.toZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
+      <h1>Temporal.Instant.prototype.toZonedDateTime ( _item_ )</h1>
       <p>
-        The `toZonedDateTime` method takes two arguments, _temporalTimeZoneLike_ and _calendarLike_.
+        The `toZonedDateTime` method takes one argument _item_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. If Type(_item_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
+        1. If _calendarLike_ is *undefined*, then
+          1. Throw a *TypeError* exception.
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
+        1. If _temporalTimeZoneLike_ is *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetimeiso">
-      <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _temporalTimeZoneLike_ )</h1>
+      <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _item_ )</h1>
       <p>
-        The `toZonedDateTimeISO` method takes one argument _temporalTimeZoneLike_.
+        The `toZonedDateTimeISO` method takes one argument _item_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. If Type(_item_) is Object, then
+          1. Let _timeZoneProperty_ be ? Get(_item_, *"timeZone"*).
+          1. If _timeZoneProperty_ is not *undefined*, then
+            1. Set _item_ to _timeZoneProperty_.
+        1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
         1. Let _calendar_ be ? GetISO8601Calendar().
         1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>

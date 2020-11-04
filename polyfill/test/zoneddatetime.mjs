@@ -1286,7 +1286,10 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.toDate()}`, '2019-10-29');
     });
     it('preserves the calendar', () => {
-      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime(tz, 'gregory');
+      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
+        timeZone: tz,
+        calendar: 'gregory'
+      });
       equal(zdt.toDate().calendar.id, 'gregory');
     });
   });
@@ -1302,7 +1305,10 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.toYearMonth()}`, '2019-10');
     });
     it('preserves the calendar', () => {
-      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime(tz, 'gregory');
+      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
+        timeZone: tz,
+        calendar: 'gregory'
+      });
       equal(zdt.toYearMonth().calendar.id, 'gregory');
     });
   });
@@ -1312,7 +1318,10 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.toMonthDay()}`, '10-29');
     });
     it('preserves the calendar', () => {
-      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime(tz, 'gregory');
+      const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTime({
+        timeZone: tz,
+        calendar: 'gregory'
+      });
       equal(zdt.toMonthDay().calendar.id, 'gregory');
     });
   });

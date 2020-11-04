@@ -1307,20 +1307,20 @@ describe('Instant', () => {
   describe('Instant.toZonedDateTime() works', () => {
     const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
     it('throws without parameter', () => {
-      throws(() => inst.toZonedDateTime(), RangeError);
+      throws(() => inst.toZonedDateTime(), TypeError);
     });
-    it('throws with only one parameter', () => {
-      throws(() => inst.toZonedDateTime('Asia/Singapore'));
+    it('throws with a string parameter', () => {
+      throws(() => inst.toZonedDateTime('Asia/Singapore'), TypeError);
     });
     it('time zone parameter UTC', () => {
-      const tz = Temporal.TimeZone.from('UTC');
-      const zdt = inst.toZonedDateTime(tz, 'gregory');
+      const timeZone = Temporal.TimeZone.from('UTC');
+      const zdt = inst.toZonedDateTime({ timeZone, calendar: 'gregory' });
       equal(inst.epochNanoseconds, zdt.epochNanoseconds);
       equal(`${zdt}`, '1976-11-18T14:23:30.123456789+00:00[UTC][c=gregory]');
     });
     it('time zone parameter non-UTC', () => {
-      const tz = Temporal.TimeZone.from('America/New_York');
-      const zdt = inst.toZonedDateTime(tz, 'gregory');
+      const timeZone = Temporal.TimeZone.from('America/New_York');
+      const zdt = inst.toZonedDateTime({ timeZone, calendar: 'gregory' });
       equal(inst.epochNanoseconds, zdt.epochNanoseconds);
       equal(`${zdt}`, '1976-11-18T09:23:30.123456789-05:00[America/New_York][c=gregory]');
     });

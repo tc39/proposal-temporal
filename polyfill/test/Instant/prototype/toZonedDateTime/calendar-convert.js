@@ -24,7 +24,7 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const zdt = instant.toZonedDateTime("UTC", input);
+  const zdt = instant.toZonedDateTime({ timeZone: "UTC", calendar: input });
   assert.sameValue(called, 1);
   assert.sameValue(zdt.calendar, calendar);
 }
@@ -33,4 +33,4 @@ Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => instant.toZonedDateTime("UTC", Symbol()));
+assert.throws(TypeError, () => instant.toZonedDateTime({ timeZone: "UTC", calendar: Symbol() }));

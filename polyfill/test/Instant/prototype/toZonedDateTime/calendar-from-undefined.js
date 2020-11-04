@@ -37,7 +37,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = instant.toZonedDateTime(timeZone, "japanese");
+const result = instant.toZonedDateTime({ timeZone, calendar: "japanese" });
 assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
 assert.sameValue(result.calendar instanceof Temporal.Calendar, true);
 assert.sameValue(result.calendar.id, "japanese");

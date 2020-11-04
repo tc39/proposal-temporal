@@ -28,7 +28,7 @@ const timeZone = new Proxy({
   },
 });
 
-const result = instant.toZonedDateTime(timeZone, calendar);
+const result = instant.toZonedDateTime({ timeZone, calendar });
 assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
 
 assert.compareArray(actual, expected);

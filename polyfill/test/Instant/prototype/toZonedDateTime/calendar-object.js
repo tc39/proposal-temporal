@@ -35,7 +35,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = instant.toZonedDateTime(timeZone, calendar);
+const result = instant.toZonedDateTime({ timeZone, calendar });
 assert.sameValue(result.epochNanoseconds, instant.epochNanoseconds);
 assert.sameValue(result.calendar, calendar);
 

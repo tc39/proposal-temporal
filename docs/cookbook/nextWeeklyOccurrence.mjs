@@ -21,7 +21,7 @@ function nextWeeklyOccurrence(now, weekday, eventTime, eventTimeZone) {
     nextOccurrence = nextOccurrence.add({ days: 7 });
   }
 
-  return eventTimeZone.getInstantFor(nextOccurrence).toZonedDateTime(now.timeZone, now.calendar).toDateTime();
+  return eventTimeZone.getInstantFor(nextOccurrence).toZonedDateTime(now).toDateTime();
 }
 
 // "Weekly on Thursdays at 08:45 California time":

@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 ---*/
 
 verifyProperty(Temporal.Instant.prototype.toZonedDateTime, "length", {
-  value: 2,
+  value: 1,
   writable: false,
   enumerable: false,
   configurable: true,
