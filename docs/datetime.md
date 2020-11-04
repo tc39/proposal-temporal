@@ -21,25 +21,25 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 
 ## Constructor
 
-### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _hour_: number = 0, _minute_: number = 0, _second_: number = 0, _millisecond_: number = 0, _microsecond_: number = 0, _nanosecond_: number = 0, _calendar_?: object) : Temporal.DateTime
+### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.DateTime
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `hour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
-- `minute` (optional number): A minute, ranging between 0 and 59 inclusive.
-- `second` (optional number): A second, ranging between 0 and 59 inclusive.
-- `millisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
-- `microsecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
-- `nanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
+- `isoHour` (optional number): An hour of the day, ranging between 0 and 23 inclusive.
+- `isoMinute` (optional number): A minute, ranging between 0 and 59 inclusive.
+- `isoSecond` (optional number): A second, ranging between 0 and 59 inclusive.
+- `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
+- `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
+- `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
+- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the datetime into.
 
 **Returns:** a new `Temporal.DateTime` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
-Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+Use this constructor if you have the correct parameters for the datetime already as individual number values in the ISO 8601 calendar.
+Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, allows inputting dates and times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter, and the time parameters must represent a valid time of day.
@@ -228,7 +228,7 @@ dt.nanosecond;  // => 500
 
 ### datetime.**calendar** : object
 
-The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
+The `calendar` read-only property gives the calendar that the `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties are interpreted in.
 
 ### datetime.**dayOfWeek** : number
 
@@ -541,7 +541,7 @@ Take care when using milliseconds, microseconds, or nanoseconds as the largest u
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
 Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
 
-Computing the difference between two dates in different calendar systems is not supported.
+Computing the difference between two datetimes in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `datetime.withCalendar()`.
 
 Usage example:
@@ -680,7 +680,7 @@ This function exists because it's not possible to compare using `datetime == oth
 
 If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.DateTime.compare`.
 
-Note that this function will return `true` if the two date/times are equal, even if they are expressed in different calendar systems.
+Note that this function will return `true` if the two datetimes are equal, even if they are expressed in different calendar systems.
 
 If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
@@ -905,7 +905,7 @@ Object.assign({}, dt).day; // => undefined
 Object.assign({}, dt.getFields()).day; // => 7
 ```
 
-### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object }
+### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }
 
 **Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the value of `datetime.calendar`.
 
@@ -921,8 +921,8 @@ dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
 f = dt.getISOFields();
 f.isoDay; // => 7
 // Fields correspond exactly to constructor arguments:
-dt2 = new Temporal.DateTime(f.isoYear, f.isoMonth, f.isoDay, f.hour, f.minute,
-  f.second, f.millisecond, f.microsecond, f.nanosecond, f.calendar);
+dt2 = new Temporal.DateTime(f.isoYear, f.isoMonth, f.isoDay, f.isoHour, f.isoMinute,
+  f.isoSecond, f.isoMillisecond, f.isoMicrosecond, f.isoNanosecond, f.calendar);
 dt.equals(dt2); // => true
 
 // Date in other calendar
