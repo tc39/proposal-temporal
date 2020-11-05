@@ -268,43 +268,20 @@ describe('Time', () => {
       const time = PlainTime.from('12:00');
       const date = Temporal.PlainDate.from('2020-01-01');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      equal(`${time.toZonedDateTime(tz, date)}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
+      const zdt = time.toZonedDateTime({ timeZone: tz, date });
+      equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
     });
-    it('works with disambiguation option', () => {
-      const time = PlainTime.from('02:00');
-      const date = Temporal.PlainDate.from('2020-03-08');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime(tz, date, { disambiguation: 'earlier' });
-      equal(`${zdt}`, '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-    });
-    it('casts first argument', () => {
+    it('casts timeZone property', () => {
       const time = PlainTime.from('12:00');
       const date = Temporal.PlainDate.from('2020-07-08');
-      const zdt = time.toZonedDateTime('America/Los_Angeles', date);
+      const zdt = time.toZonedDateTime({ timeZone: 'America/Los_Angeles', date });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
-    it('casts second argument', () => {
+    it('casts date property', () => {
       const time = PlainTime.from('12:00');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime(tz, '2020-07-08');
+      const zdt = time.toZonedDateTime({ timeZone: tz, date: '2020-07-08' });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-    it('throws on bad disambiguation', () => {
-      ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => PlainTime.from('12:00').toZonedDateTime('UTC', '2019-10-29', { disambiguation }), RangeError)
-      );
-    });
-    it('options may only be an object or undefined', () => {
-      const time = PlainTime.from('10:46:38');
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => time.toZonedDateTime('America/Sao_Paulo', '2019-10-29', badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(
-          `${time.toZonedDateTime('America/Sao_Paulo', '2019-10-29', options)}`,
-          '2019-10-29T10:46:38-03:00[America/Sao_Paulo]'
-        )
-      );
     });
   });
   describe('time.until() works', () => {

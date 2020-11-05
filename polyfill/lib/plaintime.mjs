@@ -399,12 +399,24 @@ export class PlainTime {
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
-  toZonedDateTime(timeZoneLike, temporalDate, options = undefined) {
+  toZonedDateTime(item) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+
+    if (ES.Type(item) !== 'Object') {
+      throw new TypeError('invalid argument');
+    }
+
+    const dateLike = item.date;
+    if (dateLike === undefined) {
+      throw new TypeError('missing date property');
+    }
+    const temporalDate = ES.ToTemporalDate(dateLike, GetIntrinsic('%Temporal.PlainDate%'));
+
+    const timeZoneLike = item.timeZone;
+    if (timeZoneLike === undefined) {
+      throw new TypeError('missing timeZone property');
+    }
     const timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-    temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.PlainDate%'));
-    options = ES.NormalizeOptionsObject(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
 
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
@@ -416,10 +428,21 @@ export class PlainTime {
     const millisecond = GetSlot(this, ISO_MILLISECOND);
     const microsecond = GetSlot(this, ISO_MICROSECOND);
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
-    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
 
-    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    const dt = new PlainDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
+    const instant = ES.GetTemporalInstantFor(timeZone, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
