@@ -1743,7 +1743,7 @@ describe('ZonedDateTime', () => {
       const options = { overflow: 'reject' };
       throws(() => zdt.add(d, options), RangeError);
     });
-    it.skip('order of operations: subtract / none', () => {
+    it('order of operations: subtract / none', () => {
       const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
       const d = Temporal.Duration.from({ months: 1, days: 1 });
       const options = undefined;
@@ -1751,7 +1751,7 @@ describe('ZonedDateTime', () => {
       equal(result.toString(), '2020-02-28T00:00:00-08:00[America/Los_Angeles]');
       equal(breakoutUnits('subtract', zdt, d, options).toString(), result.toString());
     });
-    it.skip('order of operations: subtract / constrain', () => {
+    it('order of operations: subtract / constrain', () => {
       const zdt = ZonedDateTime.from('2020-03-31T00:00-07:00[America/Los_Angeles]');
       const d = Temporal.Duration.from({ months: 1, days: 1 });
       const options = { overflow: 'constrain' };
