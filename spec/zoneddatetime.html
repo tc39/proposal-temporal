@@ -552,12 +552,27 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _partialZonedDateTime_ be ? ToPartialZonedDateTime(_temporalZonedDateTimeLike_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
+        1. Let _partialZonedDateTime_ be ? ToPartialZonedDateTime(_temporalZonedDateTimeLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
-        1. <mark>TODO</mark>.
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _fields_ be ? ToTemporalZonedDateTimeFields(_zonedDateTime_, _fieldNames_).
+        1. For each element _property_ of _fieldNames_, do
+          1. Let _value_ be ? Get(_partialZonedDateTime_, _property_).
+          1. If _value_ is not *undefined*, then
+            1. Perform ? Set(_fields_, _property_, _value_).
+        1. Let _offsetString_ be ? Get(_partialZonedDateTime_, *"offset"*).
+        1. If _offsetString_ is not *undefined*, then
+          1. Perform ? Set(_fields_, *"offset"*, _offsetString_).
+        1. Else,
+          1. Set _offsetString_ to ? Get(_fields_, *"offset"*).
+        1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
+        1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
+        1. Let _epochNanoseconds_ be ? InterpretTemporalZonedDateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], _offsetNanoseconds, _timeZone_, _disambiguation_, _offset_).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1056,14 +1071,34 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-topartialzoneddatetime" aoid="ToPartialZonedDateTime">
-      <h1>ToPartialZonedDateTime ( _temporalZonedDateTimeLike_ )</h1>
+      <h1>ToPartialZonedDateTime ( _temporalZonedDateTimeLike_, _fieldNames_ )</h1>
       <p>
-        The abstract operation ToPartialZonedDateTime <mark>...TODO, after landing `Calendar.fields()`</mark>.
+        The abstract operation ToPartialZonedDateTime checks whether _temporalZonedDateTimeLike_ has any Temporal.ZonedDateTime-related properties, including any calendar-specific properties given in _fieldNames_, and returns a new Object with those properties defined on it.
       </p>
       <emu-alg>
         1. If Type(_temporalZonedDateTimeLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. <mark>TODO</mark>.
+        1. Let _otherCalendar_ be ? Get(_temporalZonedDateTimeLike_, *"calendar"*).
+        1. If _otherCalendar_ is not *undefined*, throw a *TypeError* exception.
+        1. Let _timeZone_ be ? Get(_temporalZonedDateTimeLike_, *"timeZone"*).
+        1. If _timeZone_ is not *undefined*, throw a *TypeError* exception.
+        1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _any_ be *false*.
+        1. For each value _property_ of _fieldNames_, do
+          1. Let _value_ be ? Get(_temporalDateTimeLike_, _property_).
+          1. If _value_ is not *undefined*, then
+            1. Set _any_ to *true*.
+            1. If _property_ is one of *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*, then
+              1. Set _value_ to ? ToInteger(_value_).
+            1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+        1. Let _offset_ be ? Get(_temporalDateTimeLike_, *"offset"*).
+        1. If _offset_ is not *undefined*, then
+          1. Set _any_ to *true*.
+          1. Set _offset_ to ? ToString(_offset_).
+          1. Perform ! CreateDataPropertyOrThrow(_result_, *"offset"*, _offset_).
+        1. If _any_ is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

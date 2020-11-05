@@ -694,6 +694,235 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('ZonedDateTime.with()', () => {
+    const zdt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789).toZonedDateTime('UTC');
+    it('zdt.with({ year: 2019 } works', () => {
+      equal(`${zdt.with({ year: 2019 })}`, '2019-11-18T15:23:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ month: 5 } works', () => {
+      equal(`${zdt.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ day: 5 } works', () => {
+      equal(`${zdt.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ hour: 5 } works', () => {
+      equal(`${zdt.with({ hour: 5 })}`, '1976-11-18T05:23:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ minute: 5 } works', () => {
+      equal(`${zdt.with({ minute: 5 })}`, '1976-11-18T15:05:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ second: 5 } works', () => {
+      equal(`${zdt.with({ second: 5 })}`, '1976-11-18T15:23:05.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ millisecond: 5 } works', () => {
+      equal(`${zdt.with({ millisecond: 5 })}`, '1976-11-18T15:23:30.005456789+00:00[UTC]');
+    });
+    it('zdt.with({ microsecond: 5 } works', () => {
+      equal(`${zdt.with({ microsecond: 5 })}`, '1976-11-18T15:23:30.123005789+00:00[UTC]');
+    });
+    it('zdt.with({ nanosecond: 5 } works', () => {
+      equal(`${zdt.with({ nanosecond: 5 })}`, '1976-11-18T15:23:30.123456005+00:00[UTC]');
+    });
+    it('zdt.with({ month: 5, second: 15 } works', () => {
+      equal(`${zdt.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789+00:00[UTC]');
+    });
+    describe('Overflow', () => {
+      it('constrain', () => {
+        const overflow = 'constrain';
+        equal(`${zdt.with({ month: 29 }, { overflow })}`, '1976-12-18T15:23:30.123456789+00:00[UTC]');
+        equal(`${zdt.with({ day: 31 }, { overflow })}`, '1976-11-30T15:23:30.123456789+00:00[UTC]');
+        equal(`${zdt.with({ hour: 29 }, { overflow })}`, '1976-11-18T23:23:30.123456789+00:00[UTC]');
+        equal(`${zdt.with({ nanosecond: 9000 }, { overflow })}`, '1976-11-18T15:23:30.123456999+00:00[UTC]');
+      });
+      it('reject', () => {
+        const overflow = 'reject';
+        throws(() => zdt.with({ month: 29 }, { overflow }), RangeError);
+        throws(() => zdt.with({ day: 31 }, { overflow }), RangeError);
+        throws(() => zdt.with({ hour: 29 }, { overflow }), RangeError);
+        throws(() => zdt.with({ nanosecond: 9000 }, { overflow }), RangeError);
+      });
+      it('constrain is the default', () => {
+        equal(`${zdt.with({ month: 29 })}`, `${zdt.with({ month: 29 }, { overflow: 'constrain' })}`);
+      });
+      it('invalid overflow', () => {
+        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+          throws(() => zdt.with({ day: 5 }, { overflow }), RangeError)
+        );
+      });
+    });
+    const dstStartDay = ZonedDateTime.from('2019-03-10T12:00:01-02:30[America/St_Johns]');
+    const dstEndDay = ZonedDateTime.from('2019-11-03T12:00:01-03:30[America/St_Johns]');
+    const oneThirty = { hour: 1, minute: 30 };
+    const twoThirty = { hour: 2, minute: 30 };
+    describe('Disambiguation option', () => {
+      const offset = 'ignore';
+      it('compatible, skipped wall time', () => {
+        equal(
+          `${dstStartDay.with(twoThirty, { offset, disambiguation: 'compatible' })}`,
+          '2019-03-10T03:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('earlier, skipped wall time', () => {
+        equal(
+          `${dstStartDay.with(twoThirty, { offset, disambiguation: 'earlier' })}`,
+          '2019-03-10T01:30:01-03:30[America/St_Johns]'
+        );
+      });
+      it('later, skipped wall time', () => {
+        equal(
+          `${dstStartDay.with(twoThirty, { offset, disambiguation: 'later' })}`,
+          '2019-03-10T03:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('compatible, repeated wall time', () => {
+        equal(
+          `${dstEndDay.with(oneThirty, { offset, disambiguation: 'compatible' })}`,
+          '2019-11-03T01:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('earlier, repeated wall time', () => {
+        equal(
+          `${dstEndDay.with(oneThirty, { offset, disambiguation: 'earlier' })}`,
+          '2019-11-03T01:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('later, repeated wall time', () => {
+        equal(
+          `${dstEndDay.with(oneThirty, { offset, disambiguation: 'later' })}`,
+          '2019-11-03T01:30:01-03:30[America/St_Johns]'
+        );
+      });
+      it('reject', () => {
+        throws(() => dstStartDay.with(twoThirty, { offset, disambiguation: 'reject' }), RangeError);
+        throws(() => dstEndDay.with(oneThirty, { offset, disambiguation: 'reject' }), RangeError);
+      });
+      it('compatible is the default', () => {
+        equal(
+          `${dstStartDay.with(twoThirty, { offset })}`,
+          `${dstStartDay.with(twoThirty, { offset, disambiguation: 'compatible' })}`
+        );
+        equal(
+          `${dstEndDay.with(twoThirty, { offset })}`,
+          `${dstEndDay.with(twoThirty, { offset, disambiguation: 'compatible' })}`
+        );
+      });
+      it('invalid disambiguation', () => {
+        ['', 'EARLIER', 'balance', 3, null].forEach((disambiguation) =>
+          throws(() => zdt.with({ day: 5 }, { disambiguation }), RangeError)
+        );
+      });
+    });
+    describe('Offset option', () => {
+      const bogus = { ...twoThirty, offset: '+23:59' };
+      it('use, with bogus offset, changes to the exact time with the offset', () => {
+        const preserveExact = dstStartDay.with(bogus, { offset: 'use' });
+        equal(`${preserveExact}`, '2019-03-08T23:01:01-03:30[America/St_Johns]');
+        equal(preserveExact.epochNanoseconds, Temporal.Instant.from('2019-03-10T02:30:01+23:59').epochNanoseconds);
+      });
+      it('ignore, with bogus offset, defers to disambiguation option', () => {
+        const offset = 'ignore';
+        equal(
+          `${dstStartDay.with(bogus, { offset, disambiguation: 'earlier' })}`,
+          '2019-03-10T01:30:01-03:30[America/St_Johns]'
+        );
+        equal(
+          `${dstStartDay.with(bogus, { offset, disambiguation: 'later' })}`,
+          '2019-03-10T03:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('prefer, with bogus offset, defers to disambiguation option', () => {
+        const offset = 'prefer';
+        equal(
+          `${dstStartDay.with(bogus, { offset, disambiguation: 'earlier' })}`,
+          '2019-03-10T01:30:01-03:30[America/St_Johns]'
+        );
+        equal(
+          `${dstStartDay.with(bogus, { offset, disambiguation: 'later' })}`,
+          '2019-03-10T03:30:01-02:30[America/St_Johns]'
+        );
+      });
+      it('reject, with bogus offset, throws', () => {
+        throws(() => dstStartDay.with({ ...twoThirty, offset: '+23:59' }, { offset: 'reject' }), RangeError);
+      });
+      const doubleTime = ZonedDateTime.from('2019-11-03T01:30:01-03:30[America/St_Johns]');
+      it('use changes to the exact time with the offset', () => {
+        const preserveExact = doubleTime.with({ offset: '-02:30' }, { offset: 'use' });
+        equal(preserveExact.offset, '-02:30');
+        equal(preserveExact.epochNanoseconds, Temporal.Instant.from('2019-11-03T01:30:01-02:30').epochNanoseconds);
+      });
+      it('ignore defers to disambiguation option', () => {
+        const offset = 'ignore';
+        equal(doubleTime.with({ offset: '-02:30' }, { offset, disambiguation: 'earlier' }).offset, '-02:30');
+        equal(doubleTime.with({ offset: '-02:30' }, { offset, disambiguation: 'later' }).offset, '-03:30');
+      });
+      it('prefer adjusts offset of repeated clock time', () => {
+        equal(doubleTime.with({ offset: '-02:30' }, { offset: 'prefer' }).offset, '-02:30');
+      });
+      it('reject adjusts offset of repeated clock time', () => {
+        equal(doubleTime.with({ offset: '-02:30' }, { offset: 'reject' }).offset, '-02:30');
+      });
+      it('use does not cause the offset to change when adjusting repeated clock time', () => {
+        equal(doubleTime.with({ minute: 31 }, { offset: 'use' }).offset, '-03:30');
+      });
+      it('ignore may cause the offset to change when adjusting repeated clock time', () => {
+        equal(doubleTime.with({ minute: 31 }, { offset: 'ignore' }).offset, '-02:30');
+      });
+      it('prefer does not cause the offset to change when adjusting repeated clock time', () => {
+        equal(doubleTime.with({ minute: 31 }, { offset: 'prefer' }).offset, '-03:30');
+      });
+      it('reject does not cause the offset to change when adjusting repeated clock time', () => {
+        equal(doubleTime.with({ minute: 31 }, { offset: 'reject' }).offset, '-03:30');
+      });
+      it('prefer is the default', () => {
+        equal(`${dstStartDay.with(twoThirty)}`, `${dstStartDay.with(twoThirty, { offset: 'prefer' })}`);
+        equal(`${dstEndDay.with(twoThirty)}`, `${dstEndDay.with(twoThirty, { offset: 'prefer' })}`);
+        equal(`${doubleTime.with({ minute: 31 })}`, `${doubleTime.with({ minute: 31 }, { offset: 'prefer' })}`);
+      });
+      it('invalid offset', () => {
+        ['', 'PREFER', 'balance', 3, null].forEach((offset) =>
+          throws(() => zdt.with({ day: 5 }, { offset }), RangeError)
+        );
+      });
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => zdt.with({ day: 5 }, badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) =>
+        equal(`${zdt.with({ day: 5 }, options)}`, '1976-11-05T15:23:30.123456789+00:00[UTC]')
+      );
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => zdt.with({}), TypeError);
+      throws(() => zdt.with({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${zdt.with({ month: 12, days: 15 })}`, '1976-12-18T15:23:30.123456789+00:00[UTC]');
+    });
+    it('throws if timeZone is included', () => {
+      throws(() => zdt.with({ month: 2, timeZone: 'Asia/Ulaanbaatar' }), TypeError);
+    });
+    it('throws if given a Temporal object with a time zone', () => {
+      throws(() => zdt.with(dstStartDay), TypeError);
+    });
+    it('throws if calendar is included', () => {
+      throws(() => zdt.with({ month: 2, calendar: 'japanese' }), TypeError);
+    });
+    it('throws if given a Temporal object with a calendar', () => {
+      throws(() => zdt.with(Temporal.DateTime.from('1976-11-18T12:00')), TypeError);
+      throws(() => zdt.with(Temporal.Date.from('1976-11-18')), TypeError);
+      throws(() => zdt.with(Temporal.Time.from('12:00')), TypeError);
+      throws(() => zdt.with(Temporal.YearMonth.from('1976-11')), TypeError);
+      throws(() => zdt.with(Temporal.MonthDay.from('11-18')), TypeError);
+    });
+    it('throws if given a string', () => {
+      throws(() => zdt.with('1976-11-18T12:00+00:00[UTC]'), TypeError);
+      throws(() => zdt.with('1976-11-18'), TypeError);
+      throws(() => zdt.with('12:00'), TypeError);
+      throws(() => zdt.with('invalid'), TypeError);
+    });
+  });
+
   describe('ZonedDateTime.withTimeZone()', () => {
     const instant = Temporal.Instant.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     const zdt = instant.toZonedDateTimeISO('UTC');

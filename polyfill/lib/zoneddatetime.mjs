@@ -25,6 +25,9 @@ import {
 
 import bigInt from 'big-integer';
 
+const ArrayPrototypePush = Array.prototype.push;
+const ObjectAssign = Object.assign;
+
 export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = GetISO8601Calendar()) {
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
@@ -169,18 +172,71 @@ export class ZonedDateTime {
   with(temporalZonedDateTimeLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalZonedDateTimeLike) !== 'Object') {
-      const str = ES.ToString(temporalZonedDateTimeLike);
-      temporalZonedDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+      throw new TypeError('invalid zoned-date-time-like');
+    }
+    if (temporalZonedDateTimeLike.calendar !== undefined) {
+      throw new TypeError('calendar invalid for with(). use withCalendar()');
+    }
+    if (temporalZonedDateTimeLike.timeZone !== undefined) {
+      throw new TypeError('timeZone invalid for with(). use withTimeZone()');
     }
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const offset = ES.ToTemporalOffset(options, 'prefer');
 
-    void overflow;
-    void disambiguation;
-    void offset;
-    throw new Error('with() not implemented yet');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const calendar = GetSlot(this, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, [
+      'day',
+      'hour',
+      'microsecond',
+      'millisecond',
+      'minute',
+      'month',
+      'nanosecond',
+      'second',
+      'year'
+    ]);
+    ArrayPrototypePush.call(fieldNames, 'offset');
+    const props = ES.ToPartialRecord(temporalZonedDateTimeLike, fieldNames);
+    if (!props) {
+      throw new TypeError('invalid zoned-date-time-like');
+    }
+    const fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+    ObjectAssign(fields, props);
+    let {
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+    const offsetNs = ES.ParseOffsetString(fields.offset);
+    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      offsetNs,
+      timeZone,
+      disambiguation,
+      offset
+    );
+
+    const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+    const result = new Construct(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
+    if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+    return result;
   }
   withTimeZone(timeZone) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

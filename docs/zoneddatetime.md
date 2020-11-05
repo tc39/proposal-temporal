@@ -633,7 +633,7 @@ zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
 
 **Parameters:**
 
-- `zonedDateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.ZonedDateTime` (including `offsetNanoseconds`), or an ISO string.
+- `zonedDateTimeLike` (object): an object with some of the properties of a `Temporal.ZonedDateTime` (including `offset`, but not `timeZone` or `calendar`).
 - `options` (optional object): An object which may have some or all of the following properties:
   - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `'constrain'` and `'reject'`.
@@ -641,7 +641,7 @@ zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
   - `disambiguation` (string): How to handle date/time values that are ambiguous or invalid due to DST or other time zone offset changes.
     Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
     The default is `'compatible'`.
-  - `offset` (string): How to handle conflicts between time zone offset and time zone
+  - `offset` (string): How to handle conflicts between time zone offset and time zone.
     Allowed values are `'prefer'`, `'use'`, `'ignore'`, and `'reject'`.
     The default is `'prefer'`.
 
@@ -649,28 +649,25 @@ zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
 
 This method creates a new `Temporal.ZonedDateTime` which is a copy of `zonedDateTime`, but any properties present on `zonedDateTimeLike` override the ones already present on `zonedDateTime`.
 
-If `zonedDateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.ZonedDateTime`, `Temporal.Date` (if no time is given in the string), `Temporal.DateTime`, or `Temporal.Time`, in order of priority.
-
 Since `Temporal.ZonedDateTime` objects are immutable, this method will create a new instance instead of modifying the existing instance.
 
 If the result is earlier or later than the range of dates that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `zonedDateTimeLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-If a `timeZone` and/or `calendar` field is included with a different ID than the current object's fields, then `with` will first convert all existing fields to the new time zone and/or calendar and then fields in the input will be played on top of the new time zone or calendar.
-This makes `.with({timeZone})` is an easy way to convert to a new time zone while updating the clock time.
-However, to keep clock time as-is while resetting the time zone, use the `.toPlainDateTime()` method instead. Examples:
+If a `timeZone` or `calendar` property is included, this function will throw an exception.
+To convert to a new time zone while updating the clock time, use the `withTimeZone()` method, and to keep clock time as-is while resetting the time zone, use the `.toPlainDateTime()` method instead. Examples:
 
 ```javascript
 // update local time to match new time zone
-const sameInstantInOtherTz = zdt.with({ timeZone: 'Europe/London' });
+const sameInstantInOtherTz = zdt.withTimeZone('Europe/London');
 // create instance with same local time in a new time zone
 const newTzSameLocalTime = zdt.toPlainDateTime().toZonedDateTime('Europe/London');
 ```
 
-Some input values can cause conflict between the `offsetNanoseconds` field and the `timeZone` field.
-This can happen when either of these fields are included in the input, and can also happen when setting date/time values on the opposite side of a time zone offset transition like DST starting or ending.
-The `offset` option can resolve this offset vs. time zone conflict or ambiguity.
+Some input values can cause conflict between `zonedDateTime`'s time zone and its UTC offset.
+This can happen when `offset` is included in the input, and can also happen when setting date/time values on the opposite side of a time zone offset transition like DST starting or ending.
+The `offset` option can resolve this conflict.
 
 Unlike the `from()` method where `offset` defaults to `'reject'`, the offset option in `with` defaults to `'prefer'`.
 This default prevents DST disambiguation from causing unexpected one-hour changes in exact time after making small changes to clock time fields.
@@ -690,18 +687,6 @@ Usage example:
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24-06:00[America/Chicago]');
 zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31-06:00[America/Chicago]
-
-midnight = Temporal.Time.from({ hour: 0 });
-zdt.with(midnight); // => 1995-12-07T00:00-06:00[America/Chicago]
-// Note: not the same as zdt.with({ hour: 0 }), because all time units are set to zero.
-// Same as above but using a string:
-zdt.with('00:00'); // => 1995-12-07T00:00-06:00[America/Chicago]
-date = Temporal.Date.from('2015-05-31');
-zdt.with(date); // => 2015-05-31T03:24-05:00[America/Chicago] (automatically adjusted for DST)
-// Same as above but using a string:
-zdt.with('2015-05-31'); // => 2015-05-31T03:24-05:00[America/Chicago]
-yearMonth = Temporal.YearMonth.from('2018-04');
-zdt.with(yearMonth); // => 2018-04-07T03:24-05:00[America/Chicago]
 ```
 
 ### zonedDateTime.**withCalendar**(_calendar_: object | string) : Temporal.ZonedDateTime
