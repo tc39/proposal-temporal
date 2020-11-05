@@ -334,8 +334,8 @@ describe('Date', () => {
       const lastFeb20 = Date.from('2020-02-29');
       const lastFeb21 = Date.from('2021-02-28');
       equal(`${lastFeb20.until(lastFeb21)}`, 'P365D');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`, 'P11M30D');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`, 'P11M30D');
+      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`, 'P1Y');
     });
     it('weeks and months are mutually exclusive', () => {
       const laterDate = date.add({ days: 42 });
@@ -470,6 +470,37 @@ describe('Date', () => {
       equal(`${date2.until(date1, { smallestUnit: 'months' })}`, '-P1M');
     });
   });
+  describe('order of operations in until - TODO: add since', () => {
+    it('calculates using largest-to-smallest order of operations', () => {
+      /* From https://github.com/tc39/proposal-temporal/issues/993#issuecomment-709711892
+        thisValue	  otherValue	expected
+        2019-03-01	2019-01-29	P1M1D
+        2019-01-29	2019-03-01	-P1M3D
+        2019-03-29	2019-01-30	P1M29D
+        2019-01-30	2019-03-29	-P1M29D
+        2019-03-30	2019-01-31	P1M30D
+        2019-01-31	2019-03-30	-P1M28D
+        2019-03-31	2019-01-31	P2M
+        2019-01-31	2019-03-31	-P2M
+      */
+    });
+    const cases = [
+      ['2019-03-01', '2019-01-29', 'P1M1D'],
+      ['2019-01-29', '2019-03-01', '-P1M3D'],
+      ['2019-03-29', '2019-01-30', 'P1M29D'],
+      ['2019-01-30', '2019-03-29', '-P1M29D'],
+      ['2019-03-30', '2019-01-31', 'P1M30D'],
+      ['2019-01-31', '2019-03-30', '-P1M28D'],
+      ['2019-03-31', '2019-01-31', 'P2M'],
+      ['2019-01-31', '2019-03-31', '-P2M']
+    ];
+    for (const [end, start, expected] of cases) {
+      it(`${start} until ${end} => ${expected}`, () => {
+        const result = Date.from(start).until(end, { largestUnit: 'months' });
+        equal(result.toString(), expected);
+      });
+    }
+  });
   describe('date.since() works', () => {
     const date = new Date(1976, 11, 18);
     it('date.since({ year: 1976, month: 10, day: 5 })', () => {
@@ -555,8 +586,8 @@ describe('Date', () => {
       const lastFeb20 = Date.from('2020-02-29');
       const lastFeb21 = Date.from('2021-02-28');
       equal(`${lastFeb21.since(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M28D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M28D');
     });
     it('weeks and months are mutually exclusive', () => {
       const laterDate = date.add({ days: 42 });

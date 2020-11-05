@@ -172,11 +172,23 @@ export class Time {
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    duration = {
+      years: -duration.years,
+      months: -duration.months,
+      weeks: -duration.weeks,
+      days: -duration.days,
+      hours: -duration.hours,
+      minutes: -duration.minutes,
+      seconds: -duration.seconds,
+      milliseconds: -duration.milliseconds,
+      microseconds: -duration.microseconds,
+      nanoseconds: -duration.nanoseconds
+    };
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const Construct = ES.SpeciesConstructor(this, Time);
-    const result = GetSlot(this, CALENDAR).timeSubtract(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).timeAdd(this, duration, options, Construct);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
