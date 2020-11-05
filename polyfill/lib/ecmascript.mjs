@@ -479,7 +479,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
   },
   ToShowCalendarOption: (options) => {
-    return ES.GetOption(options, 'calendar', ['auto', 'always', 'never'], 'auto');
+    return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never'], 'auto');
   },
   ToShowTimeZoneNameOption: (options) => {
     return ES.GetOption(options, 'timeZoneName', ['auto', 'never'], 'auto');

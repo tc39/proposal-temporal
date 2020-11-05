@@ -176,14 +176,13 @@
   <emu-clause id="sec-temporal-toshowcalendaroption" aoid="ToShowCalendarOption">
     <h1>ToShowCalendarOption ( _normalizedOptions_ )</h1>
     <p>
-      The abstract operation ToShowCalendarOption extracts the value of the property named *"calendar"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+      The abstract operation ToShowCalendarOption extracts the value of the property named *"calendarName"* from _normalizedOptions_ and makes sure it is a valid value for the option.
     </p>
     <emu-note>
-      This property is used in `toString` methods in Temporal.
-      It is different from the `calendar` property passed to `from` methods.
+      This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"calendar"*, *"string"*, « *"auto"*, *"always"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, *"string"*, « *"auto"*, *"always"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
