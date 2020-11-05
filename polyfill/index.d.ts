@@ -1585,6 +1585,23 @@ export namespace Temporal {
     /**
      * Get the current clock time in a specific time zone.
      *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
+     * @param {TimeZoneProtocol | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
+     * object implementing the time zone protocol. If omitted,
+     * the environment's current time zone will be used.
+     */
+    export function plainTime(
+      calendar: CalendarProtocol | string,
+      tzLike?: TimeZoneProtocol | string
+    ): Temporal.PlainDate;
+
+    /**
+     * Get the current clock time in a specific time zone, using the ISO 8601 calendar.
+     *
      * @param {TimeZoneProtocol | string} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
