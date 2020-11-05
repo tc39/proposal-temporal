@@ -471,19 +471,6 @@ describe('Date', () => {
     });
   });
   describe('order of operations in until - TODO: add since', () => {
-    it('calculates using largest-to-smallest order of operations', () => {
-      /* From https://github.com/tc39/proposal-temporal/issues/993#issuecomment-709711892
-        thisValue	  otherValue	expected
-        2019-03-01	2019-01-29	P1M1D
-        2019-01-29	2019-03-01	-P1M3D
-        2019-03-29	2019-01-30	P1M29D
-        2019-01-30	2019-03-29	-P1M29D
-        2019-03-30	2019-01-31	P1M30D
-        2019-01-31	2019-03-30	-P1M28D
-        2019-03-31	2019-01-31	P2M
-        2019-01-31	2019-03-31	-P2M
-      */
-    });
     const cases = [
       ['2019-03-01', '2019-01-29', 'P1M1D'],
       ['2019-01-29', '2019-03-01', '-P1M3D'],
