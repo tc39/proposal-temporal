@@ -1446,7 +1446,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function zonedDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.DateTime;
+    export function zonedDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.ZonedDateTime;
 
     /**
      * Get the current calendar date and clock time in a specific calendar and
