@@ -355,9 +355,9 @@ export class ZonedDateTime {
     // offset. Otherwise the offset will be changed to be compatible with the
     // new date/time values. If DST disambiguation is required, the `compatible`
     // disambiguation algorithm will be used.
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
-    const calendar = GetSlot(this, CALENDAR);
-    const rounded = new DateTime(
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
+    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
       year,
       month,
       day,
@@ -367,26 +367,14 @@ export class ZonedDateTime {
       millisecond,
       microsecond,
       nanosecond,
-      calendar
+      offsetNs,
+      timeZone,
+      'compatible',
+      'prefer'
     );
 
-    const timeZone = GetSlot(this, TIME_ZONE);
-    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
-
-    // See the 'prefer' algorithm in ToTemporalZonedDateTime
-    let instant;
-    const possibleInstants = timeZone.getPossibleInstantsFor(rounded);
-    for (const candidate of possibleInstants) {
-      const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-      if (candidateOffset === offsetNs) {
-        instant = candidate;
-        break;
-      }
-    }
-    if (!instant) instant = ES.GetTemporalInstantFor(timeZone, rounded, 'compatible');
-
     const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
-    const result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    const result = new Construct(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
     if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
