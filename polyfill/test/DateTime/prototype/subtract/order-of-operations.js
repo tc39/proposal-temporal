@@ -64,7 +64,7 @@ const argument = new Proxy(fields, {
 const result = instance.subtract(argument);
 assert.sameValue(result.year, 1999, "year result");
 assert.sameValue(result.month, 3, "month result");
-assert.sameValue(result.day, 24, "day result");
+assert.sameValue(result.day, 25, "day result");
 assert.sameValue(result.hour, 11, "hour result");
 assert.sameValue(result.minute, 33, "minute result");
 assert.sameValue(result.second, 55, "second result");
