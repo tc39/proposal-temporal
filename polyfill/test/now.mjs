@@ -19,12 +19,13 @@ import * as Temporal from 'proposal-temporal';
 describe('Temporal.now', () => {
   describe('Structure', () => {
     it('Temporal.now is an object', () => equal(typeof Temporal.now, 'object'));
-    it('Temporal.now has 9 properties', () => equal(Object.keys(Temporal.now).length, 9));
+    it('Temporal.now has 10 properties', () => equal(Object.keys(Temporal.now).length, 10));
     it('Temporal.now.instant is a function', () => equal(typeof Temporal.now.instant, 'function'));
     it('Temporal.now.plainDateTime is a function', () => equal(typeof Temporal.now.plainDateTime, 'function'));
     it('Temporal.now.plainDateTimeISO is a function', () => equal(typeof Temporal.now.plainDateTimeISO, 'function'));
     it('Temporal.now.plainDate is a function', () => equal(typeof Temporal.now.plainDate, 'function'));
     it('Temporal.now.plainDateISO is a function', () => equal(typeof Temporal.now.plainDateISO, 'function'));
+    it('Temporal.now.plainTime is a function', () => equal(typeof Temporal.now.plainTime, 'function'));
     it('Temporal.now.plainTimeISO is a function', () => equal(typeof Temporal.now.plainTimeISO, 'function'));
     it('Temporal.now.timeZone is a function', () => equal(typeof Temporal.now.timeZone, 'function'));
     it('Temporal.now.zonedDateTimeISO is a function', () => equal(typeof Temporal.now.zonedDateTimeISO, 'function'));
@@ -103,8 +104,19 @@ describe('Temporal.now', () => {
     it('requires a calendar', () => throws(() => Temporal.now.plainDate(), RangeError));
   });
   describe('Temporal.now.plainTimeISO()', () => {
-    it('Temporal.now.plainTimeISO() returns a Time', () =>
-      assert(Temporal.now.plainTimeISO() instanceof Temporal.PlainTime));
+    it('Temporal.now.plainTimeISO() returns a Time', () => {
+      const t = Temporal.now.plainTimeISO();
+      assert(t instanceof Temporal.PlainTime);
+      equal(t.calendar.id, 'iso8601');
+    });
+  });
+  describe('Temporal.now.plainTime()', () => {
+    it('Temporal.now.plainTime() returns a Time', () => {
+      const t = Temporal.now.plainTime('gregory');
+      assert(t instanceof Temporal.PlainTime);
+      equal(t.calendar.id, 'gregory');
+    });
+    it('requires a calendar', () => throws(() => Temporal.now.plainTime(), RangeError));
   });
 });
 
