@@ -104,7 +104,7 @@ nextTransition.toPlainDateTime(tz);
 // On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
 ```
 
-### Temporal.now.**dateTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
+### Temporal.now.**plainDateTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
 
 **Parameters:**
 
@@ -139,7 +139,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.now.**dateTime**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
+### Temporal.now.**plainDateTime**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.DateTime
 
 **Parameters:**
 
@@ -154,7 +154,7 @@ Optionally a time zone can be given in which the time is computed, instead of th
 
 If you only want to use the ISO 8601 calendar, use `Temporal.now.plainDateTimeISO()`.
 
-### Temporal.now.**dateISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
+### Temporal.now.**plainDateISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 
 **Parameters:**
 
@@ -176,7 +176,7 @@ date = Temporal.now.plainDateISO();
 if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
 
-### Temporal.now.**date**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
+### Temporal.now.**plainDate**(_calendar_: object | string, _timeZone_: object | string = Temporal.now.timeZone()) : Temporal.Date
 
 **Parameters:**
 
