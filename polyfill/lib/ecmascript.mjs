@@ -1122,6 +1122,69 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   },
+  InterpretTemporalZonedDateTimeOffset: (
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond,
+    offsetNs,
+    timeZone,
+    disambiguation,
+    offsetOpt
+  ) => {
+    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+
+    if (offsetNs === null || offsetOpt === 'ignore') {
+      // Simple case: ISO string without a TZ offset (or caller wants to ignore
+      // the offset), so just convert DateTime to Instant in the given time zone
+      const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+      return GetSlot(instant, EPOCHNANOSECONDS);
+    }
+
+    // The caller wants the offset to always win ('use') OR the caller is OK
+    // with the offset winning ('prefer' or 'reject') as long as it's valid
+    // for this timezone and date/time.
+    if (offsetOpt === 'use') {
+      // Calculate the instant for the input's date/time and offset
+      const epochNs = ES.GetEpochFromParts(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      );
+      if (epochNs === null) throw new RangeError('ZonedDateTime outside of supported range');
+      return epochNs.minus(offsetNs);
+    }
+
+    // "prefer" or "reject"
+    const possibleInstants = timeZone.getPossibleInstantsFor(dt);
+    for (const candidate of possibleInstants) {
+      const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
+      if (candidateOffset === offsetNs) return GetSlot(candidate, EPOCHNANOSECONDS);
+    }
+
+    // the user-provided offset doesn't match any instants for this time
+    // zone and date/time.
+    if (offsetOpt === 'reject') {
+      const offsetStr = ES.FormatTimeZoneOffsetString(offsetNs);
+      throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZone}`);
+    }
+    // fall through: offsetOpt === 'prefer', but the offset doesn't match
+    // so fall back to use the time zone instead.
+    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    return GetSlot(instant, EPOCHNANOSECONDS);
+  },
   ToTemporalZonedDateTime: (
     item,
     constructor,
@@ -1172,57 +1235,24 @@ export const ES = ObjectAssign({}, ES2020, {
       if (!calendar) calendar = new (GetIntrinsic('%Temporal.ISO8601Calendar%'))();
       calendar = ES.ToTemporalCalendar(calendar);
     }
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
-    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-
-    let instant;
-    if (!offset || offsetOpt === 'ignore') {
-      // Simple case: ISO string without a TZ offset (or caller wants to ignore
-      // the offset), so just convert DateTime to Instant in the given time zone
-      instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
-    } else {
-      // The caller wants the offset to always win ('use') OR the caller is OK
-      // with the offset winning ('prefer' or 'reject') as long as it's valid
-      // for this timezone and date/time.
-      const offsetNs = ES.ParseOffsetString(offset);
-      if (offsetOpt === 'use') {
-        // Calculate the instant for the input's date/time and offset
-        const epochNs = ES.GetEpochFromParts(
-          GetSlot(dt, ISO_YEAR),
-          GetSlot(dt, ISO_MONTH),
-          GetSlot(dt, ISO_DAY),
-          GetSlot(dt, ISO_HOUR),
-          GetSlot(dt, ISO_MINUTE),
-          GetSlot(dt, ISO_SECOND),
-          GetSlot(dt, ISO_MILLISECOND),
-          GetSlot(dt, ISO_MICROSECOND),
-          GetSlot(dt, ISO_NANOSECOND)
-        );
-        if (epochNs === null) throw new RangeError('ZonedDateTime outside of supported range');
-        const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-        instant = new TemporalInstant(epochNs.minus(offsetNs));
-      } else {
-        // "prefer" or "reject"
-        const possibleInstants = timeZone.getPossibleInstantsFor(dt);
-        for (const candidate of possibleInstants) {
-          const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-          if (candidateOffset === offsetNs) {
-            instant = candidate;
-            break;
-          }
-        }
-        if (!instant) {
-          // the user-provided offset doesn't match any instants for this time
-          // zone and date/time.
-          if (offsetOpt === 'reject') throw new RangeError(`Offset ${offset} is invalid for ${dt} in ${timeZone}`);
-          // fall through: offsetOpt === 'prefer', but the offset doesn't match
-          // so fall back to use the time zone instead.
-          instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
-        }
-      }
-    }
-
-    const result = new constructor(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    let offsetNs = null;
+    if (offset) offsetNs = ES.ParseOffsetString(offset);
+    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      offsetNs,
+      timeZone,
+      disambiguation,
+      offsetOpt
+    );
+    const result = new constructor(epochNanoseconds, timeZone, calendar);
     if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
     return result;
   },
