@@ -2193,53 +2193,90 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   DifferenceDate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
-    let larger, smaller, sign;
-    if (ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
-      smaller = { year: y1, month: m1, day: d1 };
-      larger = { year: y2, month: m2, day: d2 };
-      sign = 1;
-    } else {
-      smaller = { year: y2, month: m2, day: d2 };
-      larger = { year: y1, month: m1, day: d1 };
-      sign = -1;
-    }
-    let years = larger.year - smaller.year;
-    let weeks = 0;
-    let months, days;
-
     switch (largestUnit) {
       case 'years':
       case 'months': {
-        months = larger.month - smaller.month;
-        let year, month;
-        ({ year, month, years, months } = ES.BalanceDurationDate(
-          years,
-          months,
-          smaller.year,
-          smaller.month,
-          smaller.day
-        ));
-        days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
-        if (days < 0) {
-          months -= 1;
-          ({ year, month, years, months } = ES.BalanceDurationDate(
-            years,
-            months,
-            smaller.year,
-            smaller.month,
-            smaller.day
-          ));
-          days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(year, month, smaller.day);
-          if (larger.year > year) days += ES.LeapYear(year) ? 366 : 365;
+        const sign = -ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2);
+        if (!sign) return { years: 0, months: 0, weeks: 0, days: 0 };
+
+        const start = { year: y1, month: m1, day: d1 };
+        const end = { year: y2, month: m2, day: d2 };
+
+        let months = 0;
+        let weeks = 0;
+        let days = 0;
+        let years = end.year - start.year;
+        let mid = ES.AddDate(y1, m1, d1, years, 0, 0, 0, 'constrain');
+        let midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+        if (!midSign) {
+          return largestUnit === 'years'
+            ? { years, months, weeks, days }
+            : { years: 0, months: months + years * 12, weeks, days };
         }
+        months = end.month - start.month;
+        if (midSign !== sign) {
+          years -= sign;
+          months += sign * 12;
+        }
+        mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
+        midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+        if (!midSign) {
+          return largestUnit === 'years'
+            ? { years, months, weeks, days }
+            : { years: 0, months: months + years * 12, weeks, days };
+        }
+        if (midSign !== sign) {
+          // The end date is later in the month than mid date (or earlier for
+          // negative durations). Back up one month.
+          months -= sign;
+          if (months === -sign) {
+            years -= sign;
+            months = 11 * sign;
+          }
+          mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
+          midSign = -ES.CompareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
+        }
+
+        // If we get here, months and years are correct (no overflow), and `mid`
+        // is within the range from `start` to `end`. To count the days between
+        // `mid` and `end`, there are 3 cases:
+        // 1) same month: use simple subtraction
+        // 2) end is previous month from intermediate (negative duration)
+        // 3) end is next month from intermediate (positive duration)
+        if (mid.month === end.month && mid.year === end.year) {
+          // 1) same month: use simple subtraction
+          days = end.day - mid.day;
+        } else if (sign < 0) {
+          // 2) end is previous month from intermediate (negative duration)
+          // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
+          days = -mid.day - (ES.DaysInMonth(end.year, end.month) - end.day);
+        } else {
+          // 3) end is next month from intermediate (positive duration)
+          // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
+          days = end.day + (ES.DaysInMonth(mid.year, mid.month) - mid.day);
+        }
+
         if (largestUnit === 'months') {
           months += years * 12;
           years = 0;
         }
-        break;
+        return { years, months, weeks, days };
       }
       case 'weeks':
-      case 'days':
+      case 'days': {
+        let larger, smaller, sign;
+        if (ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
+          smaller = { year: y1, month: m1, day: d1 };
+          larger = { year: y2, month: m2, day: d2 };
+          sign = 1;
+        } else {
+          smaller = { year: y2, month: m2, day: d2 };
+          larger = { year: y1, month: m1, day: d1 };
+          sign = -1;
+        }
+        let years = larger.year - smaller.year;
+        let weeks = 0;
+        let months, days;
         months = 0;
         days =
           ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
@@ -2251,15 +2288,15 @@ export const ES = ObjectAssign({}, ES2020, {
           weeks = Math.floor(days / 7);
           days %= 7;
         }
-        break;
+        years *= sign;
+        months *= sign;
+        weeks *= sign;
+        days *= sign;
+        return { years, months, weeks, days };
+      }
       default:
         throw new Error('assert not reached');
     }
-    years *= sign;
-    months *= sign;
-    weeks *= sign;
-    days *= sign;
-    return { years, months, weeks, days };
   },
   DifferenceTime: (h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) => {
     let hours = h2 - h1;
@@ -2544,7 +2581,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // If only time is to be added, then use Instant math. It's not OK to fall
     // through to the date/time code below because compatible disambiguation in
     // the PlainDateTime=>Instant conversion will change the offset of any
-    // ZonedDateTtime in the repeated clock time after a backwards transition.
+    // ZonedDateTime in the repeated clock time after a backwards transition.
     // When adding/subtracting time units and not dates, this disambiguation is
     // not expected and so is avoided below via a fast path for time-only
     // arithmetic.
@@ -2577,31 +2614,6 @@ export const ES = ObjectAssign({}, ES2020, {
     // is required by RFC 5545.
     const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
-  },
-  SubtractZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, overflow) => {
-    // FIXME: to be consolidated into AddZonedDateTime by #993
-    if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
-      return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
-    }
-    let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
-    const subtractedDate = calendar.dateSubtract(datePart, { years, months, weeks, days }, { overflow }, TemporalDate);
-    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
-    const dtIntermediate = new TemporalDateTime(
-      GetSlot(subtractedDate, ISO_YEAR),
-      GetSlot(subtractedDate, ISO_MONTH),
-      GetSlot(subtractedDate, ISO_DAY),
-      GetSlot(dt, ISO_HOUR),
-      GetSlot(dt, ISO_MINUTE),
-      GetSlot(dt, ISO_SECOND),
-      GetSlot(dt, ISO_MILLISECOND),
-      GetSlot(dt, ISO_MICROSECOND),
-      GetSlot(dt, ISO_NANOSECOND),
-      calendar
-    );
-    const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
-    return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), -h, -min, -s, -ms, -µs, -ns);
   },
   RoundNumberToIncrement: (quantity, increment, mode) => {
     const quotient = quantity / increment;
