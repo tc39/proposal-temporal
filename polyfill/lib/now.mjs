@@ -9,7 +9,9 @@ export const now = {
   plainDate,
   plainDateISO,
   plainTimeISO,
-  timeZone
+  timeZone,
+  zonedDateTime,
+  zonedDateTimeISO
 };
 
 function instant() {
@@ -27,6 +29,18 @@ function plainDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const calendar = GetISO8601Calendar();
   const inst = instant();
   return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
+}
+function zonedDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
+  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const calendar = ES.ToTemporalCalendar(calendarLike);
+  const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+  return new ZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
+}
+function zonedDateTimeISO(temporalTimeZoneLike = timeZone()) {
+  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const calendar = GetISO8601Calendar();
+  const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+  return new ZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
 }
 function plainDate(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(plainDateTime(calendarLike, temporalTimeZoneLike));
