@@ -613,12 +613,6 @@ export namespace Temporal {
       options: ArithmeticOptions,
       constructor: ConstructorOf<Temporal.Date>
     ): Temporal.Date;
-    dateSubtract?(
-      date: Temporal.Date | DateLike | string,
-      duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions,
-      constructor: ConstructorOf<Temporal.Date>
-    ): Temporal.Date;
     dateUntil?(
       one: Temporal.Date | DateLike | string,
       two: Temporal.Date | DateLike | string,
@@ -676,12 +670,6 @@ export namespace Temporal {
       constructor: ConstructorOf<Temporal.MonthDay>
     ): Temporal.MonthDay;
     dateAdd(
-      date: Temporal.Date | DateLike | string,
-      duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions,
-      constructor: ConstructorOf<Temporal.Date>
-    ): Temporal.Date;
-    dateSubtract(
       date: Temporal.Date | DateLike | string,
       duration: Temporal.Duration | DurationLike | string,
       options: ArithmeticOptions,
