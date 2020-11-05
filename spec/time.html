@@ -119,6 +119,19 @@
       </p>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.time.prototype.calendar">
+      <h1>get Temporal.Time.prototype.calendar</h1>
+      <p>
+        `Temporal.Time.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _temporalTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Return _temporalTime_.[[Calendar]].
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.time.prototype.hour">
       <h1>get Temporal.Time.prototype.hour</h1>
       <p>

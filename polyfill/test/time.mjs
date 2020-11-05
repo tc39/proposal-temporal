@@ -27,6 +27,9 @@ describe('Time', () => {
       equal(typeof Time.prototype, 'object');
     });
     describe('Time.prototype', () => {
+      it('Time.prototype has calendar', () => {
+        assert('calendar' in Time.prototype);
+      });
       it('Time.prototype has hour', () => {
         assert('hour' in Time.prototype);
       });
@@ -96,6 +99,22 @@ describe('Time', () => {
     describe('complete', () => {
       let time;
       it('time can be constructed', () => {
+        time = new Time(15, 23, 30, 123, 456, 789, Temporal.Calendar.from('gregory'));
+        assert(time);
+        equal(typeof time, 'object');
+      });
+      it('time.hour is 15', () => equal(time.hour, 15));
+      it('time.minute is 23', () => equal(time.minute, 23));
+      it('time.second is 30', () => equal(time.second, 30));
+      it('time.millisecond is 123', () => equal(time.millisecond, 123));
+      it('time.microsecond is 456', () => equal(time.microsecond, 456));
+      it('time.nanosecond is 789', () => equal(time.nanosecond, 789));
+      it('time.calendar.id is gregory', () => equal(time.calendar.id, 'gregory'));
+      it('`${time}` is 15:23:30.123456789', () => equal(`${time}`, '15:23:30.123456789[c=gregory]'));
+    });
+    describe('missing calendar', () => {
+      let time;
+      it('time can be constructed', () => {
         time = new Time(15, 23, 30, 123, 456, 789);
         assert(time);
         equal(typeof time, 'object');
@@ -106,6 +125,7 @@ describe('Time', () => {
       it('time.millisecond is 123', () => equal(time.millisecond, 123));
       it('time.microsecond is 456', () => equal(time.microsecond, 456));
       it('time.nanosecond is 789', () => equal(time.nanosecond, 789));
+      it('time.calendar.id is iso8601', () => equal(time.calendar.id, 'iso8601'));
       it('`${time}` is 15:23:30.123456789', () => equal(`${time}`, '15:23:30.123456789'));
     });
     describe('missing nanosecond', () => {

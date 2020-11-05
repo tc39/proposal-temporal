@@ -90,6 +90,10 @@ export class Time {
     }
   }
 
+  get calendar() {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR);
+  }
   get hour() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).hour(this);
