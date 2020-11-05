@@ -329,17 +329,26 @@ export class PlainDate {
     const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
-  toZonedDateTime(timeZoneLike, temporalTime = undefined, options = undefined) {
+  toZonedDateTime(item) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-    options = ES.NormalizeOptionsObject(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+
+    let timeZone, temporalTime;
+    if (ES.Type(item) === 'Object') {
+      let timeZoneLike = item.timeZone;
+      if (timeZoneLike === undefined) {
+        timeZone = ES.ToTemporalTimeZone(item);
+      } else {
+        timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+        temporalTime = item.time;
+      }
+    } else {
+      timeZone = ES.ToTemporalTimeZone(item);
+    }
 
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
     const day = GetSlot(this, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
-    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
 
     let hour = 0,
       minute = 0,
@@ -357,8 +366,20 @@ export class PlainDate {
       nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
     }
 
-    const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    const dt = new PlainDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
+    const instant = ES.GetTemporalInstantFor(timeZone, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }

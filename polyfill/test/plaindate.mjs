@@ -208,48 +208,32 @@ describe('Date', () => {
       const date = PlainDate.from('2020-01-01');
       const time = Temporal.PlainTime.from('12:00');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      equal(`${date.toZonedDateTime(tz, time)}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime({ timeZone: tz, time });
+      equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
     });
-    it('works with time omitted', () => {
+    it('works with time omitted (timeZone argument)', () => {
       const date = PlainDate.from('2020-01-01');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      equal(`${date.toZonedDateTime(tz)}`, '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime(tz);
+      equal(`${zdt}`, '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
     });
-    it('works with disambiguation option', () => {
-      const date = PlainDate.from('2020-03-08');
-      const time = Temporal.PlainTime.from('02:00');
+    it('works with time omitted (timeZone property)', () => {
+      const date = PlainDate.from('2020-01-01');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime(tz, time, { disambiguation: 'earlier' });
-      equal(`${zdt}`, '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
+      const zdt = date.toZonedDateTime({ timeZone: tz });
+      equal(`${zdt}`, '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
     });
-    it('casts first argument', () => {
+    it('casts timeZone property', () => {
       const date = PlainDate.from('2020-07-08');
       const time = Temporal.PlainTime.from('12:00');
-      const zdt = date.toZonedDateTime('America/Los_Angeles', time);
+      const zdt = date.toZonedDateTime({ timeZone: 'America/Los_Angeles', time });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
-    it('casts second argument', () => {
+    it('casts time property', () => {
       const date = PlainDate.from('2020-07-08');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime(tz, '12:00');
+      const zdt = date.toZonedDateTime({ timeZone: tz, time: '12:00' });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-    it('throws on bad disambiguation', () => {
-      ['', 'EARLIER', 'xyz', 3, null].forEach((disambiguation) =>
-        throws(() => PlainDate.from('2019-10-29').toZonedDateTime('UTC', '12:00', { disambiguation }), RangeError)
-      );
-    });
-    it('options may only be an object or undefined', () => {
-      const date = PlainDate.from('2019-10-29');
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => date.toZonedDateTime('America/Sao_Paulo', '10:46:38', badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(
-          `${date.toZonedDateTime('America/Sao_Paulo', '10:46:38', options)}`,
-          '2019-10-29T10:46:38-03:00[America/Sao_Paulo]'
-        )
-      );
     });
   });
   describe('date.until() works', () => {
