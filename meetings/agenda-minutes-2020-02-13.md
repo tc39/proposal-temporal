@@ -75,19 +75,19 @@ Agenda:
     * PDL: It would suggest that the right way to do it is to use the getters, whereas the right way is to use the ISO calendar.
     * SFC: Next question, #291, what's the best way to access this calendaric information? Should we put it on a separate object?
     * DE: Why is it needed to change the current API?
-    * SFC: Some calendars have concepts/fields that are not in others. Should we stick the union of all calendars' fields on Temporal.Date[Time]? Or maybe there's a way to forward all requests to the calendar object?
-    * DE: We could make Temporal.Date[Time] an exotic object, like a proxy, but that seems overly complicated. I'd rather throw (for missing method) or return undefined (for missing property)
+    * SFC: Some calendars have concepts/fields that are not in others. Should we stick the union of all calendars' fields on Temporal.PlainDate[Time]? Or maybe there's a way to forward all requests to the calendar object?
+    * DE: We could make Temporal.PlainDate[Time] an exotic object, like a proxy, but that seems overly complicated. I'd rather throw (for missing method) or return undefined (for missing property)
     * PDL: Let's think about year and era as an example. Does era always show up or only when the calendar has an era?
-    * DE: I think all the getters should be on Temporal.Date[Time].prototype and just return undefined if N/A.
+    * DE: I think all the getters should be on Temporal.PlainDate[Time].prototype and just return undefined if N/A.
     * PDL: That means we have to add all possible fields now.
     * DE: We can add fields in the future. If there is something really unusual then the calendar can expose a method, which wouldn't be the same API but it would be OK.
     * PDL: Another possibility is to bundle era and year, since they are related, and have '.year' return a string including the era. If you really need the separate bits then you can query the calendar.
     * DE: I feel that this is overly complicated.
     * PFC: I'm not a fan of the year getter returning a string, it seems like it would have sorting implications and possibly localization as well.
-    * SFC: If you introduce a custom calendar with a new field, you can always polyfill your field onto Temporal.Date[Time].prototpe.
+    * SFC: If you introduce a custom calendar with a new field, you can always polyfill your field onto Temporal.PlainDate[Time].prototpe.
     * PDL: +1
     * DE: Summarizing, the calendar-specific date and time properties are all on the prototype and return undefined if not present.
-    * SFC: For any field that exists in any specced calendar, we have getters on Temporal.Date[Time].prototype. When you call those getters, they access the a method on the calendar slot, and it's up to the calendar to define the behaviour. If the method doesn't exist, then the getter returns undefined.
+    * SFC: For any field that exists in any specced calendar, we have getters on Temporal.PlainDate[Time].prototype. When you call those getters, they access the a method on the calendar slot, and it's up to the calendar to define the behaviour. If the method doesn't exist, then the getter returns undefined.
     * JWS: so we'll have date.year, date.era, etc. which proxy through to the calendar.
     * SFC: There's another question that RGN raised last week, but I'll file an issue for it.
 * [#292](https://github.com/tc39/proposal-temporal/issues/292) Default calendar

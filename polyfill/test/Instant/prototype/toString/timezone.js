@@ -50,7 +50,7 @@ const timeZone = new Proxy({
   getDateTimeFor(instantArg) {
     actual.push("call timeZone.getDateTimeFor");
     assert.sameValue(instantArg.epochNanoseconds, instant.epochNanoseconds);
-    return Temporal.DateTime.from("1963-07-02T12:00:00.987654321");
+    return Temporal.PlainDateTime.from("1963-07-02T12:00:00.987654321");
   },
 }, {
   has(target, property) {

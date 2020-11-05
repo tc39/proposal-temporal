@@ -684,7 +684,7 @@ describe('Duration', () => {
   describe('Duration.round()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
-    const relativeTo = Temporal.DateTime.from('2020-01-01T00:00');
+    const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
     it('options may only be an object', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
     });
@@ -1059,7 +1059,7 @@ describe('Duration', () => {
   describe('Duration.total()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
-    const relativeTo = Temporal.DateTime.from('2020-01-01T00:00');
+    const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
     it('options may only be an object', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
     });

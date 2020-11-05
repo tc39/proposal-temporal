@@ -2,9 +2,9 @@
  * Take a date, add a number of days' delay, and round to the start of the next
  * month.
  *
- * @param {Temporal.Date} date - Original date
+ * @param {Temporal.PlainDate} date - Original date
  * @param {number} delayDays - Number of days' delay
- * @returns {Temporal.Date} - Beginning of the next month after the delay
+ * @returns {Temporal.PlainDate} - Beginning of the next month after the delay
  */
 function plusAndRoundToMonthStart(date, delayDays) {
   return date
@@ -13,7 +13,7 @@ function plusAndRoundToMonthStart(date, delayDays) {
     .with({ day: 1 });
 }
 
-const oldLaunchDate = Temporal.Date.from('2019-06-01');
+const oldLaunchDate = Temporal.PlainDate.from('2019-06-01');
 
 const fifteenDaysDelay = plusAndRoundToMonthStart(oldLaunchDate, 15);
 assert.equal(fifteenDaysDelay.toString(), '2019-07-01');

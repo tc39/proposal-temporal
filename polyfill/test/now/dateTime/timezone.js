@@ -13,7 +13,7 @@ const expected = [
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
-const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
+const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
 const timeZone = new Proxy({
   getDateTimeFor(instant, calendar) {

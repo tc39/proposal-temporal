@@ -21,7 +21,7 @@ Not out yet.
 - SFC: Is 24:01 allowed?
 - RGN: No.
 - SFC: Are proposal 1 and 3 the same except for 24:00?
-- PFC: No, if you have an invalid ISO string such as `2020-99-99T10:15:30`, then that would throw in `Temporal.Time.from()` in proposal 1, but the invalid date part would be chopped off in proposal 3.
+- PFC: No, if you have an invalid ISO string such as `2020-99-99T10:15:30`, then that would throw in `Temporal.PlainTime.from()` in proposal 1, but the invalid date part would be chopped off in proposal 3.
 - SFC: Why do we care about invalid ISO strings?
 - PDL: They are so easily and commonly generated.
 - SFC: But in proposal 3 we'd only be allowing out-of-range number values anyway, not gobbledygook.

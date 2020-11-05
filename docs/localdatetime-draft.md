@@ -6,6 +6,7 @@ This name is not intended to stick.
 **What it is:** The LocalDateTime type is intended to refer to an event, that happened (or will happen) in a particular place.
 
 **Motivation:**
+
 - "Event that happened in a particular place" is a very common use case, perhaps the most common.
   So we want a type that does the right thing for that use case.
 - Both Absolute and DateTime have cases where they do the right thing for this use case, and cases where they do the wrong thing.
@@ -56,11 +57,11 @@ class Temporal.LocalDateTime {
 
   // type conversion
   toInstant(): Temporal.Instant;
-  toPlainDateTime(): Temporal.DateTime;
-  toPlainDate(): Temporal.Date;
-  toPlainYearMonth(): Temporal.YearMonth;
-  toPlainMonthDay(): Temporal.MonthDay;
-  toPlainTime(): Temporal.Time;
+  toPlainDateTime(): Temporal.PlainDateTime;
+  toPlainDate(): Temporal.PlainDate;
+  toPlainYearMonth(): Temporal.PlainYearMonth;
+  toPlainMonthDay(): Temporal.PlainMonthDay;
+  toPlainTime(): Temporal.PlainTime;
 
   // comparison
   static compare(one: Temporal.LocalDateTime, two: Temporal.LocalDateTime): number;
@@ -85,6 +86,7 @@ It basically has all the API of DateTime, but with a time zone as well, adding t
 But since it represents an unambiguous moment in time (like Absolute, and unlike DateTime), the internal model is more like Absolute with a time zone and calendar.
 
 To create one, you use `Temporal.LocalDateTime.from`, or the `toLocalDateTime()` method of another Temporal type.
+
 - From a string: `from(string)`
 - From raw DateTime fields: `from({ year, month, day, etc., timeZone, timeZoneOffsetNanoseconds })`
 - From an Absolute: `instant.toLocalDateTime(timeZone)`
@@ -93,6 +95,7 @@ To create one, you use `Temporal.LocalDateTime.from`, or the `toLocalDateTime()`
 As in the other Temporal types, the constructor is more low-level and takes an Absolute, a TimeZone, and a Calendar.
 
 "New" API that is not on DateTime:
+
 - `hoursInDay` - this is not possible with Absolute (no concept of days and no time zone) nor with DateTime (no time zone), but it makes sense for this type.
 - `timeZoneOffsetNanoseconds` - without this, you'd need to do `ldt.timeZone.getOffsetNanoseconds(ldt.toInstant())`.
 - `timeZoneOffsetString` - ditto, you'd need `ldt.timeZone.getOffsetString(ldt.toInstant())`.

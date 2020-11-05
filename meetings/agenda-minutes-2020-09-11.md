@@ -98,7 +98,7 @@ Agenda:
 
         * PDL: If you do time.toDateTime(propertyBag) then you need a calendar in the property bag.
 
-        * SFC: Either the Temporal.Date has a calendar, or you pass a calendar in the property bag, or the ISO calendar is assumed, which we agreed for property bags.
+        * SFC: Either the Temporal.PlainDate has a calendar, or you pass a calendar in the property bag, or the ISO calendar is assumed, which we agreed for property bags.
 
         * PDL: You also can't extract from the time what the Ethiopic hour is, if the time doesn't have a calendar. And if you add a time to an Ethiopic date, then you have to shift the data model, because it's no longer an iso hour, iso minute, etc.
 
@@ -170,7 +170,7 @@ Agenda:
 
     * Proposal: rounding and balancing for Duration type (replaces #789) [#856](https://github.com/tc39/proposal-temporal/issues/856)
 
-        * PDL: Time rounding is still meaningful if relativeTo is a Temporal.Date.
+        * PDL: Time rounding is still meaningful if relativeTo is a Temporal.PlainDate.
 
         * Discussion about whether relativeTo must be required even if you are rounding Temporal.Duration.from({months: 10}).round({smallestUnit: 'months'}). Conclusion: We'll adopt this behaviour but will reconsider relaxing the error for v2 if the suggestion "just add a random relativeTo" shows up on Stack Overflow due to this decision.
 
@@ -180,7 +180,7 @@ Agenda:
 
     * Throw on wrong singular Duration fields - [#325](https://github.com/tc39/proposal-temporal/issues/325) (5 min.)
 
-        * Consensus: Require at least one, correctly spelled, field. Temporal.Duration.from({}), Temporal.Duration.from({millennia: 5}), Temporal.Duration.from({year: 1}), Temporal.Time.from({}), etc. will all throw. Temporal.Duration.from({years: 1, hour: 1}) will not throw, we don't care about catching this case because it is more obviously wrong.
+        * Consensus: Require at least one, correctly spelled, field. Temporal.Duration.from({}), Temporal.Duration.from({millennia: 5}), Temporal.Duration.from({year: 1}), Temporal.PlainTime.from({}), etc. will all throw. Temporal.Duration.from({years: 1, hour: 1}) will not throw, we don't care about catching this case because it is more obviously wrong.
 
         * Will keep the more flexible behaviour for property *values* such as smallestUnit, but mark the wrong ones as 'deprecated' in TypeScript. duration.round({smallestUnit: "minutes"}) and time.round({smallestUnit:
 

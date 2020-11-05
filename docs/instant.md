@@ -14,7 +14,7 @@ However, a `Temporal.Instant` can be created from any of several expressions tha
 
 If you have a legacy `Date` instance, you can use its `toTemporalInstant()` method to convert to a `Temporal.Instant`.
 
-Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.DateTime` (and from there into any of the other `Temporal` objects.)
+Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.PlainDateTime` (and from there into any of the other `Temporal` objects.)
 
 Like Unix time, `Temporal.Instant` ignores leap seconds.
 
@@ -297,7 +297,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes an addition with those units ambiguous.
-If you need to do this, convert the `Temporal.Instant` to a `Temporal.DateTime` by specifying the desired calendar and time zone, add the duration, and then convert it back.
+If you need to do this, convert the `Temporal.Instant` to a `Temporal.PlainDateTime` by specifying the desired calendar and time zone, add the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -328,7 +328,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes a subtraction with those units ambiguous.
-If you need to do this, convert the `Temporal.Instant` to a `Temporal.DateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
+If you need to do this, convert the `Temporal.Instant` to a `Temporal.PlainDateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -385,7 +385,7 @@ You can round the result using the `smallestUnit`, `roundingIncrement`, and `rou
 These behave as in the `Temporal.Duration.round()` method.
 The default is to do no rounding.
 
-If you do need to calculate the difference between two `Temporal.Instant`s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.DateTime`.
+If you do need to calculate the difference between two `Temporal.Instant`s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.PlainDateTime`.
 For example, you might decide to base the calculation on your user's current time zone, or on UTC, in the Gregorian calendar.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
@@ -571,7 +571,7 @@ The string can be passed to `Temporal.Instant.from()` to create a new `Temporal.
 The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
 If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
 
-The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
 Note that rounding may change the value of other units as well.
 
 If the `timeZone` option is given, then the string will express the time in the given time zone, and contain the time zone's UTC offset.
@@ -582,18 +582,18 @@ Example usage:
 instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => 2019-11-18T10:52:01.816Z
 instant.toString({ timeZone: Temporal.TimeZone.from('UTC') });
-  // => 2019-11-18T10:52:01.816+00:00
+// => 2019-11-18T10:52:01.816+00:00
 instant.toString({ timeZone: 'Asia/Seoul' });
-  // => 2019-11-18T19:52:01.816+09:00
+// => 2019-11-18T19:52:01.816+09:00
 
 instant.toString(undefined, { smallestUnit: 'minute' });
-  // => 2019-11-18T10:52Z
+// => 2019-11-18T10:52Z
 instant.toString(undefined, { fractionalSecondDigits: 0 });
-  // => 2019-11-18T10:52:01Z
+// => 2019-11-18T10:52:01Z
 instant.toString(undefined, { fractionalSecondDigits: 4 });
-  // => 2019-11-18T10:52:01.8160Z
+// => 2019-11-18T10:52:01.8160Z
 instant.toString(undefined, { smallestUnit: 'second', roundingMode: 'nearest' });
-  // => 2019-11-18T10:52:02Z
+// => 2019-11-18T10:52:02Z
 ```
 
 ### instant.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string

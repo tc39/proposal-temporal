@@ -80,11 +80,11 @@ export class TimeZone {
       microsecond,
       nanosecond + offsetNs
     ));
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   getInstantFor(dateTime, options = undefined) {
-    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.DateTime%'));
+    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
 
@@ -154,7 +154,7 @@ export class TimeZone {
   }
   getPossibleInstantsFor(dateTime) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.DateTime%'));
+    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
     const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 

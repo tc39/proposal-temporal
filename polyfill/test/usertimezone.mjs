@@ -40,7 +40,7 @@ describe('Userland time zone', () => {
 
     const obj = new CustomUTCSubclass();
     const inst = Temporal.Instant.fromEpochNanoseconds(0n);
-    const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+    const dt = new Temporal.PlainDateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
 
     it('is a time zone', () => equal(typeof obj, 'object'));
     it('.id property', () => equal(obj.id, 'Etc/Custom/UTC_Subclass'));
@@ -66,11 +66,11 @@ describe('Userland time zone', () => {
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.Time);
+      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
@@ -104,11 +104,11 @@ describe('Userland time zone', () => {
         equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Subclass' }), '1970-01-01T00:00:00+00:00');
       });
       it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Subclass') instanceof Temporal.Date);
-        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.Date);
-        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.Time);
+        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainTime);
       });
       after(() => {
         Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
@@ -133,7 +133,7 @@ describe('Userland time zone', () => {
     };
 
     const inst = Temporal.Instant.fromEpochNanoseconds(0n);
-    const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+    const dt = new Temporal.PlainDateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
 
     it('has offset string +00:00', () =>
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, inst), '+00:00'));
@@ -153,11 +153,11 @@ describe('Userland time zone', () => {
       equal(zdt.toString(), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
     });
     it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.Time);
+      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
@@ -191,11 +191,11 @@ describe('Userland time zone', () => {
         equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Protocol' }), '1970-01-01T00:00:00+00:00');
       });
       it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Protocol') instanceof Temporal.Date);
-        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.Date);
-        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.Time);
+        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainTime);
       });
       after(() => {
         Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
@@ -225,7 +225,7 @@ describe('Userland time zone', () => {
 
     const obj = new SubminuteTimeZone();
     const inst = Temporal.Instant.fromEpochNanoseconds(0n);
-    const dt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
+    const dt = new Temporal.PlainDateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
 
     it('is a time zone', () => equal(typeof obj, 'object'));
     it('.id property', () => equal(obj.id, 'Custom/Subminute'));
@@ -254,11 +254,11 @@ describe('Userland time zone', () => {
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
     it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.DateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.Date);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.Time);
+      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
     describe('Making available globally', () => {
       const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
@@ -292,11 +292,11 @@ describe('Userland time zone', () => {
         equal(inst.toString({ timeZone: 'Custom/Subminute' }), '1969-12-31T23:59:58.888888889-00:00:01.111111111');
       });
       it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Custom/Subminute') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Custom/Subminute') instanceof Temporal.DateTime);
-        assert(Temporal.now.plainDateISO('Custom/Subminute') instanceof Temporal.Date);
-        assert(Temporal.now.plainDate('gregory', 'Custom/Subminute') instanceof Temporal.Date);
-        assert(Temporal.now.plainTimeISO('Custom/Subminute') instanceof Temporal.Time);
+        assert(Temporal.now.plainDateTimeISO('Custom/Subminute') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateTime('gregory', 'Custom/Subminute') instanceof Temporal.PlainDateTime);
+        assert(Temporal.now.plainDateISO('Custom/Subminute') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainDate('gregory', 'Custom/Subminute') instanceof Temporal.PlainDate);
+        assert(Temporal.now.plainTimeISO('Custom/Subminute') instanceof Temporal.PlainTime);
       });
       after(() => {
         Temporal.TimeZone.from = originalTemporalTimeZoneFrom;

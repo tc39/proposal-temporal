@@ -1,27 +1,27 @@
-# Temporal.DateTime
+# Temporal.PlainDateTime
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <!-- toc -->
 </details>
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
+A `Temporal.PlainDateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
 Of the `Temporal` classes carrying human-readable time information, it is the most general and complete one.
-`Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`, and `Temporal.MonthDay` all carry less information and should be used when complete information is not required.
+`Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainYearMonth`, and `Temporal.PlainMonthDay` all carry less information and should be used when complete information is not required.
 
 "Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
-`Temporal.DateTime` does not represent an exact point in time; that is what `Temporal.Instant` is for.
+`Temporal.PlainDateTime` does not represent an exact point in time; that is what `Temporal.Instant` is for.
 
-One example of when it would be appropriate to use `Temporal.DateTime` and not `Temporal.Instant` is when integrating with wearable devices.
+One example of when it would be appropriate to use `Temporal.PlainDateTime` and not `Temporal.Instant` is when integrating with wearable devices.
 FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.
 Otherwise they would be recorded as sleeping at strange hours when travelling, even if their sleep rhythm was on a healthy schedule for the time zone they were in.
 
-A `Temporal.DateTime` can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
-A `Temporal.DateTime` can also be converted into any of the other `Temporal` objects that carry less information, such as `Temporal.Date` for the date or `Temporal.Time` for the time.
+A `Temporal.PlainDateTime` can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
+A `Temporal.PlainDateTime` can also be converted into any of the other `Temporal` objects that carry less information, such as `Temporal.PlainDate` for the date or `Temporal.PlainTime` for the time.
 
 ## Constructor
 
-### **new Temporal.DateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.DateTime
+### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -36,16 +36,16 @@ A `Temporal.DateTime` can also be converted into any of the other `Temporal` obj
 - `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the datetime into.
 
-**Returns:** a new `Temporal.DateTime` object.
+**Returns:** a new `Temporal.PlainDateTime` object.
 
 Use this constructor if you have the correct parameters for the datetime already as individual number values in the ISO 8601 calendar.
-Otherwise, `Temporal.DateTime.from()`, which accepts more kinds of input, allows inputting dates and times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+Otherwise, `Temporal.PlainDateTime.from()`, which accepts more kinds of input, allows inputting dates and times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter, and the time parameters must represent a valid time of day.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.DateTime.from()` instead.
+> This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.PlainDateTime.from()` instead.
 
 The range of allowed values for this type is exactly enough that calling [`toPlainDateTime()`](./instant.html#toPlainDateTime) on any valid `Temporal.Instant` with any valid `Temporal.TimeZone` will succeed.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
@@ -56,12 +56,12 @@ Usage examples:
 
 ```javascript
 // Leet hour on pi day in 2020
-datetime = new Temporal.DateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37
+datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37
 ```
 
 ## Static methods
 
-### Temporal.DateTime.**from**(_thing_: any, _options_?: object) : Temporal.DateTime
+### Temporal.PlainDateTime.**from**(_thing_: any, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -72,11 +72,11 @@ datetime = new Temporal.DateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.DateTime` object.
+**Returns:** a new `Temporal.PlainDateTime` object.
 
-This static method creates a new `Temporal.DateTime` object from another value.
-If the value is another `Temporal.DateTime` object, a new object representing the same date and time is returned.
-If the value is any other object, a `Temporal.DateTime` will be constructed from the values of any `era`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
+This static method creates a new `Temporal.PlainDateTime` object from another value.
+If the value is another `Temporal.PlainDateTime` object, a new object representing the same date and time is returned.
+If the value is any other object, a `Temporal.PlainDateTime` will be constructed from the values of any `era`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
 
 At least the `year`, `month`, and `day` properties must be present.
 If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
@@ -94,7 +94,7 @@ The `overflow` option works as follows:
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > In the default `constrain` mode and when parsing an ISO 8601 string, this will be converted to 59.
@@ -106,13 +106,13 @@ Example usage:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30');
-dt = Temporal.DateTime.from('1995-12-07T03:24:30Z'); // => 1995-12-07T03:24:30
-dt = Temporal.DateTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30Z'); // => 1995-12-07T03:24:30
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
   // => same as above; time zone is ignored
-dt === Temporal.DateTime.from(dt); // => true
+dt === Temporal.PlainDateTime.from(dt); // => true
 
-dt = Temporal.DateTime.from({
+dt = Temporal.PlainDateTime.from({
   year: 1995,
   month: 12,
   day: 7,
@@ -123,64 +123,64 @@ dt = Temporal.DateTime.from({
   microsecond: 3,
   nanosecond: 500
 }); // => 1995-12-07T03:24:30.000003500
-dt = Temporal.DateTime.from({ year: 1995, month: 12, day: 7 }); // => 1995-12-07T00:00
-dt = Temporal.DateTime.from(Temporal.Date.from('1995-12-07T03:24:30'));
-  // => same as above; Temporal.Date has year, month, and day properties
+dt = Temporal.PlainDateTime.from({ year: 1995, month: 12, day: 7 }); // => 1995-12-07T00:00
+dt = Temporal.PlainDateTime.from(Temporal.PlainDate.from('1995-12-07T03:24:30'));
+  // => same as above; Temporal.PlainDate has year, month, and day properties
 
 calendar = Temporal.Calendar.from('hebrew');
-dt = Temporal.DateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
+dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
   // => 1995-12-07T03:24:30[c=hebrew]
-dt = Temporal.DateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
+dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
   // => same as above
 
 // Different overflow modes
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
   // => 2001-12-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'constrain' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'constrain' });
   // => 2001-01-01T00:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'constrain' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'constrain' });
   // => 2001-01-01T23:00
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
   // => 2001-01-01T00:59
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
   // => 2001-01-01T01:00
-dt = Temporal.DateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' });
   // throws
-dt = Temporal.DateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject' });
   // throws
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'reject' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'reject' });
   // throws
-dt = Temporal.DateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'reject' });
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'reject' });
   // => throws
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.DateTime.**compare**(_one_: Temporal.DateTime | object | string, _two_: Temporal.DateTime | object | string) : number
+### Temporal.PlainDateTime.**compare**(_one_: Temporal.PlainDateTime | object | string, _two_: Temporal.PlainDateTime | object | string) : number
 
 **Parameters:**
 
-- `one` (`Temporal.DateTime` or value convertible to one): First date/time to compare.
-- `two` (`Temporal.DateTime` or value convertible to one): Second date/time to compare.
+- `one` (`Temporal.PlainDateTime` or value convertible to one): First date/time to compare.
+- `two` (`Temporal.PlainDateTime` or value convertible to one): Second date/time to compare.
 
 **Returns:** &minus;1, 0, or 1.
 
-Compares two `Temporal.DateTime` objects.
+Compares two `Temporal.PlainDateTime` objects.
 Returns an integer indicating whether `one` comes before or after or is equal to `two`.
 
 - &minus;1 if `one` comes before `two`;
 - 0 if `one` and `two` are the same;
 - 1 if `one` comes after `two`.
 
-If `one` and `two` are not `Temporal.DateTime` objects, then they will be converted to one as if they were passed to `Temporal.DateTime.from()`.
+If `one` and `two` are not `Temporal.PlainDateTime` objects, then they will be converted to one as if they were passed to `Temporal.PlainDateTime.from()`.
 
-This function can be used to sort arrays of `Temporal.DateTime` objects.
+This function can be used to sort arrays of `Temporal.PlainDateTime` objects.
 For example:
 
 ```javascript
-one = Temporal.DateTime.from('1995-12-07T03:24');
-two = Temporal.DateTime.from('1995-12-07T01:24');
-three = Temporal.DateTime.from('2015-12-07T01:24');
-sorted = [one, two, three].sort(Temporal.DateTime.compare);
+one = Temporal.PlainDateTime.from('1995-12-07T03:24');
+two = Temporal.PlainDateTime.from('1995-12-07T01:24');
+three = Temporal.PlainDateTime.from('2015-12-07T01:24');
+sorted = [one, two, three].sort(Temporal.PlainDateTime.compare);
 sorted.join(' ');
 // => 1995-12-07T01:24 1995-12-07T03:24 2015-12-07T01:24
 ```
@@ -213,7 +213,7 @@ Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.year;        // => 1995
 dt.month;       // => 12
 dt.day;         // => 7
@@ -239,7 +239,7 @@ For an overview, see [ISO 8601 on Wikipedia](https://en.wikipedia.org/wiki/ISO_8
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][dt.dayOfWeek - 1]; // => THU
 ```
 
@@ -251,7 +251,7 @@ For the ISO 8601 calendar, this is a value between 1 and 365, or 366 in a leap y
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 // ISO ordinal date
 console.log(dt.year, dt.dayOfYear); // => 1995 341
 ```
@@ -266,7 +266,7 @@ For more information on ISO week numbers, see for example the Wikipedia article 
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 // ISO week date
 console.log(dt.year, dt.weekOfYear, dt.dayOfWeek); // => 1995 49 4
 ```
@@ -279,7 +279,7 @@ For the ISO 8601 calendar, this is always 7, but in other calendar systems it ma
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.daysInWeek; // => 7
 ```
 
@@ -329,7 +329,7 @@ For the ISO 8601 calendar, this is always 12, but in other calendar systems it m
 Usage example:
 
 ```javascript
-dt = Temporal.Date.from('1900-01-01T12:00');
+dt = Temporal.PlainDate.from('1900-01-01T12:00');
 dt.monthsInYear; // => 12
 ```
 
@@ -350,26 +350,26 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 
 ## Methods
 
-### datetime.**with**(_dateTimeLike_: object | string, _options_?: object) : Temporal.DateTime
+### datetime.**with**(_dateTimeLike_: object | string, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
-- `dateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.DateTime`, or an ISO string.
+- `dateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.PlainDateTime`, or an ISO string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.DateTime` object.
+**Returns:** a new `Temporal.PlainDateTime` object.
 
-This method creates a new `Temporal.DateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
+This method creates a new `Temporal.PlainDateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
 
-If `dateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.Date` (if no time is given in the string), `Temporal.DateTime`, or `Temporal.Time`, in order of priority.
+If `dateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.PlainDate` (if no time is given in the string), `Temporal.PlainDateTime`, or `Temporal.PlainTime`, in order of priority.
 
-Since `Temporal.DateTime` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainDateTime` objects are immutable, use this method instead of modifying one.
 
-If the result is earlier or later than the range of dates that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
+If the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `dateTimeLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -379,45 +379,45 @@ If the result is earlier or later than the range of dates that `Temporal.DateTim
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
 
-// Temporal.Time, Temporal.Date, Temporal.YearMonth and
-// Temporal.MonthDay also have some of the properties of
-// Temporal.DateTime:
-midnight = Temporal.Time.from({ hour: 0 });
+// Temporal.PlainTime, Temporal.PlainDate, Temporal.PlainYearMonth and
+// Temporal.PlainMonthDay also have some of the properties of
+// Temporal.PlainDateTime:
+midnight = Temporal.PlainTime.from({ hour: 0 });
 dt.with(midnight); // => 1995-12-07T00:00
 // Note: not the same as dt.with({ hour: 0 })!
 // Same as above but using a string:
 dt.with('00:00'); // => 1995-12-07T00:00
-date = Temporal.Date.from('2015-03-31');
+date = Temporal.PlainDate.from('2015-03-31');
 dt.with(date); // => 2015-03-31T03:24:31.000003500
 // Same as above but using a string:
 dt.with('2015-03-31'); // => 2015-03-31T03:24:31.000003500
-yearMonth = Temporal.YearMonth.from('2018-04');
+yearMonth = Temporal.PlainYearMonth.from('2018-04');
 date.with(yearMonth); // => 2018-04-07T03:24:31.000003500
-monthDay = Temporal.MonthDay.from('02-29');
+monthDay = Temporal.PlainMonthDay.from('02-29');
 date.with(monthDay); // => 1995-02-28T03:24:30.000003500
 ```
 
-### datetime.**withCalendar**(_calendar_: object | string) : Temporal.DateTime
+### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
 
 - `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `datetime`.
 
-**Returns:** a new `Temporal.DateTime` object which is the date indicated by `datetime`, projected into `calendar`.
+**Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, projected into `calendar`.
 
 This method is the same as `datetime.with({ calendar })`, but may be more efficient.
 
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500[c=japanese]');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500[c=japanese]');
 dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.000003500
 ```
 
-### datetime.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.DateTime
+### datetime.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -428,7 +428,7 @@ dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.000003500
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.DateTime` object which is the date and time indicated by `datetime` plus `duration`.
+**Returns:** a new `Temporal.PlainDateTime` object which is the date and time indicated by `datetime` plus `duration`.
 
 This method adds `duration` to `datetime`, returning a point in time that is in the future relative to `datetime`.
 
@@ -442,22 +442,22 @@ For these cases, the `overflow` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.add({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.000004
 
-dt = Temporal.DateTime.from('2019-01-31T15:30');
+dt = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt.add({ months: 1 }); // => 2019-02-28T15:30
 dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
-### datetime.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.DateTime
+### datetime.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -468,7 +468,7 @@ dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
-**Returns:** a new `Temporal.DateTime` object which is the time indicated by `datetime` minus `duration`.
+**Returns:** a new `Temporal.PlainDateTime` object which is the time indicated by `datetime` minus `duration`.
 
 This method subtracts `duration` from `datetime`, returning a point in time that is in the past relative to `datetime`.
 
@@ -482,26 +482,26 @@ For these cases, the `overflow` option tells what to do:
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.subtract({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
 
-dt = Temporal.DateTime.from('2019-03-31T15:30');
+dt = Temporal.PlainDateTime.from('2019-03-31T15:30');
 dt.subtract({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
 dt.subtract({ months: 1 }); // => throws
 ```
 
-### datetime.**until**(_other_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Duration
+### datetime.**until**(_other_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.DateTime` or value convertible to one): Another date/time until when to compute the difference.
+- `other` (`Temporal.PlainDateTime` or value convertible to one): Another date/time until when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -522,7 +522,7 @@ This method computes the difference between the two times represented by `dateti
 If `other` is earlier than `datetime` then the resulting duration will be negative.
 The returned `Temporal.Duration`, when added to `datetime` with the same `options`, will yield `other`.
 
-If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+If `other` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -549,8 +549,8 @@ Usage example:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt1.until(dt2);
   // =>    P8456DT12H5M29.999996500S
 dt1.until(dt2, { largestUnit: 'years' });
@@ -566,7 +566,7 @@ dt1.until(dt2, { smallestUnit: 'seconds' });
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
-  Temporal.DateTime.from({ year: 2020, month, day: 1 }));
+  Temporal.PlainDateTime.from({ year: 2020, month, day: 1 }));
 jan1.until(feb1);                            // => P31D
 jan1.until(feb1, { largestUnit: 'months' }); // => P1M
 feb1.until(mar1);                            // => P29D
@@ -575,11 +575,11 @@ jan1.until(mar1);                            // => P121D
 ```
 <!-- prettier-ignore-end -->
 
-### datetime.**since**(_other_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Duration
+### datetime.**since**(_other_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Duration
 
 **Parameters:**
 
-- `other` (`Temporal.DateTime` or value convertible to one): Another date/time since when to compute the difference.
+- `other` (`Temporal.PlainDateTime` or value convertible to one): Another date/time since when to compute the difference.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
@@ -599,19 +599,19 @@ jan1.until(mar1);                            // => P121D
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `datetime` then the resulting duration will be negative.
 
-This method is similar to `Temporal.DateTime.prototype.until()`, but reversed.
+This method is similar to `Temporal.PlainDateTime.prototype.until()`, but reversed.
 The returned `Temporal.Duration`, when subtracted from `datetime` using the same `options`, will yield `other`.
 Using default options, `dt1.since(dt2)` yields the same result as `dt1.until(dt2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
 
 Usage example:
 
 ```javascript
-dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt2.since(dt1); // => P8456DT12H5M29.999996500S
 ```
 
-### datetime.**round**(_options_: object) : Temporal.DateTime
+### datetime.**round**(_options_: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -625,9 +625,9 @@ dt2.since(dt1); // => P8456DT12H5M29.999996500S
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
 
-**Returns:** a new `Temporal.DateTime` object which is `datetime` rounded to `roundingIncrement` of `smallestUnit`.
+**Returns:** a new `Temporal.PlainDateTime` object which is `datetime` rounded to `roundingIncrement` of `smallestUnit`.
 
-Rounds `datetime` to the given unit and increment, and returns the result as a new `Temporal.DateTime` object.
+Rounds `datetime` to the given unit and increment, and returns the result as a new `Temporal.PlainDateTime` object.
 
 The `smallestUnit` option determines the unit to round to.
 For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
@@ -655,7 +655,7 @@ Example usage:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 
 // Round to a particular unit
 dt.round({ smallestUnit: 'hour' }); // => 1995-12-07T03:00
@@ -668,29 +668,29 @@ dt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' 
 ```
 <!-- prettier-ignore-end -->
 
-### datetime.**equals**(_other_: Temporal.DateTime | object | string) : boolean
+### datetime.**equals**(_other_: Temporal.PlainDateTime | object | string) : boolean
 
 **Parameters:**
 
-- `other` (`Temporal.DateTime`): Another date/time to compare.
+- `other` (`Temporal.PlainDateTime`): Another date/time to compare.
 
 **Returns:** `true` if `datetime` and `other` are equal, or `false` if not.
 
-Compares two `Temporal.DateTime` objects for equality.
+Compares two `Temporal.PlainDateTime` objects for equality.
 
 This function exists because it's not possible to compare using `datetime == other` or `datetime === other`, due to ambiguity in the primitive representation and between Temporal types.
 
-If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.DateTime.compare`.
+If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.PlainDateTime.compare`.
 
 Note that this function will return `true` if the two datetimes are equal, even if they are expressed in different calendar systems.
 
-If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+If `other` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
 Example usage:
 
 ```javascript
-dt1 = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
-dt2 = Temporal.DateTime.from('2019-01-31T15:30');
+dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
+dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt1.equals(dt2); // => false
 dt1.equals(dt1); // => true
 ```
@@ -717,12 +717,12 @@ dt1.equals(dt1); // => true
 **Returns:** a string in the ISO 8601 date format representing `datetime`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `datetime`.
-The string can be passed to `Temporal.DateTime.from()` to create a new `Temporal.DateTime` object.
+The string can be passed to `Temporal.PlainDateTime.from()` to create a new `Temporal.PlainDateTime` object.
 
 The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
 If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
 
-The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
 Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `datetime`'s calendar is not the ISO 8601 calendar.
@@ -733,7 +733,7 @@ Example usage:
 
 <!-- prettier-ignore-start -->
 ```js
-dt = Temporal.DateTime.from({
+dt = Temporal.PlainDateTime.from({
   year: 1999,
   month: 12,
   day: 31,
@@ -750,7 +750,7 @@ dt.toString({ smallestUnit: 'minute' });    // => 1999-12-31T23:59
 dt.toString({ fractionalSecondDigits: 0 }); // => 1999-12-31T23:59:59
 dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
 dt.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
-  // => 2000-01-01T00:00:00.00000000
+// => 2000-01-01T00:00:00.00000000
 ```
 <!-- prettier-ignore-end -->
 
@@ -767,14 +767,14 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.DateTime` carries no time zone information.
-> It's not always possible to uniquely determine the localized time zone name using the `Temporal.DateTime` instance and the `options.timeZone`.
-> Therefore, to display a localized date and time including its time zone, convert the `Temporal.DateTime` to a `Temporal.ZonedDateTime` or `Temporal.Instant` and then call the `toLocaleString()` method.
+> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.PlainDateTime` carries no time zone information.
+> It's not always possible to uniquely determine the localized time zone name using the `Temporal.PlainDateTime` instance and the `options.timeZone`.
+> Therefore, to display a localized date and time including its time zone, convert the `Temporal.PlainDateTime` to a `Temporal.ZonedDateTime` or `Temporal.Instant` and then call the `toLocaleString()` method.
 
 Example usage:
 
 ```js
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.toLocaleString(); // => example output: 1995-12-07, 3:24:30 a.m.
 dt.toLocaleString('de-DE'); // => example output: 7.12.1995, 03:24:30
 dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => Donnerstag
@@ -788,8 +788,8 @@ dt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => １２/７/１９９５, 
 This method is the same as `datetime.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
 
-The reverse operation, recovering a `Temporal.DateTime` object from a string, is `Temporal.DateTime.from()`, but it cannot be called automatically by `JSON.parse()`.
-If you need to rebuild a `Temporal.DateTime` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.DateTime`s.
+The reverse operation, recovering a `Temporal.PlainDateTime` object from a string, is `Temporal.PlainDateTime.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.PlainDateTime` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.PlainDateTime`s.
 In that case you can build a custom "reviver" function for your use case.
 
 Example usage:
@@ -798,8 +798,8 @@ Example usage:
 const event = {
   id: 311,
   name: 'FictionalConf 2018',
-  openingDateTime: Temporal.DateTime.from('2018-07-06T10:00'),
-  closingDateTime: Temporal.DateTime.from('2018-07-08T18:15')
+  openingDateTime: Temporal.PlainDateTime.from('2018-07-06T10:00'),
+  closingDateTime: Temporal.PlainDateTime.from('2018-07-08T18:15')
 };
 const str = JSON.stringify(event, null, 2);
 console.log(str);
@@ -813,7 +813,7 @@ console.log(str);
 
 // To rebuild from the string:
 function reviver(key, value) {
-  if (key.endsWith('DateTime')) return Temporal.DateTime.from(value);
+  if (key.endsWith('DateTime')) return Temporal.PlainDateTime.from(value);
   return value;
 }
 JSON.parse(str, reviver);
@@ -822,8 +822,8 @@ JSON.parse(str, reviver);
 ### datetime.**valueOf**()
 
 This method overrides `Object.prototype.valueOf()` and always throws an exception.
-This is because it's not possible to compare `Temporal.DateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
-Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
+This is because it's not possible to compare `Temporal.PlainDateTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
+Use `Temporal.PlainDateTime.compare()` for this, or `datetime.equals()` for equality.
 
 ### datetime.**toZonedDateTime**(_timeZone_ : object | string, _options_?: object) : Temporal.ZonedDateTime
 
@@ -838,7 +838,7 @@ Use `Temporal.DateTime.compare()` for this, or `datetime.equals()` for equality.
 
 **Returns:** A `Temporal.ZonedDateTime` object representing the calendar date and wall-clock time from `dateTime` projected into `timeZone`.
 
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.ZonedDateTime`.
+This method is one way to convert a `Temporal.PlainDateTime` to a `Temporal.ZonedDateTime`.
 It is identical to [`(Temporal.TimeZone.from(timeZone)).getZonedDateTimeFor(dateTime, disambiguation)`](./timezone.html#getZonedDateTimeFor).
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
@@ -855,35 +855,35 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
+This behavior avoids exceptions when converting non-existent `Temporal.PlainDateTime` values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
 If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-### datetime.**toPlainDate**() : Temporal.Date
+### datetime.**toPlainDate**() : Temporal.PlainDate
 
-**Returns:** a `Temporal.Date` object that is the same as the date portion of `datetime`.
+**Returns:** a `Temporal.PlainDate` object that is the same as the date portion of `datetime`.
 
-### datetime.**toPlainYearMonth**() : Temporal.YearMonth
+### datetime.**toPlainYearMonth**() : Temporal.PlainYearMonth
 
-**Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `datetime`.
+**Returns:** a `Temporal.PlainYearMonth` object that is the same as the year and month of `datetime`.
 
-### datetime.**toPlainMonthDay**() : Temporal.MonthDay
+### datetime.**toPlainMonthDay**() : Temporal.PlainMonthDay
 
-**Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `datetime`.
+**Returns:** a `Temporal.PlainMonthDay` object that is the same as the month and day of `datetime`.
 
-### datetime.**toPlainTime**() : Temporal.Time
+### datetime.**toPlainTime**() : Temporal.PlainTime
 
-**Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `datetime`.
+**Returns:** a `Temporal.PlainTime` object that is the same as the wall-clock time portion of `datetime`.
 
-The above four methods can be used to convert `Temporal.DateTime` into a `Temporal.Date`, `Temporal.YearMonth`, `Temporal.MonthDay`, or `Temporal.Time` respectively.
+The above four methods can be used to convert `Temporal.PlainDateTime` into a `Temporal.PlainDate`, `Temporal.PlainYearMonth`, `Temporal.PlainMonthDay`, or `Temporal.PlainTime` respectively.
 The converted object carries a copy of all the relevant fields of `datetime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are copied.)
 
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.toPlainDate(); // => 1995-12-07
 dt.toPlainYearMonth(); // => 1995-12
 dt.toPlainMonthDay(); // => 12-07
@@ -894,7 +894,7 @@ dt.toPlainTime(); // => 03:24:30.000003500
 
 **Returns:** a plain object with properties equal to the fields of `datetime`.
 
-This method can be used to convert a `Temporal.DateTime` into a record-like data structure.
+This method can be used to convert a `Temporal.PlainDateTime` into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
 Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as `era`.
@@ -904,7 +904,7 @@ Note that if using a different calendar from ISO 8601, these will be the calenda
 Usage example:
 
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 Object.assign({}, dt).day; // => undefined
 Object.assign({}, dt.getFields()).day; // => 7
 ```
@@ -921,11 +921,11 @@ Usage example:
 
 <!-- prettier-ignore-start -->
 ```javascript
-dt = Temporal.DateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 f = dt.getISOFields();
 f.isoDay; // => 7
 // Fields correspond exactly to constructor arguments:
-dt2 = new Temporal.DateTime(f.isoYear, f.isoMonth, f.isoDay, f.isoHour, f.isoMinute,
+dt2 = new Temporal.PlainDateTime(f.isoYear, f.isoMonth, f.isoDay, f.isoHour, f.isoMinute,
   f.isoSecond, f.isoMillisecond, f.isoMicrosecond, f.isoNanosecond, f.calendar);
 dt.equals(dt2); // => true
 

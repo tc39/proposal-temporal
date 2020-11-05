@@ -1,7 +1,7 @@
 /**
  * Get an exact time corresponding with a calendar date / wall-clock time in a
  * particular time zone, the same as Temporal.TimeZone.getInstantFor() or
- * Temporal.DateTime.toInstant(), but with more disambiguation options.
+ * Temporal.PlainDateTime.toInstant(), but with more disambiguation options.
  *
  * As well as the default Temporal disambiguation options 'compatible',
  * 'earlier', 'later', and 'reject', there are additional options possible:
@@ -12,7 +12,7 @@
  * - 'clipLater': Equivalent to 'later' when turning the clock back, and when
  *   setting the clock forward returns the exact time of the clock change.
  *
- * @param {Temporal.DateTime} dateTime - Calendar date and wall-clock time to
+ * @param {Temporal.PlainDateTime} dateTime - Calendar date and wall-clock time to
  *   convert
  * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
  *   wall-clock time
@@ -49,7 +49,7 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
 }
 
 const germany = Temporal.TimeZone.from('Europe/Berlin');
-const nonexistentGermanWallTime = Temporal.DateTime.from('2019-03-31T02:45');
+const nonexistentGermanWallTime = Temporal.PlainDateTime.from('2019-03-31T02:45');
 
 const germanResults = {
   earlier: /*     */ '2019-03-31T01:45:00+01:00',
@@ -66,7 +66,7 @@ for (const [disambiguation, result] of Object.entries(germanResults)) {
 }
 
 const brazilEast = Temporal.TimeZone.from('America/Sao_Paulo');
-const doubleEasternBrazilianWallTime = Temporal.DateTime.from('2019-02-16T23:45');
+const doubleEasternBrazilianWallTime = Temporal.PlainDateTime.from('2019-02-16T23:45');
 
 const brazilianResults = {
   earlier: /*     */ '2019-02-16T23:45:00-02:00',

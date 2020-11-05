@@ -10,7 +10,7 @@
  * @param {Temporal.TimeZone} destinationTimeZone - Time zone in which the
  *  flight's destination is located
  * @param {Temporal.Calendar|string} calendar - Calendar system used for output
- * @returns {Temporal.DateTime} Local arrival time
+ * @returns {Temporal.PlainDateTime} Local arrival time
  */
 function getLocalizedArrival(departure, flightTime, destinationTimeZone, calendar) {
   const instant = departure.toInstant();

@@ -12,7 +12,7 @@ const timeZones = [
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
 const calendarNow = now.toPlainDateTime(here, browserCalendar);
 const startTime = calendarNow
-  .with(Temporal.Time.from('00:00')) // midnight
+  .with(Temporal.PlainTime.from('00:00')) // midnight
   .toInstant(here);
 
 // Build the table

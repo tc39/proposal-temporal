@@ -681,7 +681,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'era', 'month', 'year']);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
-      const TemporalDate = GetIntrinsic('%Temporal.Date%');
+      const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
       const date = calendar.dateFromFields(fields, {}, TemporalDate);
       year = GetSlot(date, ISO_YEAR);
       month = GetSlot(date, ISO_MONTH);
@@ -703,7 +703,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (!calendar) calendar = GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
-    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   },
   RelevantTemporalObjectFromString: (str) => {
@@ -717,7 +717,7 @@ export const ES = ObjectAssign({}, ES2020, {
         throw new RangeError(`invalid value ${str} for a Temporal object`);
       }
       const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
-      const TemporalTime = GetIntrinsic('%Temporal.Time%');
+      const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
       return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
     }
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar } = props;
@@ -725,10 +725,10 @@ export const ES = ObjectAssign({}, ES2020, {
     const DATE_ONLY = new RegExp(`^${PARSE.datesplit.source}$`);
     const match = DATE_ONLY.exec(str);
     if (match) {
-      const TemporalDate = GetIntrinsic('%Temporal.Date%');
+      const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
       return new TemporalDate(year, month, day, calendar);
     }
-    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
@@ -929,13 +929,13 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   InterpretTemporalDateTimeFields: (calendar, fields, overflow) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const date = calendar.dateFromFields(fields, { overflow }, TemporalDate);
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
 
-    const TemporalTime = GetIntrinsic('%Temporal.Time%');
+    const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
     const time = calendar.timeFromFields(fields, { overflow }, TemporalTime);
     const hour = GetSlot(time, ISO_HOUR);
     const minute = GetSlot(time, ISO_MINUTE);
@@ -1137,7 +1137,7 @@ export const ES = ObjectAssign({}, ES2020, {
     disambiguation,
     offsetOpt
   ) => {
-    const DateTime = GetIntrinsic('%Temporal.DateTime%');
+    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 
     if (offsetNs === null || offsetOpt === 'ignore') {
@@ -1335,7 +1335,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {
-    const Date = GetIntrinsic('%Temporal.Date%');
+    const Date = GetIntrinsic('%Temporal.PlainDate%');
     return new Date(
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
@@ -1344,7 +1344,7 @@ export const ES = ObjectAssign({}, ES2020, {
     );
   },
   TemporalDateTimeToTime: (dateTime) => {
-    const Time = GetIntrinsic('%Temporal.Time%');
+    const Time = GetIntrinsic('%Temporal.PlainTime%');
     return new Time(
       GetSlot(dateTime, ISO_HOUR),
       GetSlot(dateTime, ISO_MINUTE),
@@ -1935,7 +1935,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   UnbalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 
@@ -2015,7 +2015,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days };
   },
   BalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 
@@ -2388,8 +2388,8 @@ export const ES = ObjectAssign({}, ES2020, {
     calendar,
     largestUnit
   ) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
-    const TemporalTime = GetIntrinsic('%Temporal.Time%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
+    const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
     const time1 = new TemporalTime(h1, min1, s1, ms1, µs1, ns1, calendar);
     const time2 = new TemporalTime(h2, min2, s2, ms2, µs2, ns2, calendar);
     let { days: deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(
@@ -2559,7 +2559,7 @@ export const ES = ObjectAssign({}, ES2020, {
     days += deltaDays;
 
     // Delegate the date part addition to the calendar
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     const datePart = new TemporalDate(year, month, day, calendar);
     const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -2593,10 +2593,10 @@ export const ES = ObjectAssign({}, ES2020, {
     // RFC 5545 requires the date portion to be added in calendar days and the
     // time portion to be added in exact time.
     let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
     const addedDate = calendar.dateAdd(datePart, { years, months, weeks, days }, { overflow }, TemporalDate);
-    const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
+    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const dtIntermediate = new TemporalDateTime(
       GetSlot(addedDate, ISO_YEAR),
       GetSlot(addedDate, ISO_MONTH),
@@ -2744,7 +2744,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ).days;
   },
   MoveRelativeDate: (calendar, relativeTo, duration) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const later = calendar.dateAdd(relativeTo, duration, {}, TemporalDate);
     const days = ES.DaysUntil(relativeTo, later);
     return { relativeTo: later, days };
@@ -2765,7 +2765,7 @@ export const ES = ObjectAssign({}, ES2020, {
     roundingMode,
     relativeTo
   ) => {
-    const TemporalDate = GetIntrinsic('%Temporal.Date%');
+    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     let calendar;
     if (relativeTo) {

@@ -16,8 +16,8 @@ const invalidValues = [
   2020,
   2n,
   {},
-  Temporal.DateTime,
-  Temporal.DateTime.prototype,
+  Temporal.PlainDateTime,
+  Temporal.PlainDateTime.prototype,
 ];
 
 for (const dateTime of invalidValues) {

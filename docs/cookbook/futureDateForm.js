@@ -12,7 +12,7 @@ function englishPlural(n, singular, plural) {
 
 // When form data posted:
 if (futuredateParam !== null) {
-  const futureDate = Temporal.Date.from(futuredateParam);
+  const futureDate = Temporal.PlainDate.from(futuredateParam);
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
   const today = Temporal.now.plainDate(browserCalendar);
   const until = today.until(futureDate, { largestUnit: 'days' });

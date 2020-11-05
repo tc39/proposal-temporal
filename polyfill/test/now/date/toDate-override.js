@@ -13,13 +13,13 @@ const expected = [
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
-const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
+const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
-Object.defineProperty(Temporal.DateTime.prototype, "toPlainDate", {
+Object.defineProperty(Temporal.PlainDateTime.prototype, "toPlainDate", {
   get() {
-    actual.push("get Temporal.DateTime.prototype.toPlainDate");
+    actual.push("get Temporal.PlainDateTime.prototype.toPlainDate");
     return function() {
-      actual.push("call Temporal.DateTime.prototype.toPlainDate");
+      actual.push("call Temporal.PlainDateTime.prototype.toPlainDate");
     };
   },
 });
@@ -54,7 +54,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
 
 const result = Temporal.now.plainDate("iso8601", "UTC");
 assert.notSameValue(result, undefined);
-assert.sameValue(result instanceof Temporal.Date, true);
+assert.sameValue(result instanceof Temporal.PlainDate, true);
 for (const property of ["year", "month", "day"]) {
   assert.sameValue(result[property], dateTime[property], property);
 }

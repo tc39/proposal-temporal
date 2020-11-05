@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }

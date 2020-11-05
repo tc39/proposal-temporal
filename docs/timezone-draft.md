@@ -50,16 +50,15 @@ Temporal.TimeZone.from = function (item) {
       id = string;
     }
   }
-  if (id === 'America/St_Louis')
-    return new StLouisTime();
+  if (id === 'America/St_Louis') return new StLouisTime();
   return originalTemporalTimeZoneFrom.call(this, id);
-}
+};
 
-Temporal.Instant.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
-  // returns the Absolute corresponding to 1820-04-02T00:17:14.110Z
+Temporal.Instant.from('1820-04-01T18:16:25-06:00[America/St_Louis]');
+// returns the Absolute corresponding to 1820-04-02T00:17:14.110Z
 
-Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]')
-  // returns a new StLouisTime instance
+Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]');
+// returns a new StLouisTime instance
 ```
 
 In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.from()` function which performs the built-in mapping, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone.
@@ -76,19 +75,18 @@ Temporal.TimeZone.from = function (item) {
     const string = `${item}`;
     try {
       const { zone } = Temporal.parse(string);
-      if (zone.ianaName === 'UTC')
-        id = 'UTC';
-      else
-        id = zone.offset;
+      if (zone.ianaName === 'UTC') id = 'UTC';
+      else id = zone.offset;
     } catch {
       id = string;
     }
   }
-  if (/^[+-]\d{2}:?\d{2}$/.test(id) || id === 'UTC')
-    return originalTemporalTimeZoneFrom.call(this, id);
+  if (/^[+-]\d{2}:?\d{2}$/.test(id) || id === 'UTC') return originalTemporalTimeZoneFrom.call(this, id);
   throw new RangeError('invalid time zone');
-}
-Temporal.now.timeZone = function () { return Temporal.TimeZone.from('UTC'); }
+};
+Temporal.now.timeZone = function () {
+  return Temporal.TimeZone.from('UTC');
+};
 ```
 
 ## Implementation of a custom time zone
@@ -113,7 +111,7 @@ class Temporal.TimeZone {
    * exact times, that are possible points on the timeline corresponding
    * to it. In getInstantFor(), one of these will be selected, depending
    * on the disambiguation option. */
-  getPossibleInstantsFor(dateTime : Temporal.DateTime) : array<Temporal.Instant>;
+  getPossibleInstantsFor(dateTime : Temporal.PlainDateTime) : array<Temporal.Instant>;
 
   /** Return the next time zone transition after `startingPoint`. */
   getNextTransition(startingPoint : Temporal.Instant) : Temporal.Instant | null;
@@ -124,9 +122,9 @@ class Temporal.TimeZone {
   // API methods that a subclassed custom time zone doesn't need to touch
 
   get id() : string;
-  getDateTimeFor(instant : Temporal.Instant) : Temporal.DateTime;
+  getDateTimeFor(instant : Temporal.Instant) : Temporal.PlainDateTime;
   getInstantFor(
-      dateTime : Temporal.DateTime,
+      dateTime : Temporal.PlainDateTime,
       options?: object
   ) : Temporal.Instant;
   getOffsetStringFor(instant : Temporal.Instant) : string;
@@ -154,7 +152,7 @@ class OffsetTimeZone extends Temporal.TimeZone {
   #offsetNs;
   constructor(sign = 1, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0) {
     const offsetNs = MakeTime(h, min, s, ms, µs, ns);
-    if (sign === -1 && offsetNs === 0) sign = 1;  // "-00:00" is "+00:00"
+    if (sign === -1 && offsetNs === 0) sign = 1; // "-00:00" is "+00:00"
     const hourString = `${h}`.padStart(2, '0');
     const minuteString = `${min}`.padStart(2, '0');
     const id = `${sign < 0 ? '-' : '+'}${hourString}:${minuteString}`;

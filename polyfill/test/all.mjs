@@ -21,12 +21,12 @@ import './now.mjs';
 import './timezone.mjs';
 import './instant.mjs';
 import './zoneddatetime.mjs';
-import './date.mjs';
-import './time.mjs';
-import './datetime.mjs';
+import './plaindate.mjs';
+import './plaintime.mjs';
+import './plaindatetime.mjs';
 import './duration.mjs';
-import './yearmonth.mjs';
-import './monthday.mjs';
+import './plainyearmonth.mjs';
+import './plainmonthday.mjs';
 import './intl.mjs';
 import './calendar.mjs';
 

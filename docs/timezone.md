@@ -7,7 +7,7 @@
 
 A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time zone](https://www.iana.org/time-zones), including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.
 
-Since `Temporal.Instant` and `Temporal.DateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
+Since `Temporal.Instant` and `Temporal.PlainDateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
 
 ## Custom time zones
 
@@ -70,7 +70,7 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-inst = Temporal.DateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
+inst = Temporal.PlainDateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
 tz1.getNextTransition(inst); // => null
 tz2.getPreviousTransition(inst); // => 2020-03-08T10:00Z
 ```
@@ -228,7 +228,7 @@ tz = Temporal.TimeZone.from('America/New_York');
 tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 ```
 
-### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.DateTime
+### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -236,13 +236,13 @@ tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
 - `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
   The default is to use the ISO 8601 calendar.
 
-**Returns:** A `Temporal.DateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
+**Returns:** A `Temporal.PlainDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
-This method is one way to convert a `Temporal.Instant` to a `Temporal.DateTime`.
+This method is one way to convert a `Temporal.Instant` to a `Temporal.PlainDateTime`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
-When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation creates a `Temporal.DateTime` from `instant` using a UTC offset which is the result of calling `timeZone.getOffsetNanosecondsFor()`.
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation creates a `Temporal.PlainDateTime` from `instant` using a UTC offset which is the result of calling `timeZone.getOffsetNanosecondsFor()`.
 
 Example usage:
 
@@ -258,11 +258,11 @@ tz = Temporal.TimeZone.from('America/New_York');
 tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
-### timeZone.**getInstantFor**(_dateTime_: Temporal.DateTime | object | string, _options_?: object) : Temporal.Instant
+### timeZone.**getInstantFor**(_dateTime_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Instant
 
 **Parameters:**
 
-- `dateTime` (`Temporal.DateTime` or value convertible to one): A calendar date and wall-clock time to convert.
+- `dateTime` (`Temporal.PlainDateTime` or value convertible to one): A calendar date and wall-clock time to convert.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
@@ -271,10 +271,10 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 
 **Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
-This method is one way to convert a `Temporal.DateTime` to a `Temporal.Instant`.
-The result is identical to [`Temporal.DateTime.from(dateTime).toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
+This method is one way to convert a `Temporal.PlainDateTime` to a `Temporal.Instant`.
+The result is identical to [`Temporal.PlainDateTime.from(dateTime).toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
 
-If `dateTime` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
 In the case of ambiguity, the `disambiguation` option controls what instant to return:
 
@@ -287,7 +287,7 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.DateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.DateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
+This behavior avoids exceptions when converting non-existent `Temporal.PlainDateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
@@ -295,23 +295,23 @@ If the result is earlier or later than the range that `Temporal.Instant` can rep
 
 When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation calls `timeZone.getPossibleInstantsFor()`, and if there is more than one possible instant, uses `disambiguation` to pick which one to return.
 
-### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.DateTime | object | string) : array&lt;Temporal.Instant&gt;
+### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.PlainDateTime | object | string) : array&lt;Temporal.Instant&gt;
 
 **Parameters:**
 
-- `dateTime` (`Temporal.DateTime` or value convertible to one): A calendar date and wall-clock time to convert.
+- `dateTime` (`Temporal.PlainDateTime` or value convertible to one): A calendar date and wall-clock time to convert.
 
 **Returns:** An array of `Temporal.Instant` objects, which may be empty.
 
 This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by `dateTime`.
 
-If `dateTime` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
+If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
 Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
 Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
-During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.DateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
+During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.PlainDateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
 ### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant | string) : Temporal.Instant
 

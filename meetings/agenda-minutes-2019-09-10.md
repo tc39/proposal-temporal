@@ -30,7 +30,7 @@ PD: Yes, except a lot of the feedback from the polyfill is that people expect a 
 
 DE: Did you talk about being an object without the Civil prefix?
 
-PD: Yes; the Civil prefix has been dropped since they are in the Temporal namespace: Temporal.Date, Temporal.DateTime, etc.
+PD: Yes; the Civil prefix has been dropped since they are in the Temporal namespace: Temporal.PlainDate, Temporal.PlainDateTime, etc.
 
 PD: On ZonedDateTime, we removed withZone, since it is ambiguous about whether it keeps the Instant or the DateTime form.  So now you have to be explicit.
 

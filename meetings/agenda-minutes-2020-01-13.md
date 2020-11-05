@@ -36,7 +36,7 @@ Agenda:
         * Action item: MPT to review the cookbook pull request.
         * Action item: SFC to make the changes for each of the default calendar options, after the cookbook code is checked in.
         * Action item: PDL to ping JNW to land/complete cookbook
-    * [#291](https://github.com/tc39/proposal-temporal/issues/291) Move calendar-specific getters off of Temporal.DateTime.prototype?
+    * [#291](https://github.com/tc39/proposal-temporal/issues/291) Move calendar-specific getters off of Temporal.PlainDateTime.prototype?
         * Related: [#290](https://github.com/tc39/proposal-temporal/issues/290) Should we have calendar-specific internal slots?
         * SFC: There are properties such as dayOfWeek, isLeapYear that call into the calendar code, the question is to move them into a sub-object so that calendars that don't have those properties can
         * PDL: Have them not as properties on the DateTime object at all but as methods of the calendar where you can inquire given a Date or a DateTime?
@@ -63,7 +63,7 @@ Agenda:
         * DE: I also don't see a problem with date.calendar.isLeapYear(date)
         * Action item: SFC: I'll think about that more and post a few ideas on these threads.
     * [#289](https://github.com/tc39/proposal-temporal/issues/289) Work out the details of the Temporal.TimeZone/Calendar interfaces
-        * [#300](https://github.com/tc39/proposal-temporal/issues/300) Any issues with this plan for Temporal.TimeZone and Temporal.DateTime?
+        * [#300](https://github.com/tc39/proposal-temporal/issues/300) Any issues with this plan for Temporal.TimeZone and Temporal.PlainDateTime?
         * [#310](https://github.com/tc39/proposal-temporal/issues/310) Symbols or strings for the interface methods?
         * DE: My idea was to have Temporal.TimeZone and Temporal.Calendar be classes with one identity, but also to have internal slots, i.e. you have a built-in single implementation that you can have other implementations for. How do you feel about going ahead with this?
         * SFC: Would you extend Temporal.Calendar?

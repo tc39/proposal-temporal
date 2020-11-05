@@ -1032,7 +1032,7 @@
     <emu-clause id="sec-temporal-totemporalzoneddatetime" aoid="ToTemporalZonedDateTime">
       <h1>ToTemporalZonedDateTime ( _item_ [ , _constructor_ [ , _overflow_, _disambiguation_, _offset_ ] ] )</h1>
       <p>
-        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.Date instance if possible, and throws otherwise.
+        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
         1. If _constructor_ is not given, set it to %Temporal.ZonedDateTime%.
@@ -1290,7 +1290,7 @@
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, _overflow_).
-        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _dateDuration_, _options_, %Temporal.Date% »).
+        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _dateDuration_, _options_, %Temporal.PlainDate% »).
         1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
         1. Let _intermediateInstant_ be ? GetTemporalInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
         1. Return ! AddInstant(_intermediateInstant_.[[Nanoseconds]], _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
