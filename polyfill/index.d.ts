@@ -1466,6 +1466,49 @@ export namespace Temporal {
      * Get the current calendar date and clock time in a specific calendar and
      * time zone.
      *
+     * The `calendar` parameter is required. When using the ISO 8601 calendar or
+     * if you don't understand the need for or implications of a calendar, then
+     * a more ergonomic alternative to this method is
+     * `Temporal.now.dateTimeISO()`.
+     *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
+     * @param {TimeZoneProtocol | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
+     * object implementing the time zone protocol. If omitted, the environment's
+     * current time zone will be used.
+     */
+    export function zonedDateTime(
+      calendar: CalendarProtocol | string,
+      tzLike?: TimeZoneProtocol | string
+    ): Temporal.ZonedDateTime;
+
+    /**
+     * Get the current calendar date and clock time in a specific time zone,
+     * using the ISO 8601 calendar.
+     *
+     * The `calendar` parameter is required. When using the ISO 8601 calendar or
+     * if you don't understand the need for or implications of a calendar, then
+     * a more ergonomic alternative to this method is
+     * `Temporal.now.zonedDateTimeISO()`.
+     *
+     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * a `Temporal.Calendar` instance, or an object implementing the calendar
+     * protocol.
+     * @param {TimeZoneProtocol | string} [tzLike] -
+     * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
+     * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
+     * object implementing the time zone protocol. If omitted, the environment's
+     * current time zone will be used.
+     */
+    export function zonedDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.ZonedDateTime;
+
+    /**
+     * Get the current calendar date and clock time in a specific calendar and
+     * time zone.
+     *
      * The calendar is required. When using the ISO 8601 calendar or if you
      * don't understand the need for or implications of a calendar, then a more
      * ergonomic alternative to this method is `Temporal.now.zonedDateTimeISO`.

@@ -116,6 +116,28 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.now.zoneddatetime">
+      <h1>Temporal.now.zonedDateTime ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
+      <p>
+        The `zonedDateTime` method takes two arguments, _calendar_ and _temporalTimeZoneLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.now.zoneddatetimeiso">
+      <h1>Temporal.now.zonedDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
+      <p>
+        The `zonedDateTimeISO` method takes one argument _temporalTimeZoneLike_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.now.plaindate">
       <h1>Temporal.now.plainDate ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
       <p>
@@ -164,18 +186,26 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systeminstant" aoid="SystemInstant">
-      <h1>SystemInstant ( )</h1>
+    <emu-clause id="sec-temporal-systemutcepochnanoseconds" aoid="SystemUTCEpochNanoseconds">
+      <h1>SystemUTCEpochNanoseconds ( )</h1>
       <emu-alg>
         1. Let _ns_ be the approximate current UTC date and time, in nanoseconds since the epoch.
         1. Assert: ! ValidateInstant(_ns_) is *true*.
-        1. Return ? CreateTemporalInstant(_ns_).
+        1. Return _ns_.
       </emu-alg>
       <emu-note>
         <p>The precision of the result depends on the host. In particular, web browsers artificially
         limit it to prevent abuse of security flaws (e.g., Spectre) and to avoid certain methods of
         fingerprinting.</p>
       </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-systeminstant" aoid="SystemInstant">
+      <h1>SystemInstant ( )</h1>
+      <emu-alg>
+        1. Let _ns_ be ? SystemUTCEpochNanoseconds().
+        1. Return ? CreateTemporalInstant(_ns_).
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-systemdatetime" aoid="SystemDateTime">
@@ -191,6 +221,22 @@
           1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _instant_ be ? SystemInstant().
         1. Return ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-systemzoneddatetime" aoid="SystemZonedDateTime">
+      <h1>SystemZonedDateTime ( [ _temporalTimeZoneLike_ [ , _calendarLike_ ] ] )</h1>
+      <emu-alg>
+        1. If _temporalTimeZoneLike_ is *undefined*, then
+          1. Let _timeZone_ be ? SystemTimeZone().
+        1. Else,
+          1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. If _calendarLike_ is *undefined*, then
+          1. Let _calendar_ be ? GetISO8601Calendar().
+        1. Else,
+          1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _ns_ be ? SystemUTCEpochNanoseconds().
+        1. Return ? CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
