@@ -855,23 +855,23 @@ describe('Date', () => {
       equal(new PlainDate(1914, 2, 23).toString(), '1914-02-23');
     });
     const d = new PlainDate(1976, 11, 18);
-    it('shows only non-ISO calendar if calendar = auto', () => {
-      equal(d.toString({ calendar: 'auto' }), '1976-11-18');
-      equal(d.withCalendar('gregory').toString({ calendar: 'auto' }), '1976-11-18[c=gregory]');
+    it('shows only non-ISO calendar if calendarName = auto', () => {
+      equal(d.toString({ calendarName: 'auto' }), '1976-11-18');
+      equal(d.withCalendar('gregory').toString({ calendarName: 'auto' }), '1976-11-18[c=gregory]');
     });
-    it('shows ISO calendar if calendar = always', () => {
-      equal(d.toString({ calendar: 'always' }), '1976-11-18[c=iso8601]');
+    it('shows ISO calendar if calendarName = always', () => {
+      equal(d.toString({ calendarName: 'always' }), '1976-11-18[c=iso8601]');
     });
-    it('omits non-ISO calendar if calendar = never', () => {
-      equal(d.withCalendar('gregory').toString({ calendar: 'never' }), '1976-11-18');
+    it('omits non-ISO calendar if calendarName = never', () => {
+      equal(d.withCalendar('gregory').toString({ calendarName: 'never' }), '1976-11-18');
     });
     it('default is calendar = auto', () => {
       equal(d.toString(), '1976-11-18');
       equal(d.withCalendar('gregory').toString(), '1976-11-18[c=gregory]');
     });
     it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
-        throws(() => d.toString({ calendar }), RangeError);
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
+        throws(() => d.toString({ calendarName }), RangeError);
       });
     });
   });

@@ -1084,23 +1084,23 @@ describe('Time', () => {
       equal(t3.toString(), '15:23:30.1234');
     });
     const t3g = new PlainTime(15, 23, 30, 123, 400, 0, 'gregory');
-    it('shows only non-ISO calendar if calendar = auto', () => {
-      equal(t3.toString({ calendar: 'auto' }), '15:23:30.1234');
-      equal(t3g.toString({ calendar: 'auto' }), '15:23:30.1234[c=gregory]');
+    it('shows only non-ISO calendar if calendarName = auto', () => {
+      equal(t3.toString({ calendarName: 'auto' }), '15:23:30.1234');
+      equal(t3g.toString({ calendarName: 'auto' }), '15:23:30.1234[c=gregory]');
     });
-    it('shows ISO calendar if calendar = always', () => {
-      equal(t3.toString({ calendar: 'always' }), '15:23:30.1234[c=iso8601]');
+    it('shows ISO calendar if calendarName = always', () => {
+      equal(t3.toString({ calendarName: 'always' }), '15:23:30.1234[c=iso8601]');
     });
-    it('omits non-ISO calendar if calendar = never', () => {
-      equal(t3g.toString({ calendar: 'never' }), '15:23:30.1234');
+    it('omits non-ISO calendar if calendarName = never', () => {
+      equal(t3g.toString({ calendarName: 'never' }), '15:23:30.1234');
     });
     it('default is calendar = auto', () => {
       equal(t3.toString(), '15:23:30.1234');
       equal(t3g.toString(), '15:23:30.1234[c=gregory]');
     });
     it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
-        throws(() => t3.toString({ calendar }), RangeError);
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
+        throws(() => t3.toString({ calendarName }), RangeError);
       });
     });
     it('truncates to minute', () => {

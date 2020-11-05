@@ -905,7 +905,7 @@ describe('ZonedDateTime', () => {
     it('throws if given a Temporal object with a time zone', () => {
       throws(() => zdt.with(dstStartDay), TypeError);
     });
-    it('throws if calendar is included', () => {
+    it('throws if calendarName is included', () => {
       throws(() => zdt.with({ month: 2, calendar: 'japanese' }), TypeError);
     });
     it('throws if given a Temporal object with a calendar', () => {
@@ -1311,7 +1311,7 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.equals({ year: 1969, month: 12, timeZone: 'America/New_York' }), TypeError);
       throws(() => zdt.equals({ year: 1969, month: 12, day: 31 }), TypeError);
       throws(
-        () => zdt.equals({ years: 1969, months: 12, days: 31, timeZone: 'America/New_York', calendar: 'gregory' }),
+        () => zdt.equals({ years: 1969, months: 12, days: 31, timeZone: 'America/New_York', calendarName: 'gregory' }),
         TypeError
       );
     });
@@ -1325,26 +1325,29 @@ describe('ZonedDateTime', () => {
       equal(zdt2.toString(), '1976-11-18T15:23:30+01:00[Europe/Vienna]');
       equal(zdt3.toString(), '1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
     });
-    it('shows only non-ISO calendar if calendar = auto', () => {
-      equal(zdt1.toString({ calendar: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+    it('shows only non-ISO calendar if calendarName = auto', () => {
+      equal(zdt1.toString({ calendarName: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
       equal(
-        zdt1.withCalendar('gregory').toString({ calendar: 'auto' }),
+        zdt1.withCalendar('gregory').toString({ calendarName: 'auto' }),
         '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]'
       );
     });
-    it('shows ISO calendar if calendar = always', () => {
-      equal(zdt1.toString({ calendar: 'always' }), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=iso8601]');
+    it('shows ISO calendar if calendarName = always', () => {
+      equal(zdt1.toString({ calendarName: 'always' }), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=iso8601]');
     });
-    it('omits non-ISO calendar if calendar = never', () => {
-      equal(zdt1.withCalendar('gregory').toString({ calendar: 'never' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
+    it('omits non-ISO calendar if calendarName = never', () => {
+      equal(
+        zdt1.withCalendar('gregory').toString({ calendarName: 'never' }),
+        '1976-11-18T15:23:00+01:00[Europe/Vienna]'
+      );
     });
     it('default is calendar = auto', () => {
       equal(zdt1.toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
       equal(zdt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]');
     });
     it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendar) => {
-        throws(() => zdt1.toString({ calendar }), RangeError);
+      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
+        throws(() => zdt1.toString({ calendarName }), RangeError);
       });
     });
     it('shows time zone if timeZoneName = auto', () => {
@@ -1361,10 +1364,10 @@ describe('ZonedDateTime', () => {
     });
     it('combinations of calendar, time zone, and offset', () => {
       const zdt = zdt1.withCalendar('gregory');
-      equal(zdt.toString({ timeZoneName: 'never', calendar: 'never' }), '1976-11-18T15:23:00+01:00');
-      equal(zdt.toString({ offset: 'never', calendar: 'never' }), '1976-11-18T15:23:00[Europe/Vienna]');
+      equal(zdt.toString({ timeZoneName: 'never', calendarName: 'never' }), '1976-11-18T15:23:00+01:00');
+      equal(zdt.toString({ offset: 'never', calendarName: 'never' }), '1976-11-18T15:23:00[Europe/Vienna]');
       equal(zdt.toString({ offset: 'never', timeZoneName: 'never' }), '1976-11-18T15:23:00[c=gregory]');
-      equal(zdt.toString({ offset: 'never', timeZoneName: 'never', calendar: 'never' }), '1976-11-18T15:23:00');
+      equal(zdt.toString({ offset: 'never', timeZoneName: 'never', calendarName: 'never' }), '1976-11-18T15:23:00');
     });
     it('truncates to minute', () => {
       [zdt1, zdt2, zdt3].forEach((zdt) =>
