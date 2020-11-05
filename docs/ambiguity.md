@@ -48,11 +48,11 @@ These changes usually affect only future date/time values, but occasionally fixe
 In Temporal:
 
 - The [`Temporal.Instant`](./instant.md) type represents exact time only.
-- The [`Temporal.DateTime`](./datetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.Date`](./date.md), [`Temporal.Time`](./time.md), [`Temporal.YearMonth`](./yearmonth.md), and [`Temporal.MonthDay`](./monthday.md).
+- The [`Temporal.PlainDateTime`](./datetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.PlainDate`](./date.md), [`Temporal.PlainTime`](./time.md), [`Temporal.PlainYearMonth`](./yearmonth.md), and [`Temporal.PlainMonthDay`](./monthday.md).
   These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
 - The [`Temporal.TimeZone`](./timezone.md) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
   It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.
-- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.DateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
+- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.PlainDateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
@@ -96,15 +96,15 @@ Conversions from calendar date and/or wall clock time to exact time are also sup
 <!-- prettier-ignore-start -->
 ```javascript
 // Convert various local time types to an exact time type by providing a time zone
-date = Temporal.Date.from('2019-12-17');
+date = Temporal.PlainDate.from('2019-12-17');
 zdt = date.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T00:00+09:00[Asia/Tokyo]
-zdt = date.toZonedDateTime('Asia/Tokyo', Temporal.Time.from('10:00'));
+zdt = date.toZonedDateTime('Asia/Tokyo', Temporal.PlainTime.from('10:00'));
   // => 2019-12-17T10:00+09:00[Asia/Tokyo]
-time = Temporal.Time.from('14:35');
-zdt = time.toZonedDateTime('Asia/Tokyo', Temporal.Date.from('2020-08-27'));
+time = Temporal.PlainTime.from('14:35');
+zdt = time.toZonedDateTime('Asia/Tokyo', Temporal.PlainDate.from('2020-08-27'));
   // => 020-08-27T14:35+09:00[Asia/Tokyo]
-dateTime = Temporal.DateTime.from('2019-12-17T07:48');
+dateTime = Temporal.PlainDateTime.from('2019-12-17T07:48');
 zdt = dateTime.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T07:48+09:00[Asia/Tokyo]
 
@@ -162,12 +162,12 @@ However, opportunities for ambiguity are present when creating an exact-time typ
 <!-- prettier-ignore-start -->
 ```javascript
 // Offset is not known. Ambiguity is possible!
-zdt = Temporal.Date('2019-02-19').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
-zdt = Temporal.DateTime('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
+zdt = Temporal.PlainDate('2019-02-19').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
+zdt = Temporal.PlainDateTime('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 
 // Even if the offset is present in the source string, if the type (like DateTime)
 // isn't an exact type then the offset is ignored when parsing so ambiguity is possible.
-dt = Temporal.DateTime.from('2019-02-19T00:00-03:00');
+dt = Temporal.PlainDateTime.from('2019-02-19T00:00-03:00');
 zdt = dt.toZonedDateTimeISO('America/Sao_Paulo'); // can be ambiguous
 inst = dt.toInstantISO('America/Sao_Paulo'); // can be ambiguous
 
@@ -195,12 +195,12 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 
 Methods where this option is present include:
 
-- [`Temporal.Date.prototype.toZonedDateTime`](./date.md#toZonedDateTime)
-- [`Temporal.Time.prototype.toZonedDateTime`](./time.md#toZonedDateTime)
-- [`Temporal.DateTime.prototype.toZonedDateTime`](./datetime.md#toZonedDateTime)
-- [`Temporal.DateTime.prototype.toInstant`](./datetime.md#toInstant)
-- [`Temporal.YearMonth.prototype.toZonedDateTime`](./yearmonth.md#toZonedDateTime)
-- [`Temporal.MonthDay.prototype.toZonedDateTime`](./monthday.md#toZonedDateTime)
+- [`Temporal.PlainDate.prototype.toZonedDateTime`](./date.md#toZonedDateTime)
+- [`Temporal.PlainTime.prototype.toZonedDateTime`](./time.md#toZonedDateTime)
+- [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./datetime.md#toZonedDateTime)
+- [`Temporal.PlainDateTime.prototype.toInstant`](./datetime.md#toInstant)
+- [`Temporal.PlainYearMonth.prototype.toZonedDateTime`](./yearmonth.md#toZonedDateTime)
+- [`Temporal.PlainMonthDay.prototype.toZonedDateTime`](./monthday.md#toZonedDateTime)
 - [`Temporal.TimeZone.prototype.getZonedDateTimeFor`](./timezone.md#getZonedDateTimeFor).
 - [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 

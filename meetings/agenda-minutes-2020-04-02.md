@@ -28,7 +28,7 @@
   - SFC: We had a separate discussion about what type it should return, and I think it should return a Date object.
   - PDL: I think the original behaviour described in the issue is the expected behaviour.
   - SFC: I agree, but this is about dateFromFields not being able to return a polymorphic Date.
-  - PFC: from() could also copy the Temporal.Date returned from dateFromFields into the polymorphic type.
+  - PFC: from() could also copy the Temporal.PlainDate returned from dateFromFields into the polymorphic type.
   - SFC: OK, we can close the issue.
   - RGN: This increases the burden for virtualization. Anything that has a secret reference to a constructor has to be patched for SES, for example.
   - PDL: That is not correct. All the Temporal classes would remain the same across SES. What we want to disallow is data from the outside.
@@ -42,7 +42,7 @@
   - USA: What do people think of this suggestion?
   - SFC: I would prefer toJSON() return the object and toISOString() return the string. It would help preserve the calendar information in serialization.
   - PDL: How do you clearly separate inside a JSON whether a particular object is a Temporal object? With string parsing, you can easily see whether a string is an ISO 8601 string. And if you keep it as a string, then most databases can also correctly handle it as a date.
-  - RGN: I disagree; detecting when deserializing JSON whether any given value is or is not Temporal, is equally challenging whether that value is a string or object. However, I don't think that affects the decision whether toJSON() should return a string or object. For example, if you say that anything that *can* deserialize to a Temporal.Date, *should*, then you will include things that should not be included, and that's the case regardless of strings or objects.
+  - RGN: I disagree; detecting when deserializing JSON whether any given value is or is not Temporal, is equally challenging whether that value is a string or object. However, I don't think that affects the decision whether toJSON() should return a string or object. For example, if you say that anything that *can* deserialize to a Temporal.PlainDate, *should*, then you will include things that should not be included, and that's the case regardless of strings or objects.
   - USA: You can pass either strings or property bags to from(), so that doesn't matter for deserialization.
   - PDL: I'm thinking in terms of what the typical web developer does. If you are serializing a Temporal object to send as a request payload to some backend, then an ISO string is far more convenient.
   - RGN: I agree, in the common case, then you probably want toJSON() to be a string, because it's probably for interchange with a remote system.
@@ -57,7 +57,7 @@
   - Consensus on calling the method getFields(). It returns a new JS object whose prototype is Object, with all the fields as enumerable, writable own data properties. 
 - Next steps for calendar
   - [#354](https://github.com/tc39/proposal-temporal/issues/354) How is data passed into the calendar methods?
-    - SFC: We have Calendar.p.dateFromFields that works as expected. But when you call Temporal.Date.p.
+    - SFC: We have Calendar.p.dateFromFields that works as expected. But when you call Temporal.PlainDate.p.
     - PDL: Am I understanding correctly? Because we proxy operations into Calendar, only full Temporal objects are passed into Calendar operations, so it should throw if it gets an object that doesn't have the slots?
     - SFC: But how does a custom calendar access those slots? Built-in calendars would access the slots directly.
     - USA: With getFields()?

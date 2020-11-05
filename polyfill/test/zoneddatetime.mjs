@@ -695,7 +695,7 @@ describe('ZonedDateTime', () => {
   });
 
   describe('ZonedDateTime.with()', () => {
-    const zdt = new Temporal.DateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789).toZonedDateTime('UTC');
+    const zdt = new Temporal.PlainDateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789).toZonedDateTime('UTC');
     it('zdt.with({ year: 2019 } works', () => {
       equal(`${zdt.with({ year: 2019 })}`, '2019-11-18T15:23:30.123456789+00:00[UTC]');
     });
@@ -909,11 +909,11 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.with({ month: 2, calendar: 'japanese' }), TypeError);
     });
     it('throws if given a Temporal object with a calendar', () => {
-      throws(() => zdt.with(Temporal.DateTime.from('1976-11-18T12:00')), TypeError);
-      throws(() => zdt.with(Temporal.Date.from('1976-11-18')), TypeError);
-      throws(() => zdt.with(Temporal.Time.from('12:00')), TypeError);
-      throws(() => zdt.with(Temporal.YearMonth.from('1976-11')), TypeError);
-      throws(() => zdt.with(Temporal.MonthDay.from('11-18')), TypeError);
+      throws(() => zdt.with(Temporal.PlainDateTime.from('1976-11-18T12:00')), TypeError);
+      throws(() => zdt.with(Temporal.PlainDate.from('1976-11-18')), TypeError);
+      throws(() => zdt.with(Temporal.PlainTime.from('12:00')), TypeError);
+      throws(() => zdt.with(Temporal.PlainYearMonth.from('1976-11')), TypeError);
+      throws(() => zdt.with(Temporal.PlainMonthDay.from('11-18')), TypeError);
     });
     it('throws if given a string', () => {
       throws(() => zdt.with('1976-11-18T12:00+00:00[UTC]'), TypeError);
@@ -1648,9 +1648,12 @@ describe('ZonedDateTime', () => {
     });
   });
 
-  const hourBeforeDstStart = ZonedDateTime.from({ ...new Temporal.DateTime(2020, 3, 8, 1).getFields(), timeZone: tz });
+  const hourBeforeDstStart = ZonedDateTime.from({
+    ...new Temporal.PlainDateTime(2020, 3, 8, 1).getFields(),
+    timeZone: tz
+  });
   const dayBeforeDstStart = ZonedDateTime.from({
-    ...new Temporal.DateTime(2020, 3, 7, 2, 30).getFields(),
+    ...new Temporal.PlainDateTime(2020, 3, 7, 2, 30).getFields(),
     timeZone: tz
   });
   describe('properties around DST', () => {
@@ -1811,7 +1814,7 @@ describe('ZonedDateTime', () => {
       const clockBefore = ZonedDateTime.from('1999-12-31T23:30-08:00[America/Vancouver]');
       const clockAfter = ZonedDateTime.from('2000-01-01T01:30-04:00[America/Halifax]');
       equal(ZonedDateTime.compare(clockBefore, clockAfter), 1);
-      equal(Temporal.DateTime.compare(clockBefore.toPlainDateTime(), clockAfter.toPlainDateTime()), -1);
+      equal(Temporal.PlainDateTime.compare(clockBefore.toPlainDateTime(), clockAfter.toPlainDateTime()), -1);
     });
   });
 });

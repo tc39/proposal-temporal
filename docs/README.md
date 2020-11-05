@@ -44,7 +44,7 @@ See [Temporal.now Documentation](./now.md) for detailed documentation.
 ### **Temporal.Instant**
 
 A `Temporal.Instant` represents a fixed point in time (called **"exact time"**), without regard to calendar or location.
-For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.ZonedDateTime` or `Temporal.DateTime`.
+For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.ZonedDateTime` or `Temporal.PlainDateTime`.
 
 See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
 
@@ -55,50 +55,50 @@ _NOTE: Not all methods of this type are available in the polyfill yet._
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular exact time from the perspective of a particular region on Earth.
 This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
 
-As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
+As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.PlainDateTime` (which includes `Temporal.Calendar`).
 
 See [Temporal.ZonedDateTime Documentation](./zoneddatetime.md) for detailed documentation.
 
-### **Temporal.Date**
+### **Temporal.PlainDate**
 
-A `Temporal.Date` object represents a calendar date that is not associated with a particular time or time zone.
+A `Temporal.PlainDate` object represents a calendar date that is not associated with a particular time or time zone.
 
-This can also be converted to partial dates such as `Temporal.YearMonth` and `Temporal.MonthDay`.
+This can also be converted to partial dates such as `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`.
 
-See [Temporal.Date Documentation](./date.md) for detailed documentation.
+See [Temporal.PlainDate Documentation](./date.md) for detailed documentation.
 
 #### Time Zones and Resolving Ambiguity
 
-Converting between wall-clock/calendar-date types (like `Temporal.Date`, `Temporal.Time`, and `Temporal.DateTime`) and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time.
+Converting between wall-clock/calendar-date types (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time.
 
 Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
 
-### **Temporal.Time**
+### **Temporal.PlainTime**
 
-A `Temporal.Time` object represents a wall-clock time that is not associated with a particular date or time zone.
+A `Temporal.PlainTime` object represents a wall-clock time that is not associated with a particular date or time zone.
 
-See [Temporal.Time Documentation](./time.md) for detailed documentation.
+See [Temporal.PlainTime Documentation](./time.md) for detailed documentation.
 
-### **Temporal.DateTime**
+### **Temporal.PlainDateTime**
 
-A `Temporal.DateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.ZonedDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
+A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.ZonedDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.ZonedDateTime` instead because that type automatically adjusts for Daylight Saving Time.
 
-See [Temporal.DateTime Documentation](./datetime.md) for detailed documentation.
+See [Temporal.PlainDateTime Documentation](./datetime.md) for detailed documentation.
 
-### **Temporal.YearMonth**
+### **Temporal.PlainYearMonth**
 
 A date without a day component.
 This is useful to express things like "the November 2010 meeting".
 
-See [Temporal.YearMonth Documentation](./yearmonth.md) for detailed documentation.
+See [Temporal.PlainYearMonth Documentation](./yearmonth.md) for detailed documentation.
 
-### **Temporal.MonthDay**
+### **Temporal.PlainMonthDay**
 
 A date without a year component.
 This is useful to express things like "Bastille Day is on the 14th of July".
 
-See [Temporal.MonthDay Documentation](./monthday.md) for detailed documentation.
+See [Temporal.PlainMonthDay Documentation](./monthday.md) for detailed documentation.
 
 ### **Temporal.Duration**
 
@@ -116,7 +116,7 @@ See [Duration balancing](./balancing.md) for more on this topic.
 ### **Temporal.TimeZone**
 
 A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset, or UTC itself.
-Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Instant` and `Temporal.DateTime` as well as finding out the offset at a specific `Temporal.Instant`.
+Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Instant` and `Temporal.PlainDateTime` as well as finding out the offset at a specific `Temporal.Instant`.
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
 A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
@@ -148,7 +148,7 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 - [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
 - [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
   Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
-- [Zoned Date/Time Type Draft](./zoneddatetime-draft.md) &mdash; Explanation of `Temporal.ZonedDateTime` which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the `Temporal.DateTime` API.
+- [Zoned Date/Time Type Draft](./zoneddatetime-draft.md) &mdash; Explanation of `Temporal.ZonedDateTime` which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the `Temporal.PlainDateTime` API.
   Superseded by the [documentation](./zoneddatetime.md), but contains background info about the reasons and goals behind this type.
 
 ## Object Relationship

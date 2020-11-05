@@ -34,14 +34,14 @@ describe('Temporal.now', () => {
   describe('Temporal.now.plainDateTimeISO()', () => {
     it('returns a DateTime in the ISO calendar', () => {
       const dt = Temporal.now.plainDateTimeISO();
-      assert(dt instanceof Temporal.DateTime);
+      assert(dt instanceof Temporal.PlainDateTime);
       equal(dt.calendar.id, 'iso8601');
     });
   });
   describe('Temporal.now.plainDateTime()', () => {
     it('returns a DateTime in the correct calendar', () => {
       const dt = Temporal.now.plainDateTime('gregory');
-      assert(dt instanceof Temporal.DateTime);
+      assert(dt instanceof Temporal.PlainDateTime);
       equal(dt.calendar.id, 'gregory');
     });
     it('requires a calendar', () => throws(() => Temporal.now.plainDateTime(), RangeError));
@@ -49,21 +49,21 @@ describe('Temporal.now', () => {
   describe('Temporal.now.plainDateISO()', () => {
     it('returns a Date in the ISO calendar', () => {
       const d = Temporal.now.plainDateISO();
-      assert(d instanceof Temporal.Date);
+      assert(d instanceof Temporal.PlainDate);
       equal(d.calendar.id, 'iso8601');
     });
   });
   describe('Temporal.now.plainDate()', () => {
     it('returns a Date in the correct calendar', () => {
       const d = Temporal.now.plainDate('gregory');
-      assert(d instanceof Temporal.Date);
+      assert(d instanceof Temporal.PlainDate);
       equal(d.calendar.id, 'gregory');
     });
     it('requires a calendar', () => throws(() => Temporal.now.plainDate(), RangeError));
   });
   describe('Temporal.now.plainTimeISO()', () => {
     it('Temporal.now.plainTimeISO() returns a Time', () =>
-      assert(Temporal.now.plainTimeISO() instanceof Temporal.Time));
+      assert(Temporal.now.plainTimeISO() instanceof Temporal.PlainTime));
   });
 });
 

@@ -8,7 +8,7 @@
  * Usually this is what you want. (FIXME: but is it?)
  * Use `sourceDisambiguationPolicy` to change this behaviour.
  *
- * @param {Temporal.DateTime} sourceDateTime - The local date and time
+ * @param {Temporal.PlainDateTime} sourceDateTime - The local date and time
  * @param {Temporal.TimeZone} sourceTimeZone - The time zone for
  *  `sourceDateTime`
  * @param {Temporal.TimeZone} targetTimeZone - The time zone for the
@@ -30,7 +30,7 @@ function getParseableZonedStringWithLocalTimeInOtherZone(
 }
 
 const result = getParseableZonedStringWithLocalTimeInOtherZone(
-  Temporal.DateTime.from('2020-01-09T00:00'),
+  Temporal.PlainDateTime.from('2020-01-09T00:00'),
   Temporal.TimeZone.from('America/Chicago'),
   Temporal.TimeZone.from('America/Los_Angeles')
 );

@@ -47,7 +47,7 @@
 - RGN: I don't necessarily support that we should say that that comparison is meaningful. We have to take it into account though.
 - SFC: That's unfortunate.
 - RGN: Although you can take a legacy Date object right now and compare it with a string.
-- PDL: For Temporal.Date, we can take the number of days since the epoch since that is the granularity we're working with.
+- PDL: For Temporal.PlainDate, we can take the number of days since the epoch since that is the granularity we're working with.
 - SFC: For MonthDay, we'd use the reference year and days since the epoch.
 - PDL: You could use day number in the leap year.
 - RGN: Reference year or epoch doesn't matter in this case.

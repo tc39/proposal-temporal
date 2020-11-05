@@ -220,7 +220,7 @@ function hasTimeOptions(options) {
 }
 
 function extractOverrides(temporalObj, main) {
-  const DateTime = GetIntrinsic('%Temporal.DateTime%');
+  const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
 
   if (ES.IsTemporalTime(temporalObj)) {
     const hour = GetSlot(temporalObj, ISO_HOUR);

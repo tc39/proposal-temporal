@@ -1,8 +1,8 @@
 /**
- * Converts a Temporal.DateTime instance into a Date.
+ * Converts a Temporal.PlainDateTime instance into a Date.
  * This is the inverse of dateTimeFrom legacy Date example
  *
- * @param {Temporal.DateTime} dateTime - This is a DateTime instance
+ * @param {Temporal.PlainDateTime} dateTime - This is a DateTime instance
  * @returns {Date} legacy Date instance
  */
 function getLegacyDateInUTCFromDateTime(dateTime) {
@@ -20,7 +20,7 @@ function getLegacyDateInUTCFromDateTime(dateTime) {
   );
 }
 
-const dateTime = Temporal.DateTime.from('2020-01-01T00:00:01.000999Z');
+const dateTime = Temporal.PlainDateTime.from('2020-01-01T00:00:01.000999Z');
 const result = getLegacyDateInUTCFromDateTime(dateTime);
 assert.equal(result.getUTCDate(), 1); // Day of the month
 assert.equal(result.getUTCFullYear(), 2020);

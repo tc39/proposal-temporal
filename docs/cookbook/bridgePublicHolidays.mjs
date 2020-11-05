@@ -3,9 +3,9 @@
  * weekend around a public holiday, "bridging" the holiday if it falls on a
  * Tuesday or Thursday.
  *
- * @param {Temporal.MonthDay} holiday - Yearly date on the calendar
+ * @param {Temporal.PlainMonthDay} holiday - Yearly date on the calendar
  * @param {number} year - Year in which to calculate the bridge days
- * @returns {Temporal.Date[]} List of dates to be taken off work
+ * @returns {Temporal.PlainDate[]} List of dates to be taken off work
  */
 function bridgePublicHolidays(holiday, year) {
   const date = holiday.toPlainDate({ year });
@@ -24,7 +24,7 @@ function bridgePublicHolidays(holiday, year) {
   }
 }
 
-const labourDay = Temporal.MonthDay.from('05-01');
+const labourDay = Temporal.PlainMonthDay.from('05-01');
 
 // No bridge day
 assert.deepEqual(

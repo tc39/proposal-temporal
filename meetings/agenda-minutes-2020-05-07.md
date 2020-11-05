@@ -83,7 +83,7 @@
 - SFC: I opened a PR to add myself. You can go ahead and do the same.
 
 ### [#522](https://github.com/tc39/proposal-temporal/issues/522), alternative time-telling systems
-- PFC: This is about whether Temporal.Time should have a calendar slot. Two questions, 1) Do any current 402 calendars have alternate time-telling systems? 2) If the answer to 1) is no, do we want it in (at least the first) edition of Temporal? I don't know the answer to 1) but my preference for 2) would be no.
+- PFC: This is about whether Temporal.PlainTime should have a calendar slot. Two questions, 1) Do any current 402 calendars have alternate time-telling systems? 2) If the answer to 1) is no, do we want it in (at least the first) edition of Temporal? I don't know the answer to 1) but my preference for 2) would be no.
 - DE: The answer to 1) is no, or  isn't it?
 - SFC: I don't know for sure. I don't think ICU has implemented alternate time-telling systems. It may be that there are systems in use that haven't been implemented yet.
 - USA: The Shaka calendar has alternate units of time that are used sometimes.

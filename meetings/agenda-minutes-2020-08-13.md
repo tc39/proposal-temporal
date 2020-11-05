@@ -64,7 +64,7 @@ Agenda + Notes:
 
     * PDL: How sure are we that this would pass the committee?
 
-    * JGT: What if you create a Temporal.Date with a custom calendar, and pass it across a realm boundary?
+    * JGT: What if you create a Temporal.PlainDate with a custom calendar, and pass it across a realm boundary?
 
     * PDL: That's a side channel communications ability.
 
@@ -78,7 +78,7 @@ Agenda + Notes:
 
     * RGN: The idea is that the implementation invokes system calls on the host. You can't do that yourself from JavaScript.
 
-    * JGT: It sounds like custom calendars are not a problem, then. What happens if I create a Temporal.Calendar object and then I stick my own properties and methods on that object and create a Temporal.Date with it. Is it a problem that we retain that object?
+    * JGT: It sounds like custom calendars are not a problem, then. What happens if I create a Temporal.Calendar object and then I stick my own properties and methods on that object and create a Temporal.PlainDate with it. Is it a problem that we retain that object?
 
     * RGN: I don't think so, because it doesn't affect the Temporal.Calendar builtin. All the activities are local to that object.
 

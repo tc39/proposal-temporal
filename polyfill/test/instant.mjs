@@ -1273,8 +1273,8 @@ describe('Instant', () => {
       equal(`${Instant.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00:00Z');
     });
     it('converting from DateTime', () => {
-      const min = Temporal.DateTime.from('-271821-04-19T00:00:00.000000001');
-      const max = Temporal.DateTime.from('+275760-09-13T23:59:59.999999999');
+      const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');
+      const max = Temporal.PlainDateTime.from('+275760-09-13T23:59:59.999999999');
       const utc = Temporal.TimeZone.from('UTC');
       throws(() => utc.getInstantFor(min), RangeError);
       throws(() => utc.getInstantFor(max), RangeError);

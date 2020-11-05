@@ -209,7 +209,7 @@
 
     * PFC: +1.
 
-    * SFC: 1) The two DateTime types are in different realms but do similar things, while Date and Time are in the same realm but do different things, so it makes sense for them to share a prefix. 2) It's always been a paper cut that we have a type named Date, we've worked around it by consistently referring to Temporal.Date and legacy Date, but a prefix would be better.
+    * SFC: 1) The two DateTime types are in different realms but do similar things, while Date and Time are in the same realm but do different things, so it makes sense for them to share a prefix. 2) It's always been a paper cut that we have a type named Date, we've worked around it by consistently referring to Temporal.PlainDate and legacy Date, but a prefix would be better.
 
     * PDL: A third argument is that it ought to be possible to have a ZonedDate or a ZonedTime.
 

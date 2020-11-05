@@ -1,8 +1,8 @@
 /**
  * Gets the first Tuesday of the month and returns its date
  *
- * @param {Temporal.YearMonth} queriedMonth - YearMonth instance to query
- * @returns {Temporal.Date} Temporal.Date Instance which gives first tuesday
+ * @param {Temporal.PlainYearMonth} queriedMonth - YearMonth instance to query
+ * @returns {Temporal.PlainDate} Temporal.PlainDate Instance which gives first tuesday
  */
 function getFirstTuesday(queriedMonth) {
   // We first need to convert to a date
@@ -18,7 +18,7 @@ function getFirstTuesday(queriedMonth) {
   return firstOfMonth.add({ days: [1, 0, 6, 5, 4, 3, 2][firstOfMonth.dayOfWeek - 1] });
 }
 
-const myMonth = Temporal.YearMonth.from('2020-02');
+const myMonth = Temporal.PlainYearMonth.from('2020-02');
 const firstTuesdayOfMonth = getFirstTuesday(myMonth);
 assert.equal(firstTuesdayOfMonth.toString(), '2020-02-04');
 assert.equal(firstTuesdayOfMonth.dayOfWeek, 2);
@@ -35,4 +35,4 @@ assert.equal(lastTuesday.toString(), '2020-02-25');
 assert.equal(lastTuesday.dayOfWeek, 2);
 // or:
 const lastTuesday2 = lastOfMonth.subtract({ days: (7 + lastOfMonth.dayOfWeek - 2) % 7 });
-assert.equal(Temporal.Date.compare(lastTuesday, lastTuesday2), 0);
+assert.equal(Temporal.PlainDate.compare(lastTuesday, lastTuesday2), 0);

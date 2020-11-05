@@ -1,5 +1,4 @@
-parse
-=====
+# parse
 
 Use cases we identified:
 
@@ -8,15 +7,16 @@ Use cases we identified:
 
 ## Pros and cons
 
-|   | 👍️ | 👎️ |
-|---|---|---|
-| Proposal 1. Always ISO 8601 semantics in from() | 👍️ **Parsing ISO** easy<br>👍️ Prioritizes common use case? | 👎️ **Parsing parts** needs workaround via Temporal.parse()<br>👎️ Inconsistency in not validating time zone offset/name mismatch |
-| Proposal 2. No irrelevant parts in from()       | 👍️ Always unambiguous about what parts of the string are parsed | 👎️ **Parsing ISO** needs workaround via Absolute.from() or Temporal.parse()<br>👎️ **Parsing parts** no easier than in proposal 1<br>👎️ Prioritizes less common use case?<br>  |
+|                                                 | 👍️                                                                                              | 👎️                                                                                                                                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proposal 1. Always ISO 8601 semantics in from() | 👍️ **Parsing ISO** easy<br>👍️ Prioritizes common use case?                                     | 👎️ **Parsing parts** needs workaround via Temporal.parse()<br>👎️ Inconsistency in not validating time zone offset/name mismatch                                                      |
+| Proposal 2. No irrelevant parts in from()       | 👍️ Always unambiguous about what parts of the string are parsed                                 | 👎️ **Parsing ISO** needs workaround via Absolute.from() or Temporal.parse()<br>👎️ **Parsing parts** no easier than in proposal 1<br>👎️ Prioritizes less common use case?<br>        |
 | Proposal 3. Irrelevant parts ignored in from()  | 👍️ **Parsing parts** easy<br>👍️ Temporal.parse() not needed<br>👍️ from() less likely to throw | 👎️ from() is a mix of **parsing ISO** and **parsing parts**<br>👎️ Can parse an ISO string and not get the result specified by ISO<br>👎️ Not clear what API to use for each use case |
 
 ## Details
 
 Here are some strings of interest, used in the examples below:
+
 ```javascript
 // Valid string
 valid = '2001-09-08T18:46:40-07:00[America/Vancouver]';
@@ -45,15 +45,16 @@ onlyDate = '2001-09-09';
 // In any of the proposals, these would only be accepted by YearMonth.from,
 // MonthDay.from, or Time.from, respectively
 onlyYearMonth = '2001-09';
-onlyMonthDay = '09-09';  // not valid ISO 8601, but we accept it in a MonthDay context
+onlyMonthDay = '09-09'; // not valid ISO 8601, but we accept it in a MonthDay context
 onlyTime = '01:46:40';
 ```
 
 The Temporal.parse() assumed in this document has been repurposed from its original intent, for extracting component parts of an ISO 8601 string, for the case where you need to ignore the other parts.
 
 So, for example, on the above strings:
+
 ```javascript
-Temporal.parse(valid)
+Temporal.parse(valid);
 // {
 //   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
@@ -64,7 +65,7 @@ Temporal.parse(valid)
 //   offset: '-07:00',
 //   timeZone: 'America/Vancouver',
 // }
-Temporal.parse(time24)
+Temporal.parse(time24);
 // {
 //   instant: '2020-04-07T24:00:00-07:00[America/Vancouver]',
 //   dateTime: '2020-04-07T24:00:00',
@@ -75,7 +76,7 @@ Temporal.parse(time24)
 //   offset: '-07:00',
 //   timeZone: 'America/Vancouver',
 // }
-Temporal.parse(invalidZone)
+Temporal.parse(invalidZone);
 // {
 //   instant: '2001-09-08T18:46:40+01:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
@@ -86,7 +87,7 @@ Temporal.parse(invalidZone)
 //   offset: '+01:00',
 //   timeZone: 'America/Vancouver',
 // }
-Temporal.parse(invalidDate)
+Temporal.parse(invalidDate);
 // {
 //   instant: '2020-99-99T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2020-99-99T18:46:40',
@@ -97,7 +98,7 @@ Temporal.parse(invalidDate)
 //   offset: '-07:00',
 //   timeZone: 'America/Vancouver',
 // }
-Temporal.parse(invalidTime)
+Temporal.parse(invalidTime);
 // {
 //   instant: '2001-09-08T99:99:99-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T99:99:99',
@@ -108,7 +109,7 @@ Temporal.parse(invalidTime)
 //   offset: '-07:00',
 //   timeZone: 'America/Vancouver',
 // }
-Temporal.parse(onlyOffset)
+Temporal.parse(onlyOffset);
 // {
 //   instant: '2001-09-08T18:46:40-07:00[America/Vancouver]',
 //   dateTime: '2001-09-08T18:46:40',
@@ -119,7 +120,7 @@ Temporal.parse(onlyOffset)
 //   offset: '-07:00',
 //   timeZone: '-07:00',  /* or null? */
 // }
-Temporal.parse(onlyDateTime)
+Temporal.parse(onlyDateTime);
 // {
 //   instant: null,
 //   dateTime: '2001-09-09T01:46:40',
@@ -130,7 +131,7 @@ Temporal.parse(onlyDateTime)
 //   offset: null,
 //   timeZone: null,
 // }
-Temporal.parse(onlyDate)
+Temporal.parse(onlyDate);
 // {
 //   instant: null,
 //   dateTime: null,  // time doesn't default to midnight in parse()
@@ -141,7 +142,7 @@ Temporal.parse(onlyDate)
 //   offset: null,
 //   timeZone: null,
 // }
-Temporal.parse(onlyTime)
+Temporal.parse(onlyTime);
 // {
 //   instant: null,
 //   dateTime: null,
@@ -166,19 +167,19 @@ The reason for this is that political changes (abolishing DST, for example) may 
 
 ```javascript
 Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
-Temporal.DateTime.from(valid)  // => 2001-09-08T18:46:40
-Temporal.Date.from(valid)      // => 2001-09-08
-Temporal.YearMonth.from(valid) // => 2001-09
-Temporal.MonthDay.from(valid)  // => 09-08
-Temporal.Time.from(valid)      // => 18:46:40
+Temporal.PlainDateTime.from(valid)  // => 2001-09-08T18:46:40
+Temporal.PlainDate.from(valid)      // => 2001-09-08
+Temporal.PlainYearMonth.from(valid) // => 2001-09
+Temporal.PlainMonthDay.from(valid)  // => 09-08
+Temporal.PlainTime.from(valid)      // => 18:46:40
 Temporal.TimeZone.from(valid)  // => America/Vancouver
 
 Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
-Temporal.DateTime.from(time24)  // => 2020-04-08T00:00
-Temporal.Date.from(time24)      // => 2020-04-08
-Temporal.YearMonth.from(time24) // => 2020-04
-Temporal.MonthDay.from(time24)  // => 04-08
-Temporal.Time.from(time24)      // => 00:00
+Temporal.PlainDateTime.from(time24)  // => 2020-04-08T00:00
+Temporal.PlainDate.from(time24)      // => 2020-04-08
+Temporal.PlainYearMonth.from(time24) // => 2020-04
+Temporal.PlainMonthDay.from(time24)  // => 04-08
+Temporal.PlainTime.from(time24)      // => 00:00
 Temporal.TimeZone.from(time24)  // => America/Vancouver
 
 Temporal.Instant.from(invalidZone)  // throws
@@ -187,19 +188,19 @@ Temporal.*.from(invalidDate)  // throws
 Temporal.*.from(invalidTime)  // throws
 
 Temporal.Instant.from(onlyDateTime)  // throws
-Temporal.DateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
-Temporal.Date.from(onlyDateTime)      // => 2001-09-09
-Temporal.YearMonth.from(onlyDateTime) // => 2001-09
-Temporal.MonthDay.from(onlyDateTime)  // => 09-09
-Temporal.Time.from(onlyDateTime)      // => 01:46:40
+Temporal.PlainDateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
+Temporal.PlainDate.from(onlyDateTime)      // => 2001-09-09
+Temporal.PlainYearMonth.from(onlyDateTime) // => 2001-09
+Temporal.PlainMonthDay.from(onlyDateTime)  // => 09-09
+Temporal.PlainTime.from(onlyDateTime)      // => 01:46:40
 Temporal.TimeZone.from(onlyDateTime)  // throws
 
 Temporal.Instant.from(onlyDate)  // throws
-Temporal.DateTime.from(onlyDate)  // => 2001-09-09T00:00
-Temporal.Date.from(onlyDate)      // => 2001-09-09
-Temporal.YearMonth.from(onlyDate) // => 2001-09
-Temporal.MonthDay.from(onlyDate)  // => 09-09
-Temporal.Time.from(onlyDate)      // => 00:00
+Temporal.PlainDateTime.from(onlyDate)  // => 2001-09-09T00:00
+Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
+Temporal.PlainYearMonth.from(onlyDate) // => 2001-09
+Temporal.PlainMonthDay.from(onlyDate)  // => 09-09
+Temporal.PlainTime.from(onlyDate)      // => 00:00
 Temporal.TimeZone.from(onlyDate)  // throws
 ```
 
@@ -214,20 +215,20 @@ Temporal.parse(valid);
 parsed = Temporal.parse(time24);
 // The following would give different results than passing the string directly
 // to from():
-Temporal.Date.from(parsed.date)          // => 2020-04-07
-Temporal.MonthDay.from(parsed.monthDay)  // => 04-07
-Temporal.time.from(parsed.time)          // throws? it's still valid ISO 8601 though
+Temporal.PlainDate.from(parsed.date); // => 2020-04-07
+Temporal.PlainMonthDay.from(parsed.monthDay); // => 04-07
+Temporal.time.from(parsed.time); // throws? it's still valid ISO 8601 though
 
 parsed = Temporal.parse(invalidZone);
-Temporal.Instant.from(parsed.instant)  // throws
-Temporal.DateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
+Temporal.Instant.from(parsed.instant); // throws
+Temporal.PlainDateTime.from(parsed.dateTime); // => 2001-09-08T18:46:40
 // etc.
 
 // Likewise:
-Temporal.DateTime.from(Temporal.parse(invalidDate).dateTime)  // throws
-Temporal.DateTime.from(Temporal.parse(invalidTime).dateTime)  // throws
-Temporal.Time.from(Temporal.parse(invalidDate).time)  // => 18:46:40
-Temporal.Date.from(Temporal.parse(invalidTime).date)  // => 2001-09-08
+Temporal.PlainDateTime.from(Temporal.parse(invalidDate).dateTime); // throws
+Temporal.PlainDateTime.from(Temporal.parse(invalidTime).dateTime); // throws
+Temporal.PlainTime.from(Temporal.parse(invalidDate).time); // => 18:46:40
+Temporal.PlainDate.from(Temporal.parse(invalidTime).date); // => 2001-09-08
 ```
 
 ## Proposal 2. No irrelevant parts in from()
@@ -236,15 +237,15 @@ Temporal.Date.from(Temporal.parse(invalidTime).date)  // => 2001-09-08
 
 ```javascript
 Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
-Temporal.DateTime.from(valid)  // throws
-Temporal.Date.from(valid)      // throws
-Temporal.YearMonth.from(valid) // throws
-Temporal.MonthDay.from(valid)  // throws
-Temporal.Time.from(valid)      // throws
+Temporal.PlainDateTime.from(valid)  // throws
+Temporal.PlainDate.from(valid)      // throws
+Temporal.PlainYearMonth.from(valid) // throws
+Temporal.PlainMonthDay.from(valid)  // throws
+Temporal.PlainTime.from(valid)      // throws
 Temporal.TimeZone.from(valid)  // throws
 
 parsed = Temporal.parse(valid);
-dateTime = Temporal.DateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
+dateTime = Temporal.PlainDateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
 dateTime.getDate()                                  // => 2001-09-08
 dateTime.getDate().getYearMonth()                   // => 2001-09
 dateTime.getDate().getMonthDay()                    // => 09-08
@@ -252,15 +253,15 @@ dateTime.getTime()                                  // => 18:46:40
 Temporal.TimeZone.from(parsed.timeZone)             // => America/Vancouver
 
 Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
-Temporal.DateTime.from(time24)  // throws
-Temporal.Date.from(time24)      // throws
-Temporal.YearMonth.from(time24) // throws
-Temporal.MonthDay.from(time24)  // throws
-Temporal.Time.from(time24)      // throws
+Temporal.PlainDateTime.from(time24)  // throws
+Temporal.PlainDate.from(time24)      // throws
+Temporal.PlainYearMonth.from(time24) // throws
+Temporal.PlainMonthDay.from(time24)  // throws
+Temporal.PlainTime.from(time24)      // throws
 Temporal.TimeZone.from(time24)  // throws
 
 parsed = Temporal.parse(time24);
-dateTime = Temporal.DateTime.from(parsed.dateTime);  // => 2020-04-08T00:00
+dateTime = Temporal.PlainDateTime.from(parsed.dateTime);  // => 2020-04-08T00:00
 dateTime.getDate()                                   // => 2020-04-08
 dateTime.getDate().getYearMonth()                    // => 2020-04
 dateTime.getDate().getMonthDay()                     // => 04-08
@@ -272,11 +273,11 @@ Temporal.*.from(invalidDate)  // throws
 Temporal.*.from(invalidTime)  // throws
 
 Temporal.Instant.from(onlyDateTime)  // throws
-dateTime = Temporal.DateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
-Temporal.Date.from(onlyDateTime)      // throws
-Temporal.YearMonth.from(onlyDateTime) // throws
-Temporal.MonthDay.from(onlyDateTime)  // throws
-Temporal.Time.from(onlyDateTime)      // throws
+dateTime = Temporal.PlainDateTime.from(onlyDateTime)  // 2001-09-09T01:46:40
+Temporal.PlainDate.from(onlyDateTime)      // throws
+Temporal.PlainYearMonth.from(onlyDateTime) // throws
+Temporal.PlainMonthDay.from(onlyDateTime)  // throws
+Temporal.PlainTime.from(onlyDateTime)      // throws
 Temporal.TimeZone.from(onlyDateTime)  // throws
 
 dateTime.getDate()                 // 2001-09-09
@@ -285,35 +286,35 @@ dateTime.getDate().getMonthDay()   // 09-09
 dateTime.getTime()                 // 01:46:40
 
 Temporal.Instant.from(onlyDate)  // throws
-Temporal.DateTime.from(onlyDate)  // throws
-Temporal.Date.from(onlyDate)      // => 2001-09-09
-Temporal.YearMonth.from(onlyDate) // throws
-Temporal.MonthDay.from(onlyDate)  // throws
-Temporal.Time.from(onlyDate)      // throws
+Temporal.PlainDateTime.from(onlyDate)  // throws
+Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
+Temporal.PlainYearMonth.from(onlyDate) // throws
+Temporal.PlainMonthDay.from(onlyDate)  // throws
+Temporal.PlainTime.from(onlyDate)      // throws
 Temporal.TimeZone.from(onlyDate)  // throws
 // No longer possible to get a DateTime with time defaulting to midnight, instead use:
-Temporal.Date.from(onlyDate).withTime(Temporal.Time.from('00:00'))  // => 2001-09-09T00:00
+Temporal.PlainDate.from(onlyDate).withTime(Temporal.PlainTime.from('00:00'))  // => 2001-09-09T00:00
 ```
 
 **Use case 2:** As in proposal 1.
 
 ## Proposal 3. Irrelevant parts ignored in from()
 
-**Use case 1:** Only Temporal.Instant().from() and Temporal.DateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.DateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.
+**Use case 1:** Only Temporal.Instant().from() and Temporal.PlainDateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.PlainDateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.
 
 Temporal.parse() isn't necessary in this scenario.
 
 ```javascript
 Temporal.Instant.from(valid)  // => 2001-09-09T01:46:40Z
-Temporal.DateTime.from(valid)  // => 2001-09-08T18:46:40
-Temporal.Date.from(valid)      // => 2001-09-08
-Temporal.YearMonth.from(valid) // => 2001-09
-Temporal.MonthDay.from(valid)  // => 09-08
-Temporal.Time.from(valid)      // => 18:46:40
+Temporal.PlainDateTime.from(valid)  // => 2001-09-08T18:46:40
+Temporal.PlainDate.from(valid)      // => 2001-09-08
+Temporal.PlainYearMonth.from(valid) // => 2001-09
+Temporal.PlainMonthDay.from(valid)  // => 09-08
+Temporal.PlainTime.from(valid)      // => 18:46:40
 Temporal.TimeZone.from(valid)  // => America/Vancouver
 
 Temporal.Instant.from(time24)              // => 2020-04-08T07:00Z
-dateTime = Temporal.DateTime.from(time24);  // => 2020-04-08T00:00
+dateTime = Temporal.PlainDateTime.from(time24);  // => 2020-04-08T00:00
 dateTime.getDate()                          // => 2020-04-08
 dateTime.getDate().getYearMonth()           // => 2020-04
 dateTime.getDate().getMonthDay()            // => 04-08
@@ -328,19 +329,19 @@ Temporal.{Absolute,Time,DateTime}.from(invalidTime)  // throws
 Temporal.{Date,YearMonth,MonthDay,TimeZone}.from(invalidTime)  // doesn't throw
 
 Temporal.Instant.from(onlyDateTime)  // throws
-Temporal.DateTime.from(onlyDateTime)  // => 2001-09-09T01:46:40
-Temporal.Date.from(onlyDateTime)      // => 2001-09-09
-Temporal.YearMonth.from(onlyDateTime) // => 2001-09
-Temporal.MonthDay.from(onlyDateTime)  // => 09-09
-Temporal.Time.from(onlyDateTime)      // => 01:46:40
+Temporal.PlainDateTime.from(onlyDateTime)  // => 2001-09-09T01:46:40
+Temporal.PlainDate.from(onlyDateTime)      // => 2001-09-09
+Temporal.PlainYearMonth.from(onlyDateTime) // => 2001-09
+Temporal.PlainMonthDay.from(onlyDateTime)  // => 09-09
+Temporal.PlainTime.from(onlyDateTime)      // => 01:46:40
 Temporal.TimeZone.from(onlyDateTime)  // throws
 
 Temporal.Instant.from(onlyDate)  // throws
-Temporal.DateTime.from(onlyDate)  // => 2001-09-09T00:00
-Temporal.Date.from(onlyDate)      // => 2001-09-09
-Temporal.YearMonth.from(onlyDate) // => 2001-09
-Temporal.MonthDay.from(onlyDate)  // => 09-09
-Temporal.Time.from(onlyDate)      // => 00:00
+Temporal.PlainDateTime.from(onlyDate)  // => 2001-09-09T00:00
+Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
+Temporal.PlainYearMonth.from(onlyDate) // => 2001-09
+Temporal.PlainMonthDay.from(onlyDate)  // => 09-09
+Temporal.PlainTime.from(onlyDate)      // => 00:00
 Temporal.TimeZone.from(onlyDate)  // throws
 ```
 
@@ -348,21 +349,21 @@ Temporal.TimeZone.from(onlyDate)  // throws
 
 ```javascript
 // The following would give different results than ISO 8601:
-Temporal.Date.from(time24)      // => 2020-04-07
-Temporal.MonthDay.from(time24)  // => 04-07
-Temporal.time.from(time24)      // throws
+Temporal.PlainDate.from(time24); // => 2020-04-07
+Temporal.PlainMonthDay.from(time24); // => 04-07
+Temporal.time.from(time24); // throws
 
-Temporal.DateTime.from(invalidZone)   // => 2001-09-08T18:46:40
-Temporal.Date.from(invalidZone)       // => 2001-09-08
-Temporal.YearMonth.from(invalidZone)  // => 2001-09
-Temporal.MonthDay.from(invalidZone)   // => 09-08
-Temporal.Time.from(invalidZone)       // => 18:46:40
-Temporal.TimeZone.from(invalidZone)   // => America/Vancouver
+Temporal.PlainDateTime.from(invalidZone); // => 2001-09-08T18:46:40
+Temporal.PlainDate.from(invalidZone); // => 2001-09-08
+Temporal.PlainYearMonth.from(invalidZone); // => 2001-09
+Temporal.PlainMonthDay.from(invalidZone); // => 09-08
+Temporal.PlainTime.from(invalidZone); // => 18:46:40
+Temporal.TimeZone.from(invalidZone); // => America/Vancouver
 
-Temporal.Date.from(invalidTime)       // => 2001-09-08
-Temporal.YearMonth.from(invalidTime)  // => 2001-09
-Temporal.MonthDay.from(invalidTime)   // => 09-08
-Temporal.TimeZone.from(invalidTime)   // => America/Vancouver
+Temporal.PlainDate.from(invalidTime); // => 2001-09-08
+Temporal.PlainYearMonth.from(invalidTime); // => 2001-09
+Temporal.PlainMonthDay.from(invalidTime); // => 09-08
+Temporal.TimeZone.from(invalidTime); // => America/Vancouver
 // etc.
 ```
 
@@ -383,7 +384,7 @@ The format is intended to be a combination of ISO 8601, RFC 3339, and JavaScript
 - A time zone offset of `"-00:00"` is allowed, and means the same thing as `"+00:00"`.
 - In a combined representation, combinations of date, time, and time zone offset with Basic (no `-` or `:` separators) and Extended (with `-` or `:` separators) formatting are allowed.
   (The date, time, and time zone offset must each be fully in Basic format or Extended format.)
-- When parsing a date representation for a Temporal.MonthDay, the year may be omitted.
+- When parsing a date representation for a Temporal.PlainMonthDay, the year may be omitted.
   The year may optionally be replaced by `"--"` as in RFC 3339.
-- When parsing a date representation without a day for a Temporal.YearMonth, the expression is allowed to be in Basic format.
+- When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in Basic format.
 - Anything else described by the standard as requiring mutual agreement between communicating parties, is disallowed.

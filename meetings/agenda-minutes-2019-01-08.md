@@ -1,4 +1,4 @@
-Temporal/Date call
+Temporal.PlainDate call
 
 January 8, 2019, 18:00 UTC
 

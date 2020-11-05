@@ -78,7 +78,7 @@ describe('fromString regex', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [y, mon, d, h = 0, min = 0, s = 0, ms = 0, µs = 0, ns = 0, cid = 'iso8601'] = components;
-        const datetime = Temporal.DateTime.from(isoString);
+        const datetime = Temporal.PlainDateTime.from(isoString);
         equal(datetime.year, y);
         equal(datetime.month, mon);
         equal(datetime.day, d);
@@ -148,7 +148,7 @@ describe('fromString regex', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [y, m, d, cid = 'iso8601'] = components;
-        const date = Temporal.Date.from(isoString);
+        const date = Temporal.PlainDate.from(isoString);
         equal(date.year, y);
         equal(date.month, m);
         equal(date.day, d);
@@ -212,7 +212,7 @@ describe('fromString regex', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [h = 0, m = 0, s = 0, ms = 0, µs = 0, ns = 0] = components;
-        const time = Temporal.Time.from(isoString);
+        const time = Temporal.PlainTime.from(isoString);
         equal(time.hour, h);
         equal(time.minute, m);
         equal(time.second, s);
@@ -276,7 +276,7 @@ describe('fromString regex', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [y, m, cid = 'iso8601'] = components;
-        const yearMonth = Temporal.YearMonth.from(isoString);
+        const yearMonth = Temporal.PlainYearMonth.from(isoString);
         equal(yearMonth.year, y);
         equal(yearMonth.month, m);
         equal(yearMonth.calendar.id, cid);
@@ -349,7 +349,7 @@ describe('fromString regex', () => {
     function test(isoString, components) {
       it(isoString, () => {
         const [m, d, cid = 'iso8601'] = components;
-        const monthDay = Temporal.MonthDay.from(isoString);
+        const monthDay = Temporal.PlainMonthDay.from(isoString);
         equal(monthDay.month, m);
         equal(monthDay.day, d);
         equal(monthDay.calendar.id, cid);

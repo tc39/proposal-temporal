@@ -107,8 +107,8 @@
 - RGN: That wasn't absurd a year ago when we were discussing what to name them.
 - SFC: Right, and we namespaced them in the Temporal object. I'm suggesting we go one step further and adjust the name of DateTime to help eliminate preconceptions.
 - JWS: I'm not convinced that that would help where better documentation or a flowchart wouldn't.
-- PDL: Let's approach it backwards. What if the issue is that DateTime has a suggestive name and the thing you usually want (Absolute) doesn't? What if we renamed Temporal.Absolute to Temporal.Timestamp?
-- SFC: I think that would help, or we could do both. I think the thought process of someone new to Temporal is "I want to store a date and time. What do I pick? Temporal.Absolute? I don't know what that is. Temporal.DateTime? Sounds right."
+- PDL: Let's approach it backwards. What if the issue is that DateTime has a suggestive name and the thing you usually want (Absolute) doesn't? What if we renamed Temporal.Absolute to Temporal.PlainTimestamp?
+- SFC: I think that would help, or we could do both. I think the thought process of someone new to Temporal is "I want to store a date and time. What do I pick? Temporal.Absolute? I don't know what that is. Temporal.PlainDateTime? Sounds right."
 - DE: I agree, but I'm not sure "DateAndTime" signifies enough. People still have to learn about calendar date and wall time.
 - PDL: I think we're talking about instinct, and running out of words.
 - SFC: Let's continue this discussion on [#569](https://github.com/tc39/proposal-temporal/issues/569) which I opened for this.

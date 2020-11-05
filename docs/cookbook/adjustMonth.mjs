@@ -1,4 +1,4 @@
-const date = Temporal.Date.from('2020-05-31');
+const date = Temporal.PlainDate.from('2020-05-31');
 
 // Same date and time, but in February
 // (and use the last day if the date doesn't exist in February):

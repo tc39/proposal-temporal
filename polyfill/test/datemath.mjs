@@ -58,7 +58,7 @@ describe('Date.since(normal, leap)', () => {
 });
 
 function build(name, sone, stwo) {
-  const [one, two] = [Temporal.Date.from(sone), Temporal.Date.from(stwo)].sort(Temporal.Date.compare);
+  const [one, two] = [Temporal.PlainDate.from(sone), Temporal.PlainDate.from(stwo)].sort(Temporal.PlainDate.compare);
   describe(name, () => {
     const largestUnits = ['years', 'months', 'weeks', 'days'];
     buildSub(one, two, largestUnits);

@@ -1,13 +1,13 @@
 /**
- * Converts a Date instance into a Temporal.DateTime instance
+ * Converts a Date instance into a Temporal.PlainDateTime instance
  * DateTime accepts an ISO String in its from() method, so if you need to convert a date to a datetime
  * you're best off passing the result of that
  *
  * @param {Date} legacyDate - This is a Date instance
- * @returns {Temporal.DateTime} Temporal.DateTime instance
+ * @returns {Temporal.PlainDateTime} Temporal.PlainDateTime instance
  */
 function getDateTimeFromLegacyDate(legacyDate) {
-  return Temporal.DateTime.from(legacyDate.toISOString());
+  return Temporal.PlainDateTime.from(legacyDate.toISOString());
 }
 
 const date = new Date('1970-01-01T00:00:01Z');

@@ -356,12 +356,12 @@ d.abs(); // PT8H30M
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'nearest'`.
-  - `relativeTo` (`Temporal.DateTime`): The starting point to use when converting between years, months, weeks, and days.
-    It must be a `Temporal.DateTime`, or a value that can be passed to `Temporal.DateTime.from()`.
+  - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
+    It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
 
 **Returns:** a new `Temporal.Duration` object which is `duration`, rounded and/or balanced.
 
-Rounds and/or balances `duration` to the given largest and smallest units and rounding increment, and returns the result as a new `Temporal.DateTime` object.
+Rounds and/or balances `duration` to the given largest and smallest units and rounding increment, and returns the result as a new `Temporal.PlainDateTime` object.
 
 The `largestUnit` determines the largest unit allowed in the result.
 It will cause units larger than `largestUnit` to be converted into smaller units, and units smaller than `largestUnit` to be converted into larger units as much as possible.
@@ -405,9 +405,9 @@ The `roundingMode` option controls how the rounding is performed.
   For this reason, `trunc` is recommended for most "round down" use cases.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a `Temporal.DateTime` instance.
-If any other type of value is given, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(..., { overflow: 'reject' })`.
-A `Temporal.Date` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.DateTime`.
+It is a `Temporal.PlainDateTime` instance.
+If any other type of value is given, then it will be converted to a `Temporal.PlainDateTime` as if it were passed to `Temporal.PlainDateTime.from(..., { overflow: 'reject' })`.
+A `Temporal.PlainDate` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.PlainDateTime`.
 
 Example usage:
 
@@ -439,7 +439,7 @@ d.round({
 
 // Normalize days into months or years
 d = Temporal.Duration.from({ days: 190 });
-refDate = Temporal.Date.from('2020-01-01');
+refDate = Temporal.PlainDate.from('2020-01-01');
 d.round({ relativeTo: refDate, largestUnit: 'years' }); // => P6M6D
 
 // Same, but in a different calendar system
@@ -477,8 +477,8 @@ quarters; // => 3
   - `unit` (string): The unit of time that will be returned.
     Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
     There is no default; `unit` is required.
-  - `relativeTo` (`Temporal.DateTime`): The starting point to use when converting between years, months, weeks, and days.
-    It must be a `Temporal.DateTime`, or a value that can be passed to `Temporal.DateTime.from()`.
+  - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
+    It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
 
 **Returns:** a floating-point number representing the number of desired units in the `Temporal.Duration`.
 
@@ -490,9 +490,9 @@ Interpreting years, months, or weeks requires a reference point.
 Therefore, `unit` is `'years'`, `'months'`, or `'weeks'`, or the duration has nonzero 'years', 'months', or 'weeks', then the `relativeTo` option is required.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a `Temporal.DateTime` instance.
-If any other type is provided, then it will be converted to a `Temporal.DateTime` as if it were passed to `Temporal.DateTime.from(..., { overflow: 'reject' })`.
-A `Temporal.Date` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.DateTime`.
+It is a `Temporal.PlainDateTime` instance.
+If any other type is provided, then it will be converted to a `Temporal.PlainDateTime` as if it were passed to `Temporal.PlainDateTime.from(..., { overflow: 'reject' })`.
+A `Temporal.PlainDate` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.PlainDateTime`.
 
 Example usage:
 

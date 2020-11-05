@@ -41,10 +41,10 @@ describe('Userland calendar', () => {
     }
 
     const obj = new ZeroBasedCalendar();
-    const date = Temporal.Date.from({ year: 2020, month: 5, day: 5, calendar: obj });
-    const dt = Temporal.DateTime.from({ year: 2020, month: 5, day: 5, hour: 12, calendar: obj });
-    const ym = Temporal.YearMonth.from({ year: 2020, month: 5, calendar: obj });
-    const md = Temporal.MonthDay.from({ month: 5, day: 5, calendar: obj });
+    const date = Temporal.PlainDate.from({ year: 2020, month: 5, day: 5, calendar: obj });
+    const dt = Temporal.PlainDateTime.from({ year: 2020, month: 5, day: 5, hour: 12, calendar: obj });
+    const ym = Temporal.PlainYearMonth.from({ year: 2020, month: 5, calendar: obj });
+    const md = Temporal.PlainMonthDay.from({ month: 5, day: 5, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
     it('.id property', () => equal(obj.id, 'zero-based'));
@@ -53,8 +53,8 @@ describe('Userland calendar', () => {
       throws(() => Temporal.Calendar.from('zero-based'), RangeError);
       throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=zero-based]'), RangeError);
     });
-    it('Temporal.Date.from()', () => equal(`${date}`, '2020-06-05[c=zero-based]'));
-    it('Temporal.Date fields', () => {
+    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[c=zero-based]'));
+    it('Temporal.PlainDate fields', () => {
       equal(date.year, 2020);
       equal(date.month, 5);
       equal(date.day, 5);
@@ -64,11 +64,11 @@ describe('Userland calendar', () => {
       equal(date2.month, 0);
     });
     it('date.withCalendar()', () => {
-      const date2 = Temporal.Date.from('2020-06-05');
+      const date2 = Temporal.PlainDate.from('2020-06-05');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=zero-based]'));
-    it('Temporal.DateTime fields', () => {
+    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=zero-based]'));
+    it('Temporal.PlainDateTime fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
       equal(dt.day, 5);
@@ -84,11 +84,11 @@ describe('Userland calendar', () => {
       equal(dt2.month, 0);
     });
     it('datetime.withCalendar()', () => {
-      const dt2 = Temporal.DateTime.from('2020-06-05T12:00');
+      const dt2 = Temporal.PlainDateTime.from('2020-06-05T12:00');
       assert(dt2.withCalendar(obj).equals(dt));
     });
-    it('Temporal.YearMonth.from()', () => equal(`${ym}`, '2020-06-01[c=zero-based]'));
-    it('Temporal.YearMonth fields', () => {
+    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-06-01[c=zero-based]'));
+    it('Temporal.PlainYearMonth fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
     });
@@ -96,8 +96,8 @@ describe('Userland calendar', () => {
       const ym2 = ym.with({ month: 0 });
       equal(ym2.month, 0);
     });
-    it('Temporal.MonthDay.from()', () => equal(`${md}`, '1972-06-05[c=zero-based]'));
-    it('Temporal.MonthDay fields', () => {
+    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1972-06-05[c=zero-based]'));
+    it('Temporal.PlainMonthDay fields', () => {
       equal(dt.month, 5);
       equal(dt.day, 5);
     });
@@ -144,53 +144,53 @@ describe('Userland calendar', () => {
         assert(tz instanceof ZeroBasedCalendar);
       });
       it('works for Date.from(iso)', () => {
-        const d = Temporal.Date.from(iso);
+        const d = Temporal.PlainDate.from(iso);
         equal(`${d}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.from(props)', () => {
-        const d = Temporal.Date.from({ year: 1970, month: 0, day: 1, calendar: 'zero-based' });
+        const d = Temporal.PlainDate.from({ year: 1970, month: 0, day: 1, calendar: 'zero-based' });
         equal(`${d}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.with', () => {
-        const d1 = Temporal.Date.from('1970-02-01');
+        const d1 = Temporal.PlainDate.from('1970-02-01');
         const d2 = d1.with({ month: 0, calendar: 'zero-based' });
         equal(`${d2}`, '1970-01-01[c=zero-based]');
       });
       it('works for Date.withCalendar', () => {
-        const d = Temporal.Date.from('1970-01-01');
-        assert(d.withCalendar('zero-based').equals(Temporal.Date.from(iso)));
+        const d = Temporal.PlainDate.from('1970-01-01');
+        assert(d.withCalendar('zero-based').equals(Temporal.PlainDate.from(iso)));
       });
       it('works for DateTime.from(iso)', () => {
-        const dt = Temporal.DateTime.from(iso);
+        const dt = Temporal.PlainDateTime.from(iso);
         equal(`${dt}`, '1970-01-01T00:00:00[c=zero-based]');
       });
       it('works for DateTime.from(props)', () => {
-        const dt = Temporal.DateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
+        const dt = Temporal.PlainDateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
         equal(`${dt}`, '1970-01-01T12:00:00[c=zero-based]');
       });
       it('works for DateTime.with', () => {
-        const dt1 = Temporal.DateTime.from('1970-02-01T12:00');
+        const dt1 = Temporal.PlainDateTime.from('1970-02-01T12:00');
         const dt2 = dt1.with({ month: 0, calendar: 'zero-based' });
         equal(`${dt2}`, '1970-01-01T12:00:00[c=zero-based]');
       });
       it('works for DateTime.withCalendar', () => {
-        const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        assert(dt.withCalendar('zero-based').equals(Temporal.DateTime.from(iso)));
+        const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
+        assert(dt.withCalendar('zero-based').equals(Temporal.PlainDateTime.from(iso)));
       });
       it('works for YearMonth.from(iso)', () => {
-        const ym = Temporal.YearMonth.from(iso);
+        const ym = Temporal.PlainYearMonth.from(iso);
         equal(`${ym}`, '1970-01-01[c=zero-based]');
       });
       it('works for YearMonth.from(props)', () => {
-        const ym = Temporal.YearMonth.from({ year: 1970, month: 0, calendar: 'zero-based' });
+        const ym = Temporal.PlainYearMonth.from({ year: 1970, month: 0, calendar: 'zero-based' });
         equal(`${ym}`, '1970-01-01[c=zero-based]');
       });
       it('works for MonthDay.from(iso)', () => {
-        const md = Temporal.MonthDay.from(iso);
+        const md = Temporal.PlainMonthDay.from(iso);
         equal(`${md}`, '1970-01-01[c=zero-based]');
       });
       it('works for MonthDay.from(props)', () => {
-        const md = Temporal.MonthDay.from({ month: 0, day: 1, calendar: 'zero-based' });
+        const md = Temporal.PlainMonthDay.from({ month: 0, day: 1, calendar: 'zero-based' });
         equal(`${md}`, '1972-01-01[c=zero-based]');
       });
       it('works for TimeZone.getDateTimeFor', () => {
@@ -246,8 +246,8 @@ describe('Userland calendar', () => {
       }
       const days = year * 100 + (month - 1) * 10 + (day - 1);
       const seconds = hour * 100 + minute * 10 + second;
-      const date = new Temporal.Date(1970, 1, 1, 'iso8601').add({ days });
-      const time = new Temporal.Time().add({ seconds });
+      const date = new Temporal.PlainDate(1970, 1, 1, 'iso8601').add({ days });
+      const time = new Temporal.PlainTime().add({ seconds });
       return date.toPlainDateTime(time);
     }
     function isoToDecimal(datetime) {
@@ -259,8 +259,8 @@ describe('Userland calendar', () => {
         isoMinute = 0,
         isoSecond = 0
       } = datetime.getISOFields();
-      const isoDateTime = new Temporal.DateTime(isoYear, isoMonth, isoDay, isoHour, isoMinute, isoSecond, 0, 0, 0);
-      let { seconds } = isoDateTime.since(new Temporal.DateTime(1970, 1, 1, 0, 0, 0, 0, 0, 0), {
+      const isoDateTime = new Temporal.PlainDateTime(isoYear, isoMonth, isoDay, isoHour, isoMinute, isoSecond, 0, 0, 0);
+      let { seconds } = isoDateTime.since(new Temporal.PlainDateTime(1970, 1, 1, 0, 0, 0, 0, 0, 0), {
         largestUnit: 'seconds'
       });
       let days = Math.floor(seconds / 86400);
@@ -348,10 +348,10 @@ describe('Userland calendar', () => {
       }
     };
 
-    const date = Temporal.Date.from({ year: 184, month: 2, day: 9, calendar: obj });
-    const dt = Temporal.DateTime.from({ year: 184, month: 2, day: 9, hour: 12, calendar: obj });
-    const ym = Temporal.YearMonth.from({ year: 184, month: 2, calendar: obj });
-    const md = Temporal.MonthDay.from({ month: 2, day: 9, calendar: obj });
+    const date = Temporal.PlainDate.from({ year: 184, month: 2, day: 9, calendar: obj });
+    const dt = Temporal.PlainDateTime.from({ year: 184, month: 2, day: 9, hour: 12, calendar: obj });
+    const ym = Temporal.PlainYearMonth.from({ year: 184, month: 2, calendar: obj });
+    const md = Temporal.PlainMonthDay.from({ month: 2, day: 9, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
     it('.id property', () => equal(obj.id, 'decimal'));
@@ -360,8 +360,8 @@ describe('Userland calendar', () => {
       throws(() => Temporal.Calendar.from('decimal'), RangeError);
       throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=decimal]'), RangeError);
     });
-    it('Temporal.Date.from()', () => equal(`${date}`, '2020-06-05[c=decimal]'));
-    it('Temporal.Date fields', () => {
+    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[c=decimal]'));
+    it('Temporal.PlainDate fields', () => {
       equal(date.year, 184);
       equal(date.month, 2);
       equal(date.day, 9);
@@ -371,11 +371,11 @@ describe('Userland calendar', () => {
       equal(date2.year, 0);
     });
     it('date.withCalendar()', () => {
-      const date2 = Temporal.Date.from('2020-06-05T12:00');
+      const date2 = Temporal.PlainDate.from('2020-06-05T12:00');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.DateTime.from()', () => equal(`${dt}`, '2020-06-05T00:20:00[c=decimal]'));
-    it('Temporal.DateTime fields', () => {
+    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T00:20:00[c=decimal]'));
+    it('Temporal.PlainDateTime fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
       equal(dt.day, 9);
@@ -391,11 +391,11 @@ describe('Userland calendar', () => {
       equal(dt2.year, 0);
     });
     it('datetime.withCalendar()', () => {
-      const dt2 = Temporal.DateTime.from('2020-06-05T00:20');
+      const dt2 = Temporal.PlainDateTime.from('2020-06-05T00:20');
       assert(dt2.withCalendar(obj).equals(dt));
     });
-    it('Temporal.YearMonth.from()', () => equal(`${ym}`, '2020-05-28[c=decimal]'));
-    it('Temporal.YearMonth fields', () => {
+    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-05-28[c=decimal]'));
+    it('Temporal.PlainYearMonth fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
     });
@@ -403,8 +403,8 @@ describe('Userland calendar', () => {
       const ym2 = ym.with({ year: 0 });
       equal(ym2.year, 0);
     });
-    it('Temporal.MonthDay.from()', () => equal(`${md}`, '1970-01-19[c=decimal]'));
-    it('Temporal.MonthDay fields', () => {
+    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1970-01-19[c=decimal]'));
+    it('Temporal.PlainMonthDay fields', () => {
       equal(dt.month, 2);
       equal(dt.day, 9);
     });
@@ -451,53 +451,53 @@ describe('Userland calendar', () => {
         assert(Object.is(cal, obj));
       });
       it('works for Date.from(iso)', () => {
-        const d = Temporal.Date.from(iso);
+        const d = Temporal.PlainDate.from(iso);
         equal(`${d}`, '1970-01-01[c=decimal]');
       });
       it('works for Date.from(props)', () => {
-        const d = Temporal.Date.from({ year: 0, month: 1, day: 1, calendar: 'decimal' });
+        const d = Temporal.PlainDate.from({ year: 0, month: 1, day: 1, calendar: 'decimal' });
         equal(`${d}`, '1970-01-01[c=decimal]');
       });
       it('works for Date.with', () => {
-        const d1 = Temporal.Date.from('1970-01-01');
+        const d1 = Temporal.PlainDate.from('1970-01-01');
         const d2 = d1.with({ month: 2, calendar: 'decimal' });
         equal(`${d2}`, '1970-01-11[c=decimal]');
       });
       it('works for Date.withCalendar', () => {
-        const d = Temporal.Date.from('1970-01-01');
-        assert(d.withCalendar('decimal').equals(Temporal.Date.from(iso)));
+        const d = Temporal.PlainDate.from('1970-01-01');
+        assert(d.withCalendar('decimal').equals(Temporal.PlainDate.from(iso)));
       });
       it('works for DateTime.from(iso)', () => {
-        const dt = Temporal.DateTime.from(iso);
+        const dt = Temporal.PlainDateTime.from(iso);
         equal(`${dt}`, '1970-01-01T00:00:00[c=decimal]');
       });
       it('works for DateTime.from(props)', () => {
-        const dt = Temporal.DateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
+        const dt = Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
         equal(`${dt}`, '1970-01-01T00:20:00[c=decimal]');
       });
       it('works for DateTime.with', () => {
-        const dt1 = Temporal.DateTime.from('1970-01-01T12:00');
+        const dt1 = Temporal.PlainDateTime.from('1970-01-01T12:00');
         const dt2 = dt1.with({ month: 2, calendar: 'decimal' });
         equal(`${dt2}`, '1970-01-11T12:00:00[c=decimal]');
       });
       it('works for DateTime.withCalendar', () => {
-        const dt = Temporal.DateTime.from('1970-01-01T00:00');
-        assert(dt.withCalendar('decimal').equals(Temporal.DateTime.from(iso)));
+        const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
+        assert(dt.withCalendar('decimal').equals(Temporal.PlainDateTime.from(iso)));
       });
       it('works for YearMonth.from(iso)', () => {
-        const ym = Temporal.YearMonth.from(iso);
+        const ym = Temporal.PlainYearMonth.from(iso);
         equal(`${ym}`, '1970-01-01[c=decimal]');
       });
       it('works for YearMonth.from(props)', () => {
-        const ym = Temporal.YearMonth.from({ year: 0, month: 1, calendar: 'decimal' });
+        const ym = Temporal.PlainYearMonth.from({ year: 0, month: 1, calendar: 'decimal' });
         equal(`${ym}`, '1970-01-01[c=decimal]');
       });
       it('works for MonthDay.from(iso)', () => {
-        const md = Temporal.MonthDay.from(iso);
+        const md = Temporal.PlainMonthDay.from(iso);
         equal(`${md}`, '1970-01-01[c=decimal]');
       });
       it('works for MonthDay.from(props)', () => {
-        const md = Temporal.MonthDay.from({ month: 1, day: 1, calendar: 'decimal' });
+        const md = Temporal.PlainMonthDay.from({ month: 1, day: 1, calendar: 'decimal' });
         equal(`${md}`, '1970-01-01[c=decimal]');
       });
       it('works for TimeZone.getDateTimeFor', () => {
@@ -527,25 +527,25 @@ describe('Userland calendar', () => {
     class SeasonCalendar extends ISO8601Calendar {
       constructor() {
         super('season');
-        Object.defineProperty(Temporal.DateTime.prototype, 'season', {
+        Object.defineProperty(Temporal.PlainDateTime.prototype, 'season', {
           get() {
             return this.calendar.season(this);
           },
           configurable: true
         });
-        Object.defineProperty(Temporal.Date.prototype, 'season', {
+        Object.defineProperty(Temporal.PlainDate.prototype, 'season', {
           get() {
             return this.calendar.season(this);
           },
           configurable: true
         });
-        Object.defineProperty(Temporal.YearMonth.prototype, 'season', {
+        Object.defineProperty(Temporal.PlainYearMonth.prototype, 'season', {
           get() {
             return this.calendar.season(this);
           },
           configurable: true
         });
-        Object.defineProperty(Temporal.MonthDay.prototype, 'season', {
+        Object.defineProperty(Temporal.PlainMonthDay.prototype, 'season', {
           get() {
             return this.calendar.season(this);
           },
@@ -579,10 +579,10 @@ describe('Userland calendar', () => {
       }
     }
     const calendar = new SeasonCalendar();
-    const datetime = new Temporal.DateTime(2019, 9, 15, 0, 0, 0, 0, 0, 0, calendar);
-    const date = new Temporal.Date(2019, 9, 15, calendar);
-    const yearmonth = new Temporal.YearMonth(2019, 9, calendar);
-    const monthday = new Temporal.MonthDay(9, 15, calendar);
+    const datetime = new Temporal.PlainDateTime(2019, 9, 15, 0, 0, 0, 0, 0, 0, calendar);
+    const date = new Temporal.PlainDate(2019, 9, 15, calendar);
+    const yearmonth = new Temporal.PlainYearMonth(2019, 9, calendar);
+    const monthday = new Temporal.PlainMonthDay(9, 15, calendar);
     it('property getter works', () => {
       equal(datetime.season, 3);
       equal(datetime.month, 3);
@@ -595,12 +595,15 @@ describe('Userland calendar', () => {
     });
     it('accepts season in from()', () => {
       equal(
-        `${Temporal.DateTime.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
+        `${Temporal.PlainDateTime.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
         '2019-09-15T00:00:00[c=season]'
       );
-      equal(`${Temporal.Date.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`, '2019-09-15[c=season]');
-      equal(`${Temporal.YearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`, '2019-09-01[c=season]');
-      equal(`${Temporal.MonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[c=season]');
+      equal(
+        `${Temporal.PlainDate.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
+        '2019-09-15[c=season]'
+      );
+      equal(`${Temporal.PlainYearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`, '2019-09-01[c=season]');
+      equal(`${Temporal.PlainMonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[c=season]');
     });
     it('accepts season in with()', () => {
       equal(`${datetime.with({ season: 2 })}`, '2019-06-15T00:00:00[c=season]');
@@ -615,10 +618,10 @@ describe('Userland calendar', () => {
       equal(`${monthday.with({ month: 2 })}`, '1972-08-15[c=season]');
     });
     after(() => {
-      delete Temporal.DateTime.prototype.season;
-      delete Temporal.Date.prototype.season;
-      delete Temporal.YearMonth.prototype.season;
-      delete Temporal.MonthDay.prototype.season;
+      delete Temporal.PlainDateTime.prototype.season;
+      delete Temporal.PlainDate.prototype.season;
+      delete Temporal.PlainYearMonth.prototype.season;
+      delete Temporal.PlainMonthDay.prototype.season;
     });
   });
 });

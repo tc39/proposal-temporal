@@ -1,11 +1,11 @@
 export { Instant } from './instant.mjs';
 export { Calendar } from './calendar.mjs';
-export { Date } from './date.mjs';
-export { DateTime } from './datetime.mjs';
+export { PlainDate } from './plaindate.mjs';
+export { PlainDateTime } from './plaindatetime.mjs';
 export { Duration } from './duration.mjs';
-export { MonthDay } from './monthday.mjs';
+export { PlainMonthDay } from './plainmonthday.mjs';
 export { now } from './now.mjs';
-export { Time } from './time.mjs';
+export { PlainTime } from './plaintime.mjs';
 export { TimeZone } from './timezone.mjs';
-export { YearMonth } from './yearmonth.mjs';
+export { PlainYearMonth } from './plainyearmonth.mjs';
 export { ZonedDateTime } from './zoneddatetime.mjs';

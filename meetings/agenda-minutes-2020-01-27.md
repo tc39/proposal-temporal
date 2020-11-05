@@ -41,7 +41,7 @@ Agenda:
         * DE: Should we support weeks in duration strings?
         * RGN: If we did, we’d have to put that in the data model all the way through.
         * SFC: There’s another question about calendar notation in ISO strings -> we add it to the agenda.
-    * #[260](https://github.com/tc39/proposal-temporal/issues/260) Why do constructors accept invalid input, e.g. new Temporal.Date(2019, 13, -7)?
+    * #[260](https://github.com/tc39/proposal-temporal/issues/260) Why do constructors accept invalid input, e.g. new Temporal.PlainDate(2019, 13, -7)?
         * RGN: Very surprised that out-of-bounds input is accepted. I remember that one of the main reasons for pursuing Temporal was to eliminate that kind of sloppiness.
         * JWS: I found the polyfill was accepting a lot of invalid input. Is that intentional?
         * DE: This seems to be a consequence of how disambiguation parameters are layered into the API. I agree we should be stricter if we can be, it’s a question of how to put the disambiguation at the right layer. I think the constructor should be strict.
@@ -89,7 +89,7 @@ Agenda:
         * DE: If you have a custom TimeZone object then you also lose information. Maybe that requirement is too hard.
         * JWS: Is it off the table to have toString and serialization be two separate methods? It seems like two separate use cases.
         * RGN: Not off the table, but toString does have to do something.
-        * DE: What if we made toString just return [Object Temporal.DateTime] and toISOString serialize it and throw on non-ISO calendar?
+        * DE: What if we made toString just return [Object Temporal.PlainDateTime] and toISOString serialize it and throw on non-ISO calendar?
         * SFC: What happens on Temporal.Absolute.toString()?
         * RGN: Right now it returns RFC 3339 with a Z offset.
         * DE: toString() doesn’t usually take a parameter.

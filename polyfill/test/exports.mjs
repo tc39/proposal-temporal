@@ -27,23 +27,23 @@ describe('Exports', () => {
   it('should contain `TimeZone`', () => {
     assert(named.includes('TimeZone'));
   });
-  it('should contain `Date`', () => {
-    assert(named.includes('Date'));
+  it('should contain `PlainDate`', () => {
+    assert(named.includes('PlainDate'));
   });
-  it('should contain `Time`', () => {
-    assert(named.includes('Time'));
+  it('should contain `PlainTime`', () => {
+    assert(named.includes('PlainTime'));
   });
-  it('should contain `DateTime`', () => {
-    assert(named.includes('DateTime'));
+  it('should contain `PlainDateTime`', () => {
+    assert(named.includes('PlainDateTime'));
   });
   it('should contain `ZonedDateTime`', () => {
     assert(named.includes('ZonedDateTime'));
   });
-  it('should contain `YearMonth`', () => {
-    assert(named.includes('YearMonth'));
+  it('should contain `PlainYearMonth`', () => {
+    assert(named.includes('PlainYearMonth'));
   });
-  it('should contain `MonthDay`', () => {
-    assert(named.includes('MonthDay'));
+  it('should contain `PlainMonthDay`', () => {
+    assert(named.includes('PlainMonthDay'));
   });
   it('should contain `Duration`', () => {
     assert(named.includes('Duration'));

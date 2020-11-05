@@ -8,22 +8,22 @@
 > **NOTE**: The `with()`, `until()`, and `since()` methods of this type are not available in the polyfill yet.
 
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant from the perspective of a particular region on Earth.
-As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.DateTime` (which includes `Temporal.Calendar`).
+As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.PlainDateTime` (which includes `Temporal.Calendar`).
 
 As the only `Temporal` type that persists a time zone, `Temporal.ZonedDateTime` is optimized for use cases that require a time zone:
 
 - Arithmetic automatically adjusts for Daylight Saving Time, using the rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545) and adopted in other libraries like moment.js.
 - Creating derived values (e.g. change time to 2:30AM) can avoid worrying that the result will be invalid due to the time zone's DST rules.
 - Properties are available to easily measure attributes like "length of day" or "starting time of day" which may not be the same on all days in all time zones due to DST transitions or political changes to the definitions of time zones.
-- It's easy to flip back and forth between a human-readable representation (like `Temporal.DateTime`) and the UTC timeline (like `Temporal.Instant`) without having to do any work to keep the two in sync.
+- It's easy to flip back and forth between a human-readable representation (like `Temporal.PlainDateTime`) and the UTC timeline (like `Temporal.Instant`) without having to do any work to keep the two in sync.
 - A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string that can be sorted alphabetically by the exact time they happened.
   This behavior is also be helpful for developers who are not sure which of those components will be needed by later readers of this data.
 - Multiple time-zone-sensitive operations can be performed in a chain without having to repeatedly provide the same time zone.
 
 A `Temporal.ZonedDateTime` instance can be losslessly converted into every other `Temporal` type except `Temporal.Duration`.
-`Temporal.Instant`, `Temporal.DateTime`, `Temporal.Date`, `Temporal.Time`, `Temporal.YearMonth`, and `Temporal.MonthDay` all carry less information and can be used when complete information is not required.
+`Temporal.Instant`, `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainYearMonth`, and `Temporal.PlainMonthDay` all carry less information and can be used when complete information is not required.
 
-The `Temporal.ZonedDateTime` API is a superset of `Temporal.DateTime`, which makes it easy to port code back and forth between the two types as needed. Because `Temporal.DateTime` is not aware of time zones, in use cases where the time zone is known it's recommended to use `Temporal.ZonedDateTime` which will automatically adjust for DST and can convert easily to `Temporal.Instant` without having to re-specify the time zone.
+The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, which makes it easy to port code back and forth between the two types as needed. Because `Temporal.PlainDateTime` is not aware of time zones, in use cases where the time zone is known it's recommended to use `Temporal.ZonedDateTime` which will automatically adjust for DST and can convert easily to `Temporal.Instant` without having to re-specify the time zone.
 
 ## Constructor
 
@@ -115,14 +115,14 @@ Temporal.Instant('2020-08-05T20:06:13+05:45').toZonedDateTime('+05:45', 'iso8601
 
 Note that using `Temporal.ZonedDateTime` with a single-offset time zone will not adjust for Daylight Savings Time or other time zone changes.
 Therefore, using offset time zones with `Temporal.ZonedDateTime` is relatively unusual.
-Instead of using `Temporal.ZonedDateTime` with an offset time zone, it may be easier for most use cases to use `Temporal.DateTime` and/or `Temporal.Instant` instead.
+Instead of using `Temporal.ZonedDateTime` with an offset time zone, it may be easier for most use cases to use `Temporal.PlainDateTime` and/or `Temporal.Instant` instead.
 
 The `overflow` option works as follows:
 
 - In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `'reject'` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-Additionally, if the result is earlier or later than the range of dates that `Temporal.DateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
+Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > In the default `'constrain'` mode and when parsing an ISO 8601 string, this will be converted to 59.
@@ -246,7 +246,7 @@ JSON.stringify(sorted, undefined, 2);
 ```
 
 Note that in unusual cases like the repeated clock hour after DST ends, values that are later in the real world can be earlier in clock time, or vice versa.
-To sort `Temporal.ZonedDateTime` values according to clock time only (which is a very rare use case), convert each value to `Temporal.DateTime`.
+To sort `Temporal.ZonedDateTime` values according to clock time only (which is a very rare use case), convert each value to `Temporal.PlainDateTime`.
 For example:
 
 <!-- prettier-ignore-start -->
@@ -255,7 +255,7 @@ one = Temporal.ZonedDateTime.from('2020-11-01T01:45-07:00[America/Los_Angeles]')
 two = Temporal.ZonedDateTime.from('2020-11-01T01:15-08:00[America/Los_Angeles]');
 Temporal.ZonedDateTime.compare(one, two);
   // => -1, because `one` is earlier in the real world
-Temporal.DateTime.compare(one.toPlainDateTime(), two.toPlainDateTime());
+Temporal.PlainDateTime.compare(one.toPlainDateTime(), two.toPlainDateTime());
   // => 1, because `one` is later in clock time
 Temporal.Instant.compare(one.toInstant(), two.toInstant());
   // => -1, because `Temporal.Instant` and `Temporal.ZonedDateTime` both compare real-world exact times
@@ -374,14 +374,14 @@ Therefore, using an IANA time zone is recommended wherever possible.
 
 In very rare cases, you may choose to use `UTC` as your time zone ID.
 This is generally not advised because no humans actually live in the UTC time zone; it's just for computers.
-Also, UTC has no DST and always has a zero offset, which means that any action you'd take with `Temporal.ZonedDateTime` would return identical results to the same action on `Temporal.DateTime` or `Temporal.Instant`.
+Also, UTC has no DST and always has a zero offset, which means that any action you'd take with `Temporal.ZonedDateTime` would return identical results to the same action on `Temporal.PlainDateTime` or `Temporal.Instant`.
 Therefore, you should almost always use `Temporal.Instant` to represent UTC times.
 When you want to convert UTC time to a real time zone, that's when `Temporal.ZonedDateTime` will be useful.
 
 To change the time zone while keeping the exact time constant, use `.with({timeZone})`.
 
 The time zone is a required property when creating `Temporal.ZonedDateTime` instances.
-If you don't know the time zone of your underlying data, please use `Temporal.Instant` and/or `Temporal.DateTime`, neither of which have awareness of time zones.
+If you don't know the time zone of your underlying data, please use `Temporal.Instant` and/or `Temporal.PlainDateTime`, neither of which have awareness of time zones.
 
 Although this property is a `Temporal.TimeZoneProtocol` object (which is usually a `Temporal.TimeZone` except custom timezones), it will be automatically coerced to its string form (e.g. `"Europe/Paris"`) when displayed by `console.log`, `JSON.stringify`, `${zonedDateTime.timeZone}`, or other similar APIs.
 
@@ -723,7 +723,7 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545):
 
-- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.DateTime`).
+- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.PlainDateTime`).
   The result will automatically adjust for Daylight Saving Time using the rules of this instance's `timeZone` field.
 - Add/subtract the time portion of a duration using real-world time, like (like `Temporal.Instant`).
 - Addition (or subtraction of a negative duration) is performed in order from largest unit to smallest unit.
@@ -787,7 +787,7 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545):
 
-- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.DateTime`).
+- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.PlainDateTime`).
   The result will automatically adjust for Daylight Saving Time using the rules of this instance's `timeZone` field.
 - Add/subtract the time portion of a duration using real-world time, like (like `Temporal.Instant`).
 - Addition (or subtraction of a negative duration) is performed in order from largest unit to smallest unit.
@@ -869,7 +869,7 @@ Because rounding to an increment expressed in days or larger units requires a re
 The default is to do no rounding.
 
 The duration returned is a "hybrid" duration.
-This means that the duration's date portion represents full calendar days like `Temporal.DateTime.prototype.until()` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.until()` would return.
+This means that the duration's date portion represents full calendar days like `Temporal.PlainDateTime.prototype.until()` would return, while its time portion represents real-world elapsed time like `Temporal.Instant.prototype.until()` would return.
 This "hybrid duration" approach automatically adjusts for DST and matches widely-adopted industry standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 It also matches the behavior of popular JavaScript libraries like moment.js and date-fns.
 
@@ -881,7 +881,7 @@ Examples:
   (because it hasn't been a full calendar day even though it's been 24.5 real-world hours).
 
 If `largestUnit` is `'hours'` or smaller, then the result will be the same as if `Temporal.Instant.prototype.until()` was used.
-If both values have the same local time, then the result will be the same as if `Temporal.DateTime.prototype.until()` was used.
+If both values have the same local time, then the result will be the same as if `Temporal.PlainDateTime.prototype.until()` was used.
 To calculate the difference between calendar dates only, use `.toPlainDate().until(other.toPlainDate())`.
 To calculate the difference between clock times only, use `.toPlainTime().until(other.toPlainTime())`.
 
@@ -1098,7 +1098,7 @@ This means that it can be passed to `Temporal.ZonedDateTime.from()` to create a 
 The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
 If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
 
-The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.DateTime.round()`.
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
 Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `zonedDateTime`'s calendar is not the ISO 8601 calendar.
@@ -1200,32 +1200,32 @@ Use `Temporal.ZonedDateTime.compare()` for this, or `zonedDateTime.equals()` for
 
 **Returns:** A `Temporal.Instant` object that represents the same instant as `zonedDateTime`.
 
-### zonedDateTime.**toPlainDate**() : Temporal.Date
+### zonedDateTime.**toPlainDate**() : Temporal.PlainDate
 
-**Returns:** a `Temporal.Date` object that is the same as the date portion of `zonedDateTime`.
+**Returns:** a `Temporal.PlainDate` object that is the same as the date portion of `zonedDateTime`.
 
-### zonedDateTime.**toPlainTime**() : Temporal.Time
+### zonedDateTime.**toPlainTime**() : Temporal.PlainTime
 
-**Returns:** a `Temporal.Time` object that is the same as the wall-clock time portion of `zonedDateTime`.
+**Returns:** a `Temporal.PlainTime` object that is the same as the wall-clock time portion of `zonedDateTime`.
 
-### zonedDateTime.**toPlainDateTime**() : Temporal.DateTime
+### zonedDateTime.**toPlainDateTime**() : Temporal.PlainDateTime
 
-**Returns:** a `Temporal.DateTime` object that is the same as the date and time portion of `zonedDateTime`.
+**Returns:** a `Temporal.PlainDateTime` object that is the same as the date and time portion of `zonedDateTime`.
 
-> **NOTE**: After a `Temporal.ZonedDateTime` is converted to `Temporal.DateTime`, it will no longer be aware of its time zone.
+> **NOTE**: After a `Temporal.ZonedDateTime` is converted to `Temporal.PlainDateTime`, it will no longer be aware of its time zone.
 > This means that subsequent operations like arithmetic or `with` will not adjust for DST and may not yield the same results as equivalent operations with `Temporal.ZonedDateTime`.
 > However, unless you perform those operations across a time zone offset transition, it's impossible to notice the difference.
 > Therefore, be very careful when performing this conversion because subsequent results may look correct most of the time while failing around time zone transitions like when DST starts or ends.
 
-### zonedDateTime.**toPlainYearMonth**() : Temporal.YearMonth
+### zonedDateTime.**toPlainYearMonth**() : Temporal.PlainYearMonth
 
-**Returns:** a `Temporal.YearMonth` object that is the same as the year and month of `zonedDateTime`.
+**Returns:** a `Temporal.PlainYearMonth` object that is the same as the year and month of `zonedDateTime`.
 
-### zonedDateTime.**toPlainMonthDay**() : Temporal.MonthDay
+### zonedDateTime.**toPlainMonthDay**() : Temporal.PlainMonthDay
 
-**Returns:** a `Temporal.MonthDay` object that is the same as the month and day of `zonedDateTime`.
+**Returns:** a `Temporal.PlainMonthDay` object that is the same as the month and day of `zonedDateTime`.
 
-The above six methods can be used to convert `Temporal.ZonedDateTime` into a `Temporal.Instant`, `Temporal.Date`, `Temporal.Time`, `Temporal.DateTime`, `Temporal.YearMonth`, or `Temporal.MonthDay` respectively.
+The above six methods can be used to convert `Temporal.ZonedDateTime` into a `Temporal.Instant`, `Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainDateTime`, `Temporal.PlainYearMonth`, or `Temporal.PlainMonthDay` respectively.
 The converted object carries a copy of all the relevant data of `zonedDateTime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are the same.)
 
 Usage example:

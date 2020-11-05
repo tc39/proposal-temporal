@@ -132,7 +132,7 @@
 
         * SFC: That's exactly why we say that strings are always ISO.
 
-        * JGT: Even without strings, you actually get the calendar property if you spread a Temporal.Date.
+        * JGT: Even without strings, you actually get the calendar property if you spread a Temporal.PlainDate.
 
         * Could we have a null calendar on Time?
 

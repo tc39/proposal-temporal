@@ -11,7 +11,7 @@ const expected = [
   "get timeZone.getDateTimeFor",
   "call timeZone.getDateTimeFor",
 ];
-const dateTime = Temporal.DateTime.from("1963-07-02T12:34:56.987654321");
+const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
 const timeZone = new Proxy({
   getDateTimeFor(instant, calendar) {
@@ -40,7 +40,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
 });
 
 const result = Temporal.now.plainDate("iso8601", timeZone);
-assert.sameValue(result instanceof Temporal.Date, true);
+assert.sameValue(result instanceof Temporal.PlainDate, true);
 for (const property of ["year", "month", "day"]) {
   assert.sameValue(result[property], dateTime[property], property);
 }
