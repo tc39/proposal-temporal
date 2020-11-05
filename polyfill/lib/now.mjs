@@ -8,6 +8,7 @@ export const now = {
   plainDateTimeISO,
   plainDate,
   plainDateISO,
+  plainTime,
   plainTimeISO,
   timeZone,
   zonedDateTime,
@@ -47,6 +48,9 @@ function plainDate(calendarLike, temporalTimeZoneLike = timeZone()) {
 }
 function plainDateISO(temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(plainDateTimeISO(temporalTimeZoneLike));
+}
+function plainTime(calendarLike, temporalTimeZoneLike = timeZone()) {
+  return ES.TemporalDateTimeToTime(plainDateTime(calendarLike, temporalTimeZoneLike));
 }
 function plainTimeISO(temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToTime(plainDateTimeISO(temporalTimeZoneLike));
