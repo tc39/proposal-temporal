@@ -310,6 +310,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `time` then the resulting duration will be negative.
+The returned `Temporal.Duration`, when added to `time` with the same `options`, will yield `other`.
 
 If `other` is not a `Temporal.Time` object, then it will be converted to one as if it were passed to `Temporal.Time.from()`.
 
@@ -364,8 +365,9 @@ time.until(Temporal.Time.from('22:39:09.068346205'), { smallestUnit: 'seconds' }
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `time` then the resulting duration will be negative.
 
-This method does the same thing as the `Temporal.Time.prototype.until()` method, but reversed, and rounding takes place relative to `time` as an ending point instead of a starting point.
-With the default options, the outcome of `time1.since(time2)` is the same as `time1.until(time2).negated()`.
+This method is similar to `Temporal.Time.prototype.until()`, but reversed.
+The returned `Temporal.Duration`, when subtracted from `time` using the same `options`, will yield `other`.
+Using default options, `time1.since(time2)` yields the same result as `time1.until(time2).negated()`.
 
 Usage example:
 
@@ -491,6 +493,7 @@ For more information on the calendar annotation, see [ISO string extensions](./i
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 time = Temporal.Time.from('19:39:09.068346205');
 time.toString(); // => 19:39:09.068346205
@@ -498,9 +501,10 @@ time.toString(); // => 19:39:09.068346205
 time.toString({ smallestUnit: 'minute' }); // => 19:39
 time.toString({ fractionalSecondDigits: 0 }); // => 19:39:09
 time.toString({ fractionalSecondDigits: 4 }); // => 19:39:09.0683
-time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' })
+time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' });
   // => 19:39:09.06835
 ```
+<!-- prettier-ignore-end -->
 
 ### time.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 
@@ -675,7 +679,15 @@ time = Temporal.Time.from('03:20:00');
 f = time.getISOFields();
 f.isoHour; // => 3
 // Fields correspond exactly to constructor arguments:
-time2 = new Temporal.Time(f.isoHour, f.isoMinute, f.isoSecond, f.isoMillisecond, f.isoMicrosecond, f.isoNanosecond, f.calendar);
+time2 = new Temporal.Time(
+  f.isoHour,
+  f.isoMinute,
+  f.isoSecond,
+  f.isoMillisecond,
+  f.isoMicrosecond,
+  f.isoNanosecond,
+  f.calendar
+);
 time.equals(time2); // => true
 
 // Time in other calendar

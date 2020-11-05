@@ -520,6 +520,7 @@ dt.subtract({ months: 1 }); // => throws
 
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `datetime` then the resulting duration will be negative.
+The returned `Temporal.Duration`, when added to `datetime` with the same `options`, will yield `other`.
 
 If `other` is not a `Temporal.DateTime` object, then it will be converted to one as if it were passed to `Temporal.DateTime.from()`.
 
@@ -598,8 +599,9 @@ jan1.until(mar1);                            // => P121D
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `datetime` then the resulting duration will be negative.
 
-This method does the same thing as the `Temporal.DateTime.prototype.until()` method, but reversed, and rounding takes place relative to `datetime` as an ending point instead of a starting point.
-With the default options, the outcome of `dt1.since(dt2)` is the same as `dt1.until(dt2).negated()`.
+This method is similar to `Temporal.DateTime.prototype.until()`, but reversed.
+The returned `Temporal.Duration`, when subtracted from `datetime` using the same `options`, will yield `other`.
+Using default options, `dt1.since(dt2)` yields the same result as `dt1.until(dt2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
 
 Usage example:
 
@@ -729,6 +731,7 @@ For more information on the calendar annotation, see [ISO string extensions](./i
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```js
 dt = Temporal.DateTime.from({
   year: 1999,
@@ -743,12 +746,13 @@ dt = Temporal.DateTime.from({
 });
 dt.toString(); // => 1999-12-31T23:59:59.999999999
 
-dt.toString({ smallestUnit: 'minute' }); // => 1999-12-31T23:59
+dt.toString({ smallestUnit: 'minute' });    // => 1999-12-31T23:59
 dt.toString({ fractionalSecondDigits: 0 }); // => 1999-12-31T23:59:59
 dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
 dt.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
   // => 2000-01-01T00:00:00.00000000
 ```
+<!-- prettier-ignore-end -->
 
 ### datetime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
 

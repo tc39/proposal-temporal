@@ -449,6 +449,7 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `date` then the resulting duration will be negative.
+The returned `Temporal.Duration`, when added to `date` with the same `options`, will yield `other`.
 
 If `other` is not a `Temporal.Date` object, then it will be converted to one as if it were passed to `Temporal.Date.from()`.
 
@@ -515,8 +516,9 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `date` then the resulting duration will be negative.
 
-This method does the same thing as the `Temporal.Date.prototype.until()` method, but reversed, and rounding takes place relative to `date` as an ending point instead of a starting point.
-With the default options, the outcome of `date1.since(date2)` is the same as `date1.until(date2).negated()`.
+This method is similar to `Temporal.Date.prototype.until()`, but reversed.
+The returned `Temporal.Duration`, when subtracted from `date` using the same `options`, will yield `other`.
+Using default options, `date1.since(date2)` yields the same result as `date1.until(date2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
 
 Usage example:
 

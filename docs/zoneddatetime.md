@@ -870,6 +870,7 @@ earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
 
 This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `zonedDateTime` then the resulting duration will be negative.
+The returned `Temporal.Duration`, when added to `zonedDateTime` with the same `options`, will yield `other`.
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
@@ -965,8 +966,9 @@ jan1.until(mar1, { largestUnit: 'days' }); // => P60D
 This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is later than `zonedDateTime` then the resulting duration will be negative.
 
-This method does the same thing as the `Temporal.ZonedDateTime.prototype.until()` method, but reversed, and rounding takes place relative to `zonedDateTime` as an ending point instead of a starting point.
-With the default options, the outcome of `zdt1.since(zdt2)` is the same as `zdt1.until(zdt2).negated()`.
+This method is similar to `Temporal.ZonedDateTime.prototype.until()`, but reversed.
+The returned `Temporal.Duration`, when subtracted from `zonedDateTime` using the same `options`, will yield `other`.
+Using default options, `zdt1.since(zdt2)` yields the same result as `zdt1.until(zdt2).negated()`, but results may differ with options like `{ largestUnit: 'days' }`.
 
 Usage example:
 
