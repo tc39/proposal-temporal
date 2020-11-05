@@ -1,3 +1,92 @@
+## 0.5.0
+
+- API renames:
+  - Temporal.Calendar.dateDifference -> Temporal.Calendar.dateUntil
+  - Temporal.Calendar.datePlus -> Temporal.Calendar.dateAdd
+  - Temporal.Calendar.isLeapYear -> Temporal.Calendar.inLeapYear
+  - Temporal.Date -> Temporal.PlainDate
+  - Temporal.Date.difference -> Temporal.PlainDate.since
+  - Temporal.Date.isLeapYear -> Temporal.PlainDate.inLeapYear
+  - Temporal.Date.minus -> Temporal.PlainDate.subtract
+  - Temporal.Date.plus -> Temporal.PlainDate.add
+  - Temporal.Date.toDateTime -> Temporal.PlainDate.toPlainDateTime
+  - Temporal.Date.toMonthDay -> Temporal.PlainDate.toPlainMonthDay
+  - Temporal.Date.toYearMonth -> Temporal.PlainDate.toPlainYearMonth
+  - Temporal.DateTime -> Temporal.PlainDateTime
+  - Temporal.DateTime.difference -> Temporal.PlainDateTime.since
+  - Temporal.DateTime.isLeapYear -> Temporal.PlainDateTime.inLeapYear
+  - Temporal.DateTime.minus -> Temporal.PlainDateTime.subtract
+  - Temporal.DateTime.plus -> Temporal.PlainDateTime.add
+  - Temporal.DateTime.toDate -> Temporal.PlainDateTime.toPlainDate
+  - Temporal.DateTime.toMonthDay -> Temporal.PlainDateTime.toPlainMonthDay
+  - Temporal.DateTime.toTime -> Temporal.PlainDateTime.toPlainTime
+  - Temporal.DateTime.toYearMonth -> Temporal.PlainDateTime.toPlainYearMonth
+  - Temporal.Duration.minus -> Temporal.Duration.subtract
+  - Temporal.Duration.plus -> Temporal.Duration.add
+  - Temporal.Instant.difference -> Temporal.Instant.since
+  - Temporal.Instant.getEpochMicroseconds (method) -> Temporal.Instant.epochMicroseconds (property)
+  - Temporal.Instant.getEpochMillieconds (method) -> Temporal.Instant.epochMillieconds (property)
+  - Temporal.Instant.getEpochNanoseconds (method) -> Temporal.Instant.epochNanoseconds (property)
+  - Temporal.Instant.getEpochSeconds (method) -> Temporal.Instant.epochSeconds (property)
+  - Temporal.Instant.minus -> Temporal.Instant.subtract
+  - Temporal.Instant.plus -> Temporal.Instant.add
+  - Temporal.MonthDay -> Temporal.PlainMonthDay
+  - Temporal.MonthDay.toDateInYear -> Temporal.MonthDay.toPlainDate
+  - Temporal.now.time -> Temporal.now.plainTimeISO
+  - Temporal.Time -> Temporal.PlainTime
+  - Temporal.Time.difference -> Temporal.PlainTime.since
+  - Temporal.Time.minus -> Temporal.PlainTime.subtract
+  - Temporal.Time.plus -> Temporal.PlainTime.add
+  - Temporal.Time.toDateTime -> Temporal.PlainTime.toPlainDateTime
+  - Temporal.TimeZone.name -> Temporal.TimeZone.id
+  - Temporal.YearMonth -> Temporal.PlainYearMonth
+  - Temporal.YearMonth.difference -> Temporal.PlainYearMonth.since
+  - Temporal.YearMonth.isLeapYear -> Temporal.PlainYearMonth.inLeapYear
+  - Temporal.YearMonth.minus -> Temporal.PlainYearMonth.subtract
+  - Temporal.YearMonth.plus -> Temporal.PlainYearMonth.add
+  - Temporal.YearMonth.toDateOnDay -> Temporal.PlainYearMonth.toPlainDate
+- New APIs:
+  - Temporal.Calendar.fields
+  - Temporal.Duration.blank
+  - Temporal.Duration.round
+  - Temporal.Duration.total
+  - Temporal.Instant.toZonedDateTime
+  - Temporal.Instant.toZonedDateTimeISO
+  - Temporal.Instant.until
+  - Temporal.now.plainDateISO
+  - Temporal.now.plainDateTimeISO
+  - Temporal.now.zonedDateTime
+  - Temporal.now.zonedDateTimeISO
+  - Temporal.PlainDate.until
+  - Temporal.PlainDateTime.toZonedDateTime
+  - Temporal.PlainDateTime.until
+  - Temporal.PlainTime.until
+  - Temporal.PlainYearMonth.until
+  - Temporal.ZonedDateTime
+- Removals:
+  - Temporal.Calendar.dateMinus
+  - Temporal.DateTime.toInstant
+  - Temporal.Instant.toDateTime
+- Conversion methods that add information, such as
+  Temporal.PlainYearMonth.toPlainDate(), now always take a property bag
+  with the fields to add.
+- Temporal.Instant.toString() now takes one argument, an options bag.
+  The time zone may be specified as the value of the `timeZone` property
+  in this argument.
+- The toString() methods of Temporal.PlainDate, Temporal.PlainDateTime,
+  Temporal.PlainMonthDay, Temporal.PlainTime, and
+  Temporal.PlainYearMonth now take a `calendar` property which controls
+  whether to include the calendar annotation in the string.
+- The `overflow` option has been removed from Temporal.Duration.add()
+  and Temporal.Duration.subtract().
+- Temporal.Instant.toString(), Temporal.PlainDateTime.toString(), and
+  Temporal.PlainTime.toString() gain `fractionalSecondDigits`,
+  `smallestUnit`, and `roundingMode` options to control the precision
+  used in the output string.
+- The options argument is removed from Temporal.Duration.from() and Temporal.Duration.with().
+- In general, property bags and strings are allowed as arguments
+  wherever Temporal objects are accepted.
+
 ## 0.4.0
 
 - API renames:
