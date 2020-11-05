@@ -293,20 +293,20 @@ export class ZonedDateTime {
     const overflow = ES.ToTemporalOverflow(options);
     const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
-    const epochNanoseconds = ES.SubtractZonedDateTime(
+    const epochNanoseconds = ES.AddZonedDateTime(
       GetSlot(this, INSTANT),
       timeZone,
       calendar,
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
+      -years,
+      -months,
+      -weeks,
+      -days,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds,
       overflow
     );
     const Construct = ES.SpeciesConstructor(this, ZonedDateTime);

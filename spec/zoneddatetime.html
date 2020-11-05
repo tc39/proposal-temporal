@@ -640,7 +640,7 @@
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _epochNanoseconds_ be ? SubtractZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _overflow_).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, −_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]], _overflow_).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1297,11 +1297,5 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-subtractzoneddatetime" aoid="SubtractZonedDateTime">
-      <h1>SubtractZonedDateTime ( )</h1>
-      <emu-alg>
-        1. <mark>TODO: this will be subsumed into AddZonedDateTime by <a href="https://github.com/tc39/proposal-temporal/issues/993">issue 993</a></mark>.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 </emu-clause>
