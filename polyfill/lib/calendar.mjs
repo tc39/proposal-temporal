@@ -79,13 +79,6 @@ export class Calendar {
     void constructor;
     throw new Error('not implemented');
   }
-  dateSubtract(date, duration, options, constructor) {
-    void date;
-    void duration;
-    void options;
-    void constructor;
-    throw new Error('not implemented');
-  }
   dateUntil(one, two, options) {
     void one;
     void two;
@@ -93,13 +86,6 @@ export class Calendar {
     throw new Error('not implemented');
   }
   timeAdd(time, duration, options, constructor) {
-    void time;
-    void duration;
-    void options;
-    void constructor;
-    throw new Error('not implemented');
-  }
-  timeSubtract(time, duration, options, constructor) {
     void time;
     void duration;
     void options;
@@ -262,34 +248,10 @@ class ISO8601Calendar extends Calendar {
     const overflow = ES.ToTemporalOverflow(options);
     const { years, months, weeks, days } = duration;
     ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     let year = GetSlot(date, ISO_YEAR);
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
-    if (sign < 0) {
-      ({ year, month, day } = ES.SubtractDate(year, month, day, -years, -months, -weeks, -days, overflow));
-    } else {
-      ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, overflow));
-    }
-    return new constructor(year, month, day, this);
-  }
-  dateSubtract(date, duration, options, constructor) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
-    duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    const { years, months, weeks, days } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    let year = GetSlot(date, ISO_YEAR);
-    let month = GetSlot(date, ISO_MONTH);
-    let day = GetSlot(date, ISO_DAY);
-    if (sign < 0) {
-      ({ year, month, day } = ES.AddDate(year, month, day, -years, -months, -weeks, -days, overflow));
-    } else {
-      ({ year, month, day } = ES.SubtractDate(year, month, day, years, months, weeks, days, overflow));
-    }
+    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, overflow));
     return new constructor(year, month, day, this);
   }
   dateUntil(one, two, options) {
@@ -344,45 +306,6 @@ class ISO8601Calendar extends Calendar {
       milliseconds,
       microseconds,
       nanoseconds
-    ));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
-    return new constructor(hour, minute, second, millisecond, microsecond, nanosecond, this);
-  }
-  timeSubtract(time, duration, options, constructor) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    time = ES.ToTemporalTime(time, GetIntrinsic('%Temporal.Time%'));
-    duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    let hour = GetSlot(time, ISO_HOUR);
-    let minute = GetSlot(time, ISO_MINUTE);
-    let second = GetSlot(time, ISO_SECOND);
-    let millisecond = GetSlot(time, ISO_MILLISECOND);
-    let microsecond = GetSlot(time, ISO_MICROSECOND);
-    let nanosecond = GetSlot(time, ISO_NANOSECOND);
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds
     ));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
