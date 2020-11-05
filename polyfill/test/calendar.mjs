@@ -40,9 +40,6 @@ describe('Calendar', () => {
       it('Calendar.prototype.dateAdd is a Function', () => {
         equal(typeof Calendar.prototype.dateAdd, 'function');
       });
-      it('Calendar.prototype.dateSubtract is a Function', () => {
-        equal(typeof Calendar.prototype.dateSubtract, 'function');
-      });
       it('Calendar.prototype.dateUntil is a Function', () => {
         equal(typeof Calendar.prototype.dateUntil, 'function');
       });
@@ -306,26 +303,12 @@ describe('Calendar', () => {
       throws(() => iso.dateAdd(date, { month: 1 }, {}, Temporal.Date), TypeError);
     });
   });
-  describe('Calendar.dateSubtract()', () => {
-    const date = Temporal.Date.from('1994-11-05');
-    const duration = Temporal.Duration.from({ months: 1, weeks: 1 });
+  describe('Calendar.dateAdd() (negative duration)', () => {
+    const duration = Temporal.Duration.from({ months: 1, weeks: 1 }).negated();
     it('casts date argument', () => {
-      equal(
-        `${iso.dateSubtract(Temporal.DateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.Date)}`,
-        '1994-09-29'
-      );
-      equal(`${iso.dateSubtract({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.Date)}`, '1994-09-29');
-      equal(`${iso.dateSubtract('1994-11-05', duration, {}, Temporal.Date)}`, '1994-09-29');
-    });
-    it('date object must contain at least the required properties', () => {
-      throws(() => iso.dateSubtract({ month: 11 }, duration, {}, Temporal.Date), TypeError);
-    });
-    it('casts duration argument', () => {
-      equal(`${iso.dateSubtract(date, { months: 1, weeks: 1 }, {}, Temporal.Date)}`, '1994-09-29');
-      equal(`${iso.dateSubtract(date, 'P1M1W', {}, Temporal.Date)}`, '1994-09-29');
-    });
-    it('duration object must contain at least one correctly-spelled property', () => {
-      throws(() => iso.dateSubtract(date, { month: 1 }, {}, Temporal.Date), TypeError);
+      equal(`${iso.dateAdd(Temporal.DateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.Date)}`, '1994-09-28');
+      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.Date)}`, '1994-09-28');
+      equal(`${iso.dateAdd('1994-11-05', duration, {}, Temporal.Date)}`, '1994-09-28');
     });
   });
   describe('Calendar.dateUntil()', () => {
