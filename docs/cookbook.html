@@ -261,11 +261,11 @@ Here&#39;s how they would look using Temporal.</p>
  *
  */</span>
 
-<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Gets the current date</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Gets the current date</span>
 date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// returns the date in ISO 8601 date format</span>
 
 <span class="token comment">// If you additionally want the time:</span>
-Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">dateTimeISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// date and time in ISO 8601 format</span>
+Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDateTimeISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// date and time in ISO 8601 format</span>
 </code></pre><p>Note that if you just want the date and not the time, you should use <code>Temporal.Date</code>.
 If you want both, use <code>Temporal.DateTime</code>.</p>
 <h3 id="unix-timestamp"><a class="heading-link" href="#unix-timestamp"></a>Unix timestamp</h3><p>How to get a Unix timestamp?</p>
@@ -303,7 +303,7 @@ Here is an example using an HTML <code>&lt;input type=&quot;date&quot;&gt;</code
 <script type="text/javascript">
 const datePicker = document.getElementById('calendar-input');
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const today = Temporal.now.date(browserCalendar);
+const today = Temporal.now.plainDate(browserCalendar);
 datePicker.max = today;
 datePicker.value = today;
 
@@ -311,7 +311,7 @@ datePicker.value = today;
 
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> datePicker <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'calendar-input'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
-<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>max <span class="token operator">=</span> today<span class="token punctuation">;</span>
 datePicker<span class="token punctuation">.</span>value <span class="token operator">=</span> today<span class="token punctuation">;</span>
 </code></pre><h2 id="converting-between-types">Converting between types</h2>
@@ -737,7 +737,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   timeZone: Temporal.now.timeZone()
 });
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
-const tankMidnight = Temporal.now.date(browserCalendar, tankTimeZone).toPlainDateTime().toInstant(tankTimeZone);
+const tankMidnight = Temporal.now.plainDate(browserCalendar, tankTimeZone).toPlainDateTime().toInstant(tankTimeZone);
 const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));
@@ -788,7 +788,7 @@ new Chart(ctx, {
   timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> labelFormatter<span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
-<span class="token keyword">const</span> tankMidnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">,</span> tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> tankMidnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">,</span> tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> <span class="token function-variable function">atOrAfterMidnight</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> tankMidnight<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> dataStartIndex <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span>atOrAfterMidnight<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> graphLabels <span class="token operator">=</span> tankDataX<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>dataStartIndex<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> labelFormatter<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -993,7 +993,7 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
   // Do initialization that doesn't necessarily need to be included in
   // the example; see 'Calendar input element'
   const futureDatePicker = document.querySelector('input[name="futuredate"]');
-  const today = Temporal.now.date();
+  const today = Temporal.now.plainDate();
   futureDatePicker.min = today;
   futureDatePicker.value = today.add({ months: 1 });
 }
@@ -1013,7 +1013,7 @@ function englishPlural(n, singular, plural) {
 if (futuredateParam !== null) {
   const futureDate = Temporal.Date.from(futuredateParam);
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-  const today = Temporal.now.date(browserCalendar);
+  const today = Temporal.now.plainDate(browserCalendar);
   const until = today.until(futureDate, { largestUnit: 'days' });
   const untilMonths = until.round({ largestUnit: 'months', relativeTo: today });
 
@@ -1051,7 +1051,7 @@ if (futuredateParam !== null) {
 <span class="token keyword">if</span> <span class="token punctuation">(</span>futuredateParam <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> futureDate <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>futuredateParam<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
-  <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> until <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>futureDate<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> untilMonths <span class="token operator">=</span> until<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">,</span> relativeTo<span class="token operator">:</span> today <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 

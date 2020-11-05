@@ -10631,11 +10631,11 @@
 
   var now = {
     instant: instant$1,
-    dateTime: dateTime,
-    dateTimeISO: dateTimeISO,
-    date: date,
-    dateISO: dateISO,
-    timeISO: timeISO,
+    plainDateTime: plainDateTime,
+    plainDateTimeISO: plainDateTimeISO,
+    plainDate: plainDate,
+    plainDateISO: plainDateISO,
+    plainTimeISO: plainTimeISO,
     timeZone: timeZone
   };
 
@@ -10644,7 +10644,7 @@
     return new Instant(ES.SystemUTCEpochNanoSeconds());
   }
 
-  function dateTime(calendarLike) {
+  function plainDateTime(calendarLike) {
     var temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : timeZone();
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
@@ -10654,7 +10654,7 @@
     }();
   }
 
-  function dateTimeISO() {
+  function plainDateTimeISO() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
     return function () {
       var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
@@ -10664,19 +10664,19 @@
     }();
   }
 
-  function date(calendarLike) {
+  function plainDate(calendarLike) {
     var temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : timeZone();
-    return ES.TemporalDateTimeToDate(dateTime(calendarLike, temporalTimeZoneLike));
+    return ES.TemporalDateTimeToDate(plainDateTime(calendarLike, temporalTimeZoneLike));
   }
 
-  function dateISO() {
+  function plainDateISO() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    return ES.TemporalDateTimeToDate(dateTimeISO(temporalTimeZoneLike));
+    return ES.TemporalDateTimeToDate(plainDateTimeISO(temporalTimeZoneLike));
   }
 
-  function timeISO() {
+  function plainTimeISO() {
     var temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : timeZone();
-    return ES.TemporalDateTimeToTime(dateTimeISO(temporalTimeZoneLike));
+    return ES.TemporalDateTimeToTime(plainDateTimeISO(temporalTimeZoneLike));
   }
 
   function timeZone() {
@@ -11807,7 +11807,7 @@
         };
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false); // first, round the underlying DateTime fields
 
-        var dt = dateTime$1(this);
+        var dt = dateTime(this);
         var year = GetSlot(dt, ISO_YEAR);
         var month = GetSlot(dt, ISO_MONTH);
         var day = GetSlot(dt, ISO_DAY);
@@ -11929,7 +11929,7 @@
       key: "startOfDay",
       value: function startOfDay() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var dt = dateTime$1(this);
+        var dt = dateTime(this);
         var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
         var dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
         var timeZone = GetSlot(this, TIME_ZONE);
@@ -11950,19 +11950,19 @@
       key: "toPlainDate",
       value: function toPlainDate() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return ES.TemporalDateTimeToDate(dateTime$1(this));
+        return ES.TemporalDateTimeToDate(dateTime(this));
       }
     }, {
       key: "toPlainTime",
       value: function toPlainTime() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return ES.TemporalDateTimeToTime(dateTime$1(this));
+        return ES.TemporalDateTimeToTime(dateTime(this));
       }
     }, {
       key: "toPlainDateTime",
       value: function toPlainDateTime() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return dateTime$1(this);
+        return dateTime(this);
       }
     }, {
       key: "toPlainYearMonth",
@@ -11998,7 +11998,7 @@
       key: "getISOFields",
       value: function getISOFields() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var dt = dateTime$1(this);
+        var dt = dateTime(this);
         var tz = GetSlot(this, TIME_ZONE);
         return {
           calendar: GetSlot(this, CALENDAR),
@@ -12031,55 +12031,55 @@
       key: "year",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).year(dateTime$1(this));
+        return GetSlot(this, CALENDAR).year(dateTime(this));
       }
     }, {
       key: "month",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).month(dateTime$1(this));
+        return GetSlot(this, CALENDAR).month(dateTime(this));
       }
     }, {
       key: "day",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).day(dateTime$1(this));
+        return GetSlot(this, CALENDAR).day(dateTime(this));
       }
     }, {
       key: "hour",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_HOUR);
+        return GetSlot(dateTime(this), ISO_HOUR);
       }
     }, {
       key: "minute",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_MINUTE);
+        return GetSlot(dateTime(this), ISO_MINUTE);
       }
     }, {
       key: "second",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_SECOND);
+        return GetSlot(dateTime(this), ISO_SECOND);
       }
     }, {
       key: "millisecond",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_MILLISECOND);
+        return GetSlot(dateTime(this), ISO_MILLISECOND);
       }
     }, {
       key: "microsecond",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_MICROSECOND);
+        return GetSlot(dateTime(this), ISO_MICROSECOND);
       }
     }, {
       key: "nanosecond",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime$1(this), ISO_NANOSECOND);
+        return GetSlot(dateTime(this), ISO_NANOSECOND);
       }
     }, {
       key: "epochSeconds",
@@ -12112,25 +12112,25 @@
       key: "dayOfWeek",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfWeek(dateTime$1(this));
+        return GetSlot(this, CALENDAR).dayOfWeek(dateTime(this));
       }
     }, {
       key: "dayOfYear",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfYear(dateTime$1(this));
+        return GetSlot(this, CALENDAR).dayOfYear(dateTime(this));
       }
     }, {
       key: "weekOfYear",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).weekOfYear(dateTime$1(this));
+        return GetSlot(this, CALENDAR).weekOfYear(dateTime(this));
       }
     }, {
       key: "hoursInDay",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var dt = dateTime$1(this);
+        var dt = dateTime(this);
         var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
         var year = GetSlot(dt, ISO_YEAR);
         var month = GetSlot(dt, ISO_MONTH);
@@ -12152,31 +12152,31 @@
       key: "daysInWeek",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInWeek(dateTime$1(this));
+        return GetSlot(this, CALENDAR).daysInWeek(dateTime(this));
       }
     }, {
       key: "daysInMonth",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInMonth(dateTime$1(this));
+        return GetSlot(this, CALENDAR).daysInMonth(dateTime(this));
       }
     }, {
       key: "daysInYear",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(dateTime$1(this));
+        return GetSlot(this, CALENDAR).daysInYear(dateTime(this));
       }
     }, {
       key: "monthsInYear",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).monthsInYear(dateTime$1(this));
+        return GetSlot(this, CALENDAR).monthsInYear(dateTime(this));
       }
     }, {
       key: "inLeapYear",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).inLeapYear(dateTime$1(this));
+        return GetSlot(this, CALENDAR).inLeapYear(dateTime(this));
       }
     }, {
       key: "offset",
@@ -12222,7 +12222,7 @@
     return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
   }
 
-  function dateTime$1(zdt) {
+  function dateTime(zdt) {
     return ES.GetTemporalDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
   }
 
@@ -12231,7 +12231,7 @@
     var showTimeZone = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'auto';
     var showOffset = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'auto';
     var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-    var dt = dateTime$1(zdt);
+    var dt = dateTime(zdt);
     var year = GetSlot(dt, ISO_YEAR);
     var month = GetSlot(dt, ISO_MONTH);
     var day = GetSlot(dt, ISO_DAY);
