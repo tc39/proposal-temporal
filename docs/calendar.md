@@ -23,8 +23,9 @@ Some places use another calendar system as the main calendar, or have a separate
 It is best practice to specify a calendar system when performing calendar-sensitive operations, which are those involving arithmetic or other calculation in months or years.
 
 For example, to add a month to a date in the Hebrew calendar:
+
 ```javascript
-date.withCalendar('hebrew').add({ months: 1 })
+date.withCalendar('hebrew').add({ months: 1 });
 ```
 
 Temporal types' `toLocaleString()` methods use the user's preferred calendar, without needing to call `withCalendar()`.
@@ -32,7 +33,7 @@ To perform arithmetic consistently with the `toLocaleString()` calendar system:
 
 ```javascript
 const calendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-date.withCalendar(calendar).add({ months: 1 })
+date.withCalendar(calendar).add({ months: 1 });
 ```
 
 ### Custom calendars
@@ -57,6 +58,7 @@ The identifier of a custom calendar must consist of one or more components of be
 ### **new Temporal.Calendar**(_calendarIdentifier_: string) : Temporal.Calendar
 
 **Parameters:**
+
 - `calendarIdentifier` (string): An identifier for the calendar.
 
 **Returns:** a new `Temporal.Calendar` object.
@@ -68,10 +70,11 @@ Use this constructor directly if you have a string that is known to be a correct
 If you have an ISO 8601 date-time string with a `[c=identifier]` annotation, then `Temporal.Calendar.from()` is more convenient than parsing the identifier out of the string, and also the only way to parse strings annotated with a non-built-in calendar.
 
 Example usage:
+
 ```javascript
 cal = new Temporal.Calendar('iso8601');
 cal = new Temporal.Calendar('gregory');
-/*⚠️*/ cal = new Temporal.Calendar('discordian');  // not a built-in calendar, throws
+/*⚠️*/ cal = new Temporal.Calendar('discordian'); // not a built-in calendar, throws
 ```
 
 ## Static methods
@@ -79,6 +82,7 @@ cal = new Temporal.Calendar('gregory');
 ### Temporal.Calendar.**from**(_thing_: any) : Temporal.Calendar
 
 **Parameters:**
+
 - `thing`: A calendar object, a Temporal object that carries a calendar, or a value from which to create a `Temporal.Calendar`.
 
 **Returns:** a calendar object.
@@ -88,6 +92,7 @@ If the value is another `Temporal.Calendar` object, or object implementing the c
 If the value is another Temporal object that carries a calendar or an object with a `calendar` property, such as a `Temporal.ZonedDateTime`, the object's calendar is returned.
 
 Any other value is converted to a string, which is expected to be either:
+
 - a string that is accepted by `new Temporal.Calendar()`; or
 - a string in the ISO 8601 format.
 
@@ -97,6 +102,7 @@ Without such an annotation, the calendar is taken to be `iso8601`.
 This function is often more convenient to use than `new Temporal.Calendar()` because it handles a wider range of input.
 
 Usage examples:
+
 ```javascript
 // Calendar names
 cal = Temporal.Calendar.from('iso8601');
@@ -110,10 +116,10 @@ cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancou
 cal2 = Temporal.Calendar.from(cal);
 
 // Custom calendar that is a plain object (this calendar does not do much)
-cal = Temporal.Calendar.from({id: 'mycalendar'});
+cal = Temporal.Calendar.from({ id: 'mycalendar' });
 
-/*⚠️*/ cal = Temporal.Calendar.from('discordian');  // not a built-in calendar, throws
-/*⚠️*/ cal = Temporal.Calendar.from('[c=iso8601]');  // lone annotation not a valid ISO 8601 string
+/*⚠️*/ cal = Temporal.Calendar.from('discordian'); // not a built-in calendar, throws
+/*⚠️*/ cal = Temporal.Calendar.from('[c=iso8601]'); // lone annotation not a valid ISO 8601 string
 ```
 
 ## Properties
@@ -132,8 +138,6 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 ### calendar.**month**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.YearMonth | Temporal.MonthDay | object | string) : number
 
 ### calendar.**day**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | Temporal.MonthDay | object | string) : number
-
-
 
 ### calendar.**dayOfWeek**(_date_: Temporal.Date | Temporal.DateTime | Temporal.ZonedDateTime | object | string): number
 
@@ -155,6 +159,7 @@ The above methods are all similar.
 They provide a way to query properties of a particular date in the calendar's date reckoning.
 
 **Parameters:**
+
 - `date` (`Temporal.Date`, or value convertible to one): A date.
 
 **Returns:** some piece of data (year, month, day, etc., depending on the method) associated with `date`, in `calendar`'s calendar system.
@@ -165,12 +170,13 @@ None of the above methods need to be called directly except in specialized code.
 They are called indirectly when reading the various properties of `Temporal.ZonedDateTime`, `Temporal.DateTime`, `Temporal.Date`, `Temporal.MonthDay`, or `Temporal.YearMonth`.
 
 For example:
+
 ```javascript
 const date = Temporal.Date.from('2020-05-29').withCalendar('hebrew');
-date.year  // => 5780
-date.calendar.year(date)  // same result, but calling the method directly
-date.daysInYear  // => 355
-date.calendar.daysInYear(date)  // same result, but calling the method directly
+date.year; // => 5780
+date.calendar.year(date); // same result, but calling the method directly
+date.daysInYear; // => 355
+date.calendar.daysInYear(date); // same result, but calling the method directly
 ```
 
 ### calendar.**hour**(_time_: Temporal.Time | Temporal.DateTime | Temporal.ZonedDateTime | object | string) : number
@@ -189,6 +195,7 @@ The above methods are all similar.
 They provide a way to query properties of a particular time in the calendar's time reckoning.
 
 **Parameters:**
+
 - `time` (`Temporal.Time`, or value convertible to one): A time.
 
 **Returns:** some piece of data (hour, minute, second, etc., depending on the method) associated with `time`, in `calendar`'s calendar system.
@@ -199,12 +206,12 @@ None of the above methods need to be called directly except in specialized code.
 They are called indirectly when reading the various properties of `Temporal.ZonedDateTime`, `Temporal.DateTime`, `Temporal.Time`.
 
 For example:
+
 ```javascript
 const time = Temporal.Time.from('03:20:00').withCalendar('ethiopic');
-time.hour  // => 9
-time.calendar.hour(time)  // same result, but calling the method directly
+time.hour; // => 9
+time.calendar.hour(time); // same result, but calling the method directly
 ```
-
 
 ### calendar.**dateFromFields**(_fields_: object, _options_: object, _constructor_: function) : Temporal.Date
 
@@ -218,6 +225,7 @@ The above three methods are similar.
 They provide a way to construct other Temporal objects from values in the calendar's date or time reckoning.
 
 **Parameters:**
+
 - `fields` (object): An object with properties similar to what is passed to `Temporal.Date.from()`, `Temporal.Time.from()`, `Temporal.YearMonth.from()`, or `Temporal.MonthDay.from()`, respectively.
 - `options`: (object): An object with properties representing options for constructing the Temporal object.
   The following options are recognized:
@@ -233,26 +241,24 @@ None of the above methods need to be called directly except in specialized code.
 They are called indirectly when using `Temporal.Date.from()`, `Temporal.Time.from()`, `Temporal.DateTime.from()`, `Temporal.YearMonth.from()`, and `Temporal.MonthDay.from()`.
 
 For example:
+
 ```javascript
-date = Temporal.Date.from(
-    { year: 5780, month: 9, day: 6, calendar: 'hebrew' },
-    { overflow: 'reject' }
-);
-date.year        // => 5780
-date.month       // => 9
-date.day         // => 6
-date.toString()  // => 2020-05-29[c=hebrew]
+date = Temporal.Date.from({ year: 5780, month: 9, day: 6, calendar: 'hebrew' }, { overflow: 'reject' });
+date.year; // => 5780
+date.month; // => 9
+date.day; // => 6
+date.toString(); // => 2020-05-29[c=hebrew]
 
 // same result, but calling the method directly:
 date = Temporal.Calendar.from('hebrew').dateFromFields(
-    { year: 5780, month: 9, day: 6 },
-    { overflow: 'reject' },
-    Temporal.Date
+  { year: 5780, month: 9, day: 6 },
+  { overflow: 'reject' },
+  Temporal.Date
 );
-date.year        // => 5780
-date.month       // => 9
-date.day         // => 6
-date.toString()  // => 2020-05-29[c=hebrew]
+date.year; // => 5780
+date.month; // => 9
+date.day; // => 6
+date.toString(); // => 2020-05-29[c=hebrew]
 ```
 
 ### calendar.**dateAdd**(_date_: Temporal.Date | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.Date
@@ -263,6 +269,7 @@ The above two methods are similar.
 They provide a way to do date arithmetic in the calendar's date reckoning.
 
 **Parameters:**
+
 - `date` (`Temporal.Date`, or value convertible to one): A date.
 - `duration` (`Temporal.Duration`, or value convertible to one): A duration to add or subtract from `date`.
 - `options` (object): An object with properties representing options for performing the addition or subtraction.
@@ -281,27 +288,27 @@ Neither of the above methods need to be called directly except in specialized co
 They are called indirectly when using the `add()` and `subtract()` methods, respectively, of `Temporal.DateTime`, `Temporal.Date`, and `Temporal.YearMonth`.
 
 For example:
+
 ```javascript
-date = Temporal.Date.from('2020-05-29').withCalendar('islamic').add(
-    Temporal.Duration.from({ months: 1 }),
-    { overflow: 'reject' }
-);
-date.year        // => 1441
-date.month       // => 11
-date.day         // => 7
-date.toString()  // => 2020-06-28[c=islamic]
+date = Temporal.Date.from('2020-05-29')
+  .withCalendar('islamic')
+  .add(Temporal.Duration.from({ months: 1 }), { overflow: 'reject' });
+date.year; // => 1441
+date.month; // => 11
+date.day; // => 7
+date.toString(); // => 2020-06-28[c=islamic]
 
 // same result, but calling the method directly:
 date = Temporal.Calendar.from('islamic').dateAdd(
-    Temporal.Date.from('2020-05-29'),
-    Temporal.Duration.from({ months: 1 }),
-    { overflow: 'reject' },
-    Temporal.Date
+  Temporal.Date.from('2020-05-29'),
+  Temporal.Duration.from({ months: 1 }),
+  { overflow: 'reject' },
+  Temporal.Date
 );
-date.year        // => 1441
-date.month       // => 11
-date.day         // => 7
-date.toString()  // => 2020-06-28[c=islamic]
+date.year; // => 1441
+date.month; // => 11
+date.day; // => 7
+date.toString(); // => 2020-06-28[c=islamic]
 ```
 
 ### calendar.**timeAdd**(_time_: Temporal.Time | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.Date
@@ -312,6 +319,7 @@ The above two methods are similar.
 They provide a way to do time arithmetic in the calendar's time reckoning.
 
 **Parameters:**
+
 - `time` (`Temporal.Time`, or value convertible to one): A time.
 - `duration` (`Temporal.Duration`, or value convertible to one): A duration to add or subtract from `time`.
 - `options` (object): An object with properties representing options for performing the addition or subtraction.
@@ -330,32 +338,33 @@ Neither of the above methods need to be called directly except in specialized co
 They are called indirectly when using the `add()` and `subtract()` methods, respectively, of `Temporal.DateTime`, and `Temporal.Time`.
 
 For example:
+
 ```javascript
-time = Temporal.Time.from('03:20:00').withCalendar('ethiopic').add(
-    Temporal.Duration.from({ minutes: 1 }),
-    { overflow: 'reject' }
-);
-time.hour       // => 9
-time.minute     // => 21
-time.second     // => 0
-time.toString() // => 03:21:00[c=ethiopic]
+time = Temporal.Time.from('03:20:00')
+  .withCalendar('ethiopic')
+  .add(Temporal.Duration.from({ minutes: 1 }), { overflow: 'reject' });
+time.hour; // => 9
+time.minute; // => 21
+time.second; // => 0
+time.toString(); // => 03:21:00[c=ethiopic]
 
 // same result, but calling the method directly:
 time = Temporal.Calendar.from('ethiopic').timeAdd(
-    Temporal.Time.from('03:20:00'),
-    Temporal.Duration.from({ minutes: 1 }),
-    { overflow: 'reject' },
-    Temporal.Time
+  Temporal.Time.from('03:20:00'),
+  Temporal.Duration.from({ minutes: 1 }),
+  { overflow: 'reject' },
+  Temporal.Time
 );
-time.hour       // => 9
-time.minute     // => 21
-time.second     // => 0
-time.toString() // => 03:20:00[c=ethiopic]
+time.hour; // => 9
+time.minute; // => 21
+time.second; // => 0
+time.toString(); // => 03:20:00[c=ethiopic]
 ```
 
 ### calendar.**dateUntil**(_one_: Temporal.Date | object | string, _two_: Temporal.Date | object | string, _options_: object) : Temporal.Duration
 
 **Parameters:**
+
 - `one` (`Temporal.Date`, or value convertible to one): A date.
 - `two` (`Temporal.Date`, or value convertible to one): Another date.
 - `options` (object): An object with properties representing options for the operation.
@@ -376,22 +385,22 @@ If `one` is later than `two`, then the resulting duration should be negative.
 The default `largestUnit` value of `'auto'` is the same as `'days'`.
 
 For example:
+
 ```javascript
 d1 = Temporal.Date.from('2020-07-29').withCalendar('chinese');
 d2 = Temporal.Date.from('2020-08-29').withCalendar('chinese');
-d1.until(d2, { largestUnit: 'months' })  // => P1M2D
+d1.until(d2, { largestUnit: 'months' }); // => P1M2D
 
 // same result, but calling the method directly:
-Temporal.Calendar.from('chinese').dateUntil(
-    Temporal.Date.from('2020-07-29'),
-    Temporal.Date.from('2020-08-29'),
-    { largestUnit: 'months' }
-)  // => P1M2D
+Temporal.Calendar.from('chinese').dateUntil(Temporal.Date.from('2020-07-29'), Temporal.Date.from('2020-08-29'), {
+  largestUnit: 'months'
+}); // => P1M2D
 ```
 
 ### calendar.**timeUntil**(_one_: Temporal.Time | object | string, _two_: Temporal.Time | object | string, _options_: object) : Temporal.Duration
 
 **Parameters:**
+
 - `one` (`Temporal.Time`, or value convertible to one): A time.
 - `two` (`Temporal.Time`, or value convertible to one): Another time.
 - `options` (object): An object with properties representing options for the operation.
@@ -412,17 +421,16 @@ If `one` is later than `two`, then the resulting duration should be negative.
 The default `largestUnit` value of `'auto'` is the same as `'hours'`.
 
 For example:
+
 ```javascript
 t1 = Temporal.Time.from('03:10:00').withCalendar('ethiopic');
 t2 = Temporal.Time.from('03:30:00').withCalendar('ethiopic');
-t1.until(t2, { largestUnit: 'minutes' })  // => PT20M
+t1.until(t2, { largestUnit: 'minutes' }); // => PT20M
 
 // same result, but calling the method directly:
-Temporal.Calendar.from('ethiopic').timeUntil(
-    Temporal.Time.from('03:10:00'),
-    Temporal.Time.from('03:30:00'),
-    { largestUnit: 'minutes' }
-)  // => PT20M
+Temporal.Calendar.from('ethiopic').timeUntil(Temporal.Time.from('03:10:00'), Temporal.Time.from('03:30:00'), {
+  largestUnit: 'minutes'
+}); // => PT20M
 ```
 
 ### calendar.**fields**(fields: array<string>) : array<string>
@@ -443,11 +451,13 @@ When subclassing `Temporal.Calendar`, this method doesn't need to be overridden,
 
 Usage example:
 
+<!-- prettier-ignore-start -->
 ```js
 // In built-in calendars, this method just makes a copy of the input array
 Temporal.Calendar.from('iso8601').fields(['month', 'day']);
-  // => ['month', 'day']
+// => ['month', 'day']
 ```
+<!-- prettier-ignore-end -->
 
 ### calendar.**toString**() : string
 
@@ -456,6 +466,7 @@ Temporal.Calendar.from('iso8601').fields(['month', 'day']);
 This method overrides `Object.prototype.toString()` and provides the calendar's `id` property as a human-readable description.
 
 Example usage:
+
 ```javascript
-Temporal.Date.from('2020-05-29[c=gregory]').calendar.toString()  // => gregory
+Temporal.Date.from('2020-05-29[c=gregory]').calendar.toString(); // => gregory
 ```
