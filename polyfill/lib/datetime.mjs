@@ -492,15 +492,6 @@ export class DateTime {
       microseconds,
       nanoseconds
     } = ES.DifferenceDateTime(
-      GetSlot(other, ISO_YEAR),
-      GetSlot(other, ISO_MONTH),
-      GetSlot(other, ISO_DAY),
-      GetSlot(other, ISO_HOUR),
-      GetSlot(other, ISO_MINUTE),
-      GetSlot(other, ISO_SECOND),
-      GetSlot(other, ISO_MILLISECOND),
-      GetSlot(other, ISO_MICROSECOND),
-      GetSlot(other, ISO_NANOSECOND),
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
       GetSlot(this, ISO_DAY),
@@ -510,6 +501,15 @@ export class DateTime {
       GetSlot(this, ISO_MILLISECOND),
       GetSlot(this, ISO_MICROSECOND),
       GetSlot(this, ISO_NANOSECOND),
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY),
+      GetSlot(other, ISO_HOUR),
+      GetSlot(other, ISO_MINUTE),
+      GetSlot(other, ISO_SECOND),
+      GetSlot(other, ISO_MILLISECOND),
+      GetSlot(other, ISO_MICROSECOND),
+      GetSlot(other, ISO_NANOSECOND),
       calendar,
       largestUnit
     );
@@ -526,31 +526,21 @@ export class DateTime {
       microseconds,
       nanoseconds
     } = ES.RoundDuration(
-      -years,
-      -months,
-      -weeks,
-      -days,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds,
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
       roundingIncrement,
       smallestUnit,
       ES.NegateTemporalRoundingMode(roundingMode),
       this
     ));
-    years = -years;
-    months = -months;
-    weeks = -weeks;
-    days = -days;
-    hours = -hours;
-    minutes = -minutes;
-    seconds = -seconds;
-    milliseconds = -milliseconds;
-    microseconds = -microseconds;
-    nanoseconds = -nanoseconds;
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -563,7 +553,18 @@ export class DateTime {
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(
+      -years,
+      -months,
+      -weeks,
+      -days,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds
+    );
   }
   round(options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

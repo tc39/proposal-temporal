@@ -160,9 +160,9 @@ export class Date {
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
-    duration = { years, months, weeks, days };
+    duration = { years: -years, months: -months, weeks: -weeks, days: -days };
     const Construct = ES.SpeciesConstructor(this, Date);
-    const result = GetSlot(this, CALENDAR).dateSubtract(this, duration, options, Construct);
+    const result = GetSlot(this, CALENDAR).dateAdd(this, duration, options, Construct);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -243,10 +243,11 @@ export class Date {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const result = calendar.dateUntil(other, this, { largestUnit });
-    if (smallestUnit === 'days' && roundingIncrement === 1) return result;
-
-    let { years, months, weeks, days } = result;
+    let { years, months, weeks, days } = calendar.dateUntil(this, other, { largestUnit });
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    if (smallestUnit === 'days' && roundingIncrement === 1) {
+      return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
+    }
     const TemporalDateTime = GetIntrinsic('%Temporal.DateTime%');
     const relativeTo = new TemporalDateTime(
       GetSlot(this, ISO_YEAR),
@@ -261,10 +262,10 @@ export class Date {
       GetSlot(this, CALENDAR)
     );
     ({ years, months, weeks, days } = ES.RoundDuration(
-      -years,
-      -months,
-      -weeks,
-      -days,
+      years,
+      months,
+      weeks,
+      days,
       0,
       0,
       0,
@@ -277,7 +278,6 @@ export class Date {
       relativeTo
     ));
 
-    const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
   }
   equals(other) {

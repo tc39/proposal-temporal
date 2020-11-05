@@ -554,8 +554,8 @@ describe('DateTime', () => {
       const lastFeb20 = DateTime.from('2020-02-29T00:00');
       const lastFeb21 = DateTime.from('2021-02-28T00:00');
       equal(`${lastFeb20.until(lastFeb21)}`, 'P365D');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`, 'P11M30D');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`, 'P11M30D');
+      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`, 'P12M');
+      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`, 'P1Y');
     });
     it('weeks and months are mutually exclusive', () => {
       const laterDateTime = dt.add({ days: 42, hours: 3 });
@@ -860,8 +860,8 @@ describe('DateTime', () => {
       const lastFeb20 = DateTime.from('2020-02-29T00:00');
       const lastFeb21 = DateTime.from('2021-02-28T00:00');
       equal(`${lastFeb21.since(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M30D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M30D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M28D');
+      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M28D');
     });
     it('weeks and months are mutually exclusive', () => {
       const laterDateTime = dt.add({ days: 42, hours: 3 });
