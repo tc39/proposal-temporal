@@ -987,19 +987,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-subtractdate" aoid="SubtractDate">
-      <h1>SubtractDate ( _year_, _month_, _day_, _years_, _months_, _days_, _overflow_ )</h1>
-      <emu-alg>
-        1. Assert: _year_, _month_, _day_, _years_, _months_, and _days_ are integer Number values.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
-        1. Set _days_ to _days_ + 7 × _weeks_.
-        1. Let _intermediate_ be ? BalanceDate(_year_, _month_, _day_ - _days_).
-        1. Let _d_ be _intermediate_.[[Day]].
-        1. Let _intermediate_ be ? BalanceYearMonth(_intermediate_.[[Year]] - _years_, _intermediate_.[[Month]] - _months_).
-        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_, _overflow_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-comparetemporaldate" aoid="CompareTemporalDate">
       <h1>CompareTemporalDate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_ )</h1>
       <emu-alg>
