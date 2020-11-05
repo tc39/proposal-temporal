@@ -4566,6 +4566,58 @@
       if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
       return result;
     },
+    InterpretTemporalZonedDateTimeOffset: function InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, disambiguation, offsetOpt) {
+      var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
+      var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+
+      if (offsetNs === null || offsetOpt === 'ignore') {
+        // Simple case: ISO string without a TZ offset (or caller wants to ignore
+        // the offset), so just convert DateTime to Instant in the given time zone
+        var _instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+
+        return GetSlot(_instant, EPOCHNANOSECONDS);
+      } // The caller wants the offset to always win ('use') OR the caller is OK
+      // with the offset winning ('prefer' or 'reject') as long as it's valid
+      // for this timezone and date/time.
+
+
+      if (offsetOpt === 'use') {
+        // Calculate the instant for the input's date/time and offset
+        var epochNs = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+        if (epochNs === null) throw new RangeError('ZonedDateTime outside of supported range');
+        return epochNs.minus(offsetNs);
+      } // "prefer" or "reject"
+
+
+      var possibleInstants = timeZone.getPossibleInstantsFor(dt);
+
+      var _iterator7 = _createForOfIteratorHelper(possibleInstants),
+          _step7;
+
+      try {
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var candidate = _step7.value;
+          var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
+          if (candidateOffset === offsetNs) return GetSlot(candidate, EPOCHNANOSECONDS);
+        } // the user-provided offset doesn't match any instants for this time
+        // zone and date/time.
+
+      } catch (err) {
+        _iterator7.e(err);
+      } finally {
+        _iterator7.f();
+      }
+
+      if (offsetOpt === 'reject') {
+        var offsetStr = ES.FormatTimeZoneOffsetString(offsetNs);
+        throw new RangeError("Offset ".concat(offsetStr, " is invalid for ").concat(dt, " in ").concat(timeZone));
+      } // fall through: offsetOpt === 'prefer', but the offset doesn't match
+      // so fall back to use the time zone instead.
+
+
+      var instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+      return GetSlot(instant, EPOCHNANOSECONDS);
+    },
     ToTemporalZonedDateTime: function ToTemporalZonedDateTime(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
       var disambiguation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'compatible';
@@ -4617,61 +4669,10 @@
         calendar = ES.ToTemporalCalendar(calendar);
       }
 
-      var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
-      var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      var instant;
-
-      if (!offset || offsetOpt === 'ignore') {
-        // Simple case: ISO string without a TZ offset (or caller wants to ignore
-        // the offset), so just convert DateTime to Instant in the given time zone
-        instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
-      } else {
-        // The caller wants the offset to always win ('use') OR the caller is OK
-        // with the offset winning ('prefer' or 'reject') as long as it's valid
-        // for this timezone and date/time.
-        var offsetNs = ES.ParseOffsetString(offset);
-
-        if (offsetOpt === 'use') {
-          // Calculate the instant for the input's date/time and offset
-          var epochNs = ES.GetEpochFromParts(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), GetSlot(dt, ISO_HOUR), GetSlot(dt, ISO_MINUTE), GetSlot(dt, ISO_SECOND), GetSlot(dt, ISO_MILLISECOND), GetSlot(dt, ISO_MICROSECOND), GetSlot(dt, ISO_NANOSECOND));
-          if (epochNs === null) throw new RangeError('ZonedDateTime outside of supported range');
-          var TemporalInstant = GetIntrinsic$1('%Temporal.Instant%');
-          instant = new TemporalInstant(epochNs.minus(offsetNs));
-        } else {
-          // "prefer" or "reject"
-          var possibleInstants = timeZone.getPossibleInstantsFor(dt);
-
-          var _iterator7 = _createForOfIteratorHelper(possibleInstants),
-              _step7;
-
-          try {
-            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-              var candidate = _step7.value;
-              var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-
-              if (candidateOffset === offsetNs) {
-                instant = candidate;
-                break;
-              }
-            }
-          } catch (err) {
-            _iterator7.e(err);
-          } finally {
-            _iterator7.f();
-          }
-
-          if (!instant) {
-            // the user-provided offset doesn't match any instants for this time
-            // zone and date/time.
-            if (offsetOpt === 'reject') throw new RangeError("Offset ".concat(offset, " is invalid for ").concat(dt, " in ").concat(timeZone)); // fall through: offsetOpt === 'prefer', but the offset doesn't match
-            // so fall back to use the time zone instead.
-
-            instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
-          }
-        }
-      }
-
-      var result = new constructor(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+      var offsetNs = null;
+      if (offset) offsetNs = ES.ParseOffsetString(offset);
+      var epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, disambiguation, offsetOpt);
+      var result = new constructor(epochNanoseconds, timeZone, calendar);
       if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
       return result;
     },
@@ -11124,6 +11125,12 @@
         };
       }
     }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
       key: "hour",
       get: function get() {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -11620,6 +11627,8 @@
   }();
   MakeIntrinsicClass(YearMonth, 'Temporal.YearMonth');
 
+  var ArrayPrototypePush$1 = Array.prototype.push;
+  var ObjectAssign$6 = Object.assign;
   var ZonedDateTime = /*#__PURE__*/function () {
     function ZonedDateTime(epochNanoseconds, timeZone) {
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : GetISO8601Calendar();
@@ -11655,15 +11664,51 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 
         if (ES.Type(temporalZonedDateTimeLike) !== 'Object') {
-          var str = ES.ToString(temporalZonedDateTimeLike);
-          temporalZonedDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+          throw new TypeError('invalid zoned-date-time-like');
+        }
+
+        if (temporalZonedDateTimeLike.calendar !== undefined) {
+          throw new TypeError('calendar invalid for with(). use withCalendar()');
+        }
+
+        if (temporalZonedDateTimeLike.timeZone !== undefined) {
+          throw new TypeError('timeZone invalid for with(). use withTimeZone()');
         }
 
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var offset = ES.ToTemporalOffset(options, 'prefer');
-        throw new Error('with() not implemented yet');
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var calendar = GetSlot(this, CALENDAR);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
+        ArrayPrototypePush$1.call(fieldNames, 'offset');
+        var props = ES.ToPartialRecord(temporalZonedDateTimeLike, fieldNames);
+
+        if (!props) {
+          throw new TypeError('invalid zoned-date-time-like');
+        }
+
+        var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+        ObjectAssign$6(fields, props);
+
+        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow),
+            year = _ES$InterpretTemporal.year,
+            month = _ES$InterpretTemporal.month,
+            day = _ES$InterpretTemporal.day,
+            hour = _ES$InterpretTemporal.hour,
+            minute = _ES$InterpretTemporal.minute,
+            second = _ES$InterpretTemporal.second,
+            millisecond = _ES$InterpretTemporal.millisecond,
+            microsecond = _ES$InterpretTemporal.microsecond,
+            nanosecond = _ES$InterpretTemporal.nanosecond;
+
+        var offsetNs = ES.ParseOffsetString(fields.offset);
+        var epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, disambiguation, offset);
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        var result = new Construct(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
+        if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+        return result;
       }
     }, {
       key: "withTimeZone",
@@ -11839,37 +11884,11 @@
         // offset. Otherwise the offset will be changed to be compatible with the
         // new date/time values. If DST disambiguation is required, the `compatible`
         // disambiguation algorithm will be used.
-        var DateTime = GetIntrinsic$1('%Temporal.DateTime%');
-        var calendar = GetSlot(this, CALENDAR);
-        var rounded = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
         var timeZone = GetSlot(this, TIME_ZONE);
-        var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT)); // See the 'prefer' algorithm in ToTemporalZonedDateTime
-
-        var instant;
-        var possibleInstants = timeZone.getPossibleInstantsFor(rounded);
-
-        var _iterator = _createForOfIteratorHelper(possibleInstants),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var candidate = _step.value;
-            var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-
-            if (candidateOffset === offsetNs) {
-              instant = candidate;
-              break;
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
-        if (!instant) instant = ES.GetTemporalInstantFor(timeZone, rounded, 'compatible');
+        var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
+        var epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, 'compatible', 'prefer');
         var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
-        var result = new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+        var result = new Construct(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
         if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
         return result;
       }

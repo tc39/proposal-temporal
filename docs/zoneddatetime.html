@@ -671,7 +671,7 @@ zdt<span class="token punctuation">.</span><span class="token function">with</sp
 <h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>zonedDateTimeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.ZonedDateTime</code> (including <code>offsetNanoseconds</code>), or an ISO string.</li>
+<li><code>zonedDateTimeLike</code> (object): an object with some of the properties of a <code>Temporal.ZonedDateTime</code> (including <code>offset</code>, but not <code>timeZone</code> or <code>calendar</code>).</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
 Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
@@ -679,7 +679,7 @@ The default is <code>&#39;constrain&#39;</code>.</li>
 <li><code>disambiguation</code> (string): How to handle date/time values that are ambiguous or invalid due to DST or other time zone offset changes.
 Allowed values are <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code>.
 The default is <code>&#39;compatible&#39;</code>.</li>
-<li><code>offset</code> (string): How to handle conflicts between time zone offset and time zone
+<li><code>offset</code> (string): How to handle conflicts between time zone offset and time zone.
 Allowed values are <code>&#39;prefer&#39;</code>, <code>&#39;use&#39;</code>, <code>&#39;ignore&#39;</code>, and <code>&#39;reject&#39;</code>.
 The default is <code>&#39;prefer&#39;</code>.</li>
 </ul>
@@ -687,21 +687,19 @@ The default is <code>&#39;prefer&#39;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.ZonedDateTime</code> object.</p>
 <p>This method creates a new <code>Temporal.ZonedDateTime</code> which is a copy of <code>zonedDateTime</code>, but any properties present on <code>zonedDateTimeLike</code> override the ones already present on <code>zonedDateTime</code>.</p>
-<p>If <code>zonedDateTimeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.ZonedDateTime</code>, <code>Temporal.Date</code> (if no time is given in the string), <code>Temporal.DateTime</code>, or <code>Temporal.Time</code>, in order of priority.</p>
 <p>Since <code>Temporal.ZonedDateTime</code> objects are immutable, this method will create a new instance instead of modifying the existing instance.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>zonedDateTimeLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
-<p>If a <code>timeZone</code> and/or <code>calendar</code> field is included with a different ID than the current object&#39;s fields, then <code>with</code> will first convert all existing fields to the new time zone and/or calendar and then fields in the input will be played on top of the new time zone or calendar.
-This makes <code>.with({timeZone})</code> is an easy way to convert to a new time zone while updating the clock time.
-However, to keep clock time as-is while resetting the time zone, use the <code>.toPlainDateTime()</code> method instead. Examples:</p>
+<p>If a <code>timeZone</code> or <code>calendar</code> property is included, this function will throw an exception.
+To convert to a new time zone while updating the clock time, use the <code>withTimeZone()</code> method, and to keep clock time as-is while resetting the time zone, use the <code>.toPlainDateTime()</code> method instead. Examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// update local time to match new time zone</span>
-<span class="token keyword">const</span> sameInstantInOtherTz <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'Europe/London'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> sameInstantInOtherTz <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// create instance with same local time in a new time zone</span>
-<span class="token keyword">const</span> newTzSameLocalTime <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Some input values can cause conflict between the <code>offsetNanoseconds</code> field and the <code>timeZone</code> field.
-This can happen when either of these fields are included in the input, and can also happen when setting date/time values on the opposite side of a time zone offset transition like DST starting or ending.
-The <code>offset</code> option can resolve this offset vs. time zone conflict or ambiguity.</p>
+<span class="token keyword">const</span> newTzSameLocalTime <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Some input values can cause conflict between <code>zonedDateTime</code>&#39;s time zone and its UTC offset.
+This can happen when <code>offset</code> is included in the input, and can also happen when setting date/time values on the opposite side of a time zone offset transition like DST starting or ending.
+The <code>offset</code> option can resolve this conflict.</p>
 <p>Unlike the <code>from()</code> method where <code>offset</code> defaults to <code>&#39;reject&#39;</code>, the offset option in <code>with</code> defaults to <code>&#39;prefer&#39;</code>.
 This default prevents DST disambiguation from causing unexpected one-hour changes in exact time after making small changes to clock time fields.
 For example, if a <code>Temporal.ZonedDateTime</code> is set to the &quot;second&quot; 1:30AM on a day where the 1-2AM clock hour is repeated after a backwards DST transition, then calling <code>.with({minute: 45})</code> will result in an ambiguity which is resolved using the default <code>offset: &#39;prefer&#39;</code> option.
@@ -715,19 +713,7 @@ However, if the existing offset is not valid for the new result (e.g. <code>.wit
 <p>Please see the documentation of <code>from</code> for more details on options behavior.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24-06:00[America/Chicago]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T03:31-06:00[America/Chicago]</span>
-
-midnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>midnight<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00-06:00[America/Chicago]</span>
-<span class="token comment">// Note: not the same as zdt.with({ hour: 0 }), because all time units are set to zero.</span>
-<span class="token comment">// Same as above but using a string:</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T00:00-06:00[America/Chicago]</span>
-date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-05-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-05-31T03:24-05:00[America/Chicago] (automatically adjusted for DST)</span>
-<span class="token comment">// Same as above but using a string:</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'2015-05-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-05-31T03:24-05:00[America/Chicago]</span>
-yearMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>yearMonth<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2018-04-07T03:24-05:00[America/Chicago]</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>zonedDateTime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T03:31-06:00[America/Chicago]</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>zonedDateTime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>zonedDateTime</code>.</li>
 </ul>
