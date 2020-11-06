@@ -224,7 +224,11 @@ The value of this property is suitable to be passed to `new Temporal.Instant()`.
 
 **Parameters:**
 
-- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
+- `timeZone` (object or string): either
+  - a `Temporal.TimeZone` object
+  - an object implementing the [time zone protocol](./timezone.md#protocol)
+  - a string description of the time zone; either its IANA name or UTC offset
+  - an object with a `timeZone` property whose value is any of the above.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by `instant`.
 
@@ -245,12 +249,13 @@ timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45+00:00[UTC]
 timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
 ```
 
-### instant.**toZonedDateTime**(_timeZone_: object | string, _calendar_: object | string) : Temporal.ZonedDateTime
+### instant.**toZonedDateTime**(_item_: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
-- `timeZone` (object or string): A `Temporal.TimeZone` object, or an object implementing the [time zone protocol](./timezone.md#protocol), or a string description of the time zone; either its IANA name or UTC offset.
-- `calendar` (object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
+- `item` (object): an object with properties to be combined with `instant`. The following properties are recognized:
+  - `calendar` (required calendar identifier string, `Temporal.Calendar` object, or object implementing the calendar protocol): the calendar in which to interpret `instant`.
+  - `timeZone` (required time zone identifier string, `Temporal.TimeZone` object, or object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `instant`.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
@@ -267,14 +272,14 @@ Example usage:
 ```js
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochSeconds(0);
-tz = Temporal.TimeZone.from('America/New_York');
-epoch.toZonedDateTime(tz, 'gregory');
+timeZone = Temporal.TimeZone.from('America/New_York');
+epoch.toZonedDateTime({ timeZone, calendar: 'gregory' });
   // => 1969-12-31T19:00-05:00[America/New_York][c=gregory]
 
 // What time was the Unix epoch in Tokyo in the Japanese calendar?
-tz = Temporal.TimeZone.from('Asia/Tokyo');
-cal = Temporal.Calendar.from('japanese');
-zdt = epoch.toZonedDateTime(tz, cal);
+timeZone = Temporal.TimeZone.from('Asia/Tokyo');
+calendar = Temporal.Calendar.from('japanese');
+zdt = epoch.toZonedDateTime({ timeZone, calendar });
   // => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]
 console.log(zdt.year, zdt.era);
   // => 45 showa
