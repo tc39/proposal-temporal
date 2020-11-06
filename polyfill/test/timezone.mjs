@@ -162,6 +162,10 @@ describe('TimeZone', () => {
       throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30+00:00[America/New_York]'), RangeError);
       throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30-03[Europe/Brussels]'), RangeError);
     });
+    it('offset out of range throws', () => {
+      throws(() => Temporal.TimeZone.from('1994-11-05T08:15:30+25:00'), RangeError);
+      throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30-25:00'), RangeError);
+    });
   });
   describe('+01:00', () => {
     const zone = new Temporal.TimeZone('+01:00');
