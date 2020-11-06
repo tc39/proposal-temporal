@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }
@@ -139,13 +139,13 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporaltime">Temporal.Time</h1>
+<h1 id="temporalplaintime">Temporal.PlainTime</h1>
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#constructor">Constructor</a>
 <ul>
-<li><a href="#new-Temporal-Time">new Temporal.Time</a>
+<li><a href="#new-Temporal-PlainTime">new Temporal.PlainTime</a>
 </li>
 </ul>
 </li>
@@ -214,13 +214,13 @@
 </ul>
 </details>
 
-<p>A <code>Temporal.Time</code> represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
+<p>A <code>Temporal.PlainTime</code> represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
 &quot;Wall-clock time&quot; refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
-<p><code>Temporal.Time</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.DateTime</code>.
-A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</code> by combining it with a <code>Temporal.Date</code> using the <code>toPlainDateTime()</code> method.</p>
+<p><code>Temporal.PlainTime</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.PlainDateTime</code>.
+A <code>Temporal.PlainTime</code> can be converted into a <code>Temporal.PlainDateTime</code> by combining it with a <code>Temporal.PlainDate</code> using the <code>toPlainDateTime()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-Time"><a class="heading-link" href="#new-Temporal-Time"></a><strong>new Temporal.Time</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-PlainTime"><a class="heading-link" href="#new-Temporal-PlainTime"></a><strong>new Temporal.PlainTime</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoHour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
 <li><code>isoMinute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
@@ -230,15 +230,15 @@ A <code>Temporal.Time</code> can be converted into a <code>Temporal.DateTime</co
 <li><code>isoNanosecond</code> (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.</li>
 <li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the time into.</li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object.</p>
 <p>Use this constructor if you have the correct parameters for the time already as individual number values in the ISO 8601 calendar.
-Otherwise, <code>Temporal.Time.from()</code>, which accepts more kinds of input, allows inputting times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.</p>
+Otherwise, <code>Temporal.PlainTime.from()</code>, which accepts more kinds of input, allows inputting times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>isoHour</code>, <code>isoMinute</code>, <code>isoSecond</code>, <code>isoMillisecond</code>, <code>isoMicrosecond</code>, and <code>isoNanosecond</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
-time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Time.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainTime</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 13:37</span></code></pre><h2 id="static-methods">Static methods</h2>
+<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
@@ -249,10 +249,10 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
-<p>This static method creates a new <code>Temporal.Time</code> object from another value.
-If the value is another <code>Temporal.Time</code> object, a new object representing the same time is returned.
-If the value is any other object, a <code>Temporal.Time</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and <code>calendar</code> properties that are present.
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object.</p>
+<p>This static method creates a new <code>Temporal.PlainTime</code> object from another value.
+If the value is another <code>Temporal.PlainTime</code> object, a new object representing the same time is returned.
+If the value is any other object, a <code>Temporal.PlainTime</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and <code>calendar</code> properties that are present.
 Any missing ones except <code>calendar</code> will be assumed to be 0.</p>
 <p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
@@ -270,14 +270,14 @@ However, if parsing an ISO 8601 string with a seconds component of <code>:60</co
 </blockquote>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30+01:00[Europe/Brussels]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30+01:00[Europe/Brussels]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => same as above; time zone is ignored</span>
-time <span class="token operator">===</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
+time <span class="token operator">===</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
 
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   hour<span class="token operator">:</span> <span class="token number">19</span><span class="token punctuation">,</span>
   minute<span class="token operator">:</span> <span class="token number">39</span><span class="token punctuation">,</span>
   second<span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span>
@@ -285,45 +285,45 @@ time <span class="token operator">=</span> Temporal<span class="token punctuatio
   microsecond<span class="token operator">:</span> <span class="token number">346</span><span class="token punctuation">,</span>
   nanosecond<span class="token operator">:</span> <span class="token number">205</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.068346205</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">19</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">39</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">9</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-15T19:39:09'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => same as above; Temporal.DateTime has hour, minute, etc. properties</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">19</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">39</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">9</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-15T19:39:09'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => same as above; Temporal.PlainDateTime has hour, minute, etc. properties</span>
 
 <span class="token comment">// Different overflow modes</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 15:59</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 15:00</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token number">60</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span>
-time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> minute<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// throws</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.Time.<strong>compare</strong>(<em>one</em>: Temporal.Time | object | string, <em>two</em>: Temporal.Time | object | string) : number</h3><p><strong>Parameters:</strong></p>
+<h3 id="compare"><a class="heading-link" href="#compare"></a>Temporal.PlainTime.<strong>compare</strong>(<em>one</em>: Temporal.PlainTime | object | string, <em>two</em>: Temporal.PlainTime | object | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>one</code> (<code>Temporal.Time</code> or value convertible to one): First time to compare.</li>
-<li><code>two</code> (<code>Temporal.Time</code> or value convertible to one): Second time to compare.</li>
+<li><code>one</code> (<code>Temporal.PlainTime</code> or value convertible to one): First time to compare.</li>
+<li><code>two</code> (<code>Temporal.PlainTime</code> or value convertible to one): Second time to compare.</li>
 </ul>
 <p><strong>Returns:</strong> &minus;1, 0, or 1.</p>
-<p>Compares two <code>Temporal.Time</code> objects.
+<p>Compares two <code>Temporal.PlainTime</code> objects.
 Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
 <ul>
 <li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
 <li>0 if <code>one</code> and <code>two</code> are the same;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
-<p>If <code>one</code> and <code>two</code> are not <code>Temporal.Time</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Time.from()</code>.</p>
-<p>This function can be used to sort arrays of <code>Temporal.Time</code> objects.
+<p>If <code>one</code> and <code>two</code> are not <code>Temporal.PlainTime</code> objects, then they will be converted to one as if they were passed to <code>Temporal.PlainTime.from()</code>.</p>
+<p>This function can be used to sort arrays of <code>Temporal.PlainTime</code> objects.
 For example:</p>
-<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24:05'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'01:24:05'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 01:24 01:24:05 03:24</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="hour"><a class="heading-link" href="#hour"></a>time.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>time.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>time.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>time.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>time.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>time.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of the time individually.</p>
 <p>Usage examples:</p>
 <!-- prettier-ignore-start -->
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span>hour<span class="token punctuation">;</span>        <span class="token comment">// => 19</span>
 time<span class="token punctuation">.</span>minute<span class="token punctuation">;</span>      <span class="token comment">// => 39</span>
 time<span class="token punctuation">.</span>second<span class="token punctuation">;</span>      <span class="token comment">// => 9</span>
@@ -333,9 +333,9 @@ time<span class="token punctuation">.</span>nanosecond<span class="token punctua
 
 <h3 id="calendar"><a class="heading-link" href="#calendar"></a>time.<strong>calendar</strong>: object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties are interpreted in.</p>
 <h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.Time</code>, or an ISO string.</li>
+<li><code>timeLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.PlainTime</code>, or an ISO string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
@@ -344,13 +344,13 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object.</p>
-<p>This method creates a new <code>Temporal.Time</code> which is a copy of <code>time</code>, but any properties present on <code>timeLike</code> override the ones already present on <code>time</code>.</p>
-<p>If <code>timeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.Time</code>.
-(In this case, the result is identical to to <code>Temporal.Time.from(timeLike)</code>.)</p>
-<p>Since <code>Temporal.Time</code> objects are immutable, use this method instead of modifying one.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object.</p>
+<p>This method creates a new <code>Temporal.PlainTime</code> which is a copy of <code>time</code>, but any properties present on <code>timeLike</code> override the ones already present on <code>time</code>.</p>
+<p>If <code>timeLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.PlainTime</code>.
+(In this case, the result is identical to to <code>Temporal.PlainTime.from(timeLike)</code>.)</p>
+<p>Since <code>Temporal.PlainTime</code> objects are immutable, use this method instead of modifying one.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the top of the next hour?</span>
 time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   minute<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
@@ -358,14 +358,14 @@ time<span class="token punctuation">.</span><span class="token function">add</sp
   millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   nanosecond<span class="token operator">:</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>time.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>time.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>time</code>.</li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code>, projected into <code>calendar</code>.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is the time indicated by <code>time</code>, projected into <code>calendar</code>.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00[c=ethiopic]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00[c=ethiopic]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
@@ -376,7 +376,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> plus <code>duration</code>.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is the time indicated by <code>time</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
@@ -385,8 +385,8 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>time.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>time.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
@@ -397,7 +397,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is the time indicated by <code>time</code> minus <code>duration</code>.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is the time indicated by <code>time</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
@@ -406,10 +406,10 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:34:09.068345405</span></code></pre><h3 id="until"><a class="heading-link" href="#until"></a>time.<strong>until</strong>(<em>other</em>: Temporal.Time | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:34:09.068345405</span></code></pre><h3 id="until"><a class="heading-link" href="#until"></a>time.<strong>until</strong>(<em>other</em>: Temporal.PlainTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.Time</code> or value convertible to one): Another time until when to compute the difference.</li>
+<li><code>other</code> (<code>Temporal.PlainTime</code> or value convertible to one): Another time until when to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
@@ -428,8 +428,9 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time after <code>time</code> and until <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>time</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
-If <code>other</code> is earlier than <code>time</code> then the resulting duration will be negative.</p>
-<p>If <code>other</code> is not a <code>Temporal.Time</code> object, then it will be converted to one as if it were passed to <code>Temporal.Time.from()</code>.</p>
+If <code>other</code> is earlier than <code>time</code> then the resulting duration will be negative.
+The returned <code>Temporal.Duration</code>, when added to <code>time</code> with the same <code>options</code>, will yield <code>other</code>.</p>
+<p>If <code>other</code> is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&#39;seconds&#39;</code>, for example.
@@ -442,17 +443,17 @@ The default is to do no rounding.</p>
 If you need to do this, choose the calendar in which the computation takes place by converting one of the times with <code>time.withCalendar()</code>.</p>
 <p>Usage example:</p>
 <!-- prettier-ignore-start -->
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT2H25M49.903051894S</span>
-time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT34M11.903051894S</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT2H25M49.903051894S</span>
+time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT34M11.903051894S</span>
 
 <span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
-time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT2H25M50S</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="since"><a class="heading-link" href="#since"></a>time.<strong>since</strong>(<em>other</em>: Temporal.Time | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<h3 id="since"><a class="heading-link" href="#since"></a>time.<strong>since</strong>(<em>other</em>: Temporal.PlainTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.Time</code> or value convertible to one): Another time since when to compute the difference.</li>
+<li><code>other</code> (<code>Temporal.PlainTime</code> or value convertible to one): Another time since when to compute the difference.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
@@ -472,12 +473,13 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time before <code>time</code> and since <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>time</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>time</code> then the resulting duration will be negative.</p>
-<p>This method does the same thing as the <code>Temporal.Time.prototype.until()</code> method, but reversed, and rounding takes place relative to <code>time</code> as an ending point instead of a starting point.
-With the default options, the outcome of <code>time1.since(time2)</code> is the same as <code>time1.until(time2).negated()</code>.</p>
+<p>This method is similar to <code>Temporal.PlainTime.prototype.until()</code>, but reversed.
+The returned <code>Temporal.Duration</code>, when subtracted from <code>time</code> using the same <code>options</code>, will yield <code>other</code>.
+Using default options, <code>time1.since(time2)</code> yields the same result as <code>time1.until(time2).negated()</code>.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT34M11.903051894S</span>
-time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M49.903051894S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.Time</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT34M11.903051894S</span>
+time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M49.903051894S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
@@ -491,8 +493,8 @@ The default is <code>&#39;nearest&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.Time</code> object which is <code>time</code> rounded to <code>roundingIncrement</code> of <code>smallestUnit</code>.</p>
-<p>Rounds <code>time</code> to the given unit and increment, and returns the result as a new <code>Temporal.Time</code> object.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is <code>time</code> rounded to <code>roundingIncrement</code> of <code>smallestUnit</code>.</p>
+<p>Rounds <code>time</code> to the given unit and increment, and returns the result as a new <code>Temporal.PlainTime</code> object.</p>
 <p>The <code>smallestUnit</code> option determines the unit to round to.
 For example, to round to the nearest minute, use <code>smallestUnit: &#39;minute&#39;</code>.
 This option is required.</p>
@@ -512,7 +514,7 @@ When there is a tie, round up, like <code>ceil</code>.</li>
 </ul>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Round to a particular unit</span>
 time<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'hour'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span>
@@ -523,24 +525,24 @@ time<span class="token punctuation">.</span><span class="token function">round</
 time<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> roundingIncrement<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'ceil'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 20:00</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="equals"><a class="heading-link" href="#equals"></a>time.<strong>equals</strong>(<em>other</em>: Temporal.Time | object | string) : boolean</h3><p><strong>Parameters:</strong></p>
+<h3 id="equals"><a class="heading-link" href="#equals"></a>time.<strong>equals</strong>(<em>other</em>: Temporal.PlainTime | object | string) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>other</code> (<code>Temporal.Time</code> or value convertible to one): Another time to compare.</li>
+<li><code>other</code> (<code>Temporal.PlainTime</code> or value convertible to one): Another time to compare.</li>
 </ul>
 <p><strong>Returns:</strong> <code>true</code> if <code>time</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
-<p>Compares two <code>Temporal.Time</code> objects for equality.</p>
+<p>Compares two <code>Temporal.PlainTime</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>time == other</code> or <code>time === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
-<p>If you don&#39;t need to know the order in which the two times occur, then this function may be less typing and more efficient than <code>Temporal.Time.compare</code>.</p>
-<p>If <code>other</code> is not a <code>Temporal.Time</code> object, then it will be converted to one as if it were passed to <code>Temporal.Time.from()</code>.</p>
+<p>If you don&#39;t need to know the order in which the two times occur, then this function may be less typing and more efficient than <code>Temporal.PlainTime.compare</code>.</p>
+<p>If <code>other</code> is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>Example usage:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
 time<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>time.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>calendar</code> (string): Whether to show the calendar annotation in the return value.
+<li><code>calendarName</code> (string): Whether to show the calendar annotation in the return value.
 Valid values are <code>&#39;auto&#39;</code>, <code>&#39;always&#39;</code>, and <code>&#39;never&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
@@ -557,23 +559,26 @@ The default is <code>&#39;trunc&#39;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a string in the ISO 8601 time format representing <code>time</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>time</code>.
-The string can be passed to <code>Temporal.Time.from()</code> to create a new <code>Temporal.Time</code> object.</p>
+The string can be passed to <code>Temporal.PlainTime.from()</code> to create a new <code>Temporal.PlainTime</code> object.</p>
 <p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
 If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
-<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.DateTime.round()</code>.
+<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.PlainDateTime.round()</code>.
 Note that rounding may change the value of other units as well.</p>
 <p>Normally, a calendar annotation is shown when <code>time</code>&#39;s calendar is not the ISO 8601 calendar.
-By setting the <code>calendar</code> option to <code>&#39;always&#39;</code> or <code>&#39;never&#39;</code> this can be overridden to always or never show the annotation, respectively.
+By setting the <code>calendarName</code> option to <code>&#39;always&#39;</code> or <code>&#39;never&#39;</code> this can be overridden to always or never show the annotation, respectively.
 For more information on the calendar annotation, see <a href="./iso-string-ext.html#calendar-systems">ISO string extensions</a>.</p>
 <p>Example usage:</p>
-<pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<!-- prettier-ignore-start -->
+<pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.068346205</span>
 
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39</span>
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09</span>
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.0683</span>
-time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
-  <span class="token comment">// => 19:39:09.06835</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>time.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// => 19:39:09.06835</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>time.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
 <li><code>options</code> (optional object): An object with properties influencing the formatting.</li>
@@ -582,25 +587,25 @@ time<span class="token punctuation">.</span><span class="token function">toStrin
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>time</code>.</p>
 <p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
 <blockquote>
-<p><strong>NOTE</strong>: Unlike in <a href="./instant.html#toLocaleString"><code>Temporal.Instant.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.Time</code> carries no time zone information and is just a wall-clock time.</p>
+<p><strong>NOTE</strong>: Unlike in <a href="./instant.html#toLocaleString"><code>Temporal.Instant.prototype.toLocaleString()</code></a>, <code>locales.timeZone</code> will have no effect, because <code>Temporal.PlainTime</code> carries no time zone information and is just a wall-clock time.</p>
 </blockquote>
 <p>Example usage:</p>
-<pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => example output: 7:39:09 p.m.</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => example output: 19:39:09</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => １９:３９:０９</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>time.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>time</code>.</p>
 <p>This method is the same as <code>time.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
-<p>The reverse operation, recovering a <code>Temporal.Time</code> object from a string, is <code>Temporal.Time.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
-If you need to rebuild a <code>Temporal.Time</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Time</code>s.
+<p>The reverse operation, recovering a <code>Temporal.PlainTime</code> object from a string, is <code>Temporal.PlainTime.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.PlainTime</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.PlainTime</code>s.
 In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> workBreak <span class="token operator">=</span> <span class="token punctuation">{</span>
   type<span class="token operator">:</span> <span class="token string">'mandatory'</span><span class="token punctuation">,</span>
   name<span class="token operator">:</span> <span class="token string">'Lunch'</span><span class="token punctuation">,</span>
-  startTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  endTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">13</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  startTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  endTime<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">13</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>workBreak<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -614,16 +619,16 @@ console<span class="token punctuation">.</span><span class="token function">log<
 
 <span class="token comment">// To rebuild from the string:</span>
 <span class="token keyword">function</span> <span class="token function">reviver</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'Time'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'Time'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> value<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>time.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
-This is because it&#39;s not possible to compare <code>Temporal.Time</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
-Use <code>Temporal.Time.compare()</code> for this, or <code>time.equals()</code> for equality.</p>
-<h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>time.<strong>toZonedDateTime</strong>(<em>timeZone</em>?: Temporal.TimeZone | object | string, <em>date</em>: Temporal.Date | object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+This is because it&#39;s not possible to compare <code>Temporal.PlainTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
+Use <code>Temporal.PlainTime.compare()</code> for this, or <code>time.equals()</code> for equality.</p>
+<h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>time.<strong>toZonedDateTime</strong>(<em>timeZone</em>?: Temporal.TimeZone | object | string, <em>date</em>: Temporal.PlainDate | object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>time</code> and <code>date</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
-<li><code>date</code> (<code>Temporal.Date</code> or value convertible to one): A date used to merge into a <code>Temporal.ZonedDateTime</code> along with <code>time</code>.</li>
+<li><code>date</code> (<code>Temporal.PlainDate</code> or value convertible to one): A date used to merge into a <code>Temporal.ZonedDateTime</code> along with <code>time</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>time</code> and <code>date</code> does not exist in the time zone, or exists more than once.
@@ -633,12 +638,12 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object that represents the clock <code>time</code> on the calendar <code>date</code> projected into <code>timeZone</code>.</p>
-<p>This method can be used to convert <code>Temporal.Time</code> into a <code>Temporal.ZonedDateTime</code>, by supplying the time zone and date.</p>
+<p>This method can be used to convert <code>Temporal.PlainTime</code> into a <code>Temporal.ZonedDateTime</code>, by supplying the time zone and date.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>time</code> and <code>date</code>.
-This method produces identical results to <a href="./date.html#toZonedDateTime"><code>Temporal.Date.from(date).toZonedDateTime(time)</code></a>.</p>
-<p>If <code>date</code> is not a <code>Temporal.Date</code> object, then it will be converted to one as if it were passed to <code>Temporal.Date.from()</code>.</p>
+This method produces identical results to <a href="./date.html#toZonedDateTime"><code>Temporal.PlainDate.from(date).toZonedDateTime(time)</code></a>.</p>
+<p>If <code>date</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>In the case of ambiguity caused by DST or other time zone changes, the <code>disambiguation</code> option controls how to resolve the ambiguity:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
@@ -649,41 +654,49 @@ This method produces identical results to <a href="./date.html#toZonedDateTime">
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
-This behavior avoids exceptions when converting non-existent date/time values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.Time</code> value in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
+This behavior avoids exceptions when converting non-existent date/time values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.PlainTime</code> value in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toPlainDateTime"><a class="heading-link" href="#toPlainDateTime"></a>time.<strong>toPlainDateTime</strong>(<em>date</em>: Temporal.Date | object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toPlainDateTime"><a class="heading-link" href="#toPlainDateTime"></a>time.<strong>toPlainDateTime</strong>(<em>date</em>: Temporal.PlainDate | object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>date</code> (<code>Temporal.Date</code> or value convertible to one): A calendar date on which to place <code>time</code>.</li>
+<li><code>date</code> (<code>Temporal.PlainDate</code> or value convertible to one): A calendar date on which to place <code>time</code>.</li>
 </ul>
-<p><strong>Returns:</strong> a <code>Temporal.DateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code>.</p>
-<p>This method can be used to convert <code>Temporal.Time</code> into a <code>Temporal.DateTime</code>, by supplying the calendar date to use.
+<p><strong>Returns:</strong> a <code>Temporal.PlainDateTime</code> object that represents the wall-clock time <code>time</code> on the calendar date <code>date</code>.</p>
+<p>This method can be used to convert <code>Temporal.PlainTime</code> into a <code>Temporal.PlainDateTime</code>, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.</p>
-<p>This has identical results to <a href="./date.html#toPlainDateTime"><code>Temporal.Date.from(date).toPlainDateTime(time)</code></a>.</p>
-<p>If <code>date</code> is not a <code>Temporal.Date</code> object, then it will be converted to one as if it were passed to <code>Temporal.Date.from()</code>.</p>
+<p>This has identical results to <a href="./date.html#toPlainDateTime"><code>Temporal.PlainDate.from(date).toPlainDateTime(time)</code></a>.</p>
+<p>If <code>date</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>time.<strong>getFields</strong>() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>time</code>.</p>
-<p>This method can be used to convert a <code>Temporal.Time</code> into a record-like data structure.
+<p>This method can be used to convert a <code>Temporal.PlainTime</code> into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
 <p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">.</span>minute<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
 Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>minute<span class="token punctuation">;</span> <span class="token comment">// => 23</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>time.<strong>getISOFields</strong>(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>time</code> in the ISO 8601 calendar, as well as the value of <code>time.calendar</code>.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
 Use <code>time.getFields()</code> instead, or <code>time.withCalendar(&#39;iso8601&#39;).getFields()</code>.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 f <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 f<span class="token punctuation">.</span>isoHour<span class="token punctuation">;</span> <span class="token comment">// => 3</span>
 <span class="token comment">// Fields correspond exactly to constructor arguments:</span>
-time2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Time</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>isoHour<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMinute<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoSecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMillisecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMicrosecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoNanosecond<span class="token punctuation">,</span> f<span class="token punctuation">.</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+time2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainTime</span><span class="token punctuation">(</span>
+  f<span class="token punctuation">.</span>isoHour<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>isoMinute<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>isoSecond<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>isoMillisecond<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>isoMicrosecond<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>isoNanosecond<span class="token punctuation">,</span>
+  f<span class="token punctuation">.</span>calendar
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>time2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
 
 <span class="token comment">// Time in other calendar</span>

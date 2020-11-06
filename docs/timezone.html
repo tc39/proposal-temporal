@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }
@@ -195,7 +195,7 @@
 </details>
 
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
-<p>Since <code>Temporal.Instant</code> and <code>Temporal.DateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
+<p>Since <code>Temporal.Instant</code> and <code>Temporal.PlainDateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <h2 id="custom-time-zones">Custom time zones</h2>
 <p>For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
 There are two ways to do this.</p>
@@ -237,7 +237,7 @@ IANA time zones may have DST transitions, and UTC offsets do not.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">tz1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/Vancouver'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>tz2<span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz1<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>inst<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span>
 tz2<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>inst<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-08T10:00Z</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.TimeZone.<strong>from</strong>(<em>thing</em>: any) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
@@ -340,16 +340,16 @@ tz<span class="token punctuation">.</span><span class="token function">getZonedD
 <span class="token comment">// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getZonedDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.DateTime</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span><span class="token function">getZonedDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York]</span></code></pre><h3 id="getDateTimeFor"><a class="heading-link" href="#getDateTimeFor"></a>timeZone.<strong>getDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): An exact time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
 The default is to use the ISO 8601 calendar.</li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.DateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
-<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code>.</p>
+<p><strong>Returns:</strong> A <code>Temporal.PlainDateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
+<p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.PlainDateTime</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
-<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates a <code>Temporal.DateTime</code> from <code>instant</code> using a UTC offset which is the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates a <code>Temporal.PlainDateTime</code> from <code>instant</code> using a UTC offset which is the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting an exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -359,9 +359,9 @@ tz<span class="token punctuation">.</span><span class="token function">getDateTi
 <span class="token comment">// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00</span></code></pre><h3 id="getInstantFor"><a class="heading-link" href="#getInstantFor"></a>timeZone.<strong>getInstantFor</strong>(<em>dateTime</em>: Temporal.DateTime | object | string, <em>options</em>?: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span><span class="token function">getDateTimeFor</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1969-12-31T19:00</span></code></pre><h3 id="getInstantFor"><a class="heading-link" href="#getInstantFor"></a>timeZone.<strong>getInstantFor</strong>(<em>dateTime</em>: Temporal.PlainDateTime | object | string, <em>options</em>?: object) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>dateTime</code> (<code>Temporal.DateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
+<li><code>dateTime</code> (<code>Temporal.PlainDateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
@@ -371,9 +371,9 @@ The default is <code>&#39;compatible&#39;</code>.</li>
 </li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Instant</code> object indicating the exact time in <code>timeZone</code> at the time of the calendar date and wall-clock time from <code>dateTime</code>.</p>
-<p>This method is one way to convert a <code>Temporal.DateTime</code> to a <code>Temporal.Instant</code>.
-The result is identical to <a href="./datetime.html#toInstant"><code>Temporal.DateTime.from(dateTime).toInstant(timeZone, disambiguation)</code></a>.</p>
-<p>If <code>dateTime</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
+<p>This method is one way to convert a <code>Temporal.PlainDateTime</code> to a <code>Temporal.Instant</code>.
+The result is identical to <a href="./datetime.html#toInstant"><code>Temporal.PlainDateTime.from(dateTime).toInstant(timeZone, disambiguation)</code></a>.</p>
+<p>If <code>dateTime</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
 <p>In the case of ambiguity, the <code>disambiguation</code> option controls what instant to return:</p>
 <ul>
 <li><code>&#39;compatible&#39;</code> (the default): Acts like <code>&#39;earlier&#39;</code> for backward transitions and <code>&#39;later&#39;</code> for forward transitions.</li>
@@ -384,21 +384,21 @@ The result is identical to <a href="./datetime.html#toInstant"><code>Temporal.Da
 <p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
-This behavior avoids exceptions when converting non-existent <code>Temporal.DateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.DateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
+This behavior avoids exceptions when converting non-existent <code>Temporal.PlainDateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.PlainDateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation calls <code>timeZone.getPossibleInstantsFor()</code>, and if there is more than one possible instant, uses <code>disambiguation</code> to pick which one to return.</p>
-<h3 id="getPossibleInstantsFor"><a class="heading-link" href="#getPossibleInstantsFor"></a>timeZone.<strong>getPossibleInstantsFor</strong>(<em>dateTime</em>: Temporal.DateTime | object | string) : array&lt;Temporal.Instant&gt;</h3><p><strong>Parameters:</strong></p>
+<h3 id="getPossibleInstantsFor"><a class="heading-link" href="#getPossibleInstantsFor"></a>timeZone.<strong>getPossibleInstantsFor</strong>(<em>dateTime</em>: Temporal.PlainDateTime | object | string) : array&lt;Temporal.Instant&gt;</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>dateTime</code> (<code>Temporal.DateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
+<li><code>dateTime</code> (<code>Temporal.PlainDateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
 </ul>
 <p><strong>Returns:</strong> An array of <code>Temporal.Instant</code> objects, which may be empty.</p>
 <p>This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by <code>dateTime</code>.</p>
-<p>If <code>dateTime</code> is not a <code>Temporal.DateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.DateTime.from()</code>.</p>
+<p>If <code>dateTime</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
 <p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
 <p>Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
-During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.DateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
+During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.PlainDateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
 <h3 id="getNextTransition"><a class="heading-link" href="#getNextTransition"></a>timeZone.<strong>getNextTransition</strong>(<em>startingPoint</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time after which to find the next DST transition.</li>

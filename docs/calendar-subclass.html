@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }
@@ -140,17 +140,17 @@
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
 <h1 id="subclass-based-temporal-calendar-api">Subclass-based Temporal Calendar API</h1>
-<p><a href="calendar-draft.html">calendar-draft.md</a> discusses a design for calendar support in Temporal based on a single shared Temporal.Date type with a Temporal.Calendar.  This document discusses an alternative approach based on subclassing of Temporal.Date types, which was eliminated due to the drawbacks discussed in this document.</p>
-<p>In this document, the <em>Temporal.Calendar Approach</em> refers to the solution proposed in <a href="calendar-draft.html">calendar-draft.md</a>, and the <em>Temporal.Date Subclassing Approach</em> refers to the alternative, but eliminated, solution proposed in this document.</p>
+<p><a href="calendar-draft.html">calendar-draft.md</a> discusses a design for calendar support in Temporal based on a single shared Temporal.PlainDate type with a Temporal.Calendar. This document discusses an alternative approach based on subclassing of Temporal.PlainDate types, which was eliminated due to the drawbacks discussed in this document.</p>
+<p>In this document, the <em>Temporal.Calendar Approach</em> refers to the solution proposed in <a href="calendar-draft.html">calendar-draft.md</a>, and the <em>Temporal.PlainDate Subclassing Approach</em> refers to the alternative, but eliminated, solution proposed in this document.</p>
 <h2 id="overview">Overview</h2>
-<p><code>Temporal.Date</code> would become a base class.  For example, a class like <code>HebrewDate</code> would extend <code>Temporal.Date</code>.</p>
+<p><code>Temporal.PlainDate</code> would become a base class. For example, a class like <code>HebrewDate</code> would extend <code>Temporal.PlainDate</code>.</p>
 <h2 id="comparison">Comparison</h2>
 <h3 id="built-in-calendars"><a class="heading-link" href="#built-in-calendars"></a>Built-In Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> All built-in calendars, including 402 calendars, are all instances of Temporal.Calendar</p>
-<p><strong>Temporal.Date Subclassing Approach:</strong> Every built-in 402 calendar has a corresponding type heirarchy in the Intl namespace</p>
+<p><strong>Temporal.PlainDate Subclassing Approach:</strong> Every built-in 402 calendar has a corresponding type heirarchy in the Intl namespace</p>
 <h3 id="custom-calendars"><a class="heading-link" href="#custom-calendars"></a>Custom Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> Write an implementation of Temporal.Calendar.</p>
-<p><strong>Temporal.Date Subclassing Approach:</strong> Subclass Temporal.Date or one of its subclasses.</p>
+<p><strong>Temporal.PlainDate Subclassing Approach:</strong> Subclass Temporal.PlainDate or one of its subclasses.</p>
 <h3 id="enumerable-properties"><a class="heading-link" href="#enumerable-properties"></a>Enumerable Properties</h3><p>We tentatively decided in <a href="https://github.com/tc39/proposal-temporal/issues/403">#403</a> that data properties (like year, month, and day) should be enumerable.</p>
-<p><strong>Temporal.Calendar Approach:</strong> Since the calendar object generally instantiates the Temporal.Date, it can set the correct enumerable properties on each instance when producing it in the factory.  If a Temporal.Date is constructed directly, the behavior depends on the default calendar: if Partial ISO is used, that object need not have any enumerable properties (more elegant); if Full ISO is used, the Temporal.Date constructor should ask Full ISO which fields it should make enumerable (workable but less elegant).</p>
+<p><strong>Temporal.Calendar Approach:</strong> Since the calendar object generally instantiates the Temporal.PlainDate, it can set the correct enumerable properties on each instance when producing it in the factory. If a Temporal.PlainDate is constructed directly, the behavior depends on the default calendar: if Partial ISO is used, that object need not have any enumerable properties (more elegant); if Full ISO is used, the Temporal.PlainDate constructor should ask Full ISO which fields it should make enumerable (workable but less elegant).</p>
 <p>Note that the data fields isoYear, isoMonth, and isoDay should not be enumerable.</p>
 <p>Example of a calendar setting enumerable properties:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">JapaneseCalendar</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span> <span class="token punctuation">{</span>
@@ -158,37 +158,37 @@
         <span class="token keyword">const</span> <span class="token punctuation">{</span> era<span class="token punctuation">,</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> fields<span class="token punctuation">;</span>
         <span class="token keyword">const</span> isoYear <span class="token operator">=</span> <span class="token comment">// calculate from era and year</span>
 
-        <span class="token comment">// Temporal.Date constructor takes isoYear, isoMonth, isoDay, and calendar</span>
-        <span class="token keyword">const</span> retval <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span><span class="token punctuation">(</span>isoYear<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// Temporal.PlainDate constructor takes isoYear, isoMonth, isoDay, and calendar</span>
+        <span class="token keyword">const</span> retval <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span>isoYear<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
         <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> k <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"era"</span><span class="token punctuation">,</span> <span class="token string">"year"</span><span class="token punctuation">,</span> <span class="token string">"month"</span><span class="token punctuation">,</span> <span class="token string">"day"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             Object<span class="token punctuation">.</span><span class="token function">defineProperty</span><span class="token punctuation">(</span>retval<span class="token punctuation">,</span> k<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-                value<span class="token operator">:</span> Temporal<span class="token punctuation">.</span><span class="token class-name">Date</span><span class="token punctuation">.</span>prototype<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                value<span class="token operator">:</span> Temporal<span class="token punctuation">.</span><span class="token class-name">PlainDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span>
                 enumerable<span class="token operator">:</span> <span class="token boolean">true</span>
             <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
         <span class="token keyword">return</span> retval<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre><p><strong>Temporal.Date Subclassing Approach:</strong> Each subclass can decide which fields to make enumerable in the constructor.</p>
+<span class="token punctuation">}</span></code></pre><p><strong>Temporal.PlainDate Subclassing Approach:</strong> Each subclass can decide which fields to make enumerable in the constructor.</p>
 <p>Example of a subclass setting enumerable properties:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">JapaneseDate</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Date</span> <span class="token punctuation">{</span>
-    <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">era<span class="token punctuation">,</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>era <span class="token operator">=</span> era<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>year <span class="token operator">=</span> year<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>month <span class="token operator">=</span> month<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>day <span class="token operator">=</span> day<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">JapaneseDate</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">era<span class="token punctuation">,</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>era <span class="token operator">=</span> era<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>year <span class="token operator">=</span> year<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>month <span class="token operator">=</span> month<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>day <span class="token operator">=</span> day<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre><p>@ptomato said about this:</p>
 <blockquote>
-<p>I&#39;m not sure this approach would work, since you would have to call <code>super()</code> before setting the properties on <code>this</code>. By that time you&#39;d already have the Temporal.Date.prototype getters defined, so I think you&#39;d have to take an approach that was more similar to the calendar approach.</p>
+<p>I&#39;m not sure this approach would work, since you would have to call <code>super()</code> before setting the properties on <code>this</code>. By that time you&#39;d already have the Temporal.PlainDate.prototype getters defined, so I think you&#39;d have to take an approach that was more similar to the calendar approach.</p>
 </blockquote>
 <h3 id="julian-change-dates"><a class="heading-link" href="#julian-change-dates"></a>Julian Change Dates</h3><p>The Temporal.Calendar Approach has a more natural way to implement calendars that themselves have properties.</p>
 <p><strong>Temporal.Calendar Approach:</strong> An instance of Temporal.Calendar can be created to represent a particular change date, and that calendar can be passed around to all Temporal operations.</p>
-<p><strong>Temporal.Date Subclassing Approach:</strong> Each change date would either need its own subclass (impractical, since there are many possible change dates), or a Gregorian Temporal.Date subclass would need to add a stateful field representing the change date.</p>
+<p><strong>Temporal.PlainDate Subclassing Approach:</strong> Each change date would either need its own subclass (impractical, since there are many possible change dates), or a Gregorian Temporal.PlainDate subclass would need to add a stateful field representing the change date.</p>
 <h3 id="monthday"><a class="heading-link" href="#monthday"></a>MonthDay</h3><p>MonthDay is a type more naturaly represented by the subclassing approach.</p>
-<p><strong>Temporal.Calendar Approach:</strong> There are several imperfect solutions for the Temporal.MonthDay data model, discussed in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>.  The current workable proposed solution is to make the MonthDay data model the same as the Date data model.</p>
-<p><strong>Temporal.Date Subclassing Approach:</strong> The calendar-specific type, like HebrewMonthDay, can represent data in its on form without risk of ambiguity.</p>
+<p><strong>Temporal.Calendar Approach:</strong> There are several imperfect solutions for the Temporal.PlainMonthDay data model, discussed in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>. The current workable proposed solution is to make the MonthDay data model the same as the Date data model.</p>
+<p><strong>Temporal.PlainDate Subclassing Approach:</strong> The calendar-specific type, like HebrewMonthDay, can represent data in its on form without risk of ambiguity.</p>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }
@@ -214,7 +214,7 @@ As such <code>Temporal.Instant</code> has no concept of days, months or even hou
 <p>For convenience of interoperability, it internally uses nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> (midnight UTC on January 1, 1970).
 However, a <code>Temporal.Instant</code> can be created from any of several expressions that refer to an exact time, including an ISO 8601 string with a time zone such as <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code>.</p>
 <p>If you have a legacy <code>Date</code> instance, you can use its <code>toTemporalInstant()</code> method to convert to a <code>Temporal.Instant</code>.</p>
-<p>Since <code>Temporal.Instant</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.DateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
+<p>Since <code>Temporal.Instant</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.PlainDateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
 <p>Like Unix time, <code>Temporal.Instant</code> ignores leap seconds.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Instant"><a class="heading-link" href="#new-Temporal-Instant"></a><strong>new Temporal.Instant</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
@@ -385,7 +385,7 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 <p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
 <code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes an addition with those units ambiguous.
-If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code> by specifying the desired calendar and time zone, add the duration, and then convert it back.</p>
+If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.PlainDateTime</code> by specifying the desired calendar and time zone, add the duration, and then convert it back.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Example usage:</p>
@@ -403,7 +403,7 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 <p>The <code>years</code>, <code>months</code>, <code>weeks</code>, and <code>days</code> fields of <code>duration</code> must be zero.
 <code>Temporal.Instant</code> is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes a subtraction with those units ambiguous.
-If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.DateTime</code> by specifying the desired calendar and time zone, subtract the duration, and then convert it back.</p>
+If you need to do this, convert the <code>Temporal.Instant</code> to a <code>Temporal.PlainDateTime</code> by specifying the desired calendar and time zone, subtract the duration, and then convert it back.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), a <code>RangeError</code> will be thrown.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Example usage:</p>
@@ -446,7 +446,7 @@ In addition, weeks can be different lengths in different calendars, and days can
 <p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
 These behave as in the <code>Temporal.Duration.round()</code> method.
 The default is to do no rounding.</p>
-<p>If you do need to calculate the difference between two <code>Temporal.Instant</code>s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a <code>Temporal.DateTime</code>.
+<p>If you do need to calculate the difference between two <code>Temporal.Instant</code>s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a <code>Temporal.PlainDateTime</code>.
 For example, you might decide to base the calculation on your user&#39;s current time zone, or on UTC, in the Gregorian calendar.</p>
 <p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
@@ -594,25 +594,25 @@ The default is <code>&#39;trunc&#39;</code>.</li>
 The string can be passed to <code>Temporal.Instant.from()</code> to create a new <code>Temporal.Instant</code> object.</p>
 <p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
 If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
-<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.DateTime.round()</code>.
+<p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.PlainDateTime.round()</code>.
 Note that rounding may change the value of other units as well.</p>
 <p>If the <code>timeZone</code> option is given, then the string will express the time in the given time zone, and contain the time zone&#39;s UTC offset.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span><span class="token number">1574074321816</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-11-18T10:52:01.816Z</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T10:52:01.816+00:00</span>
+<span class="token comment">// => 2019-11-18T10:52:01.816+00:00</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'Asia/Seoul'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T19:52:01.816+09:00</span>
+<span class="token comment">// => 2019-11-18T19:52:01.816+09:00</span>
 
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'minute'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T10:52Z</span>
+<span class="token comment">// => 2019-11-18T10:52Z</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T10:52:01Z</span>
+<span class="token comment">// => 2019-11-18T10:52:01Z</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T10:52:01.8160Z</span>
+<span class="token comment">// => 2019-11-18T10:52:01.8160Z</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'second'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-11-18T10:52:02Z</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>instant.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<span class="token comment">// => 2019-11-18T10:52:02Z</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>instant.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
 <li><code>options</code> (optional object): An object with properties influencing the formatting.</li>

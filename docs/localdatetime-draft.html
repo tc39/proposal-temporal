@@ -19,13 +19,13 @@
           for (const type of [
             Temporal.Instant,
             Temporal.Calendar,
-            Temporal.Date,
-            Temporal.DateTime,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
             Temporal.Duration,
-            Temporal.MonthDay,
-            Temporal.Time,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
             Temporal.TimeZone,
-            Temporal.YearMonth
+            Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
           }
@@ -193,11 +193,11 @@ If that is so common, then we may as well have a type for it.</li>
 
   <span class="token comment">// type conversion</span>
   <span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">;</span>
-  <span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>DateTime<span class="token punctuation">;</span>
-  <span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Date<span class="token punctuation">;</span>
-  <span class="token function">toPlainYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>YearMonth<span class="token punctuation">;</span>
-  <span class="token function">toPlainMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>MonthDay<span class="token punctuation">;</span>
-  <span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Time<span class="token punctuation">;</span>
+  <span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">;</span>
+  <span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">;</span>
+  <span class="token function">toPlainYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">;</span>
+  <span class="token function">toPlainMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">;</span>
+  <span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">;</span>
 
   <span class="token comment">// comparison</span>
   <span class="token keyword">static</span> <span class="token function">compare</span><span class="token punctuation">(</span>one<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">,</span> two<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>LocalDateTime<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">;</span>
