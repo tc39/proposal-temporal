@@ -40,6 +40,39 @@ describe('Intl', () => {
       assert(str.includes('EST'));
     });
   });
+  describe('zoneddatetime.toLocaleString()', () => {
+    const zdt = Temporal.ZonedDateTime.from('1976-11-18T15:23:30+01:00[Europe/Vienna]');
+    it(`(${zdt}).toLocaleString('en-US')`, () => equal(zdt.toLocaleString('en'), '11/18/1976, 3:23:30 PM GMT+1'));
+    it(`(${zdt}).toLocaleString('de-AT')`, () => equal(zdt.toLocaleString('de'), '18.11.1976, 15:23:30 MEZ'));
+    const fmt = maybeGetWeekdayOnlyFormat();
+    if (fmt) it('uses only the options in resolvedOptions', () => equal(fmt.format(zdt), 'Thursday'));
+    it('can override the style of the time zone name', () => {
+      equal(
+        zdt.toLocaleString('en', { timeZoneName: 'long' }),
+        '11/18/1976, 3:23:30 PM Central European Standard Time'
+      );
+    });
+    it("works if the time zone given in options agrees with the object's time zone", () => {
+      equal(zdt.toLocaleString('en', { timeZone: 'Europe/Vienna' }), '11/18/1976, 3:23:30 PM GMT+1');
+    });
+    it("throws if the time zone given in options disagrees with the object's time zone", () => {
+      throws(() => zdt.toLocaleString('en', { timeZone: 'America/New_York' }), RangeError);
+    });
+    it("works when the object's calendar is the same as the locale's calendar", () => {
+      const zdt = new Temporal.ZonedDateTime(0n, 'UTC', 'japanese');
+      const result = zdt.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '1/1/45, 12:00:00 AM UTC' || result === '1/1/45 S, 12:00:00 AM UTC');
+    });
+    it("adopts the locale's calendar when the object's calendar is ISO", () => {
+      const zdt = Temporal.ZonedDateTime.from('1976-11-18T15:23:30+00:00[UTC]');
+      const result = zdt.toLocaleString('en-US-u-ca-japanese');
+      assert(result === '11/18/51, 3:23:30 PM UTC' || result === '11/18/51 S, 3:23:30 PM UTC');
+    });
+    it('throws when the calendars are different and not ISO', () => {
+      const zdt = new Temporal.ZonedDateTime(0n, 'UTC', 'gregory');
+      throws(() => zdt.toLocaleString('en-US-u-ca-japanese'));
+    });
+  });
   describe('datetime.toLocaleString()', () => {
     const datetime = Temporal.PlainDateTime.from('1976-11-18T15:23:30');
     it(`(${datetime.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
@@ -187,9 +220,11 @@ describe('Intl', () => {
 
     const us = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
     const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
+    const us2 = new Intl.DateTimeFormat('en-US');
+    const at2 = new Intl.DateTimeFormat('de-AT');
     const usCalendar = us.resolvedOptions().calendar;
     const atCalendar = at.resolvedOptions().calendar;
-    const t1 = '1976-11-18T14:23:30Z';
+    const t1 = '1976-11-18T14:23:30+00:00[UTC]';
     const t2 = '2020-02-20T15:44:56-05:00[America/New_York]';
     const start = new Date('1922-12-30'); // ☭
     const end = new Date('1991-12-26');
@@ -198,6 +233,10 @@ describe('Intl', () => {
       it('should work for Instant', () => {
         equal(us.format(Temporal.Instant.from(t1)), '11/18/1976, 9:23:30 AM');
         equal(at.format(Temporal.Instant.from(t1)), '18.11.1976, 15:23:30');
+      });
+      it('should work for ZonedDateTime', () => {
+        equal(us2.format(Temporal.ZonedDateTime.from(t1)), '11/18/1976, 2:23:30 PM UTC');
+        equal(at2.format(Temporal.ZonedDateTime.from(t1)), '18.11.1976, 14:23:30 UTC');
       });
       it('should work for DateTime', () => {
         equal(us.format(Temporal.PlainDateTime.from(t1)), '11/18/1976, 2:23:30 PM');
@@ -255,6 +294,40 @@ describe('Intl', () => {
           { type: 'minute', value: '44' },
           { type: 'literal', value: ':' },
           { type: 'second', value: '56' }
+        ]);
+      });
+      it('should work for ZonedDateTime', () => {
+        deepEqual(us2.formatToParts(Temporal.ZonedDateTime.from(t2)), [
+          { type: 'month', value: '2' },
+          { type: 'literal', value: '/' },
+          { type: 'day', value: '20' },
+          { type: 'literal', value: '/' },
+          { type: 'year', value: '2020' },
+          { type: 'literal', value: ', ' },
+          { type: 'hour', value: '3' },
+          { type: 'literal', value: ':' },
+          { type: 'minute', value: '44' },
+          { type: 'literal', value: ':' },
+          { type: 'second', value: '56' },
+          { type: 'literal', value: ' ' },
+          { type: 'dayPeriod', value: 'PM' },
+          { type: 'literal', value: ' ' },
+          { type: 'timeZoneName', value: 'EST' }
+        ]);
+        deepEqual(at2.formatToParts(Temporal.ZonedDateTime.from(t2)), [
+          { type: 'day', value: '20' },
+          { type: 'literal', value: '.' },
+          { type: 'month', value: '2' },
+          { type: 'literal', value: '.' },
+          { type: 'year', value: '2020' },
+          { type: 'literal', value: ', ' },
+          { type: 'hour', value: '15' },
+          { type: 'literal', value: ':' },
+          { type: 'minute', value: '44' },
+          { type: 'literal', value: ':' },
+          { type: 'second', value: '56' },
+          { type: 'literal', value: ' ' },
+          { type: 'timeZoneName', value: 'GMT-5' }
         ]);
       });
       it('should work for DateTime', () => {
@@ -376,6 +449,12 @@ describe('Intl', () => {
           '18.11.1976, 15:23:30 – 20.2.2020, 21:44:56'
         );
       });
+      it('should work for ZonedDateTime', () => {
+        const zdt1 = Temporal.ZonedDateTime.from(t1);
+        const zdt2 = Temporal.ZonedDateTime.from(t2).withTimeZone(zdt1.timeZone);
+        equal(us2.formatRange(zdt1, zdt2), '11/18/1976, 2:23:30 PM UTC – 2/20/2020, 8:44:56 PM UTC');
+        equal(at2.formatRange(zdt1, zdt2), '18.11.1976, 14:23:30 UTC – 20.2.2020, 20:44:56 UTC');
+      });
       it('should work for DateTime', () => {
         equal(
           us.formatRange(Temporal.PlainDateTime.from(t1), Temporal.PlainDateTime.from(t2)),
@@ -447,6 +526,9 @@ describe('Intl', () => {
           RangeError
         );
       });
+      it('throws for two ZonedDateTimes with different time zones', () => {
+        throws(() => us2.formatRange(Temporal.ZonedDateTime.from(t1), Temporal.ZonedDateTime.from(t2)), RangeError);
+      });
     });
     describe('formatRangeToParts', () => {
       it('should work for Instant', () => {
@@ -503,6 +585,72 @@ describe('Intl', () => {
           { type: 'minute', value: '44', source: 'endRange' },
           { type: 'literal', value: ':', source: 'endRange' },
           { type: 'second', value: '56', source: 'endRange' }
+        ]);
+      });
+      it('should work for ZonedDateTime', () => {
+        const zdt1 = Temporal.ZonedDateTime.from(t1);
+        const zdt2 = Temporal.ZonedDateTime.from(t2).withTimeZone(zdt1.timeZone);
+        deepEqual(us2.formatRangeToParts(zdt1, zdt2), [
+          { type: 'month', value: '11', source: 'startRange' },
+          { type: 'literal', value: '/', source: 'startRange' },
+          { type: 'day', value: '18', source: 'startRange' },
+          { type: 'literal', value: '/', source: 'startRange' },
+          { type: 'year', value: '1976', source: 'startRange' },
+          { type: 'literal', value: ', ', source: 'startRange' },
+          { type: 'hour', value: '2', source: 'startRange' },
+          { type: 'literal', value: ':', source: 'startRange' },
+          { type: 'minute', value: '23', source: 'startRange' },
+          { type: 'literal', value: ':', source: 'startRange' },
+          { type: 'second', value: '30', source: 'startRange' },
+          { type: 'literal', value: ' ', source: 'startRange' },
+          { type: 'dayPeriod', value: 'PM', source: 'startRange' },
+          { type: 'literal', value: ' ', source: 'startRange' },
+          { type: 'timeZoneName', value: 'UTC', source: 'startRange' },
+          { type: 'literal', value: ' – ', source: 'shared' },
+          { type: 'month', value: '2', source: 'endRange' },
+          { type: 'literal', value: '/', source: 'endRange' },
+          { type: 'day', value: '20', source: 'endRange' },
+          { type: 'literal', value: '/', source: 'endRange' },
+          { type: 'year', value: '2020', source: 'endRange' },
+          { type: 'literal', value: ', ', source: 'endRange' },
+          { type: 'hour', value: '8', source: 'endRange' },
+          { type: 'literal', value: ':', source: 'endRange' },
+          { type: 'minute', value: '44', source: 'endRange' },
+          { type: 'literal', value: ':', source: 'endRange' },
+          { type: 'second', value: '56', source: 'endRange' },
+          { type: 'literal', value: ' ', source: 'endRange' },
+          { type: 'dayPeriod', value: 'PM', source: 'endRange' },
+          { type: 'literal', value: ' ', source: 'endRange' },
+          { type: 'timeZoneName', value: 'UTC', source: 'endRange' }
+        ]);
+        deepEqual(at2.formatRangeToParts(zdt1, zdt2), [
+          { type: 'day', value: '18', source: 'startRange' },
+          { type: 'literal', value: '.', source: 'startRange' },
+          { type: 'month', value: '11', source: 'startRange' },
+          { type: 'literal', value: '.', source: 'startRange' },
+          { type: 'year', value: '1976', source: 'startRange' },
+          { type: 'literal', value: ', ', source: 'startRange' },
+          { type: 'hour', value: '14', source: 'startRange' },
+          { type: 'literal', value: ':', source: 'startRange' },
+          { type: 'minute', value: '23', source: 'startRange' },
+          { type: 'literal', value: ':', source: 'startRange' },
+          { type: 'second', value: '30', source: 'startRange' },
+          { type: 'literal', value: ' ', source: 'startRange' },
+          { type: 'timeZoneName', value: 'UTC', source: 'startRange' },
+          { type: 'literal', value: ' – ', source: 'shared' },
+          { type: 'day', value: '20', source: 'endRange' },
+          { type: 'literal', value: '.', source: 'endRange' },
+          { type: 'month', value: '2', source: 'endRange' },
+          { type: 'literal', value: '.', source: 'endRange' },
+          { type: 'year', value: '2020', source: 'endRange' },
+          { type: 'literal', value: ', ', source: 'endRange' },
+          { type: 'hour', value: '20', source: 'endRange' },
+          { type: 'literal', value: ':', source: 'endRange' },
+          { type: 'minute', value: '44', source: 'endRange' },
+          { type: 'literal', value: ':', source: 'endRange' },
+          { type: 'second', value: '56', source: 'endRange' },
+          { type: 'literal', value: ' ', source: 'endRange' },
+          { type: 'timeZoneName', value: 'UTC', source: 'endRange' }
         ]);
       });
       it('should work for DateTime', () => {
@@ -732,6 +880,12 @@ describe('Intl', () => {
         throws(
           () =>
             at.formatRangeToParts(Temporal.PlainDate.from(t1), Temporal.PlainDate.from(t2).withCalendar('japanese')),
+          RangeError
+        );
+      });
+      it('throws for two ZonedDateTimes with different time zones', () => {
+        throws(
+          () => us2.formatRangeToParts(Temporal.ZonedDateTime.from(t1), Temporal.ZonedDateTime.from(t2)),
           RangeError
         );
       });
