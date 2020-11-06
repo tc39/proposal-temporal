@@ -19,7 +19,7 @@ export const instant = new RegExp(
   'i'
 );
 export const datetime = new RegExp(
-  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source}(?:${zonesplit.source})?)?(?:${calendar.source})?$`,
+  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?(?:${zonesplit.source})?(?:${calendar.source})?$`,
   'i'
 );
 
