@@ -289,28 +289,6 @@ describe('DateTime', () => {
     it('datetime.with({ month: 5, second: 15 } works', () => {
       equal(`${datetime.with({ month: 5, second: 15 })}`, '1976-05-18T15:23:15.123456789');
     });
-    it('datetime.with(time) works', () => {
-      const noon = Temporal.PlainTime.from({ hour: 12 });
-      equal(`${datetime.with(noon)}`, '1976-11-18T12:00:00');
-    });
-    it('datetime.with(iso time string)', () => {
-      equal(`${datetime.with('12:00')}`, '1976-11-18T12:00:00');
-    });
-    it('datetime.with(date) works', () => {
-      const date = Temporal.PlainDate.from('1995-04-07');
-      equal(`${datetime.with(date)}`, '1995-04-07T15:23:30.123456789');
-    });
-    it('datetime.with(iso date string)', () => {
-      equal(`${datetime.with('1995-04-07')}`, '1995-04-07T15:23:30.123456789');
-    });
-    it('datetime.with(monthDay) works', () => {
-      const md = Temporal.PlainMonthDay.from('01-01');
-      equal(`${datetime.with(md)}`, '1976-01-01T15:23:30.123456789');
-    });
-    it('datetime.with(yearMonth) works', () => {
-      const ym = Temporal.PlainYearMonth.from('1977-10');
-      equal(`${datetime.with(ym)}`, '1977-10-18T15:23:30.123456789');
-    });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         throws(() => datetime.with({ day: 5 }, { overflow }), RangeError)
@@ -331,14 +309,18 @@ describe('DateTime', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${datetime.with({ month: 12, days: 15 })}`, '1976-12-18T15:23:30.123456789');
     });
-    it('datetime.with(iso datetime string)', () => {
-      const date2 = datetime.with('2019-05-17T12:34:56.007007007');
-      equal(`${date2}`, '2019-05-17T12:34:56.007007007');
-      const date3 = datetime.with('2019-05-17T12:34:56.007007007Z');
-      equal(`${date3}`, '2019-05-17T12:34:56.007007007');
+    it('datetime.with(string) throws', () => {
+      throws(() => datetime.with('12:00'), TypeError);
+      throws(() => datetime.with('1995-04-07'), TypeError);
+      throws(() => datetime.with('2019-05-17T12:34:56.007007007'), TypeError);
+      throws(() => datetime.with('2019-05-17T12:34:56.007007007Z'), TypeError);
+      throws(() => datetime.with('42'), TypeError);
     });
-    it('date.with(bad string)', () => {
-      throws(() => datetime.with('42'), RangeError);
+    it('throws with calendar property', () => {
+      throws(() => datetime.with({ year: 2021, calendar: 'iso8601' }), TypeError);
+    });
+    it('throws with timeZone property', () => {
+      throws(() => datetime.with({ year: 2021, timeZone: 'UTC' }), TypeError);
     });
   });
   describe('DateTime.compare() works', () => {
@@ -1564,10 +1546,6 @@ describe('DateTime', () => {
     });
     it('as input to from()', () => {
       const dt2 = PlainDateTime.from(fields);
-      equal(PlainDateTime.compare(dt1, dt2), 0);
-    });
-    it('as input to with()', () => {
-      const dt2 = PlainDateTime.from('2019-06-30').with(fields);
       equal(PlainDateTime.compare(dt1, dt2), 0);
     });
     it('does not include era for ISO calendar', () => {

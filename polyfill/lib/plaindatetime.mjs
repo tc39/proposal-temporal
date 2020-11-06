@@ -186,32 +186,18 @@ export class PlainDateTime {
   with(temporalDateTimeLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalDateTimeLike) !== 'Object') {
-      const str = ES.ToString(temporalDateTimeLike);
-      temporalDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+      throw new TypeError('invalid argument');
     }
+    if (temporalDateTimeLike.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
+    }
+    if (temporalDateTimeLike.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    let source;
-    let calendar = temporalDateTimeLike.calendar;
-    if (calendar) {
-      const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-      calendar = TemporalCalendar.from(calendar);
-      source = new PlainDateTime(
-        GetSlot(this, ISO_YEAR),
-        GetSlot(this, ISO_MONTH),
-        GetSlot(this, ISO_DAY),
-        GetSlot(this, ISO_HOUR),
-        GetSlot(this, ISO_MINUTE),
-        GetSlot(this, ISO_SECOND),
-        GetSlot(this, ISO_MILLISECOND),
-        GetSlot(this, ISO_MICROSECOND),
-        GetSlot(this, ISO_NANOSECOND),
-        calendar
-      );
-    } else {
-      calendar = GetSlot(this, CALENDAR);
-      source = this;
-    }
+    const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, [
       'day',
       'hour',
@@ -227,7 +213,7 @@ export class PlainDateTime {
     if (!props) {
       throw new TypeError('invalid date-time-like');
     }
-    const fields = ES.ToTemporalDateTimeFields(source, fieldNames);
+    const fields = ES.ToTemporalDateTimeFields(this, fieldNames);
     ObjectAssign(fields, props);
     const date = calendar.dateFromFields(fields, { overflow }, GetIntrinsic('%Temporal.PlainDate%'));
     let year = GetSlot(date, ISO_YEAR);

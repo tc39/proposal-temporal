@@ -354,7 +354,7 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 
 **Parameters:**
 
-- `dateTimeLike` (object or string): an object with some or all of the properties of a `Temporal.PlainDateTime`, or an ISO string.
+- `dateTimeLike` (object): an object with some or all of the properties of a `Temporal.PlainDateTime`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -365,39 +365,20 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 
 This method creates a new `Temporal.PlainDateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
 
-If `dateTimeLike` is a string, then it will be attempted to be converted into a `Temporal.PlainDate` (if no time is given in the string), `Temporal.PlainDateTime`, or `Temporal.PlainTime`, in order of priority.
-
 Since `Temporal.PlainDateTime` objects are immutable, use this method instead of modifying one.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `dateTimeLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-> **NOTE**: If a `calendar` property is provided on `dateTimeLike`, the new calendar is applied first, before any of the other properties.
-> If you are passing in an object with _only_ a `calendar` property, it is recommended to use the `withCalendar` method instead.
+> **NOTE**: `calendar` and `timeZone` properties are not allowed on `dateTimeLike`.
+> See the `withCalendar` and `toZonedDateTime` methods instead.
 
 Usage example:
 
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
-
-// Temporal.PlainTime, Temporal.PlainDate, Temporal.PlainYearMonth and
-// Temporal.PlainMonthDay also have some of the properties of
-// Temporal.PlainDateTime:
-midnight = Temporal.PlainTime.from({ hour: 0 });
-dt.with(midnight); // => 1995-12-07T00:00
-// Note: not the same as dt.with({ hour: 0 })!
-// Same as above but using a string:
-dt.with('00:00'); // => 1995-12-07T00:00
-date = Temporal.PlainDate.from('2015-03-31');
-dt.with(date); // => 2015-03-31T03:24:31.000003500
-// Same as above but using a string:
-dt.with('2015-03-31'); // => 2015-03-31T03:24:31.000003500
-yearMonth = Temporal.PlainYearMonth.from('2018-04');
-date.with(yearMonth); // => 2018-04-07T03:24:31.000003500
-monthDay = Temporal.PlainMonthDay.from('02-29');
-date.with(monthDay); // => 1995-02-28T03:24:30.000003500
 ```
 
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime

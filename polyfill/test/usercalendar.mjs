@@ -163,11 +163,6 @@ describe('Userland calendar', () => {
         const dt = Temporal.PlainDateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
         equal(`${dt}`, '1970-01-01T12:00:00[c=zero-based]');
       });
-      it('works for DateTime.with', () => {
-        const dt1 = Temporal.PlainDateTime.from('1970-02-01T12:00');
-        const dt2 = dt1.with({ month: 0, calendar: 'zero-based' });
-        equal(`${dt2}`, '1970-01-01T12:00:00[c=zero-based]');
-      });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
         assert(dt.withCalendar('zero-based').equals(Temporal.PlainDateTime.from(iso)));
@@ -464,11 +459,6 @@ describe('Userland calendar', () => {
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
         equal(`${dt}`, '1970-01-01T00:20:00[c=decimal]');
-      });
-      it('works for DateTime.with', () => {
-        const dt1 = Temporal.PlainDateTime.from('1970-01-01T12:00');
-        const dt2 = dt1.with({ month: 2, calendar: 'decimal' });
-        equal(`${dt2}`, '1970-01-11T12:00:00[c=decimal]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
