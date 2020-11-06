@@ -208,10 +208,6 @@ describe('MonthDay', () => {
       equal(`${leapDay.toPlainDate({ year: 2019 })}`, '2019-02-28');
       equal(`${leapDay.toPlainDate({ year: 2019 }, { overflow: 'constrain' })}`, '2019-02-28');
     });
-    it("can also reject if the MonthDay doesn't exist in the year", () => {
-      const leapDay = PlainMonthDay.from('02-29');
-      throws(() => leapDay.toPlainDate({ year: 2019 }, { overflow: 'reject' }));
-    });
   });
   describe('MonthDay.toString()', () => {
     const md1 = PlainMonthDay.from('11-18');

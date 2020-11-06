@@ -223,16 +223,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.monthday.prototype.toplaindate">
-      <h1>Temporal.PlainMonthDay.prototype.toPlainDate ( _item_ [ , _options_ ] )</h1>
+      <h1>Temporal.PlainMonthDay.prototype.toPlainDate ( _item_ )</h1>
       <p>
-        The `toPlainDate` method takes two arguments, _item_ and _options_.
+        The `toPlainDate` method takes one argument _item_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _receiverFieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _receiverFieldNames_).

@@ -116,7 +116,7 @@ export class PlainMonthDay {
   valueOf() {
     throw new TypeError('use equals() to compare Temporal.PlainMonthDay');
   }
-  toPlainDate(item, options = undefined) {
+  toPlainDate(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
 
@@ -134,7 +134,7 @@ export class PlainMonthDay {
     ObjectAssign(fields, ES.ToRecord(item, entries));
 
     const Date = GetIntrinsic('%Temporal.PlainDate%');
-    return calendar.dateFromFields(fields, options, Date);
+    return calendar.dateFromFields(fields, { overflow: 'constrain' }, Date);
   }
   getFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');

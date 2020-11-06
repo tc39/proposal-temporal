@@ -296,16 +296,11 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.PlainMonthDay` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Instead, use `monthDay.equals()` to check for equality.
 
-### monthDay.**toPlainDate**(_year_: object, _options_?: object) : Temporal.PlainDate
+### monthDay.**toPlainDate**(_year_: object) : Temporal.PlainDate
 
 **Parameters:**
 
 - `year` (object): An object with a `'year'` property, which must have a day corresponding to `monthDay`.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
 
 **Returns:** a `Temporal.PlainDate` object that represents the calendar date of `monthDay` in `year`.
 
@@ -321,7 +316,6 @@ md.toPlainDate({ year: 2017 }); // => 2017-08-24
 md = Temporal.PlainMonthDay.from('02-29');
 md.toPlainDate({ year: 2020 }); // => 2020-02-29
 md.toPlainDate({ year: 2017 }); // => 2017-02-28
-md.toPlainDate({ year: 2017 }, { overflow: 'reject' }); // throws
 ```
 
 In calendars where more information than just the year is needed to convert a `Temporal.PlainMonthDay` to a `Temporal.PlainDate`, you can pass the necessary properties in the _year_ object.
