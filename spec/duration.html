@@ -432,7 +432,7 @@
           1. Let _unit_ be ? ToTemporalDurationTotalUnit(_revisedOptions_).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_years_, _months_, _weeks_, _days_, _unit_, _relativeTo_).
         1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _unbalanceResult_.[[Hours]], _unbalanceResult_.[[Minutes]], _unbalanceResult_.[[Seconds]], _unbalanceResult_.[[Milliseconds]], _unbalanceResult_.[[Microseconds]], _unbalanceResult_.[[Nanoseconds]], _unit_).
-        1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], *1*, _unit_, *"trunc"*, _relativeTo_).
+        1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
         1. If _unit_ is *"years"*, then
           1. Let _whole_ be _roundResult_.[[Years]].
         1. If _unit_ is *"months"*, then
