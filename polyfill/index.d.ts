@@ -777,7 +777,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly inLeapYear: boolean;
     equals(other: Temporal.PlainDate | DateLike | string): boolean;
-    with(dateLike: DateLike | string, options?: AssignmentOptions): Temporal.PlainDate;
+    with(dateLike: DateLike, options?: AssignmentOptions): Temporal.PlainDate;
     withCalendar(calendar: CalendarProtocol | string): Temporal.PlainDate;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
