@@ -534,11 +534,9 @@
         1. If Type(_item_) is Object, then
           1. Let _timeZoneLike_ be ? Get(_item_, *"timeZone"*).
           1. If _timeZoneLike_ is *undefined*, then
-            <!-- Treat _item_ itself as a TimeZone -->
             1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
             1. Let _temporalTime_ be *undefined*.
           1. Else,
-            <!-- Treat _item_ as a property bag -->
             1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
             1. Let _temporalTime_ be ? Get(_item_, *"time"*).
         1. Else,
