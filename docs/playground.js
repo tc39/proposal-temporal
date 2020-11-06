@@ -8993,22 +8993,18 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
         if (ES.Type(temporalDateLike) !== 'Object') {
-          var str = ES.ToString(temporalDateLike);
-          temporalDateLike = ES.RelevantTemporalObjectFromString(str);
+          throw new TypeError('invalid argument');
         }
 
-        var source;
-        var calendar = temporalDateLike.calendar;
-
-        if (calendar) {
-          var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-          calendar = TemporalCalendar.from(calendar);
-          source = new PlainDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-        } else {
-          calendar = GetSlot(this, CALENDAR);
-          source = this;
+        if (temporalDateLike.calendar !== undefined) {
+          throw new TypeError('with() does not support a calendar property');
         }
 
+        if (temporalDateLike.timeZone !== undefined) {
+          throw new TypeError('with() does not support a timeZone property');
+        }
+
+        var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
         var props = ES.ToPartialRecord(temporalDateLike, fieldNames);
 
@@ -9016,7 +9012,7 @@
           throw new TypeError('invalid date-like');
         }
 
-        var fields = ES.ToTemporalDateFields(source, fieldNames);
+        var fields = ES.ToTemporalDateFields(this, fieldNames);
         ObjectAssign$2(fields, props);
         var Construct = ES.SpeciesConstructor(this, PlainDate);
         var result = calendar.dateFromFields(fields, options, Construct);
@@ -9547,24 +9543,20 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 
         if (ES.Type(temporalDateTimeLike) !== 'Object') {
-          var str = ES.ToString(temporalDateTimeLike);
-          temporalDateTimeLike = ES.RelevantTemporalObjectFromString(str);
+          throw new TypeError('invalid argument');
+        }
+
+        if (temporalDateTimeLike.calendar !== undefined) {
+          throw new TypeError('with() does not support a calendar property');
+        }
+
+        if (temporalDateTimeLike.timeZone !== undefined) {
+          throw new TypeError('with() does not support a timeZone property');
         }
 
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        var source;
-        var calendar = temporalDateTimeLike.calendar;
-
-        if (calendar) {
-          var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-          calendar = TemporalCalendar.from(calendar);
-          source = new PlainDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar);
-        } else {
-          calendar = GetSlot(this, CALENDAR);
-          source = this;
-        }
-
+        var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
         var props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
 
@@ -9572,7 +9564,7 @@
           throw new TypeError('invalid date-time-like');
         }
 
-        var fields = ES.ToTemporalDateTimeFields(source, fieldNames);
+        var fields = ES.ToTemporalDateTimeFields(this, fieldNames);
         ObjectAssign$3(fields, props);
         var date = calendar.dateFromFields(fields, {
           overflow: overflow
@@ -10612,8 +10604,16 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
 
-        if ('calendar' in temporalMonthDayLike) {
-          throw new RangeError('invalid calendar property in month-day-like');
+        if (ES.Type(temporalMonthDayLike) !== 'Object') {
+          throw new TypeError('invalid argument');
+        }
+
+        if (temporalMonthDayLike.calendar !== undefined) {
+          throw new TypeError('with() does not support a calendar property');
+        }
+
+        if (temporalMonthDayLike.timeZone !== undefined) {
+          throw new TypeError('with() does not support a timeZone property');
         }
 
         var calendar = GetSlot(this, CALENDAR);
@@ -10924,12 +10924,20 @@
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
 
         if (ES.Type(temporalTimeLike) !== 'Object') {
-          var str = ES.ToString(temporalTimeLike);
-          temporalTimeLike = ES.RelevantTemporalObjectFromString(str);
+          throw new TypeError('invalid argument');
+        }
+
+        if (temporalTimeLike.calendar !== undefined) {
+          throw new TypeError('with() does not support a calendar property');
+        }
+
+        if (temporalTimeLike.timeZone !== undefined) {
+          throw new TypeError('with() does not support a timeZone property');
         }
 
         options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options);
+        var overflow = ES.ToTemporalOverflow(options); // TODO: defer to calendar
+
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 
         if (!props) {
@@ -11454,8 +11462,16 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
 
-        if ('calendar' in temporalYearMonthLike) {
-          throw new RangeError('invalid calendar property in year-month-like');
+        if (ES.Type(temporalYearMonthLike) !== 'Object') {
+          throw new TypeError('invalid argument');
+        }
+
+        if (temporalYearMonthLike.calendar !== undefined) {
+          throw new TypeError('with() does not support a calendar property');
+        }
+
+        if (temporalYearMonthLike.timeZone !== undefined) {
+          throw new TypeError('with() does not support a timeZone property');
         }
 
         var calendar = GetSlot(this, CALENDAR);

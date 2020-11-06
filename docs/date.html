@@ -397,7 +397,7 @@ date<span class="token punctuation">.</span>inLeapYear<span class="token punctua
 date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>dateLike</code> (object or string): an object with some or all of the properties of a <code>Temporal.PlainDate</code>, or an ISO string.</li>
+<li><code>dateLike</code> (object): an object with some or all of the properties of a <code>Temporal.PlainDate</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
@@ -408,29 +408,22 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code> object.</p>
 <p>This method creates a new <code>Temporal.PlainDate</code> which is a copy of <code>date</code>, but any properties present on <code>dateLike</code> override the ones already present on <code>date</code>.</p>
-<p>If <code>dateLike</code> is a string, then it will be attempted to be converted into a <code>Temporal.PlainDate</code>.
-(In this case the result is the same as <code>Temporal.PlainDate.from(dateLike)</code>.)</p>
 <p>Since <code>Temporal.PlainDate</code> objects are immutable, use this method instead of modifying one.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>dateLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <blockquote>
-<p><strong>NOTE</strong>: If a <code>calendar</code> property is provided on <code>dateLike</code>, the new calendar is applied first, before any of the other properties.
-If you are passing in an object with <em>only</em> a <code>calendar</code> property, it is recommended to use the <code>withCalendar</code> method instead.</p>
+<p><strong>NOTE</strong>: <code>calendar</code> and <code>timeZone</code> properties are not allowed on <code>dateLike</code>.
+See the <code>withCalendar</code> and <code>toZonedDateTime</code> methods instead.</p>
 </blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-01-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// What's the first day of this month?</span>
 date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-01-01</span>
 <span class="token comment">// What's the last day of the next month?</span>
-date<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> date<span class="token punctuation">.</span>daysInMonth <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-02-28</span>
-<span class="token comment">// Temporal.PlainYearMonth and Temporal.PlainMonthDay also have some of the</span>
-<span class="token comment">// properties of Temporal.PlainDate:</span>
-yearMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2018-04'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>yearMonth<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2018-04-24</span>
-monthDay <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>monthDay<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-02-28</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>date.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+<span class="token keyword">const</span> nextMonthDate <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+nextMonthDate<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>day<span class="token operator">:</span> nextMonthDate<span class="token punctuation">.</span>daysInMonth <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-02-28</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>date.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>date</code>.</li>
 </ul>

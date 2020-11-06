@@ -374,7 +374,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>NOTE</strong>: The allowed values for the <code>yearMonthLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <blockquote>
-<p><strong>NOTE</strong>: Unlike in <code>Temporal.PlainDate.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>yearMonthLike</code>.
+<p><strong>NOTE</strong>: <code>calendar</code> and <code>timeZone</code> properties are not allowed on <code>yearMonthLike</code>.
 It is not possible to convert a <code>Temporal.PlainYearMonth</code> to another calendar system without knowing the day of the month.
 If you need to do this, use <code>yearMonth.toPlainDate({ day }).withCalendar(calendar).toPlainYearMonth()</code>.</p>
 </blockquote>

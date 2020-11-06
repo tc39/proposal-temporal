@@ -302,7 +302,7 @@ The default is <code>constrain</code>.</li>
 </blockquote>
 <p>Since <code>Temporal.PlainMonthDay</code> objects are immutable, use this method instead of modifying one.</p>
 <blockquote>
-<p><strong>NOTE</strong>: Unlike in <code>Temporal.PlainDate.prototype.with()</code>, a <code>calendar</code> property is not allowed on <code>monthDayLike</code>.
+<p><strong>NOTE</strong>: <code>calendar</code> and <code>timeZone</code> properties are not allowed on <code>monthDayLike</code>.
 It is not possible to convert a <code>Temporal.PlainMonthDay</code> to another calendar system without knowing the year.
 If you need to do this, use <code>monthDay.toPlainDate({ year }).withCalendar(calendar).toPlainMonthDay()</code>.</p>
 </blockquote>
