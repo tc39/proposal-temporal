@@ -160,7 +160,7 @@ export namespace Temporal {
   };
 
   export type ShowCalendarOption = {
-    calendar: 'auto' | 'always' | 'never';
+    calendarName: 'auto' | 'always' | 'never';
   };
 
   export type CalendarTypeToStringOptions = Partial<ToStringPrecisionOptions & ShowCalendarOption>;
@@ -569,8 +569,13 @@ export namespace Temporal {
         | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Instant;
-    toZonedDateTime(tzLike: TimeZoneProtocol | string, calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
-    toZonedDateTimeISO(tzLike: TimeZoneProtocol | string): Temporal.ZonedDateTime;
+    toZonedDateTime(calendarAndTimeZone: {
+      timeZone: TimeZoneProtocol | string;
+      calendar: CalendarProtocol | string;
+    }): Temporal.ZonedDateTime;
+    toZonedDateTimeISO(
+      tzLike: TimeZoneProtocol | string | { timeZone: TimeZoneProtocol | string }
+    ): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: InstantToStringOptions): string;
@@ -802,8 +807,10 @@ export namespace Temporal {
     ): Temporal.Duration;
     toPlainDateTime(temporalTime?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
     toZonedDateTime(
-      timeZone: TimeZoneProtocol | string,
-      temporalTime?: Temporal.PlainTime | TimeLike | string,
+      timeZoneAndTime: {
+        timeZone: TimeZoneProtocol | string;
+        time?: Temporal.PlainTime | TimeLike | string;
+      },
       options?: ToInstantOptions
     ): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
@@ -1145,8 +1152,10 @@ export namespace Temporal {
     ): Temporal.PlainTime;
     toPlainDateTime(temporalDate: Temporal.PlainDate | DateLike | string): Temporal.PlainDateTime;
     toZonedDateTime(
-      timeZoneLike: TimeZoneProtocol | string,
-      temporalDate: Temporal.PlainDate | DateLike | string,
+      timeZoneAndDate: {
+        timeZone: TimeZoneProtocol | string;
+        date: Temporal.PlainDate | DateLike | string;
+      },
       options?: ToInstantOptions
     ): Temporal.ZonedDateTime;
     getFields(): TimeFields;
@@ -1331,7 +1340,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    readonly timeZone: TimeZoneProtocol;
+    readonly timeZone: Temporal.TimeZone;
     readonly calendar: CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
