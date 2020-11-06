@@ -180,6 +180,7 @@ export class ZonedDateTime {
     if (temporalZonedDateTimeLike.timeZone !== undefined) {
       throw new TypeError('timeZone invalid for with(). use withTimeZone()');
     }
+
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);

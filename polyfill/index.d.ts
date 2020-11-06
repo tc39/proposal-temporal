@@ -1352,10 +1352,7 @@ export namespace Temporal {
     readonly epochMicroseconds: bigint;
     readonly epochNanoseconds: bigint;
     equals(other: Temporal.ZonedDateTime | ZonedDateTimeLike | string): boolean;
-    with(
-      zonedDateTimeLike: ZonedDateTimeLike | string,
-      options?: ZonedDateTimeAssignmentOptions
-    ): Temporal.ZonedDateTime;
+    with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): Temporal.ZonedDateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
     withTimeZone(timeZone: TimeZoneProtocol | string): Temporal.ZonedDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
