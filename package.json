@@ -29,6 +29,7 @@
     "tscheck": "tsc polyfill/index.d.ts --noEmit --strict --lib ESNext",
     "build:polyfill": "cd polyfill && npm install && npm run build",
     "build:docs": "cd docs && npm install && npm run build",
+    "prebuild:spec": "mkdirp out",
     "build:spec": "ecmarkup --lint-spec --strict spec.html out/index.html",
     "prebuild": "mkdirp out/docs/assets",
     "pretty": "eslint . --ext js,mjs,.d.ts --fix",
