@@ -10676,7 +10676,6 @@
     }, {
       key: "toPlainDate",
       value: function toPlainDate(item) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
         var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'month']);
@@ -10696,7 +10695,9 @@
         });
         ObjectAssign$4(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
-        return calendar.dateFromFields(fields, options, Date);
+        return calendar.dateFromFields(fields, {
+          overflow: 'constrain'
+        }, Date);
       }
     }, {
       key: "getFields",

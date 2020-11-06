@@ -393,16 +393,9 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>monthDay.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.PlainMonthDay</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Instead, use <code>monthDay.equals()</code> to check for equality.</p>
-<h3 id="toPlainDate"><a class="heading-link" href="#toPlainDate"></a>monthDay.<strong>toPlainDate</strong>(<em>year</em>: object, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+<h3 id="toPlainDate"><a class="heading-link" href="#toPlainDate"></a>monthDay.<strong>toPlainDate</strong>(<em>year</em>: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>year</code> (object): An object with a <code>&#39;year&#39;</code> property, which must have a day corresponding to <code>monthDay</code>.</li>
-<li><code>options</code> (optional object): An object with properties representing options for the operation.
-The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
-</ul>
-</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDate</code> object that represents the calendar date of <code>monthDay</code> in <code>year</code>.</p>
 <p>This method can be used to convert <code>Temporal.PlainMonthDay</code> into a <code>Temporal.PlainDate</code>, by supplying a year to use.
@@ -413,8 +406,7 @@ md<span class="token punctuation">.</span><span class="token function">toPlainDa
 
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'02-29'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-02-29</span>
-md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2017-02-28</span>
-md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// throws</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.PlainMonthDay</code> to a <code>Temporal.PlainDate</code>, you can pass the necessary properties in the <em>year</em> object.</p>
+md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2017</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2017-02-28</span></code></pre><p>In calendars where more information than just the year is needed to convert a <code>Temporal.PlainMonthDay</code> to a <code>Temporal.PlainDate</code>, you can pass the necessary properties in the <em>year</em> object.</p>
 <p>Example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   calendar<span class="token operator">:</span> <span class="token string">'japanese'</span><span class="token punctuation">,</span>
