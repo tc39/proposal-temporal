@@ -9,6 +9,7 @@ includes: [compareArray.js]
 const instance = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
 const expected = [
   "get calendar",
+  "get timeZone",
   "get day",
   "valueOf day",
   "get hour",
@@ -43,7 +44,6 @@ const fields = {
 const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
-    if (key === "calendar") return Temporal.Calendar.from('iso8601');
     const result = target[key];
     if (result === undefined) {
       return undefined;

@@ -909,7 +909,7 @@ export namespace Temporal {
     readonly monthsInYear: number;
     readonly inLeapYear: boolean;
     equals(other: Temporal.PlainDateTime | DateTimeLike | string): boolean;
-    with(dateTimeLike: DateTimeLike | string, options?: AssignmentOptions): Temporal.PlainDateTime;
+    with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.PlainDateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.PlainDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDateTime;
     subtract(

@@ -393,8 +393,13 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. If Type(_temporalDateTimeLike_) is not Object, then
-          1. Let _isoString_ be ? ToString(_temporalDateTimeLike_).
-          1. Set _temporalDateTimeLike_ to ? RelevantTemporalObjectFromString(_isoString_).
+          1. Throw a *TypeError* exception.
+        1. Let _calendarProperty_ be ? Get(_temporalDateTimeLike_, *"calendar"*).
+        1. If _calendarProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _timeZoneProperty_ be ? Get(_temporalDateTimeLike_, *"timeZone"*).
+        1. If _timeZoneProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Let _partialDateTime_ be ? ToPartialDateTime(_temporalDateTimeLike_, _fieldNames_).
