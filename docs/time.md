@@ -575,17 +575,13 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.PlainTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.PlainTime.compare()` for this, or `time.equals()` for equality.
 
-### time.**toZonedDateTime**(_timeZone_?: Temporal.TimeZone | object | string, _date_: Temporal.PlainDate | object | string, _options_?: object) : Temporal.ZonedDateTime
+### time.**toZonedDateTime**(_item_: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
-- `timeZone` (optional string or object): The time zone in which to interpret `time` and `date`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
-- `date` (`Temporal.PlainDate` or value convertible to one): A date used to merge into a `Temporal.ZonedDateTime` along with `time`.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `disambiguation` (string): How to disambiguate if the date and time given by `time` and `date` does not exist in the time zone, or exists more than once.
-    Allowed values are `'compatible'`, `'earlier'`, `'later'`, and `'reject'`.
-    The default is `'compatible'`.
+- `item` (object): an object with properties to be added to `time`. The following properties are recognized:
+  - `date` (required `Temporal.PlainDate` or value convertible to one): a date used to merge into a `Temporal.ZonedDateTime` along with `time`.
+  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `time` and `date`.
 
 **Returns:** a `Temporal.ZonedDateTime` object that represents the clock `time` on the calendar `date` projected into `timeZone`.
 
@@ -599,29 +595,23 @@ This method produces identical results to [`Temporal.PlainDate.from(date).toZone
 
 If `date` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 
-In the case of ambiguity caused by DST or other time zone changes, the `disambiguation` option controls how to resolve the ambiguity:
-
-- `'compatible'` (the default): Acts like `'earlier'` for backward transitions and `'later'` for forward transitions.
-- `'earlier'`: The earlier of two possible times.
-- `'later'`: The later of two possible times.
-- `'reject'`: Throw a `RangeError` instead.
-
-When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and  the later time for forward transitions.
+When interoperating with existing code or services, this matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
-During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset.
 This behavior avoids exceptions when converting non-existent date/time values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.PlainTime` value in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
-For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
+For usage examples and a more complete explanation of how this disambiguation works, see [Resolving ambiguity](./ambiguity.md).
 
-If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
+If the result is outside the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown.
 
 Usage example:
 
 ```javascript
 time = Temporal.PlainTime.from('15:23:30.003');
 date = Temporal.PlainDate.from('2006-08-24');
-time.toZonedDateTime('America/Los_Angeles', date); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
+time.toZonedDateTime({ timeZone: 'America/Los_Angeles', date }); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
 ```
 
 ### time.**toPlainDateTime**(_date_: Temporal.PlainDate | object | string) : Temporal.PlainDateTime
