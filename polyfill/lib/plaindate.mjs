@@ -108,25 +108,22 @@ export class PlainDate {
   with(temporalDateLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalDateLike) !== 'Object') {
-      const str = ES.ToString(temporalDateLike);
-      temporalDateLike = ES.RelevantTemporalObjectFromString(str);
+      throw new TypeError('invalid argument');
     }
-    let source;
-    let calendar = temporalDateLike.calendar;
-    if (calendar) {
-      const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-      calendar = TemporalCalendar.from(calendar);
-      source = new PlainDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-    } else {
-      calendar = GetSlot(this, CALENDAR);
-      source = this;
+    if (temporalDateLike.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
     }
+    if (temporalDateLike.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+
+    const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
     const props = ES.ToPartialRecord(temporalDateLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid date-like');
     }
-    const fields = ES.ToTemporalDateFields(source, fieldNames);
+    const fields = ES.ToTemporalDateFields(this, fieldNames);
     ObjectAssign(fields, props);
     const Construct = ES.SpeciesConstructor(this, PlainDate);
     const result = calendar.dateFromFields(fields, options, Construct);

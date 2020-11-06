@@ -290,7 +290,7 @@ date.with({ year: 2100 }).inLeapYear; // => false
 
 **Parameters:**
 
-- `dateLike` (object or string): an object with some or all of the properties of a `Temporal.PlainDate`, or an ISO string.
+- `dateLike` (object): an object with some or all of the properties of a `Temporal.PlainDate`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -301,17 +301,14 @@ date.with({ year: 2100 }).inLeapYear; // => false
 
 This method creates a new `Temporal.PlainDate` which is a copy of `date`, but any properties present on `dateLike` override the ones already present on `date`.
 
-If `dateLike` is a string, then it will be attempted to be converted into a `Temporal.PlainDate`.
-(In this case the result is the same as `Temporal.PlainDate.from(dateLike)`.)
-
 Since `Temporal.PlainDate` objects are immutable, use this method instead of modifying one.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: The allowed values for the `dateLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-> **NOTE**: If a `calendar` property is provided on `dateLike`, the new calendar is applied first, before any of the other properties.
-> If you are passing in an object with _only_ a `calendar` property, it is recommended to use the `withCalendar` method instead.
+> **NOTE**: `calendar` and `timeZone` properties are not allowed on `dateLike`.
+> See the `withCalendar` and `toZonedDateTime` methods instead.
 
 Usage example:
 
@@ -320,13 +317,8 @@ date = Temporal.PlainDate.from('2006-01-24');
 // What's the first day of this month?
 date.with({ day: 1 }); // => 2006-01-01
 // What's the last day of the next month?
-date.add({ months: 1 }).with({ day: date.daysInMonth }); // => 2006-02-28
-// Temporal.PlainYearMonth and Temporal.PlainMonthDay also have some of the
-// properties of Temporal.PlainDate:
-yearMonth = Temporal.PlainYearMonth.from('2018-04');
-date.with(yearMonth); // => 2018-04-24
-monthDay = Temporal.PlainMonthDay.from('02-29');
-date.with(monthDay); // => 2006-02-28
+const nextMonthDate = date.add({ months: 1 });
+nextMonthDate.with({day: nextMonthDate.daysInMonth }); // => 2006-02-28
 ```
 
 ### date.**withCalendar**(_calendar_: object | string) : Temporal.PlainDate

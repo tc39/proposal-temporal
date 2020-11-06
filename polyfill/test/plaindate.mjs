@@ -145,14 +145,6 @@ describe('Date', () => {
       const date = original.with({ day: 17 });
       equal(`${date}`, '1976-11-17');
     });
-    it('date.with(monthDay) works', () => {
-      const date = original.with(Temporal.PlainMonthDay.from('01-01'));
-      equal(`${date}`, '1976-01-01');
-    });
-    it('date.with(yearMonth) works', () => {
-      const date = original.with(Temporal.PlainYearMonth.from('1977-10'));
-      equal(`${date}`, '1977-10-18');
-    });
     it('invalid overflow', () => {
       ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
         throws(() => original.with({ day: 17 }, { overflow }), RangeError)
@@ -171,19 +163,18 @@ describe('Date', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${original.with({ months: 12, day: 15 })}`, '1976-11-15');
     });
-    it('date.with(iso date string)', () => {
-      const date = original.with('2019-05-17');
-      equal(`${date}`, '2019-05-17');
-      const date2 = original.with('2019-05-17T12:34');
-      equal(`${date2}`, '2019-05-17');
-      const date3 = original.with('2019-05-17T12:34Z');
-      equal(`${date3}`, '2019-05-17');
-    });
-    it('date.with(bad string)', () => {
-      throws(() => original.with('42'), RangeError);
-    });
-    it('date.with(good string but irrelevant type)', () => {
+    it('date.with(string) throws', () => {
+      throws(() => original.with('2019-05-17'), TypeError);
+      throws(() => original.with('2019-05-17T12:34'), TypeError);
+      throws(() => original.with('2019-05-17T12:34Z'), TypeError);
       throws(() => original.with('18:05:42.577'), TypeError);
+      throws(() => original.with('42'), TypeError);
+    });
+    it('throws with calendar property', () => {
+      throws(() => original.with({ year: 2021, calendar: 'iso8601' }), TypeError);
+    });
+    it('throws with timeZone property', () => {
+      throws(() => original.with({ year: 2021, timeZone: 'UTC' }), TypeError);
     });
   });
   describe('Date.toPlainDateTime() works', () => {
@@ -1099,10 +1090,6 @@ describe('Date', () => {
     });
     it('as input to from()', () => {
       const d2 = PlainDate.from(fields);
-      equal(PlainDate.compare(d1, d2), 0);
-    });
-    it('as input to with()', () => {
-      const d2 = PlainDate.from('2019-06-30').with(fields);
       equal(PlainDate.compare(d1, d2), 0);
     });
     it('does not include era for ISO calendar', () => {
