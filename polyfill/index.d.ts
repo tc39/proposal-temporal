@@ -1028,7 +1028,7 @@ export namespace Temporal {
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.PlainMonthDay | MonthDayLike | string): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.PlainMonthDay;
-    toPlainDate(year: { year: number }, options?: AssignmentOptions): Temporal.PlainDate;
+    toPlainDate(year: { year: number }): Temporal.PlainDate;
     getFields(): MonthDayFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
