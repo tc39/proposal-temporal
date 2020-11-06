@@ -9,7 +9,7 @@
  */
 function* calculateDailyOccurrence(startDate, time, timeZone) {
   for (let date = startDate; ; date = date.add({ days: 1 })) {
-    yield date.toPlainDateTime(time).toZonedDateTime(timeZone);
+    yield date.toZonedDateTime({ time, timeZone }).toInstant();
   }
 }
 
@@ -19,8 +19,8 @@ const time = Temporal.PlainTime.from('08:00');
 const timeZone = Temporal.TimeZone.from('America/Los_Angeles');
 const iter = calculateDailyOccurrence(startDate, time, timeZone);
 
-assert(iter.next().value.toString(), '2017-03-10T16:00:00.000000000Z');
-assert(iter.next().value.toString(), '2017-03-11T16:00:00.000000000Z');
+assert.equal(iter.next().value.toString(), '2017-03-10T16:00:00Z');
+assert.equal(iter.next().value.toString(), '2017-03-11T16:00:00Z');
 // DST change:
-assert(iter.next().value.toString(), '2017-03-12T15:00:00.000000000Z');
-assert(iter.next().value.toString(), '2017-03-13T15:00:00.000000000Z');
+assert.equal(iter.next().value.toString(), '2017-03-12T15:00:00Z');
+assert.equal(iter.next().value.toString(), '2017-03-13T15:00:00Z');
