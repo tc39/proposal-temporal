@@ -100,7 +100,7 @@ date = Temporal.PlainDate.from('2019-12-17');
 // If time is omitted, local time defaults to start of day
 zdt = date.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T00:00+09:00[Asia/Tokyo]
-zdt = date.toZonedDateTime({ timeZone: 'Asia/Tokyo', time: Temporal.PlainTime.from('10:00') });
+zdt = date.toZonedDateTime({ timeZone: 'Asia/Tokyo', time: '10:00' });
   // => 2019-12-17T10:00+09:00[Asia/Tokyo]
 time = Temporal.PlainTime.from('14:35');
 zdt = time.toZonedDateTime({ timeZone: 'Asia/Tokyo', date: Temporal.PlainDate.from('2020-08-27') });
