@@ -1,19 +1,15 @@
 // Display local time zone and three others
-const here = Temporal.now.timeZone();
-const now = Temporal.now.instant();
+const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
+const now = Temporal.now.zonedDateTime(browserCalendar);
 const timeZones = [
-  { name: 'Here', tz: here },
+  { name: 'Here', tz: now.timeZone },
   { name: 'New York', tz: Temporal.TimeZone.from('America/New_York') },
   { name: 'London', tz: Temporal.TimeZone.from('Europe/London') },
   { name: 'Tokyo', tz: Temporal.TimeZone.from('Asia/Tokyo') }
 ];
 
 // Start the table at midnight local time
-const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const calendarNow = now.toPlainDateTime(here, browserCalendar);
-const startTime = calendarNow
-  .with(Temporal.PlainTime.from('00:00')) // midnight
-  .toInstant(here);
+const startTime = now.startOfDay();
 
 // Build the table
 const table = document.getElementById('meeting-planner');
@@ -21,26 +17,27 @@ timeZones.forEach(({ name, tz }) => {
   const row = document.createElement('tr');
 
   const title = document.createElement('td');
-  title.textContent = `${name} (UTC${tz.getOffsetStringFor(now)})`;
+  const startTimeHere = startTime.withTimeZone(tz);
+  title.textContent = `${name} (UTC${startTimeHere.offset})`;
   row.appendChild(title);
 
   for (let hours = 0; hours < 24; hours++) {
     const cell = document.createElement('td');
 
-    const dt = startTime.add({ hours }).toPlainDateTime(tz);
-    cell.className = `time-${dt.hour}`;
+    const columnTime = startTimeHere.add({ hours });
+    cell.className = `time-${columnTime.hour}`;
 
     // Highlight the current hour in each row
-    if (hours === calendarNow.hour) cell.className += ' time-current';
+    if (hours === now.hour) cell.className += ' time-current';
 
     // Show the date in midnight cells
     let formatOptions;
-    if (dt.hour === 0) {
+    if (columnTime.hour === 0) {
       formatOptions = { month: 'short', day: 'numeric' };
     } else {
       formatOptions = { hour: 'numeric' };
     }
-    cell.textContent = dt.toLocaleString(undefined, formatOptions);
+    cell.textContent = columnTime.toLocaleString(undefined, formatOptions);
     row.appendChild(cell);
   }
 
