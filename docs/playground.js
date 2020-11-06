@@ -9279,7 +9279,8 @@
         var year = GetSlot(this, ISO_YEAR);
         var month = GetSlot(this, ISO_MONTH);
         var day = GetSlot(this, ISO_DAY);
-        var calendar = GetSlot(this, CALENDAR);
+        var calendar = GetSlot(this, CALENDAR); // TODO: use start of day in calendar.
+
         var hour = 0,
             minute = 0,
             second = 0,
@@ -9294,7 +9295,7 @@
           second = GetSlot(temporalTime, ISO_SECOND);
           millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
           microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-          nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+          nanosecond = GetSlot(temporalTime, ISO_NANOSECOND); // TODO: verify calendars match
         }
 
         var PlainDateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
@@ -11276,7 +11277,8 @@
         var timeZone = ES.ToTemporalTimeZone(timeZoneLike);
         var year = GetSlot(temporalDate, ISO_YEAR);
         var month = GetSlot(temporalDate, ISO_MONTH);
-        var day = GetSlot(temporalDate, ISO_DAY);
+        var day = GetSlot(temporalDate, ISO_DAY); // TODO: verify calendars match
+
         var calendar = GetSlot(temporalDate, CALENDAR);
         var hour = GetSlot(this, ISO_HOUR);
         var minute = GetSlot(this, ISO_MINUTE);

@@ -335,7 +335,13 @@ The number of seconds is truncated towards zero.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="toZonedDateTimeISO"><a class="heading-link" href="#toZonedDateTimeISO"></a>instant.<strong>toZonedDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
+<li><code>timeZone</code> (object or string): either<ul>
+<li>a <code>Temporal.TimeZone</code> object</li>
+<li>an object implementing the <a href="./timezone.html#protocol">time zone protocol</a></li>
+<li>a string description of the time zone; either its IANA name or UTC offset</li>
+<li>an object with a <code>timeZone</code> property whose value is any of the above.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the calendar date, wall-clock time, time zone offset, and <code>timeZone</code>, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by <code>instant</code>.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
@@ -348,10 +354,13 @@ Use this method if you are not doing computations in other calendars.</p>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 timestamp<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'Europe/Berlin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T01:45+02:00[Europe/Berlin]</span>
 timestamp<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-31T00:45+00:00[UTC]</span>
-timestamp<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T16:45-08:00[-08:00]</span></code></pre><h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>instant.<strong>toZonedDateTime</strong>(<em>timeZone</em>: object | string, <em>calendar</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+timestamp<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-03-30T16:45-08:00[-08:00]</span></code></pre><h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>instant.<strong>toZonedDateTime</strong>(<em>item</em>: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (object or string): A <code>Temporal.TimeZone</code> object, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string description of the time zone; either its IANA name or UTC offset.</li>
-<li><code>calendar</code> (object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.</li>
+<li><code>item</code> (object): an object with properties to be combined with <code>instant</code>. The following properties are recognized:<ul>
+<li><code>calendar</code> (required calendar identifier string, <code>Temporal.Calendar</code> object, or object implementing the calendar protocol): the calendar in which to interpret <code>instant</code>.</li>
+<li><code>timeZone</code> (required time zone identifier string, <code>Temporal.TimeZone</code> object, or object implementing the <a href="./timezone.html#protocol">time zone protocol</a>): the time zone in which to interpret <code>instant</code>.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the calendar date, wall-clock time, time zone offset, and <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
@@ -362,14 +371,14 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js"><span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> <span class="token string">'gregory'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token punctuation">,</span> calendar<span class="token operator">:</span> <span class="token string">'gregory'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1969-12-31T19:00-05:00[America/New_York][c=gregory]</span>
 
 <span class="token comment">// What time was the Unix epoch in Tokyo in the Japanese calendar?</span>
-tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">,</span> cal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+calendar <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+zdt <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token punctuation">,</span> calendar <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>era<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 45 showa</span></code></pre><!-- prettier-ignore-end -->
