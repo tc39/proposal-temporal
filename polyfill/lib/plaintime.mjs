@@ -122,11 +122,19 @@ export class PlainTime {
   with(temporalTimeLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalTimeLike) !== 'Object') {
-      const str = ES.ToString(temporalTimeLike);
-      temporalTimeLike = ES.RelevantTemporalObjectFromString(str);
+      throw new TypeError('invalid argument');
     }
+    if (temporalTimeLike.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
+    }
+    if (temporalTimeLike.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
+
+    // TODO: defer to calendar
     const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
       'microsecond',

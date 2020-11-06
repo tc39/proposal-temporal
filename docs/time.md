@@ -180,7 +180,7 @@ The `calendar` read-only property gives the calendar that the `hour`, `minute`, 
 
 **Parameters:**
 
-- `timeLike` (object or string): an object with some or all of the properties of a `Temporal.PlainTime`, or an ISO string.
+- `timeLike` (object): an object with some or all of the properties of a `Temporal.PlainTime`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
@@ -191,10 +191,10 @@ The `calendar` read-only property gives the calendar that the `hour`, `minute`, 
 
 This method creates a new `Temporal.PlainTime` which is a copy of `time`, but any properties present on `timeLike` override the ones already present on `time`.
 
-If `timeLike` is a string, then it will be attempted to be converted into a `Temporal.PlainTime`.
-(In this case, the result is identical to to `Temporal.PlainTime.from(timeLike)`.)
-
 Since `Temporal.PlainTime` objects are immutable, use this method instead of modifying one.
+
+> **NOTE**: `calendar` and `timeZone` properties are not allowed on `timeLike`.
+> See the `withCalendar` and `toZonedDateTime` methods instead.
 
 Usage example:
 
