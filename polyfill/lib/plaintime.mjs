@@ -421,6 +421,7 @@ export class PlainTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
+    // TODO: verify calendars match
     const calendar = GetSlot(temporalDate, CALENDAR);
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);

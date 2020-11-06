@@ -350,6 +350,7 @@ export class PlainDate {
     const day = GetSlot(this, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
 
+    // TODO: use start of day in calendar.
     let hour = 0,
       minute = 0,
       second = 0,
@@ -364,6 +365,7 @@ export class PlainDate {
       millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
       microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
       nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+      // TODO: verify calendars match
     }
 
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
