@@ -72,7 +72,7 @@ formatOptions = {
   second: 'numeric'
 };
 
-zdt = instant.toZonedDateTime('Asia/Tokyo');
+zdt = instant.toZonedDateTimeISO('Asia/Tokyo');
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo]
 zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
   // => "Sep 3, 2019 AD, 5:34:05 PM"
@@ -97,12 +97,13 @@ Conversions from calendar date and/or wall clock time to exact time are also sup
 ```javascript
 // Convert various local time types to an exact time type by providing a time zone
 date = Temporal.PlainDate.from('2019-12-17');
+// If time is omitted, local time defaults to start of day
 zdt = date.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T00:00+09:00[Asia/Tokyo]
-zdt = date.toZonedDateTime('Asia/Tokyo', Temporal.PlainTime.from('10:00'));
+zdt = date.toZonedDateTime({ timeZone: 'Asia/Tokyo', time: Temporal.PlainTime.from('10:00') });
   // => 2019-12-17T10:00+09:00[Asia/Tokyo]
 time = Temporal.PlainTime.from('14:35');
-zdt = time.toZonedDateTime('Asia/Tokyo', Temporal.PlainDate.from('2020-08-27'));
+zdt = time.toZonedDateTime({ timeZone: 'Asia/Tokyo', date: Temporal.PlainDate.from('2020-08-27') });
   // => 020-08-27T14:35+09:00[Asia/Tokyo]
 dateTime = Temporal.PlainDateTime.from('2019-12-17T07:48');
 zdt = dateTime.toZonedDateTime('Asia/Tokyo');
@@ -150,7 +151,7 @@ inst = Temporal.Instant.from('2020-09-06T10:35:24.485-07:00');
 zdt = Temporal.ZonedDateTime.from('2020-09-06T10:35:24.485-07:00[America/Los_Angeles]');
   // => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]
 // if the source is an exact Temporal object, then no ambiguity is possible.
-zdt = inst.toZonedDateTime('America/Los_Angeles');
+zdt = inst.toZonedDateTimeISO('America/Los_Angeles');
   // => 2020-09-06T10:35:24.485-07:00[America/Los_Angeles]
 inst2 = zdt.toInstant();
   // => 2020-09-06T17:35:24.485Z
@@ -162,14 +163,13 @@ However, opportunities for ambiguity are present when creating an exact-time typ
 <!-- prettier-ignore-start -->
 ```javascript
 // Offset is not known. Ambiguity is possible!
-zdt = Temporal.PlainDate('2019-02-19').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
-zdt = Temporal.PlainDateTime('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
+zdt = Temporal.PlainDate.from('2019-02-19').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
+zdt = Temporal.PlainDateTime.from('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 
 // Even if the offset is present in the source string, if the type (like DateTime)
 // isn't an exact type then the offset is ignored when parsing so ambiguity is possible.
 dt = Temporal.PlainDateTime.from('2019-02-19T00:00-03:00');
-zdt = dt.toZonedDateTimeISO('America/Sao_Paulo'); // can be ambiguous
-inst = dt.toInstantISO('America/Sao_Paulo'); // can be ambiguous
+zdt = dt.toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 
 // the offset is lost when converting from an exact type to a non-exact type
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]');
@@ -198,10 +198,6 @@ Methods where this option is present include:
 - [`Temporal.PlainDate.prototype.toZonedDateTime`](./date.md#toZonedDateTime)
 - [`Temporal.PlainTime.prototype.toZonedDateTime`](./time.md#toZonedDateTime)
 - [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./datetime.md#toZonedDateTime)
-- [`Temporal.PlainDateTime.prototype.toInstant`](./datetime.md#toInstant)
-- [`Temporal.PlainYearMonth.prototype.toZonedDateTime`](./yearmonth.md#toZonedDateTime)
-- [`Temporal.PlainMonthDay.prototype.toZonedDateTime`](./monthday.md#toZonedDateTime)
-- [`Temporal.TimeZone.prototype.getZonedDateTimeFor`](./timezone.md#getZonedDateTimeFor).
 - [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 
 ## Examples: DST Disambiguation
