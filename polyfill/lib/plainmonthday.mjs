@@ -73,9 +73,16 @@ export class PlainMonthDay {
 
   with(temporalMonthDayLike, options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    if ('calendar' in temporalMonthDayLike) {
-      throw new RangeError('invalid calendar property in month-day-like');
+    if (ES.Type(temporalMonthDayLike) !== 'Object') {
+      throw new TypeError('invalid argument');
     }
+    if (temporalMonthDayLike.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
+    }
+    if (temporalMonthDayLike.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
     const props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
