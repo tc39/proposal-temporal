@@ -1,5 +1,4 @@
 const datePicker = document.getElementById('calendar-input');
-const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const today = Temporal.now.plainDate(browserCalendar);
+const today = Temporal.now.plainDateISO();
 datePicker.max = today;
 datePicker.value = today;
