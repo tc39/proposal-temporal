@@ -161,11 +161,11 @@ This is easily done with `dateTime.toInstant()`, but here is an example of imple
 
 ### Preserving exact time
 
-Map a zoned date and time of day into a string serialization of the local time in a target time zone at the corresponding exact time.
+Map a zoned date and time of day into another zoned date and time of day in a target time zone at the corresponding exact time.
 This could be used when converting user-input date-time values between time zones.
 
 ```javascript
-{{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
+{{cookbook/zonedDateTimeInOtherZone.mjs}}
 ```
 
 Here is another example similar to the previous one, using the time zone for future events.
@@ -189,7 +189,7 @@ Similar to the previous recipe, calculate the exact times of a daily occurrence 
 
 ### UTC offset for a zoned event, as a string
 
-Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
+Use `Temporal.TimeZone.getOffsetStringFor()` or `Temporal.ZonedDateTime.offset` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
 
 ```javascript
 {{cookbook/getUtcOffsetStringAtInstant.mjs}}
@@ -368,6 +368,7 @@ This example takes a roster of wall-clock opening and closing times for a busine
 ### Flight arrival/departure/duration
 
 Map localized trip departure and arrival times into trip duration in units no larger than hours.
+(By default, differences between ZonedDateTime instances are exact differences in time units.)
 
 ```javascript
 {{cookbook/getTripDurationInHrMinSec.mjs}}
@@ -439,7 +440,7 @@ Depending on the behaviour you want, you will need to pick the right `overflow` 
 
 ### Next weekly occurrence
 
-From a `Temporal.Instant` instance and a local `Temporal.TimeZone`, get a `Temporal.PlainDateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
+From a `Temporal.ZonedDateTime` instance, get a `Temporal.ZonedDateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
 
 ```javascript
 {{cookbook/nextWeeklyOccurrence.mjs}}
