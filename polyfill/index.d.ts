@@ -806,13 +806,10 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     toPlainDateTime(temporalTime?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
-    toZonedDateTime(
-      timeZoneAndTime: {
-        timeZone: TimeZoneProtocol | string;
-        time?: Temporal.PlainTime | TimeLike | string;
-      },
-      options?: ToInstantOptions
-    ): Temporal.ZonedDateTime;
+    toZonedDateTime(timeZoneAndTime: {
+      timeZone: TimeZoneProtocol | string;
+      time?: Temporal.PlainTime | TimeLike | string;
+    }): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     getFields(): DateFields;
@@ -1151,13 +1148,10 @@ export namespace Temporal {
       >
     ): Temporal.PlainTime;
     toPlainDateTime(temporalDate: Temporal.PlainDate | DateLike | string): Temporal.PlainDateTime;
-    toZonedDateTime(
-      timeZoneAndDate: {
-        timeZone: TimeZoneProtocol | string;
-        date: Temporal.PlainDate | DateLike | string;
-      },
-      options?: ToInstantOptions
-    ): Temporal.ZonedDateTime;
+    toZonedDateTime(timeZoneAndDate: {
+      timeZone: TimeZoneProtocol | string;
+      date: Temporal.PlainDate | DateLike | string;
+    }): Temporal.ZonedDateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
