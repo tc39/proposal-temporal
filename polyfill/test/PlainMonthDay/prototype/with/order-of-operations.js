@@ -8,7 +8,8 @@ includes: [compareArray.js]
 
 const instance = new Temporal.PlainMonthDay(5, 2);
 const expected = [
-  "has calendar",
+  "get calendar",
+  "get timeZone",
   "get day",
   "valueOf day",
   "get month",

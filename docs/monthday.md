@@ -152,7 +152,7 @@ The `overflow` option tells what should happen when out-of-range values are give
 
 Since `Temporal.PlainMonthDay` objects are immutable, use this method instead of modifying one.
 
-> **NOTE**: Unlike in `Temporal.PlainDate.prototype.with()`, a `calendar` property is not allowed on `monthDayLike`.
+> **NOTE**: `calendar` and `timeZone` properties are not allowed on `monthDayLike`.
 > It is not possible to convert a `Temporal.PlainMonthDay` to another calendar system without knowing the year.
 > If you need to do this, use `monthDay.toPlainDate({ year }).withCalendar(calendar).toPlainMonthDay()`.
 

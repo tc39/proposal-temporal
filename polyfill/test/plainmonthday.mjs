@@ -143,8 +143,11 @@ describe('MonthDay', () => {
         throws(() => md.with({ day: 1 }, { overflow }), RangeError)
       );
     });
-    it('throws on trying to change the calendar', () => {
-      throws(() => md.with({ calendar: 'gregory' }), RangeError);
+    it('throws with calendar property', () => {
+      throws(() => md.with({ day: 1, calendar: 'iso8601' }), TypeError);
+    });
+    it('throws with timeZone property', () => {
+      throws(() => md.with({ day: 1, timeZone: 'UTC' }), TypeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>

@@ -142,6 +142,14 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
+        1. If Type(_temporalMonthDayLike_) is not Object, then
+          1. Throw a *TypeError* exception.
+        1. Let _calendarProperty_ be ? Get(_temporalMonthDayLike_, *"calendar"*).
+        1. If _calendarProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _timeZoneProperty_ be ? Get(_temporalMonthDayLike_, *"timeZone"*).
+        1. If _timeZoneProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
         1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_, _fieldNames_).
