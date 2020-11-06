@@ -8478,7 +8478,7 @@
       var calendar = GetSlot(temporalObj, CALENDAR);
 
       if (calendar.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format YearMonth with calendar ".concat(calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+        throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
@@ -8499,7 +8499,7 @@
       var _calendar = GetSlot(temporalObj, CALENDAR);
 
       if (_calendar.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format MonthDay with calendar ".concat(_calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+        throw new RangeError("cannot format PlainMonthDay with calendar ".concat(_calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime2 = new DateTime(referenceISOYear, _isoMonth, isoDay, 12, 0, 0, 0, 0, 0, _calendar);
@@ -8520,7 +8520,7 @@
       var _calendar2 = GetSlot(temporalObj, CALENDAR);
 
       if (_calendar2.id !== 'iso8601' && _calendar2.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format Date with calendar ".concat(_calendar2.id, " in locale with calendar ").concat(main[CAL_ID]));
+        throw new RangeError("cannot format PlainDate with calendar ".concat(_calendar2.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime3 = new DateTime(_isoYear, _isoMonth2, _isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
@@ -8553,7 +8553,7 @@
       var _calendar3 = GetSlot(temporalObj, CALENDAR);
 
       if (_calendar3.id !== 'iso8601' && _calendar3.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format Date with calendar ".concat(_calendar3.id, " in locale with calendar ").concat(main[CAL_ID]));
+        throw new RangeError("cannot format PlainDateTime with calendar ".concat(_calendar3.id, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime4 = temporalObj;
