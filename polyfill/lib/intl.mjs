@@ -131,7 +131,7 @@ function amend(options = {}, amended = {}) {
 function timeAmend(options) {
   options = amend(options, { year: false, month: false, day: false, weekday: false, timeZoneName: false });
   if (!hasTimeOptions(options)) {
-    options = ObjectAssign(options, {
+    options = ObjectAssign({}, options, {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric'
@@ -165,7 +165,7 @@ function monthDayAmend(options) {
     timeZoneName: false
   });
   if (!('month' in options || 'day' in options)) {
-    options = ObjectAssign(options, { month: 'numeric', day: 'numeric' });
+    options = ObjectAssign({}, options, { month: 'numeric', day: 'numeric' });
   }
   return options;
 }
@@ -173,7 +173,7 @@ function monthDayAmend(options) {
 function dateAmend(options) {
   options = amend(options, { hour: false, minute: false, second: false, timeZoneName: false });
   if (!hasDateOptions(options)) {
-    options = ObjectAssign(options, {
+    options = ObjectAssign({}, options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric'
@@ -185,7 +185,7 @@ function dateAmend(options) {
 function datetimeAmend(options) {
   options = amend(options, { timeZoneName: false });
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-    ObjectAssign(options, {
+    options = ObjectAssign({}, options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -199,7 +199,7 @@ function datetimeAmend(options) {
 
 function instantAmend(options) {
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-    ObjectAssign(options, {
+    options = ObjectAssign({}, options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
