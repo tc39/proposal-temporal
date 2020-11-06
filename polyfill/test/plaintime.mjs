@@ -238,16 +238,18 @@ describe('Time', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${time.with({ minutes: 1, hour: 1 })}`, '01:23:30.123456789');
     });
-    it('time.with(iso time string)', () => {
-      equal(`${time.with('18:05:42.577')}`, '18:05:42.577');
-      equal(`${time.with('2019-05-17T18:05:42.577')}`, '18:05:42.577');
-      equal(`${time.with('2019-05-17T18:05:42.577Z')}`, '18:05:42.577');
-    });
-    it('time.with(bad string)', () => {
-      throws(() => time.with('42'), RangeError);
-    });
-    it('time.with(good string but irrelevant type)', () => {
+    it('time.with(string) throws', () => {
+      throws(() => time.with('18:05:42.577'), TypeError);
+      throws(() => time.with('2019-05-17T18:05:42.577'), TypeError);
+      throws(() => time.with('2019-05-17T18:05:42.577Z'), TypeError);
       throws(() => time.with('2019-05-17'), TypeError);
+      throws(() => time.with('42'), TypeError);
+    });
+    it('throws with calendar property', () => {
+      throws(() => time.with({ hour: 21, calendar: 'iso8601' }), TypeError);
+    });
+    it('throws with timeZone property', () => {
+      throws(() => time.with({ hour: 21, timeZone: 'UTC' }), TypeError);
     });
   });
   describe('time.toPlainDateTime() works', () => {
@@ -1335,10 +1337,6 @@ describe('Time', () => {
     });
     it('as input to from()', () => {
       const t2 = PlainTime.from(fields);
-      equal(PlainTime.compare(t1, t2), 0);
-    });
-    it('as input to with()', () => {
-      const t2 = PlainTime.from('20:18:32').with(fields);
       equal(PlainTime.compare(t1, t2), 0);
     });
   });

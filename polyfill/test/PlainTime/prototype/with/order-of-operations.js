@@ -8,6 +8,8 @@ includes: [compareArray.js]
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
 const expected = [
+  "get calendar",
+  "get timeZone",
   "get hour",
   "valueOf hour",
   "get microsecond",

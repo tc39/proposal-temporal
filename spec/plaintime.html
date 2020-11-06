@@ -257,8 +257,13 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If Type(_temporalTimeLike_) is not Object, then
-          1. Let _isoString_ be ? ToString(_temporalTimeLike_).
-          1. Set _temporalTimeLike_ to ? RelevantTemporalObjectFromString(_isoString_).
+          1. Throw a *TypeError* exception.
+        1. Let _calendarProperty_ be ? Get(_temporalTimeLike_, *"calendar"*).
+        1. If _calendarProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
+        1. Let _timeZoneProperty_ be ? Get(_temporalTimeLike_, *"timeZone"*).
+        1. If _timeZoneProperty_ is not *undefined*, then
+          1. Throw a *TypeError* exception.
         1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
@@ -287,6 +292,7 @@
         1. Else,
           1. Let _nanosecond_ be _temporalTime_.[[Nanosecond]].
         1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
+        1. <mark>TODO: `calendar.timeFromFields`.</mark>
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
