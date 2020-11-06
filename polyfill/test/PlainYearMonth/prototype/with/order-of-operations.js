@@ -8,7 +8,8 @@ includes: [compareArray.js]
 
 const instance = new Temporal.PlainYearMonth(2000, 5);
 const expected = [
-  "has calendar",
+  "get calendar",
+  "get timeZone",
   "get month",
   "valueOf month",
   "get year",

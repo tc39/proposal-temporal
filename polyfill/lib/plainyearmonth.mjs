@@ -86,9 +86,16 @@ export class PlainYearMonth {
   }
   with(temporalYearMonthLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    if ('calendar' in temporalYearMonthLike) {
-      throw new RangeError('invalid calendar property in year-month-like');
+    if (ES.Type(temporalYearMonthLike) !== 'Object') {
+      throw new TypeError('invalid argument');
     }
+    if (temporalYearMonthLike.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
+    }
+    if (temporalYearMonthLike.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
     const props = ES.ToPartialRecord(temporalYearMonthLike, fieldNames);

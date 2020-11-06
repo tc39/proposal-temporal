@@ -249,7 +249,7 @@ If the result is earlier or later than the range of dates that `Temporal.PlainYe
 
 > **NOTE**: The allowed values for the `yearMonthLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-> **NOTE**: Unlike in `Temporal.PlainDate.prototype.with()`, a `calendar` property is not allowed on `yearMonthLike`.
+> **NOTE**: `calendar` and `timeZone` properties are not allowed on `yearMonthLike`.
 > It is not possible to convert a `Temporal.PlainYearMonth` to another calendar system without knowing the day of the month.
 > If you need to do this, use `yearMonth.toPlainDate({ day }).withCalendar(calendar).toPlainYearMonth()`.
 

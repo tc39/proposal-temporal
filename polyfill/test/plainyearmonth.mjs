@@ -150,8 +150,11 @@ describe('YearMonth', () => {
   });
   describe('YearMonth.with() works', () => {
     const ym = PlainYearMonth.from('2019-10');
-    it('throws on trying to change the calendar', () => {
-      throws(() => ym.with({ calendar: 'gregory' }), RangeError);
+    it('throws with calendar property', () => {
+      throws(() => ym.with({ year: 2021, calendar: 'iso8601' }), TypeError);
+    });
+    it('throws with timeZone property', () => {
+      throws(() => ym.with({ year: 2021, timeZone: 'UTC' }), TypeError);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
