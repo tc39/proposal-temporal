@@ -112,8 +112,11 @@ describe('TimeZone', () => {
       it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
         equal(timezoneFrom.id, timezoneObj.id));
     }
-    it.skip('ZonedDateTime is accepted', () => {
-      // FIXME: Requires ZonedDateTime
+    it('ZonedDateTime is accepted', () => {
+      const zdt = new Temporal.ZonedDateTime(0n, 'Africa/Cairo');
+      const tzFrom = Temporal.TimeZone.from(zdt);
+      assert(tzFrom instanceof Temporal.TimeZone);
+      equal(tzFrom.id, 'Africa/Cairo');
     });
     it('property bag with time zone object is accepted', () => {
       const tz = new Temporal.TimeZone('Africa/Cairo');
