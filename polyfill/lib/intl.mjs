@@ -243,7 +243,7 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== main[CAL_ID]) {
       throw new RangeError(
-        `cannot format YearMonth with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainYearMonth with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
       );
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
@@ -260,7 +260,7 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== main[CAL_ID]) {
       throw new RangeError(
-        `cannot format MonthDay with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainMonthDay with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
       );
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
@@ -276,7 +276,9 @@ function extractOverrides(temporalObj, main) {
     const isoDay = GetSlot(temporalObj, ISO_DAY);
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
-      throw new RangeError(`cannot format Date with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`);
+      throw new RangeError(
+        `cannot format PlainDate with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+      );
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
@@ -297,7 +299,9 @@ function extractOverrides(temporalObj, main) {
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const calendar = GetSlot(temporalObj, CALENDAR);
     if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
-      throw new RangeError(`cannot format Date with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`);
+      throw new RangeError(
+        `cannot format PlainDateTime with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+      );
     }
     let datetime = temporalObj;
     if (calendar.id === 'iso8601') {
