@@ -304,7 +304,7 @@
             1. <ins>Let _tm_ be { [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]] }.</ins>
           1. <ins>If _x_ has an [[InitializedTemporalTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[hour]]: _x_.[[Hour]], [[minute]]: _x_.[[Minute]], [[second]]: _x_.[[Second]] }.</ins>
+            1. <ins>Let _tm_ be { [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]] }.</ins>
           1. <ins>If _x_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
             1. <ins>If _x_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
               1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
@@ -313,7 +313,7 @@
             1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalDateTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]], [[hour]]: _x_.[[Hour]], [[minute]]: _x_.[[Minute]], [[second]]: _x_.[[Second]] }.</ins>
+            1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]], [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]] }.</ins>
           1. <ins>If _date_ has an [[InitializedTemporalZonedDateTime]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
