@@ -60,7 +60,9 @@ Here is an example using an HTML `<input type="date">` element with any day beyo
 <input type="date" id="calendar-input">
 
 <script type="text/javascript">
+{
 {{cookbook/calendarInput.js}}
+}
 </script>
 
 ```javascript
@@ -220,6 +222,7 @@ The graph always starts at midnight in the tank's location, but the graph labels
 <canvas id="storage-tank" width="600" height="400"></canvas>
 
 <script type="text/javascript">
+{
 // Generate fictitious "data"
 const start = Temporal.now.instant().subtract({ hours: 24 });
 const blank = Array(24 * 12);
@@ -231,6 +234,7 @@ for (let ix = 1; ix < tankDataY.length; ix++) {
 }
 
 {{cookbook/storageTank.js}}
+}
 </script>
 
 ```javascript
@@ -294,7 +298,9 @@ Across the web there are several tools for finding meeting times that are approp
 </table>
 
 <script type="text/javascript" id="meeting-planner-source">
+{
 {{cookbook/meetingPlanner.js}}
+}
 </script>
 
 ```javascript
@@ -325,8 +331,9 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
   const today = Temporal.now.plainDate();
   futureDatePicker.min = today;
   futureDatePicker.value = today.add({ months: 1 });
-}
+
 {{cookbook/futureDateForm.js}}
+}
 </script>
 
 ```javascript
