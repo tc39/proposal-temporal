@@ -18,11 +18,7 @@ Here's how they would look using Temporal.
 How to get the current date and time in the local time zone?
 
 ```javascript
-{
-  {
-    cookbook / getCurrentDate.mjs;
-  }
-}
+{{cookbook/getCurrentDate.mjs}}
 ```
 
 Note that if you just want the date and not the time, you should use `Temporal.PlainDate`.
@@ -33,11 +29,7 @@ If you want both, use `Temporal.PlainDateTime`.
 How to get a Unix timestamp?
 
 ```javascript
-{
-  {
-    cookbook / getTimeStamp.mjs;
-  }
-}
+{{cookbook/getTimeStamp.mjs}}
 ```
 
 ## Converting between Temporal types and legacy Date
@@ -47,11 +39,7 @@ How to get a Unix timestamp?
 Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in exact time.
 
 ```javascript
-{
-  {
-    cookbook / instantFromLegacyDate.mjs;
-  }
-}
+{{cookbook/instantFromLegacyDate.mjs}}
 ```
 
 ## Construction
@@ -61,11 +49,7 @@ Map a legacy ECMAScript Date instance into a Temporal.Instant instance correspon
 `Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object.
 
 ```javascript
-{
-  {
-    cookbook / getTimeZoneObjectFromIanaName.mjs;
-  }
-}
+{{cookbook/getTimeZoneObjectFromIanaName.mjs}}
 ```
 
 ### Calendar input element
@@ -80,11 +64,7 @@ Here is an example using an HTML `<input type="date">` element with any day beyo
 </script>
 
 ```javascript
-{
-  {
-    cookbook / calendarInput.js;
-  }
-}
+{{cookbook/calendarInput.js}}
 ```
 
 ## Converting between types
@@ -94,11 +74,7 @@ Here is an example using an HTML `<input type="date">` element with any day beyo
 An example of combining a calendar date (`Temporal.PlainDate`) and a wall-clock time (`Temporal.PlainTime`) into a `Temporal.PlainDateTime`.
 
 ```javascript
-{
-  {
-    cookbook / noonOnDate.mjs;
-  }
-}
+{{cookbook/noonOnDate.mjs}}
 ```
 
 ### Birthday in 2030
@@ -106,11 +82,7 @@ An example of combining a calendar date (`Temporal.PlainDate`) and a wall-clock 
 An example of combining a day on the calendar (`Temporal.PlainMonthDay`) and a year into a `Temporal.PlainDate`.
 
 ```javascript
-{
-  {
-    cookbook / birthdayIn2030.mjs;
-  }
-}
+{{cookbook/birthdayIn2030.mjs}}
 ```
 
 ## Serialization
@@ -126,11 +98,7 @@ This loses the information about which time zone the string was in, because it o
 If you need your string to include the time zone name, use Temporal.ZonedDateTime instead, which retains this information.
 
 ```javascript
-{
-  {
-    cookbook / getParseableZonedStringAtInstant.mjs;
-  }
-}
+{{cookbook/getParseableZonedStringAtInstant.mjs}}
 ```
 
 ## Sorting
@@ -143,11 +111,7 @@ Sort a list of `Temporal.PlainDateTime`s, for example in order to get a conferen
 Sorting other Temporal types would work exactly the same way as this.
 
 ```javascript
-{
-  {
-    cookbook / getSortedLocalDateTimes.mjs;
-  }
-}
+{{cookbook/getSortedLocalDateTimes.mjs}}
 ```
 
 ### Sort ISO date/time strings
@@ -155,11 +119,7 @@ Sorting other Temporal types would work exactly the same way as this.
 Sort a list of ISO 8601 date/time strings, for example to place log entries in order.
 
 ```javascript
-{
-  {
-    cookbook / sortExactTimeStrings.mjs;
-  }
-}
+{{cookbook/sortExactTimeStrings.mjs}}
 ```
 
 ## Rounding
@@ -170,11 +130,7 @@ Use the `round()` method of each Temporal type if you want to round the time fie
 Here's an example of rounding a time _down_ to the previously occurring whole hour:
 
 ```javascript
-{
-  {
-    cookbook / roundDownToWholeHours.mjs;
-  }
-}
+{{cookbook/roundDownToWholeHours.mjs}}
 ```
 
 ### Round a date to the nearest start of the month
@@ -185,11 +141,7 @@ If you need to round a date to the nearest month, for example, then you must exp
 Here is an example of rounding to the nearest start of a month, rounding up in case of a tie:
 
 ```javascript
-{
-  {
-    cookbook / roundToNearestMonth.mjs;
-  }
-}
+{{cookbook/roundToNearestMonth.mjs}}
 ```
 
 See also [Push back a launch date](#push-back-a-launch-date) for an easier way to round up unconditionally to the _next_ start of a month.
@@ -202,11 +154,7 @@ Map a zoneless date and time of day into a `Temporal.Instant` instance at which 
 This is easily done with `dateTime.toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
 
 ```javascript
-{
-  {
-    cookbook / getInstantWithLocalTimeInZone.mjs;
-  }
-}
+{{cookbook/getInstantWithLocalTimeInZone.mjs}}
 ```
 
 ### Preserving exact time
@@ -215,11 +163,7 @@ Map a zoned date and time of day into a string serialization of the local time i
 This could be used when converting user-input date-time values between time zones.
 
 ```javascript
-{
-  {
-    cookbook / getParseableZonedStringWithLocalTimeInOtherZone.mjs;
-  }
-}
+{{cookbook/getParseableZonedStringWithLocalTimeInOtherZone.mjs}}
 ```
 
 Here is another example similar to the previous one, using the time zone for future events.
@@ -230,11 +174,7 @@ So if the time zone rules changed, the event's exact time would change.
 This example calculates the starting times of all the Ecma TC39 meetings in 2019, in local time in Tokyo.
 
 ```javascript
-{
-  {
-    cookbook / localTimeForFutureEvents.mjs;
-  }
-}
+{{cookbook/localTimeForFutureEvents.mjs}}
 ```
 
 ### Daily occurrence in local time
@@ -242,11 +182,7 @@ This example calculates the starting times of all the Ecma TC39 meetings in 2019
 Similar to the previous recipe, calculate the exact times of a daily occurrence that happens at a particular local time in a particular time zone.
 
 ```javascript
-{
-  {
-    cookbook / calculateDailyOccurrence.mjs;
-  }
-}
+{{cookbook/calculateDailyOccurrence.mjs}}
 ```
 
 ### UTC offset for a zoned event, as a string
@@ -254,11 +190,7 @@ Similar to the previous recipe, calculate the exact times of a daily occurrence 
 Use `Temporal.TimeZone.getOffsetStringFor()` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
 
 ```javascript
-{
-  {
-    cookbook / getUtcOffsetStringAtInstant.mjs;
-  }
-}
+{{cookbook/getUtcOffsetStringAtInstant.mjs}}
 ```
 
 ### UTC offset for a zoned event, as a number of seconds
@@ -267,11 +199,7 @@ Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thin
 (Remember to divide by 10<sup>9</sup> to convert nanoseconds to seconds.)
 
 ```javascript
-{
-  {
-    cookbook / getUtcOffsetSecondsAtInstant.mjs;
-  }
-}
+{{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
 ```
 
 ### Offset between two time zones at an exact time
@@ -279,11 +207,7 @@ Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thin
 Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that exact time, as a number of seconds.
 
 ```javascript
-{
-  {
-    cookbook / getUtcOffsetDifferenceSecondsAtInstant.mjs;
-  }
-}
+{{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
 ```
 
 ### Dealing with dates and times in a fixed location
@@ -310,11 +234,7 @@ for (let ix = 1; ix < tankDataY.length; ix++) {
 </script>
 
 ```javascript
-{
-  {
-    cookbook / storageTank.js;
-  }
-}
+{{cookbook/storageTank.js}}
 ```
 
 ### Book a meeting across time zones
@@ -378,11 +298,7 @@ Across the web there are several tools for finding meeting times that are approp
 </script>
 
 ```javascript
-{
-  {
-    cookbook / meetingPlanner.js;
-  }
-}
+{{cookbook/meetingPlanner.js}}
 ```
 
 ## Arithmetic
@@ -414,11 +330,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
 </script>
 
 ```javascript
-{
-  {
-    cookbook / futureDateForm.js;
-  }
-}
+{{cookbook/futureDateForm.js}}
 ```
 
 ### Unit-constrained duration between now and a past/future zoned event
@@ -426,11 +338,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
 Take the difference between two Temporal.Instant instances as a Temporal.Duration instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
 
 ```javascript
-{
-  {
-    cookbook / getElapsedDurationSinceInstant.mjs;
-  }
-}
+{{cookbook/getElapsedDurationSinceInstant.mjs}}
 ```
 
 ### Nearest offset transition in a time zone
@@ -438,11 +346,7 @@ Take the difference between two Temporal.Instant instances as a Temporal.Duratio
 Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.Instant instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
 
 ```javascript
-{
-  {
-    cookbook / getInstantOfNearestOffsetTransitionToInstant.mjs;
-  }
-}
+{{cookbook/getInstantOfNearestOffsetTransitionToInstant.mjs}}
 ```
 
 ### Comparison of an exact time to business hours
@@ -450,11 +354,7 @@ Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.I
 This example takes a roster of wall-clock opening and closing times for a business, and maps an exact time into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
 
 ```javascript
-{
-  {
-    cookbook / getBusinessOpenStateText.mjs;
-  }
-}
+{{cookbook/getBusinessOpenStateText.mjs}}
 ```
 
 ### Flight arrival/departure/duration
@@ -462,21 +362,13 @@ This example takes a roster of wall-clock opening and closing times for a busine
 Map localized trip departure and arrival times into trip duration in units no larger than hours.
 
 ```javascript
-{
-  {
-    cookbook / getTripDurationInHrMinSec.mjs;
-  }
-}
+{{cookbook/getTripDurationInHrMinSec.mjs}}
 ```
 
 Given a departure time with time zone and a flight duration, get an arrival time in the destination time zone, using time zone-aware math.
 
 ```javascript
-{
-  {
-    cookbook / getLocalizedArrival.mjs;
-  }
-}
+{{cookbook/getLocalizedArrival.mjs}}
 ```
 
 ### Push back a launch date
@@ -484,11 +376,7 @@ Given a departure time with time zone and a flight duration, get an arrival time
 Add the number of days it took to get an approval, and advance to the start of the following month.
 
 ```javascript
-{
-  {
-    cookbook / plusAndRoundToMonthStart.mjs;
-  }
-}
+{{cookbook/plusAndRoundToMonthStart.mjs}}
 ```
 
 ### Schedule a reminder ahead of matching a record-setting duration
@@ -500,11 +388,7 @@ It returns the exact time at which a notification could be sent, for example "Ke
 This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
 
 ```javascript
-{
-  {
-    cookbook / getInstantBeforeOldRecord.mjs;
-  }
-}
+{{cookbook/getInstantBeforeOldRecord.mjs}}
 ```
 
 ### Nth weekday of the month
@@ -512,31 +396,19 @@ This could be used for workout tracking, racing (including _long_ and potentiall
 Example of getting a `Temporal.PlainDate` representing the first Tuesday of the given `Temporal.PlainYearMonth`, adaptable to other weekdays.
 
 ```javascript
-{
-  {
-    cookbook / getFirstTuesdayOfMonth.mjs;
-  }
-}
+{{cookbook/getFirstTuesdayOfMonth.mjs}}
 ```
 
 Given a `Temporal.PlainYearMonth` instance and an ISO 8601 ordinal calendar day of the week ranging from 1 (Monday) to 7 (Sunday), return a chronologically ordered array of `Temporal.PlainDate` instances corresponding with every day in the month that is the specified day of the week (of which there will always be either four or five).
 
 ```javascript
-{
-  {
-    cookbook / getWeeklyDaysInMonth.mjs;
-  }
-}
+{{cookbook/getWeeklyDaysInMonth.mjs}}
 ```
 
 Given a `Temporal.PlainDate` instance, return the count of preceding days in its month that share its day of the week.
 
 ```javascript
-{
-  {
-    cookbook / countPrecedingWeeklyDaysInMonth.mjs;
-  }
-}
+{{cookbook/countPrecedingWeeklyDaysInMonth.mjs}}
 ```
 
 ### Manipulating the day of the month
@@ -544,11 +416,7 @@ Given a `Temporal.PlainDate` instance, return the count of preceding days in its
 Here are some examples of taking an existing date, and adjusting the day of the month.
 
 ```javascript
-{
-  {
-    cookbook / adjustDayOfMonth.mjs;
-  }
-}
+{{cookbook/adjustDayOfMonth.mjs}}
 ```
 
 ### Same date in another month
@@ -558,11 +426,7 @@ Likewise, here are some examples of taking an existing date and adjusting the mo
 Depending on the behaviour you want, you will need to pick the right `overflow` option, but the default of `"constrain"` should be correct for most cases.
 
 ```javascript
-{
-  {
-    cookbook / adjustMonth.mjs;
-  }
-}
+{{cookbook/adjustMonth.mjs}}
 ```
 
 ### Next weekly occurrence
@@ -570,11 +434,7 @@ Depending on the behaviour you want, you will need to pick the right `overflow` 
 From a `Temporal.Instant` instance and a local `Temporal.TimeZone`, get a `Temporal.PlainDateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
 
 ```javascript
-{
-  {
-    cookbook / nextWeeklyOccurrence.mjs;
-  }
-}
+{{cookbook/nextWeeklyOccurrence.mjs}}
 ```
 
 ### Weekday of yearly occurrence
@@ -583,9 +443,5 @@ In some countries, when a public holiday falls on a Tuesday or Thursday, an extr
 The following example calculates this.
 
 ```javascript
-{
-  {
-    cookbook / bridgePublicHolidays.mjs;
-  }
-}
+{{cookbook/bridgePublicHolidays.mjs}}
 ```
