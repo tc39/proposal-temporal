@@ -280,21 +280,7 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
-        1. If _smallestUnit_ is *"hours"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
-        1. If _smallestUnit_ is *"minutes"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
-        1. Else if _smallestUnit_ is *"seconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
-        1. Else if _smallestUnit_ is *"milliseconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
-        1. Else if _smallestUnit_ is *"microseconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
-        1. Else,
-          1. Assert: _smallestUnit_ is *"nanoseconds"*.
-          1. Let _incrementNs_ be _roundingIncrement_.
-        1. Let _diff_ be the mathematical value of _otherInstant_.[[Nanoseconds]] − _instant_.[[Nanoseconds]].
-        1. Let _roundedNs_ be ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
+        1. Let _roundedNs_ be ? DifferenceInstant(_instant_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
@@ -318,21 +304,7 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be the mathematical value of ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
-        1. If _smallestUnit_ is *"hours"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
-        1. If _smallestUnit_ is *"minutes"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
-        1. Else if _smallestUnit_ is *"seconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
-        1. Else if _smallestUnit_ is *"milliseconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
-        1. Else if _smallestUnit_ is *"microseconds"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
-        1. Else,
-          1. Assert: _smallestUnit_ is *"nanoseconds"*.
-          1. Let _incrementNs_ be _roundingIncrement_.
-        1. Let _diff_ be the mathematical value of _instant_.[[Nanoseconds]] − _otherInstant_.[[Nanoseconds]].
-        1. Let _roundedNs_ be ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
+        1. Let _roundedNs_ be ? DifferenceInstant(_other_.[[Nanoseconds]], _instant_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
         1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
@@ -639,6 +611,30 @@
             _hours_ × 3,600,000,000,000.
         1. Perform ? RejectInstant(_result_).
         1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-differenceinstant" aoid="DifferenceInstant">
+      <h1>DifferenceInstant ( _ns1_, _ns2_, _roundingIncrement_, _smallestUnit_, _roundingMode_ )</h1>
+      <p>
+        The abstract operation DifferenceInstant computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and rounds the result according to the given parameters.
+      </p>
+      <emu-alg>
+        1. If _smallestUnit_ is *"hours"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
+        1. If _smallestUnit_ is *"minutes"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
+        1. Else if _smallestUnit_ is *"seconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
+        1. Else if _smallestUnit_ is *"milliseconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
+        1. Else if _smallestUnit_ is *"microseconds"*, then
+          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
+        1. Else,
+          1. Assert: _smallestUnit_ is *"nanoseconds"*.
+          1. Let _incrementNs_ be _roundingIncrement_.
+        1. Let _diff_ be _ns2_ − _ns1_.
+        1. Return ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
