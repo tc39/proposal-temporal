@@ -180,7 +180,7 @@ export class PlainDate {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const result = calendar.dateUntil(this, other, { largestUnit });
@@ -237,7 +237,7 @@ export class PlainDate {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     let { years, months, weeks, days } = calendar.dateUntil(this, other, { largestUnit });

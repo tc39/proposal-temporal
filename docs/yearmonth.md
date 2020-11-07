@@ -344,7 +344,7 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `yearMonth` and until `other`.
 
@@ -405,7 +405,7 @@ ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: '
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `yearMonth` and since `other`.
 

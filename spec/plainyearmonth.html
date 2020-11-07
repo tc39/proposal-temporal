@@ -290,7 +290,7 @@
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. <mark>TODO: Delegate to calendar.</mark>
         1. Let _years_ be _yearMonth_.[[ISOYear]] - _other_.[[ISOYear]].
@@ -325,7 +325,7 @@
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. <mark>TODO: Delegate to calendar.</mark>
