@@ -1437,16 +1437,16 @@ export const ES = ObjectAssign({}, ES2020, {
       outputTimeZone = new TemporalTimeZone('UTC');
     }
     const dateTime = ES.GetTemporalDateTimeFor(outputTimeZone, instant, 'iso8601');
-    const year = ES.ISOYearString(dateTime.year);
-    const month = ES.ISODateTimePartString(dateTime.month);
-    const day = ES.ISODateTimePartString(dateTime.day);
-    const hour = ES.ISODateTimePartString(dateTime.hour);
-    const minute = ES.ISODateTimePartString(dateTime.minute);
+    const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+    const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+    const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+    const hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
+    const minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
     const seconds = ES.FormatSecondsStringPart(
-      dateTime.second,
-      dateTime.millisecond,
-      dateTime.microsecond,
-      dateTime.nanosecond,
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND),
       precision
     );
     const timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
