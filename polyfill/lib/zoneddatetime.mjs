@@ -657,16 +657,16 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    const fields = ES.ToTemporalDateFields(this, fieldNames);
+    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    const fields = ES.ToTemporalDateFields(this, fieldNames);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }
   getFields() {
