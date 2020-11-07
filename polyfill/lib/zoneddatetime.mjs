@@ -737,44 +737,32 @@ function zonedDateTimeToString(
   showOffset = 'auto',
   options = undefined
 ) {
-  const dt = dateTime(zdt);
-  let year = GetSlot(dt, ISO_YEAR);
-  let month = GetSlot(dt, ISO_MONTH);
-  let day = GetSlot(dt, ISO_DAY);
-  let hour = GetSlot(dt, ISO_HOUR);
-  let minute = GetSlot(dt, ISO_MINUTE);
-  let second = GetSlot(dt, ISO_SECOND);
-  let millisecond = GetSlot(dt, ISO_MILLISECOND);
-  let microsecond = GetSlot(dt, ISO_MICROSECOND);
-  let nanosecond = GetSlot(dt, ISO_NANOSECOND);
+  let instant = GetSlot(zdt, INSTANT);
 
   if (options) {
     const { unit, increment, roundingMode } = options;
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      increment,
-      unit,
-      roundingMode
-    ));
+    const ns = ES.RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
+    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    instant = new TemporalInstant(ns);
   }
 
-  year = ES.ISOYearString(year);
-  month = ES.ISODateTimePartString(month);
-  day = ES.ISODateTimePartString(day);
-  hour = ES.ISODateTimePartString(hour);
-  minute = ES.ISODateTimePartString(minute);
-  const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
   const tz = GetSlot(zdt, TIME_ZONE);
+  const dateTime = ES.GetTemporalDateTimeFor(tz, instant, 'iso8601');
+
+  const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+  const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+  const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+  const hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
+  const minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
+  const seconds = ES.FormatSecondsStringPart(
+    GetSlot(dateTime, ISO_SECOND),
+    GetSlot(dateTime, ISO_MILLISECOND),
+    GetSlot(dateTime, ISO_MICROSECOND),
+    GetSlot(dateTime, ISO_NANOSECOND),
+    precision
+  );
   let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
-  if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
+  if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, instant);
   if (showTimeZone !== 'never') result += `[${ES.TimeZoneToString(tz)}]`;
   result += ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
   return result;
