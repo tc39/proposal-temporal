@@ -189,7 +189,7 @@ export class PlainYearMonth {
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
@@ -262,7 +262,7 @@ export class PlainYearMonth {
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);

@@ -495,7 +495,7 @@ dt.subtract({ months: 1 }); // => throws
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `datetime` and until `other`.
 
@@ -543,7 +543,7 @@ dt1.until(dt2, { largestUnit: 'nanoseconds' });
 
 // Rounding, for example if you don't care about sub-seconds
 dt1.until(dt2, { smallestUnit: 'seconds' });
-  // => P8456DT12H5M30S
+  // => P8456DT12H5M29S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
@@ -552,7 +552,7 @@ jan1.until(feb1);                            // => P31D
 jan1.until(feb1, { largestUnit: 'months' }); // => P1M
 feb1.until(mar1);                            // => P29D
 feb1.until(mar1, { largestUnit: 'months' }); // => P1M
-jan1.until(mar1);                            // => P121D
+jan1.until(mar1);                            // => P60D
 ```
 <!-- prettier-ignore-end -->
 
@@ -573,7 +573,7 @@ jan1.until(mar1);                            // => P121D
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `datetime` and since `other`.
 

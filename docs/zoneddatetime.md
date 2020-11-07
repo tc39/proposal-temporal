@@ -847,7 +847,7 @@ earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `zonedDateTime` and until `other`.
 
@@ -912,7 +912,7 @@ zdt1.until(zdt2, { largestUnit: 'nanoseconds' });
 
 // Rounding, for example if you don't care about sub-seconds
 zdt1.until(zdt2, { smallestUnit: 'seconds' });
-  // => PT202956H5M30S
+  // => PT202956H5M29S
 
 // Months and years can be different lengths
 [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
@@ -942,7 +942,7 @@ jan1.until(mar1, { largestUnit: 'days' }); // => P60D
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `zonedDateTime` and since `other`.
 

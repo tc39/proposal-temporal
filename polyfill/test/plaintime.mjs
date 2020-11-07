@@ -431,27 +431,45 @@ describe('Time', () => {
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
+    it('trunc is the default', () => {
       equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'PT4H17M');
-      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'PT4H17M5S');
+      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'PT4H17M4S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT3H');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        'PT3H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT4H30M');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        'PT4H30M'
+      );
     });
     it('rounds to an increment of seconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT4H17M');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        'PT4H17M'
+      );
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'PT4H17M4.860S');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.860S'
+      );
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864200S');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.864200S'
+      );
     });
     it('rounds to an increment of nanoseconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864197530S');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.864197530S'
+      );
     });
     it('valid hour increments divide into 24', () => {
       [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
@@ -681,27 +699,45 @@ describe('Time', () => {
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
+    it('trunc is the default', () => {
       equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'PT4H17M');
-      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'PT4H17M5S');
+      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'PT4H17M4S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT3H');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        'PT3H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT4H30M');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        'PT4H30M'
+      );
     });
     it('rounds to an increment of seconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT4H17M');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        'PT4H17M'
+      );
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'PT4H17M4.860S');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.860S'
+      );
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864200S');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.864200S'
+      );
     });
     it('rounds to an increment of nanoseconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`, 'PT4H17M4.864197530S');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'PT4H17M4.864197530S'
+      );
     });
     it('valid hour increments divide into 24', () => {
       [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {

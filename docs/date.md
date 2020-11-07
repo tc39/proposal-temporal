@@ -318,7 +318,7 @@ date = Temporal.PlainDate.from('2006-01-24');
 date.with({ day: 1 }); // => 2006-01-01
 // What's the last day of the next month?
 const nextMonthDate = date.add({ months: 1 });
-nextMonthDate.with({day: nextMonthDate.daysInMonth }); // => 2006-02-28
+nextMonthDate.with({ day: nextMonthDate.daysInMonth }); // => 2006-02-28
 ```
 
 ### date.**withCalendar**(_calendar_: object | string) : Temporal.PlainDate
@@ -435,7 +435,7 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the time elapsed after `date` and until `other`.
 
@@ -501,7 +501,7 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the time elapsed before `date` and since `other`.
 
@@ -660,7 +660,7 @@ If `time` is given, this method is equivalent to [`Temporal.PlainTime.from(time)
 
 If `time` is given but is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
 
-In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and  the later time for forward transitions.
+In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 

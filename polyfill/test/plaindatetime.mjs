@@ -591,9 +591,9 @@ describe('DateTime', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${earlier.until(later, { smallestUnit: 'months' })}`, 'P32M');
-      equal(`${earlier.until(later, { smallestUnit: 'weeks' })}`, 'P139W');
+      equal(`${earlier.until(later, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P3Y');
+      equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'nearest' })}`, 'P32M');
+      equal(`${earlier.until(later, { smallestUnit: 'weeks', roundingMode: 'nearest' })}`, 'P139W');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
@@ -674,28 +674,43 @@ describe('DateTime', () => {
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
+    it('trunc is the default', () => {
       equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'P973DT4H17M');
-      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'P973DT4H17M5S');
+      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'P973DT4H17M4S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'P973DT3H');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        'P973DT3H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'P973DT4H30M');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        'P973DT4H30M'
+      );
     });
     it('rounds to an increment of seconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'P973DT4H17M');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        'P973DT4H17M'
+      );
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'P973DT4H17M4.860S');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'P973DT4H17M4.860S'
+      );
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'P973DT4H17M4.864200S');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'P973DT4H17M4.864200S'
+      );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
         'P973DT4H17M4.864197530S'
       );
     });
@@ -793,8 +808,8 @@ describe('DateTime', () => {
     it('rounds relative to the receiver', () => {
       const dt1 = PlainDateTime.from('2019-01-01');
       const dt2 = PlainDateTime.from('2020-07-02');
-      equal(`${dt1.until(dt2, { smallestUnit: 'years' })}`, 'P2Y');
-      equal(`${dt2.until(dt1, { smallestUnit: 'years' })}`, '-P1Y');
+      equal(`${dt1.until(dt2, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P2Y');
+      equal(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'nearest' })}`, '-P1Y');
     });
   });
   describe('DateTime.since()', () => {
@@ -897,9 +912,9 @@ describe('DateTime', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${later.since(earlier, { smallestUnit: 'months' })}`, 'P32M');
-      equal(`${later.since(earlier, { smallestUnit: 'weeks' })}`, 'P139W');
+      equal(`${later.since(earlier, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P3Y');
+      equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'nearest' })}`, 'P32M');
+      equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingMode: 'nearest' })}`, 'P139W');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
@@ -980,28 +995,43 @@ describe('DateTime', () => {
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
+    it('trunc is the default', () => {
       equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'P973DT4H17M');
-      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'P973DT4H17M5S');
+      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'P973DT4H17M4S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3 })}`, 'P973DT3H');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        'P973DT3H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'P973DT4H30M');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        'P973DT4H30M'
+      );
     });
     it('rounds to an increment of seconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'P973DT4H17M');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        'P973DT4H17M'
+      );
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10 })}`, 'P973DT4H17M4.860S');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'P973DT4H17M4.860S'
+      );
     });
     it('rounds to an increment of microseconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10 })}`, 'P973DT4H17M4.864200S');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        'P973DT4H17M4.864200S'
+      );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
         'P973DT4H17M4.864197530S'
       );
     });
@@ -1099,8 +1129,8 @@ describe('DateTime', () => {
     it('rounds relative to the receiver', () => {
       const dt1 = PlainDateTime.from('2019-01-01');
       const dt2 = PlainDateTime.from('2020-07-02');
-      equal(`${dt2.since(dt1, { smallestUnit: 'years' })}`, 'P1Y');
-      equal(`${dt1.since(dt2, { smallestUnit: 'years' })}`, '-P2Y');
+      equal(`${dt2.since(dt1, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P1Y');
+      equal(`${dt1.since(dt2, { smallestUnit: 'years', roundingMode: 'nearest' })}`, '-P2Y');
     });
   });
   describe('DateTime.round works', () => {

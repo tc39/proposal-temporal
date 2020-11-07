@@ -340,15 +340,15 @@ describe('YearMonth', () => {
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${later.until(earlier, { smallestUnit: 'years' })}`, '-P3Y');
+    it('trunc is the default', () => {
+      equal(`${earlier.until(later, { smallestUnit: 'years' })}`, 'P2Y');
+      equal(`${later.until(earlier, { smallestUnit: 'years' })}`, '-P2Y');
     });
     it('rounds to an increment of years', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
+      equal(`${earlier.until(later, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'nearest' })}`, 'P4Y');
     });
     it('rounds to an increment of months', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P2Y10M');
+      equal(`${earlier.until(later, { smallestUnit: 'months', roundingIncrement: 5 })}`, 'P2Y5M');
       equal(
         `${earlier.until(later, { largestUnit: 'months', smallestUnit: 'months', roundingIncrement: 10 })}`,
         'P30M'
@@ -479,15 +479,15 @@ describe('YearMonth', () => {
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P3Y');
-      equal(`${earlier.since(later, { smallestUnit: 'years' })}`, '-P3Y');
+    it('trunc is the default', () => {
+      equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P2Y');
+      equal(`${earlier.since(later, { smallestUnit: 'years' })}`, '-P2Y');
     });
     it('rounds to an increment of years', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'years', roundingIncrement: 4 })}`, 'P4Y');
+      equal(`${later.since(earlier, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'nearest' })}`, 'P4Y');
     });
     it('rounds to an increment of months', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'months', roundingIncrement: 10 })}`, 'P2Y10M');
+      equal(`${later.since(earlier, { smallestUnit: 'months', roundingIncrement: 5 })}`, 'P2Y5M');
       equal(
         `${later.since(earlier, { largestUnit: 'months', smallestUnit: 'months', roundingIncrement: 10 })}`,
         'P30M'

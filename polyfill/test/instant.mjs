@@ -651,8 +651,8 @@ describe('Instant', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'hours' })}`, 'PT376435H');
-      equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'PT22586123M');
+      equal(`${later.since(earlier, { smallestUnit: 'hours', roundingMode: 'nearest' })}`, 'PT376435H');
+      equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingMode: 'nearest' })}`, 'PT22586123M');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
@@ -718,37 +718,73 @@ describe('Instant', () => {
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
-      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT376435H23M8.149S');
+    it('trunc is the default', () => {
+      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT376435H23M8.148S');
       equal(`${later.since(earlier, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT376435H23M8.148529S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'hours', roundingIncrement: 3 })}`, 'PT376434H');
+      equal(
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'hours',
+          roundingIncrement: 3,
+          roundingMode: 'nearest'
+        })}`,
+        'PT376434H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT376435H30M');
+      equal(
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'minutes',
+          roundingIncrement: 30,
+          roundingMode: 'nearest'
+        })}`,
+        'PT376435H30M'
+      );
     });
     it('rounds to an increment of seconds', () => {
       equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 15 })}`,
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'seconds',
+          roundingIncrement: 15,
+          roundingMode: 'nearest'
+        })}`,
         'PT376435H23M15S'
       );
     });
     it('rounds to an increment of milliseconds', () => {
       equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'milliseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT376435H23M8.150S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'microseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT376435H23M8.148530S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        `${later.since(earlier, {
+          largestUnit,
+          smallestUnit: 'nanoseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT376435H23M8.148529310S'
       );
     });
@@ -934,8 +970,8 @@ describe('Instant', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'hours' })}`, 'PT440610H');
-      equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'PT26436596M');
+      equal(`${earlier.until(later, { smallestUnit: 'hours', roundingMode: 'nearest' })}`, 'PT440610H');
+      equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingMode: 'nearest' })}`, 'PT26436596M');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
@@ -1001,34 +1037,73 @@ describe('Instant', () => {
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('nearest is the default', () => {
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT440609H56M3.149S');
+    it('trunc is the default', () => {
+      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT440609H56M3.148S');
       equal(`${earlier.until(later, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT440609H56M3.148529S');
     });
     it('rounds to an increment of hours', () => {
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'hours', roundingIncrement: 4 })}`, 'PT440608H');
+      equal(
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'hours',
+          roundingIncrement: 4,
+          roundingMode: 'nearest'
+        })}`,
+        'PT440608H'
+      );
     });
     it('rounds to an increment of minutes', () => {
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'minutes', roundingIncrement: 30 })}`, 'PT440610H');
+      equal(
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'minutes',
+          roundingIncrement: 30,
+          roundingMode: 'nearest'
+        })}`,
+        'PT440610H'
+      );
     });
     it('rounds to an increment of seconds', () => {
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'seconds', roundingIncrement: 15 })}`, 'PT440609H56M');
+      equal(
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'seconds',
+          roundingIncrement: 15,
+          roundingMode: 'nearest'
+        })}`,
+        'PT440609H56M'
+      );
     });
     it('rounds to an increment of milliseconds', () => {
       equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'milliseconds', roundingIncrement: 10 })}`,
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'milliseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT440609H56M3.150S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'microseconds', roundingIncrement: 10 })}`,
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'microseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT440609H56M3.148530S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'nanoseconds', roundingIncrement: 10 })}`,
+        `${earlier.until(later, {
+          largestUnit,
+          smallestUnit: 'nanoseconds',
+          roundingIncrement: 10,
+          roundingMode: 'nearest'
+        })}`,
         'PT440609H56M3.148529310S'
       );
     });

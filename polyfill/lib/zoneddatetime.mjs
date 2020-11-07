@@ -330,7 +330,7 @@ export class ZonedDateTime {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
@@ -423,7 +423,7 @@ export class ZonedDateTime {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 

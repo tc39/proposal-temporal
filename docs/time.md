@@ -304,7 +304,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `time` and until `other`.
 
@@ -332,12 +332,12 @@ Usage example:
 <!-- prettier-ignore-start -->
 ```javascript
 time = Temporal.PlainTime.from('20:13:20.971398099');
-time.until(Temporal.PlainTime.from('22:39:09.068346205')); // => PT2H25M49.903051894S
+time.until(Temporal.PlainTime.from('22:39:09.068346205')); // => PT2H25M48.096948106S
 time.until(Temporal.PlainTime.from('19:39:09.068346205')); // => -PT34M11.903051894S
 
 // Rounding, for example if you don't care about sub-seconds
 time.until(Temporal.PlainTime.from('22:39:09.068346205'), { smallestUnit: 'seconds' });
-  // => PT2H25M50S
+  // => PT2H25M48S
 ```
 <!-- prettier-ignore-end -->
 
@@ -358,7 +358,7 @@ time.until(Temporal.PlainTime.from('22:39:09.068346205'), { smallestUnit: 'secon
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `time` and since `other`.
 
@@ -374,7 +374,7 @@ Usage example:
 ```javascript
 time = Temporal.PlainTime.from('20:13:20.971398099');
 time.since(Temporal.PlainTime.from('19:39:09.068346205')); // => PT34M11.903051894S
-time.since(Temporal.PlainTime.from('22:39:09.068346205')); // => -PT2H25M49.903051894S
+time.since(Temporal.PlainTime.from('22:39:09.068346205')); // => -PT2H25M48.096948106S
 ```
 
 ### time.**round**(_options_: object) : Temporal.PlainTime
@@ -595,7 +595,7 @@ This method produces identical results to [`Temporal.PlainDate.from(date).toZone
 
 If `date` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 
-In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and  the later time for forward transitions.
+In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 

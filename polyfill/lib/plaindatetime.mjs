@@ -370,7 +370,7 @@ export class PlainDateTime {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
     let {
@@ -463,7 +463,7 @@ export class PlainDateTime {
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
     let {

@@ -365,7 +365,7 @@ Temporal.now.instant().subtract(oneHour);
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
 
@@ -410,10 +410,10 @@ missionLength.toLocaleString();
 
 // Rounding, for example if you don't care about the minutes and seconds
 approxMissionLength = startOfMoonMission.until(endOfMoonMission, {
-  largestUnit: 'days',
+  largestUnit: 'hours',
   smallestUnit: 'hours'
 });
-  // => P8DT3H
+  // => P195H
 
 // A billion (10^9) seconds since the epoch in different units
 epoch = Temporal.Instant.fromEpochSeconds(0);
@@ -429,8 +429,10 @@ ns.add({ nanoseconds: 1 });
 
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:
-utc = Temporal.TimeZone.from('UTC');
-epoch.toPlainDateTime(utc).until(billion.toPlainDateTime(utc), { largestUnit: 'years' });
+epoch.toZonedDateTimeISO('UTC').until(
+  billion.toZonedDateTimeISO('UTC'), 
+  { largestUnit: 'years' }
+);
   // => P31Y8M8DT1H46M40S
 ```
 <!-- prettier-ignore-end -->
@@ -452,7 +454,7 @@ epoch.toPlainDateTime(utc).until(billion.toPlainDateTime(utc), { largestUnit: 'y
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
     Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
 

@@ -449,7 +449,7 @@
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"days"*, _disallowedUnits_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"days"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _largestUnit_).
         1. If _smallestUnit_ is not *"days"* or _roundingIncrement_ ≠ 1, then
@@ -479,7 +479,7 @@
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"days"*, _disallowedUnits_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"days"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _largestUnit_).

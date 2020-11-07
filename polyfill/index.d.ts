@@ -216,9 +216,10 @@ export namespace Temporal {
      * - `nearest`: Round to the nearest of the values allowed by
      *   `roundingIncrement` and `smallestUnit`. When there is a tie, round away
      *   from zero like `ceil` for positive durations and like `floor` for
-     *   negative durations. This mode is the default.
+     *   negative durations.
      * - `ceil`: Always round up, towards the end of time.
-     * - `trunc`: Always round down, towards the beginning of time.
+     * - `trunc`: Always round down, towards the beginning of time. This mode is
+     *   the default.
      * - `floor`: Also round down, towards the beginning of time. This mode acts
      *   the same as `trunc`, but it's included for consistency with
      *   `Temporal.Duration.round()` where negative values are allowed and
