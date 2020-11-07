@@ -424,7 +424,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -446,12 +446,12 @@ If you need to do this, choose the calendar in which the computation takes place
 <p>Usage example:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT2H25M49.903051894S</span>
+time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT2H25M48.096948106S</span>
 time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT34M11.903051894S</span>
 
 <span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
 time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => PT2H25M50S</span></code></pre><!-- prettier-ignore-end -->
+  <span class="token comment">// => PT2H25M48S</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>time.<strong>since</strong>(<em>other</em>: Temporal.PlainTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -468,7 +468,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -481,7 +481,7 @@ Using default options, <code>time1.since(time2)</code> yields the same result as
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT34M11.903051894S</span>
-time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M49.903051894S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M48.096948106S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
@@ -642,7 +642,7 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>time</code> and <code>date</code>.
 This method produces identical results to <a href="./date.html#toZonedDateTime"><code>Temporal.PlainDate.from(date).toZonedDateTime(time)</code></a>.</p>
 <p>If <code>date</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
-<p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and  the later time for forward transitions.
+<p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset.

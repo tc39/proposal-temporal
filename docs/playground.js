@@ -8656,7 +8656,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var maximumIncrements = {
           hours: 24,
           minutes: 60,
@@ -8700,7 +8700,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var maximumIncrements = {
           hours: 24,
           minutes: 60,
@@ -9117,7 +9117,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
         var result = calendar.dateUntil(this, other, {
           largestUnit: largestUnit
@@ -9160,7 +9160,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
         var _calendar$dateUntil = calendar.dateUntil(this, other, {
@@ -9690,7 +9690,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
         var _ES$DifferenceDateTim = ES.DifferenceDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, largestUnit),
@@ -9750,7 +9750,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
         var _ES$DifferenceDateTim2 = ES.DifferenceDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, largestUnit),
@@ -11046,7 +11046,7 @@
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var maximumIncrements = {
           hours: 24,
           minutes: 60,
@@ -11104,7 +11104,7 @@
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var maximumIncrements = {
           hours: 24,
           minutes: 60,
@@ -11598,7 +11598,7 @@
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
@@ -11646,7 +11646,7 @@
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
@@ -12029,7 +12029,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
@@ -12121,7 +12121,7 @@
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;

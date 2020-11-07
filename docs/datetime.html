@@ -571,7 +571,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -611,7 +611,7 @@ dt1<span class="token punctuation">.</span><span class="token function">until</s
 
 <span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
 dt1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>dt2<span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P8456DT12H5M30S</span>
+  <span class="token comment">// => P8456DT12H5M29S</span>
 
 <span class="token comment">// Months and years can be different lengths</span>
 <span class="token punctuation">[</span>jan1<span class="token punctuation">,</span> feb1<span class="token punctuation">,</span> mar1<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">month</span><span class="token punctuation">)</span> <span class="token operator">=></span>
@@ -620,7 +620,7 @@ jan1<span class="token punctuation">.</span><span class="token function">until</
 jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>feb1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
 feb1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P29D</span>
 feb1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M</span>
-jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P121D</span></code></pre><!-- prettier-ignore-end -->
+jan1<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>mar1<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P60D</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>datetime.<strong>since</strong>(<em>other</em>: Temporal.PlainDateTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -637,7 +637,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>

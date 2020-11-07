@@ -423,7 +423,7 @@ See the <code>withCalendar</code> and <code>toZonedDateTime</code> methods inste
 date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-01-01</span>
 <span class="token comment">// What's the last day of the next month?</span>
 <span class="token keyword">const</span> nextMonthDate <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-nextMonthDate<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>day<span class="token operator">:</span> nextMonthDate<span class="token punctuation">.</span>daysInMonth <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-02-28</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>date.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+nextMonthDate<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> nextMonthDate<span class="token punctuation">.</span>daysInMonth <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-02-28</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>date.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>date</code>.</li>
 </ul>
@@ -506,7 +506,7 @@ The default is <code>&#39;days&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -560,7 +560,7 @@ The default is <code>&#39;days&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -664,7 +664,7 @@ A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.
 If <code>time</code> is given, this method is equivalent to <a href="./time.html#toZonedDateTime"><code>Temporal.PlainTime.from(time).toZonedDateTime(date)</code></a>.</p>
 <p>If <code>time</code> is given but is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
-<p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and  the later time for forward transitions.
+<p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset.

@@ -434,7 +434,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
@@ -471,10 +471,10 @@ missionLength<span class="token punctuation">.</span><span class="token function
 
 <span class="token comment">// Rounding, for example if you don't care about the minutes and seconds</span>
 approxMissionLength <span class="token operator">=</span> startOfMoonMission<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>endOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-  largestUnit<span class="token operator">:</span> <span class="token string">'days'</span><span class="token punctuation">,</span>
+  largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span><span class="token punctuation">,</span>
   smallestUnit<span class="token operator">:</span> <span class="token string">'hours'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => P8DT3H</span>
+  <span class="token comment">// => P195H</span>
 
 <span class="token comment">// A billion (10^9) seconds since the epoch in different units</span>
 epoch <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -490,8 +490,10 @@ ns<span class="token punctuation">.</span><span class="token function">add</span
 
 <span class="token comment">// Calculate the difference in years, eliminating the ambiguity by</span>
 <span class="token comment">// explicitly using the corresponding calendar date in UTC:</span>
-utc <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-epoch<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>utc<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>utc<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>
+  billion<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+  <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => P31Y8M8DT1H46M40S</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>instant.<strong>since</strong>(<em>other</em>: Temporal.Instant | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
@@ -509,7 +511,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
 </ul>
