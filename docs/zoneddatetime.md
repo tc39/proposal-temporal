@@ -111,7 +111,7 @@ Temporal.Instant.from('2020-08-05T20:06:13+05:45[+05:45]');
 Temporal.Instant('2020-08-05T20:06:13+05:45').toZonedDateTime('+05:45', 'iso8601');
 ```
 
-Note that using `Temporal.ZonedDateTime` with a single-offset time zone will not adjust for Daylight Savings Time or other time zone changes.
+Note that using `Temporal.ZonedDateTime` with a single-offset time zone will not adjust for Daylight Saving Time or other time zone changes.
 Therefore, using offset time zones with `Temporal.ZonedDateTime` is relatively unusual.
 Instead of using `Temporal.ZonedDateTime` with an offset time zone, it may be easier for most use cases to use `Temporal.PlainDateTime` and/or `Temporal.Instant` instead.
 

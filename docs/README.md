@@ -81,7 +81,8 @@ See [Temporal.PlainTime Documentation](./time.md) for detailed documentation.
 
 ### **Temporal.PlainDateTime**
 
-A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a `Temporal.ZonedDateTime` or a `Temporal.Instant` using a `Temporal.TimeZone`.
+A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that does not carry time zone information.
+It can be converted to a `Temporal.ZonedDateTime` using a `Temporal.TimeZone`.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.ZonedDateTime` instead because that type automatically adjusts for Daylight Saving Time.
 
 See [Temporal.PlainDateTime Documentation](./datetime.md) for detailed documentation.

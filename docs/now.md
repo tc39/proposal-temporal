@@ -98,10 +98,9 @@ now = Temporal.now.instant();
 nextTransition = tz.getNextTransition(now);
 before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
 after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
-console.log(`On ${nextTransition.toPlainDateTime(tz)} the clock will change from UTC ${before} to ${after}`);
-nextTransition.toPlainDateTime(tz);
+console.log(`At ${nextTransition.toZonedDateTimeISO(tz)} the offset will change from UTC ${before} to ${after}`);
 // example output:
-// On 2020-03-08T03:00 the clock will change from UTC -08:00 to -07:00
+// At 2021-03-14T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00
 ```
 
 ### Temporal.now.**plainDateTimeISO**(_timeZone_: object | string = Temporal.now.timeZone()) : Temporal.PlainDateTime

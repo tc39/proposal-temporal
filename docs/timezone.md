@@ -21,7 +21,7 @@ The other, more difficult, way to create a custom time zone is to create a plain
 The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getDateTimeFor()`, `getZonedDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
+To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
 Your object must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
@@ -70,7 +70,7 @@ For example:
 ```javascript
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
-inst = Temporal.PlainDateTime.from({ year: 2020, month: 1, day: 1 }).toInstant(tz2);
+inst = Temporal.ZonedDateTime.from({ year: 2020, month: 1, day: 1, timeZone: tz2 }).toInstant();
 tz1.getNextTransition(inst); // => null
 tz2.getPreviousTransition(inst); // => 2020-03-08T10:00Z
 ```
@@ -198,36 +198,6 @@ tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
-### timeZone.**getZonedDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.ZonedDateTime
-
-**Parameters:**
-
-- `instant` (`Temporal.Instant` or value convertible to one): An exact time to convert.
-- `calendar` (optional object or string): A `Temporal.Calendar` object, or a plain object, or a calendar identifier.
-  The default is to use the ISO 8601 calendar.
-
-**Returns:** A `Temporal.ZonedDateTime` object indicating the calendar date and wall-clock time in `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
-
-This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
-
-If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
-
-When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation gives a result equivalent to calling `new Temporal.ZonedDateTime(instant.epochNanoseconds, timeZone, calendar)`.
-
-Example usage:
-
-```javascript
-// Converting a specific exact time to a calendar date / wall-clock time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
-tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getZonedDateTimeFor(timestamp); // => 2019-03-31T01:45+02:00[Europe/Berlin]
-
-// What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = Temporal.Instant.fromEpochSeconds(0);
-tz = Temporal.TimeZone.from('America/New_York');
-tz.getZonedDateTimeFor(epoch); // => 1969-12-31T19:00-05:00[America/New_York]
-```
-
 ### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
@@ -272,7 +242,7 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 **Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.PlainDateTime` to a `Temporal.Instant`.
-The result is identical to [`Temporal.PlainDateTime.from(dateTime).toInstant(timeZone, disambiguation)`](./datetime.html#toInstant).
+The result is identical to `dateTime.toZonedDateTime(timeZone, { disambiguation }).toInstant()`.
 
 If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 

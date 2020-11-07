@@ -10,7 +10,8 @@ A `Temporal.PlainDate` represents a calendar date.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it's happening in.
 
 `Temporal.PlainDate` refers to the whole of a specific day; if you need to refer to a specific time on that day, use `Temporal.PlainDateTime`.
-A `Temporal.PlainDate` can be converted into a `Temporal.PlainDateTime` by combining it with a `Temporal.PlainTime` using the `toPlainDateTime()` method.
+A `Temporal.PlainDate` can be converted into a `Temporal.ZonedDateTime` by combining it with a `Temporal.PlainTime` and `Temporal.TimeZone` using the `toZonedDateTime()` method.
+It can also be combined with a `Temporal.PlainTime` to yield a "zoneless" `Temporal.PlainDateTime` using the `toPlainDateTime()` method.
 
 `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay` carry less information than `Temporal.PlainDate` and should be used when complete information is not required.
 
