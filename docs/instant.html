@@ -81,6 +81,8 @@
         line-height: 1.1;
         display: inline-block;
       }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
       pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
@@ -366,7 +368,7 @@ timestamp<span class="token punctuation">.</span><span class="token function">to
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>For a list of calendar identifiers, see the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters">Intl.DateTimeFormat</a>.</p>
-<p>If you only want to use the ISO 8601 calendar, use <code>toPlainDateTimeISO()</code>.</p>
+<p>If you only want to use the ISO 8601 calendar, use <code>toZonedDateTimeISO()</code>.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js"><span class="token comment">// What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?</span>

@@ -81,6 +81,8 @@
         line-height: 1.1;
         display: inline-block;
       }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
       pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
@@ -467,7 +469,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 </code></pre><p>See also <a href="#push-back-a-launch-date">Push back a launch date</a> for an easier way to round up unconditionally to the <em>next</em> start of a month.</p>
 <h2 id="time-zone-conversion">Time zone conversion</h2>
 <h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Instant</code> instance at which the local date and time of day in a specified time zone matches it.
-This is easily done with <code>dateTime.toInstant()</code>, but here is an example of implementing different disambiguation behaviors than the <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code> ones built in to Temporal.</p>
+This is easily done with <code>dateTime.toZonedDateTime(timeZone).toInstant()</code>, but here is an example of implementing different disambiguation behaviors than the <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code> ones built in to Temporal.</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * Get an exact time corresponding with a calendar date / wall-clock time in a
  * particular time zone, the same as Temporal.TimeZone.getInstantFor() or

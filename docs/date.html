@@ -81,6 +81,8 @@
         line-height: 1.1;
         display: inline-block;
       }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
       pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
@@ -230,7 +232,8 @@
 &quot;Calendar date&quot; refers to the concept of a date as expressed in everyday usage, independent of any time zone.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it&#39;s happening in.</p>
 <p><code>Temporal.PlainDate</code> refers to the whole of a specific day; if you need to refer to a specific time on that day, use <code>Temporal.PlainDateTime</code>.
-A <code>Temporal.PlainDate</code> can be converted into a <code>Temporal.PlainDateTime</code> by combining it with a <code>Temporal.PlainTime</code> using the <code>toPlainDateTime()</code> method.</p>
+A <code>Temporal.PlainDate</code> can be converted into a <code>Temporal.ZonedDateTime</code> by combining it with a <code>Temporal.PlainTime</code> and <code>Temporal.TimeZone</code> using the <code>toZonedDateTime()</code> method.
+It can also be combined with a <code>Temporal.PlainTime</code> to yield a &quot;zoneless&quot; <code>Temporal.PlainDateTime</code> using the <code>toPlainDateTime()</code> method.</p>
 <p><code>Temporal.PlainYearMonth</code> and <code>Temporal.PlainMonthDay</code> carry less information than <code>Temporal.PlainDate</code> and should be used when complete information is not required.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-PlainDate"><a class="heading-link" href="#new-Temporal-PlainDate"></a><strong>new Temporal.PlainDate</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>

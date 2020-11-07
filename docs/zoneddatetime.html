@@ -81,6 +81,8 @@
         line-height: 1.1;
         display: inline-block;
       }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
       pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
@@ -335,7 +337,7 @@ For example, <code>Etc/GMT+8</code> would be used for cases where the UTC offset
 If a non-whole-hour single-offset time zone is needed, the offset can be used as the time zone ID of an offset time zone.</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-05T20:06:13+05:45[+05:45]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// OR</span>
-Temporal<span class="token punctuation">.</span><span class="token function">Instant</span><span class="token punctuation">(</span><span class="token string">'2020-08-05T20:06:13+05:45'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'+05:45'</span><span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Note that using <code>Temporal.ZonedDateTime</code> with a single-offset time zone will not adjust for Daylight Savings Time or other time zone changes.
+Temporal<span class="token punctuation">.</span><span class="token function">Instant</span><span class="token punctuation">(</span><span class="token string">'2020-08-05T20:06:13+05:45'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'+05:45'</span><span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Note that using <code>Temporal.ZonedDateTime</code> with a single-offset time zone will not adjust for Daylight Saving Time or other time zone changes.
 Therefore, using offset time zones with <code>Temporal.ZonedDateTime</code> is relatively unusual.
 Instead of using <code>Temporal.ZonedDateTime</code> with an offset time zone, it may be easier for most use cases to use <code>Temporal.PlainDateTime</code> and/or <code>Temporal.Instant</code> instead.</p>
 <p>The <code>overflow</code> option works as follows:</p>

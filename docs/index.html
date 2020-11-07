@@ -81,6 +81,8 @@
         line-height: 1.1;
         display: inline-block;
       }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
       pre code { line-height: 1.4; }
       pre code[class*="language-"] { font-size: 0.85em; }
       pre[class*="language-"] { padding: 0.5em; }
@@ -241,7 +243,8 @@ This type is optimized for use cases that require a time zone, including DST-saf
 <p>Read more about <a href="./ambiguity.html">handling time zones, DST, and ambiguity in <code>Temporal</code></a>.</p>
 <h3 id="Temporal-PlainTime"><a class="heading-link" href="#Temporal-PlainTime"></a><strong>Temporal.PlainTime</strong></h3><p>A <code>Temporal.PlainTime</code> object represents a wall-clock time that is not associated with a particular date or time zone.</p>
 <p>See <a href="./time.html">Temporal.PlainTime Documentation</a> for detailed documentation.</p>
-<h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p>A <code>Temporal.PlainDateTime</code> represents a calendar date and wall-clock time that does not carry time zone information. It can be converted to a <code>Temporal.ZonedDateTime</code> or a <code>Temporal.Instant</code> using a <code>Temporal.TimeZone</code>.
+<h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p>A <code>Temporal.PlainDateTime</code> represents a calendar date and wall-clock time that does not carry time zone information.
+It can be converted to a <code>Temporal.ZonedDateTime</code> using a <code>Temporal.TimeZone</code>.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using <code>Temporal.ZonedDateTime</code> instead because that type automatically adjusts for Daylight Saving Time.</p>
 <p>See <a href="./datetime.html">Temporal.PlainDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainYearMonth"><a class="heading-link" href="#Temporal-PlainYearMonth"></a><strong>Temporal.PlainYearMonth</strong></h3><p>A date without a day component.
