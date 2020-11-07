@@ -16,8 +16,7 @@ export class Instant {
     SetSlot(this, EPOCHNANOSECONDS, ns);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
-      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-      const repr = ES.TemporalInstantToString(this, new TemporalTimeZone('UTC'), 'auto');
+      const repr = ES.TemporalInstantToString(this, undefined, 'auto');
       Object.defineProperty(this, '_repr_', {
         value: `${this[Symbol.toStringTag]} <${repr}>`,
         writable: false,
