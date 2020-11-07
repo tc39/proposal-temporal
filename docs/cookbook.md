@@ -153,7 +153,7 @@ See also [Push back a launch date](#push-back-a-launch-date) for an easier way t
 ### Preserving local time
 
 Map a zoneless date and time of day into a `Temporal.Instant` instance at which the local date and time of day in a specified time zone matches it.
-This is easily done with `dateTime.toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
+This is easily done with `dateTime.toZonedDateTime(timeZone).toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
 
 ```javascript
 {{cookbook/getInstantWithLocalTimeInZone.mjs}}

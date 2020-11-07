@@ -264,7 +264,7 @@ A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki
 
 For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
 
-If you only want to use the ISO 8601 calendar, use `toPlainDateTimeISO()`.
+If you only want to use the ISO 8601 calendar, use `toZonedDateTimeISO()`.
 
 Example usage:
 

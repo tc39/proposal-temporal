@@ -6,18 +6,20 @@
 </details>
 
 A `Temporal.PlainDateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
-Of the `Temporal` classes carrying human-readable time information, it is the most general and complete one.
+
+For use cases that require a time zone, especially using arithmetic or other derived values, consider using [`Temporal.ZonedDateTime`](./zoneddatetime.md) instead because that type automatically adjusts for Daylight Saving Time.
+A `Temporal.PlainDateTime` can be converted to a `Temporal.ZonedDateTime` using a `Temporal.TimeZone`.
+
 `Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainYearMonth`, and `Temporal.PlainMonthDay` all carry less information and should be used when complete information is not required.
 
+A `Temporal.PlainDateTime` can be converted into any of the types mentioned above using conversion methods like `toZonedDateTime` or `toPlainDate`.
+
 "Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
-`Temporal.PlainDateTime` does not represent an exact point in time; that is what `Temporal.Instant` is for.
+`Temporal.PlainDateTime` does not represent an exact point in time; that is what exact-time types like `Temporal.ZonedDateTime` and `Temporal.Instant` are for.
 
-One example of when it would be appropriate to use `Temporal.PlainDateTime` and not `Temporal.Instant` is when integrating with wearable devices.
+One example of when it may be appropriate to use `Temporal.PlainDateTime` and not `Temporal.ZonedDateTime` nor `Temporal.Instant` is when integrating with wearable devices.
 FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.
-Otherwise they would be recorded as sleeping at strange hours when travelling, even if their sleep rhythm was on a healthy schedule for the time zone they were in.
-
-A `Temporal.PlainDateTime` can be converted to a `Temporal.Instant` using a `Temporal.TimeZone`.
-A `Temporal.PlainDateTime` can also be converted into any of the other `Temporal` objects that carry less information, such as `Temporal.PlainDate` for the date or `Temporal.PlainTime` for the time.
+Storing the time zone is not needed, and the plain (not exact) time is needed, because otherwise they would be recorded as sleeping at strange hours when travelling.
 
 ## Constructor
 
@@ -47,7 +49,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.PlainDateTime.from()` instead.
 
-The range of allowed values for this type is exactly enough that calling [`toPlainDateTime()`](./instant.html#toPlainDateTime) on any valid `Temporal.Instant` with any valid `Temporal.TimeZone` will succeed.
+The range of allowed values for this type is exactly enough that calling `timeZone.getDateTimeFor(instant)` will succeed when `timeZone` is any built-in `Temporal.TimeZone` and `instant` is any valid `Temporal.Instant`.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -819,8 +821,7 @@ Use `Temporal.PlainDateTime.compare()` for this, or `datetime.equals()` for equa
 
 **Returns:** A `Temporal.ZonedDateTime` object representing the calendar date and wall-clock time from `dateTime` projected into `timeZone`.
 
-This method is one way to convert a `Temporal.PlainDateTime` to a `Temporal.ZonedDateTime`.
-It is identical to [`(Temporal.TimeZone.from(timeZone)).getZonedDateTimeFor(dateTime, disambiguation)`](./timezone.html#getZonedDateTimeFor).
+This method converts a `Temporal.PlainDateTime` to a `Temporal.ZonedDateTime` by adding a time zone.
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
