@@ -911,9 +911,11 @@
       CalendarDate :
           Date Calendar?
 
+      TimeSpecSeparator
+          DateTimeSeparator TimeSpec
+
       DateTime :
-          Date
-          Date DateTimeSeparator Time
+          Date TimeSpecSeparator? TimeZone?
 
       CalendarDateTime:
           DateTime Calendar?
@@ -955,13 +957,13 @@
           Sign? DurationDesignator DurationTime
 
       TemporalInstantString :
-          Date DateTimeSeparator TimeSpec TimeZoneOffsetRequired
+          Date DateTimeSeparator TimeSpec? TimeZoneOffsetRequired
 
       TemporalDateString :
           CalendarDateTime
 
       TemporalDateTimeString :
-          DateTime
+          CalendarDateTime
 
       TemporalDurationString :
           Duration
@@ -987,7 +989,7 @@
           DateTime
 
       TemporalZonedDateTimeString :
-          Date DateTimeSeparator TimeSpec TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
+          Date DateTimeSeparator TimeSpec? TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
 
       TemporalCalendarString :
           CalendarName

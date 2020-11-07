@@ -15,7 +15,7 @@ const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[(${timeZoneI
 const calendar = new RegExp(`\\[c=(${calendarID.source})\\]`);
 
 export const instant = new RegExp(
-  `^${datesplit.source}(?:T|\\s+)${timesplit.source}${zonesplit.source}(?:${calendar.source})?$`,
+  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}(?:${calendar.source})?$`,
   'i'
 );
 export const datetime = new RegExp(
