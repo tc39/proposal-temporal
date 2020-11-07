@@ -1955,6 +1955,12 @@ describe('ZonedDateTime', () => {
       const roundMeUp = ZonedDateTime.from('2020-03-08T11:30:01-07:00[America/Vancouver]');
       equal(`${roundMeUp.round(options)}`, '2020-03-09T00:00:00-07:00[America/Vancouver]');
     });
+    it('rounding up to a nonexistent wall-clock time', () => {
+      const almostSkipped = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');
+      const rounded = almostSkipped.round({ smallestUnit: 'microsecond', roundingMode: 'nearest' });
+      equal(`${rounded}`, '2018-11-04T01:00:00-02:00[America/Sao_Paulo]');
+      equal(rounded.epochNanoseconds - almostSkipped.epochNanoseconds, 1n);
+    });
   });
 
   describe('ZonedDateTime.equals()', () => {
@@ -2147,6 +2153,13 @@ describe('ZonedDateTime', () => {
         zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }),
         '2000-01-01T00:00:00.00000000+01:00[Europe/Berlin]'
       );
+    });
+    it('rounding up to a nonexistent wall-clock time', () => {
+      const zdt5 = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');
+      const roundedString = zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+      equal(roundedString, '2018-11-04T01:00:00.00000000-02:00[America/Sao_Paulo]');
+      const zdt6 = ZonedDateTime.from(roundedString);
+      equal(zdt6.epochNanoseconds - zdt5.epochNanoseconds, 1n);
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
