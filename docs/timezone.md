@@ -242,7 +242,7 @@ tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
 **Returns:** A `Temporal.Instant` object indicating the exact time in `timeZone` at the time of the calendar date and wall-clock time from `dateTime`.
 
 This method is one way to convert a `Temporal.PlainDateTime` to a `Temporal.Instant`.
-The result is identical to `dateTime.toZonedDateTime(timeZone, { disambiguation })`.
+The result is identical to `dateTime.toZonedDateTime(timeZone, { disambiguation }).toInstant()`.
 
 If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
