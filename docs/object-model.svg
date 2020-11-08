@@ -1,121 +1,43 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="1.1"
-  fill="none"
-  stroke-width="381"
-  viewBox="18000 54000 343000 198882"
-  font-family="'Trebuchet MS', Helvetica, sans-serif"
-  font-weight="700"
-  font-size="18px"
->
-  <g transform="translate(6858 6858) scale(1)">
-    <path fill="#FFFCE4" stroke="#B7B7B7" d="M 11599 54441 L 93223 54441 93223 189573 11599 189573 Z" />
-    <g transform="matrix(381,0,0,381,15256,58098)">
-      <text style="font-size: 22px; fill: #737373" x="7" y="21.1">Exact Time Types</text>
-    </g>
-    <path fill="#FFFCE4" stroke="#B7B7B7" d="M 159297 54440 L 353565 54440 353565 189572 159297 189572 Z" />
-    <g transform="matrix(381,0,0,381,162954,58097)">
-      <text style="font-size: 22px; fill: #737373" x="48" y="21.1">Calendar Date / Wall-Clock Time Types</text>
-    </g>
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 106872 115444 C 106872 113782 108219 112436 109880 112436 L 142636 112436 C 143434 112436 144199 112752 144763 113317 145327 113881 145644 114646 145644 115444 L 145644 127475 C 145644 129137 144297 130484 142636 130484 L 109880 130484 C 108219 130484 106872 129137 106872 127475 Z"
-    />
-    <g transform="matrix(381,0,0,381,107753,116888)">
-      <text style="fill: #000" x="7.6" y="19.2">TimeZone</text>
-    </g>
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 30103 127636 C 30103 125974 31449 124628 33111 124628 L 65866 124628 C 66664 124628 67429 124944 67993 125509 68558 126073 68875 126838 68875 127636 L 68875 139667 C 68875 141329 67528 142676 65866 142676 L 33111 142676 C 31449 142676 30103 141329 30103 139667 Z"
-    />
-    <g transform="matrix(381,0,0,381,30984,129080)">
-      <text style="fill: #000" x="19.6" y="19.2">Instant</text>
-    </g>
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 180663 130684 C 180663 129022 182009 127676 183671 127676 L 216426 127676 C 217224 127676 217989 127992 218553 128557 219118 129121 219435 129886 219435 130684 L 219435 142715 C 219435 144377 218088 145724 216426 145724 L 183671 145724 C 182009 145724 180663 144377 180663 142715 Z"
-    />
-    <g transform="matrix(381,0,0,381,181544,132128)">
-      <text style="fill: #000" x="8.5" y="19.2">DateTime</text>
-    </g>
-    <path stroke="#595959" d="M 145644 121460 L 166793 121460 166793 136700 180660 136700" />
-    <path stroke="#595959" d="M 68875 133652 L 83819 133652 83819 121460 106867 121460" />
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 240015 86120 C 240015 84458 241361 83112 243023 83112 L 275778 83112 C 276576 83112 277341 83428 277905 83993 278470 84557 278787 85322 278787 86120 L 278787 98151 C 278787 99813 277440 101160 275778 101160 L 243023 101160 C 241361 101160 240015 99813 240015 98151 Z"
-    />
-    <g transform="matrix(381,0,0,381,240896,87564)">
-      <text style="fill: #000" x="29" y="19.2">Date</text>
-    </g>
-    <path stroke="#595959" d="M 219435 136700 L 229725 136700 229725 92132 240015 92132" />
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 303431 75750 C 303431 74088 304777 72742 306439 72742 L 342686 72742 C 343484 72742 344249 73058 344813 73623 345378 74187 345695 74952 345695 75750 L 345695 87781 C 345695 89443 344348 90790 342686 90790 L 306439 90790 C 304777 90790 303431 89443 303431 87781 Z"
-    />
-    <g transform="matrix(381,0,0,381,304312,77194)">
-      <text style="fill: #000" x="8.5" y="19.2">YearMonth</text>
-    </g>
-    <path stroke="#595959" d="M 278787 92136 L 291109 92136 291109 81768 303435 81768" />
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 303431 108138 C 303431 106476 304777 105130 306439 105130 L 342686 105130 C 343484 105130 344249 105446 344813 106011 345378 106575 345695 107340 345695 108138 L 345695 120169 C 345695 121831 344348 123178 342686 123178 L 306439 123178 C 304777 123178 303431 121831 303431 120169 Z"
-    />
-    <g transform="matrix(381,0,0,381,304312,109582)">
-      <text style="fill: #000" x="11.9" y="19.2">MonthDay</text>
-    </g>
-    <path stroke="#595959" d="M 278787 92136 L 291109 92136 291109 114156 303435 114156" />
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 240015 152750 C 240015 151088 241361 149742 243023 149742 L 275778 149742 C 276576 149742 277341 150058 277905 150623 278470 151187 278787 151952 278787 152750 L 278787 164781 C 278787 166443 277440 167790 275778 167790 L 243023 167790 C 241361 167790 240015 166443 240015 164781 Z"
-    />
-    <g transform="matrix(381,0,0,381,240896,154194)">
-      <text style="fill: #000" x="28" y="19.2">Time</text>
-    </g>
-    <path stroke="#595959" d="M 219435 136700 L 229725 136700 229725 158768 240015 158768" />
-    <path stroke="#595959" d="M 49489 124628 L 49489 112436 49621 112436 49621 100244" />
-    <path stroke="#595959" d="M 126390 112436 L 126390 100415 126918 100415 126918 100412" />
-    <path stroke="#595959" d="M 200049 127676 L 200049 114044 200073 114044 200073 100412" />
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 30103 86120 C 30103 84458 31449 83112 33111 83112 L 216430 83112 C 217228 83112 217993 83428 218557 83993 219122 84557 219439 85322 219439 86120 L 219439 98152 C 219439 99813 218092 101160 216430 101160 L 33111 101160 C 31449 101160 30103 99813 30103 98151 Z"
-    />
-    <g transform="matrix(381,0,0,381,34641,87564)">
-      <text style="fill: #000" x="179" y="19.2">ZonedDateTime</text>
-    </g>
-    <g transform="matrix(381,0,0,381,165750,175782)">
-      <text style="fill: #737373" x="17" y="17.28">These types have a calendar &amp; know wall-clock time</text>
-    </g>
-    <path d="M 15630 164874 L 86190 164874 86190 180042 15630 180042 Z" />
-    <g transform="matrix(381,0,0,381,19288,168531)">
-      <text style="fill: #737373" x="11" y="17.28">These types know</text>
-      <text style="fill: #737373" x="15.8" y="39.28">time since Epoch</text>
-    </g>
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 106873 170798 C 106873 169136 108220 167790 109881 167790 L 142637 167790 C 143435 167790 144200 168106 144764 168671 145328 169235 145645 170000 145645 170798 L 145645 182829 C 145645 184491 144298 185838 142637 185838 L 109881 185838 C 108220 185838 106873 184491 106873 182829 Z"
-    />
-    <g transform="matrix(381,0,0,381,107754,172242)">
-      <text style="fill: #000" x="12" y="19.2">Duration</text>
-    </g>
-    <path
-      fill="#F0EDF7"
-      stroke="#B4A7D6"
-      d="M 106873 143121 C 106873 141459 108219 140113 109881 140113 L 142636 140113 C 143434 140113 144199 140429 144763 140994 145328 141558 145645 142323 145645 143121 L 145645 155152 C 145645 156814 144298 158161 142636 158161 L 109881 158161 C 108219 158161 106873 156814 106873 155152 Z"
-    />
-    <g transform="matrix(381,0,0,381,107754,144565)">
-      <text style="fill: #000" x="11.6" y="19.2">Calendar</text>
-    </g>
-    <path stroke="#595959" d="M 68875 133652 L 83820 133652 83820 149132 106879 149132" />
-    <path stroke="#595959" d="M 145645 149137 L 166792 149137 166792 136705 180661 136705" />
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="200 540 4050 1484" width="4090" height="1480" fill="none" stroke-width="3.8" font-family="'Trebuchet MS', Helvetica, sans-serif" font-weight="700" font-size="70px" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, 68, 68)">
+    <rect x="116" y="544" width="841" height="1350" fill="#FFFCE4" stroke="#B7B7B7" rx="20" />
+    <text x="200" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Exact Time Types</text>
+    <rect x="1707" y="544" width="2445" height="1350" fill="#FFFCE4" stroke="#B7B7B7" rx="20" />
+    <path stroke="#595959" d="M 1365 1491 L 1819 1491 L 1819 1367 L 2117 1367"/>
+    <path stroke="#595959" d="M 2407 1374 L 2593 1374 L 2593 929 L 2779 929"/>
+    <text x="2220" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Calendar Date / Wall-Clock Time Types</text>
+    <path stroke="#595959" d="M 1365 1214 L 1819 1214 L 1819 1367 L 2117 1367"/>
+    <path stroke="#595959" d="M 722 1336 L 874 1336 L 874 1214 L 1110 1214"/>
+    <rect x="1050" y="1133" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="1172" y="1250">TimeZone</text>
+    <path stroke="#595959" d="M 722 1336 L 875 1336 L 875 1491 L 1110 1491"/>
+    <path stroke="#595959" d="M 521 988 L 521 1126 L 522 1250 C 525 1371 521 1264 523 1264" transform="matrix(-1, 0, 0, -1, 10, 22)"/>
+    <rect x="250" y="1250" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="430" y="1370">Instant</text>
+    <path stroke="#595959" d="M 2407 1374 L 2593 1374 L 2593 1595 L 2779 1595"/>
+    <rect x="1930" y="1280" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="1970" y="1390">PlainDateTime</text>
+    <path stroke="#595959" d="M 3167 928 L 3338 928 L 3338 824 L 3508 824"/>
+    <rect x="3420" y="730" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="3475" y="845">PlainMonthDay</text>
+    <path stroke="#595959" d="M 3167 928 L 3338 928 L 3338 1148 L 3508 1148"/>
+    <rect x="2700" y="840" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="2825" y="955">PlainDate</text>
+    <rect x="3420" y="1060" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="3460" y="1175">PlainYearMonth</text>
+    <rect x="2700" y="1500" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="2815" y="1615">PlainTime</text>
+    <path stroke="#595959" d="M 1338 1125 L 1338 1005 L 1343 1005 L 1343 1005"/> 
+    <rect x="250" y="835" fill="#F0EDF7" width="2250" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="1072" y="950">ZonedDateTime</text>
+    <text x="1970" y="1840" style="font-size: 80px; fill: #737373; white-space: pre;" >These types have a calendar &amp; know wall-clock time</text>
+    <path d="M 156 1648 L 861 1648 861 1800 156 1800 Z"/>
+    <text x="190" y="1740" style="font-size: 80px; fill: #737373; white-space: pre;" >These types know</text>
+    <text x="205" y="1840" style="font-size: 80px; fill: #737373; white-space: pre;" >time since Epoch</text>
+    <rect x="1050" y="1670" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="1185" y="1790">Duration</text>
+    <rect x="1050" y="1400" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+    <text style="fill: #000; white-space: pre;" x="1185" y="1520">Calendar</text>
   </g>
 </svg>
