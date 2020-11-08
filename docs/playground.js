@@ -8593,8 +8593,7 @@
       SetSlot(this, EPOCHNANOSECONDS, ns);
 
       {
-        var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
-        var repr = ES.TemporalInstantToString(this, new TemporalTimeZone('UTC'), 'auto');
+        var repr = ES.TemporalInstantToString(this, undefined, 'auto');
         Object.defineProperty(this, '_repr_', {
           value: "".concat(this[Symbol.toStringTag], " <").concat(repr, ">"),
           writable: false,
