@@ -456,7 +456,7 @@
       1. If _value_ is *undefined*, then
         1. Return _value_.
       1. If Type(_value_) is Object, then
-        1. If _value_ has an [[InitializedTemporalDateTime]] internal slot, then
+        1. If _value_ has either an [[InitializedTemporalDateTime]] or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _value_.
         1. Let _calendar_ be ? Get(_value_, *"calendar"*).
         1. If _calendar_ is *undefined*, then
@@ -471,13 +471,37 @@
         1. Let _timeFromFields_ be ? Get(_calendar_, *"timeFromFields"*).
         1. Let _timeOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Let _temporalTime_ be ? Call(_timeFromFields_, _calendar_, « _fields_, _timeOptions_, %Temporal.PlainTime% »).
-        1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]]).
-      1. Let _string_ be ? ToString(_value_).
-      1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
-      1. Let _calendar_ be _result_.[[Calendar]].
-      1. If _calendar_ is *undefined*, then
-        1. Set _calendar_ to ? GetISO8601Calendar().
-      1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
+        1. Let _result_ be the new Record {
+            [[Year]]: _temporalDate_.[[ISOYear]],
+            [[Month]]: _temporalDate_.[[ISOMonth]],
+            [[Day]]: _temporalDate_.[[ISODay]],
+            [[Hour]]: _temporalTime_.[[ISOHour]],
+            [[Minute]]: _temporalTime_.[[ISOMinute]],
+            [[Second]]: _temporalTime_.[[ISOSecond]],
+            [[Millisecond]]: _temporalTime_.[[ISOMillisecond]],
+            [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]],
+            [[Nanosecond]]: _temporalTime_.[[ISONanosecond]]
+          }.
+        1. Let _offset_ be ? Get(_value_, *"offset"*).
+        1. Let _timeZone_ be ? Get(_value_, *"timeZone"*).
+      1. Else,
+        1. Let _string_ be ? ToString(_value_).
+        1. Let _result_ be ? ParseISODateTime(_string_).
+        1. Let _calendar_ be _record_.[[Calendar]].
+        1. If _calendar_ is *undefined*, then
+          1. Set _calendar_ to ? GetISO8601Calendar().
+        1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
+        1. Let _offset_ be _result_.[[TimeZoneOffset]].
+        1. Let _timeZone_ be _result_.[[TimeZoneIANAName]].
+      1. If _timeZone_ is not *undefined*, then
+        1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+        1. If _offset_ is not *undefined*, then
+          1. Set _offset_ to ? ToString(_offset_).
+          1. Let _offsetNs_ be ? ParseTimeZoneOffsetString(_offset_).
+        1. Else,
+          1. Let _offsetNs_ be *null*.
+        1. Let _epochNanoseconds_ be ? InterpretTemporalZonedDateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetNs_, _timeZone_, *"compatible"*, *"reject"*).
+        1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
     </emu-alg>
   </emu-clause>
