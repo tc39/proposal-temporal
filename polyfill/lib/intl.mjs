@@ -278,10 +278,10 @@ function extractOverrides(temporalObj, main) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const referenceISODay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = GetSlot(temporalObj, CALENDAR);
-    if (calendar.id !== main[CAL_ID]) {
+    const calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+    if (calendar !== main[CAL_ID]) {
       throw new RangeError(
-        `cannot format PlainYearMonth with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
       );
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
@@ -295,10 +295,10 @@ function extractOverrides(temporalObj, main) {
     const referenceISOYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = GetSlot(temporalObj, CALENDAR);
-    if (calendar.id !== main[CAL_ID]) {
+    const calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+    if (calendar !== main[CAL_ID]) {
       throw new RangeError(
-        `cannot format PlainMonthDay with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
       );
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
@@ -312,11 +312,9 @@ function extractOverrides(temporalObj, main) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = GetSlot(temporalObj, CALENDAR);
-    if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
-      throw new RangeError(
-        `cannot format PlainDate with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
-      );
+    const calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
+      throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`);
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
@@ -335,14 +333,14 @@ function extractOverrides(temporalObj, main) {
     const millisecond = GetSlot(temporalObj, ISO_MILLISECOND);
     const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
-    const calendar = GetSlot(temporalObj, CALENDAR);
-    if (calendar.id !== 'iso8601' && calendar.id !== main[CAL_ID]) {
+    const calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
       throw new RangeError(
-        `cannot format PlainDateTime with calendar ${calendar.id} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
       );
     }
     let datetime = temporalObj;
-    if (calendar.id === 'iso8601') {
+    if (calendar === 'iso8601') {
       datetime = new DateTime(
         isoYear,
         isoMonth,
