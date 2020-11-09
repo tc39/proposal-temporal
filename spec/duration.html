@@ -817,15 +817,27 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceduration" aoid="BalanceDuration">
-      <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ )</h1>
+    <emu-clause id="sec-temporal-totaldurationnanoseconds" aoid="TotalDurationNanoseconds">
+      <h1>TotalDurationNanoseconds ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _offsetShift_ )</h1>
+      <p>
+        The abstract operation TotalDurationNanoseconds computes a mathematical value number of nanoseconds from the given units, applying a given time zone offset shift in nanoseconds when converting from days to hours.
+      </p>
       <emu-alg>
+        1. If _days_ ≠ 0, then
+          1. Set _nanoseconds_ to ℝ(_nanoseconds_) − ℝ(_offsetShift_).
         1. Set _hours_ to ℝ(_hours_) + ℝ(_days_) × 24.
         1. Set _minutes_ to ℝ(_minutes_) + _hours_ × 60.
         1. Set _seconds_ to ℝ(_seconds_) + _minutes_ × 60.
         1. Set _milliseconds_ to ℝ(_milliseconds_) + _seconds_ × 1000.
         1. Set _microseconds_ to ℝ(_microseconds_) + _milliseconds_ × 1000.
-        1. Set _nanoseconds_ to ℝ(_nanoseconds_) + _microseconds_ × 1000.
+        1. Return ℝ(_nanoseconds_) + _microseconds_ × 1000.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-balanceduration" aoid="BalanceDuration">
+      <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ )</h1>
+      <emu-alg>
+        1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
         1. Set _days_, _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ to 0.
         1. If _nanoseconds_ &lt; 0, let _sign_ be −1; else, let _sign_ be 1.
         1. Set _nanoseconds_ to abs(_nanoseconds_).
