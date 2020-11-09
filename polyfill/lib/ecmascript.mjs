@@ -1488,7 +1488,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (minutes) timeParts.push(`${formatNumber(Math.abs(minutes))}M`);
 
     const secondParts = [];
-    let total = bigInt(seconds).times(1000).plus(ms).times(1000).plus(µs).times(1000).plus(ns);
+    let total = ES.TotalDurationNanoseconds(0, 0, 0, seconds, ms, µs, ns, 0);
     ({ quotient: total, remainder: ns } = total.divmod(1000));
     ({ quotient: total, remainder: µs } = total.divmod(1000));
     ({ quotient: seconds, remainder: ms } = total.divmod(1000));
@@ -1863,13 +1863,26 @@ export const ES = ObjectAssign({}, ES2020, {
 
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
+  TotalDurationNanoseconds: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) => {
+    if (days !== 0) nanoseconds = bigInt(nanoseconds).subtract(offsetShift);
     hours = bigInt(hours).add(bigInt(days).multiply(24));
     minutes = bigInt(minutes).add(hours.multiply(60));
     seconds = bigInt(seconds).add(minutes.multiply(60));
     milliseconds = bigInt(milliseconds).add(seconds.multiply(1000));
     microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
-    nanoseconds = bigInt(nanoseconds).add(microseconds.multiply(1000));
+    return bigInt(nanoseconds).add(microseconds.multiply(1000));
+  },
+  BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
+    nanoseconds = ES.TotalDurationNanoseconds(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      0
+    );
     const sign = nanoseconds.lesser(0) ? -1 : 1;
     nanoseconds = nanoseconds.abs();
     microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
