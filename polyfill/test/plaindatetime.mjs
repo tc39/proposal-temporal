@@ -1370,6 +1370,8 @@ describe('DateTime', () => {
     });
     it('no junk at end of string', () =>
       throws(() => PlainDateTime.from('1976-11-18T15:23:30.123456789junk'), RangeError));
+    it('ignores if a timezone is specified', () =>
+      equal(`${PlainDateTime.from('2020-01-01T01:23:45[Asia/Kolkata]')}`, '2020-01-01T01:23:45'));
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => PlainDateTime.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)

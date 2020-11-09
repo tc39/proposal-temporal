@@ -962,6 +962,8 @@ describe('Date', () => {
       equal(`${PlainDate.from('+0019761118T152330.1+0000')}`, '1976-11-18');
     });
     it('no junk at end of string', () => throws(() => PlainDate.from('1976-11-18junk'), RangeError));
+    it('ignores if a timezone is specified', () =>
+      equal(`${PlainDate.from('2020-01-01[Asia/Kolkata]')}`, '2020-01-01'));
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => PlainDate.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)

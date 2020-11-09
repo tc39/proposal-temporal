@@ -33,6 +33,8 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components.slice(0, 6));
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
+    // Without time component
+    test('2020-01-01Z', [2020, 1, 1, 0, 0, 0]);
     // Time separators
     ['T', 't', ' '].forEach((timeSep) =>
       generateTest(`1976-11-18${timeSep}15:23`, 'Z', [1976, 11, 18, 15, 23, 30, 123, 456, 789])

@@ -394,6 +394,7 @@ describe('ZonedDateTime', () => {
         `${ZonedDateTime.from('1976-11-18T15-08:00[America/Los_Angeles]')}`,
         '1976-11-18T15:00:00-08:00[America/Los_Angeles]'
       );
+      equal(`${ZonedDateTime.from('2020-01-01[Asia/Tokyo]')}`, '2020-01-01T00:00:00+09:00[Asia/Tokyo]');
     });
     it('no junk at end of string', () =>
       throws(() => ZonedDateTime.from('1976-11-18T15:23:30.123456789-08:00[America/Los_Angeles]junk'), RangeError));
