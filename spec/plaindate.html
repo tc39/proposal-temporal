@@ -16,7 +16,7 @@
       <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the specified Temporal.PlainDate behaviour must include a super call to the %Temporal.PlainDate% constructor to create and initialize subclass instances with the necessary internal slots.</li>
     </ul>
 
-    <emu-clause id="sec-temporal.date">
+    <emu-clause id="sec-temporal.plaindate">
       <h1>Temporal.PlainDate ( _isoYear_, _isoMonth_, _isoDay_ [ , _calendarLike_ ] )</h1>
       <p>
         When the `Temporal.PlainDate` function is called, the following steps are taken:
@@ -49,7 +49,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date-@@species">
+    <emu-clause id="sec-get-temporal.plaindate-@@species">
       <h1>get Temporal.PlainDate [ @@species ]</h1>
       <p>
         `Temporal.PlainDate[@@species]` is an accessor property whose set accessor function is *undefined*.
@@ -62,7 +62,7 @@
       <p>The value of the *"name"* property of this function is *"get [Symbol.species]"*.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.from">
+    <emu-clause id="sec-temporal.plaindate.from">
       <h1>Temporal.PlainDate.from ( _item_ [ , _options_ ] )</h1>
       <p>
         The `from` method takes two arguments, _item_ and _options_.
@@ -78,7 +78,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.compare">
+    <emu-clause id="sec-temporal.plaindate.compare">
       <h1>Temporal.PlainDate.compare ( _one_, _two_ )</h1>
       <p>
         The `compare` method takes two arguments, _one_ and _two_.
@@ -104,12 +104,12 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id="sec-temporal.date.prototype.constructor">
+    <emu-clause id="sec-temporal.plaindate.prototype.constructor">
       <h1>Temporal.PlainDate.prototype.constructor</h1>
       <p>The initial value of `Temporal.PlainDate.prototype.constructor` is %Temporal.PlainDate%.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype-@@tostringtag">
+    <emu-clause id="sec-temporal.plaindate.prototype-@@tostringtag">
       <h1>Temporal.PlainDate.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value *"Temporal.PlainDate"*.
@@ -119,7 +119,7 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.calendar">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.calendar">
       <h1>get Temporal.PlainDate.prototype.calendar</h1>
       <p>
         `Temporal.PlainDate.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
@@ -132,7 +132,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.year">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.year">
       <h1>get Temporal.PlainDate.prototype.year</h1>
       <p>
         `Temporal.PlainDate.prototype.year` is an accessor property whose set accessor function is *undefined*.
@@ -147,7 +147,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.month">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.month">
       <h1>get Temporal.PlainDate.prototype.month</h1>
       <p>
         `Temporal.PlainDate.prototype.month` is an accessor property whose set accessor function is *undefined*.
@@ -162,7 +162,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.day">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.day">
       <h1>get Temporal.PlainDate.prototype.day</h1>
       <p>
         `Temporal.PlainDate.prototype.day` is an accessor property whose set accessor function is *undefined*.
@@ -177,7 +177,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.dayofweek">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.dayofweek">
       <h1>get Temporal.PlainDate.prototype.dayOfWeek</h1>
       <p>
         `Temporal.PlainDate.prototype.dayOfWeek` is an accessor property whose set accessor function is *undefined*.
@@ -192,7 +192,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.dayofyear">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.dayofyear">
       <h1>get Temporal.PlainDate.prototype.dayOfYear</h1>
       <p>
         `Temporal.PlainDate.prototype.dayOfYear` is an accessor property whose set accessor function is *undefined*.
@@ -207,7 +207,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.weekofyear">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.weekofyear">
       <h1>get Temporal.PlainDate.prototype.weekOfYear</h1>
       <p>
         `Temporal.PlainDate.prototype.weekOfYear` is an accessor property whose set accessor function is *undefined*.
@@ -222,7 +222,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.daysinweek">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.daysinweek">
       <h1>get Temporal.PlainDate.prototype.daysInWeek</h1>
       <p>
         `Temporal.PlainDate.prototype.daysInWeek` is an accessor property whose set accessor function is *undefined*.
@@ -237,7 +237,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.daysinmonth">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.daysinmonth">
       <h1>get Temporal.PlainDate.prototype.daysInMonth</h1>
       <p>
         `Temporal.PlainDate.prototype.daysInMonth` is an accessor property whose set accessor function is *undefined*.
@@ -252,7 +252,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.daysinyear">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.daysinyear">
       <h1>get Temporal.PlainDate.prototype.daysInYear</h1>
       <p>
         `Temporal.PlainDate.prototype.daysInYear` is an accessor property whose set accessor function is *undefined*.
@@ -267,7 +267,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.monthsinyear">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.monthsinyear">
       <h1>get Temporal.PlainDate.prototype.monthsInYear</h1>
       <p>
         `Temporal.PlainDate.prototype.monthsInYear` is an accessor property whose set accessor function is *undefined*.
@@ -282,7 +282,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.date.prototype.inleapyear">
+    <emu-clause id="sec-get-temporal.plaindate.prototype.inleapyear">
       <h1>get Temporal.PlainDate.prototype.inLeapYear</h1>
       <p>
         `Temporal.PlainDate.prototype.inLeapYear` is an accessor property whose set accessor function is *undefined*.
@@ -297,7 +297,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.toplainyearmonth">
+    <emu-clause id="sec-temporal.plaindate.prototype.toplainyearmonth">
       <h1>Temporal.PlainDate.prototype.toPlainYearMonth ( )</h1>
       <p>
         The following steps are taken:
@@ -313,7 +313,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.toplainmonthday">
+    <emu-clause id="sec-temporal.plaindate.prototype.toplainmonthday">
       <h1>Temporal.PlainDate.prototype.toPlainMonthDay ( )</h1>
       <p>
         The following steps are taken:
@@ -329,7 +329,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.getfields">
+    <emu-clause id="sec-temporal.plaindate.prototype.getfields">
       <h1>Temporal.PlainDate.prototype.getFields ( )</h1>
       <p>
         The following steps are taken:
@@ -345,7 +345,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.getisofields">
+    <emu-clause id="sec-temporal.plaindate.prototype.getisofields">
       <h1>Temporal.PlainDate.prototype.getISOFields ( )</h1>
       <p>
         The following steps are taken:
@@ -362,7 +362,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.add">
+    <emu-clause id="sec-temporal.plaindate.prototype.add">
       <h1>Temporal.PlainDate.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
         The `add` method takes two arguments, _temporalDurationLike_ and _options_.
@@ -382,7 +382,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.subtract">
+    <emu-clause id="sec-temporal.plaindate.prototype.subtract">
       <h1>Temporal.PlainDate.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
         The `subtract` method takes two arguments, _temporalDurationLike_ and _options_.
@@ -402,7 +402,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.with">
+    <emu-clause id="sec-temporal.plaindate.prototype.with">
       <h1>Temporal.PlainDate.prototype.with ( _temporalDateLike_ [ , _options_ ] )</h1>
       <p>
         The `with` method takes two arguments, _temporalDateLike_ and _options_.
@@ -429,7 +429,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.until">
+    <emu-clause id="sec-temporal.plaindate.prototype.until">
       <h1>Temporal.PlainDate.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
         The `until` method takes two arguments, _other_ and _options_.
@@ -459,7 +459,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.since">
+    <emu-clause id="sec-temporal.plaindate.prototype.since">
       <h1>Temporal.PlainDate.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
         The `since` method takes two arguments, _other_ and _options_.
@@ -491,7 +491,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.equals">
+    <emu-clause id="sec-temporal.plaindate.prototype.equals">
       <h1>Temporal.PlainDate.prototype.equals ( _other_ )</h1>
       <p>
         The `equals` method takes one argument _other_.
@@ -508,7 +508,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.toplaindatetime">
+    <emu-clause id="sec-temporal.plaindate.prototype.toplaindatetime">
       <h1>Temporal.PlainDate.prototype.toPlainDateTime ( [ _temporalTime_ ] )</h1>
       <p>
         The `toPlainDateTime` method takes one argument _temporalTime_.
@@ -527,7 +527,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.tozoneddatetime">
+    <emu-clause id="sec-temporal.plaindate.prototype.tozoneddatetime">
       <h1>Temporal.PlainDate.prototype.toZonedDateTime ( _item_ )</h1>
       <p>
         The `toZonedDateTime` method takes one argument _item_.
@@ -559,7 +559,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.tostring">
+    <emu-clause id="sec-temporal.plaindate.prototype.tostring">
       <h1>Temporal.PlainDate.prototype.toString ( [ _options_ ] )</h1>
       <p>
         The `toString` method takes one argument _options_.
@@ -574,7 +574,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.tolocalestring">
+    <emu-clause id="sec-temporal.plaindate.prototype.tolocalestring">
       <h1>Temporal.PlainDate.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
@@ -590,7 +590,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.tojson">
+    <emu-clause id="sec-temporal.plaindate.prototype.tojson">
       <h1>Temporal.PlainDate.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
@@ -602,7 +602,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.date.prototype.valueof">
+    <emu-clause id="sec-temporal.plaindate.prototype.valueof">
       <h1>Temporal.PlainDate.prototype.valueOf ( )</h1>
       <p>
         The following steps are taken:
