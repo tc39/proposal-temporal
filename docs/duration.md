@@ -71,7 +71,7 @@ new Temporal.Duration(); // => PT0S
 
 ## Static methods
 
-### Temporal.Duration.**from**(_thing_: any, _options_?: object) : Temporal.Duration
+### Temporal.Duration.**from**(_thing_: any) : Temporal.Duration
 
 **Parameters:**
 
@@ -172,7 +172,7 @@ d.blank; // => true
 
 ## Methods
 
-### duration.**with**(_durationLike_: object, _options_?: object) : Temporal.Duration
+### duration.**with**(_durationLike_: object) : Temporal.Duration
 
 **Parameters:**
 
