@@ -6,15 +6,12 @@ description: Temporal.Duration.prototype.subtract throws a RangeError if any val
 esid: sec-temporal.duration.prototype.subtract
 ---*/
 
-const overflows = ['constrain', 'balance'];
 const fields = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
 const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
 
-overflows.forEach((overflow) => {
-  fields.forEach((field) => {
-    assert.throws(RangeError, () => instance.subtract({ [field]: -Infinity }, { overflow }));
-  });
+fields.forEach((field) => {
+  assert.throws(RangeError, () => instance.subtract({ [field]: -Infinity }));
 });
 
 let calls = 0;
@@ -25,10 +22,8 @@ const obj = {
   }
 };
 
-overflows.forEach((overflow) => {
-  fields.forEach((field) => {
-    calls = 0;
-    assert.throws(RangeError, () => instance.subtract({ [field]: obj }, { overflow }));
-    assert.sameValue(calls, 1, "it fails after fetching the primitive value");
-  });
+fields.forEach((field) => {
+  calls = 0;
+  assert.throws(RangeError, () => instance.subtract({ [field]: obj }));
+  assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 });

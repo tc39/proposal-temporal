@@ -21,6 +21,3 @@ assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.subtract({ nanoseconds: Number.MAX_VALUE }));
 assert.sameValue(called, 1);
-
-assert.throws(RangeError, () => instance.subtract({ nanoseconds: Number.MAX_VALUE }, { overflow: "balance" }));
-assert.sameValue(called, 1);
