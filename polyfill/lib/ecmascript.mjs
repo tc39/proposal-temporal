@@ -1943,7 +1943,9 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let calendar;
     if (relativeTo) {
-      if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+      if (!(ES.IsTemporalDate(relativeTo) || ES.IsTemporalDateTime(relativeTo))) {
+        throw new TypeError('starting point must be DateTime');
+      }
       calendar = GetSlot(relativeTo, CALENDAR);
     }
 
@@ -2020,6 +2022,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    if (sign === 0) return { years, months, weeks, days };
 
     let calendar;
     if (relativeTo) {
@@ -2727,10 +2730,43 @@ export const ES = ObjectAssign({}, ES2020, {
     ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
     return { year, month, day };
   },
-  AddDuration: (y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2) => {
-    let years = y1 + y2;
-    let months = mon1 + mon2;
-    let weeks = w1 + w2;
+  AddDuration: (
+    y1,
+    mon1,
+    w1,
+    d1,
+    h1,
+    min1,
+    s1,
+    ms1,
+    µs1,
+    ns1,
+    y2,
+    mon2,
+    w2,
+    d2,
+    h2,
+    min2,
+    s2,
+    ms2,
+    µs2,
+    ns2,
+    relativeTo
+  ) => {
+    const largestUnit1 = ES.DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
+    const largestUnit2 = ES.DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
+    const largestUnit = ES.LargerOfTwoTemporalDurationUnits(largestUnit1, largestUnit2);
+
+    ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo));
+    let intermediate;
+    if (relativeTo) {
+      const calendar = GetSlot(relativeTo, CALENDAR);
+      const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+      const datePart1 = new TemporalDuration(0, 0, 0, d1);
+      ({ relativeTo: intermediate } = ES.MoveRelativeDate(calendar, relativeTo, datePart1));
+    }
+    ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', intermediate));
+
     let days = d1 + d2;
     let hours = h1 + h2;
     let minutes = min1 + min2;
@@ -2739,18 +2775,8 @@ export const ES = ObjectAssign({}, ES2020, {
     let microseconds = µs1 + µs2;
     let nanoseconds = ns1 + ns2;
 
-    const largestUnit = ES.DefaultTemporalLargestUnit(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
+    let years, months, weeks;
+    ({ years, months, weeks, days } = ES.BalanceDurationRelative(0, 0, 0, days, largestUnit, relativeTo));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
