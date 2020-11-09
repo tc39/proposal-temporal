@@ -5934,7 +5934,7 @@
         case 'months':
           {
             var sign = -ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2);
-            if (!sign) return {
+            if (sign === 0) return {
               years: 0,
               months: 0,
               weeks: 0,
@@ -5950,28 +5950,25 @@
               month: m2,
               day: d2
             };
-            var months = 0;
-            var weeks = 0;
-            var days = 0;
             var years = end.year - start.year;
             var mid = ES.AddDate(y1, m1, d1, years, 0, 0, 0, 'constrain');
             var midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
-            if (!midSign) {
+            if (midSign === 0) {
               return largestUnit === 'years' ? {
                 years: years,
-                months: months,
-                weeks: weeks,
-                days: days
+                months: 0,
+                weeks: 0,
+                days: 0
               } : {
                 years: 0,
-                months: months + years * 12,
-                weeks: weeks,
-                days: days
+                months: years * 12,
+                weeks: 0,
+                days: 0
               };
             }
 
-            months = end.month - start.month;
+            var months = end.month - start.month;
 
             if (midSign !== sign) {
               years -= sign;
@@ -5981,17 +5978,17 @@
             mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
             midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
-            if (!midSign) {
+            if (midSign === 0) {
               return largestUnit === 'years' ? {
                 years: years,
                 months: months,
-                weeks: weeks,
-                days: days
+                weeks: 0,
+                days: 0
               } : {
                 years: 0,
                 months: months + years * 12,
-                weeks: weeks,
-                days: days
+                weeks: 0,
+                days: 0
               };
             }
 
@@ -6007,13 +6004,14 @@
 
               mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
               midSign = -ES.CompareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
-            } // If we get here, months and years are correct (no overflow), and `mid`
+            }
+
+            var days = 0; // If we get here, months and years are correct (no overflow), and `mid`
             // is within the range from `start` to `end`. To count the days between
             // `mid` and `end`, there are 3 cases:
             // 1) same month: use simple subtraction
             // 2) end is previous month from intermediate (negative duration)
             // 3) end is next month from intermediate (positive duration)
-
 
             if (mid.month === end.month && mid.year === end.year) {
               // 1) same month: use simple subtraction
@@ -6036,7 +6034,7 @@
             return {
               years: years,
               months: months,
-              weeks: weeks,
+              weeks: 0,
               days: days
             };
           }
@@ -6074,31 +6072,26 @@
 
             var _years = larger.year - smaller.year;
 
-            var _weeks = 0;
-
-            var _months, _days;
-
-            _months = 0;
-            _days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
+            var _days = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
 
             while (_years > 0) {
               _days += ES.LeapYear(smaller.year + _years - 1) ? 366 : 365;
               _years -= 1;
             }
 
+            var weeks = 0;
+
             if (largestUnit === 'weeks') {
-              _weeks = Math.floor(_days / 7);
+              weeks = Math.floor(_days / 7);
               _days %= 7;
             }
 
-            _years *= _sign;
-            _months *= _sign;
-            _weeks *= _sign;
+            weeks *= _sign;
             _days *= _sign;
             return {
-              years: _years,
-              months: _months,
-              weeks: _weeks,
+              years: 0,
+              months: 0,
+              weeks: weeks,
               days: _days
             };
           }
