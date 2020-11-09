@@ -687,7 +687,14 @@ export const ES = ObjectAssign({}, ES2020, {
       year = GetSlot(date, ISO_YEAR);
       month = GetSlot(date, ISO_MONTH);
       day = GetSlot(date, ISO_DAY);
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = fields);
+      const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
+      const time = calendar.timeFromFields(fields, {}, TemporalPlainTime);
+      hour = GetSlot(time, ISO_HOUR);
+      minute = GetSlot(time, ISO_MINUTE);
+      second = GetSlot(time, ISO_SECOND);
+      millisecond = GetSlot(time, ISO_MILLISECOND);
+      microsecond = GetSlot(time, ISO_MICROSECOND);
+      nanosecond = GetSlot(time, ISO_NANOSECOND);
     } else {
       ({
         year,
