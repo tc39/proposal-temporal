@@ -8,14 +8,14 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
+  "get timeZone.getPlainDateTimeFor",
+  "call timeZone.getPlainDateTimeFor",
 ];
 
 const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:00:00.987654321");
 const timeZone = new Proxy({
-  getDateTimeFor() {
-    actual.push("call timeZone.getDateTimeFor");
+  getPlainDateTimeFor() {
+    actual.push("call timeZone.getPlainDateTimeFor");
     return dateTime;
   },
 }, {

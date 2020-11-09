@@ -1378,13 +1378,13 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [instant]));
   },
   GetTemporalDateTimeFor: (timeZone, instant, calendar) => {
-    let getDateTimeFor = timeZone.getDateTimeFor;
-    if (getDateTimeFor === undefined) {
-      getDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getDateTimeFor%');
+    let getPlainDateTimeFor = timeZone.getPlainDateTimeFor;
+    if (getPlainDateTimeFor === undefined) {
+      getPlainDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getPlainDateTimeFor%');
     }
-    const dateTime = ES.Call(getDateTimeFor, timeZone, [instant, calendar]);
+    const dateTime = ES.Call(getPlainDateTimeFor, timeZone, [instant, calendar]);
     if (!ES.IsTemporalDateTime(dateTime)) {
-      throw new TypeError('Unexpected result from getDateTimeFor');
+      throw new TypeError('Unexpected result from getPlainDateTimeFor');
     }
     return dateTime;
   },

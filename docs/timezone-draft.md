@@ -122,7 +122,7 @@ class Temporal.TimeZone {
   // API methods that a subclassed custom time zone doesn't need to touch
 
   get id() : string;
-  getDateTimeFor(instant : Temporal.Instant) : Temporal.PlainDateTime;
+  getPlainDateTimeFor(instant : Temporal.Instant) : Temporal.PlainDateTime;
   getInstantFor(
       dateTime : Temporal.PlainDateTime,
       options?: object
@@ -136,7 +136,7 @@ class Temporal.TimeZone {
 ```
 
 All the methods that custom time zones inherit from `Temporal.TimeZone` are implemented in terms of `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and the value of the _[[Identifier]]_ internal slot.
-For example, `getOffsetStringFor()` and `getDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getInstantFor()` calls both.
+For example, `getOffsetStringFor()` and `getPlainDateTimeFor()` call `getOffsetNanosecondsFor()`, and `getInstantFor()` calls both.
 
 Alternatively, a custom time zone doesn't have to be a subclass of `Temporal.TimeZone`.
 In this case, it can be a plain object, which must implement `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()`.

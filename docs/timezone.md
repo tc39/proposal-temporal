@@ -21,7 +21,7 @@ The other, more difficult, way to create a custom time zone is to create a plain
 The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
+To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
 Your object must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
@@ -198,7 +198,7 @@ tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => -08:00
 ```
 
-### timeZone.**getDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
+### timeZone.**getPlainDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -220,12 +220,12 @@ Example usage:
 // Converting an exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getDateTimeFor(timestamp); // => 2019-03-31T01:45
+tz.getPlainDateTimeFor(timestamp); // => 2019-03-31T01:45
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-tz.getDateTimeFor(epoch); // => 1969-12-31T19:00
+tz.getPlainDateTimeFor(epoch); // => 1969-12-31T19:00
 ```
 
 ### timeZone.**getInstantFor**(_dateTime_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Instant

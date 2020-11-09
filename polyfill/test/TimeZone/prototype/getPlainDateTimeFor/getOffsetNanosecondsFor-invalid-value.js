@@ -2,18 +2,17 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 ---*/
 
 const values = [
-  undefined,
-  null,
-  true,
-  "100",
-  Symbol(),
-  0n,
-  {},
-  { valueOf() { return 20; } },
+  0.1,
+  1.2,
+  NaN,
+  Infinity,
+  -Infinity,
+  86400000000001,
+  -86400000000001,
 ];
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 
@@ -25,6 +24,6 @@ for (const value of values) {
     called = true;
     return value;
   };
-  assert.throws(TypeError, () => timeZone.getDateTimeFor(instant));
+  assert.throws(RangeError, () => timeZone.getPlainDateTimeFor(instant));
   assert.sameValue(called, true);
 }

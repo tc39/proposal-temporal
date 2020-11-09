@@ -10,8 +10,8 @@ const actual = [];
 const expected = [
   "get Temporal.TimeZone.from",
   "call Temporal.TimeZone.from",
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
+  "get timeZone.getPlainDateTimeFor",
+  "call timeZone.getPlainDateTimeFor",
 ];
 const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
@@ -25,8 +25,8 @@ Object.defineProperty(Temporal.PlainDateTime.prototype, "toPlainTime", {
 });
 
 const timeZone = new Proxy({
-  getDateTimeFor(instant) {
-    actual.push("call timeZone.getDateTimeFor");
+  getPlainDateTimeFor(instant) {
+    actual.push("call timeZone.getPlainDateTimeFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     return dateTime;
   },

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 ---*/
 
 const values = [
@@ -25,7 +25,7 @@ for (const [input, output] of values) {
     return calendar;
   };
 
-  const dateTime = timeZone.getDateTimeFor(instant, input);
+  const dateTime = timeZone.getPlainDateTimeFor(instant, input);
   assert.sameValue(called, 1);
   assert.sameValue(dateTime.calendar, calendar);
 }
@@ -34,4 +34,4 @@ Temporal.Calendar.from = function() {
   throw new Test262Error("Should not call Calendar.from");
 };
 
-assert.throws(TypeError, () => timeZone.getDateTimeFor(instant, Symbol()));
+assert.throws(TypeError, () => timeZone.getPlainDateTimeFor(instant, Symbol()));

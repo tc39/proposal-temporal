@@ -11,7 +11,7 @@ const objects = [
   new Temporal.TimeZone("Europe/Madrid"),
   new CustomTimeZone("Africa/Accra"),
   {},
-  { getDateTimeFor: null },
+  { getPlainDateTimeFor: null },
 ];
 
 const thisValues = [

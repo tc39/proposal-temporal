@@ -176,10 +176,10 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.timezone.prototype.getdatetimefor">
-      <h1>Temporal.TimeZone.prototype.getDateTimeFor ( _instant_ [ , _calendarLike_ ] )</h1>
+    <emu-clause id="sec-temporal.timezone.prototype.getplaindatetimefor">
+      <h1>Temporal.TimeZone.prototype.getPlainDateTimeFor ( _instant_ [ , _calendarLike_ ] )</h1>
       <p>
-        The `getDateTimeFor` method takes two arguments, _instant_ and _calendarLike_.
+        The `getPlainDateTimeFor` method takes two arguments, _instant_ and _calendarLike_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -195,7 +195,7 @@
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
       </emu-alg>
       <p>
-        This function is the <dfn>%Temporal.TimeZone.prototype.getDateTimeFor%</dfn> intrinsic object.
+        This function is the <dfn>%Temporal.TimeZone.prototype.getPlainDateTimeFor%</dfn> intrinsic object.
       </p>
     </emu-clause>
 
@@ -467,9 +467,9 @@
     <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
       <h1>GetTemporalDateTimeFor ( _timeZone_, _instant_, _calendar_ )</h1>
       <emu-alg>
-        1. Let _getDateTimeFor_ be ? Get(_timeZone_, *"getDateTimeFor"*).
-        1. If _getDateTimeFor_ is *undefined*, set _getDateTimeFor_ to %Temporal.TimeZone.prototype.getDateTimeFor%.
-        1. Let _dateTime_ be ? Call(_getDateTimeFor_, _timeZone_, « _instant_, _calendar_ »).
+        1. Let _getPlainDateTimeFor_ be ? Get(_timeZone_, *"getPlainDateTimeFor"*).
+        1. If _getPlainDateTimeFor_ is *undefined*, set _getPlainDateTimeFor_ to %Temporal.TimeZone.prototype.getPlainDateTimeFor%.
+        1. Let _dateTime_ be ? Call(_getPlainDateTimeFor_, _timeZone_, « _instant_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Return _dateTime_.
       </emu-alg>

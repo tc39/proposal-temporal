@@ -1499,10 +1499,10 @@ describe('DateTime', () => {
     it('converting from Instant', () => {
       const min = Temporal.Instant.from('-271821-04-20T00:00Z');
       const offsetMin = Temporal.TimeZone.from('-23:59');
-      equal(`${offsetMin.getDateTimeFor(min, 'iso8601')}`, '-271821-04-19T00:01:00');
+      equal(`${offsetMin.getPlainDateTimeFor(min, 'iso8601')}`, '-271821-04-19T00:01:00');
       const max = Temporal.Instant.from('+275760-09-13T00:00Z');
       const offsetMax = Temporal.TimeZone.from('+23:59');
-      equal(`${offsetMax.getDateTimeFor(max, 'iso8601')}`, '+275760-09-13T23:59:00');
+      equal(`${offsetMax.getPlainDateTimeFor(max, 'iso8601')}`, '+275760-09-13T23:59:00');
     });
     it('converting from Date and Time', () => {
       const midnight = Temporal.PlainTime.from('00:00');
