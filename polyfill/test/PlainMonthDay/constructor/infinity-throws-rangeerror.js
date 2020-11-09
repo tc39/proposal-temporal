@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainMonthDay throws a RangeError if any numerical value is Infinity
-esid: sec-temporal.monthday
+esid: sec-temporal.plainmonthday
 ---*/
 
 const isoCalendar = Temporal.Calendar.from('iso8601');

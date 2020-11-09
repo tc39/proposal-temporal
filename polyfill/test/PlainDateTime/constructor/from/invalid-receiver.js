@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.from
+esid: sec-temporal.plaindatetime.from
 ---*/
 
 assert.throws(TypeError, () => Temporal.PlainDateTime.from.call(undefined, "2000-05-02T12:34:56.987654321"), "undefined");

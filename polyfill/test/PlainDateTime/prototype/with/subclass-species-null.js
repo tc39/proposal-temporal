@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-Temporal.PlainDateTime.prototype.with
+esid: sec-temporal.plaindatetime.prototype.with
 includes: [compareArray.js]
 features: [Symbol.species]
 ---*/

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.dayofyear
+esid: sec-get-temporal.plaindate.prototype.dayofyear
 ---*/
 
 const dayOfYear = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "dayOfYear").get;

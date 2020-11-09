@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.yearmonth.from
+esid: sec-temporal.plainyearmonth.from
 includes: [compareArray.js]
 ---*/
 

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.year
+esid: sec-get-temporal.plaindate.prototype.year
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "year");

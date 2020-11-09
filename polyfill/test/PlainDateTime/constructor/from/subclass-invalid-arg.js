@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.from
+esid: sec-temporal.plaindatetime.from
 ---*/
 
 let called = false;

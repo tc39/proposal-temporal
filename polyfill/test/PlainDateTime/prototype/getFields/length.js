@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.prototype.getfields
+esid: sec-temporal.plaindatetime.prototype.getfields
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named

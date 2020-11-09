@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.time.prototype.getfields
+esid: sec-temporal.plaintime.prototype.getfields
 includes: [compareArray.js]
 ---*/
 

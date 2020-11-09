@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainTime.prototype.add throws a RangeError if any value in a property bag is -Infinity
-esid: sec-temporal.time.prototype.add
+esid: sec-temporal.plaintime.prototype.add
 ---*/
 
 const overflows = ["constrain", "reject"];

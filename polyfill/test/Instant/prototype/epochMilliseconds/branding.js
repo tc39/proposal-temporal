@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.epochmilliseconds
+esid: sec-get-temporal.instant.prototype.epochmilliseconds
 ---*/
 
 const epochMilliseconds = Object.getOwnPropertyDescriptor(Temporal.Instant.prototype, 'epochMilliseconds').get;

@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainMonthDay.from handles a property bag if any value is -Infinity
-esid: sec-temporal.monthday.from
+esid: sec-temporal.plainmonthday.from
 ---*/
 
 // constrain

@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainMonthDay.prototype.with handles a property bag if any value is -Infinity
-esid: sec-temporal.monthday.prototype.with
+esid: sec-temporal.plainmonthday.prototype.with
 ---*/
 
 const instance = new Temporal.PlainMonthDay(5, 2);
