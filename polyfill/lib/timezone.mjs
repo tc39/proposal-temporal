@@ -62,7 +62,7 @@ export class TimeZone {
     const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   }
-  getDateTimeFor(instant, calendar = GetISO8601Calendar()) {
+  getPlainDateTimeFor(instant, calendar = GetISO8601Calendar()) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
     calendar = ES.ToTemporalCalendar(calendar);
 
@@ -241,7 +241,7 @@ export class TimeZone {
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
 DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
-DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
+DefineIntrinsic('Temporal.TimeZone.prototype.getPlainDateTimeFor', TimeZone.prototype.getPlainDateTimeFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);

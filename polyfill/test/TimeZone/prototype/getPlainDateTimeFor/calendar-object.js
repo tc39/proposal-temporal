@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 includes: [compareArray.js]
 ---*/
 
@@ -38,7 +38,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.TimeZone.prototype.getDateTimeFor.call(timeZone, instant, calendar);
+const result = Temporal.TimeZone.prototype.getPlainDateTimeFor.call(timeZone, instant, calendar);
 assert.sameValue(result.calendar, calendar);
 
 assert.compareArray(actual, expected);

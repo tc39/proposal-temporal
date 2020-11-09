@@ -12,16 +12,16 @@ const expected = [
   "call Temporal.TimeZone.from",
   "get Temporal.Calendar.from",
   "call Temporal.Calendar.from",
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
+  "get timeZone.getPlainDateTimeFor",
+  "call timeZone.getPlainDateTimeFor",
 ];
 const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
 const calendar = {};
 
 const timeZone = new Proxy({
-  getDateTimeFor(instant, calendarArg) {
-    actual.push("call timeZone.getDateTimeFor");
+  getPlainDateTimeFor(instant, calendarArg) {
+    actual.push("call timeZone.getPlainDateTimeFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     assert.sameValue(calendarArg, calendar);
     return dateTime;

@@ -105,10 +105,10 @@ describe('Userland calendar', () => {
       const md2 = md.with({ month: 0 });
       equal(md2.month, 0);
     });
-    it('timezone.getDateTimeFor()', () => {
+    it('timezone.getPlainDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const instant = Temporal.Instant.fromEpochSeconds(0);
-      const dt = tz.getDateTimeFor(instant, obj);
+      const dt = tz.getPlainDateTimeFor(instant, obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.plainDateTime()', () => {
@@ -183,10 +183,10 @@ describe('Userland calendar', () => {
         const md = Temporal.PlainMonthDay.from({ month: 0, day: 1, calendar: 'zero-based' });
         equal(`${md}`, '1972-01-01[c=zero-based]');
       });
-      it('works for TimeZone.getDateTimeFor', () => {
+      it('works for TimeZone.getPlainDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = tz.getDateTimeFor(inst, 'zero-based');
+        const dt = tz.getPlainDateTimeFor(inst, 'zero-based');
         equal(dt.calendar.id, 'zero-based');
       });
       it('works for Temporal.now.plainDateTime', () => {
@@ -402,10 +402,10 @@ describe('Userland calendar', () => {
       const md2 = md.with({ month: 1 });
       equal(md2.month, 1);
     });
-    it('timezone.getDateTimeFor()', () => {
+    it('timezone.getPlainDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
       const inst = Temporal.Instant.fromEpochSeconds(0);
-      const dt = tz.getDateTimeFor(inst, obj);
+      const dt = tz.getPlainDateTimeFor(inst, obj);
       equal(dt.calendar.id, obj.id);
     });
     it('Temporal.now.plainDateTime()', () => {
@@ -480,10 +480,10 @@ describe('Userland calendar', () => {
         const md = Temporal.PlainMonthDay.from({ month: 1, day: 1, calendar: 'decimal' });
         equal(`${md}`, '1970-01-01[c=decimal]');
       });
-      it('works for TimeZone.getDateTimeFor', () => {
+      it('works for TimeZone.getPlainDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
-        const dt = tz.getDateTimeFor(inst, 'decimal');
+        const dt = tz.getPlainDateTimeFor(inst, 'decimal');
         equal(dt.calendar.id, 'decimal');
       });
       it('works for Temporal.now.plainDateTime', () => {

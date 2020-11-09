@@ -20,7 +20,7 @@ const invalidValues = [
 
 for (const dateTime of invalidValues) {
   const timeZone = {
-    getDateTimeFor(instant, calendar) {
+    getPlainDateTimeFor(instant, calendar) {
       assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
       assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
       assert.sameValue(calendar.id, "iso8601");

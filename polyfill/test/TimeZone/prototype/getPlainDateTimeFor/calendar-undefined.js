@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 ---*/
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
@@ -14,8 +14,8 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result1 = timeZone.getDateTimeFor(instant);
+const result1 = timeZone.getPlainDateTimeFor(instant);
 assert.sameValue(result1.calendar.toString(), "iso8601");
 
-const result2 = timeZone.getDateTimeFor(instant, undefined);
+const result2 = timeZone.getPlainDateTimeFor(instant, undefined);
 assert.sameValue(result2.calendar.toString(), "iso8601");

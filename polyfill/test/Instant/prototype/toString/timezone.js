@@ -8,8 +8,8 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get timeZone.getDateTimeFor",
-  "call timeZone.getDateTimeFor",
+  "get timeZone.getPlainDateTimeFor",
+  "call timeZone.getPlainDateTimeFor",
   "get timeZone.getOffsetStringFor",
   "call timeZone.getOffsetStringFor",
   "get offset.toString",
@@ -47,8 +47,8 @@ const timeZone = new Proxy({
     };
   },
 
-  getDateTimeFor(instantArg) {
-    actual.push("call timeZone.getDateTimeFor");
+  getPlainDateTimeFor(instantArg) {
+    actual.push("call timeZone.getPlainDateTimeFor");
     assert.sameValue(instantArg.epochNanoseconds, instant.epochNanoseconds);
     return Temporal.PlainDateTime.from("1963-07-02T12:00:00.987654321");
   },

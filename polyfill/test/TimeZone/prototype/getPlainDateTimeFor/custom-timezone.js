@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 includes: [compareArray.js]
 ---*/
 
@@ -30,7 +30,7 @@ const timeZone = new Proxy({
   },
 });
 
-const result = Temporal.TimeZone.prototype.getDateTimeFor.call(timeZone, instant);
+const result = Temporal.TimeZone.prototype.getPlainDateTimeFor.call(timeZone, instant);
 assert.sameValue(result.year, 1975);
 assert.sameValue(result.month, 2);
 assert.sameValue(result.day, 2);

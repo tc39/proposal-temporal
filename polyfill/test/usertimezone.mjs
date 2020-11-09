@@ -51,8 +51,8 @@ describe('Userland time zone', () => {
     });
     it('has offset string +00:00', () => equal(obj.getOffsetStringFor(inst), '+00:00'));
     it('converts to DateTime', () => {
-      equal(`${obj.getDateTimeFor(inst)}`, '1970-01-01T00:00:00');
-      equal(`${obj.getDateTimeFor(inst, 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
+      equal(`${obj.getPlainDateTimeFor(inst)}`, '1970-01-01T00:00:00');
+      equal(`${obj.getPlainDateTimeFor(inst, 'gregory')}`, '1970-01-01T00:00:00[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:30.123456789Z');
@@ -138,9 +138,9 @@ describe('Userland time zone', () => {
     it('has offset string +00:00', () =>
       equal(Temporal.TimeZone.prototype.getOffsetStringFor.call(obj, inst), '+00:00'));
     it('converts to DateTime', () => {
-      equal(`${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, inst)}`, '1970-01-01T00:00:00');
+      equal(`${Temporal.TimeZone.prototype.getPlainDateTimeFor.call(obj, inst)}`, '1970-01-01T00:00:00');
       equal(
-        `${Temporal.TimeZone.prototype.getDateTimeFor.call(obj, inst, 'gregory')}`,
+        `${Temporal.TimeZone.prototype.getPlainDateTimeFor.call(obj, inst, 'gregory')}`,
         '1970-01-01T00:00:00[c=gregory]'
       );
     });
@@ -238,8 +238,8 @@ describe('Userland time zone', () => {
     });
     it('has offset string -00:00:01.111111111', () => equal(obj.getOffsetStringFor(inst), '-00:00:01.111111111'));
     it('converts to DateTime', () => {
-      equal(`${obj.getDateTimeFor(inst)}`, '1969-12-31T23:59:58.888888889');
-      equal(`${obj.getDateTimeFor(inst, 'gregory')}`, '1969-12-31T23:59:58.888888889[c=gregory]');
+      equal(`${obj.getPlainDateTimeFor(inst)}`, '1969-12-31T23:59:58.888888889');
+      equal(`${obj.getPlainDateTimeFor(inst, 'gregory')}`, '1969-12-31T23:59:58.888888889[c=gregory]');
     });
     it('converts to Instant', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.2345679Z');

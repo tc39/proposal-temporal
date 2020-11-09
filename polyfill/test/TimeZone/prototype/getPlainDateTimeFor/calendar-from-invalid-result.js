@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.timezone.prototype.getdatetimefor
+esid: sec-temporal.timezone.prototype.getplaindatetimefor
 ---*/
 
 const values = [
@@ -26,6 +26,6 @@ for (const [value, description] of values) {
     return value;
   };
 
-  assert.throws(TypeError, () => timeZone.getDateTimeFor(instant, "test"), description);
+  assert.throws(TypeError, () => timeZone.getPlainDateTimeFor(instant, "test"), description);
   assert.sameValue(called, 1);
 }

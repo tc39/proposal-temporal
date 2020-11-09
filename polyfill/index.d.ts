@@ -1168,7 +1168,10 @@ export namespace Temporal {
     timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor?(instant: Temporal.Instant | string): string;
-    getDateTimeFor?(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.PlainDateTime;
+    getPlainDateTimeFor?(
+      instant: Temporal.Instant | string,
+      calendar?: CalendarProtocol | string
+    ): Temporal.PlainDateTime;
     getInstantFor?(
       dateTime: Temporal.PlainDateTime | DateTimeLike | string,
       options?: ToInstantOptions
@@ -1199,7 +1202,10 @@ export namespace Temporal {
     readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor(instant: Temporal.Instant | string): string;
-    getDateTimeFor(instant: Temporal.Instant | string, calendar?: CalendarProtocol | string): Temporal.PlainDateTime;
+    getPlainDateTimeFor(
+      instant: Temporal.Instant | string,
+      calendar?: CalendarProtocol | string
+    ): Temporal.PlainDateTime;
     getInstantFor(
       dateTime: Temporal.PlainDateTime | DateTimeLike | string,
       options?: ToInstantOptions
