@@ -6,7 +6,8 @@ esid: sec-temporal.duration.prototype.add
 includes: [compareArray.js]
 ---*/
 
-const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
+const instance = new Temporal.Duration(1, 2, 0, 4, 5, 6, 7, 987, 654, 321);
+const relativeTo = new Temporal.PlainDateTime(2000, 1, 1);
 const expected = [
   "get days",
   "valueOf days",
@@ -61,11 +62,11 @@ const argument = new Proxy(fields, {
     return key in target;
   },
 });
-const result = instance.add(argument);
+const result = instance.add(argument, { relativeTo });
 assert.sameValue(result.years, 2, "years result");
 assert.sameValue(result.months, 3, "months result");
-assert.sameValue(result.weeks, 4, "weeks result");
-assert.sameValue(result.days, 5, "days result");
+assert.sameValue(result.weeks, 0, "weeks result");
+assert.sameValue(result.days, 12, "days result");
 assert.sameValue(result.hours, 6, "hours result");
 assert.sameValue(result.minutes, 7, "minutes result");
 assert.sameValue(result.seconds, 8, "seconds result");

@@ -249,7 +249,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     options = ES.NormalizeOptionsObject(options);
-    void options; // TODO rounding options
+    const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
@@ -270,7 +270,8 @@ export class Duration {
       seconds,
       milliseconds,
       microseconds,
-      nanoseconds
+      nanoseconds,
+      relativeTo
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(
@@ -303,7 +304,7 @@ export class Duration {
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
     options = ES.NormalizeOptionsObject(options);
-    void options; // TODO rounding options
+    const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
       GetSlot(this, MONTHS),
@@ -324,7 +325,8 @@ export class Duration {
       -seconds,
       -milliseconds,
       -microseconds,
-      -nanoseconds
+      -nanoseconds,
+      relativeTo
     ));
     const Construct = ES.SpeciesConstructor(this, Duration);
     const result = new Construct(

@@ -207,8 +207,8 @@ duration = duration.with({ years, months });
 
 - `other` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
-  The following options are recognized:
-  - (TODO)
+  The following option is recognized:
+  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
 
@@ -220,8 +220,13 @@ If `other` is not a `Temporal.Duration` object, then it will be converted to one
 In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md).
 
-No conversion is ever performed between years, months, days, and other units, as that could be ambiguous depending on the start date.
-If you need such a conversion, use the `round()` method, and provide the start date using the `relativeTo` option.
+By default, you cannot add durations with years, months, or weeks, as that could be ambiguous depending on the start date.
+To do this, you must provide a start date using the `relativeTo` option.
+
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+
+If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
@@ -244,18 +249,11 @@ result = fifty.add(fifty); // => P100Y100M100DT100H100M101.001001S'
 Temporal.Duration.from(result, { overflow: 'balance' });
 // => P100Y100M104DT5H41M41.001001S
 
-// Example of not balancing:
-oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-result = oneAndAHalfYear.add(oneAndAHalfYear); // => P2Y12M
-Temporal.Duration.from(result, { overflow: 'balance' }); // => P2Y12M
-// Example of custom conversion using ISO calendar rules:
-function monthsToYears(duration) {
-  let { years, months } = duration;
-  years += Math.floor(months / 12);
-  months %= 12;
-  return duration.with({ years, months });
-}
-monthsToYears(result); // => P3Y
+// Example of converting ambiguous units relative to a start date
+oneAndAHalfMonth = Temporal.Duration.from({ months: 1, days: 15 });
+oneAndAHalfMonth.add(oneAndAHalfMonth); // throws
+oneAndAHalfMonth.add(oneAndAHalfMonth, { relativeTo: '2000-02-01' }); // => P3M
+oneAndAHalfMonth.add(oneAndAHalfMonth, { relativeTo: '2000-03-01' }); // => P2M30D
 ```
 
 <!-- prettier-ignore-start -->
@@ -266,8 +264,8 @@ monthsToYears(result); // => P3Y
 
 - `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
-  The following options are recognized:
-  - (TODO)
+  The following option is recognized:
+  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
 
@@ -280,6 +278,14 @@ If `other` is larger than `duration` and the subtraction would result in a negat
 
 In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md#duration-arithmetic).
+
+By default, you cannot subtract durations with years, months, or weeks, as that could be ambiguous depending on the start date.
+To do this, you must provide a start date using the `relativeTo` option.
+
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+
+If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
@@ -294,17 +300,12 @@ two = Temporal.Duration.from({ seconds: 30 });
 one.subtract(two); // => PT179M30S
 one.subtract(two, { overflow: 'balance' }); // => PT2H59M30S
 
-// Example of not balancing:
-threeYears = Temporal.Duration.from({ years: 3 });
-oneAndAHalfYear = Temporal.Duration.from({ years: 1, months: 6 });
-threeYears.subtract(oneAndAHalfYear); // throws; mixed months and years signs cannot be balanced
-// Example of a custom conversion using ISO calendar rules:
-function yearsToMonths(duration) {
-  let { years, months } = duration;
-  months += years * 12;
-  return duration.with({ years: 0, months });
-}
-yearsToMonths(threeYears).subtract(yearsToMonths(oneAndAHalfYear)); // => P18M
+// Example of converting ambiguous units relative to a start date
+threeMonths = Temporal.Duration.from({ months: 3 });
+oneAndAHalfMonth = Temporal.Duration.from({ months: 1, days: 15 });
+threeMonths.subtract(oneAndAHalfMonth); // throws
+threeMonths.subtract(oneAndAHalfMonth, { relativeTo: '2000-02-01' }); // => P1M16D
+threeMonths.subtract(oneAndAHalfMonth, { relativeTo: '2000-03-01' }); // => P1M15D
 ```
 
 ### duration.**negated**() : Temporal.Duration

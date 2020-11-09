@@ -9,8 +9,8 @@ includes: [compareArray.js]
 let called = 0;
 
 const constructorArguments = [
-  [1, 2, 3, 4, 5, 6, 7, 987, 654, 321],
-  [1, 2, 3, 4, 5, 6, 7, 987, 654, 320],
+  [0, 0, 0, 4, 5, 6, 7, 987, 654, 321],
+  [0, 0, 0, 4, 5, 6, 7, 987, 654, 320],
 ];
 
 class MyDuration extends Temporal.Duration {
@@ -21,13 +21,13 @@ class MyDuration extends Temporal.Duration {
   }
 }
 
-const instance = MyDuration.from("P1Y2M3W4DT5H6M7.987654321S");
+const instance = MyDuration.from("P4DT5H6M7.987654321S");
 assert.sameValue(called, 1);
 
 const result = instance.subtract({ nanoseconds: 1 });
-assert.sameValue(result.years, 1, "years result");
-assert.sameValue(result.months, 2, "months result");
-assert.sameValue(result.weeks, 3, "weeks result");
+assert.sameValue(result.years, 0, "years result");
+assert.sameValue(result.months, 0, "months result");
+assert.sameValue(result.weeks, 0, "weeks result");
 assert.sameValue(result.days, 4, "days result");
 assert.sameValue(result.hours, 5, "hours result");
 assert.sameValue(result.minutes, 6, "minutes result");
