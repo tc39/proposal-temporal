@@ -445,8 +445,10 @@
   <emu-clause id="sec-temporal-torelativetemporalobject" aoid="ToRelativeTemporalObject">
     <h1>ToRelativeTemporalObject ( _options_ )</h1>
     <p>
-      The abstract operation ToRelativeTemporalObject examines the value of the `relativeTo` property of its _options_ argument, and attempts to return a Temporal.ZonedDateTime instance <mark>(TODO)</mark>, Temporal.PlainDateTime instance, or *undefined*, in order of preference.
-      If none of those are possible, the operation throws a *RangeError*.
+      The abstract operation ToRelativeTemporalObject examines the value of the `relativeTo` property of its _options_ argument.
+      If this is not present, it returns *undefined*.
+      Otherwise, it attempts to return a Temporal.ZonedDateTime instance or Temporal.PlainDateTime instance, in order of preference, by converting the value.
+      If neither of those are possible, the operation throws a *RangeError*.
     </p>
     <emu-alg>
       1. Assert: Type(_options_) is Object.
