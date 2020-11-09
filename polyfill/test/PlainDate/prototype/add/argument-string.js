@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.add
+esid: sec-temporal.plaindate.prototype.add
 ---*/
 
 const instance = Temporal.PlainDate.from({ year: 2000, month: 5, day: 2 });

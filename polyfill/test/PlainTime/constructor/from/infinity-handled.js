@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainTime.from handles a property bag if any value is Infinity
-esid: sec-temporal.time.from
+esid: sec-temporal.plaintime.from
 ---*/
 
 // constrain

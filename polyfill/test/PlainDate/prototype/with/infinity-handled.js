@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainDate.prototype.with handles a property bag if any value is Infinity
-esid: sec-temporal.date.prototype.with
+esid: sec-temporal.plaindate.prototype.with
 ---*/
 
 const instance = new Temporal.PlainDate(2000, 5, 2);

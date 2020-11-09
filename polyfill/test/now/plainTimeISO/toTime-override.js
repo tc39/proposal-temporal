@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.nowplaintimeiso
+esid: sec-temporal.now.plaintimeiso
 includes: [compareArray.js]
 ---*/
 

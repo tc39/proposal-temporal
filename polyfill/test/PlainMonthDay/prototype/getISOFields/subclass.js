@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.prototype.getisofields
+esid: sec-temporal.plainmonthday.prototype.getisofields
 includes: [compareArray.js]
 ---*/
 

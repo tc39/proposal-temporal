@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.monthday-@@species
+esid: sec-get-temporal.plainmonthday-@@species
 info: |
     Temporal.PlainMonthDay[@@species] is an accessor property whose set accessor function is undefined.
 

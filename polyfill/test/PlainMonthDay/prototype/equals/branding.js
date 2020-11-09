@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.prototype.equals
+esid: sec-temporal.plainmonthday.prototype.equals
 features: [Symbol]
 ---*/
 

@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainYearMonth.prototype.toPlainDate throws a RangeError if the argument is Infinity
-esid: sec-temporal.yearmonth.prototype.toplaindate
+esid: sec-temporal.plainyearmonth.prototype.toplaindate
 ---*/
 
 const instance = new Temporal.PlainYearMonth(2000, 5);

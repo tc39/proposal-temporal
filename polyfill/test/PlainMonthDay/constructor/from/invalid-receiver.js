@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.monthday.from
+esid: sec-temporal.plainmonthday.from
 ---*/
 
 assert.throws(TypeError, () => Temporal.PlainMonthDay.from.call(undefined, "05-02"), "undefined");

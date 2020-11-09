@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.date.prototype.since
+esid: sec-temporal.plaindate.prototype.since
 includes: [propertyHelper.js]
 ---*/
 
