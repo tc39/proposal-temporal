@@ -109,6 +109,54 @@ d = Temporal.Duration.from('P0D'); // => PT0S
 d = Temporal.Duration.from({ hours: 1, minutes: -30 }); // throws
 ```
 
+### Temporal.Duration.**compare**(_one_: Temporal.Duration | object | string, _two_: Temporal.Duration | object | string, _options_?: object) : number
+
+**Parameters:**
+
+- `one` (`Temporal.Duration` or value convertible to one): First duration to compare.
+- `two` (`Temporal.Duration` or value convertible to one): Second duration to compare.
+- `options` (object): An object with properties representing options for the operation.
+  The following option is recognized:
+  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
+
+**Returns:** &minus;1, 0, or 1.
+
+Compares two `Temporal.Duration` objects.
+Returns an integer indicating whether `one` is shorter or longer or is equal to `two`.
+
+- &minus;1 if `one` is shorter than `two`;
+- 0 if `one` and `two` are equally long;
+- 1 if `one` is longer than `two`.
+
+If `one` and `two` are not `Temporal.Duration` objects, then they will be converted to one as if they were passed to `Temporal.Duration.from()`.
+
+If any of the `years`, `months`, or `weeks` properties of either of the durations are nonzero, then the `relativeTo` option is required, since comparing durations with years, months, or weeks requires a point on the calendar to figure out how long they are.
+
+Negative durations are treated as the same as negative numbers for comparison purposes: they are "less" (shorter) than zero.
+
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when comparing days with hours. If `relativeTo` is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+
+If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
+
+This function can be used to sort arrays of `Temporal.Duration` objects.
+For example:
+
+```javascript
+one = Temporal.Duration.from({ hours: 79, minutes: 10 });
+two = Temporal.Duration.from({ days: 3, hours: 7, seconds: 630 });
+three = Temporal.Duration.from({ days: 3, hours: 6, minutes: 50 });
+sorted = [one, two, three].sort(Temporal.Duration.compare);
+sorted.join(' ');
+// => P3DT6H50M PT79H10M P3DT7H630S
+
+// Sorting relative to a date, taking DST changes into account:
+relativeTo = Temporal.ZonedDateTime.from('2020-11-01T00:00-07:00[America/Los_Angeles]');
+sorted = [one, two, three].sort((one, two) => Temporal.Duration.compare(one, two, {relativeTo}));
+sorted.join(' ');
+// => PT79H10M P3DT6H50M P3DT7H630S
+```
+
 ## Properties
 
 ### duration.**years** : number

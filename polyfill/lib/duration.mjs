@@ -536,7 +536,7 @@ export class Duration {
     return ES.TemporalDurationToString(this);
   }
   valueOf() {
-    throw new TypeError('not possible to compare Temporal.Duration');
+    throw new TypeError('use compare() to compare Temporal.Duration');
   }
   static from(item) {
     if (ES.IsTemporalDuration(item)) {
@@ -566,6 +566,41 @@ export class Duration {
       return result;
     }
     return ES.ToTemporalDuration(item, this);
+  }
+  static compare(one, two, options = undefined) {
+    one = ES.ToTemporalDuration(one, Duration);
+    two = ES.ToTemporalDuration(two, Duration);
+    options = ES.NormalizeOptionsObject(options);
+    const relativeTo = ES.ToRelativeTemporalObject(options);
+    const y1 = GetSlot(one, YEARS);
+    const mon1 = GetSlot(one, MONTHS);
+    const w1 = GetSlot(one, WEEKS);
+    let d1 = GetSlot(one, DAYS);
+    const h1 = GetSlot(one, HOURS);
+    const min1 = GetSlot(one, MINUTES);
+    const s1 = GetSlot(one, SECONDS);
+    const ms1 = GetSlot(one, MILLISECONDS);
+    const µs1 = GetSlot(one, MICROSECONDS);
+    let ns1 = GetSlot(one, NANOSECONDS);
+    const y2 = GetSlot(two, YEARS);
+    const mon2 = GetSlot(two, MONTHS);
+    const w2 = GetSlot(two, WEEKS);
+    let d2 = GetSlot(two, DAYS);
+    const h2 = GetSlot(two, HOURS);
+    const min2 = GetSlot(two, MINUTES);
+    const s2 = GetSlot(two, SECONDS);
+    const ms2 = GetSlot(two, MILLISECONDS);
+    const µs2 = GetSlot(two, MICROSECONDS);
+    let ns2 = GetSlot(two, NANOSECONDS);
+    const shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
+    const shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
+    if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
+      ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo));
+      ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', relativeTo));
+    }
+    ns1 = ES.TotalDurationNanoseconds(d1, h1, min1, s1, ms1, µs1, ns1, shift1);
+    ns2 = ES.TotalDurationNanoseconds(d2, h2, min2, s2, ms2, µs2, ns2, shift2);
+    return ES.ComparisonResult(ns1.minus(ns2).toJSNumber());
   }
 }
 

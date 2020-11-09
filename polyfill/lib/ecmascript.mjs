@@ -2146,6 +2146,20 @@ export const ES = ObjectAssign({}, ES2020, {
 
     return { years, months, weeks, days };
   },
+  CalculateOffsetShift: (relativeTo, y, mon, w, d, h, min, s, ms, µs, ns) => {
+    if (ES.IsTemporalZonedDateTime(relativeTo)) {
+      const instant = GetSlot(relativeTo, INSTANT);
+      const timeZone = GetSlot(relativeTo, TIME_ZONE);
+      const calendar = GetSlot(relativeTo, CALENDAR);
+      const offsetBefore = ES.GetOffsetNanosecondsFor(timeZone, instant);
+      const after = ES.AddZonedDateTime(instant, timeZone, calendar, y, mon, w, d, h, min, s, ms, µs, ns, 'constrain');
+      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+      const instantAfter = new TemporalInstant(after);
+      const offsetAfter = ES.GetOffsetNanosecondsFor(timeZone, instantAfter);
+      return offsetAfter - offsetBefore;
+    }
+    return 0;
+  },
 
   ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
   ConstrainDate: (year, month, day) => {

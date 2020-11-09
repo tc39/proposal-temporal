@@ -94,6 +94,35 @@
         1. Return ? ToTemporalDuration(_item_, _constructor_).
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.duration.compare">
+      <h1>Temporal.Duration.compare ( _one_, _two_ [ , _options_ ] )</h1>
+      <p>
+        The `compare` method takes three arguments, _one_, _two_, and _options_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Set _one_ to ? ToTemporalDuration(_one_).
+        1. Set _two_ to ? ToTemporalDuration(_two_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
+        1. Let _shift1_ be ! CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
+        1. Let _shift2_ be ! CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
+        1. If any of _one_.[[Years]], _two_.[[Years]], _one_.[[Months]], _two_.[[Months]], _one_.[[Weeks]], or _two_.[[Weeks]] are not 0, then
+          1. Let _balanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"days"*, _relativeTo_).
+          1. Let _balanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"days"*, _relativeTo_).
+          1. Let _days1_ be _balanceResult1_.[[Days]].
+          1. Let _days2_ be _balanceResult2_.[[Days]].
+        1. Else,
+          1. Let _days1_ be _one_.[[Days]].
+          1. Let _days2_ be _two_.[[Days]].
+        1. Let _ns1_ be ! TotalDurationNanoseconds(_days1_, _one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]], _shift1_).
+        1. Let _ns2_ be ! TotalDurationNanoseconds(_days2_, _two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]], _shift2_).
+        1. If _ns1_ &gt; _ns2_, return 1.
+        1. If _ns1_ &lt; _ns2_, return −1.
+        1. Return 0.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-the-temporal-duration-prototype-object">
@@ -814,6 +843,22 @@
         1. Let _result_ be ? Construct(_constructor_, « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalDuration]]).
         1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calculateoffsetshift" aoid="CalculateOffsetShift">
+      <h1>CalculateOffsetShift ( _relativeTo_, _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_ )</h1>
+      <p>
+        The abstract operation CalculateOffsetShift returns the difference in nanoseconds between the time zone offset at the time of _relativeTo_, and the time zone offset at the time of _relativeTo_ plus the given duration.
+      </p>
+      <emu-alg>
+        1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, return 0.
+        1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
+        1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instant_).
+        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_, *"constrain"*).
+        1. Let _instantAfter_ be ? CreateTemporalInstant(_after_).
+        1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instantAfter_).
+        1. Return _offsetAfter_ − _offsetBefore_.
       </emu-alg>
     </emu-clause>
 
