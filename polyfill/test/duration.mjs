@@ -472,7 +472,7 @@ describe('Duration', () => {
       const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
       equal(`${oneDay.add(hours24, { relativeTo })}`, 'P2D');
     });
-    it.skip('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
+    it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
       const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
       equal(`${oneDay.add(hours24, { relativeTo })}`, 'P2D');
     });
@@ -621,7 +621,7 @@ describe('Duration', () => {
       const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
       equal(`${oneDay.subtract(hours24, { relativeTo })}`, 'PT0S');
     });
-    it.skip('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
+    it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
       const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
       equal(`${oneDay.subtract(hours24, { relativeTo })}`, 'PT0S');
     });
@@ -854,6 +854,22 @@ describe('Duration', () => {
       const almostMicrosecond = Duration.from({ nanoseconds: 999 });
       equal(`${almostMicrosecond.round({ smallestUnit: 'microseconds' })}`, 'PT0.000001S');
     });
+    const hours25 = new Duration(0, 0, 0, 0, 25);
+    it('days are 24 hours if relativeTo not given', () => {
+      equal(`${hours25.round({ largestUnit: 'days' })}`, 'P1DT1H');
+    });
+    it('days are 24 hours if relativeTo is PlainDateTime', () => {
+      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+      equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P1DT1H');
+    });
+    it('days are 24 hours if relativeTo is ZonedDateTime, and duration encompasses no DST change', () => {
+      const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
+      equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P1DT1H');
+    });
+    it('casts relativeTo to PlainDateTime if possible', () => {
+      equal(`${hours25.round({ largestUnit: 'days', relativeTo: '2019-11-02T00:00' })}`, 'P1DT1H');
+      equal(`${hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'P1DT1H');
+    });
     it('accepts datetime string equivalents or fields for relativeTo', () => {
       ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
@@ -870,8 +886,9 @@ describe('Duration', () => {
       });
     });
     it('relativeTo object must contain at least the required correctly-spelled properties', () => {
-      throws(() => d.round({ relativeTo: {} }), TypeError);
-      throws(() => d.round({ relativeTo: { years: 2020, month: 1, day: 1 } }), TypeError);
+      throws(() => hours25.round({ largestUnit: 'days', relativeTo: { month: 11, day: 3 } }), TypeError);
+      throws(() => hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, month: 11 } }), TypeError);
+      throws(() => hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
     it('incorrectly-spelled properties are ignored in relativeTo', () => {
       const oneMonth = Duration.from({ months: 1 });
@@ -1324,6 +1341,15 @@ describe('Duration', () => {
       const negativeFortyDays = Duration.from({ days: -40 });
       equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }), -1 - 11 / 31);
       equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }), -1 - 9 / 29);
+    });
+    const oneDay = new Duration(0, 0, 0, 1);
+    it('relativeTo does not affect days if PlainDateTime', () => {
+      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+      equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
+    });
+    it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
+      const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
+      equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
     });
     it('balances up to the next unit after rounding', () => {
       const almostWeek = Duration.from({ days: 6, hours: 20 });

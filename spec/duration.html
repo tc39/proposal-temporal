@@ -1139,7 +1139,7 @@
     <emu-clause id="sec-temporal-moverelativedate" aoid="MoveRelativeDate">
       <h1>MoveRelativeDate ( _calendar_, _relativeTo_, _duration_ )</h1>
       <p>
-        The abstract operation MoveRelativeDate takes a Temporal.PlainDate object _relativeTo_, and adds a Temporal.Duration _duration_ to it, returning a record with the result as well as the number of days added according to the calendar reckoning of _calendar_.
+        The abstract operation MoveRelativeDate takes a Temporal.PlainDateTime object _relativeTo_, and adds a Temporal.Duration _duration_ to it, returning a record with the result as well as the number of days added according to the calendar reckoning of _calendar_.
         This is used when balancing or rounding durations relative to a particular date.
       </p>
       <emu-alg>
@@ -1147,8 +1147,9 @@
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Let _later_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _duration_, _options_, %Temporal.PlainDate% »).
         1. Let _days_ be ? DaysUntil(_relativeTo_, _later_).
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], _relativeTo_.[[ISOHour]], _relativeTo_.[[ISOMinute]], _relativeTo_.[[ISOSecond]], _relativeTo_.[[ISOMillisecond]], _relativeTo_.[[ISOMicrosecond]], _relativeTo_.[[ISONanosecond]], _relativeTo_.[[Calendar]]).
         1. Return the new Record {
-            [[RelativeTo]]: _later_,
+            [[RelativeTo]]: _dateTime_,
             [[Days]]: _days_
           }.
       </emu-alg>
