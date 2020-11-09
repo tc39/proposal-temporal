@@ -2199,33 +2199,30 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'years':
       case 'months': {
         const sign = -ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2);
-        if (!sign) return { years: 0, months: 0, weeks: 0, days: 0 };
+        if (sign === 0) return { years: 0, months: 0, weeks: 0, days: 0 };
 
         const start = { year: y1, month: m1, day: d1 };
         const end = { year: y2, month: m2, day: d2 };
 
-        let months = 0;
-        let weeks = 0;
-        let days = 0;
         let years = end.year - start.year;
         let mid = ES.AddDate(y1, m1, d1, years, 0, 0, 0, 'constrain');
         let midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
-        if (!midSign) {
+        if (midSign === 0) {
           return largestUnit === 'years'
-            ? { years, months, weeks, days }
-            : { years: 0, months: months + years * 12, weeks, days };
+            ? { years, months: 0, weeks: 0, days: 0 }
+            : { years: 0, months: years * 12, weeks: 0, days: 0 };
         }
-        months = end.month - start.month;
+        let months = end.month - start.month;
         if (midSign !== sign) {
           years -= sign;
           months += sign * 12;
         }
         mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
         midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
-        if (!midSign) {
+        if (midSign === 0) {
           return largestUnit === 'years'
-            ? { years, months, weeks, days }
-            : { years: 0, months: months + years * 12, weeks, days };
+            ? { years, months, weeks: 0, days: 0 }
+            : { years: 0, months: months + years * 12, weeks: 0, days: 0 };
         }
         if (midSign !== sign) {
           // The end date is later in the month than mid date (or earlier for
@@ -2239,6 +2236,7 @@ export const ES = ObjectAssign({}, ES2020, {
           midSign = -ES.CompareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
         }
 
+        let days = 0;
         // If we get here, months and years are correct (no overflow), and `mid`
         // is within the range from `start` to `end`. To count the days between
         // `mid` and `end`, there are 3 cases:
@@ -2262,7 +2260,7 @@ export const ES = ObjectAssign({}, ES2020, {
           months += years * 12;
           years = 0;
         }
-        return { years, months, weeks, days };
+        return { years, months, weeks: 0, days };
       }
       case 'weeks':
       case 'days': {
@@ -2277,24 +2275,20 @@ export const ES = ObjectAssign({}, ES2020, {
           sign = -1;
         }
         let years = larger.year - smaller.year;
-        let weeks = 0;
-        let months, days;
-        months = 0;
-        days =
+        let days =
           ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
         while (years > 0) {
           days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
           years -= 1;
         }
+        let weeks = 0;
         if (largestUnit === 'weeks') {
           weeks = Math.floor(days / 7);
           days %= 7;
         }
-        years *= sign;
-        months *= sign;
         weeks *= sign;
         days *= sign;
-        return { years, months, weeks, days };
+        return { years: 0, months: 0, weeks, days };
       }
       default:
         throw new Error('assert not reached');
