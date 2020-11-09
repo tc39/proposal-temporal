@@ -4798,16 +4798,16 @@
       return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [instant]));
     },
     GetTemporalDateTimeFor: function GetTemporalDateTimeFor(timeZone, instant, calendar) {
-      var getDateTimeFor = timeZone.getDateTimeFor;
+      var getPlainDateTimeFor = timeZone.getPlainDateTimeFor;
 
-      if (getDateTimeFor === undefined) {
-        getDateTimeFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getDateTimeFor%');
+      if (getPlainDateTimeFor === undefined) {
+        getPlainDateTimeFor = GetIntrinsic$1('%Temporal.TimeZone.prototype.getPlainDateTimeFor%');
       }
 
-      var dateTime = ES.Call(getDateTimeFor, timeZone, [instant, calendar]);
+      var dateTime = ES.Call(getPlainDateTimeFor, timeZone, [instant, calendar]);
 
       if (!ES.IsTemporalDateTime(dateTime)) {
-        throw new TypeError('Unexpected result from getDateTimeFor');
+        throw new TypeError('Unexpected result from getPlainDateTimeFor');
       }
 
       return dateTime;
@@ -7976,8 +7976,8 @@
         return ES.FormatTimeZoneOffsetString(offsetNs);
       }
     }, {
-      key: "getDateTimeFor",
-      value: function getDateTimeFor(instant) {
+      key: "getPlainDateTimeFor",
+      value: function getPlainDateTimeFor(instant) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GetISO8601Calendar();
         instant = ES.ToTemporalInstant(instant, GetIntrinsic$1('%Temporal.Instant%'));
         calendar = ES.ToTemporalCalendar(calendar);
@@ -8173,7 +8173,7 @@
   }();
   MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
   DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
-  DefineIntrinsic('Temporal.TimeZone.prototype.getDateTimeFor', TimeZone.prototype.getDateTimeFor);
+  DefineIntrinsic('Temporal.TimeZone.prototype.getPlainDateTimeFor', TimeZone.prototype.getPlainDateTimeFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
