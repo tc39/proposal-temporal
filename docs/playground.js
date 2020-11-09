@@ -4876,12 +4876,12 @@
       }
 
       var dateTime = ES.GetTemporalDateTimeFor(outputTimeZone, instant, 'iso8601');
-      var year = ES.ISOYearString(dateTime.year);
-      var month = ES.ISODateTimePartString(dateTime.month);
-      var day = ES.ISODateTimePartString(dateTime.day);
-      var hour = ES.ISODateTimePartString(dateTime.hour);
-      var minute = ES.ISODateTimePartString(dateTime.minute);
-      var seconds = ES.FormatSecondsStringPart(dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, precision);
+      var year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+      var month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+      var day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+      var hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
+      var minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
+      var seconds = ES.FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
       var timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
@@ -12610,44 +12610,27 @@
     var showTimeZone = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'auto';
     var showOffset = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'auto';
     var options = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
-    var dt = dateTime(zdt);
-    var year = GetSlot(dt, ISO_YEAR);
-    var month = GetSlot(dt, ISO_MONTH);
-    var day = GetSlot(dt, ISO_DAY);
-    var hour = GetSlot(dt, ISO_HOUR);
-    var minute = GetSlot(dt, ISO_MINUTE);
-    var second = GetSlot(dt, ISO_SECOND);
-    var millisecond = GetSlot(dt, ISO_MILLISECOND);
-    var microsecond = GetSlot(dt, ISO_MICROSECOND);
-    var nanosecond = GetSlot(dt, ISO_NANOSECOND);
+    var instant = GetSlot(zdt, INSTANT);
 
     if (options) {
       var unit = options.unit,
           increment = options.increment,
           roundingMode = options.roundingMode;
-
-      var _ES$RoundDateTime2 = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode);
-
-      year = _ES$RoundDateTime2.year;
-      month = _ES$RoundDateTime2.month;
-      day = _ES$RoundDateTime2.day;
-      hour = _ES$RoundDateTime2.hour;
-      minute = _ES$RoundDateTime2.minute;
-      second = _ES$RoundDateTime2.second;
-      millisecond = _ES$RoundDateTime2.millisecond;
-      microsecond = _ES$RoundDateTime2.microsecond;
-      nanosecond = _ES$RoundDateTime2.nanosecond;
+      var ns = ES.RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
+      var TemporalInstant = GetIntrinsic$1('%Temporal.Instant%');
+      instant = new TemporalInstant(ns);
     }
 
-    year = ES.ISOYearString(year);
-    month = ES.ISODateTimePartString(month);
-    day = ES.ISODateTimePartString(day);
-    hour = ES.ISODateTimePartString(hour);
-    minute = ES.ISODateTimePartString(minute);
-    var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
     var tz = GetSlot(zdt, TIME_ZONE);
+    var dateTime = ES.GetTemporalDateTimeFor(tz, instant, 'iso8601');
+    var year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+    var month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+    var day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+    var hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
+    var minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
+    var seconds = ES.FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
     var result = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds);
-    if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, GetSlot(zdt, INSTANT));
+    if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, instant);
     if (showTimeZone !== 'never') result += "[".concat(ES.TimeZoneToString(tz), "]");
     result += ES.FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
     return result;
