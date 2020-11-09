@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.inleapyear
+esid: sec-get-temporal.plaindate.prototype.inleapyear
 ---*/
 
 const inLeapYear = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "inLeapYear").get;

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal-comparetemporalyearmonth
+esid: sec-temporal-sec-temporal.yearmonth.compare
 ---*/
 
 function CustomError() {}

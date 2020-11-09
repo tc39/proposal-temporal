@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime
+esid: sec-temporal.plaindatetime
 ---*/
 
 const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789];

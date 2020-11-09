@@ -3,7 +3,7 @@
 
 /*---
 description: Temporal.PlainDate throws a RangeError if any value is -Infinity
-esid: sec-temporal.time
+esid: sec-temporal.plaintime
 ---*/
 
 assert.throws(RangeError, () => new Temporal.PlainTime(-Infinity));

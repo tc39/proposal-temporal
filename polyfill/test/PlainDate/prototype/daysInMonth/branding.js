@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.date.prototype.daysinmonth
+esid: sec-get-temporal.plaindate.prototype.daysinmonth
 ---*/
 
 const daysInMonth = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "daysInMonth").get;

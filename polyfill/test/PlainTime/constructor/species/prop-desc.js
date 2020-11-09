@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-get-temporal.time-@@species
+esid: sec-get-temporal.plaintime-@@species
 info: |
     Temporal.PlainTime[@@species] is an accessor property whose set accessor function is undefined.
 

@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.yearmonth.prototype.subtract
+esid: sec-temporal.plainyearmonth.prototype.subtract
 features: [Symbol.species]
 ---*/
 

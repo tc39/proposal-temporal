@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.datetime.prototype.tozoneddatetime
+esid: sec-temporal.plaindatetime.prototype.tozoneddatetime
 includes: [compareArray.js]
 ---*/
 
