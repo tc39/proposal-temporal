@@ -18,7 +18,7 @@
       Subclass constructors that intend to inherit the specified Time behaviour must include a super call to the %Temporal.PlainTime% constructor to create and initialize subclass instances with the necessary internal slots.
     </p>
 
-    <emu-clause id="sec-temporal.time">
+    <emu-clause id="sec-temporal.plaintime">
       <h1>Temporal.PlainTime ( [ _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
       <p>
         When the `Temporal.PlainTime` function is called, the following steps are taken:
@@ -50,7 +50,7 @@
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time-@@species">
+    <emu-clause id="sec-get-temporal.plaintime-@@species">
       <h1>get Temporal.PlainTime [ @@species ]</h1>
       <p>
         `Temporal.PlainTime[@@species]` is an accessor property whose set accessor function is *undefined*.
@@ -63,7 +63,7 @@
       <p>The value of the *"name"* property of this function is *"get [Symbol.species]"*.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.from">
+    <emu-clause id="sec-temporal.plaintime.from">
       <h1>Temporal.PlainTime.from ( _item_ [ , _options_ ] )</h1>
       <p>
         The `from` method takes two arguments, _item_ and _options_.
@@ -79,7 +79,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.compare">
+    <emu-clause id="sec-temporal.plaintime.compare">
       <h1>Temporal.PlainTime.compare ( _one_, _two_ )</h1>
       <p>
         The `compare` method takes two arguments, _one_ and _two_.
@@ -104,12 +104,12 @@
       <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
     </ul>
 
-    <emu-clause id="sec-temporal.time.prototype.constructor">
+    <emu-clause id="sec-temporal.plaintime.prototype.constructor">
       <h1>Temporal.PlainTime.prototype.constructor</h1>
       <p>The initial value of `Temporal.PlainTime.prototype.constructor` is %Temporal.PlainTime%.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype-@@tostringtag">
+    <emu-clause id="sec-temporal.plaintime.prototype-@@tostringtag">
       <h1>Temporal.PlainTime.prototype[ @@toStringTag ]</h1>
       <p>
         The initial value of the @@toStringTag property is the string value `"Temporal.PlainTime"`.
@@ -132,7 +132,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.hour">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.hour">
       <h1>get Temporal.PlainTime.prototype.hour</h1>
       <p>
         `Temporal.PlainTime.prototype.hour` is an accessor property whose set accessor function is *undefined*.
@@ -145,7 +145,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.minute">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.minute">
       <h1>get Temporal.PlainTime.prototype.minute</h1>
       <p>
         `Temporal.PlainTime.prototype.minute` is an accessor property whose set accessor function is *undefined*.
@@ -158,7 +158,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.second">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.second">
       <h1>get Temporal.PlainTime.prototype.second</h1>
       <p>
         `Temporal.PlainTime.prototype.second` is an accessor property whose set accessor function is *undefined*.
@@ -171,7 +171,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.millisecond">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.millisecond">
       <h1>get Temporal.PlainTime.prototype.millisecond</h1>
       <p>
         `Temporal.PlainTime.prototype.millisecond` is an accessor property whose set accessor function is *undefined*.
@@ -184,7 +184,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.microsecond">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.microsecond">
       <h1>get Temporal.PlainTime.prototype.microsecond</h1>
       <p>
         `Temporal.PlainTime.prototype.microsecond` is an accessor property whose set accessor function is *undefined*.
@@ -197,7 +197,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.time.prototype.nanosecond">
+    <emu-clause id="sec-get-temporal.plaintime.prototype.nanosecond">
       <h1>get Temporal.PlainTime.prototype.nanosecond</h1>
       <p>
         `Temporal.PlainTime.prototype.nanosecond` is an accessor property whose set accessor function is *undefined*.
@@ -210,7 +210,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.add">
+    <emu-clause id="sec-temporal.plaintime.prototype.add">
       <h1>Temporal.PlainTime.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
         The `add` method takes two arguments, _temporalDurationLike_ and _options_.
@@ -228,7 +228,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.subtract">
+    <emu-clause id="sec-temporal.plaintime.prototype.subtract">
       <h1>Temporal.PlainTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
         The `subtract` method takes two arguments, _temporalDurationLike_ and _options_.
@@ -247,7 +247,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.with">
+    <emu-clause id="sec-temporal.plaintime.prototype.with">
       <h1>Temporal.PlainTime.prototype.with ( _temporalTimeLike_ [ , _options_ ] )</h1>
       <p>
         The `with` method takes two arguments, _temporalTimeLike_ and _options_.
@@ -297,7 +297,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.until">
+    <emu-clause id="sec-temporal.plaintime.prototype.until">
       <h1>Temporal.PlainTime.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
         The `until` method takes two arguments, _other_ and _options_.
@@ -321,7 +321,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.since">
+    <emu-clause id="sec-temporal.plaintime.prototype.since">
       <h1>Temporal.PlainTime.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
         The `since` method takes two arguments, _other_ and _options_.
@@ -346,7 +346,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.round">
+    <emu-clause id="sec-temporal.plaintime.prototype.round">
       <h1>Temporal.PlainTime.prototype.round ( _options_ )</h1>
       <p>
         The `round` method takes one argument _options_.
@@ -372,7 +372,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.equals">
+    <emu-clause id="sec-temporal.plaintime.prototype.equals">
       <h1>Temporal.PlainTime.prototype.equals ( _other_ )</h1>
       <p>
         The `equals` method takes one argument _other_.
@@ -392,7 +392,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.toplaindatetime">
+    <emu-clause id="sec-temporal.plaintime.prototype.toplaindatetime">
       <h1>Temporal.PlainTime.prototype.toPlainDateTime ( _temporalDate_ )</h1>
       <p>
         The `toPlainDateTime` method takes one argument _temporalDate_.
@@ -409,7 +409,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.tozoneddatetime">
+    <emu-clause id="sec-temporal.plaintime.prototype.tozoneddatetime">
       <h1>Temporal.PlainTime.prototype.toZonedDateTime ( _item_ )</h1>
       <p>
         The `toZonedDateTime` method takes one argument _item_.
@@ -433,7 +433,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.getfields">
+    <emu-clause id="sec-temporal.plaintime.prototype.getfields">
       <h1>Temporal.PlainTime.prototype.getFields ( )</h1>
       <p>
         The following steps are taken:
@@ -450,7 +450,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.tostring">
+    <emu-clause id="sec-temporal.plaintime.prototype.tostring">
       <h1>Temporal.PlainTime.prototype.toString ( [ _options_ ] )</h1>
       <p>
         The `toString` method takes one argument _options_.
@@ -468,7 +468,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.tolocalestring">
+    <emu-clause id="sec-temporal.plaintime.prototype.tolocalestring">
       <h1>Temporal.PlainTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
@@ -484,7 +484,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.tojson">
+    <emu-clause id="sec-temporal.plaintime.prototype.tojson">
       <h1>Temporal.PlainTime.prototype.toJSON ( )</h1>
       <p>
         The following steps are taken:
@@ -496,7 +496,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.time.prototype.valueof">
+    <emu-clause id="sec-temporal.plaintime.prototype.valueof">
       <h1>Temporal.PlainTime.prototype.valueOf ( )</h1>
       <p>
         The following steps are taken:
