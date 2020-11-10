@@ -32,7 +32,7 @@ timeZones.forEach(({ name, tz }) => {
 
     // Show the date in midnight cells
     let formatOptions;
-    if (columnTime.hour === 0) {
+    if (columnTime.hour === columnTime.startOfDay().hour) {
       formatOptions = { month: 'short', day: 'numeric' };
     } else {
       formatOptions = { hour: 'numeric' };
