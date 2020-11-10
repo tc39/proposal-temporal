@@ -11067,6 +11067,16 @@
         return result;
       }
     }, {
+      key: "withCalendar",
+      value: function withCalendar(calendar) {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        calendar = ES.ToTemporalCalendar(calendar);
+        var Construct = ES.SpeciesConstructor(this, PlainTime);
+        var result = new Construct(GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar);
+        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+        return result;
+      }
+    }, {
       key: "add",
       value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
