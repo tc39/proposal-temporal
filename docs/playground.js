@@ -5566,7 +5566,10 @@
       var calendar;
 
       if (relativeTo) {
-        if (!ES.IsTemporalDateTime(relativeTo)) throw new TypeError('starting point must be DateTime');
+        if (!(ES.IsTemporalDate(relativeTo) || ES.IsTemporalDateTime(relativeTo))) {
+          throw new TypeError('starting point must be DateTime');
+        }
+
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
@@ -5678,6 +5681,12 @@
       var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
       var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      if (sign === 0) return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      };
       var calendar;
 
       if (relativeTo) {
@@ -6490,10 +6499,29 @@
         day: day
       };
     },
-    AddDuration: function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2) {
-      var years = y1 + y2;
-      var months = mon1 + mon2;
-      var weeks = w1 + w2;
+    AddDuration: function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, relativeTo) {
+      var largestUnit1 = ES.DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
+      var largestUnit2 = ES.DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
+      var largestUnit = ES.LargerOfTwoTemporalDurationUnits(largestUnit1, largestUnit2);
+
+      var _ES$UnbalanceDuration = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo);
+
+      d1 = _ES$UnbalanceDuration.days;
+      var intermediate;
+
+      if (relativeTo) {
+        var calendar = GetSlot(relativeTo, CALENDAR);
+        var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
+        var datePart1 = new TemporalDuration(0, 0, 0, d1);
+
+        var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, datePart1);
+
+        intermediate = _ES$MoveRelativeDate14.relativeTo;
+      }
+
+      var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', intermediate);
+
+      d2 = _ES$UnbalanceDuration2.days;
       var days = d1 + d2;
       var hours = h1 + h2;
       var minutes = min1 + min2;
@@ -6501,7 +6529,14 @@
       var milliseconds = ms1 + ms2;
       var microseconds = µs1 + µs2;
       var nanoseconds = ns1 + ns2;
-      var largestUnit = ES.DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      var years, months, weeks;
+
+      var _ES$BalanceDurationRe = ES.BalanceDurationRelative(0, 0, 0, days, largestUnit, relativeTo);
+
+      years = _ES$BalanceDurationRe.years;
+      months = _ES$BalanceDurationRe.months;
+      weeks = _ES$BalanceDurationRe.weeks;
+      days = _ES$BalanceDurationRe.days;
 
       var _ES$BalanceDuration3 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
@@ -6804,19 +6839,19 @@
             var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
             var oneYearDays;
 
-            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+            var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
 
-            relativeTo = _ES$MoveRelativeDate14.relativeTo;
-            oneYearDays = _ES$MoveRelativeDate14.days;
+            relativeTo = _ES$MoveRelativeDate15.relativeTo;
+            oneYearDays = _ES$MoveRelativeDate15.days;
 
             while (Math.abs(days) >= Math.abs(oneYearDays)) {
               years += sign;
               days -= oneYearDays;
 
-              var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+              var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
 
-              relativeTo = _ES$MoveRelativeDate15.relativeTo;
-              oneYearDays = _ES$MoveRelativeDate15.days;
+              relativeTo = _ES$MoveRelativeDate16.relativeTo;
+              oneYearDays = _ES$MoveRelativeDate16.days;
             }
 
             years += days / Math.abs(oneYearDays);
@@ -6851,19 +6886,19 @@
             var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
             var oneMonthDays;
 
-            var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-            relativeTo = _ES$MoveRelativeDate16.relativeTo;
-            oneMonthDays = _ES$MoveRelativeDate16.days;
+            relativeTo = _ES$MoveRelativeDate17.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate17.days;
 
             while (Math.abs(days) >= Math.abs(oneMonthDays)) {
               months += _sign2;
               days -= oneMonthDays;
 
-              var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-              relativeTo = _ES$MoveRelativeDate17.relativeTo;
-              oneMonthDays = _ES$MoveRelativeDate17.days;
+              relativeTo = _ES$MoveRelativeDate18.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate18.days;
             }
 
             months += days / Math.abs(oneMonthDays);
@@ -6886,19 +6921,19 @@
             var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
             var oneWeekDays;
 
-            var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+            var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-            relativeTo = _ES$MoveRelativeDate18.relativeTo;
-            oneWeekDays = _ES$MoveRelativeDate18.days;
+            relativeTo = _ES$MoveRelativeDate19.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate19.days;
 
             while (Math.abs(days) >= Math.abs(oneWeekDays)) {
               weeks += _sign3;
               days -= oneWeekDays;
 
-              var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate20 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-              relativeTo = _ES$MoveRelativeDate19.relativeTo;
-              oneWeekDays = _ES$MoveRelativeDate19.days;
+              relativeTo = _ES$MoveRelativeDate20.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate20.days;
             }
 
             weeks += days / Math.abs(oneWeekDays);
@@ -10300,8 +10335,9 @@
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
         options = ES.NormalizeOptionsObject(options);
+        var relativeTo = ES.ToRelativeTemporalObject(options);
 
-        var _ES$AddDuration = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+        var _ES$AddDuration = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, relativeTo);
 
         years = _ES$AddDuration.years;
         months = _ES$AddDuration.months;
@@ -10337,8 +10373,9 @@
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
         options = ES.NormalizeOptionsObject(options);
+        var relativeTo = ES.ToRelativeTemporalObject(options);
 
-        var _ES$AddDuration2 = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds);
+        var _ES$AddDuration2 = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, relativeTo);
 
         years = _ES$AddDuration2.years;
         months = _ES$AddDuration2.months;
