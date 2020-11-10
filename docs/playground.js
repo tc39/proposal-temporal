@@ -9117,8 +9117,7 @@
       key: "withCalendar",
       value: function withCalendar(calendar) {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var TemporalCalendar = GetIntrinsic$1('%Temporal.Calendar%');
-        calendar = TemporalCalendar.from(calendar);
+        calendar = ES.ToTemporalCalendar(calendar);
         var Construct = ES.SpeciesConstructor(this, PlainDate);
         var result = new Construct(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
         if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
