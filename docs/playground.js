@@ -12409,8 +12409,8 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
+        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
     }, {
@@ -12419,8 +12419,8 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         return calendar.monthDayFromFields(fields, {}, MonthDay);
       }
     }, {
