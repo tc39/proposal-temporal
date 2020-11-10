@@ -429,6 +429,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.plaindate.prototype.withcalendar">
+      <h1>Temporal.PlainDate.prototype.withCalendar ( _calendar_ )</h1>
+      <p>
+        The `withCalendar` method takes one argument _calendar_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendar_).
+        1. Return ? CreateTemporalDateFromInstance(_temporalDate_, _temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _calendar_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.plaindate.prototype.until">
       <h1>Temporal.PlainDate.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
