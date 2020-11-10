@@ -8177,9 +8177,11 @@
   var MD = Symbol('md');
   var TIME = Symbol('time');
   var DATETIME = Symbol('datetime');
-  var INSTANT$1 = Symbol('instant');
+  var ZONED = Symbol('zoneddatetime');
+  var INST = Symbol('instant');
   var ORIGINAL = Symbol('original');
-  var TIMEZONE = Symbol('timezone');
+  var TZ_RESOLVED = Symbol('timezone');
+  var TZ_GIVEN = Symbol('timezone-id-given');
   var CAL_ID = Symbol('calendar-id');
 
   var descriptor = function descriptor(value) {
@@ -8197,15 +8199,17 @@
     var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : IntlDateTimeFormat$1().resolvedOptions().locale;
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+    this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
     this[ORIGINAL] = new IntlDateTimeFormat$1(locale, options);
-    this[TIMEZONE] = new TimeZone(this.resolvedOptions().timeZone);
+    this[TZ_RESOLVED] = new TimeZone(this.resolvedOptions().timeZone);
     this[CAL_ID] = this.resolvedOptions().calendar;
     this[DATE] = new IntlDateTimeFormat$1(locale, dateAmend(options));
     this[YM] = new IntlDateTimeFormat$1(locale, yearMonthAmend(options));
     this[MD] = new IntlDateTimeFormat$1(locale, monthDayAmend(options));
     this[TIME] = new IntlDateTimeFormat$1(locale, timeAmend(options));
     this[DATETIME] = new IntlDateTimeFormat$1(locale, datetimeAmend(options));
-    this[INSTANT$1] = new IntlDateTimeFormat$1(locale, instantAmend(options));
+    this[ZONED] = new IntlDateTimeFormat$1(locale, zonedDateTimeAmend(options));
+    this[INST] = new IntlDateTimeFormat$1(locale, instantAmend(options));
   }
 
   DateTimeFormat.supportedLocalesOf = function () {
@@ -8232,14 +8236,24 @@
     return this[ORIGINAL].resolvedOptions();
   }
 
+  function adjustFormatterTimeZone(formatter, timeZone) {
+    if (!timeZone) return formatter;
+    var options = formatter.resolvedOptions();
+    return new IntlDateTimeFormat$1(options.locale, _objectSpread2(_objectSpread2({}, options), {}, {
+      timeZone: timeZone
+    }));
+  }
+
   function format(datetime) {
     var _this$ORIGINAL;
 
     var _extractOverrides = extractOverrides(datetime, this),
         instant = _extractOverrides.instant,
-        formatter = _extractOverrides.formatter;
+        formatter = _extractOverrides.formatter,
+        timeZone = _extractOverrides.timeZone;
 
     if (instant && formatter) {
+      formatter = adjustFormatterTimeZone(formatter, timeZone);
       return formatter.format(instant.epochMilliseconds);
     }
 
@@ -8255,9 +8269,11 @@
 
     var _extractOverrides2 = extractOverrides(datetime, this),
         instant = _extractOverrides2.instant,
-        formatter = _extractOverrides2.formatter;
+        formatter = _extractOverrides2.formatter,
+        timeZone = _extractOverrides2.timeZone;
 
     if (instant && formatter) {
+      formatter = adjustFormatterTimeZone(formatter, timeZone);
       return formatter.formatToParts(instant.epochMilliseconds);
     }
 
@@ -8276,14 +8292,21 @@
 
       var _extractOverrides3 = extractOverrides(a, this),
           aa = _extractOverrides3.instant,
-          aformatter = _extractOverrides3.formatter;
+          aformatter = _extractOverrides3.formatter,
+          atz = _extractOverrides3.timeZone;
 
       var _extractOverrides4 = extractOverrides(b, this),
           bb = _extractOverrides4.instant,
-          bformatter = _extractOverrides4.formatter;
+          bformatter = _extractOverrides4.formatter,
+          btz = _extractOverrides4.timeZone;
+
+      if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+        throw new RangeError('cannot format range between different time zones');
+      }
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
+        var formatter = adjustFormatterTimeZone(aformatter, atz);
+        return formatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
       }
     }
 
@@ -8298,14 +8321,21 @@
 
       var _extractOverrides5 = extractOverrides(a, this),
           aa = _extractOverrides5.instant,
-          aformatter = _extractOverrides5.formatter;
+          aformatter = _extractOverrides5.formatter,
+          atz = _extractOverrides5.timeZone;
 
       var _extractOverrides6 = extractOverrides(b, this),
           bb = _extractOverrides6.instant,
-          bformatter = _extractOverrides6.formatter;
+          bformatter = _extractOverrides6.formatter,
+          btz = _extractOverrides6.timeZone;
+
+      if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+        throw new RangeError('cannot format range between different time zones');
+      }
 
       if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-        return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
+        var formatter = adjustFormatterTimeZone(aformatter, atz);
+        return formatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
       }
     }
 
@@ -8336,7 +8366,7 @@
     });
 
     if (!hasTimeOptions(options)) {
-      options = ObjectAssign$1(options, {
+      options = ObjectAssign$1({}, options, {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric'
@@ -8377,7 +8407,7 @@
     });
 
     if (!('month' in options || 'day' in options)) {
-      options = ObjectAssign$1(options, {
+      options = ObjectAssign$1({}, options, {
         month: 'numeric',
         day: 'numeric'
       });
@@ -8395,7 +8425,7 @@
     });
 
     if (!hasDateOptions(options)) {
-      options = ObjectAssign$1(options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric'
@@ -8411,7 +8441,7 @@
     });
 
     if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-      ObjectAssign$1(options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -8424,9 +8454,25 @@
     return options;
   }
 
+  function zonedDateTimeAmend(options) {
+    if (!hasTimeOptions(options) && !hasDateOptions(options)) {
+      options = ObjectAssign$1({}, options, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+      if (options.timeZoneName === undefined) options.timeZoneName = 'short';
+    }
+
+    return options;
+  }
+
   function instantAmend(options) {
     if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-      ObjectAssign$1(options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -8459,7 +8505,7 @@
       var nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
       var datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
       return {
-        instant: main[TIMEZONE].getInstantFor(datetime),
+        instant: main[TZ_RESOLVED].getInstantFor(datetime),
         formatter: main[TIME]
       };
     }
@@ -8468,16 +8514,16 @@
       var isoYear = GetSlot(temporalObj, ISO_YEAR);
       var isoMonth = GetSlot(temporalObj, ISO_MONTH);
       var referenceISODay = GetSlot(temporalObj, ISO_DAY);
-      var calendar = GetSlot(temporalObj, CALENDAR);
+      var calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
 
-      if (calendar.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+      if (calendar !== main[CAL_ID]) {
+        throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
 
       return {
-        instant: main[TIMEZONE].getInstantFor(_datetime),
+        instant: main[TZ_RESOLVED].getInstantFor(_datetime),
         formatter: main[YM]
       };
     }
@@ -8489,16 +8535,16 @@
 
       var isoDay = GetSlot(temporalObj, ISO_DAY);
 
-      var _calendar = GetSlot(temporalObj, CALENDAR);
+      var _calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
 
-      if (_calendar.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format PlainMonthDay with calendar ".concat(_calendar.id, " in locale with calendar ").concat(main[CAL_ID]));
+      if (_calendar !== main[CAL_ID]) {
+        throw new RangeError("cannot format PlainMonthDay with calendar ".concat(_calendar, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime2 = new DateTime(referenceISOYear, _isoMonth, isoDay, 12, 0, 0, 0, 0, 0, _calendar);
 
       return {
-        instant: main[TIMEZONE].getInstantFor(_datetime2),
+        instant: main[TZ_RESOLVED].getInstantFor(_datetime2),
         formatter: main[MD]
       };
     }
@@ -8510,16 +8556,16 @@
 
       var _isoDay = GetSlot(temporalObj, ISO_DAY);
 
-      var _calendar2 = GetSlot(temporalObj, CALENDAR);
+      var _calendar2 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
 
-      if (_calendar2.id !== 'iso8601' && _calendar2.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format PlainDate with calendar ".concat(_calendar2.id, " in locale with calendar ").concat(main[CAL_ID]));
+      if (_calendar2 !== 'iso8601' && _calendar2 !== main[CAL_ID]) {
+        throw new RangeError("cannot format PlainDate with calendar ".concat(_calendar2, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime3 = new DateTime(_isoYear, _isoMonth2, _isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
 
       return {
-        instant: main[TIMEZONE].getInstantFor(_datetime3),
+        instant: main[TZ_RESOLVED].getInstantFor(_datetime3),
         formatter: main[DATE]
       };
     }
@@ -8543,28 +8589,49 @@
 
       var _nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
 
-      var _calendar3 = GetSlot(temporalObj, CALENDAR);
+      var _calendar3 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
 
-      if (_calendar3.id !== 'iso8601' && _calendar3.id !== main[CAL_ID]) {
-        throw new RangeError("cannot format PlainDateTime with calendar ".concat(_calendar3.id, " in locale with calendar ").concat(main[CAL_ID]));
+      if (_calendar3 !== 'iso8601' && _calendar3 !== main[CAL_ID]) {
+        throw new RangeError("cannot format PlainDateTime with calendar ".concat(_calendar3, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var _datetime4 = temporalObj;
 
-      if (_calendar3.id === 'iso8601') {
+      if (_calendar3 === 'iso8601') {
         _datetime4 = new DateTime(_isoYear2, _isoMonth3, _isoDay2, _hour, _minute, _second, _millisecond, _microsecond, _nanosecond, main[CAL_ID]);
       }
 
       return {
-        instant: main[TIMEZONE].getInstantFor(_datetime4),
+        instant: main[TZ_RESOLVED].getInstantFor(_datetime4),
         formatter: main[DATETIME]
+      };
+    }
+
+    if (ES.IsTemporalZonedDateTime(temporalObj)) {
+      var _calendar4 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+
+      if (_calendar4 !== 'iso8601' && _calendar4 !== main[CAL_ID]) {
+        throw new RangeError("cannot format ZonedDateTime with calendar ".concat(_calendar4, " in locale with calendar ").concat(main[CAL_ID]));
+      }
+
+      var timeZone = GetSlot(temporalObj, TIME_ZONE);
+      var objTimeZone = ES.TimeZoneToString(timeZone);
+
+      if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
+        throw new RangeError("timeZone option ".concat(main[TZ_GIVEN], " doesn't match actual time zone ").concat(objTimeZone));
+      }
+
+      return {
+        instant: GetSlot(temporalObj, INSTANT),
+        formatter: main[ZONED],
+        timeZone: timeZone
       };
     }
 
     if (ES.IsTemporalInstant(temporalObj)) {
       return {
         instant: temporalObj,
-        formatter: main[INSTANT$1]
+        formatter: main[INST]
       };
     }
 

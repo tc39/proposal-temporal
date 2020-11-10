@@ -855,21 +855,17 @@ new Chart(ctx, {
 <script type="text/javascript" id="meeting-planner-source">
 {
 // Display local time zone and three others
-const here = Temporal.now.timeZone();
-const now = Temporal.now.instant();
+const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
+const now = Temporal.now.zonedDateTime(browserCalendar);
 const timeZones = [
-  { name: 'Here', tz: here },
+  { name: 'Here', tz: now.timeZone },
   { name: 'New York', tz: Temporal.TimeZone.from('America/New_York') },
   { name: 'London', tz: Temporal.TimeZone.from('Europe/London') },
   { name: 'Tokyo', tz: Temporal.TimeZone.from('Asia/Tokyo') }
 ];
 
 // Start the table at midnight local time
-const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const calendarNow = now.toPlainDateTime(here, browserCalendar);
-const startTime = calendarNow
-  .with(Temporal.PlainTime.from('00:00')) // midnight
-  .toInstant(here);
+const startTime = now.startOfDay();
 
 // Build the table
 const table = document.getElementById('meeting-planner');
@@ -877,26 +873,27 @@ timeZones.forEach(({ name, tz }) => {
   const row = document.createElement('tr');
 
   const title = document.createElement('td');
-  title.textContent = `${name} (UTC${tz.getOffsetStringFor(now)})`;
+  const startTimeHere = startTime.withTimeZone(tz);
+  title.textContent = `${name} (UTC${startTimeHere.offset})`;
   row.appendChild(title);
 
   for (let hours = 0; hours < 24; hours++) {
     const cell = document.createElement('td');
 
-    const dt = startTime.add({ hours }).toPlainDateTime(tz);
-    cell.className = `time-${dt.hour}`;
+    const columnTime = startTimeHere.add({ hours });
+    cell.className = `time-${columnTime.hour}`;
 
     // Highlight the current hour in each row
-    if (hours === calendarNow.hour) cell.className += ' time-current';
+    if (hours === now.hour) cell.className += ' time-current';
 
     // Show the date in midnight cells
     let formatOptions;
-    if (dt.hour === 0) {
+    if (columnTime.hour === 0) {
       formatOptions = { month: 'short', day: 'numeric' };
     } else {
       formatOptions = { hour: 'numeric' };
     }
-    cell.textContent = dt.toLocaleString(undefined, formatOptions);
+    cell.textContent = columnTime.toLocaleString(undefined, formatOptions);
     row.appendChild(cell);
   }
 
@@ -907,21 +904,17 @@ timeZones.forEach(({ name, tz }) => {
 </script>
 
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Display local time zone and three others</span>
-<span class="token keyword">const</span> here <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
+<span class="token keyword">const</span> now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> timeZones <span class="token operator">=</span> <span class="token punctuation">[</span>
-  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'Here'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> here <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'Here'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> now<span class="token punctuation">.</span>timeZone <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'New York'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'London'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/London'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'Tokyo'</span><span class="token punctuation">,</span> tz<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
 <span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Start the table at midnight local time</span>
-<span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
-<span class="token keyword">const</span> calendarNow <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>here<span class="token punctuation">,</span> browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> startTime <span class="token operator">=</span> calendarNow
-  <span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// midnight</span>
-  <span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span>here<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> startTime <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">startOfDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Build the table</span>
 <span class="token keyword">const</span> table <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'meeting-planner'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -929,26 +922,27 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
   <span class="token keyword">const</span> row <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'tr'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">const</span> title <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'td'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  title<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (UTC</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> startTimeHere <span class="token operator">=</span> startTime<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  title<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (UTC</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>startTimeHere<span class="token punctuation">.</span>offset<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   row<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> hours <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> hours <span class="token operator">&lt;</span> <span class="token number">24</span><span class="token punctuation">;</span> hours<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> cell <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'td'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">const</span> dt <span class="token operator">=</span> startTime<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    cell<span class="token punctuation">.</span>className <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">time-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dt<span class="token punctuation">.</span>hour<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> columnTime <span class="token operator">=</span> startTimeHere<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cell<span class="token punctuation">.</span>className <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">time-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>columnTime<span class="token punctuation">.</span>hour<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 
     <span class="token comment">// Highlight the current hour in each row</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>hours <span class="token operator">===</span> calendarNow<span class="token punctuation">.</span>hour<span class="token punctuation">)</span> cell<span class="token punctuation">.</span>className <span class="token operator">+=</span> <span class="token string">' time-current'</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>hours <span class="token operator">===</span> now<span class="token punctuation">.</span>hour<span class="token punctuation">)</span> cell<span class="token punctuation">.</span>className <span class="token operator">+=</span> <span class="token string">' time-current'</span><span class="token punctuation">;</span>
 
     <span class="token comment">// Show the date in midnight cells</span>
     <span class="token keyword">let</span> formatOptions<span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>dt<span class="token punctuation">.</span>hour <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>columnTime<span class="token punctuation">.</span>hour <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
       formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    cell<span class="token punctuation">.</span>textContent <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> formatOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cell<span class="token punctuation">.</span>textContent <span class="token operator">=</span> columnTime<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> formatOptions<span class="token punctuation">)</span><span class="token punctuation">;</span>
     row<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>cell<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
