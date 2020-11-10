@@ -168,6 +168,22 @@ export class PlainTime {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
+  withCalendar(calendar) {
+    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+    calendar = ES.ToTemporalCalendar(calendar);
+    const Construct = ES.SpeciesConstructor(this, PlainTime);
+    const result = new Construct(
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
+      calendar
+    );
+    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+    return result;
+  }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
