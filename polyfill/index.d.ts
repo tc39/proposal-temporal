@@ -841,7 +841,7 @@ export namespace Temporal {
     toPlainDateTime(temporalTime?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
     toZonedDateTime(timeZoneAndTime: {
       timeZone: TimeZoneProtocol | string;
-      time?: Temporal.PlainTime | TimeLike | string;
+      plainTime?: Temporal.PlainTime | TimeLike | string;
     }): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
