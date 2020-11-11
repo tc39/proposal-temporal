@@ -699,14 +699,14 @@
       <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration.</li>
       <li>Alphabetic designators may be in lower or upper case.</li>
       <li>Period or comma may be used as the decimal separator.</li>
-      <li>A time zone offset of `"-00:00"` is allowed, and means the same thing as `"+00:00"`.</li>
+      <li>A time zone offset of *"-00:00"* is allowed, and means the same thing as *"+00:00"*.</li>
       <li>
         In a combined representation, combinations of date, time, and time zone offset with Basic (no `-` or `:` separators) and Extended (with `-` or `:` separators) formatting are allowed.
         (The date, time, and time zone offset must each be fully in Basic format or Extended format.)
       </li>
       <li>
         When parsing a date representation for a Temporal.PlainMonthDay, the year may be omitted.
-        The year may optionally be replaced by `"--"` as in RFC 3339.
+        The year may optionally be replaced by *"--"* as in RFC 3339.
       </li>
       <li>When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in Basic format.</li>
       <li>A duration specifier of *"W"* (weeks) can be combined with any of the other specifiers.</li>
@@ -1052,7 +1052,7 @@
       1. If _second_ is 60, then
         1. Set _second_ to 59.
       1. If _fraction_ is not *undefined*, then
-        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string `"000000000"`.
+        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _millisecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
         1. Set _millisecond_ to ! ToInteger(_millisecond_).
         1. Let _microsecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).
@@ -1212,7 +1212,7 @@
       1. Set _seconds_ to ? ToInteger(_seconds_).
       1. If _isoString_ contains a |TimeFractionalPart| production, then
         1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
-        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string `"000000000"`.
+        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _milliseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
         1. Set _milliseconds_ to ! ToInteger(_milliseconds_).
         1. Let _microseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).

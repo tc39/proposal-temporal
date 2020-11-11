@@ -120,7 +120,7 @@
     <emu-clause id="sec-temporal.plaindatetime.prototype-@@tostringtag">
       <h1>Temporal.PlainDateTime.prototype[ @@toStringTag ]</h1>
       <p>
-        The initial value of the @@toStringTag property is the string value `"Temporal.PlainDateTime"`.
+        The initial value of the @@toStringTag property is the string value *"Temporal.PlainDateTime"*.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
@@ -1045,7 +1045,7 @@
         1. If ! DateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is not ~in range~, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainDateTime%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.PlainDateTime.prototype%"`, « [[InitializedTemporalDateTime]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]], [[Calendar]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainDateTime.prototype%"*, « [[InitializedTemporalDateTime]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
         1. Set _object_.[[ISOMonth]] to _isoMonth_.
         1. Set _object_.[[ISODay]] to _isoDay_.

@@ -112,7 +112,7 @@
     <emu-clause id="sec-temporal.plaintime.prototype-@@tostringtag">
       <h1>Temporal.PlainTime.prototype[ @@toStringTag ]</h1>
       <p>
-        The initial value of the @@toStringTag property is the string value `"Temporal.PlainTime"`.
+        The initial value of the @@toStringTag property is the string value *"Temporal.PlainTime"*.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
@@ -664,32 +664,32 @@
           <tbody>
             <tr>
               <td>[[Hour]]</td>
-              <td>`"hour"`</td>
+              <td>*"hour"*</td>
             </tr>
 
             <tr>
               <td>[[Microsecond]]</td>
-              <td>`"microsecond"`</td>
+              <td>*"microsecond"*</td>
             </tr>
 
             <tr>
               <td>[[Millisecond]]</td>
-              <td>`"millisecond"`</td>
+              <td>*"millisecond"*</td>
             </tr>
 
             <tr>
               <td>[[Minute]]</td>
-              <td>`"minute"`</td>
+              <td>*"minute"*</td>
             </tr>
 
             <tr>
               <td>[[Nanosecond]]</td>
-              <td>`"nanosecond"`</td>
+              <td>*"nanosecond"*</td>
             </tr>
 
             <tr>
               <td>[[Second]]</td>
-              <td>`"second"`</td>
+              <td>*"second"*</td>
             </tr>
           </tbody>
         </table>
@@ -794,7 +794,7 @@
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainTime%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.PlainTime.prototype%"`, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainTime.prototype%"*, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
         1. Set _object_.[[Hour]] to _hour_.
         1. Set _object_.[[Minute]] to _minute_.
         1. Set _object_.[[Second]] to _second_.

@@ -109,16 +109,16 @@
           1. <ins>Set _hc_ to _hcDefault_.</ins>
         1. <ins>If _hour12_ is not *undefined*, then</ins>
           1. <ins>If _hour12_ is *true*, then</ins>
-            1. <ins>If _hcDefault_ is `"h11"` or `"h23"`, then</ins>
-              1. <ins>Set _hc_ to `"h11"`.</ins>
+            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+              1. <ins>Set _hc_ to *"h11"*.</ins>
             1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to `"h12"`.</ins>
+              1. <ins>Set _hc_ to *"h12"*.</ins>
           1. <ins>Else,</ins>
             1. <ins>Assert: _hour12_ is *false*.</ins>
-            1. <ins>If _hcDefault_ is `"h11"` or `"h23"`, then</ins>
-              1. <ins>Set _hc_ to `"h23"`.</ins>
+            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+              1. <ins>Set _hc_ to *"h23"*.</ins>
             1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to `"h24"`.</ins>
+              1. <ins>Set _hc_ to *"h24"*.</ins>
         1. Set _dateTimeFormat_.[[NumberingSystem]] to _r_.[[nu]].
         1. <del>Let _dataLocale_ be _r_.[[dataLocale]].</del>
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
@@ -177,12 +177,12 @@
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
         1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
         1. <ins>Let _needDefaults_ be *true*.</ins>
-        1. <ins>For each _field_ of « `"weekday"`, `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
+        1. <ins>For each _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* », do</ins>
           1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
             1. <ins>Set _needDefaults_ to *false*.</ins>
         1. <ins>If _needDefaults_ is *true*, then</ins>
-          1. <ins>For each _field_ of « `"year"`, `"month"`, `"day"`, `"hour"`, `"minute"`, `"second"` », do</ins>
-            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to `"numeric"`.</ins>
+          1. <ins>For each _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* », do</ins>
+            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
@@ -456,16 +456,16 @@
       <h1>GetDateTimeFormatPattern ( _opt_, _formats_, _hc_ )</h1>
 
       <p>
-        The abstract operation GetDateTimeFormatPattern accepts the arguments _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of `"h11"`, `"h12"`, `"h23"`, and `"h24"`). It returns one of the records from _formats_. This abstract operation functions as follows:
+        The abstract operation GetDateTimeFormatPattern accepts the arguments _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
-        1. If _matcher_ is `"basic"`, then
+        1. If _matcher_ is *"basic"*, then
           1. Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).
         1. Else,
           1. Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).
         1. If _bestFormat_.[[hour]] is not *undefined*, then
-          1. If _hc_ is `"h11"` or `"h12"`, then
+          1. If _hc_ is *"h11"* or *"h12"*, then
             1. Set _bestFormat_.[[pattern]] to _bestFormat_.[[pattern12]].
           1. Remove the [[pattern12]] field from _bestFormat_.
           1. Set _bestFormat_.[[hourCycle]] to _hc_.

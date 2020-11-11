@@ -32,7 +32,7 @@
         1. If _hour_ is not *undefined*, then
           1. Assert: _sign_ is not *undefined*.
           1. Set _hour_ to ! ToInteger(_hour_).
-          1. If _sign_ = `"-"`, then
+          1. If _sign_ = *"-"*, then
             1. Set _hour_ to −1 × _hour_.
           1. If _minute_ is not *undefined*, then
             1. Set _minute_ to ! ToInteger(_minute_).
@@ -110,7 +110,7 @@
     <emu-clause id="sec-temporal.timezone.prototype-@@tostringtag">
       <h1>Temporal.TimeZone.prototype[ @@toStringTag ]</h1>
       <p>
-        The initial value of the @@toStringTag property is the string value `"Temporal.TimeZone"`.
+        The initial value of the @@toStringTag property is the string value *"Temporal.TimeZone"*.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
@@ -369,7 +369,7 @@
       <emu-alg>
         1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
         1. If _newTarget_ is not given, set it to %Temporal.TimeZone%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.TimeZone.prototype%"`, « [[InitializedTemporalTimeZone]], [[Identifier]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]] »).
         1. Set _object_.[[Identifier]] to _identifier_.
         1. Return _object_.
       </emu-alg>
