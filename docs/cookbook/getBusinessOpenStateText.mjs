@@ -32,10 +32,10 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     if (!businessHours[index]) continue;
 
     const { open: openTime, close: closeTime } = businessHours[index];
-    const open = openDate.toZonedDateTime({ time: openTime, timeZone: now.timeZone });
+    const open = openDate.toZonedDateTime({ plainTime: openTime, timeZone: now.timeZone });
     const isWrap = Temporal.PlainTime.compare(closeTime, openTime) < 0;
     const closeDate = isWrap ? openDate.add({ days: 1 }) : openDate;
-    const close = closeDate.toZonedDateTime({ time: closeTime, timeZone: now.timeZone });
+    const close = closeDate.toZonedDateTime({ plainTime: closeTime, timeZone: now.timeZone });
 
     if (inRange(now, open, close)) {
       return compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';

@@ -337,7 +337,7 @@ export class PlainDate {
         timeZone = ES.ToTemporalTimeZone(item);
       } else {
         timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-        temporalTime = item.time;
+        temporalTime = item.plainTime;
       }
     } else {
       timeZone = ES.ToTemporalTimeZone(item);

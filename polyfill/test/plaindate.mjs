@@ -199,7 +199,7 @@ describe('Date', () => {
       const date = PlainDate.from('2020-01-01');
       const time = Temporal.PlainTime.from('12:00');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime({ timeZone: tz, time });
+      const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: time });
       equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
     });
     it('works with time omitted (timeZone argument)', () => {
@@ -217,13 +217,13 @@ describe('Date', () => {
     it('casts timeZone property', () => {
       const date = PlainDate.from('2020-07-08');
       const time = Temporal.PlainTime.from('12:00');
-      const zdt = date.toZonedDateTime({ timeZone: 'America/Los_Angeles', time });
+      const zdt = date.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainTime: time });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
     it('casts time property', () => {
       const date = PlainDate.from('2020-07-08');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime({ timeZone: tz, time: '12:00' });
+      const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: '12:00' });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
   });

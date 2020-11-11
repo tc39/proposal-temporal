@@ -4,12 +4,12 @@
  * particular time zone.
  *
  * @param {Temporal.PlainDate} startDate - Starting date
- * @param {Temporal.PlainTime} time - Local time that event occurs at
+ * @param {Temporal.PlainTime} plainTime - Local time that event occurs at
  * @param {Temporal.TimeZone} timeZone - Time zone in which event is defined
  */
-function* calculateDailyOccurrence(startDate, time, timeZone) {
+function* calculateDailyOccurrence(startDate, plainTime, timeZone) {
   for (let date = startDate; ; date = date.add({ days: 1 })) {
-    yield date.toZonedDateTime({ time, timeZone }).toInstant();
+    yield date.toZonedDateTime({ plainTime, timeZone }).toInstant();
   }
 }
 
