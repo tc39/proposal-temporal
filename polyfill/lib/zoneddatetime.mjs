@@ -339,6 +339,7 @@ export class ZonedDateTime {
       years = 0;
       months = 0;
       weeks = 0;
+      days = 0;
       ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
         GetSlot(this, EPOCHNANOSECONDS),
         GetSlot(other, EPOCHNANOSECONDS),
@@ -346,7 +347,7 @@ export class ZonedDateTime {
         smallestUnit,
         roundingMode
       ));
-      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
         0,
         0,
         0,
@@ -433,6 +434,7 @@ export class ZonedDateTime {
       years = 0;
       months = 0;
       weeks = 0;
+      days = 0;
       ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
         GetSlot(this, EPOCHNANOSECONDS),
         GetSlot(other, EPOCHNANOSECONDS),
@@ -440,7 +442,7 @@ export class ZonedDateTime {
         smallestUnit,
         roundingMode
       ));
-      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
         0,
         0,
         0,
