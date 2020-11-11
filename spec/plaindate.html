@@ -966,28 +966,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balancedurationdate" aoid="BalanceDurationDate">
-      <h1>BalanceDurationDate ( _years_, _months_, _startYear_, _startMonth_, _startDay_ )</h1>
-      <emu-alg>
-        1. If _months_ &lt; 0, then
-          1. Set _years_ to _years_ − 1.
-          1. Set _months_ to _months_ + 12.
-        1. Let _balanceResult_ be ? BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
-        1. Repeat, while _startDay_ &gt; ! DaysInMonth(_balanceResult_.[[Year]], _balanceResult_.[[Month]]),
-          1. Set _months_ to _months_ − 1.
-          1. If _months_ &lt; 0, then
-            1. Set _years_ to _years_ − 1.
-            1. Set _months_ to _months_ + 12.
-          1. Set _balanceResult_ to ? BalanceYearMonth(_startYear_ + _years_, _startMonth_ + _months_).
-        1. Return the new Record {
-          [[Year]]: _balanceResult_.[[Year]],
-          [[Month]]: _balanceResult_.[[Month]],
-          [[Years]]: _years_,
-          [[Months]]: _months_
-          }.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-padyear" aoid="PadYear">
       <h1>PadYear ( _y_ )</h1>
       <emu-alg>

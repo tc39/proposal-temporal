@@ -1863,22 +1863,6 @@ export const ES = ObjectAssign({}, ES2020, {
 
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  BalanceDurationDate: (years, months, startYear, startMonth, startDay) => {
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-    let { year, month } = ES.BalanceYearMonth(startYear + years, startMonth + months);
-    while (startDay > ES.DaysInMonth(year, month)) {
-      months -= 1;
-      if (months < 0) {
-        years -= 1;
-        months += 12;
-      }
-      ({ year, month } = ES.BalanceYearMonth(startYear + years, startMonth + months));
-    }
-    return { year, month, years, months };
-  },
   BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
     hours = bigInt(hours).add(bigInt(days).multiply(24));
     minutes = bigInt(minutes).add(hours.multiply(60));
