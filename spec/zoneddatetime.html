@@ -676,14 +676,13 @@
         1. If _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
           1. Let _differenceNs_ be ? DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
-          1. Let _result_ be the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: _balanceResult_.[[Days]], [[Hours]]: _balanceResult_.[[Hours]], [[Minutes]]: _balanceResult_.[[Minutes]], [[Seconds]]: _balanceResult_.[[Seconds]], [[Milliseconds]]: _balanceResult_.[[Milliseconds]], [[Microseconds]]: _balanceResult_.[[Microseconds]], [[Nanoseconds]]: _balanceResult_.[[Nanoseconds]] }.
-        1. Else,
-          1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-          1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
-          1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+          1. Return ? CreateTemporalDuration(0, 0, 0, 0, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
+        1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
+        1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -712,14 +711,13 @@
         1. If _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
           1. Let _differenceNs_ be ? DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
-          1. Let _result_ be the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: _balanceResult_.[[Days]], [[Hours]]: _balanceResult_.[[Hours]], [[Minutes]]: _balanceResult_.[[Minutes]], [[Seconds]]: _balanceResult_.[[Seconds]], [[Milliseconds]]: _balanceResult_.[[Milliseconds]], [[Microseconds]]: _balanceResult_.[[Microseconds]], [[Nanoseconds]]: _balanceResult_.[[Nanoseconds]] }.
-        1. Else,
-          1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-          1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
-          1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+          1. Return ? CreateTemporalDuration(0, 0, 0, 0, −_balanceResult_.[[Hours]], −_balanceResult_.[[Minutes]], −_balanceResult_.[[Seconds]], −_balanceResult_.[[Milliseconds]], −_balanceResult_.[[Microseconds]], −_balanceResult_.[[Nanoseconds]]).
+        1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
+        1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], −_result_.[[Weeks]], −_result_.[[Days]], −_result_.[[Hours]], −_result_.[[Minutes]], −_result_.[[Seconds]], −_result_.[[Milliseconds]], −_result_.[[Microseconds]], −_result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
