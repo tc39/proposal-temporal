@@ -2420,97 +2420,6 @@ export const ES = ObjectAssign({}, ES2020, {
     ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  // TODO: remove AdjustDayRelativeTo after relativeTo lands for duration.add
-  AdjustDayRelativeTo: (years, months, weeks, days, direction, largestUnit, relativeTo) => {
-    const calendar = GetSlot(relativeTo, CALENDAR);
-    const dtRelative = ES.GetTemporalDateTimeFor(
-      GetSlot(relativeTo, TIME_ZONE),
-      GetSlot(relativeTo, INSTANT),
-      calendar
-    );
-    const relYear = GetSlot(dtRelative, ISO_YEAR);
-    const relMonth = GetSlot(dtRelative, ISO_MONTH);
-    const relDay = GetSlot(dtRelative, ISO_DAY);
-    const relHour = GetSlot(dtRelative, ISO_HOUR);
-    const relMinute = GetSlot(dtRelative, ISO_MINUTE);
-    const relSecond = GetSlot(dtRelative, ISO_SECOND);
-    const relMillisecond = GetSlot(dtRelative, ISO_MILLISECOND);
-    const relMicrosecond = GetSlot(dtRelative, ISO_MICROSECOND);
-    const relNanosecond = GetSlot(dtRelative, ISO_NANOSECOND);
-    const oneDayEarlier = ES.AddDateTime(
-      relYear,
-      relMonth,
-      relDay,
-      relHour,
-      relMinute,
-      relSecond,
-      relMillisecond,
-      relMicrosecond,
-      relNanosecond,
-      calendar,
-      years,
-      months,
-      weeks,
-      days + direction,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      'constrain'
-    );
-    let hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.DifferenceDateTime(
-      relYear,
-      relMonth,
-      relDay,
-      relHour,
-      relMinute,
-      relSecond,
-      relMillisecond,
-      relMicrosecond,
-      relNanosecond,
-      oneDayEarlier.year,
-      oneDayEarlier.month,
-      oneDayEarlier.day,
-      oneDayEarlier.hour,
-      oneDayEarlier.minute,
-      oneDayEarlier.second,
-      oneDayEarlier.millisecond,
-      oneDayEarlier.microsecond,
-      oneDayEarlier.nanosecond,
-      calendar,
-      largestUnit
-    ));
-    return ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      1,
-      'days',
-      'ceil',
-      dtRelative
-    );
-  },
   DifferenceZonedDateTime: (start, end, largestUnit, roundingIncrement, smallestUnit, roundingMode) => {
     const ns1 = GetSlot(start, EPOCHNANOSECONDS);
     const ns2 = GetSlot(end, EPOCHNANOSECONDS);
@@ -2575,9 +2484,29 @@ export const ES = ObjectAssign({}, ES2020, {
       ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 1 &&
       intermediateNs.greater(ns2)
     ) {
-      // TODO: after PlainDate.add rounding lands, uncomment use of relativeTo
-      // dateDuration = dateDuration.subtract({ days: -1, relativeTo: dtEarlier });
-      ({ years, months, weeks, days } = ES.AdjustDayRelativeTo(years, months, weeks, days, -1, largestUnit, start));
+      ({ years, months, weeks, days } = ES.AddDuration(
+        years,
+        months,
+        weeks,
+        days,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        dtStart
+      ));
       intermediateNs = ES.AddZonedDateTime(
         GetSlot(start, INSTANT),
         timeZone,
@@ -2601,7 +2530,29 @@ export const ES = ObjectAssign({}, ES2020, {
     let timeRemainderNs = 0;
     do {
       // calculate length of the next day (day that contains the time remainder)
-      const oneDayFartherDuration = ES.AdjustDayRelativeTo(years, months, weeks, days, direction, largestUnit, start);
+      const oneDayFartherDuration = ES.AddDuration(
+        years,
+        months,
+        weeks,
+        days,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        direction,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        dtStart
+      );
       const oneDayFartherNs = ES.AddZonedDateTime(
         GetSlot(start, INSTANT),
         timeZone,
@@ -2669,14 +2620,28 @@ export const ES = ObjectAssign({}, ES2020, {
     // then it'd risk an infinite loop.
     isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
     if (isOverflow) {
-      ({ years, months, weeks, days } = ES.AdjustDayRelativeTo(
+      ({ years, months, weeks, days } = ES.AddDuration(
         years,
         months,
         weeks,
         days,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         direction,
-        largestUnit,
-        start
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        dtStart
       ));
       timeRemainderNs -= dayLengthNs;
 

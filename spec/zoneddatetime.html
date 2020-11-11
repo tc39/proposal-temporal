@@ -680,7 +680,7 @@
         1. Else,
           1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
             1. Throw a *RangeError* exception.
-          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _zonedDateTime_).
+          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
           1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
           1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -716,7 +716,7 @@
         1. Else,
           1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
             1. Throw a *RangeError* exception.
-          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _zonedDateTime_).
+          1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
           1. Let _relativeTo_ be ? GetTemporalDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
           1. Let _result_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -1334,24 +1334,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adjustdayrelativeto" aoid="AdjustDayRelativeTo">
-      <h1>AdjustDayRelativeTo ( _dateDifference_, _direction_, _largestUnit_, _relativeTo_ )</h1>
-      <p>
-        The abstract operation AdjustDayRelativeTo adjusts _dateDifference_ by one day in the given _direction_, balancing it up to _largestUnit_ relative to the given Temporal.ZonedDateTime instance _relativeTo_.
-        The time units of _dateDifference_ are ignored, and the returned difference will have time units that are all zero.
-      </p>
-      <emu-alg>
-        1. Assert: _direction_ is 1 or −1.
-        1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
-        1. Let _relativeDateTime_ be ? GetTemporalDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
-        1. Let _oneDayEarlier_ be ? AddDateTime(_relativeDateTime_.[[ISOYear]], _relativeDateTime_.[[ISOMonth]], _relativeDateTime_.[[ISODay]], _relativeDateTime_.[[ISOHour]], _relativeDateTime_.[[ISOMinute]], _relativeDateTime_.[[ISOSecond]], _relativeDateTime_.[[ISOMillisecond]], _relativeDateTime_.[[ISOMicrosecond]], _relativeDateTime_.[[ISONanosecond]], _relativeTo_.[[Calendar]], _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]] + _direction_, 0, 0, 0, 0, 0, 0, *"constrain"*).
-        1. Let _difference_ be ? DifferenceDateTime(_relativeDateTime_.[[ISOYear]], _relativeDateTime_.[[ISOMonth]], _relativeDateTime_.[[ISODay]], _relativeDateTime_.[[ISOHour]], _relativeDateTime_.[[ISOMinute]], _relativeDateTime_.[[ISOSecond]], _relativeDateTime_.[[ISOMillisecond]], _relativeDateTime_.[[ISOMicrosecond]], _relativeDateTime_.[[ISONanosecond]], _oneDayEarlier_.[[ISOYear]], _oneDayEarlier_.[[ISOMonth]], _oneDayEarlier_.[[ISODay]], _oneDayEarlier_.[[ISOHour]], _oneDayEarlier_.[[ISOMinute]], _oneDayEarlier_.[[ISOSecond]], _oneDayEarlier_.[[ISOMillisecond]], _oneDayEarlier_.[[ISOMicrosecond]], _oneDayEarlier_.[[ISONanosecond]], _calendar_, _largestUnit_).
-        1. Return ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], 1, *"days"*, *"ceil"*, _relativeDateTime_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-differencezoneddatetime" aoid="DifferenceZonedDateTime">
-      <h1>DifferenceZonedDateTime ( _ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_ )</h1>
+      <h1>DifferenceZonedDateTime ( _ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_ )</h1>
       <p>
         The abstract operation DifferenceZonedDateTime computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and rounds the result according to the given parameters, taking calendar reckoning and time zone offset changes into account.
       </p>
@@ -1368,13 +1352,13 @@
         1. Let _intermediateNs_ be ? AddZonedDateTime(_ns1_, _timeZone_, _calendar_, _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0, *"constrain"*).
         1. If _direction_ = 1, then
           1. Repeat, while ! DurationSign(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0) = 1 and _intermediateNs_ &gt; _ns2_,
-            1. Set _dateDifference_ to ? AdjustDayRelativeTo(_dateDifference_, −1, _largestUnit_, _relativeTo_).
+            1. Set _dateDifference_ to ? AddDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0, 0, 0, 0, −1, 0, 0, 0, 0, 0, 0, _startDateTime_).
             1. Set _intermediateNs_ to ? AddZonedDateTime(_ns1_, _timeZone_, _calendar_, _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0, *"constrain"*).
         1. Let _dayLengthNs_ be 0.
         1. Let _timeRemainderNs_ be 0.
         1. Let _done_ be *false*.
         1. Repeat, while _done_ is *false*,
-          1. Let _oneDayFartherDuration_ be ? AdjustDayRelativeTo(_dateDifference_, _direction_, _largestUnit_, _relativeTo_).
+          1. Let _oneDayFartherDuration_ be ? AddDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _startDateTime_).
           1. Let _oneDayFartherNs_ be ? AddZonedDateTime(_ns1_, _timeZone, _calendar_, _oneDayFartherDuration_.[[Years]], _oneDayFartherDuration_.[[Months]], _oneDayFartherDuration_.[[Weeks]], _oneDayFartherDuration_.[[Days]], 0, 0, 0, 0, 0, 0, *"constrain"*).
           1. Set _dayLengthNs_ to _oneDayFartherNs_ − _intermediateNs_.
           1. Set _timeRemainderNs_ to _ns2_ − _intermediateNs_.
@@ -1388,7 +1372,7 @@
         1. Let _roundedTimeRemainderNs_ be ? DifferenceInstant(_intermediateNs_, _ns2_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Let _timeDifference_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedTimeRemainderNs_, *"hours"*).
         1. If (_roundedTimeRemainderNs_ − _dayLengthNs_) × _direction_ ≥ 0, then
-          1. Set _dateDifference_ to ? AdjustDayRelativeTo(_dateDifference_, _direction_, _largestUnit_, _relativeTo_).
+          1. Set _dateDifference_ to ? AddDuration(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _startDateTime_).
           1. Set _roundedTimeRemainderNs_ to _roundedTimeRemainderNs_ − _dayLengthNs_.
           1. 1. Return the new Record { [[Years]]: _dateDifference_.[[Years]], [[Months]]: _dateDifference_.[[Months]], [[Weeks]]: _dateDifference_.[[Weeks]], [[Days]]: _dateDifference_.[[Days]], [[Hours]]: 0, [[Minutes]]: 0, [[Seconds]]: 0, [[Milliseconds]]: 0, [[Microseconds]]: 0, [[Nanoseconds]]: _roundedTimeRemainderNs_ }.
         1. Return the new Record { [[Years]]: _dateDifference_.[[Years]], [[Months]]: _dateDifference_.[[Months]], [[Weeks]]: _dateDifference_.[[Weeks]], [[Days]]: _dateDifference_.[[Days]], [[Hours]]: _timeDifference_.[[Hours]], [[Minutes]]: _timeDifference_.[[Minutes]], [[Seconds]]: _timeDifference_.[[Seconds]], [[Milliseconds]]: _timeDifference_.[[Milliseconds]], [[Microseconds]]: _timeDifference_.[[Microseconds]], [[Nanoseconds]]: _timeDifference_.[[Nanoseconds]] }.
