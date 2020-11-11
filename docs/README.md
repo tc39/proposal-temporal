@@ -129,6 +129,18 @@ Most code will use the ISO 8601 calendar, but other calendar systems are availab
 
 See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
+## Object Relationship
+
+<img src="object-model.svg">
+
+## String Persistence
+
+All `Temporal` types have a string representation for persistence and interoperability.
+The correspondence between types and strings is shown below.
+For more information about extensions to the ISO 8601 / RFC 3339 standards that are used by Temporal and which are intended to be put on a standards track, see [ISO string extensions](./iso-string-ext.md).
+
+<img src="persistence-model.svg">
+
 ## Other Documentation
 
 ### **Key Concepts**
@@ -151,7 +163,3 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
   Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
 - [Zoned Date/Time Type Draft](./zoneddatetime-draft.md) &mdash; Explanation of `Temporal.ZonedDateTime` which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the `Temporal.PlainDateTime` API.
   Superseded by the [documentation](./zoneddatetime.md), but contains background info about the reasons and goals behind this type.
-
-## Object Relationship
-
-<img src="object-model.svg">
