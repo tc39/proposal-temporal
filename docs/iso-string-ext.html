@@ -141,36 +141,52 @@
       The API will change based on feedback that we get.
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="ecmascript-extended-iso-8601-strings">ECMAScript Extended ISO-8601 Strings</h1>
-<p>ISO-8601 is the industry standard when it comes to serialization of dates and times in a computer. However, there are two key use cases that are helpful for ECMAScript users that are not covered in ISO-8601:</p>
+<h1 id="ecmascript-extended-iso-8601--rfc-3339-strings">ECMAScript Extended ISO-8601 / RFC 3339 Strings</h1>
+<p><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a> and <a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a> are the industry standards for machine-readable serialization of dates and times.
+However, there are three key use cases that are helpful for ECMAScript users that are not covered in ISO-8601 or RFC 3339:</p>
 <ol>
 <li>IANA Time Zone Names</li>
-<li>Calendar systems</li>
+<li>Month/Day Syntax</li>
+<li>Calendar Systems</li>
 </ol>
-<p>This document addresses addenda to the ISO-8601 spec for string serialization in the ECMAScript Temporal proposal.</p>
+<p>This document addresses addenda to the ISO-8601 and/or RFC 3339 spec for string serialization in the ECMAScript <code>Temporal</code> proposal.</p>
 <h2 id="iana-time-zone-names">IANA Time Zone Names</h2>
-<p>There is precedent in other popular datetime libraries, such as Joda Time (now java.time), for appending time zone names in brackets. We intend to fully support this syntax in ECMAScript, both input and output. For example:</p>
-<pre><code>2007-12-03T10:15:30+01:00[Europe/Paris]</code></pre><p>The ISO-8601 specification makes no mention of this syntax. It is adopted here as a de-facto industry standard.</p>
-<p>The time zone string is written according to the rules of the time zone database (see <a href="timezone.html">timezone.md</a>). These rules are documented <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">here</a>:</p>
+<p>There is precedent in other popular datetime libraries, such as Joda Time (now java.time), for appending time zone names in brackets.
+We intend to fully support this syntax in ECMAScript, both input and output.
+For example:</p>
+<pre><code>2007-12-03T10:15:30+01:00[Europe/Paris]</code></pre><p>Neither ISO-8601 nor RFC 3339 specifications mention this syntax, but it is adopted in <code>Temporal</code> as a de-facto industry standard.</p>
+<p>The time zone string is written according to the rules of the time zone database (see <a href="timezone.html">timezone.md</a>).
+These rules are documented <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">here</a>:</p>
 <blockquote>
-<p>Use only valid POSIX file name components (i.e., the parts of names other than <code>&#39;/&#39;</code>). Do not use the file name components <code>&#39;.&#39;</code> and <code>&#39;..&#39;</code>. Within a file name component, use only ASCII letters, <code>&#39;.&#39;</code>, <code>&#39;-&#39;</code> and <code>&#39;_&#39;</code>. Do not use digits, as that might create an ambiguity with POSIX TZ strings. A file name component must not exceed 14 characters or start with <code>&#39;-&#39;</code>.</p>
+<p>Use only valid POSIX file name components (i.e., the parts of names other than <code>&#39;/&#39;</code>).
+Do not use the file name components <code>&#39;.&#39;</code> and <code>&#39;..&#39;</code>.
+Within a file name component, use only ASCII letters, <code>&#39;.&#39;</code>, <code>&#39;-&#39;</code> and <code>&#39;_&#39;</code>.
+Do not use digits, as that might create an ambiguity with POSIX TZ strings.
+A file name component must not exceed 14 characters or start with <code>&#39;-&#39;</code>.</p>
 </blockquote>
-<h2 id="monthday-syntax">MonthDay Syntax</h2>
-<p>ISO-8601 specifies syntax appropriate for Temporal.PlainDate, Temporal.PlainDateTime, and Temporal.PlainYearMonth, but not Temporal.PlainMonthDay, except in the special case of a duration. We are establishing the following convention:</p>
+<h2 id="monthday-syntax">Month/Day Syntax</h2>
+<p>ISO-8601 and RFC 3339 specify syntax appropriate for <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, <code>Temporal.PlainDateTime</code>, and <code>Temporal.PlainYearMonth</code>, but not <code>Temporal.PlainMonthDay</code> except in the special case of a duration.
+Therefore, <code>Temporal</code> defines the following convention for month/day strings:</p>
 <pre><code>07-04</code></pre><p>The above string would signify July 4 in the ISO calendar.</p>
-<p>RFC 3339 also has <code>--07-04</code> for a date without year component. In the current spec, we accept this but don&#39;t emit it.</p>
+<p>RFC 3339 includes <code>--07-04</code> for a date without year component.
+In the current spec, we accept this but don&#39;t emit it.</p>
 <h2 id="calendar-systems">Calendar Systems</h2>
-<p>With ECMAScript Temporal&#39;s first-class calendar system support, we have found the desire to add a calendar system identifier to the string syntax, allowing for Temporal types to round-trip to strings.</p>
-<p>The authors of this proposal are unaware of existing precedent for expressing a calendar system in an ISO-8601 string. Therefore, we are considering the following data model: <em>Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
+<p>In order to achieve round-trip persistence for <code>Temporal</code> objects using non-ISO calendar systems, it&#39;s needed to add a calendar system identifier to the string syntax.</p>
+<p>The authors of this proposal are unaware of existing precedent for expressing a calendar system in an ISO 8601 and/or RFC 3339 string.
+Therefore, we are proposing the following extension:
+<em>Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
 <p>For example, when parsed, the following string would represent the date <strong>28 Iyar 5780</strong> in the Hebrew calendar:</p>
-<pre><code>2020-05-22[c=hebrew]</code></pre><p>The syntax of the prefix is open for debate. Options we have considered:</p>
+<pre><code>2020-05-22[c=hebrew]</code></pre><p>The syntax of the calendar suffix is currently being discussed with the CalConnect and IETF Calsify standards bodies.
+Options being considered include:</p>
 <ul>
 <li><code>[c=hebrew]</code>, using the same non-standard syntax as time zone names, with <code>c=</code> to distinguish the calendar identifier from a time zone identifier.</li>
+<li><code>[ca=hebrew]</code>, using the same non-standard syntax as time zone names, with <code>ca=</code> to distinguish the calendar identifier from a time zone identifier.</li>
 <li><code>[hebrew]</code>, distinguished from time zone names by starting with a lowercase letter.</li>
 <li><code>{hebrew}</code>, using a different type of bracket.</li>
 <li><code>{ca-hebrew}</code>, including a UTS 35 locale identifier key.</li>
 </ul>
-<p>The calendar identifiers <a href="http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">are defined by CLDR</a> as <a href="http://unicode.org/reports/tr35/#unicode_locale_extensions">a sequence of 3-8 character BCP47 subtags</a>. The list of calendar identifiers currently supported by CLDR is:</p>
+<p>The calendar identifiers <a href="http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">are defined by CLDR</a> as <a href="http://unicode.org/reports/tr35/#unicode_locale_extensions">a sequence of 3-8 character BCP47 subtags</a>.
+The list of calendar identifiers currently supported by CLDR is:</p>
 <ul>
 <li><code>buddhist</code></li>
 <li><code>chinese</code></li>
@@ -193,9 +209,15 @@
 <li><code>islamicc</code> (deprecated in favor of <code>islamic-civil</code>)</li>
 </ul>
 <p>Example of a maximal length string containing both an IANA time zone name and a calendar system:</p>
-<pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis]{islamic-umalqura}</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, YearMonth and MonthDay use the Temporal.PlainDate data model when in a non-ISO calendar system. For example, the Hebrew calendar might express the YearMonth &quot;Iyar 5780&quot; as 2020-04-25, the first day of that month in the ISO calendar.</p>
+<pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis]{islamic-umalqura}</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> use the <code>Temporal.PlainDate</code> data model when in a non-ISO calendar system.
+For example, a <code>Temporal</code> object using the Hebrew calendar might store &quot;Iyar 5780&quot; in a <code>Temporal.YearMonth</code> using <code>2020-04-25</code> which is the first day of that month in the ISO calendar.</p>
 <p>When expressed as an ISO string, we would say:</p>
-<pre><code>2020-04-25{hebrew}</code></pre><p>Since it is ambiguous whether that string represents a Date, YearMonth, or MonthDay, the appropriate Temporal constructor must be chosen in order to get the expected data type back out.</p>
+<pre><code>2020-04-25{hebrew}</code></pre><p>Because it is ambiguous whether that string represents a <code>Temporal.PlainDate</code>, <code>Temporal.YearMonth</code>, or <code>Temporal.MonthDay</code>, the appropriate <code>Temporal</code> constructor must be chosen in order to get the expected data type back out.</p>
+<h2 id="string-persistence-overview">String Persistence Overview</h2>
+<p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
+Most of these types only require existing standards, with a few exceptions noted above.
+The correspondence between types and strings is shown below.</p>
+<img src="persistence-model.svg">
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.

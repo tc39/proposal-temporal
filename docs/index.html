@@ -183,6 +183,10 @@
 </li>
 </ul>
 </li>
+<li><a href="#object-relationship">Object Relationship</a>
+</li>
+<li><a href="#string-persistence">String Persistence</a>
+</li>
 <li><a href="#other-documentation">Other Documentation</a>
 <ul>
 <li><a href="#Key-Concepts">Key Concepts</a>
@@ -192,8 +196,6 @@
 <li><a href="#obsolete-pages">Obsolete Pages</a>
 </li>
 </ul>
-</li>
-<li><a href="#object-relationship">Object Relationship</a>
 </li>
 </ul>
 </details>
@@ -266,6 +268,15 @@ A conceptual explanation of handling <a href="./ambiguity.html">time zones, DST,
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>
 <p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for detailed documentation.</p>
+<h2 id="object-relationship">Object Relationship</h2>
+<img src="object-model.svg">
+
+<h2 id="string-persistence">String Persistence</h2>
+<p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
+The correspondence between types and strings is shown below.
+For more information about extensions to the ISO 8601 / RFC 3339 standards that are used by Temporal and which are intended to be put on a standards track, see <a href="./iso-string-ext.html">ISO string extensions</a>.</p>
+<img src="persistence-model.svg">
+
 <h2 id="other-documentation">Other Documentation</h2>
 <h3 id="Key-Concepts"><a class="heading-link" href="#Key-Concepts"></a><strong>Key Concepts</strong></h3><ul>
 <li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
@@ -285,8 +296,6 @@ Mostly superseded by the documentation of <a href="./calendar.html">Temporal.Cal
 <li><a href="./zoneddatetime-draft.html">Zoned Date/Time Type Draft</a> &mdash; Explanation of <code>Temporal.ZonedDateTime</code> which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the <code>Temporal.PlainDateTime</code> API.
 Superseded by the <a href="./zoneddatetime.html">documentation</a>, but contains background info about the reasons and goals behind this type.</li>
 </ul>
-<h2 id="object-relationship">Object Relationship</h2>
-<img src="object-model.svg">
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
