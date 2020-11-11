@@ -2508,11 +2508,24 @@ export const ES = ObjectAssign({}, ES2020, {
     ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  DifferenceZonedDateTime: (start, end, largestUnit, roundingIncrement, smallestUnit, roundingMode) => {
+  DifferenceZonedDateTime: (start, end, largestUnit) => {
     const ns1 = GetSlot(start, EPOCHNANOSECONDS);
     const ns2 = GetSlot(end, EPOCHNANOSECONDS);
     const nsDiff = ns2.subtract(ns1);
-    if (nsDiff.isZero()) return {};
+    if (nsDiff.isZero()) {
+      return {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        microseconds: 0,
+        nanoseconds: 0
+      };
+    }
     const direction = nsDiff.divide(nsDiff.abs()).toJSNumber();
 
     // Find the difference in dates only.
@@ -2614,7 +2627,6 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     let isOverflow = false;
-    let dayLengthNs = 0;
     let timeRemainderNs = 0;
     do {
       // calculate length of the next day (day that contains the time remainder)
@@ -2657,7 +2669,7 @@ export const ES = ObjectAssign({}, ES2020, {
         0,
         'constrain'
       );
-      dayLengthNs = oneDayFartherNs.subtract(intermediateNs).toJSNumber();
+      const dayLengthNs = oneDayFartherNs.subtract(intermediateNs).toJSNumber();
       timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
       isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
       if (isOverflow) {
@@ -2666,77 +2678,17 @@ export const ES = ObjectAssign({}, ES2020, {
       }
     } while (isOverflow);
 
-    const dateUnits = ['years', 'months', 'weeks', 'days'];
-    const wantDateUnitsOnly = dateUnits.includes(smallestUnit);
-    if (timeRemainderNs === 0 || wantDateUnitsOnly) {
-      // If there's no time remainder, we're done! If there is a time remainder
-      // and smallestUnit is days or larger, this means that there will be no
-      // time remainder in the final result, but we may have to round from hours
-      // to days in the subsequent rounding step.
-      return { years, months, weeks, days, nanoseconds: timeRemainderNs };
-    }
-
-    // There's a time remainder and `smallestUnit` is `hours` or smaller.
-    // Calculate the time remainder.
-    let hours, minutes;
-    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
-      intermediateNs,
-      ns2,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode
-    );
-    timeRemainderNs = seconds * 1e9 + milliseconds * 1e6 + microseconds * 1e3 + nanoseconds;
-    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      0,
-      0,
-      0,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      'hours'
-    ));
-
-    // There's one more round of rounding possible: the time duration above
-    // could have rounded up into enough hours to exceed the day length. If
-    // this happens, grow the date duration by a single day and re-run the
-    // time rounding on the smaller remainder. DO NOT RECURSE, because once
-    // the extra hours are sucked up into the date duration, there's no way
-    // for another full day to come from the next round of rounding. And if
-    // it were possible (e.g. contrived calendar with 30-minute-long "days")
-    // then it'd risk an infinite loop.
-    isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
-    if (isOverflow) {
-      ({ years, months, weeks, days } = ES.AddDuration(
-        years,
-        months,
-        weeks,
-        days,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        direction,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        dtStart
-      ));
-      timeRemainderNs -= dayLengthNs;
-
-      return { years, months, weeks, days, nanoseconds: timeRemainderNs };
-    }
-
     // Finally, merge the date and time durations and return the merged result.
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      timeRemainderNs,
+      'hours'
+    );
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   AddDate: (year, month, day, years, months, weeks, days, overflow) => {
@@ -3110,6 +3062,128 @@ export const ES = ObjectAssign({}, ES2020, {
     );
     return { relativeTo, days };
   },
+  AdjustRoundedDurationDays: (
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    increment,
+    unit,
+    roundingMode,
+    relativeTo
+  ) => {
+    if (
+      !ES.IsTemporalZonedDateTime(relativeTo) ||
+      unit === 'years' ||
+      unit === 'months' ||
+      unit === 'weeks' ||
+      unit === 'days' ||
+      (unit === 'nanoseconds' && increment === 1)
+    ) {
+      return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    }
+
+    // There's one more round of rounding possible: if relativeTo is a
+    // ZonedDateTime, the time units could have rounded up into enough hours
+    // to exceed the day length. If this happens, grow the date part by a
+    // single day and re-run exact time rounding on the smaller remainder. DO
+    // NOT RECURSE, because once the extra hours are sucked up into the date
+    // duration, there's no way for another full day to come from the next
+    // round of rounding. And if it were possible (e.g. contrived calendar
+    // with 30-minute-long "days") then it'd risk an infinite loop.
+    let timeRemainderNs = ES.TotalDurationNanoseconds(
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      0
+    );
+    const direction = MathSign(timeRemainderNs.toJSNumber());
+
+    const timeZone = GetSlot(relativeTo, TIME_ZONE);
+    const calendar = GetSlot(relativeTo, CALENDAR);
+    const dayStart = ES.AddZonedDateTime(
+      GetSlot(relativeTo, INSTANT),
+      timeZone,
+      calendar,
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      'constrain'
+    );
+    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    const dayEnd = ES.AddZonedDateTime(
+      new TemporalInstant(dayStart),
+      timeZone,
+      calendar,
+      0,
+      0,
+      0,
+      direction,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      'constrain'
+    );
+    const dayLengthNs = dayEnd.subtract(dayStart);
+
+    if (timeRemainderNs.subtract(dayLengthNs).multiply(direction).geq(0)) {
+      ({ years, months, weeks, days } = ES.AddDuration(
+        years,
+        months,
+        weeks,
+        days,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        direction,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        relativeTo
+      ));
+      timeRemainderNs = ES.RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
+      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        timeRemainderNs.toJSNumber(),
+        'hours'
+      ));
+    }
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
   RoundDuration: (
     years,
     months,
@@ -3130,7 +3204,13 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     let calendar;
     if (relativeTo) {
-      if (!(ES.IsTemporalDateTime(relativeTo) || ES.IsTemporalZonedDateTime(relativeTo))) {
+      if (ES.IsTemporalZonedDateTime(relativeTo)) {
+        relativeTo = ES.GetTemporalDateTimeFor(
+          GetSlot(relativeTo, TIME_ZONE),
+          GetSlot(relativeTo, INSTANT),
+          GetSlot(relativeTo, CALENDAR)
+        );
+      } else if (!ES.IsTemporalDateTime(relativeTo)) {
         throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
       }
       calendar = GetSlot(relativeTo, CALENDAR);

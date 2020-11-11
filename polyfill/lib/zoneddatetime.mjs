@@ -365,18 +365,17 @@ export class ZonedDateTime {
         );
       }
       ({
-        years = 0,
-        months = 0,
-        weeks = 0,
-        days = 0,
-        hours = 0,
-        minutes = 0,
-        seconds = 0,
-        milliseconds = 0,
-        microseconds = 0,
-        nanoseconds = 0
-      } = ES.DifferenceZonedDateTime(this, other, largestUnit, roundingIncrement, smallestUnit, roundingMode));
-      const relativeTo = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.DifferenceZonedDateTime(this, other, largestUnit));
       ({
         years,
         months,
@@ -402,7 +401,34 @@ export class ZonedDateTime {
         roundingIncrement,
         smallestUnit,
         roundingMode,
-        relativeTo
+        this
+      ));
+      ({
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.AdjustRoundedDurationDays(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        this
       ));
     }
 
@@ -460,18 +486,17 @@ export class ZonedDateTime {
         );
       }
       ({
-        years = 0,
-        months = 0,
-        weeks = 0,
-        days = 0,
-        hours = 0,
-        minutes = 0,
-        seconds = 0,
-        milliseconds = 0,
-        microseconds = 0,
-        nanoseconds = 0
-      } = ES.DifferenceZonedDateTime(this, other, largestUnit, roundingIncrement, smallestUnit, roundingMode));
-      const relativeTo = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.DifferenceZonedDateTime(this, other, largestUnit));
       ({
         years,
         months,
@@ -497,7 +522,34 @@ export class ZonedDateTime {
         roundingIncrement,
         smallestUnit,
         roundingMode,
-        relativeTo
+        this
+      ));
+      ({
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds
+      } = ES.AdjustRoundedDurationDays(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        this
       ));
     }
 
