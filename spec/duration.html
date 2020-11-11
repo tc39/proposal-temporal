@@ -1311,8 +1311,9 @@
           1. Set _nanoseconds_ to 0.
         1. Else,
           1. Assert: _unit_ is *"nanoseconds"*.
-          1. Set _remainder_ to 0.
+          1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to ? RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
+          1. Set _remainder_ to _remainder_ − _nanoseconds_.
         1. Return the new Record {
           [[Years]]: _years_,
           [[Months]]: _months_,

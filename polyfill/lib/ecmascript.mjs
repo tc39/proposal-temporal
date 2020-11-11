@@ -3279,8 +3279,9 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = 0;
         break;
       case 'nanoseconds':
-        remainder = 0;
+        remainder = nanoseconds;
         nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
+        remainder -= nanoseconds;
         break;
     }
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, remainder };
