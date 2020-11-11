@@ -417,7 +417,7 @@ For example, if a <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</c
 Because the existing offset is valid for the new time, it will be retained so the result will be the &quot;second&quot; 1:45AM.
 However, if the existing offset is not valid for the new result (e.g. <code>.with({hour: 0})</code>), then the default behavior will change the offset to match the new local time in that time zone.</p>
 <p>Note that offset vs. timezone conflicts only matter for <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
-For example, <a href="./instant.html#from"><code>Temporal.Instant.from</code></a> will never run into conflicts because the <a href="./instant.html"><code>Temporal.Instant</code></a> type ignores the time sone in the input and only uses the offset.</p>
+For example, <a href="./instant.html#from"><code>Temporal.Instant.from</code></a> will never run into conflicts because the <a href="./instant.html"><code>Temporal.Instant</code></a> type ignores the time zone in the input and only uses the offset.</p>
 <h2 id="examples-offset-option">Examples: <code>offset</code> option</h2>
 <p>The primary reason to use the <code>offset</code> option is for parsing values which were saved before a change to that time zone&#39;s time zone definition.
 For example, Brazil stopped observing Daylight Saving Time in 2019, with the final transition out of DST on February 16, 2019.
