@@ -118,7 +118,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype-@@tostringtag">
       <h1>Temporal.ZonedDateTime.prototype[ @@toStringTag ]</h1>
       <p>
-        The initial value of the @@toStringTag property is the string value `"Temporal.ZonedDateTime"`.
+        The initial value of the @@toStringTag property is the string value *"Temporal.ZonedDateTime"*.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
@@ -1150,7 +1150,7 @@
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: Type(_calendar_) is Object.
         1. If _newTarget_ is not given, set it to %Temporal.ZonedDateTime%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%Temporal.ZonedDateTime.prototype%"`, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.ZonedDateTime.prototype%"*, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
         1. Set _object_.[[TimeZone]] to _timeZone_.
         1. Set _object_.[[Calendar]] to _calendar_.
