@@ -430,7 +430,7 @@ export class PlainTime {
       throw new TypeError('invalid argument');
     }
 
-    const dateLike = item.date;
+    const dateLike = item.plainDate;
     if (dateLike === undefined) {
       throw new TypeError('missing date property');
     }

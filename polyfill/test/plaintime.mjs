@@ -270,19 +270,19 @@ describe('Time', () => {
       const time = PlainTime.from('12:00');
       const date = Temporal.PlainDate.from('2020-01-01');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime({ timeZone: tz, date });
+      const zdt = time.toZonedDateTime({ timeZone: tz, plainDate: date });
       equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
     });
     it('casts timeZone property', () => {
       const time = PlainTime.from('12:00');
       const date = Temporal.PlainDate.from('2020-07-08');
-      const zdt = time.toZonedDateTime({ timeZone: 'America/Los_Angeles', date });
+      const zdt = time.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainDate: date });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
     it('casts date property', () => {
       const time = PlainTime.from('12:00');
       const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime({ timeZone: tz, date: '2020-07-08' });
+      const zdt = time.toZonedDateTime({ timeZone: tz, plainDate: '2020-07-08' });
       equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
     });
   });

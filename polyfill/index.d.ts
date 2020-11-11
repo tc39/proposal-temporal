@@ -1183,7 +1183,7 @@ export namespace Temporal {
     toPlainDateTime(temporalDate: Temporal.PlainDate | DateLike | string): Temporal.PlainDateTime;
     toZonedDateTime(timeZoneAndDate: {
       timeZone: TimeZoneProtocol | string;
-      date: Temporal.PlainDate | DateLike | string;
+      plainDate: Temporal.PlainDate | DateLike | string;
     }): Temporal.ZonedDateTime;
     getFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;

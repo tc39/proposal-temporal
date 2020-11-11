@@ -581,20 +581,20 @@ Use `Temporal.PlainTime.compare()` for this, or `time.equals()` for equality.
 **Parameters:**
 
 - `item` (object): an object with properties to be added to `time`. The following properties are recognized:
-  - `date` (required `Temporal.PlainDate` or value convertible to one): a date used to merge into a `Temporal.ZonedDateTime` along with `time`.
-  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `time` and `date`.
+  - `plainDate` (required `Temporal.PlainDate` or value convertible to one): a date used to merge into a `Temporal.ZonedDateTime` along with `time`.
+  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `time` and `plainDate`.
 
-**Returns:** a `Temporal.ZonedDateTime` object that represents the clock `time` on the calendar `date` projected into `timeZone`.
+**Returns:** a `Temporal.ZonedDateTime` object that represents the clock `time` on the calendar `plainDate` projected into `timeZone`.
 
 This method can be used to convert `Temporal.PlainTime` into a `Temporal.ZonedDateTime`, by supplying the time zone and date.
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
-In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `time` and `date`.
-This method produces identical results to [`Temporal.PlainDate.from(date).toZonedDateTime(time)`](./date.html#toZonedDateTime).
+In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `time` and `plainDate`.
+This method produces identical results to [`Temporal.PlainDate.from(plainDate).toZonedDateTime(time)`](./date.html#toZonedDateTime).
 
-If `date` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
+If `plainDate` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 
 In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
@@ -610,9 +610,10 @@ If the result is outside the range that `Temporal.ZonedDateTime` can represent (
 Usage example:
 
 ```javascript
-time = Temporal.PlainTime.from('15:23:30.003');
-date = Temporal.PlainDate.from('2006-08-24');
-time.toZonedDateTime({ timeZone: 'America/Los_Angeles', date }); // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
+plainTime = Temporal.PlainTime.from('15:23:30.003');
+plainDate = Temporal.PlainDate.from('2006-08-24');
+plainTime.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainDate });
+// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
 ```
 
 ### time.**toPlainDateTime**(_date_: Temporal.PlainDate | object | string) : Temporal.PlainDateTime
