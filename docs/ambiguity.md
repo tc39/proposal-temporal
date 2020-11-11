@@ -304,7 +304,7 @@ Because the existing offset is valid for the new time, it will be retained so th
 However, if the existing offset is not valid for the new result (e.g. `.with({hour: 0})`), then the default behavior will change the offset to match the new local time in that time zone.
 
 Note that offset vs. timezone conflicts only matter for [`Temporal.ZonedDateTime`](./zoneddatetime.md) because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
-For example, [`Temporal.Instant.from`](./instant.md#from) will never run into conflicts because the [`Temporal.Instant`](./instant.md) type ignores the time sone in the input and only uses the offset.
+For example, [`Temporal.Instant.from`](./instant.md#from) will never run into conflicts because the [`Temporal.Instant`](./instant.md) type ignores the time zone in the input and only uses the offset.
 
 ## Examples: `offset` option
 
