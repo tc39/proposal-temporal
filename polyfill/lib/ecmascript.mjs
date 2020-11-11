@@ -1947,6 +1947,52 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
     return bigInt(nanoseconds).add(microseconds.multiply(1000));
   },
+  NanosecondsToDays: (nanoseconds, relativeTo) => {
+    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    const sign = MathSign(nanoseconds);
+    nanoseconds = bigInt(nanoseconds);
+    let dayLengthNs = 86400e9;
+    if (sign === 0) return { days: 0, nanoseconds: bigInt.zero };
+    if (!ES.IsTemporalZonedDateTime(relativeTo)) {
+      let days;
+      ({ quotient: days, remainder: nanoseconds } = nanoseconds.divmod(dayLengthNs));
+      days = days.toJSNumber();
+      return { days, nanoseconds };
+    }
+    let isOverflow = false;
+    let days = 0;
+    let relativeInstant = GetSlot(relativeTo, INSTANT);
+    const timeZone = GetSlot(relativeTo, TIME_ZONE);
+    const calendar = GetSlot(relativeTo, CALENDAR);
+    do {
+      // calculate length of the next day (day that contains the time remainder)
+      const oneDayFartherNs = ES.AddZonedDateTime(
+        relativeInstant,
+        timeZone,
+        calendar,
+        0,
+        0,
+        0,
+        sign,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        'constrain'
+      );
+      const relativeNs = GetSlot(relativeInstant, EPOCHNANOSECONDS);
+      dayLengthNs = oneDayFartherNs.subtract(relativeNs).toJSNumber();
+      isOverflow = nanoseconds.subtract(dayLengthNs).multiply(sign).geq(0);
+      if (isOverflow) {
+        nanoseconds = nanoseconds.subtract(dayLengthNs);
+        relativeInstant = new TemporalInstant(oneDayFartherNs);
+        days += sign;
+      }
+    } while (isOverflow);
+    return { days, nanoseconds };
+  },
   BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
     nanoseconds = ES.TotalDurationNanoseconds(
       days,
@@ -2626,57 +2672,34 @@ export const ES = ObjectAssign({}, ES2020, {
       ); // may do disambiguation
     }
 
-    let isOverflow = false;
-    let timeRemainderNs = 0;
-    do {
-      // calculate length of the next day (day that contains the time remainder)
-      const oneDayFartherDuration = ES.AddDuration(
-        years,
-        months,
-        weeks,
-        days,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        direction,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        dtStart
-      );
-      const oneDayFartherNs = ES.AddZonedDateTime(
-        GetSlot(start, INSTANT),
-        timeZone,
-        calendar,
-        oneDayFartherDuration.years,
-        oneDayFartherDuration.months,
-        oneDayFartherDuration.weeks,
-        oneDayFartherDuration.days,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        'constrain'
-      );
-      const dayLengthNs = oneDayFartherNs.subtract(intermediateNs).toJSNumber();
-      timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
-      isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
-      if (isOverflow) {
-        ({ years, months, weeks, days } = oneDayFartherDuration);
-        intermediateNs = oneDayFartherNs;
-      }
-    } while (isOverflow);
+    let timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
+    let deltaDays;
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    const intermediate = new TemporalZonedDateTime(intermediateNs, timeZone, calendar);
+    ({ nanoseconds: timeRemainderNs, days: deltaDays } = ES.NanosecondsToDays(timeRemainderNs, intermediate));
+    ({ years, months, weeks, days } = ES.AddDuration(
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      deltaDays,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      dtStart
+    ));
 
     // Finally, merge the date and time durations and return the merged result.
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
