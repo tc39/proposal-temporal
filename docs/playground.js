@@ -4030,12 +4030,14 @@
         year = GetSlot(date, ISO_YEAR);
         month = GetSlot(date, ISO_MONTH);
         day = GetSlot(date, ISO_DAY);
-        hour = fields.hour;
-        minute = fields.minute;
-        second = fields.second;
-        millisecond = fields.millisecond;
-        microsecond = fields.microsecond;
-        nanosecond = fields.nanosecond;
+        var TemporalPlainTime = GetIntrinsic$1('%Temporal.PlainTime%');
+        var time = calendar.timeFromFields(fields, {}, TemporalPlainTime);
+        hour = GetSlot(time, ISO_HOUR);
+        minute = GetSlot(time, ISO_MINUTE);
+        second = GetSlot(time, ISO_SECOND);
+        millisecond = GetSlot(time, ISO_MILLISECOND);
+        microsecond = GetSlot(time, ISO_MICROSECOND);
+        nanosecond = GetSlot(time, ISO_NANOSECOND);
       } else {
         var _ES$ParseTemporalDate = ES.ParseTemporalDateTimeString(ES.ToString(relativeTo));
 
@@ -5372,37 +5374,6 @@
         nanosecond: nanosecond
       };
     },
-    BalanceDurationDate: function BalanceDurationDate(years, months, startYear, startMonth, startDay) {
-      if (months < 0) {
-        years -= 1;
-        months += 12;
-      }
-
-      var _ES$BalanceYearMonth4 = ES.BalanceYearMonth(startYear + years, startMonth + months),
-          year = _ES$BalanceYearMonth4.year,
-          month = _ES$BalanceYearMonth4.month;
-
-      while (startDay > ES.DaysInMonth(year, month)) {
-        months -= 1;
-
-        if (months < 0) {
-          years -= 1;
-          months += 12;
-        }
-
-        var _ES$BalanceYearMonth5 = ES.BalanceYearMonth(startYear + years, startMonth + months);
-
-        year = _ES$BalanceYearMonth5.year;
-        month = _ES$BalanceYearMonth5.month;
-      }
-
-      return {
-        year: year,
-        month: month,
-        years: years,
-        months: months
-      };
-    },
     BalanceDuration: function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
       hours = BigInteger(hours).add(BigInteger(days).multiply(24));
       minutes = BigInteger(minutes).add(hours.multiply(60));
@@ -6246,36 +6217,6 @@
         nanoseconds: nanoseconds
       };
     },
-    // TODO: remove AdjustDayRelativeTo after relativeTo lands for duration.add
-    AdjustDayRelativeTo: function AdjustDayRelativeTo(years, months, weeks, days, direction, largestUnit, relativeTo) {
-      var calendar = GetSlot(relativeTo, CALENDAR);
-      var dtRelative = ES.GetTemporalDateTimeFor(GetSlot(relativeTo, TIME_ZONE), GetSlot(relativeTo, INSTANT), calendar);
-      var relYear = GetSlot(dtRelative, ISO_YEAR);
-      var relMonth = GetSlot(dtRelative, ISO_MONTH);
-      var relDay = GetSlot(dtRelative, ISO_DAY);
-      var relHour = GetSlot(dtRelative, ISO_HOUR);
-      var relMinute = GetSlot(dtRelative, ISO_MINUTE);
-      var relSecond = GetSlot(dtRelative, ISO_SECOND);
-      var relMillisecond = GetSlot(dtRelative, ISO_MILLISECOND);
-      var relMicrosecond = GetSlot(dtRelative, ISO_MICROSECOND);
-      var relNanosecond = GetSlot(dtRelative, ISO_NANOSECOND);
-      var oneDayEarlier = ES.AddDateTime(relYear, relMonth, relDay, relHour, relMinute, relSecond, relMillisecond, relMicrosecond, relNanosecond, calendar, years, months, weeks, days + direction, 0, 0, 0, 0, 0, 0, 'constrain');
-      var hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-
-      var _ES$DifferenceDateTim = ES.DifferenceDateTime(relYear, relMonth, relDay, relHour, relMinute, relSecond, relMillisecond, relMicrosecond, relNanosecond, oneDayEarlier.year, oneDayEarlier.month, oneDayEarlier.day, oneDayEarlier.hour, oneDayEarlier.minute, oneDayEarlier.second, oneDayEarlier.millisecond, oneDayEarlier.microsecond, oneDayEarlier.nanosecond, calendar, largestUnit);
-
-      years = _ES$DifferenceDateTim.years;
-      months = _ES$DifferenceDateTim.months;
-      weeks = _ES$DifferenceDateTim.weeks;
-      days = _ES$DifferenceDateTim.days;
-      hours = _ES$DifferenceDateTim.hours;
-      minutes = _ES$DifferenceDateTim.minutes;
-      seconds = _ES$DifferenceDateTim.seconds;
-      milliseconds = _ES$DifferenceDateTim.milliseconds;
-      microseconds = _ES$DifferenceDateTim.microseconds;
-      nanoseconds = _ES$DifferenceDateTim.nanoseconds;
-      return ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, 'days', 'ceil', dtRelative);
-    },
     DifferenceZonedDateTime: function DifferenceZonedDateTime(start, end, largestUnit, roundingIncrement, smallestUnit, roundingMode) {
       var ns1 = GetSlot(start, EPOCHNANOSECONDS);
       var ns2 = GetSlot(end, EPOCHNANOSECONDS);
@@ -6288,11 +6229,11 @@
       var dtStart = ES.GetTemporalDateTimeFor(timeZone, GetSlot(start, INSTANT), calendar);
       var dtEnd = ES.GetTemporalDateTimeFor(timeZone, GetSlot(end, INSTANT), calendar);
 
-      var _ES$DifferenceDateTim2 = ES.DifferenceDateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendar, largestUnit),
-          years = _ES$DifferenceDateTim2.years,
-          months = _ES$DifferenceDateTim2.months,
-          weeks = _ES$DifferenceDateTim2.weeks,
-          days = _ES$DifferenceDateTim2.days;
+      var _ES$DifferenceDateTim = ES.DifferenceDateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendar, largestUnit),
+          years = _ES$DifferenceDateTim.years,
+          months = _ES$DifferenceDateTim.months,
+          weeks = _ES$DifferenceDateTim.weeks,
+          days = _ES$DifferenceDateTim.days;
 
       var intermediateNs = ES.AddZonedDateTime(GetSlot(start, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may disambiguate
       // If clock time after addition was in the middle of a skipped period, the
@@ -6305,14 +6246,12 @@
       // `disambiguation: 'compatible'` can change clock time is forwards.
 
       while (direction === 1 && ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 1 && intermediateNs.greater(ns2)) {
-        // TODO: after PlainDate.add rounding lands, uncomment use of relativeTo
-        // dateDuration = dateDuration.subtract({ days: -1, relativeTo: dtEarlier });
-        var _ES$AdjustDayRelative = ES.AdjustDayRelativeTo(years, months, weeks, days, -1, largestUnit, start);
+        var _ES$AddDuration = ES.AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, dtStart);
 
-        years = _ES$AdjustDayRelative.years;
-        months = _ES$AdjustDayRelative.months;
-        weeks = _ES$AdjustDayRelative.weeks;
-        days = _ES$AdjustDayRelative.days;
+        years = _ES$AddDuration.years;
+        months = _ES$AddDuration.months;
+        weeks = _ES$AddDuration.weeks;
+        days = _ES$AddDuration.days;
         intermediateNs = ES.AddZonedDateTime(GetSlot(start, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may do disambiguation
       }
 
@@ -6322,7 +6261,7 @@
 
       do {
         // calculate length of the next day (day that contains the time remainder)
-        var oneDayFartherDuration = ES.AdjustDayRelativeTo(years, months, weeks, days, direction, largestUnit, start);
+        var oneDayFartherDuration = ES.AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0, dtStart);
         var oneDayFartherNs = ES.AddZonedDateTime(GetSlot(start, INSTANT), timeZone, calendar, oneDayFartherDuration.years, oneDayFartherDuration.months, oneDayFartherDuration.weeks, oneDayFartherDuration.days, 0, 0, 0, 0, 0, 0, 'constrain');
         dayLengthNs = oneDayFartherNs.subtract(intermediateNs).toJSNumber();
         timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
@@ -6385,12 +6324,12 @@
       isOverflow = (timeRemainderNs - dayLengthNs) * direction >= 0;
 
       if (isOverflow) {
-        var _ES$AdjustDayRelative2 = ES.AdjustDayRelativeTo(years, months, weeks, days, direction, largestUnit, start);
+        var _ES$AddDuration2 = ES.AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0, dtStart);
 
-        years = _ES$AdjustDayRelative2.years;
-        months = _ES$AdjustDayRelative2.months;
-        weeks = _ES$AdjustDayRelative2.weeks;
-        days = _ES$AdjustDayRelative2.days;
+        years = _ES$AddDuration2.years;
+        months = _ES$AddDuration2.months;
+        weeks = _ES$AddDuration2.weeks;
+        days = _ES$AddDuration2.days;
         timeRemainderNs -= dayLengthNs;
         return {
           years: years,
@@ -6419,10 +6358,10 @@
       year += years;
       month += months;
 
-      var _ES$BalanceYearMonth6 = ES.BalanceYearMonth(year, month);
+      var _ES$BalanceYearMonth4 = ES.BalanceYearMonth(year, month);
 
-      year = _ES$BalanceYearMonth6.year;
-      month = _ES$BalanceYearMonth6.month;
+      year = _ES$BalanceYearMonth4.year;
+      month = _ES$BalanceYearMonth4.month;
 
       var _ES$RegulateDate2 = ES.RegulateDate(year, month, day, overflow);
 
@@ -6483,10 +6422,10 @@
       month -= months;
       year -= years;
 
-      var _ES$BalanceYearMonth7 = ES.BalanceYearMonth(year, month);
+      var _ES$BalanceYearMonth5 = ES.BalanceYearMonth(year, month);
 
-      year = _ES$BalanceYearMonth7.year;
-      month = _ES$BalanceYearMonth7.month;
+      year = _ES$BalanceYearMonth5.year;
+      month = _ES$BalanceYearMonth5.month;
 
       var _ES$RegulateDate3 = ES.RegulateDate(year, month, day, overflow);
 

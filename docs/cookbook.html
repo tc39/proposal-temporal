@@ -888,7 +888,7 @@ timeZones.forEach(({ name, tz }) => {
 
     // Show the date in midnight cells
     let formatOptions;
-    if (columnTime.hour === 0) {
+    if (columnTime.hour === columnTime.startOfDay().hour) {
       formatOptions = { month: 'short', day: 'numeric' };
     } else {
       formatOptions = { hour: 'numeric' };
@@ -937,7 +937,7 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
 
     <span class="token comment">// Show the date in midnight cells</span>
     <span class="token keyword">let</span> formatOptions<span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>columnTime<span class="token punctuation">.</span>hour <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>columnTime<span class="token punctuation">.</span>hour <span class="token operator">===</span> columnTime<span class="token punctuation">.</span><span class="token function">startOfDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>hour<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
       formatOptions <span class="token operator">=</span> <span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token string">'numeric'</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
