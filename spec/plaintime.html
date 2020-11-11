@@ -410,7 +410,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _temporalDateLike_ be ? Get(_item_, *"date"*).
+        1. Let _temporalDateLike_ be ? Get(_item_, *"plainDate"*).
         1. If _temporalDateLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _temporalDate_ to ? ToTemporalTime(_temporalDateLike_).
