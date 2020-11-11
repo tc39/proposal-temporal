@@ -4025,19 +4025,18 @@
         calendar = ES.ToTemporalCalendar(calendar);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
         var fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
-        var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
-        var date = calendar.dateFromFields(fields, {}, TemporalDate);
-        year = GetSlot(date, ISO_YEAR);
-        month = GetSlot(date, ISO_MONTH);
-        day = GetSlot(date, ISO_DAY);
-        var TemporalPlainTime = GetIntrinsic$1('%Temporal.PlainTime%');
-        var time = calendar.timeFromFields(fields, {}, TemporalPlainTime);
-        hour = GetSlot(time, ISO_HOUR);
-        minute = GetSlot(time, ISO_MINUTE);
-        second = GetSlot(time, ISO_SECOND);
-        millisecond = GetSlot(time, ISO_MILLISECOND);
-        microsecond = GetSlot(time, ISO_MICROSECOND);
-        nanosecond = GetSlot(time, ISO_NANOSECOND);
+
+        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, 'constrain');
+
+        year = _ES$InterpretTemporal.year;
+        month = _ES$InterpretTemporal.month;
+        day = _ES$InterpretTemporal.day;
+        hour = _ES$InterpretTemporal.hour;
+        minute = _ES$InterpretTemporal.minute;
+        second = _ES$InterpretTemporal.second;
+        millisecond = _ES$InterpretTemporal.millisecond;
+        microsecond = _ES$InterpretTemporal.microsecond;
+        nanosecond = _ES$InterpretTemporal.nanosecond;
         offset = relativeTo.offset;
         timeZone = relativeTo.timeZone;
       } else {
@@ -4191,6 +4190,7 @@
     ToRecord: function ToRecord(bag, fields) {
       if (ES.Type(bag) !== 'Object') return false;
       var result = {};
+      var any = false;
 
       var _iterator6 = _createForOfIteratorHelper(fields),
           _step6;
@@ -4211,6 +4211,8 @@
             }
 
             value = defaultValue;
+          } else {
+            any = true;
           }
 
           if (BUILTIN_FIELDS.has(property)) {
@@ -4223,6 +4225,10 @@
         _iterator6.e(err);
       } finally {
         _iterator6.f();
+      }
+
+      if (!any) {
+        throw new TypeError('no supported properties found');
       }
 
       return result;
@@ -4273,32 +4279,8 @@
       });
       return ES.ToRecord(bag, entries);
     },
-    ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
-      var props = ES.ToPartialRecord(bag, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
-      if (!props) throw new TypeError('invalid time-like');
-      var _props$hour = props.hour,
-          hour = _props$hour === void 0 ? 0 : _props$hour,
-          _props$minute = props.minute,
-          minute = _props$minute === void 0 ? 0 : _props$minute,
-          _props$second = props.second,
-          second = _props$second === void 0 ? 0 : _props$second,
-          _props$millisecond = props.millisecond,
-          millisecond = _props$millisecond === void 0 ? 0 : _props$millisecond,
-          _props$microsecond = props.microsecond,
-          microsecond = _props$microsecond === void 0 ? 0 : _props$microsecond,
-          _props$nanosecond = props.nanosecond,
-          nanosecond = _props$nanosecond === void 0 ? 0 : _props$nanosecond;
-      return {
-        hour: hour,
-        minute: minute,
-        second: second,
-        millisecond: millisecond,
-        microsecond: microsecond,
-        nanosecond: nanosecond
-      };
-    },
-    ToTemporalYearMonthFields: function ToTemporalYearMonthFields(bag, fieldNames) {
-      var entries = [['month'], ['year']]; // Add extra fields from the calendar at the end
+    ToTemporalTimeFields: function ToTemporalTimeFields(bag, fieldNames) {
+      var entries = [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref14) {
@@ -4312,8 +4294,8 @@
       });
       return ES.ToRecord(bag, entries);
     },
-    ToTemporalZonedDateTimeFields: function ToTemporalZonedDateTimeFields(bag, fieldNames) {
-      var entries = [['day'], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month'], ['nanosecond', 0], ['offset', undefined], ['second', 0], ['timeZone'], ['year']]; // Add extra fields from the calendar at the end
+    ToTemporalYearMonthFields: function ToTemporalYearMonthFields(bag, fieldNames) {
+      var entries = [['month'], ['year']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref16) {
@@ -4327,52 +4309,59 @@
       });
       return ES.ToRecord(bag, entries);
     },
+    ToTemporalZonedDateTimeFields: function ToTemporalZonedDateTimeFields(bag, fieldNames) {
+      var entries = [['day'], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month'], ['nanosecond', 0], ['offset', undefined], ['second', 0], ['timeZone'], ['year']]; // Add extra fields from the calendar at the end
+
+      fieldNames.forEach(function (fieldName) {
+        if (!entries.some(function (_ref18) {
+          var _ref19 = _slicedToArray(_ref18, 1),
+              name = _ref19[0];
+
+          return name === fieldName;
+        })) {
+          entries.push([fieldName, undefined]);
+        }
+      });
+      return ES.ToRecord(bag, entries);
+    },
     ToTemporalDate: function ToTemporalDate(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
-      var result;
 
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalDate(item)) return item;
-        var calendar = item.calendar;
-        if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
-        calendar = ES.ToTemporalCalendar(calendar);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(item, fieldNames);
-        result = calendar.dateFromFields(fields, {
-          overflow: overflow
-        }, constructor);
-      } else {
-        var _ES$ParseTemporalDate = ES.ParseTemporalDateString(ES.ToString(item)),
-            year = _ES$ParseTemporalDate.year,
-            month = _ES$ParseTemporalDate.month,
-            day = _ES$ParseTemporalDate.day,
-            _calendar = _ES$ParseTemporalDate.calendar;
-
-        var _ES$RegulateDate = ES.RegulateDate(year, month, day, overflow);
-
-        year = _ES$RegulateDate.year;
-        month = _ES$RegulateDate.month;
-        day = _ES$RegulateDate.day;
+        var _calendar = item.calendar;
         if (_calendar === undefined) _calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
         _calendar = ES.ToTemporalCalendar(_calendar);
-        result = new constructor(year, month, day, _calendar);
+        var fieldNames = ES.CalendarFields(_calendar, ['day', 'month', 'year']);
+        var fields = ES.ToTemporalDateFields(item, fieldNames);
+        return ES.DateFromFields(_calendar, fields, constructor, overflow);
       }
 
+      var _ES$ParseTemporalDate = ES.ParseTemporalDateString(ES.ToString(item)),
+          year = _ES$ParseTemporalDate.year,
+          month = _ES$ParseTemporalDate.month,
+          day = _ES$ParseTemporalDate.day,
+          calendar = _ES$ParseTemporalDate.calendar;
+
+      var _ES$RegulateDate = ES.RegulateDate(year, month, day, overflow);
+
+      year = _ES$RegulateDate.year;
+      month = _ES$RegulateDate.month;
+      day = _ES$RegulateDate.day;
+      if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      var result = new constructor(year, month, day, calendar);
       if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
       return result;
     },
     InterpretTemporalDateTimeFields: function InterpretTemporalDateTimeFields(calendar, fields, overflow) {
       var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
-      var date = calendar.dateFromFields(fields, {
-        overflow: overflow
-      }, TemporalDate);
+      var date = ES.DateFromFields(calendar, fields, TemporalDate, overflow);
       var year = GetSlot(date, ISO_YEAR);
       var month = GetSlot(date, ISO_MONTH);
       var day = GetSlot(date, ISO_DAY);
       var TemporalTime = GetIntrinsic$1('%Temporal.PlainTime%');
-      var time = calendar.timeFromFields(fields, {
-        overflow: overflow
-      }, TemporalTime);
+      var time = ES.TimeFromFields(calendar, fields, TemporalTime, overflow);
       var hour = GetSlot(time, ISO_HOUR);
       var minute = GetSlot(time, ISO_MINUTE);
       var second = GetSlot(time, ISO_SECOND);
@@ -4403,17 +4392,17 @@
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
         var fields = ES.ToTemporalDateTimeFields(item, fieldNames);
 
-        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+        var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
-        year = _ES$InterpretTemporal.year;
-        month = _ES$InterpretTemporal.month;
-        day = _ES$InterpretTemporal.day;
-        hour = _ES$InterpretTemporal.hour;
-        minute = _ES$InterpretTemporal.minute;
-        second = _ES$InterpretTemporal.second;
-        millisecond = _ES$InterpretTemporal.millisecond;
-        microsecond = _ES$InterpretTemporal.microsecond;
-        nanosecond = _ES$InterpretTemporal.nanosecond;
+        year = _ES$InterpretTemporal2.year;
+        month = _ES$InterpretTemporal2.month;
+        day = _ES$InterpretTemporal2.day;
+        hour = _ES$InterpretTemporal2.hour;
+        minute = _ES$InterpretTemporal2.minute;
+        second = _ES$InterpretTemporal2.second;
+        millisecond = _ES$InterpretTemporal2.millisecond;
+        microsecond = _ES$InterpretTemporal2.microsecond;
+        nanosecond = _ES$InterpretTemporal2.nanosecond;
       } else {
         var _ES$ParseTemporalDate2 = ES.ParseTemporalDateTimeString(ES.ToString(item));
 
@@ -4481,108 +4470,97 @@
     },
     ToTemporalMonthDay: function ToTemporalMonthDay(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
-      var result;
 
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalMonthDay(item)) return item;
-        var calendar = item.calendar;
-        if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
-        calendar = ES.ToTemporalCalendar(calendar);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
-        var fields = ES.ToTemporalMonthDayFields(item, fieldNames);
-        result = calendar.monthDayFromFields(fields, {
-          overflow: overflow
-        }, constructor);
-      } else {
-        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
-            month = _ES$ParseTemporalMont.month,
-            day = _ES$ParseTemporalMont.day,
-            referenceISOYear = _ES$ParseTemporalMont.referenceISOYear,
-            _calendar2 = _ES$ParseTemporalMont.calendar;
-
-        var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, overflow);
-
-        month = _ES$RegulateMonthDay.month;
-        day = _ES$RegulateMonthDay.day;
+        var _calendar2 = item.calendar;
         if (_calendar2 === undefined) _calendar2 = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
         _calendar2 = ES.ToTemporalCalendar(_calendar2);
-        if (referenceISOYear === undefined) referenceISOYear = 1972;
-        result = new constructor(month, day, _calendar2, referenceISOYear);
+        var fieldNames = ES.CalendarFields(_calendar2, ['day', 'month']);
+        var fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+        return ES.MonthDayFromFields(_calendar2, fields, constructor, overflow);
       }
 
+      var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
+          month = _ES$ParseTemporalMont.month,
+          day = _ES$ParseTemporalMont.day,
+          referenceISOYear = _ES$ParseTemporalMont.referenceISOYear,
+          calendar = _ES$ParseTemporalMont.calendar;
+
+      var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, overflow);
+
+      month = _ES$RegulateMonthDay.month;
+      day = _ES$RegulateMonthDay.day;
+      if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      if (referenceISOYear === undefined) referenceISOYear = 1972;
+      var result = new constructor(month, day, calendar, referenceISOYear);
       if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
       return result;
     },
     ToTemporalTime: function ToTemporalTime(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
-      var result;
 
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalTime(item)) return item;
-        var calendar = item.calendar;
-        if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
-        calendar = ES.ToTemporalCalendar(calendar);
-        var fields = ES.ToTemporalTimeRecord(item);
-        result = calendar.timeFromFields(fields, {
-          overflow: overflow
-        }, constructor);
-      } else {
-        var _ES$ParseTemporalTime2 = ES.ParseTemporalTimeString(ES.ToString(item)),
-            hour = _ES$ParseTemporalTime2.hour,
-            minute = _ES$ParseTemporalTime2.minute,
-            second = _ES$ParseTemporalTime2.second,
-            millisecond = _ES$ParseTemporalTime2.millisecond,
-            microsecond = _ES$ParseTemporalTime2.microsecond,
-            nanosecond = _ES$ParseTemporalTime2.nanosecond,
-            _calendar3 = _ES$ParseTemporalTime2.calendar;
-
-        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
-
-        hour = _ES$RegulateTime.hour;
-        minute = _ES$RegulateTime.minute;
-        second = _ES$RegulateTime.second;
-        millisecond = _ES$RegulateTime.millisecond;
-        microsecond = _ES$RegulateTime.microsecond;
-        nanosecond = _ES$RegulateTime.nanosecond;
+        var _calendar3 = item.calendar;
         if (_calendar3 === undefined) _calendar3 = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
         _calendar3 = ES.ToTemporalCalendar(_calendar3);
-        result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, _calendar3);
+        var fieldNames = ES.CalendarFields(_calendar3, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+        var fields = ES.ToTemporalTimeFields(item, fieldNames);
+        return ES.TimeFromFields(_calendar3, fields, constructor, overflow);
       }
 
+      var _ES$ParseTemporalTime2 = ES.ParseTemporalTimeString(ES.ToString(item)),
+          hour = _ES$ParseTemporalTime2.hour,
+          minute = _ES$ParseTemporalTime2.minute,
+          second = _ES$ParseTemporalTime2.second,
+          millisecond = _ES$ParseTemporalTime2.millisecond,
+          microsecond = _ES$ParseTemporalTime2.microsecond,
+          nanosecond = _ES$ParseTemporalTime2.nanosecond,
+          calendar = _ES$ParseTemporalTime2.calendar;
+
+      var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
+
+      hour = _ES$RegulateTime.hour;
+      minute = _ES$RegulateTime.minute;
+      second = _ES$RegulateTime.second;
+      millisecond = _ES$RegulateTime.millisecond;
+      microsecond = _ES$RegulateTime.microsecond;
+      nanosecond = _ES$RegulateTime.nanosecond;
+      if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      var result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
       if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
       return result;
     },
     ToTemporalYearMonth: function ToTemporalYearMonth(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
-      var result;
 
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalYearMonth(item)) return item;
-        var calendar = item.calendar;
-        if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
-        calendar = ES.ToTemporalCalendar(calendar);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
-        var fields = ES.ToTemporalYearMonthFields(item, fieldNames);
-        result = calendar.yearMonthFromFields(fields, {
-          overflow: overflow
-        }, constructor);
-      } else {
-        var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
-            year = _ES$ParseTemporalYear.year,
-            month = _ES$ParseTemporalYear.month,
-            referenceISODay = _ES$ParseTemporalYear.referenceISODay,
-            _calendar4 = _ES$ParseTemporalYear.calendar;
-
-        var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, overflow);
-
-        year = _ES$RegulateYearMonth.year;
-        month = _ES$RegulateYearMonth.month;
+        var _calendar4 = item.calendar;
         if (_calendar4 === undefined) _calendar4 = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
         _calendar4 = ES.ToTemporalCalendar(_calendar4);
-        if (referenceISODay === undefined) referenceISODay = 1;
-        result = new constructor(year, month, _calendar4, referenceISODay);
+        var fieldNames = ES.CalendarFields(_calendar4, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(item, fieldNames);
+        return ES.YearMonthFromFields(_calendar4, fields, constructor, overflow);
       }
 
+      var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
+          year = _ES$ParseTemporalYear.year,
+          month = _ES$ParseTemporalYear.month,
+          _ES$ParseTemporalYear2 = _ES$ParseTemporalYear.referenceISODay,
+          referenceISODay = _ES$ParseTemporalYear2 === void 0 ? 1 : _ES$ParseTemporalYear2,
+          calendar = _ES$ParseTemporalYear.calendar;
+
+      var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, overflow);
+
+      year = _ES$RegulateYearMonth.year;
+      month = _ES$RegulateYearMonth.month;
+      if (calendar === undefined) calendar = new (GetIntrinsic$1('%Temporal.ISO8601Calendar%'))();
+      calendar = ES.ToTemporalCalendar(calendar);
+      var result = new constructor(year, month, calendar, referenceISODay);
       if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
       return result;
     },
@@ -4652,17 +4630,17 @@
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
         var fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
 
-        var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+        var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
-        year = _ES$InterpretTemporal2.year;
-        month = _ES$InterpretTemporal2.month;
-        day = _ES$InterpretTemporal2.day;
-        hour = _ES$InterpretTemporal2.hour;
-        minute = _ES$InterpretTemporal2.minute;
-        second = _ES$InterpretTemporal2.second;
-        millisecond = _ES$InterpretTemporal2.millisecond;
-        microsecond = _ES$InterpretTemporal2.microsecond;
-        nanosecond = _ES$InterpretTemporal2.nanosecond;
+        year = _ES$InterpretTemporal3.year;
+        month = _ES$InterpretTemporal3.month;
+        day = _ES$InterpretTemporal3.day;
+        hour = _ES$InterpretTemporal3.hour;
+        minute = _ES$InterpretTemporal3.minute;
+        second = _ES$InterpretTemporal3.second;
+        millisecond = _ES$InterpretTemporal3.millisecond;
+        microsecond = _ES$InterpretTemporal3.microsecond;
+        nanosecond = _ES$InterpretTemporal3.nanosecond;
         timeZone = ES.ToTemporalTimeZone(fields.timeZone);
         offset = fields.offset;
         if (offset !== undefined) offset = ES.ToString(offset);
@@ -4752,6 +4730,38 @@
       } else {
         throw new RangeError('irreconcilable calendars');
       }
+    },
+    TimeFromFields: function TimeFromFields(calendar, fields, constructor) {
+      var overflow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'constrain';
+      var result = calendar.timeFromFields(fields, {
+        overflow: overflow
+      }, constructor);
+      if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
+      return result;
+    },
+    DateFromFields: function DateFromFields(calendar, fields, constructor) {
+      var overflow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'constrain';
+      var result = calendar.dateFromFields(fields, {
+        overflow: overflow
+      }, constructor);
+      if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
+      return result;
+    },
+    YearMonthFromFields: function YearMonthFromFields(calendar, fields, constructor) {
+      var overflow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'constrain';
+      var result = calendar.yearMonthFromFields(fields, {
+        overflow: overflow
+      }, constructor);
+      if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+      return result;
+    },
+    MonthDayFromFields: function MonthDayFromFields(calendar, fields, constructor) {
+      var overflow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'constrain';
+      var result = calendar.monthDayFromFields(fields, {
+        overflow: overflow
+      }, constructor);
+      if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+      return result;
     },
     TimeZoneFrom: function TimeZoneFrom(temporalTimeZoneLike) {
       var TemporalTimeZone = GetIntrinsic$1('%Temporal.TimeZone%');
@@ -7415,13 +7425,13 @@
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
-        var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(fields),
-            hour = _ES$ToTemporalTimeRec.hour,
-            minute = _ES$ToTemporalTimeRec.minute,
-            second = _ES$ToTemporalTimeRec.second,
-            millisecond = _ES$ToTemporalTimeRec.millisecond,
-            microsecond = _ES$ToTemporalTimeRec.microsecond,
-            nanosecond = _ES$ToTemporalTimeRec.nanosecond;
+        var _ES$ToRecord2 = ES.ToRecord(fields, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]),
+            hour = _ES$ToRecord2.hour,
+            minute = _ES$ToRecord2.minute,
+            second = _ES$ToRecord2.second,
+            millisecond = _ES$ToRecord2.millisecond,
+            microsecond = _ES$ToRecord2.microsecond,
+            nanosecond = _ES$ToRecord2.nanosecond;
 
         var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
@@ -7440,9 +7450,9 @@
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
-        var _ES$ToRecord2 = ES.ToRecord(fields, [['month'], ['year']]),
-            year = _ES$ToRecord2.year,
-            month = _ES$ToRecord2.month;
+        var _ES$ToRecord3 = ES.ToRecord(fields, [['month'], ['year']]),
+            year = _ES$ToRecord3.year,
+            month = _ES$ToRecord3.month;
 
         var _ES$RegulateYearMonth = ES.RegulateYearMonth(year, month, overflow);
 
@@ -7459,9 +7469,9 @@
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
-        var _ES$ToRecord3 = ES.ToRecord(fields, [['day'], ['month']]),
-            month = _ES$ToRecord3.month,
-            day = _ES$ToRecord3.day;
+        var _ES$ToRecord4 = ES.ToRecord(fields, [['day'], ['month']]),
+            month = _ES$ToRecord4.month,
+            day = _ES$ToRecord4.day;
 
         var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, overflow);
 
@@ -9092,10 +9102,10 @@
 
         var fields = ES.ToTemporalDateFields(this, fieldNames);
         ObjectAssign$2(fields, props);
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainDate);
-        var result = calendar.dateFromFields(fields, options, Construct);
-        if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
-        return result;
+        return ES.DateFromFields(calendar, fields, Construct, overflow);
       }
     }, {
       key: "withCalendar",
@@ -9383,9 +9393,9 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
-        return calendar.yearMonthFromFields(fields, {}, YearMonth);
+        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+        return ES.YearMonthFromFields(calendar, fields, YearMonth);
       }
     }, {
       key: "toPlainMonthDay",
@@ -9393,9 +9403,9 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
-        return calendar.monthDayFromFields(fields, {}, MonthDay);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+        return ES.MonthDayFromFields(calendar, fields, MonthDay);
       }
     }, {
       key: "getFields",
@@ -9643,21 +9653,18 @@
 
         var fields = ES.ToTemporalDateTimeFields(this, fieldNames);
         ObjectAssign$3(fields, props);
-        var date = calendar.dateFromFields(fields, {
-          overflow: overflow
-        }, GetIntrinsic$1('%Temporal.PlainDate%'));
-        var year = GetSlot(date, ISO_YEAR);
-        var month = GetSlot(date, ISO_MONTH);
-        var day = GetSlot(date, ISO_DAY);
-        var time = calendar.timeFromFields(fields, {
-          overflow: overflow
-        }, GetIntrinsic$1('%Temporal.PlainTime%'));
-        var hour = GetSlot(time, ISO_HOUR);
-        var minute = GetSlot(time, ISO_MINUTE);
-        var second = GetSlot(time, ISO_SECOND);
-        var millisecond = GetSlot(time, ISO_MILLISECOND);
-        var microsecond = GetSlot(time, ISO_MICROSECOND);
-        var nanosecond = GetSlot(time, ISO_NANOSECOND);
+
+        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow),
+            year = _ES$InterpretTemporal.year,
+            month = _ES$InterpretTemporal.month,
+            day = _ES$InterpretTemporal.day,
+            hour = _ES$InterpretTemporal.hour,
+            minute = _ES$InterpretTemporal.minute,
+            second = _ES$InterpretTemporal.second,
+            millisecond = _ES$InterpretTemporal.millisecond,
+            microsecond = _ES$InterpretTemporal.microsecond,
+            nanosecond = _ES$InterpretTemporal.nanosecond;
+
         var Construct = ES.SpeciesConstructor(this, PlainDateTime);
         var result = new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
         if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
@@ -9989,9 +9996,9 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
-        return calendar.yearMonthFromFields(fields, {}, YearMonth);
+        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+        return ES.YearMonthFromFields(calendar, fields, YearMonth);
       }
     }, {
       key: "toPlainMonthDay",
@@ -9999,9 +10006,9 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
-        return calendar.monthDayFromFields(fields, {}, MonthDay);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+        return ES.MonthDayFromFields(calendar, fields, MonthDay);
       }
     }, {
       key: "toPlainTime",
@@ -10750,8 +10757,10 @@
 
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         ObjectAssign$4(fields, props);
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainMonthDay);
-        var result = calendar.monthDayFromFields(fields, options, Construct);
+        var result = ES.MonthDayFromFields(calendar, fields, Construct, overflow);
         if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
         return result;
       }
@@ -10820,9 +10829,7 @@
         });
         ObjectAssign$4(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
-        return calendar.dateFromFields(fields, {
-          overflow: 'constrain'
-        }, Date);
+        return ES.DateFromFields(calendar, fields, Date);
       }
     }, {
       key: "getFields",
@@ -10970,6 +10977,8 @@
     return ES.SystemTimeZone();
   }
 
+  var ObjectAssign$5 = Object.assign;
+
   function TemporalTimeToString(time, precision) {
     var showCalendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'auto';
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
@@ -11060,39 +11069,19 @@
         }
 
         options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options); // TODO: defer to calendar
-
-        var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+        var overflow = ES.ToTemporalOverflow(options);
+        var calendar = GetSlot(this, CALENDAR);
+        var fieldNames = ES.CalendarFields(calendar, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+        var props = ES.ToPartialRecord(temporalTimeLike, fieldNames);
 
         if (!props) {
           throw new TypeError('invalid time-like');
         }
 
-        var _props$hour = props.hour,
-            hour = _props$hour === void 0 ? GetSlot(this, ISO_HOUR) : _props$hour,
-            _props$minute = props.minute,
-            minute = _props$minute === void 0 ? GetSlot(this, ISO_MINUTE) : _props$minute,
-            _props$second = props.second,
-            second = _props$second === void 0 ? GetSlot(this, ISO_SECOND) : _props$second,
-            _props$millisecond = props.millisecond,
-            millisecond = _props$millisecond === void 0 ? GetSlot(this, ISO_MILLISECOND) : _props$millisecond,
-            _props$microsecond = props.microsecond,
-            microsecond = _props$microsecond === void 0 ? GetSlot(this, ISO_MICROSECOND) : _props$microsecond,
-            _props$nanosecond = props.nanosecond,
-            nanosecond = _props$nanosecond === void 0 ? GetSlot(this, ISO_NANOSECOND) : _props$nanosecond;
-
-        var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
-
-        hour = _ES$RegulateTime.hour;
-        minute = _ES$RegulateTime.minute;
-        second = _ES$RegulateTime.second;
-        millisecond = _ES$RegulateTime.millisecond;
-        microsecond = _ES$RegulateTime.microsecond;
-        nanosecond = _ES$RegulateTime.nanosecond;
+        var fields = ES.ToTemporalTimeFields(this, fieldNames);
+        ObjectAssign$5(fields, props);
         var Construct = ES.SpeciesConstructor(this, PlainTime);
-        var result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-        if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-        return result;
+        return ES.TimeFromFields(calendar, fields, Construct, overflow);
       }
     }, {
       key: "withCalendar",
@@ -11437,8 +11426,10 @@
     }, {
       key: "getFields",
       value: function getFields() {
-        var fields = ES.ToTemporalTimeRecord(this);
-        if (!fields) throw new TypeError('invalid receiver');
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        var calendar = GetSlot(this, CALENDAR);
+        var fieldNames = ES.CalendarFields(calendar, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+        var fields = ES.ToTemporalTimeFields(this, fieldNames);
         fields.calendar = GetSlot(this, CALENDAR);
         return fields;
       }
@@ -11541,7 +11532,7 @@
   }();
   MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
 
-  var ObjectAssign$5 = Object.assign;
+  var ObjectAssign$6 = Object.assign;
 
   function YearMonthToString(yearMonth) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
@@ -11617,11 +11608,11 @@
         }
 
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        ObjectAssign$5(fields, props);
+        ObjectAssign$6(fields, props);
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-        var result = calendar.yearMonthFromFields(fields, options, Construct);
-        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-        return result;
+        return ES.YearMonthFromFields(calendar, fields, Construct, overflow);
       }
     }, {
       key: "add",
@@ -11644,22 +11635,23 @@
         var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
         days = _ES$BalanceDuration.days;
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? calendar.daysInMonth(this) : 1;
-        var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+        var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
-        }), {}, TemporalDate);
+        }), TemporalDate);
         var addedDate = calendar.dateAdd(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
+        var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
         var Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-        var result = calendar.yearMonthFromFields(addedDate, options, Construct);
-        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-        return result;
+        return ES.YearMonthFromFields(calendar, addedDateFields, Construct, overflow);
       }
     }, {
       key: "subtract",
@@ -11695,22 +11687,23 @@
         var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
         days = _ES$BalanceDuration2.days;
+        options = ES.NormalizeOptionsObject(options);
+        var overflow = ES.ToTemporalOverflow(options);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? calendar.daysInMonth(this) : 1;
-        var startDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+        var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
-        }), {}, TemporalDate);
+        }), TemporalDate);
         var addedDate = calendar.dateAdd(startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options, TemporalDate);
+        var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
         var Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-        var result = calendar.yearMonthFromFields(addedDate, options, Construct);
-        if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-        return result;
+        return ES.YearMonthFromFields(calendar, addedDateFields, Construct, overflow);
       }
     }, {
       key: "until",
@@ -11738,12 +11731,12 @@
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
-        var otherDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, otherFields), {}, {
+        var otherDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
           day: 1
-        }), {}, TemporalDate);
-        var thisDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, thisFields), {}, {
+        }), TemporalDate);
+        var thisDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
-        }), {}, TemporalDate);
+        }), TemporalDate);
         var result = calendar.dateUntil(thisDate, otherDate, {
           largestUnit: largestUnit
         });
@@ -11786,12 +11779,12 @@
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
-        var otherDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, otherFields), {}, {
+        var otherDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
           day: 1
-        }), {}, TemporalDate);
-        var thisDate = calendar.dateFromFields(_objectSpread2(_objectSpread2({}, thisFields), {}, {
+        }), TemporalDate);
+        var thisDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
-        }), {}, TemporalDate);
+        }), TemporalDate);
 
         var _calendar$dateUntil = calendar.dateUntil(thisDate, otherDate, {
           largestUnit: largestUnit
@@ -11877,11 +11870,9 @@
             entries.push([fieldName, undefined]);
           }
         });
-        ObjectAssign$5(fields, ES.ToRecord(item, entries));
+        ObjectAssign$6(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
-        return calendar.dateFromFields(fields, {
-          overflow: 'reject'
-        }, Date);
+        return ES.DateFromFields(calendar, fields, Date, 'reject');
       }
     }, {
       key: "getFields",
@@ -11987,7 +11978,7 @@
   MakeIntrinsicClass(PlainYearMonth, 'Temporal.PlainYearMonth');
 
   var ArrayPrototypePush$1 = Array.prototype.push;
-  var ObjectAssign$6 = Object.assign;
+  var ObjectAssign$7 = Object.assign;
   var ZonedDateTime = /*#__PURE__*/function () {
     function ZonedDateTime(epochNanoseconds, timeZone) {
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : GetISO8601Calendar();
@@ -12049,7 +12040,7 @@
         }
 
         var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
-        ObjectAssign$6(fields, props);
+        ObjectAssign$7(fields, props);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow),
             year = _ES$InterpretTemporal.year,
