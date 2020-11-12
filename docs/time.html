@@ -633,18 +633,18 @@ Use <code>Temporal.PlainTime.compare()</code> for this, or <code>time.equals()</
 <h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>time.<strong>toZonedDateTime</strong>(<em>item</em>: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>item</code> (object): an object with properties to be added to <code>time</code>. The following properties are recognized:<ul>
-<li><code>date</code> (required <code>Temporal.PlainDate</code> or value convertible to one): a date used to merge into a <code>Temporal.ZonedDateTime</code> along with <code>time</code>.</li>
-<li><code>timeZone</code> (required <code>Temporal.TimeZone</code> or value convertible to one, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>): the time zone in which to interpret <code>time</code> and <code>date</code>.</li>
+<li><code>plainDate</code> (required <code>Temporal.PlainDate</code> or value convertible to one): a date used to merge into a <code>Temporal.ZonedDateTime</code> along with <code>time</code>.</li>
+<li><code>timeZone</code> (required <code>Temporal.TimeZone</code> or value convertible to one, or an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>): the time zone in which to interpret <code>time</code> and <code>plainDate</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object that represents the clock <code>time</code> on the calendar <code>date</code> projected into <code>timeZone</code>.</p>
+<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object that represents the clock <code>time</code> on the calendar <code>plainDate</code> projected into <code>timeZone</code>.</p>
 <p>This method can be used to convert <code>Temporal.PlainTime</code> into a <code>Temporal.ZonedDateTime</code>, by supplying the time zone and date.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
-<p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>time</code> and <code>date</code>.
-This method produces identical results to <a href="./date.html#toZonedDateTime"><code>Temporal.PlainDate.from(date).toZonedDateTime(time)</code></a>.</p>
-<p>If <code>date</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
+<p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>time</code> and <code>plainDate</code>.
+This method produces identical results to <a href="./date.html#toZonedDateTime"><code>Temporal.PlainDate.from(plainDate).toZonedDateTime(time)</code></a>.</p>
+<p>If <code>plainDate</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
@@ -653,9 +653,10 @@ This behavior avoids exceptions when converting non-existent date/time values to
 <p>For usage examples and a more complete explanation of how this disambiguation works, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is outside the range that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> date <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toPlainDateTime"><a class="heading-link" href="#toPlainDateTime"></a>time.<strong>toPlainDateTime</strong>(<em>date</em>: Temporal.PlainDate | object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">plainTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'15:23:30.003'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+plainDate <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+plainTime<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span> plainDate <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]</span></code></pre><h3 id="toPlainDateTime"><a class="heading-link" href="#toPlainDateTime"></a>time.<strong>toPlainDateTime</strong>(<em>date</em>: Temporal.PlainDate | object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>date</code> (<code>Temporal.PlainDate</code> or value convertible to one): A calendar date on which to place <code>time</code>.</li>
 </ul>

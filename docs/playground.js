@@ -9353,7 +9353,7 @@
             timeZone = ES.ToTemporalTimeZone(item);
           } else {
             timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-            temporalTime = item.time;
+            temporalTime = item.plainTime;
           }
         } else {
           timeZone = ES.ToTemporalTimeZone(item);
@@ -11392,7 +11392,7 @@
           throw new TypeError('invalid argument');
         }
 
-        var dateLike = item.date;
+        var dateLike = item.plainDate;
 
         if (dateLike === undefined) {
           throw new TypeError('missing date property');
