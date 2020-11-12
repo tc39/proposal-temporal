@@ -643,11 +643,11 @@ Use `Temporal.PlainDate.compare()` for this, or `date.equals()` for equality.
 
 **Parameters:**
 
-- `item` (object): an object with properties to be added to `time`. The following properties are recognized:
+- `item` (object): an object with properties to be added to `date`. The following properties are recognized:
   - `plainTime` (optional `Temporal.PlainTime` or value convertible to one): a time of day on `date` used to merge into a `Temporal.ZonedDateTime`.
   - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `date` and `plainTime`.
 
-**Returns:** a `Temporal.ZonedDateTime` object that represents the wall-clock time `time` on the calendar date `date` projected into `timeZone`.
+**Returns:** a `Temporal.ZonedDateTime` object that represents the wall-clock time `plainTime` on the calendar date `date` projected into `timeZone`.
 
 This method can be used to convert `Temporal.PlainDate` into a `Temporal.ZonedDateTime`, by supplying the time zone and time of day.
 The default `plainTime`, if it's not provided, is the first valid local time in `timeZone` on the calendar date `date`.
