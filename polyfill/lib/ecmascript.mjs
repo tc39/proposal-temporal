@@ -2554,9 +2554,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  DifferenceZonedDateTime: (start, end, largestUnit) => {
-    const ns1 = GetSlot(start, EPOCHNANOSECONDS);
-    const ns2 = GetSlot(end, EPOCHNANOSECONDS);
+  DifferenceZonedDateTime: (ns1, ns2, timeZone, calendar, largestUnit) => {
     const nsDiff = ns2.subtract(ns1);
     if (nsDiff.isZero()) {
       return {
@@ -2575,10 +2573,11 @@ export const ES = ObjectAssign({}, ES2020, {
     const direction = nsDiff.divide(nsDiff.abs()).toJSNumber();
 
     // Find the difference in dates only.
-    const timeZone = GetSlot(start, TIME_ZONE);
-    const calendar = GetSlot(start, CALENDAR);
-    const dtStart = ES.GetTemporalDateTimeFor(timeZone, GetSlot(start, INSTANT), calendar);
-    const dtEnd = ES.GetTemporalDateTimeFor(timeZone, GetSlot(end, INSTANT), calendar);
+    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    const start = new TemporalInstant(ns1);
+    const end = new TemporalInstant(ns2);
+    const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
     let { years, months, weeks, days } = ES.DifferenceDateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
@@ -2602,7 +2601,7 @@ export const ES = ObjectAssign({}, ES2020, {
       largestUnit
     );
     let intermediateNs = ES.AddZonedDateTime(
-      GetSlot(start, INSTANT),
+      start,
       timeZone,
       calendar,
       years,
@@ -2655,7 +2654,7 @@ export const ES = ObjectAssign({}, ES2020, {
         dtStart
       ));
       intermediateNs = ES.AddZonedDateTime(
-        GetSlot(start, INSTANT),
+        start,
         timeZone,
         calendar,
         years,

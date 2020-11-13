@@ -333,6 +333,8 @@ export class ZonedDateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
+    const ns1 = GetSlot(this, EPOCHNANOSECONDS);
+    const ns2 = GetSlot(other, EPOCHNANOSECONDS);
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
       // The user is only asking for a time difference, so return difference of instants.
@@ -341,8 +343,8 @@ export class ZonedDateTime {
       weeks = 0;
       days = 0;
       ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
-        GetSlot(this, EPOCHNANOSECONDS),
-        GetSlot(other, EPOCHNANOSECONDS),
+        ns1,
+        ns2,
         roundingIncrement,
         smallestUnit,
         roundingMode
@@ -358,7 +360,8 @@ export class ZonedDateTime {
         largestUnit
       ));
     } else {
-      if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+      const timeZone = GetSlot(this, TIME_ZONE);
+      if (!ES.TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
         throw new RangeError(
           "When calculating difference between time zones, largestUnit must be 'hours' " +
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
@@ -375,7 +378,7 @@ export class ZonedDateTime {
         milliseconds,
         microseconds,
         nanoseconds
-      } = ES.DifferenceZonedDateTime(this, other, largestUnit));
+      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit));
       ({
         years,
         months,
@@ -454,6 +457,8 @@ export class ZonedDateTime {
     roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
+    const ns1 = GetSlot(this, EPOCHNANOSECONDS);
+    const ns2 = GetSlot(other, EPOCHNANOSECONDS);
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
       // The user is only asking for a time difference, so return difference of instants.
@@ -462,8 +467,8 @@ export class ZonedDateTime {
       weeks = 0;
       days = 0;
       ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
-        GetSlot(this, EPOCHNANOSECONDS),
-        GetSlot(other, EPOCHNANOSECONDS),
+        ns1,
+        ns2,
         roundingIncrement,
         smallestUnit,
         roundingMode
@@ -479,7 +484,8 @@ export class ZonedDateTime {
         largestUnit
       ));
     } else {
-      if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+      const timeZone = GetSlot(this, TIME_ZONE);
+      if (!ES.TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
         throw new RangeError(
           "When calculating difference between time zones, largestUnit must be 'hours' " +
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
@@ -496,7 +502,7 @@ export class ZonedDateTime {
         milliseconds,
         microseconds,
         nanoseconds
-      } = ES.DifferenceZonedDateTime(this, other, largestUnit));
+      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit));
       ({
         years,
         months,
