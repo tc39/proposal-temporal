@@ -601,6 +601,14 @@ export class ZonedDateTime {
     let millisecond = GetSlot(dt, ISO_MILLISECOND);
     let microsecond = GetSlot(dt, ISO_MICROSECOND);
     let nanosecond = GetSlot(dt, ISO_NANOSECOND);
+
+    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const calendar = GetSlot(this, CALENDAR);
+    const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
+    const instantStart = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
+    const endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 'constrain');
+    const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
       year,
       month,
@@ -613,21 +621,15 @@ export class ZonedDateTime {
       nanosecond,
       roundingIncrement,
       smallestUnit,
-      roundingMode
+      roundingMode,
+      dayLengthNs
     ));
-
-    // TODO: there's a case not yet implemented here: if there's a DST
-    // transition during the current day, then it's ignored by rounding. For
-    // example, using the `nearest` mode a time of 11:45 would round up in
-    // DateTime rounding but should round down if the day is 23 hours long.
-    // The since()/until() implementation will show one way to do this rounding.
 
     // Now reset all DateTime fields but leave the TimeZone. The offset will
     // also be retained if the new date/time values are still OK with the old
     // offset. Otherwise the offset will be changed to be compatible with the
     // new date/time values. If DST disambiguation is required, the `compatible`
     // disambiguation algorithm will be used.
-    const timeZone = GetSlot(this, TIME_ZONE);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
     const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
       year,

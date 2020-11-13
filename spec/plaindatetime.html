@@ -1175,12 +1175,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-rounddatetime" aoid="RoundDateTime">
-      <h1>RoundDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ )</h1>
+      <h1>RoundDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ [ , _dayLength_ ] )</h1>
       <p>
         The abstract operation RoundDateTime rounds the time part of a combined date and time, carrying over any excess into the date part.
       </p>
       <emu-alg>
-        1. Let _roundedTime_ be ? RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_).
+        1. Let _roundedTime_ be ? RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
         1. Let _balanceResult_ be ? BalanceDate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the new Record {
             [[Year]]: _balanceResult_.[[Year]],

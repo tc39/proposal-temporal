@@ -738,8 +738,13 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Let _roundResult_ be ? RoundDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-        1. <mark>TODO: handle non-24-hour days with difference algorithm</mark>.
+        1. Let _isoCalendar_ be ? GetISO8601Calendar().
+        1. Let _dtStart_ be ? CreateTemporalDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, _isoCalendar_).
+        1. Let _instantStart_ be ? GetTemporalInstantFor(_timeZone_, _dtStart_, *"compatible"*).
+        1. Let _startNs_ be _instantStart_.[[Nanoseconds]].
+        1. Let _endNs_ be ? AddZonedDateTime(_startNs_, _timeZone_, _calendar_, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, *"constrain"*).
+        1. Let _dayLengthNs_ be _endNs_ − _startNs_.
+        1. Let _roundResult_ be ? RoundDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _dayLengthNs_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Let _epochNanoseconds_ be ? InterpretTemporalZonedDateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _zonedDateTime_.[[Calendar]]).
