@@ -713,14 +713,14 @@ If `plainTime` is a `Temporal.PlainTime` object, then this method returns the sa
 Usage example:
 
 ```javascript
-dt = Temporal.ZonedDateTime.from('2015-12-07T03:24:30.000003500');
-dt.withPlainTime({ hour: 10 }); // => 2015-12-07T10:00:00-08:00[America/Los_Angeles]
+zdt = Temporal.ZonedDateTime.from('2015-12-07T03:24:30.000003500-08:00[America/Los_Angeles]');
+zdt.withPlainTime({ hour: 10 }); // => 2015-12-07T10:00:00-08:00[America/Los_Angeles]
 time = Temporal.PlainTime.from('11:22');
-dt.withPlainTime(time); // => 2015-12-07T11:22:00-08:00[America/Los_Angeles]
-dt.withPlainTime('12:34'); // => 2015-12-07T12:34:00-08:00[America/Los_Angeles]
+zdt.withPlainTime(time); // => 2015-12-07T11:22:00-08:00[America/Los_Angeles]
+zdt.withPlainTime('12:34'); // => 2015-12-07T12:34:00-08:00[America/Los_Angeles]
 
 // easier for chaining
-dt.add({ days: 2, hours: 22 }).withTime('00:00'); // => 2015-12-10T00:00:00-08:00[America/Los_Angeles]
+zdt.add({ days: 2, hours: 22 }).withPlainTime('00:00'); // => 2015-12-10T00:00:00-08:00[America/Los_Angeles]
 ```
 
 ### zonedDateTime.**withPlainDate**(_plainDate_: object | string) : Temporal.ZonedDateTime

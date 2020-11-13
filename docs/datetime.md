@@ -412,7 +412,7 @@ dt.withPlainTime(time); // => 2015-12-07T11:22:00
 dt.withPlainTime('12:34'); // => 2015-12-07T12:34:00
 
 // easier for chaining
-dt.add({ days: 2, hours: 22 }).withTime('00:00'); // => 2015-12-10T00:00:00
+dt.add({ days: 2, hours: 22 }).withPlainTime('00:00'); // => 2015-12-10T00:00:00
 ```
 
 ### datetime.**withPlainDate**(_plainDate_: object | string) : Temporal.PlainDateTime
