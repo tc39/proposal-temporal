@@ -580,7 +580,7 @@
           1. Set _offsetString_ to ? Get(_fields_, *"offset"*).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
-        1. Let _epochNanoseconds_ be ? InterpretTemporalZonedDateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], _offsetNanoseconds, _timeZone_, _disambiguation_, _offset_).
+        1. Let _epochNanoseconds_ be ? InterpretTemporalZonedDateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
         1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -595,7 +595,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
-        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _zonedDateTime_.[[Nanoseconds]], _timeZoneLike_, _zonedDateTime_.[[Calendar]]).
+        1. Return ? CreateTemporalZonedDateTimeFromInstance(_zonedDateTime_, _zonedDateTime_.[[Nanoseconds]], _timeZone_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
