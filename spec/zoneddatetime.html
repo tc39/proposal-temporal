@@ -217,7 +217,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Hour]].
+        1. Return 𝔽(_temporalDateTime_.[[ISOHour]]).
       </emu-alg>
     </emu-clause>
 
@@ -233,7 +233,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Minute]].
+        1. Return 𝔽(_temporalDateTime_.[[ISOMinute]]).
       </emu-alg>
     </emu-clause>
 
@@ -249,7 +249,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Second]].
+        1. Return 𝔽(_temporalDateTime_.[[ISOSecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -265,7 +265,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Millisecond]].
+        1. Return 𝔽(_temporalDateTime_.[[ISOMillisecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -281,7 +281,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Microsecond]].
+        1. Return 𝔽(_temporalDateTime_.[[ISOMicrosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -297,7 +297,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return _temporalDateTime_.[[Nanosecond]].
+        1. Return 𝔽(_temporalDateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -938,7 +938,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
-        1. Return ? CreateTemporalTime(_temporalDateTime_.[[Hour]], _temporalDateTime_.[[Minute]], _temporalDateTime_.[[Second]], _temporalDateTime_.[[Millisecond]], _temporalDateTime_.[[Microsecond]], _temporalDateTime_.[[Nanosecond]]).
+        1. Return ? CreateTemporalTime(_temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -1026,16 +1026,16 @@
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _offset_ be ? GetOffsetStringFor(_timeZone_, _instant_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _zonedDateTime_.[[Calendar]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[Hour]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[ISOHour]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _dateTime_.[[ISODay]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _dateTime_.[[ISOMonth]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _dateTime_.[[ISOYear]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[Microsecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[Millisecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[Minute]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[Nanosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[ISOMinute]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"offset"*, _offset_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[Second]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[ISOSecond]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _timeZone_).
         1. Return _fields_.
       </emu-alg>
