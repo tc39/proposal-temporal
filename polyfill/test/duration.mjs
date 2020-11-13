@@ -975,20 +975,23 @@ describe('Duration', () => {
     const oneDay = new Duration(0, 0, 0, 1);
     const hours12 = new Duration(0, 0, 0, 0, 12);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
-      it.skip('start inside repeated hour, end after', () => {
+      it('start inside repeated hour, end after', () => {
         equal(`${hours25.round({ largestUnit: 'days', relativeTo: inRepeatedHour })}`, 'P1D');
         equal(`${oneDay.round({ largestUnit: 'hours', relativeTo: inRepeatedHour })}`, 'PT25H');
       });
-      it.skip('start after repeated hour, end inside (negative)', () => {
+      it('start after repeated hour, end inside (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-04T01:00[America/Vancouver]');
         equal(`${hours25.negated().round({ largestUnit: 'days', relativeTo })}`, '-P1D');
         equal(`${oneDay.negated().round({ largestUnit: 'hours', relativeTo })}`, '-PT25H');
       });
       it('start inside repeated hour, end in skipped hour', () => {
-        // gain one hour at the beginning, lose one at the end, days average 24h
         equal(
           `${Duration.from({ days: 126, hours: 1 }).round({ largestUnit: 'days', relativeTo: inRepeatedHour })}`,
           'P126DT1H'
+        );
+        equal(
+          `${Duration.from({ days: 126, hours: 1 }).round({ largestUnit: 'hours', relativeTo: inRepeatedHour })}`,
+          'PT3026H'
         );
       });
       it('start in normal hour, end in skipped hour', () => {
@@ -996,11 +999,11 @@ describe('Duration', () => {
         equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P1DT1H');
         equal(`${oneDay.round({ largestUnit: 'hours', relativeTo })}`, 'PT24H');
       });
-      it.skip('start before skipped hour, end >1 day after', () => {
+      it('start before skipped hour, end >1 day after', () => {
         equal(`${hours25.round({ largestUnit: 'days', relativeTo: skippedHourDay })}`, 'P1DT2H');
         equal(`${oneDay.round({ largestUnit: 'hours', relativeTo: skippedHourDay })}`, 'PT23H');
       });
-      it.skip('start after skipped hour, end >1 day before (negative)', () => {
+      it('start after skipped hour, end >1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-11T00:00[America/Vancouver]');
         equal(`${hours25.negated().round({ largestUnit: 'days', relativeTo })}`, '-P1DT2H');
         equal(`${oneDay.negated().round({ largestUnit: 'hours', relativeTo })}`, '-PT23H');
@@ -1012,11 +1015,11 @@ describe('Duration', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-10T12:00[America/Vancouver]');
         equal(`${hours12.negated().round({ largestUnit: 'days', relativeTo })}`, '-PT12H');
       });
-      it.skip('start before repeated hour, end >1 day after', () => {
+      it('start before repeated hour, end >1 day after', () => {
         equal(`${hours25.round({ largestUnit: 'days', relativeTo: repeatedHourDay })}`, 'P1D');
         equal(`${oneDay.round({ largestUnit: 'hours', relativeTo: repeatedHourDay })}`, 'PT25H');
       });
-      it.skip('start after repeated hour, end >1 day before (negative)', () => {
+      it('start after repeated hour, end >1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-04T00:00[America/Vancouver]');
         equal(`${hours25.negated().round({ largestUnit: 'days', relativeTo })}`, '-P1D');
         equal(`${oneDay.negated().round({ largestUnit: 'hours', relativeTo })}`, '-PT25H');
@@ -1028,13 +1031,13 @@ describe('Duration', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-03T12:00[America/Vancouver]');
         equal(`${hours12.negated().round({ largestUnit: 'days', relativeTo })}`, '-PT12H');
       });
-      it.skip('Samoa skipped 24 hours', () => {
+      it('Samoa skipped 24 hours', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
         equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P2DT1H');
         equal(`${Duration.from({ hours: 48 }).round({ largestUnit: 'days', relativeTo })}`, 'P3D');
       });
     });
-    it.skip('casts relativeTo to ZonedDateTime if possible', () => {
+    it('casts relativeTo to ZonedDateTime if possible', () => {
       equal(`${hours25.round({ largestUnit: 'days', relativeTo: '2019-11-03T00:00[America/Vancouver]' })}`, 'P1D');
       equal(
         `${hours25.round({
@@ -1535,33 +1538,29 @@ describe('Duration', () => {
     const hours12 = new Duration(0, 0, 0, 0, 12);
     const hours25 = new Duration(0, 0, 0, 0, 25);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
-      it.skip('start inside repeated hour, end after', () => {
+      it('start inside repeated hour, end after', () => {
         equal(hours25.total({ unit: 'days', relativeTo: inRepeatedHour }), 1);
         equal(oneDay.total({ unit: 'hours', relativeTo: inRepeatedHour }), 25);
       });
-      it.skip('start after repeated hour, end inside (negative)', () => {
+      it('start after repeated hour, end inside (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-04T01:00[America/Vancouver]');
         equal(hours25.negated().total({ unit: 'days', relativeTo }), -1);
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -25);
       });
-      it.skip('start inside repeated hour, end in skipped hour', () => {
-        // gain one hour at the beginning, lose one at the end, days average 24h
-        equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'days', relativeTo: inRepeatedHour }), 126 + 1 / 24);
-        equal(
-          Duration.from({ days: 126, hours: 1 }).total({ unit: 'hours', relativeTo: inRepeatedHour }),
-          126 * 24 + 1
-        );
+      it('start inside repeated hour, end in skipped hour', () => {
+        equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'days', relativeTo: inRepeatedHour }), 126 + 1 / 23);
+        equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'hours', relativeTo: inRepeatedHour }), 3026);
       });
       it('start in normal hour, end in skipped hour', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
         equal(hours25.total({ unit: 'days', relativeTo }), 1 + 1 / 24);
         equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
       });
-      it.skip('start before skipped hour, end >1 day after', () => {
+      it('start before skipped hour, end >1 day after', () => {
         equal(hours25.total({ unit: 'days', relativeTo: skippedHourDay }), 1 + 2 / 24);
         equal(oneDay.total({ unit: 'hours', relativeTo: skippedHourDay }), 23);
       });
-      it.skip('start after skipped hour, end >1 day before (negative)', () => {
+      it('start after skipped hour, end >1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-11T00:00[America/Vancouver]');
         equal(hours25.negated().total({ unit: 'days', relativeTo }), -1 - 2 / 24);
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -23);
@@ -1573,11 +1572,11 @@ describe('Duration', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-10T12:00[America/Vancouver]');
         equal(hours12.negated().total({ unit: 'days', relativeTo }), -12 / 23);
       });
-      it.skip('start before repeated hour, end >1 day after', () => {
+      it('start before repeated hour, end >1 day after', () => {
         equal(hours25.total({ unit: 'days', relativeTo: repeatedHourDay }), 1);
         equal(oneDay.total({ unit: 'hours', relativeTo: repeatedHourDay }), 25);
       });
-      it.skip('start after repeated hour, end >1 day before (negative)', () => {
+      it('start after repeated hour, end >1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-04T00:00[America/Vancouver]');
         equal(hours25.negated().total({ unit: 'days', relativeTo }), -1);
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -25);
@@ -1589,7 +1588,7 @@ describe('Duration', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-03T12:00[America/Vancouver]');
         equal(hours12.negated().total({ unit: 'days', relativeTo }), -12 / 25);
       });
-      it.skip('Samoa skipped 24 hours', () => {
+      it('Samoa skipped 24 hours', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
         equal(hours25.total({ unit: 'days', relativeTo }), 2 + 1 / 24);
         equal(Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 3);
@@ -1597,12 +1596,12 @@ describe('Duration', () => {
         equal(Duration.from({ days: 3 }).total({ unit: 'hours', relativeTo }), 48);
       });
     });
-    it.skip('totaling back up to days', () => {
+    it('totaling back up to days', () => {
       const relativeTo = Temporal.ZonedDateTime.from('2019-11-02T00:00[America/Vancouver]');
       equal(Duration.from({ hours: 48 }).total({ unit: 'days' }), 2);
       equal(Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 1 + 24 / 25);
     });
-    it.skip('casts relativeTo to ZonedDateTime if possible', () => {
+    it('casts relativeTo to ZonedDateTime if possible', () => {
       equal(oneDay.total({ unit: 'hours', relativeTo: '2019-11-03T00:00[America/Vancouver]' }), 25);
       equal(
         oneDay.total({ unit: 'hours', relativeTo: { year: 2019, month: 11, day: 3, timeZone: 'America/Vancouver' } }),

@@ -372,7 +372,7 @@ export class Duration {
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-    const relativeTo = ES.ToRelativeTemporalObject(options);
+    let relativeTo = ES.ToRelativeTemporalObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
@@ -453,6 +453,9 @@ export class Duration {
       relativeTo
     ));
     ({ years, months, weeks, days } = ES.BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
+    if (ES.IsTemporalZonedDateTime(relativeTo)) {
+      relativeTo = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
+    }
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -461,7 +464,8 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      largestUnit
+      largestUnit,
+      relativeTo
     ));
 
     const Construct = ES.SpeciesConstructor(this, Duration);
@@ -501,6 +505,10 @@ export class Duration {
     // Convert larger units down to days
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
     // If the unit we're totalling is smaller than `days`, convert days down to that unit.
+    let intermediate;
+    if (ES.IsTemporalZonedDateTime(relativeTo)) {
+      intermediate = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
+    }
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -509,7 +517,8 @@ export class Duration {
       milliseconds,
       microseconds,
       nanoseconds,
-      unit
+      unit,
+      intermediate
     ));
     // Finally, truncate to the correct unit and calculate remainder
     const rounded = ES.RoundDuration(
