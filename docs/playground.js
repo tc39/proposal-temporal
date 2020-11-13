@@ -6316,9 +6316,7 @@
         nanoseconds: nanoseconds
       };
     },
-    DifferenceZonedDateTime: function DifferenceZonedDateTime(start, end, largestUnit) {
-      var ns1 = GetSlot(start, EPOCHNANOSECONDS);
-      var ns2 = GetSlot(end, EPOCHNANOSECONDS);
+    DifferenceZonedDateTime: function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
       var nsDiff = ns2.subtract(ns1);
 
       if (nsDiff.isZero()) {
@@ -6338,10 +6336,11 @@
 
       var direction = nsDiff.divide(nsDiff.abs()).toJSNumber(); // Find the difference in dates only.
 
-      var timeZone = GetSlot(start, TIME_ZONE);
-      var calendar = GetSlot(start, CALENDAR);
-      var dtStart = ES.GetTemporalDateTimeFor(timeZone, GetSlot(start, INSTANT), calendar);
-      var dtEnd = ES.GetTemporalDateTimeFor(timeZone, GetSlot(end, INSTANT), calendar);
+      var TemporalInstant = GetIntrinsic$1('%Temporal.Instant%');
+      var start = new TemporalInstant(ns1);
+      var end = new TemporalInstant(ns2);
+      var dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
+      var dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
 
       var _ES$DifferenceDateTim = ES.DifferenceDateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendar, largestUnit),
           years = _ES$DifferenceDateTim.years,
@@ -6349,7 +6348,7 @@
           weeks = _ES$DifferenceDateTim.weeks,
           days = _ES$DifferenceDateTim.days;
 
-      var intermediateNs = ES.AddZonedDateTime(GetSlot(start, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may disambiguate
+      var intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may disambiguate
       // If clock time after addition was in the middle of a skipped period, the
       // endpoint was disambiguated to a later clock time. So it's possible that
       // the resulting disambiguated result is later than `this`. If so, then back
@@ -6366,7 +6365,7 @@
         months = _ES$AddDuration.months;
         weeks = _ES$AddDuration.weeks;
         days = _ES$AddDuration.days;
-        intermediateNs = ES.AddZonedDateTime(GetSlot(start, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may do disambiguation
+        intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0, 'constrain'); // may do disambiguation
       }
 
       var timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
@@ -6496,50 +6495,102 @@
       var largestUnit1 = ES.DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
       var largestUnit2 = ES.DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
       var largestUnit = ES.LargerOfTwoTemporalDurationUnits(largestUnit1, largestUnit2);
+      var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
-      var _ES$UnbalanceDuration = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo);
+      if (!relativeTo) {
+        if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
+          throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
+        }
 
-      d1 = _ES$UnbalanceDuration.days;
-      var intermediate;
+        years = months = weeks = 0;
 
-      if (relativeTo) {
-        var calendar = GetSlot(relativeTo, CALENDAR);
+        var _ES$BalanceDuration3 = ES.BalanceDuration(d1 + d2, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+
+        days = _ES$BalanceDuration3.days;
+        hours = _ES$BalanceDuration3.hours;
+        minutes = _ES$BalanceDuration3.minutes;
+        seconds = _ES$BalanceDuration3.seconds;
+        milliseconds = _ES$BalanceDuration3.milliseconds;
+        microseconds = _ES$BalanceDuration3.microseconds;
+        nanoseconds = _ES$BalanceDuration3.nanoseconds;
+      } else if (ES.IsTemporalDateTime(relativeTo)) {
+        var TemporalPlainDate = GetIntrinsic$1('%Temporal.PlainDate%');
         var TemporalDuration = GetIntrinsic$1('%Temporal.Duration%');
-        var datePart1 = new TemporalDuration(0, 0, 0, d1);
+        var calendar = GetSlot(relativeTo, CALENDAR);
+        var datePart = new TemporalPlainDate(GetSlot(relativeTo, ISO_YEAR), GetSlot(relativeTo, ISO_MONTH), GetSlot(relativeTo, ISO_DAY), calendar);
+        var dateDuration1 = new TemporalDuration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
+        var dateDuration2 = new TemporalDuration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
+        var dateAdd = calendar.dateAdd;
+        var intermediate = ES.Call(dateAdd, calendar, [datePart, dateDuration1, {}, TemporalPlainDate]);
+        var end = ES.Call(dateAdd, calendar, [intermediate, dateDuration2, {}, TemporalPlainDate]);
+        var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
 
-        var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, datePart1);
+        var _calendar$dateUntil2 = calendar.dateUntil(datePart, end, {
+          largestUnit: dateLargestUnit
+        });
 
-        intermediate = _ES$MoveRelativeDate14.relativeTo;
+        years = _calendar$dateUntil2.years;
+        months = _calendar$dateUntil2.months;
+        weeks = _calendar$dateUntil2.weeks;
+        days = _calendar$dateUntil2.days;
+
+        var _ES$BalanceDuration4 = ES.BalanceDuration(days, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+
+        days = _ES$BalanceDuration4.days;
+        hours = _ES$BalanceDuration4.hours;
+        minutes = _ES$BalanceDuration4.minutes;
+        seconds = _ES$BalanceDuration4.seconds;
+        milliseconds = _ES$BalanceDuration4.milliseconds;
+        microseconds = _ES$BalanceDuration4.microseconds;
+        nanoseconds = _ES$BalanceDuration4.nanoseconds;
+      } else {
+        // relativeTo is a ZonedDateTime
+        var TemporalInstant = GetIntrinsic$1('%Temporal.Instant%');
+        var timeZone = GetSlot(relativeTo, TIME_ZONE);
+
+        var _calendar5 = GetSlot(relativeTo, CALENDAR);
+
+        var intermediateNs = ES.AddZonedDateTime(GetSlot(relativeTo, INSTANT), timeZone, _calendar5, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, 'constrain');
+        var endNs = ES.AddZonedDateTime(new TemporalInstant(intermediateNs), timeZone, _calendar5, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, 'constrain');
+
+        if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
+          // The user is only asking for a time difference, so return difference of instants.
+          years = 0;
+          months = 0;
+          weeks = 0;
+          days = 0;
+
+          var _ES$DifferenceInstant = ES.DifferenceInstant(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, 1, 'nanoseconds', 'nearest');
+
+          seconds = _ES$DifferenceInstant.seconds;
+          milliseconds = _ES$DifferenceInstant.milliseconds;
+          microseconds = _ES$DifferenceInstant.microseconds;
+          nanoseconds = _ES$DifferenceInstant.nanoseconds;
+
+          var _ES$BalanceDuration5 = ES.BalanceDuration(0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+          hours = _ES$BalanceDuration5.hours;
+          minutes = _ES$BalanceDuration5.minutes;
+          seconds = _ES$BalanceDuration5.seconds;
+          milliseconds = _ES$BalanceDuration5.milliseconds;
+          microseconds = _ES$BalanceDuration5.microseconds;
+          nanoseconds = _ES$BalanceDuration5.nanoseconds;
+        } else {
+          var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, _calendar5, largestUnit);
+
+          years = _ES$DifferenceZonedDa.years;
+          months = _ES$DifferenceZonedDa.months;
+          weeks = _ES$DifferenceZonedDa.weeks;
+          days = _ES$DifferenceZonedDa.days;
+          hours = _ES$DifferenceZonedDa.hours;
+          minutes = _ES$DifferenceZonedDa.minutes;
+          seconds = _ES$DifferenceZonedDa.seconds;
+          milliseconds = _ES$DifferenceZonedDa.milliseconds;
+          microseconds = _ES$DifferenceZonedDa.microseconds;
+          nanoseconds = _ES$DifferenceZonedDa.nanoseconds;
+        }
       }
 
-      var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', intermediate);
-
-      d2 = _ES$UnbalanceDuration2.days;
-      var days = d1 + d2;
-      var hours = h1 + h2;
-      var minutes = min1 + min2;
-      var seconds = s1 + s2;
-      var milliseconds = ms1 + ms2;
-      var microseconds = µs1 + µs2;
-      var nanoseconds = ns1 + ns2;
-      var years, months, weeks;
-
-      var _ES$BalanceDurationRe = ES.BalanceDurationRelative(0, 0, 0, days, largestUnit, relativeTo);
-
-      years = _ES$BalanceDurationRe.years;
-      months = _ES$BalanceDurationRe.months;
-      weeks = _ES$BalanceDurationRe.weeks;
-      days = _ES$BalanceDurationRe.days;
-
-      var _ES$BalanceDuration3 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
-
-      days = _ES$BalanceDuration3.days;
-      hours = _ES$BalanceDuration3.hours;
-      minutes = _ES$BalanceDuration3.minutes;
-      seconds = _ES$BalanceDuration3.seconds;
-      milliseconds = _ES$BalanceDuration3.milliseconds;
-      microseconds = _ES$BalanceDuration3.microseconds;
-      nanoseconds = _ES$BalanceDuration3.nanoseconds;
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
@@ -6689,9 +6740,10 @@
       return wholeDays.plus(roundedRemainder);
     },
     RoundDateTime: function RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
+      var dayLengthNs = arguments.length > 12 && arguments[12] !== undefined ? arguments[12] : 86400e9;
       var deltaDays = 0;
 
-      var _ES$RoundTime = ES.RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode);
+      var _ES$RoundTime = ES.RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode, dayLengthNs);
 
       deltaDays = _ES$RoundTime.deltaDays;
       hour = _ES$RoundTime.hour;
@@ -6719,11 +6771,13 @@
       };
     },
     RoundTime: function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
+      var dayLengthNs = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 86400e9;
       var quantity = 0;
 
       switch (unit) {
         case 'day':
-          quantity = (((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour) / 24;
+          quantity = ((((hour * 60 + minute) * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
+          quantity /= dayLengthNs;
           break;
 
         case 'hour':
@@ -6840,14 +6894,14 @@
         days = _ES$AddDuration3.days;
         timeRemainderNs = ES.RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
 
-        var _ES$BalanceDuration4 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs.toJSNumber(), 'hours');
+        var _ES$BalanceDuration6 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs.toJSNumber(), 'hours');
 
-        hours = _ES$BalanceDuration4.hours;
-        minutes = _ES$BalanceDuration4.minutes;
-        seconds = _ES$BalanceDuration4.seconds;
-        milliseconds = _ES$BalanceDuration4.milliseconds;
-        microseconds = _ES$BalanceDuration4.microseconds;
-        nanoseconds = _ES$BalanceDuration4.nanoseconds;
+        hours = _ES$BalanceDuration6.hours;
+        minutes = _ES$BalanceDuration6.minutes;
+        seconds = _ES$BalanceDuration6.seconds;
+        milliseconds = _ES$BalanceDuration6.milliseconds;
+        microseconds = _ES$BalanceDuration6.microseconds;
+        nanoseconds = _ES$BalanceDuration6.nanoseconds;
       }
 
       return {
@@ -6904,19 +6958,19 @@
             var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
             var oneYearDays;
 
-            var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
 
-            relativeTo = _ES$MoveRelativeDate15.relativeTo;
-            oneYearDays = _ES$MoveRelativeDate15.days;
+            relativeTo = _ES$MoveRelativeDate14.relativeTo;
+            oneYearDays = _ES$MoveRelativeDate14.days;
 
             while (Math.abs(days) >= Math.abs(oneYearDays)) {
               years += sign;
               days -= oneYearDays;
 
-              var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+              var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
 
-              relativeTo = _ES$MoveRelativeDate16.relativeTo;
-              oneYearDays = _ES$MoveRelativeDate16.days;
+              relativeTo = _ES$MoveRelativeDate15.relativeTo;
+              oneYearDays = _ES$MoveRelativeDate15.days;
             }
 
             years += days / Math.abs(oneYearDays);
@@ -6951,19 +7005,19 @@
             var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
             var oneMonthDays;
 
-            var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-            relativeTo = _ES$MoveRelativeDate17.relativeTo;
-            oneMonthDays = _ES$MoveRelativeDate17.days;
+            relativeTo = _ES$MoveRelativeDate16.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate16.days;
 
             while (Math.abs(days) >= Math.abs(oneMonthDays)) {
               months += _sign2;
               days -= oneMonthDays;
 
-              var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-              relativeTo = _ES$MoveRelativeDate18.relativeTo;
-              oneMonthDays = _ES$MoveRelativeDate18.days;
+              relativeTo = _ES$MoveRelativeDate17.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate17.days;
             }
 
             months += days / Math.abs(oneMonthDays);
@@ -6986,19 +7040,19 @@
             var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
             var oneWeekDays;
 
-            var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+            var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-            relativeTo = _ES$MoveRelativeDate19.relativeTo;
-            oneWeekDays = _ES$MoveRelativeDate19.days;
+            relativeTo = _ES$MoveRelativeDate18.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate18.days;
 
             while (Math.abs(days) >= Math.abs(oneWeekDays)) {
               weeks += _sign3;
               days -= oneWeekDays;
 
-              var _ES$MoveRelativeDate20 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-              relativeTo = _ES$MoveRelativeDate20.relativeTo;
-              oneWeekDays = _ES$MoveRelativeDate20.days;
+              relativeTo = _ES$MoveRelativeDate19.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate19.days;
             }
 
             weeks += days / Math.abs(oneWeekDays);
@@ -12241,6 +12295,8 @@
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
+        var ns1 = GetSlot(this, EPOCHNANOSECONDS);
+        var ns2 = GetSlot(other, EPOCHNANOSECONDS);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
         if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
@@ -12250,7 +12306,7 @@
           weeks = 0;
           days = 0;
 
-          var _ES$DifferenceInstant = ES.DifferenceInstant(GetSlot(this, EPOCHNANOSECONDS), GetSlot(other, EPOCHNANOSECONDS), roundingIncrement, smallestUnit, roundingMode);
+          var _ES$DifferenceInstant = ES.DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
 
           seconds = _ES$DifferenceInstant.seconds;
           milliseconds = _ES$DifferenceInstant.milliseconds;
@@ -12266,11 +12322,13 @@
           microseconds = _ES$BalanceDuration.microseconds;
           nanoseconds = _ES$BalanceDuration.nanoseconds;
         } else {
-          if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+          var timeZone = GetSlot(this, TIME_ZONE);
+
+          if (!ES.TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
             throw new RangeError("When calculating difference between time zones, largestUnit must be 'hours' " + 'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.');
           }
 
-          var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(this, other, largestUnit);
+          var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit);
 
           years = _ES$DifferenceZonedDa.years;
           months = _ES$DifferenceZonedDa.months;
@@ -12336,6 +12394,8 @@
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
+        var ns1 = GetSlot(this, EPOCHNANOSECONDS);
+        var ns2 = GetSlot(other, EPOCHNANOSECONDS);
         var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 
         if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
@@ -12345,7 +12405,7 @@
           weeks = 0;
           days = 0;
 
-          var _ES$DifferenceInstant2 = ES.DifferenceInstant(GetSlot(this, EPOCHNANOSECONDS), GetSlot(other, EPOCHNANOSECONDS), roundingIncrement, smallestUnit, roundingMode);
+          var _ES$DifferenceInstant2 = ES.DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
 
           seconds = _ES$DifferenceInstant2.seconds;
           milliseconds = _ES$DifferenceInstant2.milliseconds;
@@ -12361,11 +12421,13 @@
           microseconds = _ES$BalanceDuration2.microseconds;
           nanoseconds = _ES$BalanceDuration2.nanoseconds;
         } else {
-          if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) {
+          var timeZone = GetSlot(this, TIME_ZONE);
+
+          if (!ES.TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
             throw new RangeError("When calculating difference between time zones, largestUnit must be 'hours' " + 'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.');
           }
 
-          var _ES$DifferenceZonedDa2 = ES.DifferenceZonedDateTime(this, other, largestUnit);
+          var _ES$DifferenceZonedDa2 = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit);
 
           years = _ES$DifferenceZonedDa2.years;
           months = _ES$DifferenceZonedDa2.months;
@@ -12437,8 +12499,15 @@
         var millisecond = GetSlot(dt, ISO_MILLISECOND);
         var microsecond = GetSlot(dt, ISO_MICROSECOND);
         var nanosecond = GetSlot(dt, ISO_NANOSECOND);
+        var DateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var calendar = GetSlot(this, CALENDAR);
+        var dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
+        var instantStart = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
+        var endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 'constrain');
+        var dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
 
-        var _ES$RoundDateTime = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode);
+        var _ES$RoundDateTime = ES.RoundDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode, dayLengthNs);
 
         year = _ES$RoundDateTime.year;
         month = _ES$RoundDateTime.month;
@@ -12449,17 +12518,11 @@
         millisecond = _ES$RoundDateTime.millisecond;
         microsecond = _ES$RoundDateTime.microsecond;
         nanosecond = _ES$RoundDateTime.nanosecond;
-        // TODO: there's a case not yet implemented here: if there's a DST
-        // transition during the current day, then it's ignored by rounding. For
-        // example, using the `nearest` mode a time of 11:45 would round up in
-        // DateTime rounding but should round down if the day is 23 hours long.
-        // The since()/until() implementation will show one way to do this rounding.
         // Now reset all DateTime fields but leave the TimeZone. The offset will
         // also be retained if the new date/time values are still OK with the old
         // offset. Otherwise the offset will be changed to be compatible with the
         // new date/time values. If DST disambiguation is required, the `compatible`
         // disambiguation algorithm will be used.
-        var timeZone = GetSlot(this, TIME_ZONE);
         var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
         var epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, 'compatible', 'prefer');
         var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
