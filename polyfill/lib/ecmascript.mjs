@@ -3084,7 +3084,8 @@ export const ES = ObjectAssign({}, ES2020, {
     nanosecond,
     increment,
     unit,
-    roundingMode
+    roundingMode,
+    dayLengthNs = 86400e9
   ) => {
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
@@ -3096,17 +3097,30 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond,
       increment,
       unit,
-      roundingMode
+      roundingMode,
+      dayLengthNs
     ));
     ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  RoundTime: (hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) => {
+  RoundTime: (
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond,
+    increment,
+    unit,
+    roundingMode,
+    dayLengthNs = 86400e9
+  ) => {
     let quantity = 0;
     switch (unit) {
       case 'day':
         quantity =
-          (((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour) / 24;
+          ((((hour * 60 + minute) * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
+        quantity /= dayLengthNs;
         break;
       case 'hour':
         quantity = ((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour;

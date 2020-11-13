@@ -888,12 +888,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-roundtime" aoid="RoundTime">
-      <h1>RoundTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ )</h1>
+      <h1>RoundTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ [ , _dayLengthNs_ ] )</h1>
+      <p>
+        The abstract operation RoundTime rounds a time to the given increment, optionally adjusting for a non-24-hour day.
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
         1. Let _fractionalSecond_ be _nanosecond_ × 10<sup>−9</sup> + _microsecond_ × 10<sup>−6</sup> + _millisecond_ × 10<sup>−3</sup> + _second_.
         1. If _unit_ is *"day"*, then
-          1. Let _quantity_ be ((_fractionalSecond_ / 60 + _minute_) / 60 + _hour_) / 24.
+          1. If _dayLengthNs_ is not given, set it to 8.64 × 10<sup>13</sup>.
+          1. Let _quantity_ be (((((_hour_ × 60 + _minute_) × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_) / _dayLengthNs_.
         1. Else if _unit_ is *"hour"*, then
           1. Let _quantity_ be (_fractionalSecond_ / 60 + _minute_) / 60 + _hour_.
         1. Else if _unit_ is *"minute"*, then

@@ -1942,14 +1942,14 @@ describe('ZonedDateTime', () => {
       assert(zdt.round({ smallestUnit: 'microseconds' }).equals(zdt.round({ smallestUnit: 'microsecond' })));
       assert(zdt.round({ smallestUnit: 'nanoseconds' }).equals(zdt.round({ smallestUnit: 'nanosecond' })));
     });
-    it.skip('rounds correctly to a 25-hour day', () => {
+    it('rounds correctly to a 25-hour day', () => {
       const options = { smallestUnit: 'day' };
       const roundMeDown = ZonedDateTime.from('2020-11-01T12:29:59-08:00[America/Vancouver]');
       equal(`${roundMeDown.round(options)}`, '2020-11-01T00:00:00-07:00[America/Vancouver]');
       const roundMeUp = ZonedDateTime.from('2020-11-01T12:30:01-08:00[America/Vancouver]');
       equal(`${roundMeUp.round(options)}`, '2020-11-02T00:00:00-08:00[America/Vancouver]');
     });
-    it.skip('rounds correctly to a 23-hour day', () => {
+    it('rounds correctly to a 23-hour day', () => {
       const options = { smallestUnit: 'day' };
       const roundMeDown = ZonedDateTime.from('2020-03-08T11:29:59-07:00[America/Vancouver]');
       equal(`${roundMeDown.round(options)}`, '2020-03-08T00:00:00-08:00[America/Vancouver]');
