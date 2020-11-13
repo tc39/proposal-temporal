@@ -943,8 +943,8 @@ export namespace Temporal {
     readonly inLeapYear: boolean;
     equals(other: Temporal.PlainDateTime | DateTimeLike | string): boolean;
     with(dateTimeLike: DateTimeLike, options?: AssignmentOptions): Temporal.PlainDateTime;
-    withTime(timeLike?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
-    withDate(dateLike: Temporal.PlainDate | DateLike | string): Temporal.PlainDateTime;
+    withPlainTime(timeLike?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
+    withPlainDate(dateLike: Temporal.PlainDate | DateLike | string): Temporal.PlainDateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.PlainDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDateTime;
     subtract(
@@ -1394,8 +1394,8 @@ export namespace Temporal {
     readonly epochNanoseconds: bigint;
     equals(other: Temporal.ZonedDateTime | ZonedDateTimeLike | string): boolean;
     with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): Temporal.ZonedDateTime;
-    withTime(timeLike?: Temporal.PlainTime | TimeLike | string): Temporal.ZonedDateTime;
-    withDate(dateLike: Temporal.PlainDate | DateLike | string): Temporal.ZonedDateTime;
+    withPlainTime(timeLike?: Temporal.PlainTime | TimeLike | string): Temporal.ZonedDateTime;
+    withPlainDate(dateLike: Temporal.PlainDate | DateLike | string): Temporal.ZonedDateTime;
     withCalendar(calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
     withTimeZone(timeZone: TimeZoneProtocol | string): Temporal.ZonedDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
