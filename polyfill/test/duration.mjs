@@ -484,7 +484,7 @@ describe('Duration', () => {
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
     const hours12 = new Duration(0, 0, 0, 0, 12);
     const hours25 = new Duration(0, 0, 0, 0, 25);
-    describe.skip('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
+    describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(`${hours25.add(oneDay, { relativeTo: inRepeatedHour })}`, 'P2D');
         equal(`${oneDay.add(hours25, { relativeTo: inRepeatedHour })}`, 'P2DT1H');
@@ -546,7 +546,7 @@ describe('Duration', () => {
         equal(`${oneDay.add(hours25, { relativeTo })}`, 'P3DT1H');
       });
     });
-    it.skip('casts relativeTo to ZonedDateTime if possible', () => {
+    it('casts relativeTo to ZonedDateTime if possible', () => {
       equal(`${oneDay.add(hours24, { relativeTo: '2019-11-02T00:00[America/Vancouver]' })}`, 'P1DT24H');
       equal(
         `${oneDay.add(hours24, { relativeTo: { year: 2019, month: 11, day: 2, timeZone: 'America/Vancouver' } })}`,
@@ -696,7 +696,7 @@ describe('Duration', () => {
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
     const twoDays = new Duration(0, 0, 0, 2);
     const threeDays = new Duration(0, 0, 0, 3);
-    describe.skip('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
+    describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(`${hours24.subtract(oneDay, { relativeTo: inRepeatedHour })}`, '-PT1H');
         equal(`${oneDay.subtract(hours24, { relativeTo: inRepeatedHour })}`, 'PT1H');
@@ -732,7 +732,7 @@ describe('Duration', () => {
         equal(`${Duration.from({ hours: 48 }).subtract(twoDays, { relativeTo })}`, 'P2D');
       });
     });
-    it.skip('casts relativeTo to ZonedDateTime if possible', () => {
+    it('casts relativeTo to ZonedDateTime if possible', () => {
       equal(`${oneDay.subtract(hours24, { relativeTo: '2019-11-03T00:00[America/Vancouver]' })}`, 'PT1H');
       equal(
         `${oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11, day: 3, timeZone: 'America/Vancouver' } })}`,
