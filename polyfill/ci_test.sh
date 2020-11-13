@@ -35,6 +35,7 @@ if [ $threads -gt 2 ]; then threads=2; fi
 test262-harness \
   -t $threads \
   -r json \
+  --reporter-keys file,rawResult,result,scenario \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
   --transformer ./transform.test262.js \
