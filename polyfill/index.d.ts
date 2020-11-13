@@ -1575,7 +1575,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    export function dateTime(
+    export function plainDateTime(
       calendar: CalendarProtocol | string,
       tzLike?: TimeZoneProtocol | string
     ): Temporal.PlainDateTime;
@@ -1598,7 +1598,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function dateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDateTime;
+    export function plainDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDateTime;
 
     /**
      * Get the current calendar date in a specific time zone.
@@ -1612,7 +1612,10 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    export function date(calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string): Temporal.PlainDate;
+    export function plainDate(
+      calendar: CalendarProtocol | string,
+      tzLike?: TimeZoneProtocol | string
+    ): Temporal.PlainDate;
 
     /**
      * Get the current date in a specific time zone, using the ISO 8601
@@ -1627,7 +1630,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function dateISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDate;
+    export function plainDateISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDate;
 
     /**
      * Get the current clock time in a specific time zone, using the ISO 8601 calendar.
