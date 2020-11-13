@@ -561,11 +561,9 @@
           1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
           1. Let _temporalTime_ be *undefined*.
         1. If _temporalTime_ is *undefined*, then
-          1. <mark>TODO: use start of day in _calendar_.</mark>
           1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
         1. Else,
           1. Set _temporalTime_ to ? ToTemporalTime(_temporalTime_).
-          1. <mark>TODO: verify calendars match.</mark>
           1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _temporalDate_.[[Calendar]]).
         1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _temporalDateTime_, *"compatible"*).
         1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).

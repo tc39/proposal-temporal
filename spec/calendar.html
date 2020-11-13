@@ -143,24 +143,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-timefromfields" aoid="TimeFromFields">
-      <h1>TimeFromFields ( _calendar_, _fields_, _constructor_ [ , _overflow_ ] )</h1>
-      <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
-        1. Assert: Type(_fields_) is Object.
-        1. If _overflow_ is *undefined*, then
-          1. Set _overflow_ to *"constrain"*.
-        1. Else,
-          1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
-        1. Let _options_ be ! ObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, _overflow_).
-        1. Let _timeFromFields_ be ? Get(_calendar_, *"timeFromFields"*).
-        1. Let _time_ be ? Call(_timeFromFields_, _calendar_, « _fields_, _options_, _constructor_ »).
-        1. Perform ? RequireInternalSlot(_time_, [[InitializedTemporalTime]]).
-        1. Return _time_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-formatcalendarannotation" aoid="FormatCalendarAnnotation">
       <h1>FormatCalendarAnnotation ( _id_, _showCalendar_ )</h1>
       <p>

@@ -15,7 +15,7 @@ It can also be combined with a `Temporal.PlainDate` to yield a "zoneless" `Tempo
 
 ## Constructor
 
-### **new Temporal.PlainTime**(_isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.PlainTime
+### **new Temporal.PlainTime**(_isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0) : Temporal.PlainTime
 
 **Parameters:**
 
@@ -25,15 +25,13 @@ It can also be combined with a `Temporal.PlainDate` to yield a "zoneless" `Tempo
 - `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the time into.
 
 **Returns:** a new `Temporal.PlainTime` object.
 
 Use this constructor if you have the correct parameters for the time already as individual number values in the ISO 8601 calendar.
-Otherwise, `Temporal.PlainTime.from()`, which accepts more kinds of input, allows inputting times in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+Otherwise, `Temporal.PlainTime.from()`, which accepts more kinds of input and allows controlling the overflow behaviour, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoHour`, `isoMinute`, `isoSecond`, `isoMillisecond`, `isoMicrosecond`, and `isoNanosecond` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 Usage examples:
 
@@ -59,10 +57,10 @@ time = new Temporal.PlainTime(13, 37); // => 13:37
 
 This static method creates a new `Temporal.PlainTime` object from another value.
 If the value is another `Temporal.PlainTime` object, a new object representing the same time is returned.
-If the value is any other object, a `Temporal.PlainTime` will be constructed from the values of any `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
-Any missing ones except `calendar` will be assumed to be 0.
+If the value is any other object, a `Temporal.PlainTime` will be constructed from the values of any `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties that are present.
+Any missing ones will be assumed to be 0.
 
-If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+If the `calendar` property is present, it must be the string `'iso8601'` or the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates), for future compatibility.
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.
@@ -171,9 +169,9 @@ time.nanosecond;  // => 205
 ```
 <!-- prettier-ignore-end -->
 
-### time.**calendar**: object
+### time.**calendar**: Temporal.Calendar
 
-The `calendar` read-only property gives the calendar that the `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties are interpreted in.
+The value of the `calendar` read-only property is always the ISO 8601 calendar, for future compatibility.
 
 ## Methods
 
@@ -195,7 +193,7 @@ This method creates a new `Temporal.PlainTime` which is a copy of `time`, but an
 Since `Temporal.PlainTime` objects are immutable, use this method instead of modifying one.
 
 > **NOTE**: `calendar` and `timeZone` properties are not allowed on `timeLike`.
-> See the `withCalendar` and `toZonedDateTime` methods instead.
+> See the `toPlainDateTime` and `toZonedDateTime` methods instead.
 
 Usage example:
 
@@ -209,21 +207,6 @@ time.add({ hours: 1 }).with({
   microsecond: 0,
   nanosecond: 0
 }); // => 20:00
-```
-
-### time.**withCalendar**(_calendar_: object | string) : Temporal.PlainTime
-
-**Parameters:**
-
-- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `time`.
-
-**Returns:** a new `Temporal.PlainTime` object which is the time indicated by `time`, projected into `calendar`.
-
-Usage example:
-
-```javascript
-time = Temporal.PlainTime.from('03:20:00[c=ethiopic]');
-time.withCalendar('iso8601'); // => 03:20:00
 ```
 
 ### time.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainTime
@@ -464,9 +447,6 @@ time.equals(time); // => true
 
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `calendarName` (string): Whether to show the calendar annotation in the return value.
-    Valid values are `'auto'`, `'always'`, and `'never'`.
-    The default is `'auto'`.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
     The default is `'auto'`.
@@ -487,10 +467,6 @@ If no options are given, the default is `fractionalSecondDigits: 'auto'`, which 
 
 The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
 Note that rounding may change the value of other units as well.
-
-Normally, a calendar annotation is shown when `time`'s calendar is not the ISO 8601 calendar.
-By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
-For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
 
 Example usage:
 
@@ -639,14 +615,14 @@ date = Temporal.PlainDate.from('2006-08-24');
 time.toPlainDateTime(date); // => 2006-08-24T15:23:30.003
 ```
 
-### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number }
+### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: Temporal.Calendar }
 
 **Returns:** a plain object with properties equal to the fields of `time`.
 
 This method can be used to convert a `Temporal.PlainTime` into a record-like data structure.
 It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
 
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.
+A `calendar` property is included and is always set to the ISO 8601 calendar.
 
 Usage example:
 
@@ -656,13 +632,12 @@ Object.assign({}, time).minute; // => undefined
 Object.assign({}, time.getFields()).minute; // => 23
 ```
 
-### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }
+### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: Temporal.Calendar }
 
-**Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar, as well as the value of `time.calendar`.
+**Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar.
 
-This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-Use `time.getFields()` instead, or `time.withCalendar('iso8601').getFields()`.
+This method is present for forward compatibility with custom calendars.
+Use `time.getFields()` instead.
 
 Usage example:
 
@@ -670,23 +645,4 @@ Usage example:
 time = Temporal.PlainTime.from('03:20:00');
 f = time.getISOFields();
 f.isoHour; // => 3
-// Fields correspond exactly to constructor arguments:
-time2 = new Temporal.PlainTime(
-  f.isoHour,
-  f.isoMinute,
-  f.isoSecond,
-  f.isoMillisecond,
-  f.isoMicrosecond,
-  f.isoNanosecond,
-  f.calendar
-);
-time.equals(time2); // => true
-
-// Time in other calendar
-time = time.withCalendar('ethiopic');
-time.getFields().hour; // => 9
-time.getISOFields().isoHour; // => 3
-
-// Most likely what you need is this:
-time.withCalendar('iso8601').hour; // => 3
 ```

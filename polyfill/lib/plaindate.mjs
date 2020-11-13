@@ -314,10 +314,10 @@ export class PlainDate {
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
     const day = GetSlot(this, ISO_DAY);
-    const dateCalendar = GetSlot(this, CALENDAR);
+    const calendar = GetSlot(this, CALENDAR);
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
 
-    if (temporalTime === undefined) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, dateCalendar);
+    if (temporalTime === undefined) return new DateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
 
     temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.PlainTime%'));
     const hour = GetSlot(temporalTime, ISO_HOUR);
@@ -326,9 +326,7 @@ export class PlainDate {
     const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
     const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
     const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-    const timeCalendar = GetSlot(temporalTime, CALENDAR);
 
-    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   toZonedDateTime(item) {
@@ -352,7 +350,6 @@ export class PlainDate {
     const day = GetSlot(this, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
 
-    // TODO: use start of day in calendar.
     let hour = 0,
       minute = 0,
       second = 0,
@@ -367,7 +364,6 @@ export class PlainDate {
       millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
       microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
       nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-      // TODO: verify calendars match
     }
 
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');

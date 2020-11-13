@@ -129,27 +129,27 @@ export class PlainDateTime {
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).hour(this);
+    return GetSlot(this, ISO_HOUR);
   }
   get minute() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).minute(this);
+    return GetSlot(this, ISO_MINUTE);
   }
   get second() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).second(this);
+    return GetSlot(this, ISO_SECOND);
   }
   get millisecond() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).millisecond(this);
+    return GetSlot(this, ISO_MILLISECOND);
   }
   get microsecond() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).microsecond(this);
+    return GetSlot(this, ISO_MICROSECOND);
   }
   get nanosecond() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).nanosecond(this);
+    return GetSlot(this, ISO_NANOSECOND);
   }
   get era() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -252,10 +252,10 @@ export class PlainDateTime {
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
     const day = GetSlot(this, ISO_DAY);
-    const dateCalendar = GetSlot(this, CALENDAR);
+    const calendar = GetSlot(this, CALENDAR);
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
 
-    if (temporalTime === undefined) return new Construct(year, month, day, 0, 0, 0, 0, 0, 0, dateCalendar);
+    if (temporalTime === undefined) return new Construct(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
 
     temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.PlainTime%'));
     const hour = GetSlot(temporalTime, ISO_HOUR);
@@ -264,9 +264,7 @@ export class PlainDateTime {
     const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
     const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
     const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-    const timeCalendar = GetSlot(temporalTime, CALENDAR);
 
-    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
   withPlainDate(temporalDate) {
@@ -276,7 +274,7 @@ export class PlainDateTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
-    const dateCalendar = GetSlot(temporalDate, CALENDAR);
+    let calendar = GetSlot(temporalDate, CALENDAR);
 
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);
@@ -284,9 +282,8 @@ export class PlainDateTime {
     const millisecond = GetSlot(this, ISO_MILLISECOND);
     const microsecond = GetSlot(this, ISO_MICROSECOND);
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
-    const timeCalendar = GetSlot(this, CALENDAR);
 
-    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+    calendar = ES.ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
     return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }

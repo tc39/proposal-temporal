@@ -222,8 +222,9 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Perform ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _result_ be ? AddTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -240,9 +241,10 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Perform ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _result_ be ? AddTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
+        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -265,27 +267,35 @@
         1. If _timeZoneProperty_ is not *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _temporalTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"second"* »).
-        1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_, _fieldNames_).
+        1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Let _fields_ be <mark>TODO</mark>.
-        1. Let _constructor_ be ? SpeciesConstructor(_temporalTime_, %Temporal.PlainTime%).
-        1. Return ? TimeFromFields(_calendar_, _fields_, _constructor_, _overflow_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.plaintime.prototype.withcalendar">
-      <h1>Temporal.PlainTime.prototype.withCalendar ( _calendar_ )</h1>
-      <p>
-        The `withCalendar` method takes one argument _calendar_.
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _calendar_ be ? ToTemporalCalendar(_calendar_).
-        1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _calendar_).
+        1. If _partialTime_.[[Hour]] is not *undefined*, then
+          1. Let _hour_ be _partialTime_.[[Hour]].
+        1. Else,
+          1. Let _hour_ be _temporalTime_.[[ISOHour]].
+        1. If _partialTime_.[[Minute]] is not *undefined*, then
+          1. Let _minute_ be _partialTime_.[[Minute]].
+        1. Else,
+          1. Let _minute_ be _temporalTime_.[[ISOMinute]].
+        1. If _partialTime_.[[Second]] is not *undefined*, then
+          1. Let _second_ be _partialTime_.[[Second]].
+        1. Else,
+          1. Let _second_ be _temporalTime_.[[ISOSecond]].
+        1. If _partialTime_.[[Millisecond]] is not *undefined*, then
+          1. Let _millisecond_ be _partialTime_.[[Millisecond]].
+        1. Else,
+          1. Let _millisecond_ be _temporalTime_.[[ISOMillisecond]].
+        1. If _partialTime_.[[Microsecond]] is not *undefined*, then
+          1. Let _microsecond_ be _partialTime_.[[Microsecond]].
+        1. Else,
+          1. Let _microsecond_ be _temporalTime_.[[ISOMicrosecond]].
+        1. If _partialTime_.[[Nanosecond]] is not *undefined*, then
+          1. Let _nanosecond_ be _partialTime_.[[Nanosecond]].
+        1. Else,
+          1. Let _nanosecond_ be _temporalTime_.[[ISONanosecond]].
+        1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
+        1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -418,7 +428,6 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. <mark>TODO: verify calendars match.</mark>
         1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _temporalDate_.[[Calendar]]).
         1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _temporalDateTime_, *"compatible"*).
         1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).
@@ -432,10 +441,32 @@
       </p>
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
-        1. Let _calendar_ be _temporalTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"second"* »).
-        1. Let _fields_ be ? ToTemporalTimeFields(_temporalTime_, _fieldNames_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
+        1. Let _record_ be ? ToTemporalTimeRecord(_temporalTime_).
+        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalTime_.[[Calendar]]).
+        1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _p_ be the Property value of the current row.
+          1. Let _v_ be the value of _record_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, _p_, _v_).
+        1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.plaintime.prototype.getisofields">
+      <h1>Temporal.PlainTime.prototype.getISOFields ( )</h1>
+      <p>
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _temporalTime_ be the *this* value.
+        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalTime_.[[Calendar]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_temporalTime_.[[ISOHour]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_temporalTime_.[[ISOMicrosecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, 𝔽(_temporalTime_.[[ISOMillisecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, 𝔽(_temporalTime_.[[ISOMinute]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, 𝔽(_temporalTime_.[[ISONanosecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_temporalTime_.[[ISOSecond]])).
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
@@ -452,9 +483,8 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
         1. Let _roundResult_ be ? RoundTime(_temporalTime_.[[Hour]], _temporalTime_.[[Minute]], _temporalTime_.[[Second]], _temporalTime_.[[Millisecond]], _temporalTime_.[[Microsecond]], _temporalTime_.[[Nanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return ? TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _temporalTime_.[[Calendar]], _precision_.[[Precision]], _showCalendar_).
+        1. Return ? TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _temporalTime_.[[Calendar]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -570,6 +600,14 @@
               An integer between 0 and 999, inclusive, representing the nanosecond within the microsecond.
             </td>
           </tr>
+          <tr>
+            <td>
+              [[Calendar]]
+            </td>
+            <td>
+              An instance of the built-in ISO 8601 calendar.
+            </td>
+          </tr>
         </tbody>
       </table>
     </emu-table>
@@ -614,13 +652,16 @@
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? Get(_item_, *"calendar"*).
-          1. If _calendar_ is *undefined*, set _calendar_ to ? GetISO8601Calendar().
-          1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"second"* »).
-          1. Let _fields_ be ? ToTemporalTimeFields(_item_, _fieldNames_).
-          1. Return ? TimeFromFields(_calendar_, _fields_, _constructor_, _overflow_).
-        1. Let _string_ be ? ToString(_item_).
-        1. Let _result_ be ? ParseTemporalTimeString(_string_).
+          1. If _calendar_ is not *undefined*, then
+            1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
+            1. If ? CalendarToString(_calendar_) is not *"iso8601"*, then
+              1. Throw a *RangeError* exception.
+          1. Let _result_ be ? ToTemporalTimeRecord(_item_).
+        1. Else,
+          1. Let _string_ be ? ToString(_item_).
+          1. Let _result_ be ? ParseTemporalTimeString(_string_).
+          1. If _result_.[[Calendar]] is not one of *undefined* or *"iso8601"*, then
+            1. Throw a *RangeError* exception.
         1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalTimeFromStatic(_constructor_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
@@ -794,13 +835,14 @@
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainTime%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainTime.prototype%"*, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainTime.prototype%"*, « [[InitializedTemporalTime]], [[Hour]], [[Minute]], [[Second]], [[Millisecond]], [[Microsecond]], [[Nanosecond]], [[Calendar]] »).
         1. Set _object_.[[Hour]] to _hour_.
         1. Set _object_.[[Minute]] to _minute_.
         1. Set _object_.[[Second]] to _second_.
         1. Set _object_.[[Millisecond]] to _millisecond_.
         1. Set _object_.[[Microsecond]] to _microsecond_.
         1. Set _object_.[[Nanosecond]] to _nanosecond_.
+        1. Set _object_.[[Calendar]] to ? GetISO8601Calendar().
         1. Return _object_.
       </emu-alg>
     </emu-clause>
@@ -829,22 +871,31 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaltimefields" aoid="ToTemporalTimeFields">
-      <h1>ToTemporalTimeFields ( _temporalDateLike_, _fieldNames_ )</h1>
+    <emu-clause id="sec-temporal-totemporaltimerecord" aoid="ToTemporalTimeRecord">
+      <h1>ToTemporalTimeRecord ( _temporalTimeLike_ )</h1>
       <emu-alg>
         1. Assert: Type(_temporalTimeLike_) is Object.
-        1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. For each value _property_ of _fieldNames_, do
-          1. Let _value_ be ? Get(_temporalDateLike_, _property_).
-          1. If _property_ is one of *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, or *"second"*, then
-            1. Set _value_ to ? ToInteger(_value_).
-          1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+        1. Let _result_ be the new Record {
+          [[Hour]]: *undefined*,
+          [[Minute]]: *undefined*,
+          [[Second]]: *undefined*,
+          [[Millisecond]]: *undefined*,
+          [[Microsecond]]: *undefined*,
+          [[Nanosecond]]: *undefined*
+          }.
+        1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property value of the current row.
+          1. Let _value_ be ? Get(_temporalTimeLike_, _property_).
+          1. If _value_ is *undefined*, then
+            1. Throw a *TypeError* exception.
+          1. Set _value_ to ? ToInteger(_value_).
+          1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaltimetostring" aoid="TemporalTimeToString">
-      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
+      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_ )</h1>
       <emu-alg>
         1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _hour_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.

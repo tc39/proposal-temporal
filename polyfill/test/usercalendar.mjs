@@ -206,61 +206,30 @@ describe('Userland calendar', () => {
   });
   describe('Trivial protocol implementation', () => {
     // For the purposes of testing, a nonsensical calendar that has 10-month
-    // years, 10-day months, 864-hour days, 10-minute hours and 10-second
-    // minutes, and the year zero is at the Unix epoch.
-    function decimalToISO(year, month, day, hour = 0, minute = 0, second = 0, overflow = 'constrain') {
+    // years, 10-day months, and the year zero is at the Unix epoch.
+    function decimalToISO(year, month, day, overflow = 'constrain') {
       if (overflow === 'constrain') {
         if (month < 1) month = 1;
         if (month > 10) month = 10;
         if (day < 1) day = 1;
         if (day > 10) day = 10;
-        if (hour < 0) hour = 0;
-        if (hour > 863) hour = 863;
-        if (minute < 0) minute = 0;
-        if (minute > 9) minute = 9;
-        if (second < 0) second = 0;
-        if (second > 9) second = 9;
       } else if (overflow === 'reject') {
-        if (
-          month < 1 ||
-          month > 10 ||
-          day < 1 ||
-          day > 10 ||
-          hour < 0 ||
-          hour > 863 ||
-          minute < 0 ||
-          minute > 9 ||
-          second < 0 ||
-          second > 9
-        ) {
+        if (month < 1 || month > 10 || day < 1 || day > 10) {
           throw new RangeError('invalid value');
         }
       }
       const days = year * 100 + (month - 1) * 10 + (day - 1);
-      const seconds = hour * 100 + minute * 10 + second;
-      const date = new Temporal.PlainDate(1970, 1, 1, 'iso8601').add({ days });
-      const time = new Temporal.PlainTime().add({ seconds });
-      return date.toPlainDateTime(time);
+      return new Temporal.PlainDate(1970, 1, 1, 'iso8601').add({ days });
     }
-    function isoToDecimal(datetime) {
-      const {
-        isoYear = 1970,
-        isoMonth = 1,
-        isoDay = 1,
-        isoHour = 0,
-        isoMinute = 0,
-        isoSecond = 0
-      } = datetime.getISOFields();
-      const isoDateTime = new Temporal.PlainDateTime(isoYear, isoMonth, isoDay, isoHour, isoMinute, isoSecond, 0, 0, 0);
-      let { seconds } = isoDateTime.since(new Temporal.PlainDateTime(1970, 1, 1, 0, 0, 0, 0, 0, 0), {
-        largestUnit: 'seconds'
+    function isoToDecimal(date) {
+      let { isoYear, isoMonth, isoDay } = date.getISOFields();
+      let isoDate = new Temporal.PlainDate(isoYear, isoMonth, isoDay);
+      let { days } = isoDate.since(new Temporal.PlainDate(1970, 1, 1), {
+        largestUnit: 'days'
       });
-      let days = Math.floor(seconds / 86400);
-      seconds %= 86400;
       let year = Math.floor(days / 100);
       days %= 100;
-      if (isoYear < 1970) year *= -1;
-      return { year, days, seconds };
+      return { year, days };
     }
     const obj = {
       get id() {
@@ -273,19 +242,6 @@ describe('Userland calendar', () => {
         const { overflow = 'constrain' } = options ? options : {};
         const isoDateTime = decimalToISO(fields.year, fields.month, fields.day, 0, 0, 0, overflow);
         return new constructor(isoDateTime.year, isoDateTime.month, isoDateTime.day, this);
-      },
-      timeFromFields(fields, options, constructor) {
-        const { overflow = 'constrain' } = options ? options : {};
-        const isoDateTime = decimalToISO(0, 1, 1, fields.hour, fields.minute, fields.second, overflow);
-        return new constructor(
-          isoDateTime.hour,
-          isoDateTime.minute,
-          isoDateTime.second,
-          fields.millisecond,
-          fields.microsecond,
-          fields.nanosecond,
-          this
-        );
       },
       yearMonthFromFields(fields, options, constructor) {
         const { overflow = 'constrain' } = options ? options : {};
@@ -366,7 +322,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.PlainDate.from('2020-06-05T12:00');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T00:20:00[c=decimal]'));
+    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=decimal]'));
     it('Temporal.PlainDateTime fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
@@ -383,7 +339,7 @@ describe('Userland calendar', () => {
       equal(dt2.year, 0);
     });
     it('datetime.withCalendar()', () => {
-      const dt2 = Temporal.PlainDateTime.from('2020-06-05T00:20');
+      const dt2 = Temporal.PlainDateTime.from('2020-06-05T12:00');
       assert(dt2.withCalendar(obj).equals(dt));
     });
     it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-05-28[c=decimal]'));
@@ -460,7 +416,7 @@ describe('Userland calendar', () => {
       });
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
-        equal(`${dt}`, '1970-01-01T00:20:00[c=decimal]');
+        equal(`${dt}`, '1970-01-01T12:00:00[c=decimal]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
