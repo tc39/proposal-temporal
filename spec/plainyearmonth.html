@@ -705,7 +705,7 @@
         1. Assert: ! ValidateDate(_year_, _month_, _referenceISODay_) is *true*.
         1. If ! IsConstructor(_constructor_) is *false*, then
           1. Throw a *TypeError* exception.
-        1. Let _result_ be ? Construct(_constructor_, « _year_, _month_, _calendar_, _refISODay_ »).
+        1. Let _result_ be ? Construct(_constructor_, « _year_, _month_, _calendar_, _referenceISODay_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalYearMonth]]).
         1. Return _result_.
       </emu-alg>

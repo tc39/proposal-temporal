@@ -1108,7 +1108,7 @@
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer mathematical value or *null*.
         1. Let _calendar_ be ? GetISO8601Calendar().
-        1. Let _dateTime_ be ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]]. _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_. _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetNanoseconds_ is *null*, or _offset_ is *"ignore"*, then
           1. Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _dateTime_, _disambiguation_).
           1. Return _instant_.[[Nanoseconds]].
