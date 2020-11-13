@@ -425,10 +425,7 @@
         1. If _plainTimeLike_ is *undefined*, then
           1. Return ? CreateTemporalDateTimeFromInstance(_temporalDateTime_, _temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDateTime_.[[Calendar]]).
         1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
-        1. Let _dateCalendar_ be _temporalDateTime_.[[Calendar]].
-        1. Let _timeCalendar_ be _plainTime_.[[Calendar]].
-        1. Let _calendar_ be ? ConsolidateCalendars(_dateCalendar_, _timeCalendar_).
-        1. Return ? CreateTemporalDateTimeFromInstance(_temporalDateTime_, _temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _plainTime_.[[ISOHour]], _plainTime_.[[ISOMinute]], _plainTime_.[[ISOSecond]], _plainTime_.[[ISOMillisecond]], _plainTime_.[[ISOMicrosecond]], _plainTime_.[[ISONanosecond]], _calendar_).
+        1. Return ? CreateTemporalDateTimeFromInstance(_temporalDateTime_, _temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _plainTime_.[[ISOHour]], _plainTime_.[[ISOMinute]], _plainTime_.[[ISOSecond]], _plainTime_.[[ISOMillisecond]], _plainTime_.[[ISOMicrosecond]], _plainTime_.[[ISONanosecond]], _temporalDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -442,9 +439,7 @@
         1. Let _temporalDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDateTime_, [[InitializedTemporalDateTime]]).
         1. Let _plainDate_ be ? ToTemporalDate(_plainDateLike_).
-        1. Let _dateCalendar_ be _plainDate_.[[Calendar]].
-        1. Let _timeCalendar_ be _temporalDateTime_.[[Calendar]].
-        1. Let _calendar_ be ? ConsolidateCalendars(_dateCalendar_, _timeCalendar_).
+        1. Let _calendar_ be ? ConsolidateCalendars(_temporalDateTime_.[[Calendar]], _plainDate_.[[Calendar]]).
         1. Return ? CreateTemporalDateTimeFromInstance(_temporalDateTime_, _plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -925,17 +920,18 @@
       </p>
       <emu-alg>
         1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, %Temporal.PlainDate%, _overflow_).
-        1. Let _temporalTime_ be ? TimeFromFields(_calendar_, _fields_, %Temporal.PlainTime%, _overflow_).
+        1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
+        1. Let _timeResult_ be ? RegulateTime(_timeResult_.[[Hour]], _timeResult_.[[Minute]], _timeResult_.[[Second]], _timeResult_.[[Millisecond]], _timeResult_.[[Microsecond]], _timeResult_.[[Nanosecond]], _overflow_).
         1. Return the new Record {
           [[Year]]: _temporalDate_.[[ISOYear]],
           [[Month]]: _temporalDate_.[[ISOMonth]],
           [[Day]]: _temporalDate_.[[ISODay]],
-          [[Hour]]: _temporalTime_.[[ISOHour]],
-          [[Minute]]: _temporalTime_.[[ISOMinute]],
-          [[Second]]: _temporalTime_.[[ISOSecond]],
-          [[Millisecond]]: _temporalTime_.[[ISOMillisecond]],
-          [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]],
-          [[Nanosecond]]: _temporalTime_.[[ISONanosecond]]
+          [[Hour]]: _timeResult_.[[Hour]],
+          [[Minute]]: _timeResult_.[[Minute]],
+          [[Second]]: _timeResult_.[[Second]],
+          [[Millisecond]]: _timeResult_.[[Millisecond]],
+          [[Microsecond]]: _timeResult_.[[Microsecond]],
+          [[Nanosecond]]: _timeResult_.[[Nanosecond]]
           }.
       </emu-alg>
     </emu-clause>
@@ -1191,7 +1187,6 @@
       <emu-alg>
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, _overflow_).
-        1. <mark>TODO: use `calendar.timeAdd()`</mark>.
         1. Let _timeResult_ be ? AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]]).
@@ -1241,10 +1236,7 @@
         The _largestUnit_ argument is used in _calendar_'s `dateUntil` method.
       </p>
       <emu-alg>
-        1. Let _time1_ be ? CreateTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _calendar_).
-        1. Let _time2_ be ? CreateTemporalTime(_h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_).
-        1. Let _timeUntil_ be ? Get(_calendar_, *"timeUntil"*).
-        1. Let _timeDifference_ be ? Call(_timeUntil_, _calendar_, « _time1_, _time2_ »).
+        1. Let _timeDifference_ be ? DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _balanceResult_ be ? BalanceDate(_y1_, _mon1_, _d1_ + _timeDifference_.[[Days]]).
         1. Let _date1_ be ? CreateTemporalDate(_balanceResult_.[[Year]], _balanceResult_.[[Month]], _balanceResult_.[[Day]]).
         1. Let _date2_ be ? CreateTemporalDate(_y2_, _mon2_, _d2_).

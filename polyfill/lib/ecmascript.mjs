@@ -678,17 +678,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = relativeTo.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, [
-        'day',
-        'hour',
-        'microsecond',
-        'millisecond',
-        'minute',
-        'month',
-        'nanosecond',
-        'second',
-        'year'
-      ]);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       ({
         year,
@@ -917,22 +907,15 @@ export const ES = ObjectAssign({}, ES2020, {
     });
     return ES.ToRecord(bag, entries);
   },
-  ToTemporalTimeFields: (bag, fieldNames) => {
-    const entries = [
+  ToTemporalTimeRecord: (bag) => {
+    return ES.ToRecord(bag, [
       ['hour', 0],
       ['microsecond', 0],
       ['millisecond', 0],
       ['minute', 0],
       ['nanosecond', 0],
       ['second', 0]
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.ToRecord(bag, entries);
+    ]);
   },
   ToTemporalYearMonthFields: (bag, fieldNames) => {
     const entries = [['month'], ['year']];
@@ -991,16 +974,16 @@ export const ES = ObjectAssign({}, ES2020, {
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
-
-    const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
-    const time = ES.TimeFromFields(calendar, fields, TemporalTime, overflow);
-    const hour = GetSlot(time, ISO_HOUR);
-    const minute = GetSlot(time, ISO_MINUTE);
-    const second = GetSlot(time, ISO_SECOND);
-    const millisecond = GetSlot(time, ISO_MILLISECOND);
-    const microsecond = GetSlot(time, ISO_MICROSECOND);
-    const nanosecond = GetSlot(time, ISO_NANOSECOND);
-
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      overflow
+    ));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   ToTemporalDateTime: (item, constructor, overflow = 'constrain') => {
@@ -1129,26 +1112,25 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   ToTemporalTime: (item, constructor, overflow = 'constrain') => {
+    let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
-      let calendar = item.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, [
-        'hour',
-        'microsecond',
-        'millisecond',
-        'minute',
-        'nanosecond',
-        'second'
-      ]);
-      const fields = ES.ToTemporalTimeFields(item, fieldNames);
-      return ES.TimeFromFields(calendar, fields, constructor, overflow);
+      calendar = item.calendar;
+      if (calendar) {
+        calendar = ES.ToTemporalCalendar(calendar);
+        if (ES.CalendarToString(calendar) !== 'iso8601') {
+          throw new RangeError('PlainTime can only have iso8601 calendar');
+        }
+      }
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
+    } else {
+      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
+        ES.ToString(item)
+      ));
+      if (calendar !== undefined && calendar !== 'iso8601') {
+        throw new RangeError('PlainTime can only have iso8601 calendar');
+      }
     }
-
-    let { hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
-      ES.ToString(item)
-    );
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -1158,9 +1140,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond,
       overflow
     ));
-    if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-    calendar = ES.ToTemporalCalendar(calendar);
-    let result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    let result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   },
@@ -1373,11 +1353,6 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       throw new RangeError('irreconcilable calendars');
     }
-  },
-  TimeFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
-    const result = calendar.timeFromFields(fields, { overflow }, constructor);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
   },
   DateFromFields: (calendar, fields, constructor, overflow = 'constrain') => {
     const result = calendar.dateFromFields(fields, { overflow }, constructor);
@@ -2610,12 +2585,19 @@ export const ES = ObjectAssign({}, ES2020, {
     largestUnit
   ) => {
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
-    const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
-    const time1 = new TemporalTime(h1, min1, s1, ms1, µs1, ns1, calendar);
-    const time2 = new TemporalTime(h2, min2, s2, ms2, µs2, ns2, calendar);
-    let { days: deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(
-      time1,
-      time2
+    let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      h1,
+      min1,
+      s1,
+      ms1,
+      µs1,
+      ns1,
+      h2,
+      min2,
+      s2,
+      ms2,
+      µs2,
+      ns2
     );
     ({ year: y1, month: mon1, day: d1 } = ES.BalanceDate(y1, mon1, d1 + deltaDays));
     const date1 = new TemporalDate(y1, mon1, d1, calendar);

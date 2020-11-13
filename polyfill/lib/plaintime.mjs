@@ -23,7 +23,7 @@ import {
 
 const ObjectAssign = Object.assign;
 
-function TemporalTimeToString(time, precision, showCalendar = 'auto', options = undefined) {
+function TemporalTimeToString(time, precision, options = undefined) {
   let hour = GetSlot(time, ISO_HOUR);
   let minute = GetSlot(time, ISO_MINUTE);
   let second = GetSlot(time, ISO_SECOND);
@@ -49,28 +49,17 @@ function TemporalTimeToString(time, precision, showCalendar = 'auto', options = 
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendarID = ES.CalendarToString(GetSlot(time, CALENDAR));
-  const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
-  return `${hour}:${minute}${seconds}${calendar}`;
+  return `${hour}:${minute}${seconds}`;
 }
 
 export class PlainTime {
-  constructor(
-    isoHour = 0,
-    isoMinute = 0,
-    isoSecond = 0,
-    isoMillisecond = 0,
-    isoMicrosecond = 0,
-    isoNanosecond = 0,
-    calendar = ES.GetISO8601Calendar()
-  ) {
+  constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
     isoHour = ES.ToInteger(isoHour);
     isoMinute = ES.ToInteger(isoMinute);
     isoSecond = ES.ToInteger(isoSecond);
     isoMillisecond = ES.ToInteger(isoMillisecond);
     isoMicrosecond = ES.ToInteger(isoMicrosecond);
     isoNanosecond = ES.ToInteger(isoNanosecond);
-    calendar = ES.ToTemporalCalendar(calendar);
 
     ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
     CreateSlots(this);
@@ -80,7 +69,7 @@ export class PlainTime {
     SetSlot(this, ISO_MILLISECOND, isoMillisecond);
     SetSlot(this, ISO_MICROSECOND, isoMicrosecond);
     SetSlot(this, ISO_NANOSECOND, isoNanosecond);
-    SetSlot(this, CALENDAR, calendar);
+    SetSlot(this, CALENDAR, ES.GetISO8601Calendar());
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
@@ -98,27 +87,27 @@ export class PlainTime {
   }
   get hour() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).hour(this);
+    return GetSlot(this, ISO_HOUR);
   }
   get minute() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).minute(this);
+    return GetSlot(this, ISO_MINUTE);
   }
   get second() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).second(this);
+    return GetSlot(this, ISO_SECOND);
   }
   get millisecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).millisecond(this);
+    return GetSlot(this, ISO_MILLISECOND);
   }
   get microsecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).microsecond(this);
+    return GetSlot(this, ISO_MICROSECOND);
   }
   get nanosecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).nanosecond(this);
+    return GetSlot(this, ISO_NANOSECOND);
   }
 
   with(temporalTimeLike, options = undefined) {
@@ -136,8 +125,7 @@ export class PlainTime {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
 
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, [
+    const props = ES.ToPartialRecord(temporalTimeLike, [
       'hour',
       'microsecond',
       'millisecond',
@@ -145,29 +133,22 @@ export class PlainTime {
       'nanosecond',
       'second'
     ]);
-    const props = ES.ToPartialRecord(temporalTimeLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid time-like');
     }
-    const fields = ES.ToTemporalTimeFields(this, fieldNames);
-    ObjectAssign(fields, props);
-
+    const fields = ES.ToTemporalTimeRecord(this);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ObjectAssign(fields, props);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      overflow
+    ));
     const Construct = ES.SpeciesConstructor(this, PlainTime);
-    return ES.TimeFromFields(calendar, fields, Construct, overflow);
-  }
-  withCalendar(calendar) {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    calendar = ES.ToTemporalCalendar(calendar);
-    const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      calendar
-    );
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -176,44 +157,86 @@ export class PlainTime {
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    options = ES.NormalizeOptionsObject(options);
+    const overflow = ES.ToTemporalOverflow(options);
+    let hour = GetSlot(this, ISO_HOUR);
+    let minute = GetSlot(this, ISO_MINUTE);
+    let second = GetSlot(this, ISO_SECOND);
+    let millisecond = GetSlot(this, ISO_MILLISECOND);
+    let microsecond = GetSlot(this, ISO_MICROSECOND);
+    let nanosecond = GetSlot(this, ISO_NANOSECOND);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    ));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      overflow
+    ));
     const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = GetSlot(this, CALENDAR).timeAdd(this, duration, options, Construct);
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    duration = {
-      years: -duration.years,
-      months: -duration.months,
-      weeks: -duration.weeks,
-      days: -duration.days,
-      hours: -duration.hours,
-      minutes: -duration.minutes,
-      seconds: -duration.seconds,
-      milliseconds: -duration.milliseconds,
-      microseconds: -duration.microseconds,
-      nanoseconds: -duration.nanoseconds
-    };
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    options = ES.NormalizeOptionsObject(options);
+    const overflow = ES.ToTemporalOverflow(options);
+    let hour = GetSlot(this, ISO_HOUR);
+    let minute = GetSlot(this, ISO_MINUTE);
+    let second = GetSlot(this, ISO_SECOND);
+    let millisecond = GetSlot(this, ISO_MILLISECOND);
+    let microsecond = GetSlot(this, ISO_MICROSECOND);
+    let nanosecond = GetSlot(this, ISO_NANOSECOND);
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      -hours,
+      -minutes,
+      -seconds,
+      -milliseconds,
+      -microseconds,
+      -nanoseconds
+    ));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      overflow
+    ));
     const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = GetSlot(this, CALENDAR).timeAdd(this, duration, options, Construct);
+    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other, PlainTime);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between times of ${calendarId} and ${otherCalendarId} calendars`);
-    }
-
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
@@ -228,8 +251,20 @@ export class PlainTime {
       nanoseconds: 1000
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
-
-    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(this, other);
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
+      GetSlot(other, ISO_HOUR),
+      GetSlot(other, ISO_MINUTE),
+      GetSlot(other, ISO_SECOND),
+      GetSlot(other, ISO_MILLISECOND),
+      GetSlot(other, ISO_MICROSECOND),
+      GetSlot(other, ISO_NANOSECOND)
+    );
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RoundDuration(
       0,
       0,
@@ -261,14 +296,6 @@ export class PlainTime {
   since(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other, PlainTime);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between times of ${calendarId} and ${otherCalendarId} calendars`);
-    }
-
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
@@ -283,8 +310,20 @@ export class PlainTime {
       nanoseconds: 1000
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
-
-    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = calendar.timeUntil(other, this);
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+      GetSlot(other, ISO_HOUR),
+      GetSlot(other, ISO_MINUTE),
+      GetSlot(other, ISO_SECOND),
+      GetSlot(other, ISO_MILLISECOND),
+      GetSlot(other, ISO_MICROSECOND),
+      GetSlot(other, ISO_NANOSECOND),
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND)
+    );
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RoundDuration(
       0,
       0,
@@ -374,8 +413,7 @@ export class PlainTime {
     options = ES.NormalizeOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const showCalendar = ES.ToShowCalendarOption(options);
-    return TemporalTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
+    return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -396,7 +434,7 @@ export class PlainTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
-    const dateCalendar = GetSlot(temporalDate, CALENDAR);
+    const calendar = GetSlot(temporalDate, CALENDAR);
 
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);
@@ -404,9 +442,7 @@ export class PlainTime {
     const millisecond = GetSlot(this, ISO_MILLISECOND);
     const microsecond = GetSlot(this, ISO_MICROSECOND);
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
-    const timeCalendar = GetSlot(this, CALENDAR);
 
-    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   }
@@ -432,7 +468,6 @@ export class PlainTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
-    // TODO: verify calendars match
     const calendar = GetSlot(temporalDate, CALENDAR);
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);
@@ -459,17 +494,8 @@ export class PlainTime {
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   getFields() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, [
-      'hour',
-      'microsecond',
-      'millisecond',
-      'minute',
-      'nanosecond',
-      'second'
-    ]);
-    const fields = ES.ToTemporalTimeFields(this, fieldNames);
+    const fields = ES.ToTemporalTimeRecord(this);
+    if (!fields) throw new TypeError('invalid receiver');
     fields.calendar = GetSlot(this, CALENDAR);
     return fields;
   }
@@ -496,8 +522,7 @@ export class PlainTime {
       const millisecond = GetSlot(item, ISO_MILLISECOND);
       const microsecond = GetSlot(item, ISO_MICROSECOND);
       const nanosecond = GetSlot(item, ISO_NANOSECOND);
-      const calendar = GetSlot(item, CALENDAR);
-      const result = new this(hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
       if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
       return result;
     }
@@ -511,7 +536,7 @@ export class PlainTime {
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
     }
-    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+    return 0;
   }
 }
 

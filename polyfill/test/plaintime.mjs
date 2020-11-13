@@ -99,22 +99,6 @@ describe('Time', () => {
     describe('complete', () => {
       let time;
       it('time can be constructed', () => {
-        time = new PlainTime(15, 23, 30, 123, 456, 789, Temporal.Calendar.from('gregory'));
-        assert(time);
-        equal(typeof time, 'object');
-      });
-      it('time.hour is 15', () => equal(time.hour, 15));
-      it('time.minute is 23', () => equal(time.minute, 23));
-      it('time.second is 30', () => equal(time.second, 30));
-      it('time.millisecond is 123', () => equal(time.millisecond, 123));
-      it('time.microsecond is 456', () => equal(time.microsecond, 456));
-      it('time.nanosecond is 789', () => equal(time.nanosecond, 789));
-      it('time.calendar.id is gregory', () => equal(time.calendar.id, 'gregory'));
-      it('`${time}` is 15:23:30.123456789', () => equal(`${time}`, '15:23:30.123456789[c=gregory]'));
-    });
-    describe('missing calendar', () => {
-      let time;
-      it('time can be constructed', () => {
         time = new PlainTime(15, 23, 30, 123, 456, 789);
         assert(time);
         equal(typeof time, 'object');
@@ -1121,26 +1105,6 @@ describe('Time', () => {
       equal(t2.toString(), '15:23:30');
       equal(t3.toString(), '15:23:30.1234');
     });
-    const t3g = new PlainTime(15, 23, 30, 123, 400, 0, 'gregory');
-    it('shows only non-ISO calendar if calendarName = auto', () => {
-      equal(t3.toString({ calendarName: 'auto' }), '15:23:30.1234');
-      equal(t3g.toString({ calendarName: 'auto' }), '15:23:30.1234[c=gregory]');
-    });
-    it('shows ISO calendar if calendarName = always', () => {
-      equal(t3.toString({ calendarName: 'always' }), '15:23:30.1234[c=iso8601]');
-    });
-    it('omits non-ISO calendar if calendarName = never', () => {
-      equal(t3g.toString({ calendarName: 'never' }), '15:23:30.1234');
-    });
-    it('default is calendar = auto', () => {
-      equal(t3.toString(), '15:23:30.1234');
-      equal(t3g.toString(), '15:23:30.1234[c=gregory]');
-    });
-    it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
-        throws(() => t3.toString({ calendarName }), RangeError);
-      });
-    });
     it('truncates to minute', () => {
       [t1, t2, t3].forEach((t) => equal(t.toString({ smallestUnit: 'minute' }), '15:23'));
     });
@@ -1361,6 +1325,7 @@ describe('Time', () => {
       equal(fields.millisecond, 123);
       equal(fields.microsecond, 456);
       equal(fields.nanosecond, 789);
+      equal(fields.calendar.id, 'iso8601');
     });
     it('enumerable', () => {
       const fields2 = { ...fields };
@@ -1370,6 +1335,7 @@ describe('Time', () => {
       equal(fields2.millisecond, 123);
       equal(fields2.microsecond, 456);
       equal(fields2.nanosecond, 789);
+      equal(fields2.calendar.id, 'iso8601');
     });
     it('as input to from()', () => {
       const t2 = PlainTime.from(fields);
@@ -1404,8 +1370,7 @@ describe('Time', () => {
         fields.isoSecond,
         fields.isoMillisecond,
         fields.isoMicrosecond,
-        fields.isoNanosecond,
-        fields.calendar
+        fields.isoNanosecond
       );
       assert(t1.equals(t2));
     });

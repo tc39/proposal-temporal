@@ -2,22 +2,7 @@
 
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
-import {
-  CALENDAR_ID,
-  ISO_YEAR,
-  ISO_MONTH,
-  ISO_DAY,
-  ISO_HOUR,
-  ISO_MINUTE,
-  ISO_SECOND,
-  ISO_MILLISECOND,
-  ISO_MICROSECOND,
-  ISO_NANOSECOND,
-  CreateSlots,
-  GetSlot,
-  HasSlot,
-  SetSlot
-} from './slots.mjs';
+import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlot, SetSlot } from './slots.mjs';
 
 const ArrayIncludes = Array.prototype.includes;
 const ObjectAssign = Object.assign;
@@ -50,15 +35,6 @@ export class Calendar {
     const overflow = ES.ToTemporalOverflow(options);
     const { year, month, day } = impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, overflow);
     return new constructor(year, month, day, this);
-  }
-  timeFromFields(fields, options, constructor) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = impl[
-      GetSlot(this, CALENDAR_ID)
-    ].timeFromFields(fields, overflow);
-    return new constructor(hour, minute, second, millisecond, microsecond, nanosecond, this);
   }
   yearMonthFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -104,31 +80,6 @@ export class Calendar {
     const { years, months, weeks, days } = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-  }
-  timeAdd(time, duration, options, constructor) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    time = ES.ToTemporalTime(time, GetIntrinsic('%Temporal.PlainTime%'));
-    duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = impl[GetSlot(this, CALENDAR_ID)].timeAdd(
-      time,
-      duration,
-      overflow
-    );
-    return new constructor(hour, minute, second, millisecond, microsecond, nanosecond, this);
-  }
-  timeUntil(one, two, options) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    one = ES.ToTemporalTime(one, GetIntrinsic('%Temporal.PlainTime%'));
-    two = ES.ToTemporalTime(two, GetIntrinsic('%Temporal.PlainTime%'));
-    options = ES.NormalizeOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'days']);
-    const { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = impl[
-      GetSlot(this, CALENDAR_ID)
-    ].timeUntil(one, two, largestUnit);
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   year(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -178,30 +129,6 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].inLeapYear(date);
   }
-  hour(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].hour(time);
-  }
-  minute(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].minute(time);
-  }
-  second(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].second(time);
-  }
-  millisecond(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].millisecond(time);
-  }
-  microsecond(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].microsecond(time);
-  }
-  nanosecond(time) {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].nanosecond(time);
-  }
   toString() {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR_ID);
@@ -235,17 +162,6 @@ impl['iso8601'] = {
     const { year, month, day } = ES.ToRecord(fields, [['day'], ['month'], ['year']]);
     return ES.RegulateDate(year, month, day, overflow);
   },
-  timeFromFields(fields, overflow) {
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToRecord(fields, [
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['nanosecond', 0],
-      ['second', 0]
-    ]);
-    return ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
-  },
   yearMonthFromFields(fields, overflow) {
     const { year, month } = ES.ToRecord(fields, [['month'], ['year']]);
     return ES.RegulateYearMonth(year, month, overflow);
@@ -275,47 +191,6 @@ impl['iso8601'] = {
       largestUnit
     );
   },
-  timeAdd(time, duration, overflow) {
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    let hour = GetSlot(time, ISO_HOUR);
-    let minute = GetSlot(time, ISO_MINUTE);
-    let second = GetSlot(time, ISO_SECOND);
-    let millisecond = GetSlot(time, ISO_MILLISECOND);
-    let microsecond = GetSlot(time, ISO_MICROSECOND);
-    let nanosecond = GetSlot(time, ISO_NANOSECOND);
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
-    return ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
-  },
-  timeUntil(one, two) {
-    const { deltaDays: days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
-      GetSlot(one, ISO_HOUR),
-      GetSlot(one, ISO_MINUTE),
-      GetSlot(one, ISO_SECOND),
-      GetSlot(one, ISO_MILLISECOND),
-      GetSlot(one, ISO_MICROSECOND),
-      GetSlot(one, ISO_NANOSECOND),
-      GetSlot(two, ISO_HOUR),
-      GetSlot(two, ISO_MINUTE),
-      GetSlot(two, ISO_SECOND),
-      GetSlot(two, ISO_MILLISECOND),
-      GetSlot(two, ISO_MICROSECOND),
-      GetSlot(two, ISO_NANOSECOND)
-    );
-    return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
-  },
   year(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_YEAR);
@@ -331,24 +206,6 @@ impl['iso8601'] = {
   era(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
     return undefined;
-  },
-  hour(time) {
-    return GetSlot(time, ISO_HOUR);
-  },
-  minute(time) {
-    return GetSlot(time, ISO_MINUTE);
-  },
-  second(time) {
-    return GetSlot(time, ISO_SECOND);
-  },
-  millisecond(time) {
-    return GetSlot(time, ISO_MILLISECOND);
-  },
-  microsecond(time) {
-    return GetSlot(time, ISO_MICROSECOND);
-  },
-  nanosecond(time) {
-    return GetSlot(time, ISO_NANOSECOND);
   },
   dayOfWeek(date) {
     date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
