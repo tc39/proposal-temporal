@@ -203,6 +203,10 @@
 <ul>
 <li><a href="#with">with</a>
 </li>
+<li><a href="#withPlainTime">withPlainTime</a>
+</li>
+<li><a href="#withPlainDate">withPlainDate</a>
+</li>
 <li><a href="#withCalendar">withCalendar</a>
 </li>
 <li><a href="#add">add</a>
@@ -490,7 +494,61 @@ See the <code>withCalendar</code> and <code>toZonedDateTime</code> methods inste
 </blockquote>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T03:24:31.000003500</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>datetime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+dt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> second<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T03:24:31.000003500</span></code></pre><h3 id="withPlainTime"><a class="heading-link" href="#withPlainTime"></a>datetime.<strong>withPlainTime</strong>(<em>plainTime</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>plainTime</code> (<code>Temporal.PlainTime</code> or plain object or string): The clock time that should replace the current clock time of <code>datetime</code>.
+If omitted, the clock time of the result will be <code>00:00:00</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainDateTime</code> object which is the date indicated by <code>datetime</code>, combined with the time represented by <code>plainTime</code>.</p>
+<p>Valid input to <code>withPlainTime</code> is the same as valid input to <code>Temporal.PlainTime.from</code>, including strings like <code>12:15:36</code>, plain object property bags like <code>{ hour: 20, minute: 30 }</code>, or <code>Temporal</code> objects that contain time fields: <code>Temporal.PlainTime</code>, <code>Temporal.ZonedDateTime</code>, or <code>Temporal.PlainDateTime</code>.</p>
+<p>This method is similar to <code>with</code>, but with a few important differences:</p>
+<ul>
+<li><code>withPlainTime</code> accepts strings, Temporal objects, or object property bags.
+<code>with</code> only accepts object property bags and does not accept strings nor <code>Temporal.PlainTime</code> objects because they can contain calendar information.</li>
+<li><code>withPlainTime</code> will default all missing time units to zero, while <code>with</code> will only change units that are present in the input object.</li>
+</ul>
+<p>If <code>plainTime</code> is a <code>Temporal.PlainTime</code> object, then this method returns the same result as <code>plainTime.toPlainDateTime(datetime)</code> but can be easier to use, especially when chained to previous operations that return a <code>Temporal.PlainDateTime</code>.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hour<span class="token operator">:</span> <span class="token number">10</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T10:00:00</span>
+time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'11:22'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainTime</span><span class="token punctuation">(</span>time<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T11:22:00</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainTime</span><span class="token punctuation">(</span><span class="token string">'12:34'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T12:34:00</span>
+
+<span class="token comment">// easier for chaining</span>
+dt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> hours<span class="token operator">:</span> <span class="token number">22</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTime</span><span class="token punctuation">(</span><span class="token string">'00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-10T00:00:00</span></code></pre><h3 id="withPlainDate"><a class="heading-link" href="#withPlainDate"></a>datetime.<strong>withPlainDate</strong>(<em>plainDate</em>: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>plainDate</code> (<code>Temporal.PlainDate</code> or plain object or string): The calendar date that should replace the current calendar date of <code>datetime</code>.</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainDateTime</code> object which is the date indicated by <code>datetime</code>, combined with the date represented by <code>plainDate</code>.</p>
+<p>Valid input to <code>withPlainDate</code> is the same as valid input to <code>Temporal.PlainDate.from</code>, including strings like <code>2000-03-01</code>, plain object property bags like <code>{ year: 2020, month: 3, day: 1 }</code>, or <code>Temporal</code> objects that contain a <code>year</code>, <code>month</code>, and <code>day</code> property, including <code>Temporal.PlainDate</code>, <code>Temporal.PlainDateTime</code>, or <code>Temporal.ZonedDateTime</code>.</p>
+<p>All three date units (<code>year</code>, <code>month</code>, and <code>day</code>) are required.
+<code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> are not valid input because they lack all date units.
+Both of those types have a <code>toPlainDate</code> method that can be used to obtain a <code>Temporal.PlainDate</code> which can in turn be used as input to <code>withPlainDate</code>.</p>
+<p>If <code>plainDate</code> contains a non-ISO 8601 calendar, then the result of <code>withPlainDate</code> will be the calendar of <code>plainDate</code>.
+However, if <code>datetime.calendar</code> is already a non-ISO 8601 calendar, then this method wil throw a <code>RangeError</code>.
+To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using <code>.withCalendar(&#39;iso8601&#39;)</code>.</p>
+<p>This method is similar to <code>with</code>, but with a few important differences:</p>
+<ul>
+<li><code>withPlainDate</code> accepts strings, Temporal objects, or object property bags.
+<code>with</code> only accepts object property bags and does not accept strings nor <code>Temporal.PlainDate</code> objects because they can contain calendar information.</li>
+<li><code>withPlainDate</code> will update all date units, while <code>with</code> only changes individual units that are present in the input, e.g. setting the <code>day</code> to <code>1</code> while leaving <code>month</code> and <code>year</code> unchanged.</li>
+</ul>
+<p>If <code>plainDate</code> is a <code>Temporal.PlainDate</code> object, then this method returns the same result as <code>plainDate.toPlainDateTime(datetime)</code> but can be easier to use, especially when chained to previous operations that return a <code>Temporal.PlainDateTime</code>.</p>
+<p>Usage example:</p>
+<pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2000</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-06-01T03:24:30</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-23'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-23T03:24:30</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token string">'2018-09-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2018-09-15T03:24:30</span>
+
+<span class="token comment">// easier for chaining</span>
+dt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token string">'2000-06-01'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-06-01T15:24:30</span>
+
+<span class="token comment">// result contains a non-ISO calendar if present in the input</span>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token string">'2008-09-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2008-09-06T03:24:30[c=japanese]</span>
+dt<span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token string">'2017-09-06[c=japanese]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2017-09-06T03:24:30[c=japanese]</span>
+dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withPlainDate</span><span class="token punctuation">(</span><span class="token string">'2017-09-06[c=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => RangeError (calendar conflict)</span></code></pre><h3 id="withCalendar"><a class="heading-link" href="#withCalendar"></a>datetime.<strong>withCalendar</strong>(<em>calendar</em>: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>datetime</code>.</li>
 </ul>
@@ -596,7 +654,7 @@ The default is to do no rounding.</p>
 <p>Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow <code>Number.MAX_SAFE_INTEGER</code> and lose precision in its least significant digit(s).
 Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.</p>
-<p>Computing the difference between two datetimes in different calendar systems is not supported.
+<p>Computing the difference between two date/times in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with <code>datetime.withCalendar()</code>.</p>
 <p>Usage example:</p>
 <!-- prettier-ignore-start -->
@@ -707,7 +765,7 @@ dt<span class="token punctuation">.</span><span class="token function">round</sp
 <p>Compares two <code>Temporal.PlainDateTime</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>datetime == other</code> or <code>datetime === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If you don&#39;t need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than <code>Temporal.PlainDateTime.compare</code>.</p>
-<p>Note that this function will return <code>true</code> if the two datetimes are equal, even if they are expressed in different calendar systems.</p>
+<p>Note that this function will return <code>true</code> if the two date/times are equal, even if they are expressed in different calendar systems.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">dt1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

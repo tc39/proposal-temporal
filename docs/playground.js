@@ -4725,7 +4725,7 @@
 
       if (sOne === sTwo || sOne === 'iso8601') {
         return two;
-      } else if (two === 'iso8601') {
+      } else if (sTwo === 'iso8601') {
         return one;
       } else {
         throw new RangeError('irreconcilable calendars');
@@ -9797,6 +9797,48 @@
         return result;
       }
     }, {
+      key: "withPlainTime",
+      value: function withPlainTime() {
+        var temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var year = GetSlot(this, ISO_YEAR);
+        var month = GetSlot(this, ISO_MONTH);
+        var day = GetSlot(this, ISO_DAY);
+        var dateCalendar = GetSlot(this, CALENDAR);
+        var Construct = ES.SpeciesConstructor(this, PlainDateTime);
+        if (temporalTime === undefined) return new Construct(year, month, day, 0, 0, 0, 0, 0, 0, dateCalendar);
+        temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic$1('%Temporal.PlainTime%'));
+        var hour = GetSlot(temporalTime, ISO_HOUR);
+        var minute = GetSlot(temporalTime, ISO_MINUTE);
+        var second = GetSlot(temporalTime, ISO_SECOND);
+        var millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
+        var microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
+        var nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+        var timeCalendar = GetSlot(temporalTime, CALENDAR);
+        var calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+        return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      }
+    }, {
+      key: "withPlainDate",
+      value: function withPlainDate(temporalDate) {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic$1('%Temporal.PlainDate%'));
+        var year = GetSlot(temporalDate, ISO_YEAR);
+        var month = GetSlot(temporalDate, ISO_MONTH);
+        var day = GetSlot(temporalDate, ISO_DAY);
+        var dateCalendar = GetSlot(temporalDate, CALENDAR);
+        var hour = GetSlot(this, ISO_HOUR);
+        var minute = GetSlot(this, ISO_MINUTE);
+        var second = GetSlot(this, ISO_SECOND);
+        var millisecond = GetSlot(this, ISO_MILLISECOND);
+        var microsecond = GetSlot(this, ISO_MICROSECOND);
+        var nanosecond = GetSlot(this, ISO_NANOSECOND);
+        var timeCalendar = GetSlot(this, CALENDAR);
+        var calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+        var Construct = ES.SpeciesConstructor(this, PlainDateTime);
+        return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+      }
+    }, {
       key: "withCalendar",
       value: function withCalendar(calendar) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -12198,6 +12240,58 @@
         var result = new Construct(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
         if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
         return result;
+      }
+    }, {
+      key: "withPlainDate",
+      value: function withPlainDate(temporalDate) {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic$1('%Temporal.PlainDate%'));
+        var year = GetSlot(temporalDate, ISO_YEAR);
+        var month = GetSlot(temporalDate, ISO_MONTH);
+        var day = GetSlot(temporalDate, ISO_DAY);
+        var dateCalendar = GetSlot(temporalDate, CALENDAR);
+        var timeCalendar = GetSlot(this, CALENDAR);
+        var thisDt = dateTime(this);
+        var hour = GetSlot(thisDt, ISO_HOUR);
+        var minute = GetSlot(thisDt, ISO_MINUTE);
+        var second = GetSlot(thisDt, ISO_SECOND);
+        var millisecond = GetSlot(thisDt, ISO_MILLISECOND);
+        var microsecond = GetSlot(thisDt, ISO_MICROSECOND);
+        var nanosecond = GetSlot(thisDt, ISO_NANOSECOND);
+        var calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var PlainDateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
+        var dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        var instant = ES.GetTemporalInstantFor(timeZone, dt, 'compatible');
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        return new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+      }
+    }, {
+      key: "withPlainTime",
+      value: function withPlainTime() {
+        var temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var PlainTime = GetIntrinsic$1('%Temporal.PlainTime%');
+        temporalTime = temporalTime == undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime, PlainTime);
+        var thisDt = dateTime(this);
+        var year = GetSlot(thisDt, ISO_YEAR);
+        var month = GetSlot(thisDt, ISO_MONTH);
+        var day = GetSlot(thisDt, ISO_DAY);
+        var dateCalendar = GetSlot(this, CALENDAR);
+        var hour = GetSlot(temporalTime, ISO_HOUR);
+        var minute = GetSlot(temporalTime, ISO_MINUTE);
+        var second = GetSlot(temporalTime, ISO_SECOND);
+        var millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
+        var microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
+        var nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+        var timeCalendar = GetSlot(temporalTime, CALENDAR);
+        var calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var PlainDateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
+        var dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+        var instant = ES.GetTemporalInstantFor(timeZone, dt, 'compatible');
+        var Construct = ES.SpeciesConstructor(this, ZonedDateTime);
+        return new Construct(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
       }
     }, {
       key: "withTimeZone",
