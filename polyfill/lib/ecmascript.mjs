@@ -1366,7 +1366,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const sTwo = ES.CalendarToString(two);
     if (sOne === sTwo || sOne === 'iso8601') {
       return two;
-    } else if (two === 'iso8601') {
+    } else if (sTwo === 'iso8601') {
       return one;
     } else {
       throw new RangeError('irreconcilable calendars');
