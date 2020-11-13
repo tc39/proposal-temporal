@@ -986,6 +986,9 @@ describe('Date', () => {
           );
         });
       });
+      it('constrain has no effect on invalid ISO string', () => {
+        throws(() => PlainDate.from('2020-13-34', { overflow: 'constrain' }), RangeError);
+      });
     });
   });
   describe('Date.compare works', () => {

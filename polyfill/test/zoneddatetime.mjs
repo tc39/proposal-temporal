@@ -400,6 +400,9 @@ describe('ZonedDateTime', () => {
     });
     it('no junk at end of string', () =>
       throws(() => ZonedDateTime.from('1976-11-18T15:23:30.123456789-08:00[America/Los_Angeles]junk'), RangeError));
+    it('constrain has no effect on invalid ISO string', () => {
+      throws(() => ZonedDateTime.from('2020-13-34T24:60[America/Los_Angeles]', { overflow: 'constrain' }), RangeError);
+    });
     describe('Offset option', () => {
       it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {
         throws(() => ZonedDateTime.from('2020-03-08T01:00-04:00[-08:00]'), RangeError);

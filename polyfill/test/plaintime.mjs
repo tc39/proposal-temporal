@@ -1284,6 +1284,9 @@ describe('Time', () => {
       const leap = { hour: 23, minute: 59, second: 60 };
       it('reject leap second', () => throws(() => PlainTime.from(leap, { overflow: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${PlainTime.from(leap)}`, '23:59:59'));
+      it('constrain has no effect on invalid ISO string', () => {
+        throws(() => PlainTime.from('24:60', { overflow: 'constrain' }), RangeError);
+      });
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => PlainTime.from({}), TypeError);

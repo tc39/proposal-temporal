@@ -961,7 +961,7 @@ export const ES = ObjectAssign({}, ES2020, {
       return ES.DateFromFields(calendar, fields, constructor, overflow);
     }
     let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
+    ES.RejectDate(year, month, day);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
     let result = new constructor(year, month, day, calendar);
@@ -1021,6 +1021,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanosecond,
         calendar
       } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
+      ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
@@ -1102,8 +1103,8 @@ export const ES = ObjectAssign({}, ES2020, {
       return ES.MonthDayFromFields(calendar, fields, constructor, overflow);
     }
 
-    let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
-    ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
+    let { month, day, referenceISOYear = 1972, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
+    ES.RejectDate(referenceISOYear, month, day);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
     if (referenceISOYear === undefined) referenceISOYear = 1972;
@@ -1123,23 +1124,24 @@ export const ES = ObjectAssign({}, ES2020, {
         }
       }
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
+      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        overflow
+      ));
     } else {
       ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseTemporalTimeString(
         ES.ToString(item)
       ));
+      ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
       if (calendar !== undefined && calendar !== 'iso8601') {
         throw new RangeError('PlainTime can only have iso8601 calendar');
       }
     }
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      overflow
-    ));
     let result = new constructor(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
@@ -1156,7 +1158,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     let { year, month, referenceISODay = 1, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-    ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
+    ES.RejectDate(year, month, referenceISODay);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
     let result = new constructor(year, month, calendar, referenceISODay);

@@ -133,6 +133,9 @@ describe('YearMonth', () => {
             );
           });
         });
+        it('constrain has no effect on invalid ISO string', () => {
+          throws(() => PlainYearMonth.from('2020-13', { overflow: 'constrain' }), RangeError);
+        });
       });
       it('object must contain at least the required correctly-spelled properties', () => {
         throws(() => PlainYearMonth.from({}), TypeError);

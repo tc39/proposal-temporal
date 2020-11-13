@@ -657,12 +657,14 @@
             1. If ? CalendarToString(_calendar_) is not *"iso8601"*, then
               1. Throw a *RangeError* exception.
           1. Let _result_ be ? ToTemporalTimeRecord(_item_).
+          1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalTimeString(_string_).
+          1. If ! ValidateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
+            1. Throw a *RangeError* exception.
           1. If _result_.[[Calendar]] is not one of *undefined* or *"iso8601"*, then
             1. Throw a *RangeError* exception.
-        1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Return ? CreateTemporalTimeFromStatic(_constructor_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
