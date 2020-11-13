@@ -383,6 +383,82 @@ dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
 ```
 
+### datetime.**withPlainTime**(_plainTime_?: object | string) : Temporal.PlainDateTime
+
+**Parameters:**
+
+- `plainTime` (`Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `datetime`.
+  If omitted, the clock time of the result will be `00:00:00`.
+
+**Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, combined with the time represented by `plainTime`.
+
+Valid input to `withPlainTime` is the same as valid input to `Temporal.PlainTime.from`, including strings like `12:15:36`, plain object property bags like `{ hour: 20, minute: 30 }`, or `Temporal` objects that contain time fields: `Temporal.PlainTime`, `Temporal.ZonedDateTime`, or `Temporal.PlainDateTime`.
+
+This method is similar to `with`, but with a few important differences:
+
+- `withPlainTime` accepts strings, Temporal objects, or object property bags.
+  `with` only accepts object property bags and does not accept strings nor `Temporal.PlainTime` objects because they can contain calendar information.
+- `withPlainTime` will default all missing time units to zero, while `with` will only change units that are present in the input object.
+
+If `plainTime` is a `Temporal.PlainTime` object, then this method returns the same result as `plainTime.toPlainDateTime(datetime)` but can be easier to use, especially when chained to previous operations that return a `Temporal.PlainDateTime`.
+
+Usage example:
+
+```javascript
+dt = Temporal.PlainDateTime.from('2015-12-07T03:24:30.000003500');
+dt.withPlainTime({ hour: 10 }); // => 2015-12-07T10:00:00
+time = Temporal.PlainTime.from('11:22');
+dt.withPlainTime(time); // => 2015-12-07T11:22:00
+dt.withPlainTime('12:34'); // => 2015-12-07T12:34:00
+
+// easier for chaining
+dt.add({ days: 2, hours: 22 }).withTime('00:00'); // => 2015-12-10T00:00:00
+```
+
+### datetime.**withPlainDate**(_plainDate_: object | string) : Temporal.PlainDateTime
+
+**Parameters:**
+
+- `plainDate` (`Temporal.PlainDate` or plain object or string): The calendar date that should replace the current calendar date of `datetime`.
+
+**Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, combined with the date represented by `plainDate`.
+
+Valid input to `withPlainDate` is the same as valid input to `Temporal.PlainDate.from`, including strings like `2000-03-01`, plain object property bags like `{ year: 2020, month: 3, day: 1 }`, or `Temporal` objects that contain a `year`, `month`, and `day` property, including `Temporal.PlainDate`, `Temporal.PlainDateTime`, or `Temporal.ZonedDateTime`.
+
+All three date units (`year`, `month`, and `day`) are required.
+`Temporal.YearMonth` and `Temporal.MonthDay` are not valid input because they lack all date units.
+Both of those types have a `toPlainDate` method that can be used to obtain a `Temporal.PlainDate` which can in turn be used as input to `withPlainDate`.
+
+If `plainDate` contains a non-ISO 8601 calendar, then the result of `withPlainDate` will be the calendar of `plainDate`.
+However, if `datetime.calendar` is already a non-ISO 8601 calendar, then this method wil throw a `RangeError`.
+To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using `.withCalendar('iso8601')`.
+
+This method is similar to `with`, but with a few important differences:
+
+- `withPlainDate` accepts strings, Temporal objects, or object property bags.
+  `with` only accepts object property bags and does not accept strings nor `Temporal.PlainDate` objects because they can contain calendar information.
+- `withPlainDate` will update all date units, while `with` only changes individual units that are present in the input, e.g. setting the `day` to `1` while leaving `month` and `year` unchanged.
+
+If `plainDate` is a `Temporal.PlainDate` object, then this method returns the same result as `plainDate.toPlainDateTime(datetime)` but can be easier to use, especially when chained to previous operations that return a `Temporal.PlainDateTime`.
+
+Usage example:
+
+```javascript
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
+dt.withPlainDate({ year: 2000, month: 6, day: 1 }); // => 2000-06-01T03:24:30
+date = Temporal.PlainDate.from('2020-01-23');
+dt.withPlainDate(date); // => 2020-01-23T03:24:30
+dt.withPlainDate('2018-09-15'); // => 2018-09-15T03:24:30
+
+// easier for chaining
+dt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30
+
+// result contains a non-ISO calendar if present in the input
+dt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30[c=japanese]
+dt.withPlainDate('2017-09-06[c=japanese]'); // => 2017-09-06T03:24:30[c=japanese]
+dt.withCalendar('japanese').withPlainDate('2017-09-06[c=hebrew]'); // => RangeError (calendar conflict)
+```
+
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
@@ -525,7 +601,7 @@ Take care when using milliseconds, microseconds, or nanoseconds as the largest u
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
 Nanoseconds values will overflow and lose precision after about 104 days. Microseconds can fit about 285 years without losing precision, and milliseconds can handle about 285,000 years without losing precision.
 
-Computing the difference between two datetimes in different calendar systems is not supported.
+Computing the difference between two date/times in different calendar systems is not supported.
 If you need to do this, choose the calendar in which the computation takes place by converting one of the dates with `datetime.withCalendar()`.
 
 Usage example:
@@ -665,7 +741,7 @@ This function exists because it's not possible to compare using `datetime == oth
 
 If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.PlainDateTime.compare`.
 
-Note that this function will return `true` if the two datetimes are equal, even if they are expressed in different calendar systems.
+Note that this function will return `true` if the two date/times are equal, even if they are expressed in different calendar systems.
 
 If `other` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 

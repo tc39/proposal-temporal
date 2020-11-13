@@ -243,6 +243,49 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
     return result;
   }
+  withPlainTime(temporalTime = undefined) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    const year = GetSlot(this, ISO_YEAR);
+    const month = GetSlot(this, ISO_MONTH);
+    const day = GetSlot(this, ISO_DAY);
+    const dateCalendar = GetSlot(this, CALENDAR);
+    const Construct = ES.SpeciesConstructor(this, PlainDateTime);
+
+    if (temporalTime === undefined) return new Construct(year, month, day, 0, 0, 0, 0, 0, 0, dateCalendar);
+
+    temporalTime = ES.ToTemporalTime(temporalTime, GetIntrinsic('%Temporal.PlainTime%'));
+    const hour = GetSlot(temporalTime, ISO_HOUR);
+    const minute = GetSlot(temporalTime, ISO_MINUTE);
+    const second = GetSlot(temporalTime, ISO_SECOND);
+    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
+    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
+    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
+    const timeCalendar = GetSlot(temporalTime, CALENDAR);
+
+    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+  }
+  withPlainDate(temporalDate) {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+
+    temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.PlainDate%'));
+    const year = GetSlot(temporalDate, ISO_YEAR);
+    const month = GetSlot(temporalDate, ISO_MONTH);
+    const day = GetSlot(temporalDate, ISO_DAY);
+    const dateCalendar = GetSlot(temporalDate, CALENDAR);
+
+    const hour = GetSlot(this, ISO_HOUR);
+    const minute = GetSlot(this, ISO_MINUTE);
+    const second = GetSlot(this, ISO_SECOND);
+    const millisecond = GetSlot(this, ISO_MILLISECOND);
+    const microsecond = GetSlot(this, ISO_MICROSECOND);
+    const nanosecond = GetSlot(this, ISO_NANOSECOND);
+    const timeCalendar = GetSlot(this, CALENDAR);
+
+    const calendar = ES.ConsolidateCalendars(dateCalendar, timeCalendar);
+    const Construct = ES.SpeciesConstructor(this, PlainDateTime);
+    return new Construct(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+  }
   withCalendar(calendar) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     calendar = ES.ToTemporalCalendar(calendar);

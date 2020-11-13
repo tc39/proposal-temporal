@@ -43,12 +43,14 @@ This range covers approximately half a million years. If `epochNanoseconds` is o
 
 Usage examples:
 
+<!-- prettier-ignore-start -->
 ```javascript
 // UNIX epoch in California
-new Temporal.ZonedDateTime(0n, Temporal.TimeZone.from('America/Los_Angeles), Temporal.Calendar.from('iso8601'))
+new Temporal.ZonedDateTime(0n, Temporal.TimeZone.from('America/Los_Angeles'), Temporal.Calendar.from('iso8601'));
   // => 1969-12-31T16:00-08:00[America/Los_Angeles]
-new Temporal.ZonedDateTime(0n, 'America/Los_Angeles')  // same, but shorter
+new Temporal.ZonedDateTime(0n, 'America/Los_Angeles'); // same, but shorter
 ```
+<!-- prettier-ignore-end -->
 
 ## Static methods
 
@@ -169,6 +171,7 @@ If the offset in the input is used, then there is no ambiguity and the `disambig
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo]');
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo][c=islamic]');
@@ -177,7 +180,7 @@ zdt = Temporal.ZonedDateTime.from('1995-12-07T01:24:30Z');  // RangeError; time 
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00');  // RangeError; time zone ID required
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[+02:00]');  // OK (offset time zone) but rarely used
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+03:00[Africa/Cairo]');
-// => RangeError: Offset is invalid for '1995-12-07T03:24:30' in 'Africa/Cairo'. Provided: +03:00, expected: +02:00.
+  // => RangeError: Offset is invalid for '1995-12-07T03:24:30' in 'Africa/Cairo'. Provided: +03:00, expected: +02:00.
 
 zdt = Temporal.ZonedDateTime.from({
     timeZone: 'America/Los_Angeles'
@@ -202,6 +205,7 @@ zdt = Temporal.ZonedDateTime.from({ timeZone: 'Europe/Paris', year: 2001, month:
 zdt = Temporal.ZonedDateTime.from({ timeZone: 'Europe/Paris', year: 2001, month: -1, day: 1 }, { overflow: 'reject' })
   // => throws RangeError
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.ZonedDateTime.**compare**(_one_: Temporal.ZonedDateTime, _two_: Temporal.ZonedDateTime) : number
 
@@ -685,6 +689,82 @@ Usage example:
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24-06:00[America/Chicago]');
 zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31-06:00[America/Chicago]
+```
+
+### zonedDateTime.**withPlainTime**(_plainTime_?: object | string) : Temporal.PlainDateTime
+
+**Parameters:**
+
+- `plainTime` (`Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `zonedDateTime`.
+  If omitted, the clock time of the result will be `00:00:00`.
+
+**Returns:** a new `Temporal.ZonedDateTime` object which replaces the clock time of `zonedDateTime` with the clock time represented by `plainTime`.
+
+Valid input to `withPlainTime` is the same as valid input to `Temporal.PlainTime.from`, including strings like `12:15:36`, plain object property bags like `{ hour: 20, minute: 30 }`, or `Temporal` objects that contain time fields: `Temporal.PlainTime`, `Temporal.ZonedDateTime`, or `Temporal.PlainDateTime`.
+
+This method is similar to `with`, but with a few important differences:
+
+- `withPlainTime` accepts strings, Temporal objects, or object property bags.
+  `with` only accepts object property bags and does not accept strings nor `Temporal.PlainTime` objects because they can contain calendar information.
+- `withPlainTime` will default all missing time units to zero, while `with` will only change units that are present in the input object.
+
+If `plainTime` is a `Temporal.PlainTime` object, then this method returns the same result as `plainTime.toZonedDateTime({ plainTime: zonedDateTime, timeZone: zonedDateTime})` but can be easier to use, especially when chained to previous operations that return a `Temporal.ZonedDateTime`.
+
+Usage example:
+
+```javascript
+dt = Temporal.ZonedDateTime.from('2015-12-07T03:24:30.000003500');
+dt.withPlainTime({ hour: 10 }); // => 2015-12-07T10:00:00-08:00[America/Los_Angeles]
+time = Temporal.PlainTime.from('11:22');
+dt.withPlainTime(time); // => 2015-12-07T11:22:00-08:00[America/Los_Angeles]
+dt.withPlainTime('12:34'); // => 2015-12-07T12:34:00-08:00[America/Los_Angeles]
+
+// easier for chaining
+dt.add({ days: 2, hours: 22 }).withTime('00:00'); // => 2015-12-10T00:00:00-08:00[America/Los_Angeles]
+```
+
+### zonedDateTime.**withPlainDate**(_plainDate_: object | string) : Temporal.ZonedDateTime
+
+**Parameters:**
+
+- `plainDate` (`Temporal.PlainDate` or plain object or string): The calendar date that should replace the current calendar date of `zonedDateTime`.
+
+**Returns:** a new `Temporal.ZonedDateTime` object which replaces the calendar date of `zonedDateTime` with the calendar date represented by `plainDate`.
+
+Valid input to `withPlainDate` is the same as valid input to `Temporal.PlainDate.from`, including strings like `2000-03-01`, plain object property bags like `{ year: 2020, month: 3, day: 1 }`, or `Temporal` objects that contain a `year`, `month`, and `day` property, including `Temporal.PlainDate`, `Temporal.ZonedDateTime`, or `Temporal.PlainDateTime`.
+
+All three date units (`year`, `month`, and `day`) are required.
+`Temporal.YearMonth` and `Temporal.MonthDay` are not valid input because they lack all date units.
+Both of those types have a `toPlainDate` method that can be used to obtain a `Temporal.PlainDate` which can in turn be used as input to `withPlainDate`.
+
+If `plainDate` contains a non-ISO 8601 calendar, then the result of `withPlainDate` will be the calendar of `plainDate`.
+However, if `zonedDateTime.calendar` is already a non-ISO 8601 calendar, then this method wil throw a `RangeError`.
+To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using `.withCalendar('iso8601')`.
+
+This method is similar to `with`, but with a few important differences:
+
+- `withPlainDate` accepts strings, Temporal objects, or object property bags.
+  `with` only accepts object property bags and does not accept strings nor `Temporal.PlainDate` objects because they can contain calendar information.
+- `withPlainDate` will update all date units, while `with` only changes individual units that are present in the input, e.g. setting the `day` to `1` while leaving `month` and `year` unchanged.
+
+If `plainDate` is a `Temporal.PlainDate` object, then this method returns the same result as `plainDate.toZonedDateTime({ plainDate: zonedDateTime, timeZone: zonedDateTime})` but can be easier to use, especially when chained to previous operations that return a `Temporal.ZonedDateTime`.
+
+Usage example:
+
+```javascript
+zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30-08:00[America/Los_Angeles]');
+zdt.withPlainDate({ year: 2000, month: 6, day: 1 }); // => 2000-06-01T03:24:30-07:00[America/Los_Angeles]
+date = Temporal.PlainDate.from('2020-01-23');
+zdt.withPlainDate(date); // => 2020-01-23T03:24:30-08:00[America/Los_Angeles]
+zdt.withPlainDate('2018-09-15'); // => 2018-09-15T03:24:30-07:00[America/Los_Angeles]
+
+// easier for chaining
+zdt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30-07:00[America/Los_Angeles]
+
+// result contains a non-ISO calendar if present in the input
+zdt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]
+zdt.withPlainDate('2017-09-06[c=japanese]'); // => 2017-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]
+zdt.withCalendar('japanese').withPlainDate('2017-09-06[c=hebrew]'); // => RangeError (calendar conflict)
 ```
 
 ### zonedDateTime.**withCalendar**(_calendar_: object | string) : Temporal.ZonedDateTime
@@ -1261,8 +1341,7 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500-08:00[America/Los_Angeles]');
 
 const thisWontWork = { ...zdt, hour: 12 };
-JSON.stringify(thisWontWork);
-// => { "hour": 12 }
+JSON.stringify(thisWontWork); // => { "hour": 12 }
 // There are no other properties because Temporal.ZonedDateTime has no enumerable own properties
 
 const thisWillWork = { ...zdt.getFields(), hour: 12 };
