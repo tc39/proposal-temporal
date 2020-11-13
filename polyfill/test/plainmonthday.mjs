@@ -107,6 +107,9 @@ describe('MonthDay', () => {
             );
           });
         });
+        it('constrain has no effect on invalid ISO string', () => {
+          throws(() => PlainMonthDay.from('13-34', { overflow: 'constrain' }), RangeError);
+        });
       });
       describe('Leap day', () => {
         ['reject', 'constrain'].forEach((overflow) =>

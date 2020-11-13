@@ -1376,6 +1376,9 @@ describe('DateTime', () => {
       const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60 };
       it('reject leap second', () => throws(() => PlainDateTime.from(leap, { overflow: 'reject' }), RangeError));
       it('constrain leap second', () => equal(`${PlainDateTime.from(leap)}`, '2016-12-31T23:59:59'));
+      it('constrain has no effect on invalid ISO string', () => {
+        throws(() => PlainDateTime.from('2020-13-34T24:60', { overflow: 'constrain' }), RangeError);
+      });
     });
     it('variant time separators', () => {
       equal(`${PlainDateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23:00');
