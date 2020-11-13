@@ -3189,6 +3189,28 @@ export const ES = ObjectAssign({}, ES2020, {
     );
     return { relativeTo, days };
   },
+  MoveRelativeZonedDateTime: (relativeTo, years, months, weeks, days) => {
+    const timeZone = GetSlot(relativeTo, TIME_ZONE);
+    const calendar = GetSlot(relativeTo, CALENDAR);
+    const intermediateNs = ES.AddZonedDateTime(
+      GetSlot(relativeTo, INSTANT),
+      timeZone,
+      calendar,
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      'constrain'
+    );
+    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
+    return new TemporalZonedDateTime(intermediateNs, timeZone, calendar);
+  },
   AdjustRoundedDurationDays: (
     years,
     months,
@@ -3329,9 +3351,10 @@ export const ES = ObjectAssign({}, ES2020, {
   ) => {
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-    let calendar;
+    let calendar, zdtRelative;
     if (relativeTo) {
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
+        zdtRelative = relativeTo;
         relativeTo = ES.GetTemporalDateTimeFor(
           GetSlot(relativeTo, TIME_ZONE),
           GetSlot(relativeTo, INSTANT),
@@ -3342,6 +3365,22 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       calendar = GetSlot(relativeTo, CALENDAR);
     }
+
+    // First convert time units up to days, if rounding to days or higher units.
+    // If rounding relative to a ZonedDateTime, then some days may not be 24h.
+    if (unit === 'years' || unit === 'months' || unit === 'weeks' || unit === 'days') {
+      nanoseconds = ES.TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
+      let intermediate;
+      if (zdtRelative) {
+        intermediate = ES.MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
+      }
+      let dayLengthNs;
+      let deltaDays;
+      ({ days: deltaDays, nanoseconds, dayLengthNs } = ES.NanosecondsToDays(nanoseconds, intermediate));
+      days += deltaDays + nanoseconds / MathAbs(dayLengthNs);
+      hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+    }
+
     let remainder;
     switch (unit) {
       case 'years': {
@@ -3354,10 +3393,7 @@ export const ES = ObjectAssign({}, ES2020, {
         const yearsMonthsWeeksLater = calendar.dateAdd(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
         const monthsWeeksInDays = ES.DaysUntil(yearsLater, yearsMonthsWeeksLater);
         relativeTo = yearsLater;
-
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         days += monthsWeeksInDays;
-        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
         // Years may be different lengths of days depending on the calendar, so
         // we need to convert days to years in a loop. We get the number of days
@@ -3378,7 +3414,7 @@ export const ES = ObjectAssign({}, ES2020, {
         remainder = years;
         years = ES.RoundNumberToIncrement(years, increment, roundingMode);
         remainder -= years;
-        months = weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        months = weeks = days = 0;
         break;
       }
       case 'months': {
@@ -3392,10 +3428,7 @@ export const ES = ObjectAssign({}, ES2020, {
         const yearsMonthsWeeksLater = calendar.dateAdd(relativeTo, yearsMonthsWeeks, {}, TemporalDate);
         const weeksInDays = ES.DaysUntil(yearsMonthsLater, yearsMonthsWeeksLater);
         relativeTo = yearsMonthsLater;
-
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
         days += weeksInDays;
-        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
 
         // Months may be different lengths of days depending on the calendar,
         // convert days to months in a loop as described above under 'years'.
@@ -3413,14 +3446,11 @@ export const ES = ObjectAssign({}, ES2020, {
         remainder = months;
         months = ES.RoundNumberToIncrement(months, increment, roundingMode);
         remainder -= months;
-        weeks = days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        weeks = days = 0;
         break;
       }
       case 'weeks': {
         if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
-
         // Weeks may be different lengths of days depending on the calendar,
         // convert days to weeks in a loop as described above under 'years'.
         const sign = Math.sign(days);
@@ -3437,16 +3467,13 @@ export const ES = ObjectAssign({}, ES2020, {
         remainder = weeks;
         weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
         remainder -= weeks;
-        days = hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+        days = 0;
         break;
       }
       case 'days':
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        days += ((seconds / 60 + minutes) / 60 + hours) / 24;
         remainder = days;
         days = ES.RoundNumberToIncrement(days, increment, roundingMode);
         remainder -= days;
-        hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       case 'hours':
         seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
