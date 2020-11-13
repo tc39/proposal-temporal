@@ -1959,11 +1959,61 @@ export const ES = ObjectAssign({}, ES2020, {
       days = days.toJSNumber();
       return { days, nanoseconds, dayLengthNs: sign * dayLengthNs };
     }
-    let isOverflow = false;
-    let days = 0;
-    let relativeInstant = GetSlot(relativeTo, INSTANT);
+
+    const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
+    const start = GetSlot(relativeTo, INSTANT);
+    const endNs = startNs.add(nanoseconds);
+    const end = new TemporalInstant(endNs);
     const timeZone = GetSlot(relativeTo, TIME_ZONE);
     const calendar = GetSlot(relativeTo, CALENDAR);
+
+    // Find the difference in days only.
+    const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
+    let { days } = ES.DifferenceDateTime(
+      GetSlot(dtStart, ISO_YEAR),
+      GetSlot(dtStart, ISO_MONTH),
+      GetSlot(dtStart, ISO_DAY),
+      GetSlot(dtStart, ISO_HOUR),
+      GetSlot(dtStart, ISO_MINUTE),
+      GetSlot(dtStart, ISO_SECOND),
+      GetSlot(dtStart, ISO_MILLISECOND),
+      GetSlot(dtStart, ISO_MICROSECOND),
+      GetSlot(dtStart, ISO_NANOSECOND),
+      GetSlot(dtEnd, ISO_YEAR),
+      GetSlot(dtEnd, ISO_MONTH),
+      GetSlot(dtEnd, ISO_DAY),
+      GetSlot(dtEnd, ISO_HOUR),
+      GetSlot(dtEnd, ISO_MINUTE),
+      GetSlot(dtEnd, ISO_SECOND),
+      GetSlot(dtEnd, ISO_MILLISECOND),
+      GetSlot(dtEnd, ISO_MICROSECOND),
+      GetSlot(dtEnd, ISO_NANOSECOND),
+      calendar,
+      'days'
+    );
+    let intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0, 'constrain');
+    // may disambiguate
+
+    // If clock time after addition was in the middle of a skipped period, the
+    // endpoint was disambiguated to a later clock time. So it's possible that
+    // the resulting disambiguated result is later than endNs. If so, then back
+    // up one day and try again. Repeat if necessary (some transitions are
+    // > 24 hours) until either there's zero days left or the date duration is
+    // back inside the period where it belongs. Note that this case only can
+    // happen for positive durations because the only direction that
+    // `disambiguation: 'compatible'` can change clock time is forwards.
+    if (sign === 1) {
+      while (days > 0 && intermediateNs.greater(endNs)) {
+        --days;
+        intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0, 'constrain');
+        // may do disambiguation
+      }
+    }
+    nanoseconds = endNs.subtract(intermediateNs);
+
+    let isOverflow = false;
+    let relativeInstant = new TemporalInstant(intermediateNs);
     do {
       // calculate length of the next day (day that contains the time remainder)
       const oneDayFartherNs = ES.AddZonedDateTime(
@@ -1993,33 +2043,63 @@ export const ES = ObjectAssign({}, ES2020, {
     } while (isOverflow);
     return { days, nanoseconds, dayLengthNs };
   },
-  BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
-    nanoseconds = ES.TotalDurationNanoseconds(
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      0
-    );
+  BalanceDuration: (
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    largestUnit,
+    relativeTo = undefined
+  ) => {
+    if (ES.IsTemporalZonedDateTime(relativeTo)) {
+      const endNs = ES.AddZonedDateTime(
+        GetSlot(relativeTo, INSTANT),
+        GetSlot(relativeTo, TIME_ZONE),
+        GetSlot(relativeTo, CALENDAR),
+        0,
+        0,
+        0,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        'constrain'
+      );
+      const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
+      nanoseconds = endNs.subtract(startNs);
+    } else {
+      nanoseconds = ES.TotalDurationNanoseconds(
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        0
+      );
+    }
+    if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks' || largestUnit === 'days') {
+      ({ days, nanoseconds } = ES.NanosecondsToDays(nanoseconds, relativeTo));
+    } else {
+      days = 0;
+    }
+
     const sign = nanoseconds.lesser(0) ? -1 : 1;
     nanoseconds = nanoseconds.abs();
-    microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
+    microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
 
     switch (largestUnit) {
       case 'years':
       case 'months':
       case 'weeks':
       case 'days':
-        ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
-        ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
-        ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
-        ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
-        ({ quotient: hours, remainder: minutes } = minutes.divmod(60));
-        ({ quotient: days, remainder: hours } = hours.divmod(24));
-        break;
       case 'hours':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
@@ -2051,7 +2131,6 @@ export const ES = ObjectAssign({}, ES2020, {
         throw new Error('assert not reached');
     }
 
-    days = days.toJSNumber() * sign;
     hours = hours.toJSNumber() * sign;
     minutes = minutes.toJSNumber() * sign;
     seconds = seconds.toJSNumber() * sign;
@@ -2570,7 +2649,6 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds: 0
       };
     }
-    const direction = nsDiff.divide(nsDiff.abs()).toJSNumber();
 
     // Find the difference in dates only.
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -2607,7 +2685,7 @@ export const ES = ObjectAssign({}, ES2020, {
       years,
       months,
       weeks,
-      days,
+      0,
       0,
       0,
       0,
@@ -2616,89 +2694,10 @@ export const ES = ObjectAssign({}, ES2020, {
       0,
       'constrain'
     ); // may disambiguate
-
-    // If clock time after addition was in the middle of a skipped period, the
-    // endpoint was disambiguated to a later clock time. So it's possible that
-    // the resulting disambiguated result is later than `this`. If so, then back
-    // up one day and try again. Repeat if necessary (some transitions are
-    // > 24 hours) until either there's zero days left or the date duration is
-    // back inside the period where it belongs. Note that this case only can
-    // happen for positive durations because the only direction that
-    // `disambiguation: 'compatible'` can change clock time is forwards.
-    while (
-      direction === 1 &&
-      ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 1 &&
-      intermediateNs.greater(ns2)
-    ) {
-      ({ years, months, weeks, days } = ES.AddDuration(
-        years,
-        months,
-        weeks,
-        days,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        dtStart
-      ));
-      intermediateNs = ES.AddZonedDateTime(
-        start,
-        timeZone,
-        calendar,
-        years,
-        months,
-        weeks,
-        days,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        'constrain'
-      ); // may do disambiguation
-    }
-
-    let timeRemainderNs = ns2.subtract(intermediateNs).toJSNumber();
-    let deltaDays;
+    let timeRemainderNs = ns2.subtract(intermediateNs);
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     const intermediate = new TemporalZonedDateTime(intermediateNs, timeZone, calendar);
-    ({ nanoseconds: timeRemainderNs, days: deltaDays } = ES.NanosecondsToDays(timeRemainderNs, intermediate));
-    ({ years, months, weeks, days } = ES.AddDuration(
-      years,
-      months,
-      weeks,
-      days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      deltaDays,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      dtStart
-    ));
+    ({ nanoseconds: timeRemainderNs, days } = ES.NanosecondsToDays(timeRemainderNs, intermediate));
 
     // Finally, merge the date and time durations and return the merged result.
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(

@@ -440,7 +440,9 @@
         1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Let _adjustResult_ be ? AdjustRoundedDurationDays(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _roundResult_.[[Hours]], _roundResult_.[[Minutes]], _roundResult_.[[Seconds]], _roundResult_.[[Milliseconds]], _roundResult_.[[Microseconds]], _roundResult_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Let _balanceResult_ be ? BalanceDurationRelative(_adjustResult_.[[Years]], _adjustResult_.[[Months]], _adjustResult_.[[Weeks]], _adjustResult_.[[Days]], _largestUnit_, _relativeTo_).
-        1. Let _result_ be ? BalanceDuration(_balanceResult_.[[Days]], _adjustResult_.[[Hours]], _adjustResult_.[[Minutes]], _adjustResult_.[[Seconds]], _adjustResult_.[[Milliseconds]], _adjustResult_.[[Microseconds]], _adjustResult.[[Nanoseconds]]).
+        1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Set _relativeTo_ to ? MoveRelativeZonedDateTime(_relativeTo_, _balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], 0).
+        1. Let _result_ be ? BalanceDuration(_balanceResult_.[[Days]], _adjustResult_.[[Hours]], _adjustResult_.[[Minutes]], _adjustResult_.[[Seconds]], _adjustResult_.[[Milliseconds]], _adjustResult_.[[Microseconds]], _adjustResult.[[Nanoseconds]], _largestUnit_, _relativeTo_).
         1. Return ? CreateTemporalDurationFromInstance(_duration_, _balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -461,7 +463,10 @@
         1. Else,
           1. Let _unit_ be ? ToTemporalDurationTotalUnit(_revisedOptions_).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_years_, _months_, _weeks_, _days_, _unit_, _relativeTo_).
-        1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _unbalanceResult_.[[Hours]], _unbalanceResult_.[[Minutes]], _unbalanceResult_.[[Seconds]], _unbalanceResult_.[[Milliseconds]], _unbalanceResult_.[[Microseconds]], _unbalanceResult_.[[Nanoseconds]], _unit_).
+        1. Let _intermediate_ be *undefined*.
+        1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Set _intermediate_ to ? MoveRelativeZonedDateTime(_relativeTo_, _unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], 0).
+        1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _unbalanceResult_.[[Hours]], _unbalanceResult_.[[Minutes]], _unbalanceResult_.[[Seconds]], _unbalanceResult_.[[Milliseconds]], _unbalanceResult_.[[Microseconds]], _unbalanceResult_.[[Nanoseconds]], _unit_, _intermediate_).
         1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
         1. If _unit_ is *"years"*, then
           1. Let _whole_ be _roundResult_.[[Years]].
@@ -882,26 +887,23 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-balanceduration" aoid="BalanceDuration">
-      <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ )</h1>
+      <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <emu-alg>
-        1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
-        1. Set _days_, _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ to 0.
+        1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"constrain"*).
+          1. Set _nanoseconds_ to _endNs_ − _relativeTo_.[[Nanoseconds]].
+        1. Else,
+          1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
+        1. If _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+          1. Let _result_ be ? NanosecondsToDays(_nanoseconds_, _relativeTo_).
+          1. Set _days_ to _result_.[[Days]].
+          1. Set _nanoseconds_ to _result_.[[Nanoseconds]].
+        1. Else,
+          1. Set _days_ to 0.
+        1. Set _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ to 0.
         1. If _nanoseconds_ &lt; 0, let _sign_ be −1; else, let _sign_ be 1.
         1. Set _nanoseconds_ to abs(_nanoseconds_).
-        1. If _largestUnit_ is *"years"*, *"months"*, *"weeks"*, or *"days"*, then
-          1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
-          1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
-          1. Set _milliseconds_ to floor(_microseconds_ / 1000).
-          1. Set _microseconds_ to _microseconds_ modulo 1000.
-          1. Set _seconds_ to floor(_milliseconds_ / 1000).
-          1. Set _milliseconds_ to _milliseconds_ modulo 1000.
-          1. Set _minutes_ to floor(_seconds_ / 60).
-          1. Set _seconds_ to _seconds_ modulo 60.
-          1. Set _hours_ to floor(_minutes_ / 60).
-          1. Set _minutes_ to _minutes_ modulo 60.
-          1. Set _days_ to floor(_hours_ / 24).
-          1. Set _hours_ to _hours_ modulo 24.
-        1. Else if _largestUnit_ is *"hours"*, then
+        1. If _largestUnit_ is *"years"*, *"months"*, *"weeks"*, *"days"*, or *"hours"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
           1. Set _milliseconds_ to floor(_microseconds_ / 1000).
@@ -939,7 +941,7 @@
         1. Else,
           1. Assert: _largestUnit_ is *"nanoseconds"*.
         1. Return the new Record {
-          [[Days]]: 𝔽(_days_) × _sign_,
+          [[Days]]: 𝔽(_days_),
           [[Hours]]: 𝔽(_hours_) × _sign_,
           [[Minutes]]: 𝔽(_minutes_) × _sign_,
           [[Seconds]]: 𝔽(_seconds_) × _sign_,
