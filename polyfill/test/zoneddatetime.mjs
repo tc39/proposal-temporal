@@ -924,6 +924,71 @@ describe('ZonedDateTime', () => {
     });
   });
 
+  describe('.withPlainTime manipulation', () => {
+    const zdt = Temporal.ZonedDateTime.from('2015-12-07T03:24:30.000003500[America/Los_Angeles]');
+    it('withPlainTime({ hour: 10 }) works', () => {
+      equal(`${zdt.withPlainTime({ hour: 10 })}`, '2015-12-07T10:00:00-08:00[America/Los_Angeles]');
+    });
+    it('withPlainTime(time) works', () => {
+      const time = Temporal.PlainTime.from('11:22');
+      equal(`${zdt.withPlainTime(time)}`, '2015-12-07T11:22:00-08:00[America/Los_Angeles]');
+    });
+    it("withPlainTime('12:34') works", () => {
+      equal(`${zdt.withPlainTime('12:34')}`, '2015-12-07T12:34:00-08:00[America/Los_Angeles]');
+    });
+    it('withPlainTime() defaults to midnight', () => {
+      equal(`${zdt.withPlainTime()}`, '2015-12-07T00:00:00-08:00[America/Los_Angeles]');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => zdt.withPlainTime({}), TypeError);
+      throws(() => zdt.withPlainTime({ minutes: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${zdt.withPlainTime({ hour: 10, seconds: 55 })}`, '2015-12-07T10:00:00-08:00[America/Los_Angeles]');
+    });
+  });
+  describe('.withPlainDate manipulation', () => {
+    const zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30[America/Los_Angeles]');
+    it('withPlainDate({ year: 2000, month: 6, day: 1 }) works', () => {
+      equal(`${zdt.withPlainDate({ year: 2000, month: 6, day: 1 })}`, '2000-06-01T03:24:30-07:00[America/Los_Angeles]');
+    });
+    it('withPlainDate(plainDate) works', () => {
+      const date = Temporal.PlainDate.from('2020-01-23');
+      equal(`${zdt.withPlainDate(date)}`, '2020-01-23T03:24:30-08:00[America/Los_Angeles]');
+    });
+    it("withPlainDate('2018-09-15') works", () => {
+      equal(`${zdt.withPlainDate('2018-09-15')}`, '2018-09-15T03:24:30-07:00[America/Los_Angeles]');
+    });
+    it('result contains a non-ISO calendar if present in the input', () => {
+      equal(
+        `${zdt.withCalendar('japanese').withPlainDate('2008-09-06')}`,
+        '2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]'
+      );
+    });
+    it('calendar is unchanged if input has ISO calendar', () => {
+      equal(
+        `${zdt.withPlainDate('2008-09-06[c=japanese]')}`,
+        '2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]'
+      );
+    });
+    it('throws if both `this` and `other` have a non-ISO calendar', () => {
+      throws(
+        () => zdt.withCalendar('gregory').withPlainDate('2008-09-06-07:00[America/Los_Angeles][c=japanese]'),
+        RangeError
+      );
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => zdt.withPlainDate({}), TypeError);
+      throws(() => zdt.withPlainDate({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(
+        `${zdt.withPlainDate({ year: 2000, month: 6, day: 1, months: 123 })}`,
+        '2000-06-01T03:24:30-07:00[America/Los_Angeles]'
+      );
+    });
+  });
+
   describe('ZonedDateTime.withTimeZone()', () => {
     const instant = Temporal.Instant.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     const zdt = instant.toZonedDateTimeISO('UTC');

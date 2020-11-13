@@ -323,6 +323,58 @@ describe('DateTime', () => {
       throws(() => datetime.with({ year: 2021, timeZone: 'UTC' }), TypeError);
     });
   });
+  describe('.withPlainTime manipulation', () => {
+    const dt = Temporal.PlainDateTime.from('2015-12-07T03:24:30.000003500');
+    it('datetime.withPlainTime({ hour: 10 }) works', () => {
+      equal(`${dt.withPlainTime({ hour: 10 })}`, '2015-12-07T10:00:00');
+    });
+    it('datetime.withPlainTime(time) works', () => {
+      const time = Temporal.PlainTime.from('11:22');
+      equal(`${dt.withPlainTime(time)}`, '2015-12-07T11:22:00');
+    });
+    it("datetime.withPlainTime('12:34') works", () => {
+      equal(`${dt.withPlainTime('12:34')}`, '2015-12-07T12:34:00');
+    });
+    it('datetime.withPlainTime() defaults to midnight', () => {
+      equal(`${dt.withPlainTime()}`, '2015-12-07T00:00:00');
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => dt.withPlainTime({}), TypeError);
+      throws(() => dt.withPlainTime({ minutes: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${dt.withPlainTime({ hour: 10, seconds: 123 })}`, '2015-12-07T10:00:00');
+    });
+  });
+  describe('.withPlainDate manipulation', () => {
+    const dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
+    it('datetime.withPlainDate({ year: 2000, month: 6, day: 1 }) works', () => {
+      equal(`${dt.withPlainDate({ year: 2000, month: 6, day: 1 })}`, '2000-06-01T03:24:30');
+    });
+    it('datetime.withPlainDate(plainDate) works', () => {
+      const date = Temporal.PlainDate.from('2020-01-23');
+      equal(`${dt.withPlainDate(date)}`, '2020-01-23T03:24:30');
+    });
+    it("datetime.withPlainDate('2018-09-15') works", () => {
+      equal(`${dt.withPlainDate('2018-09-15')}`, '2018-09-15T03:24:30');
+    });
+    it('result contains a non-ISO calendar if present in the input', () => {
+      equal(`${dt.withCalendar('japanese').withPlainDate('2008-09-06')}`, '2008-09-06T03:24:30[c=japanese]');
+    });
+    it('calendar is unchanged if input has ISO calendar', () => {
+      equal(`${dt.withPlainDate('2008-09-06[c=japanese]')}`, '2008-09-06T03:24:30[c=japanese]');
+    });
+    it('throws if both `this` and `other` have a non-ISO calendar', () => {
+      throws(() => dt.withCalendar('gregory').withPlainDate('2008-09-06[c=japanese]'), RangeError);
+    });
+    it('object must contain at least one correctly-spelled property', () => {
+      throws(() => dt.withPlainDate({}), TypeError);
+      throws(() => dt.withPlainDate({ months: 12 }), TypeError);
+    });
+    it('incorrectly-spelled properties are ignored', () => {
+      equal(`${dt.withPlainDate({ year: 2000, month: 6, day: 1, months: 123 })}`, '2000-06-01T03:24:30');
+    });
+  });
   describe('DateTime.compare() works', () => {
     const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
     const dt2 = PlainDateTime.from('2019-10-29T10:46:38.271986102');
