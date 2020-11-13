@@ -374,7 +374,7 @@ export namespace Temporal {
      * this option is omitted), then the operation will ignore time zone
      * transitions and all days will be assumed to be 24 hours long.
      */
-    relativeTo?: Temporal.PlainDateTime | DateTimeLike | string;
+    relativeTo?: Temporal.PlainDateTime | Temporal.ZonedDateTime | DateTimeLike | ZonedDateTimeLike | string;
   }
 
   /**

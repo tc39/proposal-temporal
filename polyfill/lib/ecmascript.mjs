@@ -2791,36 +2791,127 @@ export const ES = ObjectAssign({}, ES2020, {
     const largestUnit2 = ES.DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
     const largestUnit = ES.LargerOfTwoTemporalDurationUnits(largestUnit1, largestUnit2);
 
-    ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo));
-    let intermediate;
-    if (relativeTo) {
-      const calendar = GetSlot(relativeTo, CALENDAR);
+    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+    if (!relativeTo) {
+      if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
+        throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
+      }
+      years = months = weeks = 0;
+      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        d1 + d2,
+        h1 + h2,
+        min1 + min2,
+        s1 + s2,
+        ms1 + ms2,
+        µs1 + µs2,
+        ns1 + ns2,
+        largestUnit
+      ));
+    } else if (ES.IsTemporalDateTime(relativeTo)) {
+      const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
       const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-      const datePart1 = new TemporalDuration(0, 0, 0, d1);
-      ({ relativeTo: intermediate } = ES.MoveRelativeDate(calendar, relativeTo, datePart1));
+      const calendar = GetSlot(relativeTo, CALENDAR);
+
+      const datePart = new TemporalPlainDate(
+        GetSlot(relativeTo, ISO_YEAR),
+        GetSlot(relativeTo, ISO_MONTH),
+        GetSlot(relativeTo, ISO_DAY),
+        calendar
+      );
+      const dateDuration1 = new TemporalDuration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
+      const dateDuration2 = new TemporalDuration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
+      const dateAdd = calendar.dateAdd;
+      const intermediate = ES.Call(dateAdd, calendar, [datePart, dateDuration1, {}, TemporalPlainDate]);
+      const end = ES.Call(dateAdd, calendar, [intermediate, dateDuration2, {}, TemporalPlainDate]);
+
+      const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+      ({ years, months, weeks, days } = calendar.dateUntil(datePart, end, { largestUnit: dateLargestUnit }));
+      // Signs of date part and time part may not agree; balance them together
+      ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        days,
+        h1 + h2,
+        min1 + min2,
+        s1 + s2,
+        ms1 + ms2,
+        µs1 + µs2,
+        ns1 + ns2,
+        largestUnit
+      ));
+    } else {
+      // relativeTo is a ZonedDateTime
+      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+      const timeZone = GetSlot(relativeTo, TIME_ZONE);
+      const calendar = GetSlot(relativeTo, CALENDAR);
+      const intermediateNs = ES.AddZonedDateTime(
+        GetSlot(relativeTo, INSTANT),
+        timeZone,
+        calendar,
+        y1,
+        mon1,
+        w1,
+        d1,
+        h1,
+        min1,
+        s1,
+        ms1,
+        µs1,
+        ns1,
+        'constrain'
+      );
+      const endNs = ES.AddZonedDateTime(
+        new TemporalInstant(intermediateNs),
+        timeZone,
+        calendar,
+        y2,
+        mon2,
+        w2,
+        d2,
+        h2,
+        min2,
+        s2,
+        ms2,
+        µs2,
+        ns2,
+        'constrain'
+      );
+      if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
+        // The user is only asking for a time difference, so return difference of instants.
+        years = 0;
+        months = 0;
+        weeks = 0;
+        days = 0;
+        ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+          GetSlot(relativeTo, EPOCHNANOSECONDS),
+          endNs,
+          1,
+          'nanoseconds',
+          'nearest'
+        ));
+        ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+          0,
+          0,
+          0,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          largestUnit
+        ));
+      } else {
+        ({
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds
+        } = ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit));
+      }
     }
-    ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', intermediate));
-
-    let days = d1 + d2;
-    let hours = h1 + h2;
-    let minutes = min1 + min2;
-    let seconds = s1 + s2;
-    let milliseconds = ms1 + ms2;
-    let microseconds = µs1 + µs2;
-    let nanoseconds = ns1 + ns2;
-
-    let years, months, weeks;
-    ({ years, months, weeks, days } = ES.BalanceDurationRelative(0, 0, 0, days, largestUnit, relativeTo));
-    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      largestUnit
-    ));
 
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
