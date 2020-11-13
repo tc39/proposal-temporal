@@ -1952,12 +1952,12 @@ export const ES = ObjectAssign({}, ES2020, {
     const sign = MathSign(nanoseconds);
     nanoseconds = bigInt(nanoseconds);
     let dayLengthNs = 86400e9;
-    if (sign === 0) return { days: 0, nanoseconds: bigInt.zero };
+    if (sign === 0) return { days: 0, nanoseconds: bigInt.zero, dayLengthNs };
     if (!ES.IsTemporalZonedDateTime(relativeTo)) {
       let days;
       ({ quotient: days, remainder: nanoseconds } = nanoseconds.divmod(dayLengthNs));
       days = days.toJSNumber();
-      return { days, nanoseconds };
+      return { days, nanoseconds, dayLengthNs: sign * dayLengthNs };
     }
     let isOverflow = false;
     let days = 0;
@@ -1991,7 +1991,7 @@ export const ES = ObjectAssign({}, ES2020, {
         days += sign;
       }
     } while (isOverflow);
-    return { days, nanoseconds };
+    return { days, nanoseconds, dayLengthNs };
   },
   BalanceDuration: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) => {
     nanoseconds = ES.TotalDurationNanoseconds(
