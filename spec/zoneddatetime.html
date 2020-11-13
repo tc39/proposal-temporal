@@ -1430,23 +1430,25 @@
       <h1>NanosecondsToDays ( _nanoseconds_, _relativeTo_ )</h1>
       <p>
         The abstract operation NanosecondsToDays takes a number of nanoseconds relative to a Temporal.ZonedDateTime _relativeTo_, and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _relativeTo_.
+        It also returns the signed length of the last day in nanoseconds, for rounding purposes.
       </p>
       <emu-alg>
         1. Let _sign_ be ! Sign(_nanoseconds_).
         1. Let _dayLengthNs_ be 8.64 × 10<sup>13</sup><sub>ℝ</sub>.
         1. If _sign_ = 0, then
-          1. Return the new Record { [[Days]]: 0, [[Nanoseconds]]: 0 }.
+          1. Return the new Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
         1. If _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the new Record {
             [[Days]]: the integral part of _nanoseconds_ ÷ _dayLengthNs_,
-            [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_
+            [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_,
+            [[DayLength]]: _sign_ × _dayLengthNs_
             }.
         1. Let _days_ be 0.
         1. Let _done_ be *false*.
         1. Let _relativeNs_ be _relativeTo_.[[Nanoseconds]].
         1. Repeat, while _done_ is *false*,
           1. Let _oneDayFartherNs_ be ? AddZonedDateTime(_relativeNs_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _sign_, 0, 0, 0, 0, 0, 0, *"constrain"*).
-          1. Let _dayLengthNs_ be _oneDayFartherNs_ − _relativeNs_.
+          1. Set _dayLengthNs_ to _oneDayFartherNs_ − _relativeNs_.
           1. If (_nanoseconds_ − _dayLengthNs_) × _sign_ ≥ 0, then
             1. Set _nanoseconds_ to _nanoseconds_ − _dayLengthNs_.
             1. Set _relativeNs_ to _oneDayFartherNs_.
@@ -1455,7 +1457,8 @@
             1. Set _done_ to *true*.
         1. Return the new Record {
           [[Days]]: _days_,
-          [[Nanoseconds]]: _nanoseconds_
+          [[Nanoseconds]]: _nanoseconds_,
+          [[DayLength]]: _dayLengthNs_
           }.
       </emu-alg>
     </emu-clause>
