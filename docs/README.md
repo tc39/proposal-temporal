@@ -65,7 +65,7 @@ A `Temporal.PlainDate` object represents a calendar date that is not associated 
 
 This can also be converted to partial dates such as `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`.
 
-See [Temporal.PlainDate Documentation](./date.md) for detailed documentation.
+See [Temporal.PlainDate Documentation](./plaindate.md) for detailed documentation.
 
 #### Time Zones and Resolving Ambiguity
 
@@ -77,7 +77,7 @@ Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambigu
 
 A `Temporal.PlainTime` object represents a wall-clock time that is not associated with a particular date or time zone.
 
-See [Temporal.PlainTime Documentation](./time.md) for detailed documentation.
+See [Temporal.PlainTime Documentation](./plaintime.md) for detailed documentation.
 
 ### **Temporal.PlainDateTime**
 
@@ -85,21 +85,21 @@ A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that d
 It can be converted to a `Temporal.ZonedDateTime` using a `Temporal.TimeZone`.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.ZonedDateTime` instead because that type automatically adjusts for Daylight Saving Time.
 
-See [Temporal.PlainDateTime Documentation](./datetime.md) for detailed documentation.
+See [Temporal.PlainDateTime Documentation](./plaindatetime.md) for detailed documentation.
 
 ### **Temporal.PlainYearMonth**
 
 A date without a day component.
 This is useful to express things like "the November 2010 meeting".
 
-See [Temporal.PlainYearMonth Documentation](./yearmonth.md) for detailed documentation.
+See [Temporal.PlainYearMonth Documentation](./plainyearmonth.md) for detailed documentation.
 
 ### **Temporal.PlainMonthDay**
 
 A date without a year component.
 This is useful to express things like "Bastille Day is on the 14th of July".
 
-See [Temporal.PlainMonthDay Documentation](./monthday.md) for detailed documentation.
+See [Temporal.PlainMonthDay Documentation](./plainmonthday.md) for detailed documentation.
 
 ### **Temporal.Duration**
 
@@ -147,19 +147,6 @@ For more information about extensions to the ISO 8601 / RFC 3339 standards that 
 
 - [Ambiguity](./ambiguity.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
 - [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
+- [ISO String Extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 and/or RFC 3339 standards which are used by `Temporal`.
+  These extensions are being actively worked on with IETF to get them on a standards track.
 
-### **Design drafts**
-
-- [ISO string extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 standard which are used by Temporal and intended to be put on a standards track.
-
-### Obsolete Pages
-
-- [Calendar Subclassing Draft](./calendar-subclass.md) &mdash; Draft design document for alternative approach for calendar support.
-  (**Obsolete;** rejected.)
-- [Custom Time Zone Draft](./timezone-draft.md) &mdash; Draft design document for custom time zone support in Temporal.
-  (**Obsolete;** superseded by the documentation of [Temporal.TimeZone](./timezone.md).)
-- [Parse Draft](./parse-draft.md) &mdash; Draft design document for a `Temporal.parse` API, which is not currently planned to be implemented.
-- [Calendar Draft](./calendar-draft.md) &mdash; Draft design document for calendar support in Temporal.
-  Mostly superseded by the documentation of [Temporal.Calendar](./calendar.md), but also contains some discussion about whether to have a default calendar.
-- [Zoned Date/Time Type Draft](./zoneddatetime-draft.md) &mdash; Explanation of `Temporal.ZonedDateTime` which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the `Temporal.PlainDateTime` API.
-  Superseded by the [documentation](./zoneddatetime.md), but contains background info about the reasons and goals behind this type.

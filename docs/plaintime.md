@@ -520,7 +520,7 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `locales.timeZone` will have no effect, because `Temporal.PlainTime` carries no time zone information and is just a wall-clock time.
+> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.md#toLocaleString), `locales.timeZone` will have no effect, because `Temporal.PlainTime` carries no time zone information and is just a wall-clock time.
 
 Example usage:
 
@@ -592,7 +592,7 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `time` and `plainDate`.
-This method produces identical results to [`Temporal.PlainDate.from(plainDate).toZonedDateTime(time)`](./date.html#toZonedDateTime).
+This method produces identical results to [`Temporal.PlainDate.from(plainDate).toZonedDateTime(time)`](./plaindate.md#toZonedDateTime).
 
 If `plainDate` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 
@@ -627,7 +627,7 @@ plainTime.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainDate });
 This method can be used to convert `Temporal.PlainTime` into a `Temporal.PlainDateTime`, by supplying the calendar date to use.
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-This has identical results to [`Temporal.PlainDate.from(date).toPlainDateTime(time)`](./date.html#toPlainDateTime).
+This has identical results to [`Temporal.PlainDate.from(date).toPlainDateTime(time)`](./plaindate.md#toPlainDateTime).
 
 If `date` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 

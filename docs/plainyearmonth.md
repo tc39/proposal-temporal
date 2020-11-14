@@ -31,7 +31,7 @@ Otherwise, `Temporal.PlainYearMonth.from()`, which accepts more kinds of input, 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
-The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./date.html#toPlainYearMonth) on any valid `Temporal.PlainDate` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./plaindate.md#toPlainYearMonth) on any valid `Temporal.PlainDate` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).

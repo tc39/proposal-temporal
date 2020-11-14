@@ -826,7 +826,7 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.html#toLocaleString), `options.timeZone` will have no effect, because `Temporal.PlainDateTime` carries no time zone information.
+> **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.md#toLocaleString), `options.timeZone` will have no effect, because `Temporal.PlainDateTime` carries no time zone information.
 > It's not always possible to uniquely determine the localized time zone name using the `Temporal.PlainDateTime` instance and the `options.timeZone`.
 > Therefore, to display a localized date and time including its time zone, convert the `Temporal.PlainDateTime` to a `Temporal.ZonedDateTime` or `Temporal.Instant` and then call the `toLocaleString()` method.
 
