@@ -465,3 +465,9 @@ Since they are generally larger than these cookbook recipes, they're on their ow
 Extend Temporal to support arbitrarily-large years (e.g., **+635427810-02-02**) for astronomical purposes.
 
 → [Extra-expanded years](cookbook-expandedyears.md)
+
+### New York Stock Exchange time zone
+
+An example of using `Temporal.TimeZone` for other purposes than a standard time zne.
+
+→ [NYSE time zone](cookbook-nyse.md)
