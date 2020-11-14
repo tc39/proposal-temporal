@@ -34,7 +34,7 @@ Otherwise, `Temporal.PlainDate.from()`, which accepts more kinds of input, allow
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
-The range of allowed values for this type is exactly enough that calling [`toPlainDate()`](./datetime.html#toPlainDate) on any valid `Temporal.PlainDateTime` will succeed.
+The range of allowed values for this type is exactly enough that calling [`toPlainDate()`](./plaindatetime.md#toPlainDate) on any valid `Temporal.PlainDateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then this function will throw a `RangeError`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -657,7 +657,7 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `date` and `plainTime`.
-If `plainTime` is given, this method is equivalent to [`Temporal.PlainTime.from(plainTime).toZonedDateTime(date)`](./time.html#toZonedDateTime).
+If `plainTime` is given, this method is equivalent to [`Temporal.PlainTime.from(plainTime).toZonedDateTime(date)`](./plaintime.md#toZonedDateTime).
 
 If `plainTime` is given but is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
 
@@ -695,7 +695,7 @@ This method can be used to convert `Temporal.PlainDate` into a `Temporal.PlainDa
 The default `time`, if it is not given, is midnight (00:00).
 The converted object carries a copy of all the relevant fields of `date` and `time`.
 
-If `time` is given, this is equivalent to [`Temporal.PlainTime.from(time).toPlainDateTime(date)`](./time.html#toPlainDateTime).
+If `time` is given, this is equivalent to [`Temporal.PlainTime.from(time).toPlainDateTime(date)`](./plaintime.md#toPlainDateTime).
 
 If `time` is given and is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
 

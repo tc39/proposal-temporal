@@ -1,3 +1,6 @@
+This document has been superseded by the documentation of [Temporal.TimeZone](./timezone.md).
+It's kept here for future reference if needed.
+
 # Draft design of custom time zone API
 
 ## Why?

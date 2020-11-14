@@ -48,11 +48,11 @@ These changes usually affect only future date/time values, but occasionally fixe
 In Temporal:
 
 - The [`Temporal.Instant`](./instant.md) type represents exact time only.
-- The [`Temporal.PlainDateTime`](./datetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.PlainDate`](./date.md), [`Temporal.PlainTime`](./time.md), [`Temporal.PlainYearMonth`](./yearmonth.md), and [`Temporal.PlainMonthDay`](./monthday.md).
+- The [`Temporal.PlainDateTime`](./plaindatetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.PlainDate`](./plaindate.md), [`Temporal.PlainTime`](./plaintime.md), [`Temporal.PlainYearMonth`](./plainyearmonth.md), and [`Temporal.PlainMonthDay`](./plainmonthday.md).
   These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
 - The [`Temporal.TimeZone`](./timezone.md) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
   It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.
-- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.PlainDateTime`](./datetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
+- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.PlainDateTime`](./plaindatetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
@@ -195,9 +195,9 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 
 Methods where this option is present include:
 
-- [`Temporal.PlainDate.prototype.toZonedDateTime`](./date.md#toZonedDateTime)
-- [`Temporal.PlainTime.prototype.toZonedDateTime`](./time.md#toZonedDateTime)
-- [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./datetime.md#toZonedDateTime)
+- [`Temporal.PlainDate.prototype.toZonedDateTime`](./plaindate.md#toZonedDateTime)
+- [`Temporal.PlainTime.prototype.toZonedDateTime`](./plaintime.md#toZonedDateTime)
+- [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./plaindatetime.md#toZonedDateTime)
 - [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 
 ## Examples: DST Disambiguation
