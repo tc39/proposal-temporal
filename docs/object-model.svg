@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg 
+<svg
   viewBox="116 540 4040 1484"
   width="100%"
   height="100%"
@@ -16,7 +16,7 @@
       font-weight: bold;
       font-style: normal;
     }
-    text { 
+    text {
       font-family: Roboto, 'Trebuchet MS', Helvetica, sans-serif;
       font-size: 70px;
       font-weight: 700;
@@ -31,7 +31,7 @@
   <text x="2220" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Calendar Date / Wall-Clock Time Types</text>
   <path stroke="#595959" d="M 1365 1214 L 1819 1214 L 1819 1367 L 2117 1367"/>
   <path stroke="#595959" d="M 722 1336 L 874 1336 L 874 1214 L 1110 1214"/>
-  <path stroke="#595959" d="M 1338 1150 V 1005"/> 
+  <path stroke="#595959" d="M 1338 1150 V 1005"/>
   <rect x="1050" y="1133" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
   <text style="fill: #000; white-space: pre;" x="1172" y="1250">TimeZone</text>
   <path stroke="#595959" d="M 722 1336 L 875 1336 L 875 1491 L 1110 1491"/>

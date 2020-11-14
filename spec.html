@@ -3,13 +3,28 @@
 <pre class=metadata>
 title: Temporal proposal
 stage: 2
-contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philipp Dunkel, Sasha Pierson, Ujjwal Sharma, Philip Chimento
+contributors: Maggie Pint, Matt Johnson, Brian Terlson, Daniel Ehrenberg, Philipp Dunkel, Sasha Pierson, Ujjwal Sharma, Philip Chimento, Justin Grant
 </pre>
 <emu-biblio href="spec/biblio.json"></emu-biblio>
 
 <emu-intro id=sec-temporal-intro>
   <h1>Introduction</h1>
-  <p>TBD</p>
+  <p>The venerable ECMAScript Date object has a number of challenges, including lack of immutability, lack of support for time zones, lack of support for use cases that require dates only or times only, a confusing and non-ergonomic API, and many other challenges.</p>
+  <p>The Temporal set of types addresses these challenges with a built-in date and time API for ECMAScript that includes:</p>
+  <ul>
+    <li>First-class support for all time zones, including DST-safe arithmetic</li>
+    <li>Strongly-typed objects for dates, times, date/time values, year/month values, month/year values, "zoned" date/time values, and durations</li>
+    <li>Immutability for all Temporal objects</li>
+    <li>String serialization and interoperability via standardized formats</li>
+    <li>Compliance with industry standards like ISO 8601, RFC 3339, and RFC5545 (iCalendar)</li>
+    <li>Full support for non-Gregorian calendars</li>
+  </ul>
+  <emu-figure id="temporal-object-model" caption="Temporal Object Relationships">
+    <object data="docs/object-model.svg" type="image/svg+xml"></object>
+  </emu-figure>
+  <emu-figure id="temporal-persistence-model" caption="Temporal String Persistence">
+    <object data="docs/persistence-model.svg" type="image/svg+xml"></object>
+  </emu-figure>
 </emu-intro>
 
 <emu-import href="spec/temporal.html"></emu-import>
