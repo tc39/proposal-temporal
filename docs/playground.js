@@ -12935,6 +12935,12 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
       }
+    }, {
+      key: "offsetNanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return ES.GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
+      }
     }], [{
       key: "from",
       value: function from(item) {
