@@ -191,10 +191,6 @@
 <ul>
 <li><a href="#Key-Concepts">Key Concepts</a>
 </li>
-<li><a href="#Design-drafts">Design drafts</a>
-</li>
-<li><a href="#obsolete-pages">Obsolete Pages</a>
-</li>
 </ul>
 </li>
 </ul>
@@ -239,22 +235,22 @@ This type is optimized for use cases that require a time zone, including DST-saf
 <p>See <a href="./zoneddatetime.html">Temporal.ZonedDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainDate"><a class="heading-link" href="#Temporal-PlainDate"></a><strong>Temporal.PlainDate</strong></h3><p>A <code>Temporal.PlainDate</code> object represents a calendar date that is not associated with a particular time or time zone.</p>
 <p>This can also be converted to partial dates such as <code>Temporal.PlainYearMonth</code> and <code>Temporal.PlainMonthDay</code>.</p>
-<p>See <a href="./date.html">Temporal.PlainDate Documentation</a> for detailed documentation.</p>
+<p>See <a href="./plaindate.html">Temporal.PlainDate Documentation</a> for detailed documentation.</p>
 <h4 id="time-zones-and-resolving-ambiguity">Time Zones and Resolving Ambiguity</h4>
 <p>Converting between wall-clock/calendar-date types (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time.</p>
 <p>Read more about <a href="./ambiguity.html">handling time zones, DST, and ambiguity in <code>Temporal</code></a>.</p>
 <h3 id="Temporal-PlainTime"><a class="heading-link" href="#Temporal-PlainTime"></a><strong>Temporal.PlainTime</strong></h3><p>A <code>Temporal.PlainTime</code> object represents a wall-clock time that is not associated with a particular date or time zone.</p>
-<p>See <a href="./time.html">Temporal.PlainTime Documentation</a> for detailed documentation.</p>
+<p>See <a href="./plaintime.html">Temporal.PlainTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p>A <code>Temporal.PlainDateTime</code> represents a calendar date and wall-clock time that does not carry time zone information.
 It can be converted to a <code>Temporal.ZonedDateTime</code> using a <code>Temporal.TimeZone</code>.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using <code>Temporal.ZonedDateTime</code> instead because that type automatically adjusts for Daylight Saving Time.</p>
-<p>See <a href="./datetime.html">Temporal.PlainDateTime Documentation</a> for detailed documentation.</p>
+<p>See <a href="./plaindatetime.html">Temporal.PlainDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainYearMonth"><a class="heading-link" href="#Temporal-PlainYearMonth"></a><strong>Temporal.PlainYearMonth</strong></h3><p>A date without a day component.
 This is useful to express things like &quot;the November 2010 meeting&quot;.</p>
-<p>See <a href="./yearmonth.html">Temporal.PlainYearMonth Documentation</a> for detailed documentation.</p>
+<p>See <a href="./plainyearmonth.html">Temporal.PlainYearMonth Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainMonthDay"><a class="heading-link" href="#Temporal-PlainMonthDay"></a><strong>Temporal.PlainMonthDay</strong></h3><p>A date without a year component.
 This is useful to express things like &quot;Bastille Day is on the 14th of July&quot;.</p>
-<p>See <a href="./monthday.html">Temporal.PlainMonthDay Documentation</a> for detailed documentation.</p>
+<p>See <a href="./plainmonthday.html">Temporal.PlainMonthDay Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Duration"><a class="heading-link" href="#Temporal-Duration"></a><strong>Temporal.Duration</strong></h3><p>A <code>Temporal.Duration</code> expresses a length of time.
 This is used for date/time arithmetic and for measuring differences between <code>Temporal</code> objects.</p>
 <p>See <a href="./duration.html">Temporal.Duration Documentation</a> for detailed documentation.</p>
@@ -281,20 +277,8 @@ For more information about extensions to the ISO 8601 / RFC 3339 standards that 
 <h3 id="Key-Concepts"><a class="heading-link" href="#Key-Concepts"></a><strong>Key Concepts</strong></h3><ul>
 <li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
 <li><a href="./balancing.html">Balancing</a> &mdash; Explanation of when <code>Temporal.Duration</code> units wrap around to 0 and when they don&#39;t.</li>
-</ul>
-<h3 id="Design-drafts"><a class="heading-link" href="#Design-drafts"></a><strong>Design drafts</strong></h3><ul>
-<li><a href="./iso-string-ext.html">ISO string extensions</a> &mdash; Discussion of extensions to the ISO 8601 standard which are used by Temporal and intended to be put on a standards track.</li>
-</ul>
-<h3 id="obsolete-pages"><a class="heading-link" href="#obsolete-pages"></a>Obsolete Pages</h3><ul>
-<li><a href="./calendar-subclass.html">Calendar Subclassing Draft</a> &mdash; Draft design document for alternative approach for calendar support.
-(<strong>Obsolete;</strong> rejected.)</li>
-<li><a href="./timezone-draft.html">Custom Time Zone Draft</a> &mdash; Draft design document for custom time zone support in Temporal.
-(<strong>Obsolete;</strong> superseded by the documentation of <a href="./timezone.html">Temporal.TimeZone</a>.)</li>
-<li><a href="./parse-draft.html">Parse Draft</a> &mdash; Draft design document for a <code>Temporal.parse</code> API, which is not currently planned to be implemented.</li>
-<li><a href="./calendar-draft.html">Calendar Draft</a> &mdash; Draft design document for calendar support in Temporal.
-Mostly superseded by the documentation of <a href="./calendar.html">Temporal.Calendar</a>, but also contains some discussion about whether to have a default calendar.</li>
-<li><a href="./zoneddatetime-draft.html">Zoned Date/Time Type Draft</a> &mdash; Explanation of <code>Temporal.ZonedDateTime</code> which is a new type combining an exact time with a time zone and calendar, and exposing a superset of the <code>Temporal.PlainDateTime</code> API.
-Superseded by the <a href="./zoneddatetime.html">documentation</a>, but contains background info about the reasons and goals behind this type.</li>
+<li><a href="./iso-string-ext.html">ISO String Extensions</a> &mdash; Discussion of extensions to the ISO 8601 and/or RFC 3339 standards which are used by <code>Temporal</code>.
+These extensions are being actively worked on with IETF to get them on a standards track.</li>
 </ul>
     <footer>
       <p>

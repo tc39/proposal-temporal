@@ -197,11 +197,11 @@ These changes usually affect only future date/time values, but occasionally fixe
 <p>In Temporal:</p>
 <ul>
 <li>The <a href="./instant.html"><code>Temporal.Instant</code></a> type represents exact time only.</li>
-<li>The <a href="./datetime.html"><code>Temporal.PlainDateTime</code></a> type represents calendar date and wall-clock time, as do other narrower types: <a href="./date.html"><code>Temporal.PlainDate</code></a>, <a href="./time.html"><code>Temporal.PlainTime</code></a>, <a href="./yearmonth.html"><code>Temporal.PlainYearMonth</code></a>, and <a href="./monthday.html"><code>Temporal.PlainMonthDay</code></a>.
+<li>The <a href="./plaindatetime.html"><code>Temporal.PlainDateTime</code></a> type represents calendar date and wall-clock time, as do other narrower types: <a href="./plaindate.html"><code>Temporal.PlainDate</code></a>, <a href="./plaintime.html"><code>Temporal.PlainTime</code></a>, <a href="./plainyearmonth.html"><code>Temporal.PlainYearMonth</code></a>, and <a href="./plainmonthday.html"><code>Temporal.PlainMonthDay</code></a>.
 These types all carry a calendar system, which by default is <code>&#39;iso8601&#39;</code> (the ISO 8601 calendar) but can be overridden for other <a href="./calendar.html">calendars</a> like <code>&#39;islamic&#39;</code> or <code>&#39;japanese&#39;</code>.</li>
 <li>The <a href="./timezone.html"><code>Temporal.TimeZone</code></a> represents a time zone function that converts between exact time and wall-clock time and vice-versa.
 It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.</li>
-<li>The <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> type encapsulates all of the types above: an exact time (like a <a href="./instant.html"><code>Temporal.Instant</code></a>), its wall-clock equivalent (like a <a href="./datetime.html"><code>Temporal.PlainDateTime</code></a>), and the time zone that links the two (like a <a href="./timezone.html"><code>Temporal.TimeZone</code></a>).</li>
+<li>The <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> type encapsulates all of the types above: an exact time (like a <a href="./instant.html"><code>Temporal.Instant</code></a>), its wall-clock equivalent (like a <a href="./plaindatetime.html"><code>Temporal.PlainDateTime</code></a>), and the time zone that links the two (like a <a href="./timezone.html"><code>Temporal.TimeZone</code></a>).</li>
 </ul>
 <p>There are two ways to get a human-readable calendar date and clock time from a <code>Temporal</code> type that stores exact time.</p>
 <ul>
@@ -325,9 +325,9 @@ zdtAmbiguous <span class="token operator">=</span> dt<span class="token punctuat
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>Methods where this option is present include:</p>
 <ul>
-<li><a href="./date.html#toZonedDateTime"><code>Temporal.PlainDate.prototype.toZonedDateTime</code></a></li>
-<li><a href="./time.html#toZonedDateTime"><code>Temporal.PlainTime.prototype.toZonedDateTime</code></a></li>
-<li><a href="./datetime.html#toZonedDateTime"><code>Temporal.PlainDateTime.prototype.toZonedDateTime</code></a></li>
+<li><a href="./plaindate.html#toZonedDateTime"><code>Temporal.PlainDate.prototype.toZonedDateTime</code></a></li>
+<li><a href="./plaintime.html#toZonedDateTime"><code>Temporal.PlainTime.prototype.toZonedDateTime</code></a></li>
+<li><a href="./plaindatetime.html#toZonedDateTime"><code>Temporal.PlainDateTime.prototype.toZonedDateTime</code></a></li>
 <li><a href="./timezone.html#getInstantFor"><code>Temporal.TimeZone.prototype.getInstantFor</code></a>.</li>
 </ul>
 <h2 id="examples-dst-disambiguation">Examples: DST Disambiguation</h2>

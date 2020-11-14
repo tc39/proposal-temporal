@@ -248,7 +248,7 @@ It can also be combined with a <code>Temporal.PlainTime</code> to yield a &quot;
 Otherwise, <code>Temporal.PlainDate.from()</code>, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.</p>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
-<p>The range of allowed values for this type is exactly enough that calling <a href="./datetime.html#toPlainDate"><code>toPlainDate()</code></a> on any valid <code>Temporal.PlainDateTime</code> will succeed.
+<p>The range of allowed values for this type is exactly enough that calling <a href="./plaindatetime.html#toPlainDate"><code>toPlainDate()</code></a> on any valid <code>Temporal.PlainDateTime</code> will succeed.
 If <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> form a date outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -665,7 +665,7 @@ Usually this is midnight (<code>00:00</code>), but may be a different time in ra
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>date</code> and <code>plainTime</code>.
-If <code>plainTime</code> is given, this method is equivalent to <a href="./time.html#toZonedDateTime"><code>Temporal.PlainTime.from(plainTime).toZonedDateTime(date)</code></a>.</p>
+If <code>plainTime</code> is given, this method is equivalent to <a href="./plaintime.html#toZonedDateTime"><code>Temporal.PlainTime.from(plainTime).toZonedDateTime(date)</code></a>.</p>
 <p>If <code>plainTime</code> is given but is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
@@ -688,7 +688,7 @@ plainDate<span class="token punctuation">.</span><span class="token function">to
 <p>This method can be used to convert <code>Temporal.PlainDate</code> into a <code>Temporal.PlainDateTime</code>, by supplying the time of day to use.
 The default <code>time</code>, if it is not given, is midnight (00:00).
 The converted object carries a copy of all the relevant fields of <code>date</code> and <code>time</code>.</p>
-<p>If <code>time</code> is given, this is equivalent to <a href="./time.html#toPlainDateTime"><code>Temporal.PlainTime.from(time).toPlainDateTime(date)</code></a>.</p>
+<p>If <code>time</code> is given, this is equivalent to <a href="./plaintime.html#toPlainDateTime"><code>Temporal.PlainTime.from(time).toPlainDateTime(date)</code></a>.</p>
 <p>If <code>time</code> is given and is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

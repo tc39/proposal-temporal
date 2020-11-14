@@ -142,7 +142,7 @@
       <strong>Do</strong> <a href="https://forms.gle/iL9iZg7Y9LvH41Nv8">give feedback</a> and open <a href="https://github.com/tc39/proposal-temporal/issues">issues</a>; <strong>don't</strong> use it in production!
     </div>
 <h1 id="subclass-based-temporal-calendar-api">Subclass-based Temporal Calendar API</h1>
-<p><a href="calendar-draft.html">calendar-draft.md</a> discusses a design for calendar support in Temporal based on a single shared Temporal.PlainDate type with a Temporal.Calendar. This document discusses an alternative approach based on subclassing of Temporal.PlainDate types, which was eliminated due to the drawbacks discussed in this document.</p>
+<p><a href="calendar.html">calendar-draft.md</a> documents the design for calendar support in Temporal based on a single shared Temporal.PlainDate type with a Temporal.Calendar. This document discusses an alternative approach based on subclassing of Temporal.PlainDate types. This idea was not pursued further due to the drawbacks discussed in this document.</p>
 <p>In this document, the <em>Temporal.Calendar Approach</em> refers to the solution proposed in <a href="calendar-draft.html">calendar-draft.md</a>, and the <em>Temporal.PlainDate Subclassing Approach</em> refers to the alternative, but eliminated, solution proposed in this document.</p>
 <h2 id="overview">Overview</h2>
 <p><code>Temporal.PlainDate</code> would become a base class. For example, a class like <code>HebrewDate</code> would extend <code>Temporal.PlainDate</code>.</p>
