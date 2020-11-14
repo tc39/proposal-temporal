@@ -218,6 +218,7 @@ describe('ZonedDateTime', () => {
       it('zdt.monthsInYear is 12', () => equal(zdt.monthsInYear, 12));
       it('zdt.inLeapYear is true', () => equal(zdt.inLeapYear, true));
       it('zdt.offset is +00:00', () => equal(zdt.offset, '+00:00'));
+      it('zdt.offsetNanoseconds is 0', () => equal(zdt.offsetNanoseconds, 0));
       it('string output is 1976-11-18T15:23:30.123456789+00:00[UTC]', () =>
         equal(`${zdt}`, '1976-11-18T15:23:30.123456789+00:00[UTC]'));
     });
@@ -254,6 +255,7 @@ describe('ZonedDateTime', () => {
       it('zdt.monthsInYear is 12', () => equal(zdt.monthsInYear, 12));
       it('zdt.inLeapYear is true', () => equal(zdt.inLeapYear, true));
       it('zdt.offset is +01:00', () => equal(zdt.offset, '+01:00'));
+      it('zdt.offsetNanoseconds is 3600e9', () => equal(zdt.offsetNanoseconds, 3600e9));
       it('string output is 1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][c=gregory]', () =>
         equal(`${zdt}`, '1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][c=gregory]'));
     });

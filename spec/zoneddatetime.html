@@ -529,6 +529,21 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.offsetnanoseconds">
+      <h1>get Temporal.ZonedDateTime.prototype.offsetNanoseconds</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.offsetNanoseconds` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Return ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.offset">
       <h1>get Temporal.ZonedDateTime.prototype.offset</h1>
       <p>

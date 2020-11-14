@@ -169,6 +169,10 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
   }
+  get offsetNanoseconds() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    return ES.GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
+  }
   with(temporalZonedDateTimeLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalZonedDateTimeLike) !== 'Object') {

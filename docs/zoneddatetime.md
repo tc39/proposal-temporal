@@ -74,7 +74,7 @@ new Temporal.ZonedDateTime(0n, 'America/Los_Angeles'); // same, but shorter
 
 This static method creates a new `Temporal.ZonedDateTime` object from another value.
 If the value is another `Temporal.ZonedDateTime` object, a new but otherwise identical object will be returned.
-If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `timeZone`, `offsetNanoseconds`, `era`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
+If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `timeZone`, `offset`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
 At least the `timeZone`, `year`, `month`, and `day` properties must be present. Other properties are optional.
 If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
 Any other missing properties will be assumed to be 0 (for time fields).
@@ -356,11 +356,6 @@ Calendar-specific date/time values are NOT used in only a few places:
 - In the values returned by the `getISOFields()` method which is explicitly used to provide ISO 8601 calendar values
 - In arguments to the `Temporal.ZonedDateTime` constructor which is used for advanced use cases only
 
-### zonedDateTime.**era** : unknown
-
-The `era` read-only property is `undefined` when using the ISO 8601 calendar.
-It's used for calendar systems like `japanese` that specify an era in addition to the year.
-
 ### zonedDateTime.**timeZone** : Temporal.TimeZoneProtocol
 
 The `timeZone` read-only property represents the persistent time zone of `zonedDateTime`.
@@ -585,26 +580,14 @@ The `offsetNanoseconds` read-only property is the offset (in nanoseconds) relati
 
 The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.
 
-This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
-Therefore, this field is returned by `getFields()` and is accepted by `from` and `with`.
-The presence of this field means that `zonedDateTime.toInstant()` requires no parameters.
+To change the offset using `with` (or `from` using an property bag object instead of a string), use the string-typed `offset` field.
+The numeric `offsetNanoseconds` field is read-only and is ignored in `with` and `from`.
 
 <!-- prettier-ignore-start -->
 ```javascript
-minus8Hours = -8 * 3600 * 1e9;
-daylightTime0130 = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]');
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
-  // This is Pacific Daylight Time 1:30AM
-repeated0130 = daylightTime0130.with({ offsetNanoseconds: minus8Hours });
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
-  // This is Pacific Standard Time 1:30AM
-const { offsetNanoseconds, ...otherFields } = repeated0130.getFields();
-zdt = Temporal.ZonedDateTime.from(otherFields, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
-zdt = Temporal.ZonedDateTime.from({ ...otherFields, offsetNanoseconds }, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
-  // Note that the `{disambiguation: 'earlier'}` option is ignored because `offsetNanoseconds`
-  // is included in the input so the result is not ambiguous.
+zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]');
+zdt.offsetNanoseconds;
+  // => -25200000000000 (-7 * 3600 * 1e9)
 ```
 <!-- prettier-ignore-end -->
 
@@ -616,8 +599,9 @@ The format used is defined in the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8
 
 The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.
 
-Note that when setting the offset using `with` (or `from` using an property bag object instead of a string), the only way to set the time zone offset is via the `offsetNanoseconds` field.
-String values are not accepted for offsets in these cases, nor is this property emitted by `.getFields()`.
+This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
+Therefore, this field is returned by `getFields()` and is accepted by `from` and `with`.
+The presence of this field means that `zonedDateTime.toInstant()` requires no parameters.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -626,6 +610,21 @@ zdt.offset;
   // => "-07:00"
 zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
   // => "+05:30"
+
+minus8Hours = '-08:00';
+daylightTime0130 = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]');
+  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+  // This is Pacific Daylight Time 1:30AM
+repeated0130 = daylightTime0130.with({ offset: minus8Hours });
+  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
+  // This is Pacific Standard Time 1:30AM
+const { offset, ...otherFields } = repeated0130.getFields();
+zdt = Temporal.ZonedDateTime.from(otherFields, { disambiguation: 'earlier' });
+  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+zdt = Temporal.ZonedDateTime.from({ ...otherFields, offset }, { disambiguation: 'earlier' });
+  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
+  // Note that the `{disambiguation: 'earlier'}` option is ignored because `offset`
+  // is included in the input so the result is not ambiguous.
 ```
 <!-- prettier-ignore-end -->
 
