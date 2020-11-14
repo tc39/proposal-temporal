@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" 
-  viewBox="-10 -155 1335 770"
-  width="1345" 
-  height="770" 
+<svg xmlns="http://www.w3.org/2000/svg"
+  viewBox="-12 -155 1339 770"
+  width="100%"
+  height="100%"
   fill="none"
-  style="background-color: #fff"
+  style="background-color: #fff;"
 >
   <!-- font from https://fonts.google.com/specimen/Roboto?sidebar.open=true&selection.family=Roboto:wght@400 -->
   <style><![CDATA[
@@ -18,29 +18,28 @@
       width: 100%;
       height: 100%;
     }
-    path { 
+    path {
       stroke: #999;
       stroke-width: 5px;
     }
-    rect { 
+    rect {
       stroke-width: 5px;
       opacity: 0.5;
     }
-    text { 
+    text {
       stroke: #000;
       fill: #000;
       font-family: 'Roboto', 'Trebuchet MS', Helvetica, sans-serif;
       font-size: 40px;
       text-rendering: geometricPrecision;
     }
-    text tspan { 
+    text tspan {
       stroke: #999;
       fill: #999;
     }
     g text {
       font-size: 35px;
     }
-    
   ]]></style>
   <text fill="#000" style="font-size: 55px">2020-08-05T20:06:13+09:00[Asia/Tokyo][c=Japanese]</text>
   <rect x="-10" y="-150" stroke="#70AD47" fill="none" width="698" height="170"/>
