@@ -169,7 +169,7 @@ describe('Duration', () => {
         { hours: 0.5, minutes: 20 },
         { hours: 0.5, seconds: 15 },
         { minutes: 10.7, nanoseconds: 400 }
-      ].forEach((str) => throws(() => Duration.from(str)));
+      ].forEach((str) => throws(() => Duration.from(str), RangeError));
     });
     it('decimal places are properly handled on valid units', () => {
       equal(`${Duration.from('P1DT0.5M')}`, 'P1DT30S');

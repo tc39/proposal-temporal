@@ -307,7 +307,7 @@ export const ES = ObjectAssign({}, ES2020, {
     fHours = fHours ? (sign * ES.ToInteger(fHours)) / 10 ** fHours.length : 0;
     fMinutes = fMinutes ? (sign * ES.ToInteger(fMinutes)) / 10 ** fMinutes.length : 0;
 
-    const time = ES.DurationHandleFractions(
+    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
       fHours,
       minutes,
       fMinutes,
@@ -319,13 +319,7 @@ export const ES = ObjectAssign({}, ES2020, {
       0,
       nanoseconds,
       0
-    );
-    minutes = time.minutes;
-    seconds = time.seconds;
-    milliseconds = time.milliseconds;
-    microseconds = time.microseconds;
-    nanoseconds = time.nanoseconds;
-
+    ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
@@ -451,7 +445,7 @@ export const ES = ObjectAssign({}, ES2020, {
         if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
       });
       let mins = fHours * 60;
-      minutes = ES.ToInteger(mins);
+      minutes = MathTrunc(mins);
       fMinutes = mins % 1;
     }
 
@@ -462,7 +456,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
       );
       let secs = fMinutes * 60;
-      seconds = ES.ToInteger(secs);
+      seconds = MathTrunc(secs);
       fSeconds = secs % 1;
     }
 
@@ -471,7 +465,7 @@ export const ES = ObjectAssign({}, ES2020, {
         if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
       });
       let mils = fSeconds * 1000;
-      milliseconds = ES.ToInteger(mils);
+      milliseconds = MathTrunc(mils);
       fMilliseconds = mils % 1;
     }
 
@@ -480,7 +474,7 @@ export const ES = ObjectAssign({}, ES2020, {
         if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
       });
       let mics = fMilliseconds * 1000;
-      microseconds = ES.ToInteger(mics);
+      microseconds = MathTrunc(mics);
       fMicroseconds = mics % 1;
     }
 
@@ -489,7 +483,7 @@ export const ES = ObjectAssign({}, ES2020, {
         if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
       });
       let nans = fMicroseconds * 1000;
-      nanoseconds = ES.ToInteger(nans);
+      nanoseconds = MathTrunc(nans);
     }
 
     return { minutes, seconds, milliseconds, microseconds, nanoseconds };
@@ -541,7 +535,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!ES.IsInteger(years) || !ES.IsInteger(months) || !ES.IsInteger(weeks) || !ES.IsInteger(days)) {
       throw new RangeError('non-time units cannot be fractional');
     }
-    const time = ES.DurationHandleFractions(
+    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
       hours % 1,
       MathTrunc(minutes),
       minutes % 1,
@@ -553,13 +547,8 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds % 1,
       MathTrunc(nanoseconds),
       nanoseconds % 1
-    );
+    ));
     hours = MathTrunc(hours);
-    minutes = time.minutes;
-    seconds = time.seconds;
-    milliseconds = time.milliseconds;
-    microseconds = time.microseconds;
-    nanoseconds = time.nanoseconds;
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
