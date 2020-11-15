@@ -151,6 +151,10 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).nanosecond(this);
   }
+  get era() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(this);
+  }
   get dayOfWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).dayOfWeek(this);

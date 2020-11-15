@@ -98,6 +98,10 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(dateTime(this), ISO_NANOSECOND);
   }
+  get era() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(dateTime(this));
+  }
   get epochSeconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);

@@ -4,9 +4,7 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import * as REGEX from './regex.mjs';
 import {
-  CALENDAR,
   CALENDAR_ID,
-  INSTANT,
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
@@ -16,7 +14,6 @@ import {
   ISO_MILLISECOND,
   ISO_MICROSECOND,
   ISO_NANOSECOND,
-  TIME_ZONE,
   CreateSlots,
   GetSlot,
   HasSlot,
@@ -107,6 +104,10 @@ export class Calendar {
     throw new Error('not implemented');
   }
   day(date) {
+    void date;
+    throw new Error('not implemented');
+  }
+  era(date) {
     void date;
     throw new Error('not implemented');
   }
@@ -361,6 +362,10 @@ class ISO8601Calendar extends Calendar {
     if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_DAY);
   }
+  era(date) {
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    return undefined;
+  }
   hour(time) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return GetSlot(time, ISO_HOUR);
@@ -433,29 +438,6 @@ MakeIntrinsicClass(ISO8601Calendar, 'Temporal.ISO8601Calendar');
 // proposal for ECMA-262. These calendars will be standardized as part of
 // ECMA-402.
 
-function addCustomPropertyGetter(type, name) {
-  Object.defineProperty(GetIntrinsic(`%Temporal.${type}.prototype%`), name, {
-    get() {
-      return GetSlot(this, CALENDAR)[name](this);
-    },
-    configurable: true
-  });
-}
-
-function addEraProperties() {
-  addCustomPropertyGetter('PlainDate', 'era');
-  addCustomPropertyGetter('PlainDateTime', 'era');
-  addCustomPropertyGetter('PlainYearMonth', 'era');
-  Object.defineProperty(GetIntrinsic('%Temporal.ZonedDateTime.prototype%'), 'era', {
-    get() {
-      const calendar = GetSlot(this, CALENDAR);
-      const dateTime = ES.GetTemporalDateTimeFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT), calendar);
-      return calendar.era(dateTime);
-    },
-    configurable: true
-  });
-}
-
 // Implementation details for Gregorian calendar
 const gre = {
   isoYear(year, era) {
@@ -469,7 +451,6 @@ const gre = {
 class Gregorian extends ISO8601Calendar {
   constructor() {
     super('gregory');
-    addEraProperties();
   }
 
   era(date) {
@@ -567,7 +548,6 @@ const jpn = {
 class Japanese extends ISO8601Calendar {
   constructor() {
     super('japanese');
-    addEraProperties();
   }
 
   era(date) {

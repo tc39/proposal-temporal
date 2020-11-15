@@ -61,6 +61,10 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR);
   }
+  get era() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(this);
+  }
   get year() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).year(this);
