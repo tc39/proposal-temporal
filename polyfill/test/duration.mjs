@@ -1401,7 +1401,7 @@ describe('Duration', () => {
           const partialMonth = (daysPastJuly1 + partialDay) / 31;
           const totalMonths = 5 * 12 + 5 + 1 + partialMonth; // +1 for 5 weeks
           const total = d.total({ unit: 'months', relativeTo });
-          equal(total, totalMonths); // 66.32930780242619
+          assert(Math.abs(total - totalMonths) < Number.EPSILON); // 66.32930780242619
         }
       );
     });
@@ -1461,22 +1461,22 @@ describe('Duration', () => {
       nanoseconds: d2Nanoseconds
     };
     it('relativeTo not required to round fixed-length units in durations without variable units', () => {
-      equal(d2.total({ unit: 'days' }), totalD2.days);
-      equal(d2.total({ unit: 'hours' }), totalD2.hours);
-      equal(d2.total({ unit: 'minutes' }), totalD2.minutes);
-      equal(d2.total({ unit: 'seconds' }), totalD2.seconds);
-      equal(d2.total({ unit: 'milliseconds' }), totalD2.milliseconds);
-      equal(d2.total({ unit: 'microseconds' }), totalD2.microseconds);
+      assert(Math.abs(d2.total({ unit: 'days' }) - totalD2.days) < Number.EPSILON);
+      assert(Math.abs(d2.total({ unit: 'hours' }) - totalD2.hours) < Number.EPSILON);
+      assert(Math.abs(d2.total({ unit: 'minutes' }) - totalD2.minutes) < Number.EPSILON);
+      assert(Math.abs(d2.total({ unit: 'seconds' }) - totalD2.seconds) < Number.EPSILON);
+      assert(Math.abs(d2.total({ unit: 'milliseconds' }) - totalD2.milliseconds) < Number.EPSILON);
+      assert(Math.abs(d2.total({ unit: 'microseconds' }) - totalD2.microseconds) < Number.EPSILON);
       equal(d2.total({ unit: 'nanoseconds' }), totalD2.nanoseconds);
     });
     it('relativeTo not required to round fixed-length units in durations without variable units (negative)', () => {
       const negativeD2 = d2.negated();
-      equal(negativeD2.total({ unit: 'days' }), -totalD2.days);
-      equal(negativeD2.total({ unit: 'hours' }), -totalD2.hours);
-      equal(negativeD2.total({ unit: 'minutes' }), -totalD2.minutes);
-      equal(negativeD2.total({ unit: 'seconds' }), -totalD2.seconds);
-      equal(negativeD2.total({ unit: 'milliseconds' }), -totalD2.milliseconds);
-      equal(negativeD2.total({ unit: 'microseconds' }), -totalD2.microseconds);
+      assert(Math.abs(negativeD2.total({ unit: 'days' }) - -totalD2.days) < Number.EPSILON);
+      assert(Math.abs(negativeD2.total({ unit: 'hours' }) - -totalD2.hours) < Number.EPSILON);
+      assert(Math.abs(negativeD2.total({ unit: 'minutes' }) - -totalD2.minutes) < Number.EPSILON);
+      assert(Math.abs(negativeD2.total({ unit: 'seconds' }) - -totalD2.seconds) < Number.EPSILON);
+      assert(Math.abs(negativeD2.total({ unit: 'milliseconds' }) - -totalD2.milliseconds) < Number.EPSILON);
+      assert(Math.abs(negativeD2.total({ unit: 'microseconds' }) - -totalD2.microseconds) < Number.EPSILON);
       equal(negativeD2.total({ unit: 'nanoseconds' }), -totalD2.nanoseconds);
     });
 
@@ -1505,7 +1505,7 @@ describe('Duration', () => {
     };
     for (const [unit, expected] of Object.entries(totalResults)) {
       it(`total(${unit}) = ${expected}`, () => {
-        equal(d.total({ unit, relativeTo }), expected);
+        assert(Math.abs(d.total({ unit, relativeTo }) - expected) < Number.EPSILON);
       });
     }
     for (const unit of ['microseconds', 'nanoseconds']) {
@@ -1515,13 +1515,18 @@ describe('Duration', () => {
     }
     it('balances differently depending on relativeTo', () => {
       const fortyDays = Duration.from({ days: 40 });
-      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }), 1 + 11 / 31);
-      equal(fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }), 1 + 9 / 29);
+      assert(Math.abs(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }) - (1 + 11 / 31)) < Number.EPSILON);
+      assert(Math.abs(fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }) - (1 + 9 / 29)) < Number.EPSILON);
     });
     it('balances differently depending on relativeTo (negative)', () => {
       const negativeFortyDays = Duration.from({ days: -40 });
-      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }), -1 - 11 / 31);
-      equal(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }), -1 - 9 / 29);
+      assert(
+        Math.abs(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }) - (-1 - 11 / 31)) <
+          Number.EPSILON
+      );
+      assert(
+        Math.abs(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }) - (-1 - 9 / 29)) < Number.EPSILON
+      );
     });
     const oneDay = new Duration(0, 0, 0, 1);
     it('relativeTo does not affect days if PlainDateTime', () => {
@@ -1548,29 +1553,35 @@ describe('Duration', () => {
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -25);
       });
       it('start inside repeated hour, end in skipped hour', () => {
-        equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'days', relativeTo: inRepeatedHour }), 126 + 1 / 23);
+        const totalDays = Duration.from({ days: 126, hours: 1 }).total({ unit: 'days', relativeTo: inRepeatedHour });
+        assert(Math.abs(totalDays - (126 + 1 / 23)) < Number.EPSILON);
         equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'hours', relativeTo: inRepeatedHour }), 3026);
       });
       it('start in normal hour, end in skipped hour', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
-        equal(hours25.total({ unit: 'days', relativeTo }), 1 + 1 / 24);
+        const totalDays = hours25.total({ unit: 'days', relativeTo });
+        assert(Math.abs(totalDays - (1 + 1 / 24)) < Number.EPSILON);
         equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
       });
       it('start before skipped hour, end >1 day after', () => {
-        equal(hours25.total({ unit: 'days', relativeTo: skippedHourDay }), 1 + 2 / 24);
+        const totalDays = hours25.total({ unit: 'days', relativeTo: skippedHourDay });
+        assert(Math.abs(totalDays - (1 + 2 / 24)) < Number.EPSILON);
         equal(oneDay.total({ unit: 'hours', relativeTo: skippedHourDay }), 23);
       });
       it('start after skipped hour, end >1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-11T00:00[America/Vancouver]');
-        equal(hours25.negated().total({ unit: 'days', relativeTo }), -1 - 2 / 24);
+        const totalDays = hours25.negated().total({ unit: 'days', relativeTo });
+        assert(Math.abs(totalDays - (-1 - 2 / 24)) < Number.EPSILON);
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -23);
       });
       it('start before skipped hour, end <1 day after', () => {
-        equal(hours12.total({ unit: 'days', relativeTo: skippedHourDay }), 12 / 23);
+        const totalDays = hours12.total({ unit: 'days', relativeTo: skippedHourDay });
+        assert(Math.abs(totalDays - 12 / 23) < Number.EPSILON);
       });
       it('start after skipped hour, end <1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-10T12:00[America/Vancouver]');
-        equal(hours12.negated().total({ unit: 'days', relativeTo }), -12 / 23);
+        const totalDays = hours12.negated().total({ unit: 'days', relativeTo });
+        assert(Math.abs(totalDays - -12 / 23) < Number.EPSILON);
       });
       it('start before repeated hour, end >1 day after', () => {
         equal(hours25.total({ unit: 'days', relativeTo: repeatedHourDay }), 1);
@@ -1582,15 +1593,18 @@ describe('Duration', () => {
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -25);
       });
       it('start before repeated hour, end <1 day after', () => {
-        equal(hours12.total({ unit: 'days', relativeTo: repeatedHourDay }), 12 / 25);
+        const totalDays = hours12.total({ unit: 'days', relativeTo: repeatedHourDay });
+        assert(Math.abs(totalDays - 12 / 25) < Number.EPSILON);
       });
       it('start after repeated hour, end <1 day before (negative)', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-11-03T12:00[America/Vancouver]');
-        equal(hours12.negated().total({ unit: 'days', relativeTo }), -12 / 25);
+        const totalDays = hours12.negated().total({ unit: 'days', relativeTo });
+        assert(Math.abs(totalDays - -12 / 25) < Number.EPSILON);
       });
       it('Samoa skipped 24 hours', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
-        equal(hours25.total({ unit: 'days', relativeTo }), 2 + 1 / 24);
+        const totalDays = hours25.total({ unit: 'days', relativeTo });
+        assert(Math.abs(totalDays - (2 + 1 / 24)) < Number.EPSILON);
         equal(Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 3);
         equal(Duration.from({ days: 2 }).total({ unit: 'hours', relativeTo }), 24);
         equal(Duration.from({ days: 3 }).total({ unit: 'hours', relativeTo }), 48);
@@ -1599,7 +1613,8 @@ describe('Duration', () => {
     it('totaling back up to days', () => {
       const relativeTo = Temporal.ZonedDateTime.from('2019-11-02T00:00[America/Vancouver]');
       equal(Duration.from({ hours: 48 }).total({ unit: 'days' }), 2);
-      equal(Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 1 + 24 / 25);
+      const totalDays = Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo });
+      assert(Math.abs(totalDays - (1 + 24 / 25)) < Number.EPSILON);
     });
     it('casts relativeTo to ZonedDateTime if possible', () => {
       equal(oneDay.total({ unit: 'hours', relativeTo: '2019-11-03T00:00[America/Vancouver]' }), 25);
@@ -1610,11 +1625,13 @@ describe('Duration', () => {
     });
     it('balances up to the next unit after rounding', () => {
       const almostWeek = Duration.from({ days: 6, hours: 20 });
-      equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), (6 + 20 / 24) / 7);
+      const totalWeeks = almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' });
+      assert(Math.abs(totalWeeks - (6 + 20 / 24) / 7) < Number.EPSILON);
     });
     it('balances up to the next unit after rounding (negative)', () => {
       const almostWeek = Duration.from({ days: -6, hours: -20 });
-      equal(almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' }), -((6 + 20 / 24) / 7));
+      const totalWeeks = almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' });
+      assert(Math.abs(totalWeeks - -((6 + 20 / 24) / 7)) < Number.EPSILON);
     });
     it('balances days up to both years and months', () => {
       const twoYears = Duration.from({ months: 11, days: 396 });
