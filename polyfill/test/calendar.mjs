@@ -52,6 +52,9 @@ describe('Calendar', () => {
       it('Calendar.prototype.day is a Function', () => {
         equal(typeof Calendar.prototype.day, 'function');
       });
+      it('Calendar.prototype.era is a Function', () => {
+        equal(typeof Calendar.prototype.era, 'function');
+      });
       it('Calendar.prototype.dayOfWeek is a Function', () => {
         equal(typeof Calendar.prototype.dayOfWeek, 'function');
       });

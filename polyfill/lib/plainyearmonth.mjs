@@ -68,6 +68,10 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR);
   }
+  get era() {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    return GetSlot(this, CALENDAR).era(this);
+  }
   get daysInMonth() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR).daysInMonth(this);
