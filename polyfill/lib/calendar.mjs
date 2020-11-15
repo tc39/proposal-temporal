@@ -259,7 +259,6 @@ impl['iso8601'] = {
   },
   dateAdd(date, duration, overflow) {
     const { years, months, weeks, days } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
@@ -277,8 +276,7 @@ impl['iso8601'] = {
     );
   },
   timeAdd(time, duration, overflow) {
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let hour = GetSlot(time, ISO_HOUR);
     let minute = GetSlot(time, ISO_MINUTE);
     let second = GetSlot(time, ISO_SECOND);
