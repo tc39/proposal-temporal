@@ -4,17 +4,7 @@ import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import {
-  ISO_MONTH,
-  ISO_DAY,
-  ISO_YEAR,
-  CALENDAR,
-  CALENDAR_ID,
-  MONTH_DAY_BRAND,
-  CreateSlots,
-  GetSlot,
-  SetSlot
-} from './slots.mjs';
+import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 const ObjectAssign = Object.assign;
 
@@ -23,11 +13,12 @@ function MonthDayToString(monthDay, showCalendar = 'auto') {
   const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
   let resultString = `${month}-${day}`;
   const calendar = GetSlot(monthDay, CALENDAR);
-  if (!(ES.IsTemporalCalendar(calendar) && GetSlot(calendar, CALENDAR_ID) === 'iso8601')) {
+  const calendarID = ES.CalendarToString(calendar);
+  if (calendarID !== 'iso8601') {
     const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
     resultString = `${year}-${resultString}`;
   }
-  const calendarString = ES.FormatCalendarAnnotation(GetSlot(monthDay, CALENDAR), showCalendar);
+  const calendarString = ES.FormatCalendarAnnotation(calendarID, showCalendar);
   if (calendarString) resultString += calendarString;
   return resultString;
 }

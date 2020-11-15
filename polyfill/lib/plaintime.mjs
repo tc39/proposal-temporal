@@ -50,7 +50,8 @@ function TemporalTimeToString(time, precision, showCalendar = 'auto', options = 
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(time, CALENDAR), showCalendar);
+  const calendarID = ES.CalendarToString(GetSlot(time, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return `${hour}:${minute}${seconds}${calendar}`;
 }
 
