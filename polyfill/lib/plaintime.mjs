@@ -1,6 +1,5 @@
 /* global __debug__ */
 
-import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -63,7 +62,7 @@ export class PlainTime {
     isoMillisecond = 0,
     isoMicrosecond = 0,
     isoNanosecond = 0,
-    calendar = GetISO8601Calendar()
+    calendar = ES.GetISO8601Calendar()
   ) {
     isoHour = ES.ToInteger(isoHour);
     isoMinute = ES.ToInteger(isoMinute);

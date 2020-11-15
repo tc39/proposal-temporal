@@ -1,6 +1,5 @@
 /* global __debug__ */
 
-import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -34,7 +33,7 @@ function TemporalDateToString(date, showCalendar = 'auto') {
 }
 
 export class PlainDate {
-  constructor(isoYear, isoMonth, isoDay, calendar = GetISO8601Calendar()) {
+  constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
     isoYear = ES.ToInteger(isoYear);
     isoMonth = ES.ToInteger(isoMonth);
     isoDay = ES.ToInteger(isoDay);

@@ -1,5 +1,5 @@
 import Demitasse from '@pipobscure/demitasse';
-const { describe, it, report } = Demitasse;
+const { after, before, describe, it, report } = Demitasse;
 
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
@@ -649,29 +649,34 @@ describe('fromString regex', () => {
   });
 
   describe('calendar ID', () => {
-    function makeCustomCalendar(id) {
-      return class extends Temporal.Calendar {
-        constructor() {
-          super(id);
-        }
+    let oldTemporalCalendarFrom = Temporal.Calendar.from;
+    let fromCalledWith;
+    before(() => {
+      Temporal.Calendar.from = function (item) {
+        fromCalledWith = item;
+        return new Temporal.Calendar('iso8601');
       };
+    });
+    function testCalendarID(id) {
+      return Temporal.PlainDateTime.from(`1970-01-01T00:00[c=${id}]`);
     }
     describe('valid', () => {
       ['aaa', 'aaa-aaa', 'eightZZZ', 'eightZZZ-eightZZZ'].forEach((id) => {
         it(id, () => {
-          const Custom = makeCustomCalendar(id);
-          const calendar = new Custom();
-          equal(calendar.id, id);
+          testCalendarID(id);
+          equal(fromCalledWith, id);
         });
       });
     });
     describe('not valid', () => {
       ['a', 'a-a', 'aa', 'aa-aa', 'foo_', 'foo.', 'ninechars', 'ninechars-ninechars'].forEach((id) => {
         it(id, () => {
-          const Custom = makeCustomCalendar(id);
-          throws(() => new Custom(), RangeError);
+          throws(() => testCalendarID(id), RangeError);
         });
       });
+    });
+    after(() => {
+      Temporal.Calendar.from = oldTemporalCalendarFrom;
     });
   });
 });
