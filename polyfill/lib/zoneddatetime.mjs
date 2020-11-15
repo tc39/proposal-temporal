@@ -1,6 +1,5 @@
 /* global __debug__ */
 
-import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -29,7 +28,7 @@ const ArrayPrototypePush = Array.prototype.push;
 const ObjectAssign = Object.assign;
 
 export class ZonedDateTime {
-  constructor(epochNanoseconds, timeZone, calendar = GetISO8601Calendar()) {
+  constructor(epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) {
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
     timeZone = ES.ToTemporalTimeZone(timeZone);
     calendar = ES.ToTemporalCalendar(calendar);

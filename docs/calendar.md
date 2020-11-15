@@ -41,11 +41,15 @@ date.withCalendar(calendar).add({ months: 1 });
 For specialized applications where you need to do calculations in a calendar system that is not supported by Intl, you can implement a custom calendar.
 There are two ways to do this.
 
-The recommended way is to create a class inheriting from `Temporal.Calendar`, call `super()` in the constructor with a calendar identifier string, and implement all the members except `id`, `toString()`, and `fields()`, which are optional.
-If you don't implement the optional members, then the base class's default implementations will be used.
+The recommended way is to create a class inheriting from `Temporal.Calendar`.
+You must use one of the built-in calendars as the "base calendar".
+In the class's constructor, call `super()` with the identifier of the base calendar.
+The class must override `toString()` to return its own identifier.
+Overriding all the other members is optional.
+If you don't override the optional members, then they will behave as in the base calendar.
 
 The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
-The object must implement all of the `Temporal.Calendar` methods except for `fields()`.
+The object must implement all of the `Temporal.Calendar` methods except for `id` and `fields()`.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
 To interoperate with libraries or other code that you didn't write, then you should implement the `id` property and the `fields()` method as well.

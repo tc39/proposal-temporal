@@ -18,10 +18,12 @@ describe('Userland calendar', () => {
   describe('Trivial subclass', () => {
     // For the purposes of testing, a nonsensical calendar that uses 0-based
     // month numbers, like legacy Date
-    const ISO8601Calendar = Temporal.Calendar.from('iso8601').constructor;
-    class ZeroBasedCalendar extends ISO8601Calendar {
+    class ZeroBasedCalendar extends Temporal.Calendar {
       constructor() {
-        super('zero-based');
+        super('iso8601');
+      }
+      toString() {
+        return 'zero-based';
       }
       dateFromFields(fields, options, constructor) {
         fields.month++;
@@ -503,10 +505,9 @@ describe('Userland calendar', () => {
     // Contrived example of a calendar identical to the ISO calendar except that
     // months are numbered 1, 2, 3, and each year has four seasons of 3 months
     // numbered 1, 2, 3, 4.
-    const ISO8601Calendar = Temporal.Calendar.from('iso8601').constructor;
-    class SeasonCalendar extends ISO8601Calendar {
+    class SeasonCalendar extends Temporal.Calendar {
       constructor() {
-        super('season');
+        super('iso8601');
         Object.defineProperty(Temporal.PlainDateTime.prototype, 'season', {
           get() {
             return this.calendar.season(this);
@@ -531,6 +532,9 @@ describe('Userland calendar', () => {
           },
           configurable: true
         });
+      }
+      toString() {
+        return 'season';
       }
       month(date) {
         const { isoMonth } = date.getISOFields();

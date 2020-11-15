@@ -1,6 +1,5 @@
 /* global __debug__ */
 
-import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -259,7 +258,7 @@ export class Instant {
       }
     }
     const timeZone = ES.ToTemporalTimeZone(item);
-    const calendar = GetISO8601Calendar();
+    const calendar = ES.GetISO8601Calendar();
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }

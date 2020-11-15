@@ -1,4 +1,3 @@
-import { GetISO8601Calendar } from './calendar.mjs';
 import { ES } from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 
@@ -27,7 +26,7 @@ function plainDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
 }
 function plainDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = GetISO8601Calendar();
+  const calendar = ES.GetISO8601Calendar();
   const inst = instant();
   return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
 }
@@ -39,7 +38,7 @@ function zonedDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
 }
 function zonedDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = GetISO8601Calendar();
+  const calendar = ES.GetISO8601Calendar();
   const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
   return new ZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
 }
