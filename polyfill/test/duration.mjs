@@ -132,7 +132,7 @@ describe('Duration', () => {
       equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
-    it('any number of decimal places work', () => {
+    it('upto nine decimal places work', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.100S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.12S')}`, 'P1Y1M1W1DT1H1M1.120S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123S')}`, 'P1Y1M1W1DT1H1M1.123S');
@@ -142,7 +142,9 @@ describe('Duration', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234567S')}`, 'P1Y1M1W1DT1H1M1.123456700S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345678S')}`, 'P1Y1M1W1DT1H1M1.123456780S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456789S')}`, 'P1Y1M1W1DT1H1M1.123456789S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456789123S')}`, 'P1Y1M1W1DT1H1M1.123456789S');
+    });
+    it('above nine decimal places throw', () => {
+      throws(() => Duration.from('P1Y1M1W1DT1H1M1.123456789123S'), RangeError);
     });
     it('variant decimal separator', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
