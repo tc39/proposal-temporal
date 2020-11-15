@@ -162,11 +162,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-formatcalendarannotation" aoid="FormatCalendarAnnotation">
-      <h1>FormatCalendarAnnotation ( _calendar_, _showCalendar_ )</h1>
+      <h1>FormatCalendarAnnotation ( _id_, _showCalendar_ )</h1>
+      <p>
+        The abstract operation FormatCalendarAnnotation returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
+        Depending on the given _id_ and value of _showCalendar_, the string may be empty if no calendar annotation need be included.
+      </p>
+      <emu-note type="editor">
+        The exact form this annotation will take is unknown, and the *"c="* format is tentative; it is being discussed as an addition to ISO 8601 or RFC 3339.
+      </emu-note>
       <emu-alg>
         1. Assert: _showCalendar_ is *"auto"*, *"always"*, or *"never"*.
         1. If _showCalendar_ is *"never"*, return the empty String.
-        1. Let _id_ be ? CalendarToString(_calendar_).
         1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
         1. Return the string-concatenation of *"[c="*, _id_, and *"]"*.
       </emu-alg>

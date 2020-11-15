@@ -28,7 +28,8 @@ function TemporalDateToString(date, showCalendar = 'auto') {
   const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
   const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
   const day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
+  const calendarID = ES.CalendarToString(GetSlot(date, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return `${year}-${month}-${day}${calendar}`;
 }
 

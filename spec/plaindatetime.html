@@ -1152,7 +1152,8 @@
         1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _minute_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
-        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendar_, _showCalendar_).
+        1. Let _calendarID_ be ? CalendarToString(_calendar_).
+        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendarString_.
       </emu-alg>
     </emu-clause>

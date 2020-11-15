@@ -1369,7 +1369,8 @@
           1. Let _timeZoneString_ be the empty String.
         1. Else,
           1. Let _timeZoneString_ be ? TimeZoneToString(_timeZone_).
-        1. Let _calendarString_ be ? FormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
+        1. Let _calendarID_ be ? CalendarToString(_zonedDateTime_.[[Calendar]]).
+        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, the code unit 0x005B (LEFT SQUARE BRACKET), _timeZoneString_, the code unit 0x005D (RIGHT SQUARE BRACKET), and _calendarString_.
       </emu-alg>
     </emu-clause>

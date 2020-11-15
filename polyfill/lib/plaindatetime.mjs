@@ -59,7 +59,8 @@ function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = 
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendar = ES.FormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
+  const calendarID = ES.CalendarToString(GetSlot(dateTime, CALENDAR));
+  const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
 }
 

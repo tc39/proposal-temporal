@@ -136,9 +136,8 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return result;
   },
-  FormatCalendarAnnotation: (calendar, showCalendar) => {
+  FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
-    const id = ES.CalendarToString(calendar);
     if (showCalendar === 'auto' && id === 'iso8601') return '';
     return `[c=${id}]`;
   },
