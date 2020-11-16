@@ -468,7 +468,7 @@
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_calendar_, _temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _temporalDate_, _other_, _largestUnit_).
         1. If _smallestUnit_ is not *"days"* or _roundingIncrement_ ≠ 1, then
           1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
           1. Set _result_ to ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -499,7 +499,7 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_calendar_, _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _other_, _temporalDate_, _largestUnit_).
         1. If _smallestUnit_ is *"days"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).

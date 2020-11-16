@@ -116,7 +116,9 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Return _monthDay_.[[ISOMonth]].
+        1. Let _calendar_ be _monthDay_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"month"*).
+        1. Return ? Call(_method_, _calendar_, « _monthDay_ »).
       </emu-alg>
     </emu-clause>
 
@@ -129,7 +131,9 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Return _monthDay_.[[ISODay]].
+        1. Let _calendar_ be _monthDay_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"month"*).
+        1. Return ? Call(_method_, _calendar_, « _monthDay_ »).
       </emu-alg>
     </emu-clause>
 
