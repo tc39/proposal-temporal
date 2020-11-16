@@ -738,31 +738,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   },
-  RelevantTemporalObjectFromString: (str) => {
-    let props;
-    try {
-      props = ES.ParseISODateTime(str, { zoneRequired: false });
-    } catch {
-      try {
-        props = ES.ParseTemporalTimeString(str);
-      } catch {
-        throw new RangeError(`invalid value ${str} for a Temporal object`);
-      }
-      const { hour, minute, second, millisecond, microsecond, nanosecond } = props;
-      const TemporalTime = GetIntrinsic('%Temporal.PlainTime%');
-      return new TemporalTime(hour, minute, second, millisecond, microsecond, nanosecond);
-    }
-    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar } = props;
-    if (!calendar) calendar = ES.GetISO8601Calendar();
-    const DATE_ONLY = new RegExp(`^${PARSE.datesplit.source}$`);
-    const match = DATE_ONLY.exec(str);
-    if (match) {
-      const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
-      return new TemporalDate(year, month, day, calendar);
-    }
-    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-  },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
     const validUnits = [
       'years',
