@@ -502,28 +502,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-relevanttemporalobjectfromstring" aoid="RelevantTemporalObjectFromString">
-    <h1>RelevantTemporalObjectFromString ( _isoString_ )</h1>
-    <p>
-      The abstract operation RelevantTemporalObjectFromString returns a `Temporal.ZonedDateTime`, `Temporal.PlainDate`, `Temporal.PlainDateTime`, or `Temporal.PlainTime` instance parsed from an ISO-8601 string _isoString_.
-      Whichever one can first be parsed is returned, with the exception that a `Temporal.PlainDate` is only returned if there is no time component present in the string.
-    </p>
-    <emu-alg>
-      1. Let _record_ be ? ParseISODateTime(_isoString_).
-      1. Let _calendar_ be _record_.[[Calendar]].
-      1. If _calendar_ is *undefined*, then
-        1. Set _calendar_ to ? GetISO8601Calendar().
-      1. <mark>TODO: ZonedDateTime</mark>.
-      1. If _isoString_ satisfies the syntax of a |CalendarDate| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Return ? CreateTemporalDate(_record_.[[Year]], _record_.[[Month]], _record_.[[Day]], _calendar_).
-      1. If _isoString_ satisfies the syntax of a |CalendarDateTime| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Return ? CreateTemporalDateTime(_record_.[[Year]], _record_.[[Month]], _record_.[[Day]], _record_.[[Hour]], _record_.[[Minute]], _record_.[[Second]], _record_.[[Millisecond]], _record_.[[Microsecond]], _record_.[[Nanosecond]], _calendar_).
-      1. If _isoString_ satisfies the syntax of a |Time| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Return ? CreateTemporalTime(_record_.[[Hour]], _record_.[[Minute]], _record_.[[Second]], _record_.[[Millisecond]], _record_.[[Microsecond]], _record_.[[Nanosecond]]).
-      1. Throw a *RangeError* exception.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-validatetemporalunitrange" aoid="ValidateTemporalUnitRange">
     <h1>ValidateTemporalUnitRange ( _largestUnit_, _smallestUnit_ )</h1>
     <emu-alg>
