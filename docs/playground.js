@@ -3317,7 +3317,6 @@
         month = _ES$ParseISODateTime2.month;
         calendar = _ES$ParseISODateTime2.calendar;
         referenceISODay = _ES$ParseISODateTime2.day;
-        if (!calendar) referenceISODay = undefined;
       }
 
       return {
@@ -3343,7 +3342,6 @@
         day = _ES$ParseISODateTime3.day;
         calendar = _ES$ParseISODateTime3.calendar;
         referenceISOYear = _ES$ParseISODateTime3.year;
-        if (!calendar) referenceISOYear = undefined;
       }
 
       return {
@@ -3960,54 +3958,6 @@
         var epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, 'compatible', 'reject');
         var TemporalZonedDateTime = GetIntrinsic$1('%Temporal.ZonedDateTime%');
         return new TemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
-      }
-
-      var TemporalDateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
-      return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-    },
-    RelevantTemporalObjectFromString: function RelevantTemporalObjectFromString(str) {
-      var props;
-
-      try {
-        props = ES.ParseISODateTime(str, {
-          zoneRequired: false
-        });
-      } catch (_unused4) {
-        try {
-          props = ES.ParseTemporalTimeString(str);
-        } catch (_unused5) {
-          throw new RangeError("invalid value ".concat(str, " for a Temporal object"));
-        }
-
-        var _props = props,
-            _hour = _props.hour,
-            _minute = _props.minute,
-            _second = _props.second,
-            _millisecond = _props.millisecond,
-            _microsecond = _props.microsecond,
-            _nanosecond = _props.nanosecond;
-        var TemporalTime = GetIntrinsic$1('%Temporal.PlainTime%');
-        return new TemporalTime(_hour, _minute, _second, _millisecond, _microsecond, _nanosecond);
-      }
-
-      var _props2 = props,
-          year = _props2.year,
-          month = _props2.month,
-          day = _props2.day,
-          hour = _props2.hour,
-          minute = _props2.minute,
-          second = _props2.second,
-          millisecond = _props2.millisecond,
-          microsecond = _props2.microsecond,
-          nanosecond = _props2.nanosecond,
-          calendar = _props2.calendar;
-      if (!calendar) calendar = ES.GetISO8601Calendar();
-      var DATE_ONLY = new RegExp("^".concat(datesplit.source, "$"));
-      var match = DATE_ONLY.exec(str);
-
-      if (match) {
-        var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
-        return new TemporalDate(year, month, day, calendar);
       }
 
       var TemporalDateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
