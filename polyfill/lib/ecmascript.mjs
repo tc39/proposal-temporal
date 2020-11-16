@@ -245,7 +245,6 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = match[3];
     } else {
       ({ year, month, calendar, day: referenceISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
-      if (!calendar) referenceISODay = undefined;
     }
     return { year, month, calendar, referenceISODay };
   },
@@ -257,7 +256,6 @@ export const ES = ObjectAssign({}, ES2020, {
       day = ES.ToInteger(match[2]);
     } else {
       ({ month, day, calendar, year: referenceISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
-      if (!calendar) referenceISOYear = undefined;
     }
     return { month, day, calendar, referenceISOYear };
   },
