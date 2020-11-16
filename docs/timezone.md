@@ -14,8 +14,13 @@ Since `Temporal.Instant` and `Temporal.PlainDateTime` do not contain any time zo
 For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
 There are two ways to do this.
 
-The recommended way is to create a class inheriting from `Temporal.TimeZone`, call `super()` in the constructor with a time zone identifier string, and implement the methods `getOffsetNanosecondsFor()` and `getPossibleInstantsFor()`, and optionally `getNextTransition()` and `getPreviousTransition()`.
-You don't need to implement any other methods because other properties and methods will use the base class's default implementations.
+The recommended way is to create a class inheriting from `Temporal.TimeZone`.
+You must use one of the built-in time zones as the "base time zone".
+In the class's constructor, call `super()` with the identifier of the base time zone.
+The class must override `toString()` to return its own identifier.
+Overriding `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, `getNextTransition()`, and `getPreviousTransition()` is optional.
+If you don't override the optional members, then they will behave as in the base time zone.
+You don't need to override any other methods such as `getOffsetStringFor()` because they will call `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` internally.
 
 The other, more difficult, way to create a custom time zone is to create a plain object implementing the `Temporal.TimeZone` protocol, without subclassing.
 The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.

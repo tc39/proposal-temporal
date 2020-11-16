@@ -589,12 +589,16 @@ describe('fromString regex', () => {
   });
 
   describe('time zone ID', () => {
-    function makeCustomTimeZone(id) {
-      return class extends Temporal.TimeZone {
-        constructor() {
-          super(id);
-        }
+    let oldTemporalTimeZoneFrom = Temporal.TimeZone.from;
+    let fromCalledWith;
+    before(() => {
+      Temporal.TimeZone.from = function (item) {
+        fromCalledWith = item;
+        return new Temporal.TimeZone('UTC');
       };
+    });
+    function testTimeZoneID(id) {
+      return Temporal.ZonedDateTime.from(`1970-01-01T00:00[${id}]`);
     }
     describe('valid', () => {
       [
@@ -616,9 +620,8 @@ describe('fromString regex', () => {
         'Etc/GMT+12'
       ].forEach((id) => {
         it(id, () => {
-          const Custom = makeCustomTimeZone(id);
-          const tz = new Custom();
-          equal(tz.id, id);
+          testTimeZoneID(id);
+          equal(fromCalledWith, id);
         });
       });
     });
@@ -641,10 +644,12 @@ describe('fromString regex', () => {
         'Foo/Etc/GMT-8'
       ].forEach((id) => {
         it(id, () => {
-          const Custom = makeCustomTimeZone(id);
-          throws(() => new Custom(), RangeError);
+          throws(() => testTimeZoneID(id), RangeError);
         });
       });
+    });
+    after(() => {
+      Temporal.TimeZone.from = oldTemporalTimeZoneFrom;
     });
   });
 

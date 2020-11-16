@@ -18,7 +18,10 @@ describe('Userland time zone', () => {
   describe('Trivial subclass', () => {
     class CustomUTCSubclass extends Temporal.TimeZone {
       constructor() {
-        super('Etc/Custom/UTC_Subclass');
+        super('UTC');
+      }
+      toString() {
+        return 'Etc/Custom/UTC_Subclass';
       }
       getOffsetNanosecondsFor(/* instant */) {
         return 0;
@@ -205,7 +208,10 @@ describe('Userland time zone', () => {
   describe('sub-minute offset', () => {
     class SubminuteTimeZone extends Temporal.TimeZone {
       constructor() {
-        super('Custom/Subminute');
+        super('-00:00:01.111111111');
+      }
+      toString() {
+        return 'Custom/Subminute';
       }
       getOffsetNanosecondsFor() {
         return -1111111111;
