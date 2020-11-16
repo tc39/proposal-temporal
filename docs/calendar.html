@@ -246,10 +246,14 @@ To perform arithmetic consistently with the <code>toLocaleString()</code> calend
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> calendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="custom-calendars"><a class="heading-link" href="#custom-calendars"></a>Custom calendars</h3><p>For specialized applications where you need to do calculations in a calendar system that is not supported by Intl, you can implement a custom calendar.
 There are two ways to do this.</p>
-<p>The recommended way is to create a class inheriting from <code>Temporal.Calendar</code>, call <code>super()</code> in the constructor with a calendar identifier string, and implement all the members except <code>id</code>, <code>toString()</code>, and <code>fields()</code>, which are optional.
-If you don&#39;t implement the optional members, then the base class&#39;s default implementations will be used.</p>
+<p>The recommended way is to create a class inheriting from <code>Temporal.Calendar</code>.
+You must use one of the built-in calendars as the &quot;base calendar&quot;.
+In the class&#39;s constructor, call <code>super()</code> with the identifier of the base calendar.
+The class must override <code>toString()</code> to return its own identifier.
+Overriding all the other members is optional.
+If you don&#39;t override the optional members, then they will behave as in the base calendar.</p>
 <p>The other, more difficult, way to create a custom calendar is to create a plain object implementing the <code>Temporal.Calendar</code> protocol, without subclassing.
-The object must implement all of the <code>Temporal.Calendar</code> methods except for <code>fields()</code>.
+The object must implement all of the <code>Temporal.Calendar</code> methods except for <code>id</code> and <code>fields()</code>.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in <code>Temporal.Calendar</code> objects.
 To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> method as well.

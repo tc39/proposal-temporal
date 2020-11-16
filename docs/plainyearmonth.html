@@ -167,6 +167,8 @@
 </li>
 <li><a href="#calendar">calendar</a>
 </li>
+<li><a href="#era">era</a>
+</li>
 <li><a href="#daysInMonth">daysInMonth</a>
 </li>
 <li><a href="#daysInYear">daysInYear</a>
@@ -320,6 +322,8 @@ sorted<span class="token punctuation">.</span><span class="token function">join<
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2019</span>
 ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>yearMonth.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code> and <code>month</code> properties are interpreted in.</p>
+<h3 id="era"><a class="heading-link" href="#era"></a>yearmonth.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
+It&#39;s used for calendar systems that specify an era in addition to the year.</p>
 <h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>yearMonth.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
 This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>

@@ -199,8 +199,13 @@
 <h2 id="custom-time-zones">Custom time zones</h2>
 <p>For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
 There are two ways to do this.</p>
-<p>The recommended way is to create a class inheriting from <code>Temporal.TimeZone</code>, call <code>super()</code> in the constructor with a time zone identifier string, and implement the methods <code>getOffsetNanosecondsFor()</code> and <code>getPossibleInstantsFor()</code>, and optionally <code>getNextTransition()</code> and <code>getPreviousTransition()</code>.
-You don&#39;t need to implement any other methods because other properties and methods will use the base class&#39;s default implementations.</p>
+<p>The recommended way is to create a class inheriting from <code>Temporal.TimeZone</code>.
+You must use one of the built-in time zones as the &quot;base time zone&quot;.
+In the class&#39;s constructor, call <code>super()</code> with the identifier of the base time zone.
+The class must override <code>toString()</code> to return its own identifier.
+Overriding <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, <code>getNextTransition()</code>, and <code>getPreviousTransition()</code> is optional.
+If you don&#39;t override the optional members, then they will behave as in the base time zone.
+You don&#39;t need to override any other methods such as <code>getOffsetStringFor()</code> because they will call <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> internally.</p>
 <p>The other, more difficult, way to create a custom time zone is to create a plain object implementing the <code>Temporal.TimeZone</code> protocol, without subclassing.
 The object must have at least <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> methods.
 Any object with those three methods will return the correct output from any Temporal property or method.

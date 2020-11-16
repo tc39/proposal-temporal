@@ -181,6 +181,8 @@
 </li>
 <li><a href="#calendar">calendar</a>
 </li>
+<li><a href="#era">era</a>
+</li>
 <li><a href="#dayOfWeek">dayOfWeek</a>
 </li>
 <li><a href="#dayOfYear">dayOfYear</a>
@@ -415,6 +417,8 @@ dt<span class="token punctuation">.</span>microsecond<span class="token punctuat
 dt<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 500</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="calendar"><a class="heading-link" href="#calendar"></a>datetime.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties are interpreted in.</p>
+<h3 id="era"><a class="heading-link" href="#era"></a>datetime.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
+It&#39;s used for calendar systems that specify an era in addition to the year.</p>
 <h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>datetime.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
 For the ISO 8601 calendar, the weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see <a href="https://en.wikipedia.org/wiki/ISO_8601#Week_dates">ISO 8601 on Wikipedia</a>.</p>
