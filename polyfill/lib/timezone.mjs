@@ -19,18 +19,9 @@ import {
   SetSlot
 } from './slots.mjs';
 
-import * as REGEX from './regex.mjs';
-const OFFSET = new RegExp(`^${REGEX.offset.source}$`);
-const IANA_NAME = new RegExp(`^${REGEX.timeZoneID.source}$`);
-
 export class TimeZone {
   constructor(timeZoneIdentifier) {
-    if (new.target === TimeZone) {
-      timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
-    }
-    if (!OFFSET.exec(timeZoneIdentifier) && !IANA_NAME.exec(timeZoneIdentifier)) {
-      throw new RangeError(`invalid time zone identifier ${timeZoneIdentifier}`);
-    }
+    timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
 
