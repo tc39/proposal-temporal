@@ -129,7 +129,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return _yearMonth_.[[ISOYear]].
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"year"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -142,7 +144,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return _yearMonth_.[[ISOMonth]].
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"month"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -155,7 +159,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ! DaysInYear(_yearMonth_.[[ISOYear]]).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"daysInYear"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -168,7 +174,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"daysInMonth"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -181,8 +189,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return *12*<sub>𝔽</sub>.
-        1. <mark>TODO: Make calendar-aware along with all the other properties.</mark>
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"monthsInYear"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -195,7 +204,9 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ! IsLeapYear(_yearMonth_.[[ISOYear]]).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"inLeapYear"*).
+        1. Return ? Call(_method_, _calendar_, « _yearMonth_ »).
       </emu-alg>
     </emu-clause>
 
@@ -249,10 +260,13 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. If _sign_ &lt; 0, then
-          1. Let _day_ be <mark>TODO: get via calendar.daysInMonth</mark> ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
+          1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
+          1. Let _day_ be ? Call(_daysInMonth_, _calendar_, « _yearMonth_ »).
         1. Else,
           1. Let _day_ be 1.
-        1. Let _addedDate_ be ? <mark>TODO: get via calendar.dateAdd</mark> AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
+        1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
+        1. Let _durationToAdd_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.Date%, _overflow_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
         1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
         1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
@@ -277,10 +291,13 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. If _sign_ &lt; 0, then
-          1. Let _day_ be <mark>TODO: get via calendar.daysInMonth</mark> ! DaysInMonth(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]]).
+          1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
+          1. Let _day_ be ? Call(_daysInMonth_, _calendar_, « _yearMonth_ »).
         1. Else,
           1. Let _day_ be 1.
-        1. Let _addedDate_ be <mark>TODO: get via calendar.dateAdd</mark> ? AddDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, −_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], _overflow_).
+        1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
+        1. Let _durationToAdd_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.Date%, _overflow_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
         1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
         1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
@@ -297,7 +314,11 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
-        1. <mark>TODO: compare calendars.</mark>
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _calendarID_ be ? CalendarToString(_calendar_).
+        1. Let _otherCalendar_ be _other_.[[Calendar]].
+        1. Let _otherCalendarID_ be ? CalendarToString(_otherCalendar_).
+        1. If _calendarID_ ≠ _otherCalendarID_, throw a *RangeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
@@ -313,7 +334,7 @@
         1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.Date%).
-        1. <mark>TODO: Let _result_ be `calendar.dateUntil(thisDate, otherDate, { largestUnit })`.</mark>
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _largestUnit_).
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
@@ -332,7 +353,11 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
-        1. <mark>TODO: compare calendars.</mark>
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _calendarID_ be ? CalendarToString(_calendar_).
+        1. Let _otherCalendar_ be _other_.[[Calendar]].
+        1. Let _otherCalendarID_ be ? CalendarToString(_otherCalendar_).
+        1. If _calendarID_ ≠ _otherCalendarID_, throw a *RangeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
@@ -349,7 +374,7 @@
         1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.Date%).
-        1. <mark>TODO: Let _result_ be `calendar.dateUntil(thisDate, otherDate, { largestUnit })`.</mark>
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _largestUnit_).
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
