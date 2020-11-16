@@ -406,7 +406,10 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _fields_ be ? ToTemporalDateTimeFields(_datetime_, _fieldNames_).
-        1. <mark>TODO: do something with _partialDateTime_.</mark>
+        1. For each value _property_ in _fieldNames_, do
+          1. Let _value_ be ? Get(_partialDateTime_, _property_).
+          1. If _value_ is not *undefined*, then
+            1. Perform ? Set(_fields_, _property_, _value_).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Assert: ! ValidateDateTime(_year_, _month_, _day_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ? CreateTemporalDateTimeFromInstance(_dateTime_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
