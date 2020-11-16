@@ -574,8 +574,10 @@
           1. Return ? YearMonthFromFields(_calendar_, _fields_, _overflow_, _constructor_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
-        1. Let _referenceISODay_ be 1.
-        1. <mark>TODO: get referenceISODay from string</mark>.
+        1. If _result_.[[Day]] is *undefined*, then
+          1. Let _referenceISODay_ be 1.
+        1. Else,
+          1. Let _referenceISODay_ be _result_.[[Day]].
         1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _referenceISODay_) is *false*, then
           1. Throw a *RangeError* exception.
         1. Let _calendar_ be _result_.[[Calendar]].
