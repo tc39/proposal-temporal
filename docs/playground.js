@@ -12469,12 +12469,7 @@
         var timeZone = GetSlot(this, TIME_ZONE);
         var todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
         var tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-
-        var _tomorrowNs$subtract$ = tomorrowNs.subtract(todayNs).divmod(3.6e12),
-            quotient = _tomorrowNs$subtract$.quotient,
-            remainder = _tomorrowNs$subtract$.remainder;
-
-        return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
+        return tomorrowNs.subtract(todayNs).toJSNumber() / 3.6e12;
       }
     }, {
       key: "daysInWeek",
