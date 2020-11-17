@@ -313,10 +313,12 @@
             1. <ins>If _x_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
               1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
               1. <ins>Let _calendar_ be ? CalendarFrom(_dateTimeFormat_.[[Calendar]]).</ins>
-              1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).</ins>
+              1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_timeZone_, _x_, _calendar_).</ins>
+              1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
             1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]], [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]] }.</ins>
           1. <ins>If _date_ has an [[InitializedTemporalZonedDateTime]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
@@ -364,6 +366,11 @@
               1. If _v_ is 0 and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h12"*, let _v_ be 12.
             1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h24"*, then
               1. If _v_ is 0, let _v_ be 24.
+            1. <ins>If _p_ is *timeZoneName*, then</ins>
+              1. <ins>If _tm_ has a [[timeZoneName]] field, then</ins>
+                1. <ins>Set _v_ to _tm_.[[timeZoneName]].</ins>
+              1. <ins>Else,</ins>
+                1. <ins>Set _v_ to _dateTimeFormat_.[[TimeZone]].</ins>
             1. If _f_ is *"numeric"*, then
               1. Let _fv_ be FormatNumeric(_nf_, _v_).
             1. Else if _f_ is *"2-digit"*, then
