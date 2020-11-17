@@ -34,6 +34,21 @@
     },
     {
       "type": "op",
+      "aoid": "BasicFormatMatcher",
+      "id": "sec-basicformatmatcher"
+    },
+    {
+      "type": "op",
+      "aoid": "BestFitFormatMatcher",
+      "id": "sec-bestfitformatmatcher"
+    },
+    {
+      "type": "op",
+      "aoid": "CanonicalizeLocaleList",
+      "id": "sec-canonicalizelocalelist"
+    },
+    {
+      "type": "op",
       "aoid": "CanonicalizeTimeZoneName",
       "id": "sec-canonicalizetimezonename"
     },
@@ -41,6 +56,11 @@
       "type": "op",
       "aoid": "DefaultTimeZone",
       "id": "sec-defaulttimezone"
+    },
+    {
+      "type": "op",
+      "aoid": "ToDateTimeOptions",
+      "id": "sec-todatetimeoptions"
     },
     {
       "type": "op",
@@ -61,6 +81,11 @@
       "type": "clause",
       "number": "6.1",
       "id": "sec-case-sensitivity-and-case-mapping"
+    },
+    {
+      "type": "term",
+      "term": "%DateTimeFormat%",
+      "id": "sec-intl-datetimeformat-constructor"
     }
   ],
   "https://tc39.es/proposal-intl-duration-format/": [
