@@ -6,6 +6,8 @@ polyfill/script.js.map
 polyfill/test262/
 polyfill/*.tgz
 polyfill/venv
+polyfill/coverage
+polyfill/script-instrumented.js
 out/
 .vscode/
 .eslintcache

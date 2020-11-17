@@ -15,11 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: use python v3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-        architecture: x64
     - name: use node.js v15.x
       uses: actions/setup-node@v1
       with:

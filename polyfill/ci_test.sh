@@ -2,10 +2,6 @@
 
 TESTS=${@:-"./*/**/*.js"}
 
-virtualenv -p python3 venv
-source venv/bin/activate
-pip install ijson
-
 export NODE_PATH=$PWD/node_modules
 npm run build
 if [ ! -d "test262" ]; then
@@ -19,8 +15,9 @@ fi
 
 PRELUDE=script.js
 if [ "x$COVERAGE" = xyes ]; then
-    nyc instrument script.js > script-instrumented.js
-    PRELUDE=script-instrumented.js
+  nyc instrument script.js > script-instrumented.js
+  PRELUDE=script-instrumented.js
+  TRANSFORMER_ARG="--transformer ./transform.test262.js"
 fi
 
 cd test/
@@ -38,15 +35,15 @@ test262-harness \
   --reporter-keys file,rawResult,result,scenario \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
-  --transformer ./transform.test262.js \
+  $TRANSFORMER_ARG \
   "$TESTS" \
-  | ./parseResults.py
+  | ./parseResults.js
 RESULT=$?
 
 cd ..
 
 if [ "x$COVERAGE" = xyes ]; then
-    nyc report -t coverage/tmp/transformer --reporter=text-lcov > coverage/test262.lcov
+  nyc report -t coverage/tmp/transformer --reporter=text-lcov > coverage/test262.lcov
 fi
 
 rm -f script-instrumented.js
