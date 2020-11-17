@@ -33,4 +33,8 @@ export const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:$
 export const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
 export const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
 
-export const duration = /^([+\u2212-])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
+const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
+
+const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
+const durationTime = new RegExp(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
+export const duration = new RegExp(`^([+\u2212-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');

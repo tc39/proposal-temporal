@@ -14,6 +14,7 @@ const ObjectCreate = Object.create;
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
 import SpeciesConstructor from 'es-abstract/2020/SpeciesConstructor.js';
+import IsInteger from 'es-abstract/2020/IsInteger.js';
 import ToInteger from 'es-abstract/2020/ToInteger.js';
 import ToLength from 'es-abstract/2020/ToLength.js';
 import ToNumber from 'es-abstract/2020/ToNumber.js';
@@ -88,6 +89,7 @@ import * as PARSE from './regex.mjs';
 const ES2020 = {
   Call,
   SpeciesConstructor,
+  IsInteger,
   ToInteger,
   ToLength,
   ToNumber,
@@ -289,12 +291,31 @@ export const ES = ObjectAssign({}, ES2020, {
     const weeks = ES.ToInteger(match[4]) * sign;
     const days = ES.ToInteger(match[5]) * sign;
     const hours = ES.ToInteger(match[6]) * sign;
-    const minutes = ES.ToInteger(match[7]) * sign;
-    const seconds = ES.ToInteger(match[8]) * sign;
-    const fraction = match[9] + '000000000';
-    const milliseconds = ES.ToInteger(fraction.slice(0, 3)) * sign;
-    const microseconds = ES.ToInteger(fraction.slice(3, 6)) * sign;
-    const nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
+    let fHours = match[7];
+    let minutes = ES.ToInteger(match[8]) * sign;
+    let fMinutes = match[9];
+    let seconds = ES.ToInteger(match[10]) * sign;
+    let fSeconds = match[11] + '000000000';
+    let milliseconds = ES.ToInteger(fSeconds.slice(0, 3)) * sign;
+    let microseconds = ES.ToInteger(fSeconds.slice(3, 6)) * sign;
+    let nanoseconds = ES.ToInteger(fSeconds.slice(6, 9)) * sign;
+
+    fHours = fHours ? (sign * ES.ToInteger(fHours)) / 10 ** fHours.length : 0;
+    fMinutes = fMinutes ? (sign * ES.ToInteger(fMinutes)) / 10 ** fMinutes.length : 0;
+
+    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
+      fHours,
+      minutes,
+      fMinutes,
+      seconds,
+      0,
+      milliseconds,
+      0,
+      microseconds,
+      0,
+      nanoseconds,
+      0
+    ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
@@ -391,6 +412,78 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return { month, day };
   },
+  DurationHandleFractions: (
+    fHours,
+    minutes,
+    fMinutes,
+    seconds,
+    fSeconds,
+    milliseconds,
+    fMilliseconds,
+    microseconds,
+    fMicroseconds,
+    nanoseconds,
+    fNanoseconds
+  ) => {
+    if (fHours !== 0) {
+      [
+        minutes,
+        fMinutes,
+        seconds,
+        fSeconds,
+        milliseconds,
+        fMilliseconds,
+        microseconds,
+        fMicroseconds,
+        nanoseconds,
+        fNanoseconds
+      ].forEach((val) => {
+        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+      });
+      let mins = fHours * 60;
+      minutes = MathTrunc(mins);
+      fMinutes = mins % 1;
+    }
+
+    if (fMinutes !== 0) {
+      [seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(
+        (val) => {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        }
+      );
+      let secs = fMinutes * 60;
+      seconds = MathTrunc(secs);
+      fSeconds = secs % 1;
+    }
+
+    if (fSeconds !== 0) {
+      [milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach((val) => {
+        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+      });
+      let mils = fSeconds * 1000;
+      milliseconds = MathTrunc(mils);
+      fMilliseconds = mils % 1;
+    }
+
+    if (fMilliseconds !== 0) {
+      [microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach((val) => {
+        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+      });
+      let mics = fMilliseconds * 1000;
+      microseconds = MathTrunc(mics);
+      fMicroseconds = mics % 1;
+    }
+
+    if (fMicroseconds !== 0) {
+      [nanoseconds, fNanoseconds].forEach((val) => {
+        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+      });
+      let nans = fMicroseconds * 1000;
+      nanoseconds = MathTrunc(nans);
+    }
+
+    return { minutes, seconds, milliseconds, microseconds, nanoseconds };
+  },
   ToTemporalDurationRecord: (item) => {
     if (ES.IsTemporalDuration(item)) {
       return {
@@ -406,20 +499,24 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds: GetSlot(item, NANOSECONDS)
       };
     }
-    const props = ES.ToPartialRecord(item, [
-      'days',
-      'hours',
-      'microseconds',
-      'milliseconds',
-      'minutes',
-      'months',
-      'nanoseconds',
-      'seconds',
-      'weeks',
-      'years'
-    ]);
+    const props = ES.ToPartialRecord(
+      item,
+      [
+        'days',
+        'hours',
+        'microseconds',
+        'milliseconds',
+        'minutes',
+        'months',
+        'nanoseconds',
+        'seconds',
+        'weeks',
+        'years'
+      ],
+      ES.ToNumber
+    );
     if (!props) throw new TypeError('invalid duration-like');
-    const {
+    let {
       years = 0,
       months = 0,
       weeks = 0,
@@ -431,6 +528,23 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds = 0,
       nanoseconds = 0
     } = props;
+    if (!ES.IsInteger(years) || !ES.IsInteger(months) || !ES.IsInteger(weeks) || !ES.IsInteger(days)) {
+      throw new RangeError('non-time units cannot be fractional');
+    }
+    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
+      hours % 1,
+      MathTrunc(minutes),
+      minutes % 1,
+      MathTrunc(seconds),
+      seconds % 1,
+      MathTrunc(milliseconds),
+      milliseconds % 1,
+      MathTrunc(microseconds),
+      microseconds % 1,
+      MathTrunc(nanoseconds),
+      nanoseconds % 1
+    ));
+    hours = MathTrunc(hours);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
@@ -797,7 +911,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (validUnits.indexOf(unit1) > validUnits.indexOf(unit2)) return unit2;
     return unit1;
   },
-  ToPartialRecord: (bag, fields) => {
+  ToPartialRecord: (bag, fields, cast = ES.ToInteger) => {
     if (ES.Type(bag) !== 'Object') return false;
     let any;
     for (const property of fields) {
@@ -805,7 +919,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (value !== undefined) {
         any = any || {};
         if (BUILTIN_FIELDS.has(property)) {
-          any[property] = ES.ToInteger(value);
+          any[property] = cast(value);
         } else {
           any[property] = value;
         }

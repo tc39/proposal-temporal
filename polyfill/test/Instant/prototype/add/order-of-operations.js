@@ -27,12 +27,12 @@ const expected = [
 ];
 const actual = [];
 const fields = {
-  hours: 1.7,
-  minutes: 1.7,
-  seconds: 1.7,
-  milliseconds: 1.7,
-  microseconds: 1.7,
-  nanoseconds: 1.7,
+  hours: 1,
+  minutes: 1,
+  seconds: 1,
+  milliseconds: 1,
+  microseconds: 1,
+  nanoseconds: 1,
 };
 const argument = new Proxy(fields, {
   get(target, key) {

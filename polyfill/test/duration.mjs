@@ -132,7 +132,7 @@ describe('Duration', () => {
       equal(`${Duration.from({ milliseconds: 5 })}`, 'PT0.005S'));
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
-    it('any number of decimal places works', () => {
+    it('upto nine decimal places work', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.100S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.12S')}`, 'P1Y1M1W1DT1H1M1.120S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123S')}`, 'P1Y1M1W1DT1H1M1.123S');
@@ -143,19 +143,37 @@ describe('Duration', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345678S')}`, 'P1Y1M1W1DT1H1M1.123456780S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456789S')}`, 'P1Y1M1W1DT1H1M1.123456789S');
     });
+    it('above nine decimal places throw', () => {
+      throws(() => Duration.from('P1Y1M1W1DT1H1M1.123456789123S'), RangeError);
+    });
     it('variant decimal separator', () => {
       equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
     });
-    it('decimal places only allowed in seconds', () => {
+    it('decimal places only allowed in time units', () => {
       [
         'P0.5Y',
         'P1Y0,5M',
         'P1Y1M0.5W',
         'P1Y1M1W0,5D',
-        'P1Y1M1W1DT0.5H',
-        'P1Y1M1W1DT1H0,5M',
-        'P1Y1M1W1DT1H0.5M0.5S'
+        { years: 0.5 },
+        { months: 0.5 },
+        { weeks: 0.5 },
+        { days: 0.5 }
       ].forEach((str) => throws(() => Duration.from(str), RangeError));
+    });
+    it('decimal places only allowed in last non-zero unit', () => {
+      [
+        'P1Y1M1W1DT0.5H5S',
+        'P1Y1M1W1DT1.5H0,5M',
+        'P1Y1M1W1DT1H0.5M0.5S',
+        { hours: 0.5, minutes: 20 },
+        { hours: 0.5, seconds: 15 },
+        { minutes: 10.7, nanoseconds: 400 }
+      ].forEach((str) => throws(() => Duration.from(str), RangeError));
+    });
+    it('decimal places are properly handled on valid units', () => {
+      equal(`${Duration.from('P1DT0.5M')}`, 'P1DT30S');
+      equal(`${Duration.from('P1DT0,5H')}`, 'P1DT30M');
     });
     it('"P" by itself is not a valid string', () => {
       ['P', 'PT', '-P', '-PT', '+P', '+PT'].forEach((s) => throws(() => Duration.from(s), RangeError));
