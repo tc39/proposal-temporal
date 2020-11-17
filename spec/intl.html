@@ -183,7 +183,7 @@
         1. <ins>If _needDefaults_ is *true*, then</ins>
           1. <ins>For each _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* », do</ins>
             1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
-        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_expandedOptions_, _formats_, _hc_)</ins>.
+        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>Let _needDefaults_ be *true*.</ins>
@@ -196,7 +196,7 @@
             1. <ins>Let _defaultFields_ be the list of fields in the Supported fields column of the row.</ins>
             1. <ins>For each _field_ of _defaultFields_, do</ins>
               1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to <mark>something</mark>.</ins>
-          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_limitedOptions_, _formats_, _hc_).</ins>
+          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _limitedOptions_, _formats_, _hc_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
           1. <ins>Set _dateTimeFormat_'s internal slot whose name is the Pattern column of the row to _bestFormat_.</ins>
@@ -453,10 +453,10 @@
 
     <ins class="block">
     <emu-clause id="sec-temporal-getdatetimeformatpattern" aoid="GetDateTimeFormatPattern">
-      <h1>GetDateTimeFormatPattern ( _opt_, _formats_, _hc_ )</h1>
+      <h1>GetDateTimeFormatPattern ( _matcher_, _opt_, _formats_, _hc_ )</h1>
 
       <p>
-        The abstract operation GetDateTimeFormatPattern accepts the arguments _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
+         The abstract operation GetDateTimeFormatPattern accepts the arguments_matcher_ (which must be either *"basic"* or *"best fit"*), _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
