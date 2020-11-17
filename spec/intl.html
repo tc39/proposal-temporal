@@ -195,7 +195,11 @@
           1. <ins>If _needDefaults_ is *true*, then</ins>
             1. <ins>Let _defaultFields_ be the list of fields in the Default fields column of the row.</ins>
             1. <ins>For each _field_ of _defaultFields_, do</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to <mark>something</mark>.</ins>
+              1. <ins>If _field_ is *"timeZoneName"*, then</ins>
+                1. <ins>Let _defaultValue_ be *"short"*.</ins>
+              1. <ins>Else,</ins>
+                1. <ins>Let _defaultValue_ be *"numeric"*.</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to _defaultValue_.</ins>
           1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _limitedOptions_, _formats_, _hc_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
