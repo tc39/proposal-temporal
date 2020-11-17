@@ -1,3 +1,24 @@
+## 0.6.0
+
+- API renames:
+  - Temporal.TimeZone.getDateTimeFor -> Temporal.TimeZone.getPlainDateTimeFor
+- New APIs:
+  - Temporal.Duration.compare
+  - Temporal.PlainDateTime.withPlainDate
+  - Temporal.PlainDateTime.withPlainTime
+  - Temporal.ZonedDateTime.offsetNanoseconds
+  - Temporal.ZonedDateTime.withPlainDate
+  - Temporal.ZonedDateTime.withPlainTime
+- Removals:
+  - Temporal.PlainTime.withCalendar
+- Removed the options argument from Temporal.PlainMonthDay.toPlainDate(), Temporal.PlainDate.toZonedDateTime(), Temporal.PlainTime.toZonedDateTime().
+- with() methods no longer accept strings as their first argument.
+- The default for the roundingMode option in until()/since() methods is now 'trunc'.
+- The `time` property in the first argument of Temporal.PlainDate.toZonedDateTime() is renamed to `plainTime`.
+- The `date` property in the first argument of Temporal.PlainTime.toZonedDateTime() is renamed to `plainDate`.
+- Temporal.Duration.add(), Temporal.Duration.subtract(), Temporal.Duration.round(), and Temporal.Duration.total() now accept a Temporal.ZonedDateTime, or a value convertible to one, as the `relativeTo` option.
+- Temporal.PlainTime may now only have an 'iso8601' calendar. The calendar argument is removed from its constructor.
+
 ## 0.5.0
 
 - API renames:
