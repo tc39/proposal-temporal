@@ -2627,15 +2627,43 @@
   	return $floor(x);
   };
 
+  var $isNaN = Number.isNaN || function (a) { return a !== a; };
+
+  var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
+
+  // https://www.ecma-international.org/ecma-262/6.0/#sec-isinteger
+
+  var IsInteger = function IsInteger(argument) {
+  	if (typeof argument !== 'number' || _isNaN(argument) || !_isFinite(argument)) {
+  		return false;
+  	}
+  	var absValue = abs(argument);
+  	return floor(absValue) === absValue;
+  };
+
+  var $abs$1 = GetIntrinsic('%Math.abs%');
+
+  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+
+  var abs$1 = function abs(x) {
+  	return $abs$1(x);
+  };
+
+  // var modulo = require('./modulo');
+  var $floor$1 = Math.floor;
+
+  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+
+  var floor$1 = function floor(x) {
+  	// return x - modulo(x, 1);
+  	return $floor$1(x);
+  };
+
   // http://www.ecma-international.org/ecma-262/5.1/#sec-9.3
 
   var ToNumber = function ToNumber(value) {
   	return +value; // eslint-disable-line no-implicit-coercion
   };
-
-  var $isNaN = Number.isNaN || function (a) { return a !== a; };
-
-  var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
 
   var sign = function sign(number) {
   	return number >= 0 ? 1 : -1;
@@ -2647,7 +2675,7 @@
   	var number = ToNumber(value);
   	if (_isNaN(number)) { return 0; }
   	if (number === 0 || !_isFinite(number)) { return number; }
-  	return sign(number) * floor(abs(number));
+  	return sign(number) * floor$1(abs$1(number));
   };
 
   var $test = GetIntrinsic('RegExp.prototype.test');
@@ -3081,7 +3109,10 @@
 
   var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
   var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
-  var duration = /^([+\u2212-])?P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?!$)(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)(?:[.,](\d{1,9}))?S)?)?$/i;
+  var fraction = /(\d+)(?:[.,](\d{1,9}))?/;
+  var durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
+  var durationTime = new RegExp("(?:".concat(fraction.source, "H)?(?:").concat(fraction.source, "M)?(?:").concat(fraction.source, "S)?"));
+  var duration = new RegExp("^([+\u2212-])?P".concat(durationDate.source, "(?:T(?!$)").concat(durationTime.source, ")?$"), 'i');
 
   var ArrayIsArray = Array.isArray;
   var ArrayPrototypeIndexOf = Array.prototype.indexOf;
@@ -3106,6 +3137,7 @@
   var ES2020 = {
     Call: Call,
     SpeciesConstructor: SpeciesConstructor,
+    IsInteger: IsInteger,
     ToInteger: ToInteger$1,
     ToLength: ToLength,
     ToNumber: ToNumber$1,
@@ -3392,12 +3424,24 @@
       var weeks = ES.ToInteger(match[4]) * sign;
       var days = ES.ToInteger(match[5]) * sign;
       var hours = ES.ToInteger(match[6]) * sign;
-      var minutes = ES.ToInteger(match[7]) * sign;
-      var seconds = ES.ToInteger(match[8]) * sign;
-      var fraction = match[9] + '000000000';
-      var milliseconds = ES.ToInteger(fraction.slice(0, 3)) * sign;
-      var microseconds = ES.ToInteger(fraction.slice(3, 6)) * sign;
-      var nanoseconds = ES.ToInteger(fraction.slice(6, 9)) * sign;
+      var fHours = match[7];
+      var minutes = ES.ToInteger(match[8]) * sign;
+      var fMinutes = match[9];
+      var seconds = ES.ToInteger(match[10]) * sign;
+      var fSeconds = match[11] + '000000000';
+      var milliseconds = ES.ToInteger(fSeconds.slice(0, 3)) * sign;
+      var microseconds = ES.ToInteger(fSeconds.slice(3, 6)) * sign;
+      var nanoseconds = ES.ToInteger(fSeconds.slice(6, 9)) * sign;
+      fHours = fHours ? sign * ES.ToInteger(fHours) / Math.pow(10, fHours.length) : 0;
+      fMinutes = fMinutes ? sign * ES.ToInteger(fMinutes) / Math.pow(10, fMinutes.length) : 0;
+
+      var _ES$DurationHandleFra = ES.DurationHandleFractions(fHours, minutes, fMinutes, seconds, 0, milliseconds, 0, microseconds, 0, nanoseconds, 0);
+
+      minutes = _ES$DurationHandleFra.minutes;
+      seconds = _ES$DurationHandleFra.seconds;
+      milliseconds = _ES$DurationHandleFra.milliseconds;
+      microseconds = _ES$DurationHandleFra.microseconds;
+      nanoseconds = _ES$DurationHandleFra.nanoseconds;
       return {
         years: years,
         months: months,
@@ -3553,6 +3597,59 @@
         day: day
       };
     },
+    DurationHandleFractions: function DurationHandleFractions(fHours, minutes, fMinutes, seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds) {
+      if (fHours !== 0) {
+        [minutes, fMinutes, seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(function (val) {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        var mins = fHours * 60;
+        minutes = MathTrunc(mins);
+        fMinutes = mins % 1;
+      }
+
+      if (fMinutes !== 0) {
+        [seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(function (val) {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        var secs = fMinutes * 60;
+        seconds = MathTrunc(secs);
+        fSeconds = secs % 1;
+      }
+
+      if (fSeconds !== 0) {
+        [milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(function (val) {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        var mils = fSeconds * 1000;
+        milliseconds = MathTrunc(mils);
+        fMilliseconds = mils % 1;
+      }
+
+      if (fMilliseconds !== 0) {
+        [microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(function (val) {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        var mics = fMilliseconds * 1000;
+        microseconds = MathTrunc(mics);
+        fMicroseconds = mics % 1;
+      }
+
+      if (fMicroseconds !== 0) {
+        [nanoseconds, fNanoseconds].forEach(function (val) {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        var nans = fMicroseconds * 1000;
+        nanoseconds = MathTrunc(nans);
+      }
+
+      return {
+        minutes: minutes,
+        seconds: seconds,
+        milliseconds: milliseconds,
+        microseconds: microseconds,
+        nanoseconds: nanoseconds
+      };
+    },
     ToTemporalDurationRecord: function ToTemporalDurationRecord(item) {
       if (ES.IsTemporalDuration(item)) {
         return {
@@ -3569,7 +3666,7 @@
         };
       }
 
-      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
+      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], ES.ToNumber);
       if (!props) throw new TypeError('invalid duration-like');
       var _props$years = props.years,
           years = _props$years === void 0 ? 0 : _props$years,
@@ -3591,6 +3688,19 @@
           microseconds = _props$microseconds === void 0 ? 0 : _props$microseconds,
           _props$nanoseconds = props.nanoseconds,
           nanoseconds = _props$nanoseconds === void 0 ? 0 : _props$nanoseconds;
+
+      if (!ES.IsInteger(years) || !ES.IsInteger(months) || !ES.IsInteger(weeks) || !ES.IsInteger(days)) {
+        throw new RangeError('non-time units cannot be fractional');
+      }
+
+      var _ES$DurationHandleFra2 = ES.DurationHandleFractions(hours % 1, MathTrunc(minutes), minutes % 1, MathTrunc(seconds), seconds % 1, MathTrunc(milliseconds), milliseconds % 1, MathTrunc(microseconds), microseconds % 1, MathTrunc(nanoseconds), nanoseconds % 1);
+
+      minutes = _ES$DurationHandleFra2.minutes;
+      seconds = _ES$DurationHandleFra2.seconds;
+      milliseconds = _ES$DurationHandleFra2.milliseconds;
+      microseconds = _ES$DurationHandleFra2.microseconds;
+      nanoseconds = _ES$DurationHandleFra2.nanoseconds;
+      hours = MathTrunc(hours);
       return {
         years: years,
         months: months,
@@ -3998,6 +4108,7 @@
       return unit1;
     },
     ToPartialRecord: function ToPartialRecord(bag, fields) {
+      var cast = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ES.ToInteger;
       if (ES.Type(bag) !== 'Object') return false;
       var any;
 
@@ -4013,7 +4124,7 @@
             any = any || {};
 
             if (BUILTIN_FIELDS.has(property)) {
-              any[property] = ES.ToInteger(value);
+              any[property] = cast(value);
             } else {
               any[property] = value;
             }
