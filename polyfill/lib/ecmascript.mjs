@@ -2623,26 +2623,9 @@ export const ES = ObjectAssign({}, ES2020, {
   DifferenceInstant(ns1, ns2, increment, unit, roundingMode) {
     const diff = ns2.minus(ns1);
 
-    let incrementNs = increment;
-    switch (unit) {
-      case 'hours':
-        incrementNs *= 60;
-      // fall through
-      case 'minutes':
-        incrementNs *= 60;
-      // fall through
-      case 'seconds':
-        incrementNs *= 1000;
-      // fall through
-      case 'milliseconds':
-        incrementNs *= 1000;
-      // fall through
-      case 'microseconds':
-        incrementNs *= 1000;
-    }
     const remainder = diff.mod(86400e9);
     const wholeDays = diff.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), incrementNs, roundingMode);
+    const roundedRemainder = ES.RoundNumberToIncrementBigInt(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     const roundedDiff = wholeDays.plus(roundedRemainder);
 
     const nanoseconds = +roundedDiff.mod(1e3);
@@ -2989,7 +2972,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   AddInstant: (epochNanoseconds, h, min, s, ms, µs, ns) => {
-    let sum = bigInt(0);
+    let sum = bigInt.zero;
     sum = sum.plus(bigInt(ns));
     sum = sum.plus(bigInt(µs).multiply(1e3));
     sum = sum.plus(bigInt(ms).multiply(1e6));
@@ -3100,6 +3083,28 @@ export const ES = ObjectAssign({}, ES2020, {
     const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   },
+  RoundNumberToIncrementBigInt: (quantity, increment, mode) => {
+    if (increment === 1) return quantity;
+    let { quotient, remainder } = quantity.divmod(increment);
+    if (remainder.equals(bigInt.zero)) return quantity;
+    const sign = remainder.lt(bigInt.zero) ? -1 : 1;
+    switch (mode) {
+      case 'ceil':
+        if (sign > 0) quotient = quotient.add(sign);
+        break;
+      case 'floor':
+        if (sign < 0) quotient = quotient.add(sign);
+        break;
+      case 'trunc':
+        // no change needed, because divmod is a truncation
+        break;
+      case 'nearest':
+        // "half up away from zero"
+        if (remainder.multiply(2).abs() >= increment) quotient = quotient.add(sign);
+        break;
+    }
+    return quotient.multiply(increment);
+  },
   RoundNumberToIncrement: (quantity, increment, mode) => {
     const quotient = quantity / increment;
     let round;
@@ -3121,27 +3126,11 @@ export const ES = ObjectAssign({}, ES2020, {
     return round * increment;
   },
   RoundInstant: (epochNs, increment, unit, roundingMode) => {
-    switch (unit) {
-      case 'hour':
-        increment *= 60;
-      // fall through
-      case 'minute':
-        increment *= 60;
-      // fall through
-      case 'second':
-        increment *= 1000;
-      // fall through
-      case 'millisecond':
-        increment *= 1000;
-      // fall through
-      case 'microsecond':
-        increment *= 1000;
-    }
     // Note: NonNegativeModulo, but with BigInt
     let remainder = epochNs.mod(86400e9);
     if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
     const wholeDays = epochNs.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrement(remainder.toJSNumber(), increment, roundingMode);
+    const roundedRemainder = ES.RoundNumberToIncrementBigInt(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     return wholeDays.plus(roundedRemainder);
   },
   RoundDateTime: (
@@ -3187,33 +3176,30 @@ export const ES = ObjectAssign({}, ES2020, {
     roundingMode,
     dayLengthNs = 86400e9
   ) => {
-    let quantity = 0;
+    let quantity = bigInt.zero;
     switch (unit) {
       case 'day':
-        quantity =
-          ((((hour * 60 + minute) * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
-        quantity /= dayLengthNs;
-        break;
       case 'hour':
-        quantity = ((second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute) / 60 + hour;
-        break;
+        quantity = bigInt(hour);
+      // fall through
       case 'minute':
-        quantity = (second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9) / 60 + minute;
-        break;
+        quantity = quantity.multiply(60).plus(minute);
+      // fall through
       case 'second':
-        quantity = second + millisecond * 1e-3 + microsecond * 1e-6 + nanosecond * 1e-9;
-        break;
+        quantity = quantity.multiply(60).plus(second);
+      // fall through
       case 'millisecond':
-        quantity = millisecond + microsecond * 1e-3 + nanosecond * 1e-9;
-        break;
+        quantity = quantity.multiply(1000).plus(millisecond);
+      // fall through
       case 'microsecond':
-        quantity = microsecond + nanosecond * 1e-3;
-        break;
+        quantity = quantity.multiply(1000).plus(microsecond);
+      // fall through
       case 'nanosecond':
-        quantity = nanosecond;
-        break;
+        quantity = quantity.multiply(1000).plus(nanosecond);
     }
-    const result = ES.RoundNumberToIncrement(quantity, increment, roundingMode);
+    const nsPerUnit = unit === 'day' ? dayLengthNs : nsPerTimeUnit[unit];
+    const rounded = ES.RoundNumberToIncrementBigInt(quantity, nsPerUnit * increment, roundingMode);
+    const result = rounded.divide(nsPerUnit).toJSNumber();
     switch (unit) {
       case 'day':
         return { deltaDays: result, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
@@ -3453,7 +3439,7 @@ export const ES = ObjectAssign({}, ES2020, {
       hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
     }
 
-    let remainder;
+    let total;
     switch (unit) {
       case 'years': {
         if (!calendar) throw new RangeError('A starting point is required for years rounding');
@@ -3483,9 +3469,8 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         years += days / Math.abs(oneYearDays);
 
-        remainder = years;
+        total = years;
         years = ES.RoundNumberToIncrement(years, increment, roundingMode);
-        remainder -= years;
         months = weeks = days = 0;
         break;
       }
@@ -3515,9 +3500,8 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         months += days / Math.abs(oneMonthDays);
 
-        remainder = months;
+        total = months;
         months = ES.RoundNumberToIncrement(months, increment, roundingMode);
-        remainder -= months;
         weeks = days = 0;
         break;
       }
@@ -3536,61 +3520,81 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         weeks += days / Math.abs(oneWeekDays);
 
-        remainder = weeks;
+        total = weeks;
         weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
-        remainder -= weeks;
         days = 0;
         break;
       }
       case 'days':
-        remainder = days;
+        total = days;
         days = ES.RoundNumberToIncrement(days, increment, roundingMode);
-        remainder -= days;
         break;
-      case 'hours':
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        hours += (minutes + seconds / 60) / 60;
-        remainder = hours;
-        hours = ES.RoundNumberToIncrement(hours, increment, roundingMode);
-        remainder -= hours;
+      case 'hours': {
+        const divisor = 3600e9;
+        nanoseconds = bigInt(hours)
+          .multiply(3600e9)
+          .plus(bigInt(minutes).multiply(60e9))
+          .plus(bigInt(seconds).multiply(1e9))
+          .plus(bigInt(milliseconds).multiply(1e6))
+          .plus(bigInt(microseconds).multiply(1e3))
+          .plus(nanoseconds);
+        total = nanoseconds.toJSNumber() / divisor;
+        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        hours = rounded.divide(divisor).toJSNumber();
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
-      case 'minutes':
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        minutes += seconds / 60;
-        remainder = minutes;
-        minutes = ES.RoundNumberToIncrement(minutes, increment, roundingMode);
-        remainder -= minutes;
+      }
+      case 'minutes': {
+        const divisor = 60e9;
+        nanoseconds = bigInt(minutes)
+          .multiply(60e9)
+          .plus(bigInt(seconds).multiply(1e9))
+          .plus(bigInt(milliseconds).multiply(1e6))
+          .plus(bigInt(microseconds).multiply(1e3))
+          .plus(nanoseconds);
+        total = nanoseconds.toJSNumber() / divisor;
+        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        minutes = rounded.divide(divisor).toJSNumber();
         seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
-      case 'seconds':
-        seconds += milliseconds * 1e-3 + microseconds * 1e-6 + nanoseconds * 1e-9;
-        remainder = seconds;
-        seconds = ES.RoundNumberToIncrement(seconds, increment, roundingMode);
-        remainder -= seconds;
+      }
+      case 'seconds': {
+        const divisor = 1e9;
+        nanoseconds = bigInt(seconds)
+          .multiply(1e9)
+          .plus(bigInt(milliseconds).multiply(1e6))
+          .plus(bigInt(microseconds).multiply(1e3))
+          .plus(nanoseconds);
+        total = nanoseconds.toJSNumber() / divisor;
+        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        seconds = rounded.divide(divisor).toJSNumber();
         milliseconds = microseconds = nanoseconds = 0;
         break;
-      case 'milliseconds':
-        milliseconds += microseconds * 1e-3 + nanoseconds * 1e-6;
-        remainder = milliseconds;
-        milliseconds = ES.RoundNumberToIncrement(milliseconds, increment, roundingMode);
-        remainder -= milliseconds;
+      }
+      case 'milliseconds': {
+        const divisor = 1e6;
+        nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
+        total = nanoseconds.toJSNumber() / divisor;
+        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        milliseconds = rounded.divide(divisor).toJSNumber();
         microseconds = nanoseconds = 0;
         break;
-      case 'microseconds':
-        microseconds += nanoseconds * 1e-3;
-        remainder = microseconds;
-        microseconds = ES.RoundNumberToIncrement(microseconds, increment, roundingMode);
-        remainder -= microseconds;
+      }
+      case 'microseconds': {
+        const divisor = 1e3;
+        nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
+        total = nanoseconds.toJSNumber() / divisor;
+        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        microseconds = rounded.divide(divisor).toJSNumber();
         nanoseconds = 0;
         break;
+      }
       case 'nanoseconds':
-        remainder = nanoseconds;
+        total = nanoseconds;
         nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
-        remainder -= nanoseconds;
         break;
     }
-    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, remainder };
+    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
   },
 
   CompareTemporalDate: (y1, m1, d1, y2, m2, d2) => {
@@ -3642,7 +3646,7 @@ export const ES = ObjectAssign({}, ES2020, {
         if (prim) {
           return bigInt(1);
         } else {
-          return bigInt(0);
+          return bigInt.zero;
         }
     }
   },
@@ -3747,3 +3751,18 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
 function bigIntIfAvailable(wrapper) {
   return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
 }
+
+const nsPerTimeUnit = {
+  hour: 3600e9,
+  hours: 3600e9,
+  minute: 60e9,
+  minutes: 60e9,
+  second: 1e9,
+  seconds: 1e9,
+  millisecond: 1e6,
+  milliseconds: 1e6,
+  microsecond: 1e3,
+  microseconds: 1e3,
+  nanosecond: 1,
+  nanoseconds: 1
+};

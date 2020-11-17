@@ -1404,6 +1404,10 @@ describe('Duration', () => {
         throws(() => d.total({ unit }), RangeError);
       });
     });
+    it('does not lose precision for seconds and smaller units', () => {
+      const s = Temporal.Duration.from({ milliseconds: 2, microseconds: 31 }).total({ unit: 'seconds' });
+      equal(s, 0.002031);
+    });
     it('accepts datetime string equivalents or fields for relativeTo', () => {
       ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
@@ -1523,7 +1527,9 @@ describe('Duration', () => {
     };
     for (const [unit, expected] of Object.entries(totalResults)) {
       it(`total(${unit}) = ${expected}`, () => {
-        assert(Math.abs(d.total({ unit, relativeTo }) - expected) < Number.EPSILON);
+        // Computed values above are approximate due to accumulated floating point
+        // rounding errors, so just comparing the first 16 digits is good enough.
+        equal(d.total({ unit, relativeTo }).toPrecision(16), expected.toPrecision(16));
       });
     }
     for (const unit of ['microseconds', 'nanoseconds']) {
