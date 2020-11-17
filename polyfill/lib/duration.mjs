@@ -521,7 +521,7 @@ export class Duration {
       intermediate
     ));
     // Finally, truncate to the correct unit and calculate remainder
-    const rounded = ES.RoundDuration(
+    const { total } = ES.RoundDuration(
       years,
       months,
       weeks,
@@ -537,7 +537,7 @@ export class Duration {
       'trunc',
       relativeTo
     );
-    return rounded[unit] + rounded.remainder;
+    return total;
   }
   getFields() {
     const fields = ES.ToRecord(this, [
