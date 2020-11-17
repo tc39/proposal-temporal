@@ -177,11 +177,11 @@
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
         1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
         1. <ins>Let _needDefaults_ be *true*.</ins>
-        1. <ins>For each _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* », do</ins>
+        1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
           1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
             1. <ins>Set _needDefaults_ to *false*.</ins>
         1. <ins>If _needDefaults_ is *true*, then</ins>
-          1. <ins>For each _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* », do</ins>
+          1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
             1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_)</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
