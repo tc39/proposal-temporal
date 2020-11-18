@@ -1423,7 +1423,7 @@ describe('Duration', () => {
           const partialMonth = (daysPastJuly1 + partialDay) / 31;
           const totalMonths = 5 * 12 + 5 + 1 + partialMonth; // +1 for 5 weeks
           const total = d.total({ unit: 'months', relativeTo });
-          assert(Math.abs(total - totalMonths) < Number.EPSILON); // 66.32930780242619
+          equal(total.toPrecision(15), totalMonths.toPrecision(15)); // 66.32930780242619
         }
       );
     });
@@ -1528,8 +1528,8 @@ describe('Duration', () => {
     for (const [unit, expected] of Object.entries(totalResults)) {
       it(`total(${unit}) = ${expected}`, () => {
         // Computed values above are approximate due to accumulated floating point
-        // rounding errors, so just comparing the first 16 digits is good enough.
-        equal(d.total({ unit, relativeTo }).toPrecision(16), expected.toPrecision(16));
+        // rounding errors, so just comparing the first 15 digits is good enough.
+        equal(d.total({ unit, relativeTo }).toPrecision(15), expected.toPrecision(15));
       });
     }
     for (const unit of ['microseconds', 'nanoseconds']) {
@@ -1539,17 +1539,24 @@ describe('Duration', () => {
     }
     it('balances differently depending on relativeTo', () => {
       const fortyDays = Duration.from({ days: 40 });
-      assert(Math.abs(fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }) - (1 + 11 / 31)) < Number.EPSILON);
-      assert(Math.abs(fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }) - (1 + 9 / 29)) < Number.EPSILON);
+      equal(
+        fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }).toPrecision(16),
+        (1 + 11 / 31).toPrecision(16)
+      );
+      equal(
+        fortyDays.total({ unit: 'months', relativeTo: '2020-01-01' }).toPrecision(16),
+        (1 + 9 / 29).toPrecision(16)
+      );
     });
     it('balances differently depending on relativeTo (negative)', () => {
       const negativeFortyDays = Duration.from({ days: -40 });
-      assert(
-        Math.abs(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }) - (-1 - 11 / 31)) <
-          Number.EPSILON
+      equal(
+        negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }).toPrecision(16),
+        (-(1 + 11 / 31)).toPrecision(16)
       );
-      assert(
-        Math.abs(negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }) - (-1 - 9 / 29)) < Number.EPSILON
+      equal(
+        negativeFortyDays.total({ unit: 'months', relativeTo: '2020-04-01' }).toPrecision(16),
+        (-(1 + 9 / 29)).toPrecision(16)
       );
     });
     const oneDay = new Duration(0, 0, 0, 1);
