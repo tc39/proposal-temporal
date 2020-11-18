@@ -22,6 +22,11 @@
     },
     {
       "type": "term",
+      "term": "%Date.now%",
+      "id": "sec-date.now"
+    },
+    {
+      "type": "term",
       "term": "%Object.prototype%",
       "id": "sec-properties-of-the-object-prototype-object"
     }
@@ -59,6 +64,11 @@
     },
     {
       "type": "op",
+      "aoid": "FormatNumeric",
+      "id": "sec-formatnumber"
+    },
+    {
+      "type": "op",
       "aoid": "ToDateTimeOptions",
       "id": "sec-todatetimeoptions"
     },
@@ -66,6 +76,11 @@
       "type": "op",
       "aoid": "ToLocalTime",
       "id": "sec-tolocaltime"
+    },
+    {
+      "type": "op",
+      "aoid": "UnwrapDateTimeFormat",
+      "id": "sec-unwrapdatetimeformat"
     },
     {
       "type": "clause",
@@ -86,6 +101,11 @@
       "type": "term",
       "term": "%DateTimeFormat%",
       "id": "sec-intl-datetimeformat-constructor"
+    },
+    {
+      "type": "term",
+      "term": "%NumberFormat%",
+      "id": "sec-intl-numberformat-constructor"
     }
   ],
   "https://tc39.es/proposal-intl-duration-format/": [
