@@ -2,8 +2,6 @@ const ArrayIsArray = Array.isArray;
 const ArrayPrototypeIndexOf = Array.prototype.indexOf;
 const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-const MathAbs = Math.abs;
-const MathCeil = Math.ceil;
 const MathFloor = Math.floor;
 const MathSign = Math.sign;
 const MathTrunc = Math.trunc;
@@ -2625,7 +2623,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     const remainder = diff.mod(86400e9);
     const wholeDays = diff.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrementBigInt(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
+    const roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     const roundedDiff = wholeDays.plus(roundedRemainder);
 
     const nanoseconds = +roundedDiff.mod(1e3);
@@ -3083,7 +3081,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   },
-  RoundNumberToIncrementBigInt: (quantity, increment, mode) => {
+  RoundNumberToIncrement: (quantity, increment, mode) => {
     if (increment === 1) return quantity;
     let { quotient, remainder } = quantity.divmod(increment);
     if (remainder.equals(bigInt.zero)) return quantity;
@@ -3105,32 +3103,12 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return quotient.multiply(increment);
   },
-  RoundNumberToIncrement: (quantity, increment, mode) => {
-    const quotient = quantity / increment;
-    let round;
-    switch (mode) {
-      case 'ceil':
-        round = MathCeil(quotient);
-        break;
-      case 'floor':
-        round = MathFloor(quotient);
-        break;
-      case 'trunc':
-        round = MathTrunc(quotient);
-        break;
-      case 'nearest':
-        // "half away from zero"
-        round = MathSign(quotient) * MathFloor(MathAbs(quotient) + 0.5);
-        break;
-    }
-    return round * increment;
-  },
   RoundInstant: (epochNs, increment, unit, roundingMode) => {
     // Note: NonNegativeModulo, but with BigInt
     let remainder = epochNs.mod(86400e9);
     if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
     const wholeDays = epochNs.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrementBigInt(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
+    const roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     return wholeDays.plus(roundedRemainder);
   },
   RoundDateTime: (
@@ -3198,7 +3176,7 @@ export const ES = ObjectAssign({}, ES2020, {
         quantity = quantity.multiply(1000).plus(nanosecond);
     }
     const nsPerUnit = unit === 'day' ? dayLengthNs : nsPerTimeUnit[unit];
-    const rounded = ES.RoundNumberToIncrementBigInt(quantity, nsPerUnit * increment, roundingMode);
+    const rounded = ES.RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode);
     const result = rounded.divide(nsPerUnit).toJSNumber();
     switch (unit) {
       case 'day':
@@ -3426,17 +3404,18 @@ export const ES = ObjectAssign({}, ES2020, {
 
     // First convert time units up to days, if rounding to days or higher units.
     // If rounding relative to a ZonedDateTime, then some days may not be 24h.
+    let dayLengthNs;
     if (unit === 'years' || unit === 'months' || unit === 'weeks' || unit === 'days') {
       nanoseconds = ES.TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
       let intermediate;
       if (zdtRelative) {
         intermediate = ES.MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
       }
-      let dayLengthNs;
       let deltaDays;
       ({ days: deltaDays, nanoseconds, dayLengthNs } = ES.NanosecondsToDays(nanoseconds, intermediate));
-      days += deltaDays + nanoseconds / MathAbs(dayLengthNs);
-      hours = minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
+      dayLengthNs = Math.abs(dayLengthNs);
+      days += deltaDays;
+      hours = minutes = seconds = milliseconds = microseconds = 0;
     }
 
     let total;
@@ -3467,11 +3446,19 @@ export const ES = ObjectAssign({}, ES2020, {
           days -= oneYearDays;
           ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
         }
-        years += days / Math.abs(oneYearDays);
-
-        total = years;
-        years = ES.RoundNumberToIncrement(years, increment, roundingMode);
-        months = weeks = days = 0;
+        // Note that `nanoseconds` below (here and in similar code for months,
+        // weeks, and days further below) isn't actually nanoseconds for the
+        // full date range.  Instead, it's a BigInt representation of total
+        // days multiplied by the number of nanoseconds in the last day of
+        // the duration. This lets us do days-or-larger rounding using BigInt
+        // math which reduces precision loss.
+        oneYearDays = Math.abs(oneYearDays);
+        const divisor = bigInt(oneYearDays).multiply(dayLengthNs);
+        nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
+        total = nanoseconds.toJSNumber() / divisor;
+        years = rounded.divide(divisor).toJSNumber();
+        nanoseconds = months = weeks = days = 0;
         break;
       }
       case 'months': {
@@ -3498,11 +3485,13 @@ export const ES = ObjectAssign({}, ES2020, {
           days -= oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
         }
-        months += days / Math.abs(oneMonthDays);
-
-        total = months;
-        months = ES.RoundNumberToIncrement(months, increment, roundingMode);
-        weeks = days = 0;
+        oneMonthDays = Math.abs(oneMonthDays);
+        const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
+        nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
+        total = nanoseconds.toJSNumber() / divisor;
+        months = rounded.divide(divisor).toJSNumber();
+        nanoseconds = weeks = days = 0;
         break;
       }
       case 'weeks': {
@@ -3518,17 +3507,24 @@ export const ES = ObjectAssign({}, ES2020, {
           days -= oneWeekDays;
           ({ relativeTo, days: oneWeekDays } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek));
         }
-        weeks += days / Math.abs(oneWeekDays);
-
-        total = weeks;
-        weeks = ES.RoundNumberToIncrement(weeks, increment, roundingMode);
-        days = 0;
+        oneWeekDays = Math.abs(oneWeekDays);
+        const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
+        nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
+        total = nanoseconds.toJSNumber() / divisor;
+        weeks = rounded.divide(divisor).toJSNumber();
+        nanoseconds = days = 0;
         break;
       }
-      case 'days':
-        total = days;
-        days = ES.RoundNumberToIncrement(days, increment, roundingMode);
+      case 'days': {
+        const divisor = bigInt(dayLengthNs);
+        nanoseconds = divisor.multiply(days).plus(nanoseconds);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
+        total = nanoseconds.toJSNumber() / divisor;
+        days = rounded.divide(divisor).toJSNumber();
+        nanoseconds = 0;
         break;
+      }
       case 'hours': {
         const divisor = 3600e9;
         nanoseconds = bigInt(hours)
@@ -3539,7 +3535,7 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
-        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         hours = rounded.divide(divisor).toJSNumber();
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
@@ -3553,7 +3549,7 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
-        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         minutes = rounded.divide(divisor).toJSNumber();
         seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
@@ -3566,7 +3562,7 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
-        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         seconds = rounded.divide(divisor).toJSNumber();
         milliseconds = microseconds = nanoseconds = 0;
         break;
@@ -3575,7 +3571,7 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = 1e6;
         nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
-        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         milliseconds = rounded.divide(divisor).toJSNumber();
         microseconds = nanoseconds = 0;
         break;
@@ -3584,15 +3580,16 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = 1e3;
         nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
-        const rounded = ES.RoundNumberToIncrementBigInt(nanoseconds, divisor * increment, roundingMode);
+        const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         microseconds = rounded.divide(divisor).toJSNumber();
         nanoseconds = 0;
         break;
       }
-      case 'nanoseconds':
+      case 'nanoseconds': {
         total = nanoseconds;
-        nanoseconds = ES.RoundNumberToIncrement(nanoseconds, increment, roundingMode);
+        nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
         break;
+      }
     }
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
   },
