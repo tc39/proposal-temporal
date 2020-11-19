@@ -18,7 +18,10 @@ function reportStatus(length = testCount) {
 
 stdin.on('data', function (chunk) {
   testOutput += chunk;
-  testCount = testOutput.split('"file":').length - 1;
+  const matches = testOutput.split('"file":').length - 1;
+  // We skipped execution of non-strict tests via a preprocessor, but the test
+  // is treated as passed and shows up here, so we'll divide total by 2.
+  testCount = Math.trunc(matches / 2);
   if (testCount >= nextReportCount || testOutput.endsWith(']\n')) {
     reportStatus();
     nextReportCount += 100;
@@ -27,7 +30,8 @@ stdin.on('data', function (chunk) {
 
 stdin.on('end', function () {
   stdout.write('\n');
-  const tests = JSON.parse(testOutput);
+  // filter out the non-strict tests because they were skipped via a preprocessor
+  const tests = JSON.parse(testOutput).filter((test) => test.scenario.includes('strict'));
   const failedTests = [];
   for (const test of tests) {
     const { result, scenario, file } = test;

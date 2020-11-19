@@ -3,7 +3,7 @@
 TESTS=${@:-"./*/**/*.js"}
 
 export NODE_PATH=$PWD/node_modules
-npm run build
+npm run build262
 if [ ! -d "test262" ]; then
   git clone --depth 1 https://github.com/tc39/test262.git
 else
@@ -27,7 +27,7 @@ if [ "$(uname)" = 'Darwin' ]; then
 else
   threads=$(nproc --ignore 1)
 fi
-if [ $threads -gt 2 ]; then threads=2; fi
+if [ $threads -gt 8 ]; then threads=8; fi
 
 test262-harness \
   -t $threads \
@@ -35,6 +35,7 @@ test262-harness \
   --reporter-keys file,rawResult,result,scenario \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
+  --preprocessor ./preprocessor.test262.js \
   $TRANSFORMER_ARG \
   "$TESTS" \
   | ./parseResults.js
