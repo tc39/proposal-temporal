@@ -15,6 +15,7 @@
     "codecov:tests": "NODE_V8_COVERAGE=coverage/tmp npm run test && c8 report --reporter=text-lcov > coverage/tests.lcov && codecov -F tests -f coverage/tests.lcov",
     "codecov:test262": "COVERAGE=yes npm run test262 && codecov -F test262 -f coverage/test262.lcov",
     "build": "rollup -c rollup.config.js",
+    "build262": "TEST262=1 rollup -c rollup.config.js",
     "prepublishOnly": "npm run build",
     "playground": "node --experimental-modules --no-warnings --icu-data-dir node_modules/full-icu -r ./lib/init.js"
   },

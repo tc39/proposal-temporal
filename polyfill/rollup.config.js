@@ -6,6 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
 const isProduction = env.NODE_ENV === 'production';
+const isTest262 = !!env.TEST262;
 const libName = 'temporal';
 const babelConfig = {
   exclude: 'node_modules/**',
@@ -23,7 +24,7 @@ const replaceConfig = { exclude: 'node_modules/**' };
 const resolveConfig = { preferBuiltins: false };
 
 export default [
-  {
+  !isTest262 && {
     input: 'lib/index.mjs',
     plugins: [
       replace({ ...replaceConfig, __debug__: !isProduction }),
@@ -57,7 +58,7 @@ export default [
       sourcemap: true
     }
   },
-  {
+  !isTest262 && {
     input: 'lib/shim.mjs',
     output: {
       name: libName,
@@ -67,4 +68,4 @@ export default [
     },
     plugins: [replace({ ...replaceConfig, __debug__: true }), commonjs(), resolve(resolveConfig), babel(babelConfig)]
   }
-];
+].filter(Boolean);
