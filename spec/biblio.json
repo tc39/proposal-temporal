@@ -69,6 +69,16 @@
     },
     {
       "type": "op",
+      "aoid": "PartitionPattern",
+      "id": "sec-partitionpattern"
+    },
+    {
+      "type": "op",
+      "aoid": "ResolveLocale",
+      "id": "sec-resolvelocale"
+    },
+    {
+      "type": "op",
       "aoid": "ToDateTimeOptions",
       "id": "sec-todatetimeoptions"
     },
