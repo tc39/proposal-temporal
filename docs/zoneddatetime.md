@@ -79,10 +79,13 @@ At least the `timeZone`, `year`, `month`, and `day` properties must be present. 
 If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
 Any other missing properties will be assumed to be 0 (for time fields).
 
-All date/time values will be interpreted in context of the provided time zone.
-Also, if `calendar` is present then all date/time values will also be interpreted in context of that calendar.
+Date/time values will be interpreted in context of the provided offset and/or time zone, depending on the `offset` option.
 
-Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar. For example:
+Date/time values in object inputs will be interpreted in the context of `calendar`.
+However, date/time values in string inputs are always interpreted in the context of the ISO 8601 calendar.
+
+Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
+For example:
 
 ```
 2020-08-05T20:06:13+09:00[Asia/Tokyo][c=japanese]
