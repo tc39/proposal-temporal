@@ -328,9 +328,11 @@ If the value is any other object, a <code>Temporal.ZonedDateTime</code> will be 
 At least the <code>timeZone</code>, <code>year</code>, <code>month</code>, and <code>day</code> properties must be present. Other properties are optional.
 If <code>calendar</code> is missing, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>.
 Any other missing properties will be assumed to be 0 (for time fields).</p>
-<p>All date/time values will be interpreted in context of the provided time zone.
-Also, if <code>calendar</code> is present then all date/time values will also be interpreted in context of that calendar.</p>
-<p>Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar. For example:</p>
+<p>Date/time values will be interpreted in context of the provided offset and/or time zone, depending on the <code>offset</code> option.</p>
+<p>Date/time values in object inputs will be interpreted in the context of <code>calendar</code>.
+However, date/time values in string inputs are always interpreted in the context of the ISO 8601 calendar.</p>
+<p>Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
+For example:</p>
 <pre><code>2020-08-05T20:06:13+09:00[Asia/Tokyo][c=japanese]</code></pre><p>If the string isn&#39;t valid, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>Note that this string format (albeit limited to the ISO calendar system) is also used by <code>java.time</code> and some other time-zone-aware libraries.
 For more information on <code>Temporal</code>&#39;s extensions to the ISO string format and the progress towards becoming a published standard, see <a href="./iso-string-ext.html">ISO standard extensions</a>.</p>
