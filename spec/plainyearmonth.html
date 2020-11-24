@@ -709,7 +709,7 @@
         1. If ! ValidateYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainYearMonth%.
-        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]] »).
+        1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
         1. Set _object_.[[ISOMonth]] to _isoMonth_.
         1. Set _object_.[[Calendar]] to _calendar_.
