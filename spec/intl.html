@@ -292,35 +292,50 @@
         1. <ins>If IsTemporalObject(_x_) is *true*, then</ins>
           1. <mark>TODO: _era_, _dayPeriod_, _fractionalSecondDigits_.</mark>
           1. <ins>If _x_ has an [[InitializedTemporalDate]] internal slot, then</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
-            1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]] }.</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>If _calendar_ is _dateTimeFormat_.[[Calendar]], then</ins>
+              1. <ins>Let _calendarOverride_ be _x_.[[Calendar]].</ins>
+            1. <ins>Else if _calendar_ is *"iso8601"*, then</ins>
+              1. <ins>Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Throw a *RangeError* exception.</ins>
+            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).</ins>
+            1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
-            1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].</ins>
-            1. <ins>Let _tm_ be { [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]] }.</ins>
-          1. <ins>If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
-            1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
+            1. <ins>If _calendar_ is _dateTimeFormat_.[[Calendar]], then</ins>
+              1. <ins>Let _calendarOverride_ be _x_.[[Calendar]].</ins>
+            1. <ins>Else if _calendar_ is *"iso8601"*, then</ins>
+              1. <ins>Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Throw a *RangeError* exception.</ins>
+            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).</ins>
+            1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].</ins>
-            1. <ins>Let _tm_ be { [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]] }.</ins>
+            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>If _calendar_ is _dateTimeFormat_.[[Calendar]], then</ins>
+              1. <ins>Let _calendarOverride_ be _x_.[[Calendar]].</ins>
+            1. <ins>Else if _calendar_ is *"iso8601"*, then</ins>
+              1. <ins>Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Throw a *RangeError* exception.</ins>
+            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).</ins>
+            1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]] }.</ins>
+            1. <ins>Let _calendarOverride_ be ? GetISO8601Calendar().</ins>
+            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _x_.[[ISOHour]], _x_.[[ISOMinute]], _x_.[[ISOSecond]], _x_.[[ISOMilliSecond]], _x_.[[ISOMicroSecond]], _x_.[[ISONanoSecond]], _calendarOverride_).</ins>
+            1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
-            1. <ins>If _x_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
-              1. <ins>Let _timeZone_ be ? TimeZoneFrom(_dateTimeFormat_.[[TimeZone]]).</ins>
-              1. <ins>Let _calendar_ be ? CalendarFrom(_dateTimeFormat_.[[Calendar]]).</ins>
-              1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_timeZone_, _x_, _calendar_).</ins>
-              1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
-            1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]], [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]] }.</ins>
-          1. <ins>If _date_ has an [[InitializedTemporalZonedDateTime]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
+            1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _x_, *"reject"*).</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalInstant]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].</ins>
+          1. <ins>If _x_ has an [[InitializedTemporalZonedDateTime]] internal slot, then</ins>
+            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalZonedDateTimePattern]].</ins>
             1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
@@ -328,10 +343,8 @@
             1. <ins>If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _instant_ be ? CreateTemporalInstant(_x_.[[Nanoseconds]]).</ins>
-            1. <ins>Set _x_ to ? GetTemporalDateTimeFor(_x_.[[TimeZone]], _instant_, _x_.[[Calendar]]).</ins>
-            1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalZonedDateTimePattern]].</ins>
-            1. <ins>Let _tm_ be { [[weekday]]: ! ToDayOfWeek(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]]), [[year]]: _x_.[[ISOYear]], [[month]]: _x_.[[ISOMonth]], [[day]]: _x_.[[ISODay]], [[hour]]: _x_.[[ISOHour]], [[minute]]: _x_.[[ISOMinute]], [[second]]: _x_.[[ISOSecond]], [[timeZoneName]]: _timeZone_ }.</ins>
           1. <ins>If _pattern_ is *null*, throw a *TypeError* exception.</ins>
+          1. <ins>Let _epochNanoseconds_ be _instant_.[[Nanoseconds]].</ins>
         1. <ins>Else,</ins>
           1. <ins>Let _pattern_ be _dateTimeFormat_.[[Pattern]].</ins>
           1. <ins>If _x_ is *undefined*, then</ins>
@@ -340,7 +353,7 @@
             1. <ins>Set _x_ to ? ToNumber(_x_).</ins>
           1. Set _x_ to TimeClip(_x_).
           1. If _x_ is *NaN*, throw a *RangeError* exception.
-          1. <ins>Let _tm_ be ToLocalTime(_x_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).</ins>
+          1. <ins>Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.</ins>
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
         1. Let _nfOptions_ be ObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
@@ -349,7 +362,7 @@
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, 2).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
         1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
-        1. <del>Let _tm_ be ToLocalTime(_x_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).</del>
+        1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. Let _result_ be a new empty List.
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
         1. For each element _patternPart_ of _patternParts_, in List order, do
@@ -393,7 +406,7 @@
             1. Let _v_ be _tm_.[[YearName]].
             1. Append a new Record { [[Type]]: *"yearName"*, [[Value]]: _v_ } as the last element of the list _result_.
           1. Else,
-            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_tm_</ins> and _p_.
+            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_epochNanoseconds_</ins> and _p_.
             1. Append a new Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } as the last element of _result_.
         1. Return _result_.
       </emu-alg>
@@ -491,14 +504,14 @@
       <h1>ToLocalTime ( _t_, _calendar_, _timeZone_ )</h1>
 
       <p>
-        When the ToLocalTime abstract operation is called with arguments _t_, _calendar_, and _timeZone_, the following steps are taken:
+        When the ToLocalTime abstract operation is called with arguments _t_ <ins>(in nanoseconds from the epoch)</ins>, _calendar_, and _timeZone_, the following steps are taken:
       </p>
 
       <emu-alg>
-        1. Assert: Type(_t_) is Number.
+        1. Assert: Type(_t_) is <del>Number</del><ins>BigInt</ins>.
         1. If _calendar_ is *"gregory"*, then
-          1. Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.
-          <ins>Given the same values of _t_ and _timeZone_, the result must be the same for the lifetime of the surrounding agent</ins>.
+          1. <del>Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.</del>
+          1. <ins>Let _timeZoneOffset_ be ! GetIANATimeZoneOffsetNanoseconds(_t_, _timeZone_).</ins>
           1. Let _tz_ be the time value _t_ + _timeZoneOffset_.
           1. Return a record with fields calculated from _tz_ according to <emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref>.
         1. Else,
@@ -517,15 +530,24 @@
           </thead>
           <tr>
             <td>[[Weekday]]</td>
-            <td>`WeekDay(tz)` specified in ES2021's <emu-xref href="#sec-week-day">Week Day</emu-xref></td>
+            <td>
+              <del>`WeekDay(tz)` specified in ES2021's <emu-xref href="#sec-week-day">Week Day</emu-xref></del>
+              <ins>! WeekDay(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Era]]</td>
-            <td>Let `year` be `YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</td>
+            <td>
+              <del>Let `year` be `YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</del>
+              <ins>Let _year_ be ! YearFromTime(_tz_ / 10<sup>6</sup>). If _year_ is less than 0, return *"BC"*, else, return *"AD"*.</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Year]]</td>
-            <td>`YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref></td>
+            <td>
+              <del>`YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref></del>
+              <ins>! YearFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[RelatedYear]]</td>
@@ -537,23 +559,42 @@
           </tr>
           <tr>
             <td>[[Month]]</td>
-            <td>`MonthFromTime(tz)` specified in ES2021's <emu-xref href="#sec-month-number">Month Number</emu-xref></td>
+            <td>
+              <del>`MonthFromTime(tz)` specified in ES2021's <emu-xref href="#sec-month-number">Month Number</emu-xref></del>
+              <ins>! MonthFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Day]]</td>
-            <td>`DateFromTime(tz)` specified in ES2021's <emu-xref href="#sec-date-number">Date Number</emu-xref></td>
+            <td>
+              <del>`DateFromTime(tz)` specified in ES2021's <emu-xref href="#sec-date-number">Date Number</emu-xref></del>
+              <ins>! DateFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Hour]]</td>
-            <td>`HourFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+            <td>
+              <del>`HourFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <ins>! HourFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Minute]]</td>
-            <td>`MinFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+            <td>
+              <del>`MinFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <ins>! MinFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
           </tr>
           <tr>
             <td>[[Second]]</td>
-            <td>`SecFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></td>
+            <td>
+              <del>`SecFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <ins>! SecFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
+          </tr>
+          <tr>
+            <td><ins>[[Nanosecond]]</td>
+            <td><ins>_tz_ modulo 10<sup>9</sup></td>
           </tr>
           <tr>
             <td>[[InDST]]</td>
