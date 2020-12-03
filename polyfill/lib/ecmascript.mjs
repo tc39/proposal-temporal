@@ -2,12 +2,20 @@ const ArrayIsArray = Array.isArray;
 const ArrayPrototypeIndexOf = Array.prototype.indexOf;
 const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
+const MathMin = Math.min;
+const MathMax = Math.max;
+const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const MathSign = Math.sign;
 const MathTrunc = Math.trunc;
 const NumberIsNaN = Number.isNaN;
+const NumberIsFinite = Number.isFinite;
+const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
+const NumberIsInteger = Number.isInteger;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
+const ObjectIs = Object.is;
+const ObjectEntries = Object.entries;
 
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
@@ -877,7 +885,7 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds,
     nanoseconds
   ) => {
-    for (const [prop, v] of Object.entries({
+    for (const [prop, v] of ObjectEntries({
       years,
       months,
       weeks,
@@ -1511,7 +1519,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
     }
-    if (!Number.isInteger(offsetNs) || Math.abs(offsetNs) > 86400e9) {
+    if (!NumberIsInteger(offsetNs) || MathAbs(offsetNs) > 86400e9) {
       throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
     }
     return offsetNs;
@@ -1552,7 +1560,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let yearString;
     if (year < 1000 || year > 9999) {
       let sign = year < 0 ? '-' : '+';
-      let yearNumber = Math.abs(year);
+      let yearNumber = MathAbs(year);
       yearString = sign + `000000${yearNumber}`.slice(-6);
     } else {
       yearString = `${year}`;
@@ -1600,7 +1608,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   TemporalDurationToString: (duration) => {
     function formatNumber(num) {
-      if (num <= Number.MAX_SAFE_INTEGER) return num.toString(10);
+      if (num <= NumberMaxSafeInteger) return num.toString(10);
       return bigInt(num).toString();
     }
 
@@ -1617,14 +1625,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
 
     const dateParts = [];
-    if (years) dateParts.push(`${formatNumber(Math.abs(years))}Y`);
-    if (months) dateParts.push(`${formatNumber(Math.abs(months))}M`);
-    if (weeks) dateParts.push(`${formatNumber(Math.abs(weeks))}W`);
-    if (days) dateParts.push(`${formatNumber(Math.abs(days))}D`);
+    if (years) dateParts.push(`${formatNumber(MathAbs(years))}Y`);
+    if (months) dateParts.push(`${formatNumber(MathAbs(months))}M`);
+    if (weeks) dateParts.push(`${formatNumber(MathAbs(weeks))}W`);
+    if (days) dateParts.push(`${formatNumber(MathAbs(days))}D`);
 
     const timeParts = [];
-    if (hours) timeParts.push(`${formatNumber(Math.abs(hours))}H`);
-    if (minutes) timeParts.push(`${formatNumber(Math.abs(minutes))}M`);
+    if (hours) timeParts.push(`${formatNumber(MathAbs(hours))}H`);
+    if (minutes) timeParts.push(`${formatNumber(MathAbs(minutes))}M`);
 
     const secondParts = [];
     let total = ES.TotalDurationNanoseconds(0, 0, 0, seconds, ms, µs, ns, 0);
@@ -1634,9 +1642,9 @@ export const ES = ObjectAssign({}, ES2020, {
     ms = ms.toJSNumber();
     µs = µs.toJSNumber();
     ns = ns.toJSNumber();
-    if (ns) secondParts.unshift(`${Math.abs(ns)}`.padStart(3, '0'));
-    if (µs || secondParts.length) secondParts.unshift(`${Math.abs(µs)}`.padStart(3, '0'));
-    if (ms || secondParts.length) secondParts.unshift(`${Math.abs(ms)}`.padStart(3, '0'));
+    if (ns) secondParts.unshift(`${MathAbs(ns)}`.padStart(3, '0'));
+    if (µs || secondParts.length) secondParts.unshift(`${MathAbs(µs)}`.padStart(3, '0'));
+    if (ms || secondParts.length) secondParts.unshift(`${MathAbs(ms)}`.padStart(3, '0'));
     if (secondParts.length) secondParts.unshift('.');
     if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
@@ -1688,11 +1696,11 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   FormatTimeZoneOffsetString: (offsetNanoseconds) => {
     const sign = offsetNanoseconds < 0 ? '-' : '+';
-    offsetNanoseconds = Math.abs(offsetNanoseconds);
+    offsetNanoseconds = MathAbs(offsetNanoseconds);
     const nanoseconds = offsetNanoseconds % 1e9;
-    const seconds = Math.floor(offsetNanoseconds / 1e9) % 60;
-    const minutes = Math.floor(offsetNanoseconds / 60e9) % 60;
-    const hours = Math.floor(offsetNanoseconds / 3600e9);
+    const seconds = MathFloor(offsetNanoseconds / 1e9) % 60;
+    const minutes = MathFloor(offsetNanoseconds / 60e9) % 60;
+    const hours = MathFloor(offsetNanoseconds / 3600e9);
 
     const hourString = ES.ISODateTimePartString(hours);
     const minuteString = ES.ISODateTimePartString(minutes);
@@ -1714,7 +1722,7 @@ export const ES = ObjectAssign({}, ES2020, {
     legacyDate.setUTCHours(hour, minute, second, millisecond);
     legacyDate.setUTCFullYear(year, month - 1, day);
     const ms = legacyDate.getTime();
-    if (Number.isNaN(ms)) return null;
+    if (NumberIsNaN(ms)) return null;
     let ns = bigInt(ms).multiply(1e6);
     ns = ns.plus(bigInt(microsecond).multiply(1e3));
     ns = ns.plus(bigInt(nanosecond));
@@ -1729,7 +1737,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanos += 1e6;
       epochMilliseconds -= 1;
     }
-    const microsecond = Math.floor(nanos / 1e3) % 1e3;
+    const microsecond = MathFloor(nanos / 1e3) % 1e3;
     const nanosecond = nanos % 1e3;
 
     const item = new Date(epochMilliseconds);
@@ -1871,14 +1879,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const m = month + (month < 3 ? 10 : -2);
     const Y = year - (month < 3 ? 1 : 0);
 
-    const c = Math.floor(Y / 100);
+    const c = MathFloor(Y / 100);
     const y = Y - c * 100;
     const d = day;
 
     const pD = d;
-    const pM = Math.floor(2.6 * m - 0.2);
-    const pY = y + Math.floor(y / 4);
-    const pC = Math.floor(c / 4) - 2 * c;
+    const pM = MathFloor(2.6 * m - 0.2);
+    const pY = y + MathFloor(y / 4);
+    const pC = MathFloor(c / 4) - 2 * c;
 
     const dow = (pD + pM + pY + pC) % 7;
 
@@ -1896,7 +1904,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let dow = ES.DayOfWeek(year, month, day) || 7;
     let doj = ES.DayOfWeek(year, 1, 1);
 
-    const week = Math.floor((doy - dow + 10) / 7);
+    const week = MathFloor((doy - dow + 10) / 7);
 
     if (week < 1) {
       if (doj === (ES.LeapYear(year) ? 5 : 6)) {
@@ -1921,16 +1929,16 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   BalanceYearMonth: (year, month) => {
-    if (!Number.isFinite(year) || !Number.isFinite(month)) throw new RangeError('infinity is out of range');
+    if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError('infinity is out of range');
     month -= 1;
-    year += Math.floor(month / 12);
+    year += MathFloor(month / 12);
     month %= 12;
     if (month < 0) month += 12;
     month += 1;
     return { year, month };
   },
   BalanceDate: (year, month, day) => {
-    if (!Number.isFinite(day)) throw new RangeError('infinity is out of range');
+    if (!NumberIsFinite(day)) throw new RangeError('infinity is out of range');
     ({ year, month } = ES.BalanceYearMonth(year, month));
     let daysInYear = 0;
     let testYear = month > 2 ? year : year - 1;
@@ -1972,32 +1980,32 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
     if (
-      !Number.isFinite(hour) ||
-      !Number.isFinite(minute) ||
-      !Number.isFinite(second) ||
-      !Number.isFinite(millisecond) ||
-      !Number.isFinite(microsecond) ||
-      !Number.isFinite(nanosecond)
+      !NumberIsFinite(hour) ||
+      !NumberIsFinite(minute) ||
+      !NumberIsFinite(second) ||
+      !NumberIsFinite(millisecond) ||
+      !NumberIsFinite(microsecond) ||
+      !NumberIsFinite(nanosecond)
     ) {
       throw new RangeError('infinity is out of range');
     }
 
-    microsecond += Math.floor(nanosecond / 1000);
+    microsecond += MathFloor(nanosecond / 1000);
     nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
 
-    millisecond += Math.floor(microsecond / 1000);
+    millisecond += MathFloor(microsecond / 1000);
     microsecond = ES.NonNegativeModulo(microsecond, 1000);
 
-    second += Math.floor(millisecond / 1000);
+    second += MathFloor(millisecond / 1000);
     millisecond = ES.NonNegativeModulo(millisecond, 1000);
 
-    minute += Math.floor(second / 60);
+    minute += MathFloor(second / 60);
     second = ES.NonNegativeModulo(second, 60);
 
-    hour += Math.floor(minute / 60);
+    hour += MathFloor(minute / 60);
     minute = ES.NonNegativeModulo(minute, 60);
 
-    let deltaDays = Math.floor(hour / 24);
+    let deltaDays = MathFloor(hour / 24);
     hour = ES.NonNegativeModulo(hour, 24);
 
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
@@ -2228,7 +2236,7 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'months':
         if (!calendar) throw new RangeError('a starting point is required for months balancing');
         // balance years down to months
-        while (Math.abs(years) > 0) {
+        while (MathAbs(years) > 0) {
           const newRelativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
           const oneYearMonths = calendar.dateUntil(relativeTo, newRelativeTo, { largestUnit: 'months' }).months;
           relativeTo = newRelativeTo;
@@ -2239,7 +2247,7 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'weeks':
         if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
         // balance years down to days
-        while (Math.abs(years) > 0) {
+        while (MathAbs(years) > 0) {
           let oneYearDays;
           ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
           days += oneYearDays;
@@ -2247,7 +2255,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
 
         // balance months down to days
-        while (Math.abs(months) > 0) {
+        while (MathAbs(months) > 0) {
           let oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
           days += oneMonthDays;
@@ -2256,7 +2264,7 @@ export const ES = ObjectAssign({}, ES2020, {
         break;
       default:
         // balance years down to days
-        while (Math.abs(years) > 0) {
+        while (MathAbs(years) > 0) {
           if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
           let oneYearDays;
           ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
@@ -2265,7 +2273,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
 
         // balance months down to days
-        while (Math.abs(months) > 0) {
+        while (MathAbs(months) > 0) {
           if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
           let oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
@@ -2274,7 +2282,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
 
         // balance weeks down to days
-        while (Math.abs(weeks) > 0) {
+        while (MathAbs(weeks) > 0) {
           if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
           let oneWeekDays;
           ({ relativeTo, days: oneWeekDays } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek));
@@ -2310,7 +2318,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // balance days up to years
         let newRelativeTo, oneYearDays;
         ({ relativeTo: newRelativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
-        while (Math.abs(days) >= Math.abs(oneYearDays)) {
+        while (MathAbs(days) >= MathAbs(oneYearDays)) {
           days -= oneYearDays;
           years += sign;
           relativeTo = newRelativeTo;
@@ -2320,7 +2328,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // balance days up to months
         let oneMonthDays;
         ({ relativeTo: newRelativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
-        while (Math.abs(days) >= Math.abs(oneMonthDays)) {
+        while (MathAbs(days) >= MathAbs(oneMonthDays)) {
           days -= oneMonthDays;
           months += sign;
           relativeTo = newRelativeTo;
@@ -2330,7 +2338,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // balance months up to years
         newRelativeTo = calendar.dateAdd(relativeTo, oneYear, {}, TemporalDate);
         let oneYearMonths = calendar.dateUntil(relativeTo, newRelativeTo, { largestUnit: 'months' }).months;
-        while (Math.abs(months) >= Math.abs(oneYearMonths)) {
+        while (MathAbs(months) >= MathAbs(oneYearMonths)) {
           months -= oneYearMonths;
           years += sign;
           relativeTo = newRelativeTo;
@@ -2344,7 +2352,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // balance days up to months
         let newRelativeTo, oneMonthDays;
         ({ relativeTo: newRelativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
-        while (Math.abs(days) >= Math.abs(oneMonthDays)) {
+        while (MathAbs(days) >= MathAbs(oneMonthDays)) {
           days -= oneMonthDays;
           months += sign;
           relativeTo = newRelativeTo;
@@ -2357,7 +2365,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // balance days up to weeks
         let newRelativeTo, oneWeekDays;
         ({ relativeTo: newRelativeTo, days: oneWeekDays } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek));
-        while (Math.abs(days) >= Math.abs(oneWeekDays)) {
+        while (MathAbs(days) >= MathAbs(oneWeekDays)) {
           days -= oneWeekDays;
           weeks += sign;
           relativeTo = newRelativeTo;
@@ -2387,7 +2395,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return 0;
   },
 
-  ConstrainToRange: (value, min, max) => Math.min(max, Math.max(min, value)),
+  ConstrainToRange: (value, min, max) => MathMin(max, MathMax(min, value)),
   ConstrainDate: (year, month, day) => {
     month = ES.ConstrainToRange(month, 1, 12);
     day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
@@ -2468,15 +2476,15 @@ export const ES = ObjectAssign({}, ES2020, {
   RejectDurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
     for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
-      const propSign = Math.sign(prop);
+      const propSign = MathSign(prop);
       if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
     }
   },
   RejectDuration: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
     for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
-      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-      const propSign = Math.sign(prop);
+      if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+      const propSign = MathSign(prop);
       if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
     }
   },
@@ -2570,7 +2578,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         let weeks = 0;
         if (largestUnit === 'weeks') {
-          weeks = Math.floor(days / 7);
+          weeks = MathFloor(days / 7);
           days %= 7;
         }
         weeks *= sign;
@@ -3413,7 +3421,7 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       let deltaDays;
       ({ days: deltaDays, nanoseconds, dayLengthNs } = ES.NanosecondsToDays(nanoseconds, intermediate));
-      dayLengthNs = Math.abs(dayLengthNs);
+      dayLengthNs = MathAbs(dayLengthNs);
       days += deltaDays;
       hours = minutes = seconds = milliseconds = microseconds = 0;
     }
@@ -3437,11 +3445,11 @@ export const ES = ObjectAssign({}, ES2020, {
         // in the one-year period after (or preceding, depending on the sign of
         // the duration) the relativeTo date, and convert that number of days to
         // one year, repeating until the number of days is less than a year.
-        const sign = Math.sign(days);
+        const sign = MathSign(days);
         const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
         let oneYearDays;
         ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
-        while (Math.abs(days) >= Math.abs(oneYearDays)) {
+        while (MathAbs(days) >= MathAbs(oneYearDays)) {
           years += sign;
           days -= oneYearDays;
           ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
@@ -3452,7 +3460,7 @@ export const ES = ObjectAssign({}, ES2020, {
         // days multiplied by the number of nanoseconds in the last day of
         // the duration. This lets us do days-or-larger rounding using BigInt
         // math which reduces precision loss.
-        oneYearDays = Math.abs(oneYearDays);
+        oneYearDays = MathAbs(oneYearDays);
         const divisor = bigInt(oneYearDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
@@ -3476,16 +3484,16 @@ export const ES = ObjectAssign({}, ES2020, {
 
         // Months may be different lengths of days depending on the calendar,
         // convert days to months in a loop as described above under 'years'.
-        const sign = Math.sign(days);
+        const sign = MathSign(days);
         const oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
         let oneMonthDays;
         ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
-        while (Math.abs(days) >= Math.abs(oneMonthDays)) {
+        while (MathAbs(days) >= MathAbs(oneMonthDays)) {
           months += sign;
           days -= oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
         }
-        oneMonthDays = Math.abs(oneMonthDays);
+        oneMonthDays = MathAbs(oneMonthDays);
         const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
@@ -3498,16 +3506,16 @@ export const ES = ObjectAssign({}, ES2020, {
         if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
         // Weeks may be different lengths of days depending on the calendar,
         // convert days to weeks in a loop as described above under 'years'.
-        const sign = Math.sign(days);
+        const sign = MathSign(days);
         const oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
         let oneWeekDays;
         ({ relativeTo, days: oneWeekDays } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek));
-        while (Math.abs(days) >= Math.abs(oneWeekDays)) {
+        while (MathAbs(days) >= MathAbs(oneWeekDays)) {
           weeks += sign;
           days -= oneWeekDays;
           ({ relativeTo, days: oneWeekDays } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek));
         }
-        oneWeekDays = Math.abs(oneWeekDays);
+        oneWeekDays = MathAbs(oneWeekDays);
         const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
@@ -3606,12 +3614,12 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   AssertPositiveInteger: (num) => {
-    if (!Number.isFinite(num) || Math.abs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
+    if (!NumberIsFinite(num) || MathAbs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
     return num;
   },
   NonNegativeModulo: (x, y) => {
     let result = x % y;
-    if (Object.is(result, -0)) return 0;
+    if (ObjectIs(result, -0)) return 0;
     if (result < 0) result += y;
     return result;
   },
