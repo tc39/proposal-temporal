@@ -593,13 +593,13 @@ instant.toString({ timeZone: Temporal.TimeZone.from('UTC') });
 instant.toString({ timeZone: 'Asia/Seoul' });
 // => 2019-11-18T19:52:01.816+09:00
 
-instant.toString(undefined, { smallestUnit: 'minute' });
+instant.toString({ smallestUnit: 'minute' });
 // => 2019-11-18T10:52Z
-instant.toString(undefined, { fractionalSecondDigits: 0 });
+instant.toString({ fractionalSecondDigits: 0 });
 // => 2019-11-18T10:52:01Z
-instant.toString(undefined, { fractionalSecondDigits: 4 });
+instant.toString({ fractionalSecondDigits: 4 });
 // => 2019-11-18T10:52:01.8160Z
-instant.toString(undefined, { smallestUnit: 'second', roundingMode: 'nearest' });
+instant.toString({ smallestUnit: 'second', roundingMode: 'nearest' });
 // => 2019-11-18T10:52:02Z
 ```
 
