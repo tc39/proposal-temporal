@@ -2,19 +2,28 @@
 <meta charset="utf8">
 
 <emu-clause id="sec-temporal-legacy-date-objects">
-  <h1>Integration with the Date Object</h1>
+  <h1>Amendments to the ECMAScript® 2021 Language Specification</h1>
+
+  <emu-note type="editor">
+    <p>
+      This section lists amendments which must be made to <a href="https://tc39.es/ecma262/">ECMA-262, the ECMAScript® 2021 Language Specification</a>, other than the addition of the new sections specifying the Temporal object and everything related to it.
+      Text to be added is marked <ins>like this</ins>, and text to be deleted is marked <del>like this</del>.
+    </p>
+  </emu-note>
 
   <emu-clause id="sec-temporal-properties-of-the-legacy-date-prototype-object">
-    <h1>Properties of the Date Prototype Object</h1>
+    <h1><a href="https://tc39.es/ecma262/#sec-properties-of-the-date-prototype-object">Properties of the Date Prototype Object</a></h1>
 
-    <emu-clause id="sec-date.prototype.totemporalinstant">
-      <h1>Date.prototype.toTemporalInstant ( )</h1>
-      <p>The following steps are performed:</p>
-      <emu-alg>
-        1. Let _t_ be ? thisTimeValue(*this* value).
-        1. Let _ns_ be ? NumberToBigInt(_t_) × 10<sup>6</sup>.
-        1. Return ? CreateTemporalInstant(_ns_).
-      </emu-alg>
-    </emu-clause>
+    <ins class="block">
+      <emu-clause id="sec-date.prototype.totemporalinstant">
+        <h1>Date.prototype.toTemporalInstant ( )</h1>
+        <p>The following steps are performed:</p>
+        <emu-alg>
+          1. Let _t_ be ? thisTimeValue(*this* value).
+          1. Let _ns_ be ? NumberToBigInt(_t_) × 10<sup>6</sup>.
+          1. Return ? CreateTemporalInstant(_ns_).
+        </emu-alg>
+      </emu-clause>
+    </ins>
   </emu-clause>
 </emu-clause>
