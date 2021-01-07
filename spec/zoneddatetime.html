@@ -847,16 +847,16 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tolocalestring">
       <h1>Temporal.ZonedDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.ZonedDateTime.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+      </p>
+      <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
-        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
-        1. Return ? FormatDateTime(_dateFormat_, _zonedDateTime_).
+        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 

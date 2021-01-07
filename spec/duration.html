@@ -534,18 +534,16 @@
     <emu-clause id="sec-temporal.duration.prototype.tolocalestring">
       <h1>Temporal.Duration.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Duration.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+      </p>
+      <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ! TemporalDurationToString(_duration_).
-        1. If the implementation does not include the `Intl.DurationFormat` API, then
-          1. Return ! TemporalDurationToString(_duration_).
-        1. Let _durationFormat_ be ? Construct(%Intl.DurationFormat%, « _locales_, _options_ »).
-        1. Return ? FormatDuration(_durationFormat_, _duration_).
+        1. Return ! TemporalDurationToString(_duration_).
       </emu-alg>
     </emu-clause>
 

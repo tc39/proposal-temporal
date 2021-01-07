@@ -419,16 +419,16 @@
     <emu-clause id="sec-temporal.plainyearmonth.prototype.tolocalestring">
       <h1>Temporal.PlainYearMonth.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.PlainYearMonth.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+      </p>
+      <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalYearMonthToString(_yearMonth_, *"auto"*).
-        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
-        1. Return ? FormatDateTime(_dateFormat_, _yearMonth_).
+        1. Return ? TemporalYearMonthToString(_yearMonth_, *"auto"*).
       </emu-alg>
     </emu-clause>
 
