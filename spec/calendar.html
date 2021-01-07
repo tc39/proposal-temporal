@@ -584,8 +584,8 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToDayOfWeek(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
+        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+        1. Return 𝔽(! ToDayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -603,8 +603,8 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToDayOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
+        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+        1. Return 𝔽(! ToDayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -622,8 +622,8 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Set _date_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToWeekOfYear(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]], _dateOrDateTime_.[[ISODay]])).
+        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+        1. Return 𝔽(! ToWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
