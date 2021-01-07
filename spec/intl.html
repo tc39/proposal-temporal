@@ -810,6 +810,355 @@
     <h1><a href="https://tc39.es/ecma402/#locale-sensitive-functions">Locale Sensitive Functions of the ECMAScript Language Specification</a></h1>
 
     <ins class="block">
+      <emu-clause id="sup-temporal-calendar-abstract-ops">
+        <h1>Abstract Operations for Temporal.Calendar Objects</h1>
+
+        <emu-clause id="sup-temporal-isbuiltincalendar" aoid="IsBuiltinCalendar">
+          <h1>IsBuiltinCalendar ( _id_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-isbuiltincalendar"></emu-xref>.</p>
+          <emu-alg>
+            1. Let _builtinCalendars_ be a List of Unicode BCP 47 calendar identifiers identifying the calendars for which the implementation provides the functionality of the constructed `Temporal.Calendar` objects. The list must include *"iso8601"*. The ordering is irrelevant.
+            1. If _builtinCalendars_ contains _id_, return *true*.
+            1. Return *false*.
+          </emu-alg>
+        </emu-clause>
+      </emu-clause>
+
+      <emu-clause id="sup-properties-of-the-temporal-calendar-prototype-object">
+        <h1>Properties of the Temporal.Calendar Prototype Object</h1>
+
+        <emu-clause id="sup-temporal.calendar.prototype.datefromfields">
+          <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.datefromfields"></emu-xref>.</p>
+          <p>
+            The `dateFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _options_ to ? NormalizeOptionsObject(_options_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _result_ be ? ISODateFromFields(_fields_, _options_).
+            1. Else,
+              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _fields_, _options_, and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.yearmonthfromfields">
+          <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.yearmonthfromfields"></emu-xref>.</p>
+          <p>
+            The `yearMonthFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _options_ to ? NormalizeOptionsObject(_options_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
+            1. Else,
+              1. Let _result_ be a Record with [[Year]], [[Month]], and [[ReferenceISODay]] fields, that is the result of implementation-defined processing of _fields_, _options_, and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.monthdayfromfields">
+          <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.monthdayfromfields"></emu-xref>.</p>
+          <p>
+            The `monthDayFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _options_ to ? NormalizeOptionsObject(_options_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _options_).
+            1. Else,
+              1. Let _result_ be a Record with [[Month]], [[Day]], and [[ReferenceISOYear]] fields, that is the result of implementation-defined processing of _fields_, _options_, and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.dateadd">
+          <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_, _options_, _constructor_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.dateadd"></emu-xref>.</p>
+          <p>
+            The `dateAdd` method takes four arguments, _date_, _duration_, _options_, and _constructor_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _date_ to ? ToTemporalDate(_date_).
+            1. Set _duration_ to ? ToTemporalDuration(_duration_).
+            1. Set _options_ to ? NormalizeOptionsObject(_options_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+              1. Let _result_ be ? AddDate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
+            1. Else,
+              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _date_, _duration_, _options_, and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.dateuntil">
+          <h1>Temporal.Calendar.prototype.dateUntil ( _one_, _two_, _options_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.dateuntil"></emu-xref>.</p>
+          <p>
+            The `dateUntil` method takes three arguments, _one_, _two_, and _options_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _one_ to ? ToTemporalDate(_one_).
+            1. Set _two_ to ? ToTemporalDate(_two_).
+            1. Set _options_ to ? NormalizeOptionsObject(_options_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, *"days"*, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* »).
+              1. Let _result_ be ? DifferenceDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+            1. Else,
+              1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _options_, and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.year">
+          <h1>Temporal.Calendar.prototype.year ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.year"></emu-xref>.</p>
+          <p>
+            The `year` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _year_ be ? ISOYear(_dateOrDateTime_).
+            1. Else,
+              1. Let _year_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_year_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.month">
+          <h1>Temporal.Calendar.prototype.month ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.month"></emu-xref>.</p>
+          <p>
+            The `month` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _month_ be ? ISOMonth(_dateOrDateTime_).
+            1. Else,
+              1. Let _month_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_month_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.day">
+          <h1>Temporal.Calendar.prototype.day ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.day"></emu-xref>.</p>
+          <p>
+            The `day` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _day_ be ? ISODay(_dateOrDateTime_).
+            1. Else,
+              1. Let _day_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_day_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.dayofweek">
+          <h1>Temporal.Calendar.prototype.dayOfWeek ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.dayofweek"></emu-xref>.</p>
+          <p>
+            The `dayOfWeek` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _dayOfWeek_ be ! ToDayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+            1. Else,
+              1. Let _dayOfWeek_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_dayOfWeek_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.dayofyear">
+          <h1>Temporal.Calendar.prototype.dayOfYear ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.dayofyear"></emu-xref>.</p>
+          <p>
+            The `dayOfYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _dayOfYear_ be ! ToDayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+            1. Else,
+              1. Let _dayOfYear_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_dayOfYear_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.weekofyear">
+          <h1>Temporal.Calendar.prototype.weekOfYear ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.weekofyear"></emu-xref>.</p>
+          <p>
+            The `weekOfYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _weekOfYear_ be ! ToWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+            1. Else,
+              1. Let _weekOfYear_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_weekOfYear_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.daysinweek">
+          <h1>Temporal.Calendar.prototype.daysInWeek ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.daysinweek"></emu-xref>.</p>
+          <p>
+            The `daysInWeek` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _daysInWeek_ be 7.
+            1. Else,
+              1. Let _daysInWeek_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_daysInWeek_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.daysinmonth">
+          <h1>Temporal.Calendar.prototype.daysInMonth ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.daysinmonth"></emu-xref>.</p>
+          <p>
+            The `daysInMonth` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. If _dateOrDateTime_ does not have [[ISOYear]] and [[ISOMonth]] internal slots, then
+                1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
+              1. Let _daysInMonth_ be ! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]]).
+            1. Else,
+              1. Let _daysInMonth_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_daysInMonth_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.daysinyear">
+          <h1>Temporal.Calendar.prototype.daysInYear ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.daysinyear"></emu-xref>.</p>
+          <p>
+            The `daysInYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _year_ be ? ISOYear(_dateOrDateTime_).
+              1. Let _daysInYear_ be ! DaysInYear(_year_).
+            1. Else,
+              1. Let _daysInYear_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_daysInYear_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.monthsinyear">
+          <h1>Temporal.Calendar.prototype.monthsInYear ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.monthsinyear"></emu-xref>.</p>
+          <p>
+            The `monthsInYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _date_ be ? ToTemporalDateTime(_dateOrDateTime_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _monthsInYear_ be 12.
+            1. Else,
+              1. Let _monthsInYear_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_monthsInYear_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.inleapyear">
+          <h1>Temporal.Calendar.prototype.inLeapYear ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.inleapyear"></emu-xref>.</p>
+          <p>
+            The `inLeapYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _year_ be ? ISOYear(_dateOrDateTime_).
+              1. Let _inLeapYear_ be ! IsLeapYear(_year_).
+            1. Else,
+              1. Let _inLeapYear_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return _inLeapYear_.
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.fields">
+          <h1>Temporal.Calendar.prototype.fields ( _fields_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.fields"></emu-xref>.</p>
+          <p>
+            The `fields` method takes one argument _fields_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Set _fields_ to ? ToObject(_fields_).
+            1. Let _fieldNames_ be ? CreateListFromArrayLike(_fields_, « String »).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _result_ be _fieldNames_.
+            1. Else,
+              1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and the value of _calendar_.[[Identifier]].
+            1. Return ? CreateArrayFromList(_result_).
+          </emu-alg>
+          <p>
+            This function is the <dfn>%Temporal.Calendar.prototype.fields%</dfn> intrinsic object.
+          </p>
+        </emu-clause>
+      </emu-clause>
+
       <emu-clause id="sup-properties-of-the-temporal-duration-prototype-object">
         <h1>Properties of the Temporal.Duration Prototype Object</h1>
         <emu-clause id="sup-temporal.duration.prototype.tolocalestring">
