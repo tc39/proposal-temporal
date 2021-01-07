@@ -624,16 +624,16 @@
     <emu-clause id="sec-temporal.plaindatetime.prototype.tolocalestring">
       <h1>Temporal.PlainDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.PlainDateTime.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+      </p>
+      <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], *"auto"*, *"auto"*).
-        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
-        1. Return ? FormatDateTime(_dateFormat_, _dateTime_).
+        1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
