@@ -392,7 +392,7 @@ dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
 
 **Parameters:**
 
-- `plainTime` (`Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `datetime`.
+- `plainTime` (optional `Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `datetime`.
   If omitted, the clock time of the result will be `00:00:00`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, combined with the time represented by `plainTime`.

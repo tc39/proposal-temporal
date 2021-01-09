@@ -702,7 +702,7 @@ zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31-06:00[America/Chica
 
 **Parameters:**
 
-- `plainTime` (`Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `zonedDateTime`.
+- `plainTime` (optional `Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `zonedDateTime`.
   If omitted, the clock time of the result will be `00:00:00`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which replaces the clock time of `zonedDateTime` with the clock time represented by `plainTime`.
