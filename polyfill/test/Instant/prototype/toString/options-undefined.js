@@ -9,7 +9,7 @@ includes: [compareArray.js]
 const actual = [];
 const expected = [];
 
-const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456Z");
+const instant = Temporal.Instant.from("1975-02-02T14:25:36.12345Z");
 
 Object.defineProperty(Temporal.TimeZone, "from", {
   get() {
@@ -21,5 +21,16 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-assert.sameValue(instant.toString(), "1975-02-02T14:25:36.123456Z");
+assert.sameValue(
+  instant.toString(),
+  "1975-02-02T14:25:36.12345Z",
+  "default time zone is none, precision is auto, and rounding is trunc"
+);
+assert.compareArray(actual, expected);
+
+assert.sameValue(
+  instant.toString(undefined),
+  "1975-02-02T14:25:36.12345Z",
+  "default time zone is none, precision is auto, and rounding is trunc"
+);
 assert.compareArray(actual, expected);

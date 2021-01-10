@@ -1,0 +1,17 @@
+// Copyright (C) 2021 Igalia, S.L. All rights reserved.
+// This code is governed by the BSD license found in the LICENSE file.
+
+/*---
+esid: sec-temporal.zoneddatetime.prototype.tolocalestring
+features: [BigInt]
+---*/
+
+const datetime = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC");
+const defaultFormatter = new Intl.DateTimeFormat([], Object.create(null));
+const expected = defaultFormatter.format(datetime);
+
+const actualExplicit = datetime.toLocaleString(undefined);
+assert.sameValue(actualExplicit, expected, "default locale is determined by Intl.DateTimeFormat");
+
+const actualImplicit = datetime.toLocaleString();
+assert.sameValue(actualImplicit, expected, "default locale is determined by Intl.DateTimeFormat");
