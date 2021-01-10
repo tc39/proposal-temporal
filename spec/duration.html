@@ -951,7 +951,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-unbalancedurationrelative" aoid="UnbalanceDurationRelative">
-      <h1>UnbalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_, _relativeTo_ )</h1>
+      <h1>UnbalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <p>The abstract operation UnbalanceDurationRelative converts the calendar units of a Temporal.Duration into a form where no unit is larger than _largestUnit_.</p>
       <emu-alg>
         1. If _largestUnit_ is *"years"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
@@ -1117,7 +1117,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-addduration" aoid="AddDuration">
-      <h1>AddDuration ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _relativeTo_ )</h1>
+      <h1>AddDuration ( _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ [ , _relativeTo_ ] )</h1>
       <p>
         The abstract operation AddDuration adds the components of a second duration to those of a first duration, and balances the duration relative to the given date _relativeTo_ to ensure that no mixed signs remain in the result.
       </p>
@@ -1399,7 +1399,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-adjustroundeddurationdays" aoid="AdjustRoundedDurationDays">
-      <h1>AdjustRoundedDurationDays ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _increment_, _unit_, _roundingMode_, _relativeTo_ )</h1>
+      <h1>AdjustRoundedDurationDays ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _increment_, _unit_, _roundingMode_ [ , _relativeTo_ ] )</h1>
       <p>
         The abstract operation AdjustRoundedDurationDays adjusts, if necessary, a duration that was rounded to a unit of hours or lower relative to a Temporal.ZonedDateTime.
         On a calendar day that is not 24 hours in length due to time zone offset changes, it is possible for a duration's time units to round up to exceed the day's length.
