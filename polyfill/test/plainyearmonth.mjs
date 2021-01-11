@@ -706,6 +706,20 @@ describe('YearMonth', () => {
       );
     });
   });
+  describe('YearMonth.toPlainDate()', () => {
+    const ym = PlainYearMonth.from('2002-01');
+    it("doesn't take a primitive argument", () => {
+      [22, '22', false, 22n, Symbol('22'), null].forEach((bad) => {
+        throws(() => ym.toPlainDate(bad), TypeError);
+      });
+    });
+    it('takes an object argument with day property', () => {
+      equal(`${ym.toPlainDate({ day: 22 })}`, '2002-01-22');
+    });
+    it('needs at least a day property on the object in the ISO calendar', () => {
+      throws(() => ym.toPlainDate({ something: 'nothing' }), TypeError);
+    });
+  });
   describe('YearMonth.toString()', () => {
     const ym1 = PlainYearMonth.from('1976-11');
     const ym2 = PlainYearMonth.from({ year: 1976, month: 11, calendar: 'gregory' });
