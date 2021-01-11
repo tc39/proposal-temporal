@@ -333,8 +333,8 @@
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].</ins>
-            1. <ins>Let _calendarOverride_ be ? GetISO8601Calendar().</ins>
-            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _x_.[[ISOHour]], _x_.[[ISOMinute]], _x_.[[ISOSecond]], _x_.[[ISOMilliSecond]], _x_.[[ISOMicroSecond]], _x_.[[ISONanoSecond]], _calendarOverride_).</ins>
+            1. <ins>Let _isoCalendar_ be ? GetISO8601Calendar().</ins>
+            1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _x_.[[ISOHour]], _x_.[[ISOMinute]], _x_.[[ISOSecond]], _x_.[[ISOMillisecond]], _x_.[[ISOMicrosecond]], _x_.[[ISONanosecond]], _isoCalendar_).</ins>
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalDateTime]] or an [[InitializedTemporalInstant]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
