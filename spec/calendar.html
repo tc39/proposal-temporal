@@ -98,6 +98,31 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-tooptionaltemporalcalendar" aoid="ToOptionalTemporalCalendar">
+      <h1>ToOptionalTemporalCalendar ( _temporalCalendarLike_ )</h1>
+      <p>
+        The abstract operation ToOptionalTemporalCalendar converts a value into an Object suitable for use as a calendar.
+        If the value is *undefined*, the ISO 8601 calendar is returned.
+      </p>
+      <emu-alg>
+        1. If _temporalCalendarLike_ is *undefined*, then
+          1. Return ? GetISO8601Calendar().
+        1. Return ? ToTemporalCalendar(_temporalCalendarLike_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-getoptionaltemporalcalendar" aoid="GetOptionalTemporalCalendar">
+      <h1>GetOptionalTemporalCalendar ( _item_ )</h1>
+      <p>
+        The abstract operation GetOptionalTemporalCalendar looks for a `calendar` property on the given _item_ and converts its value to an Object suitable for use as a calendar.
+        If no such property is present, the ISO 8601 calendar is returned.
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be ? Get(_item_, *"calendar"*).
+        1. Return ? ToOptionalTemporalCalendar(_calendar_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
       <h1>CalendarFrom ( _identifier_ )</h1>
       <emu-alg>
