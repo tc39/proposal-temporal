@@ -960,7 +960,7 @@
         1. Else,
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
-          1. If ! ValidateDateTime(__.[[Year]], __.[[Month]], __.[[Day]], __.[[Hour]], __.[[Minute]], __.[[Second]], __.[[Millisecond]], __.[[Microsecond]], __.[[Nanosecond]]) is *false*, then
+          1. If ! ValidateDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, then
             1. Throw a *RangeError* exception.
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is *undefined*, set _calendar_ to ? GetISO8601Calendar().
