@@ -508,14 +508,19 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.tostring">
-      <h1>Temporal.Duration.prototype.toString ( )</h1>
+      <h1>Temporal.Duration.prototype.toString ( [ _options_ ] )</h1>
       <p>
+        The `toString` method takes one argument _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! TemporalDurationToString(_duration_).
+        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Let _precision_ be ? ToDurationSecondsStringPrecision(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. Let _result_ be ? RoundDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Return ! TemporalDurationToString(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -527,7 +532,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! TemporalDurationToString(_duration_).
+        1. Return ! TemporalDurationToString(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -543,7 +548,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! TemporalDurationToString(_duration_).
+        1. Return ! TemporalDurationToString(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -1475,18 +1480,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaldurationtostring" aoid="TemporalDurationToString">
-      <h1>TemporalDurationToString ( _duration_ )</h1>
+      <h1>TemporalDurationToString ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _precision_ )</h1>
       <emu-alg>
-        1. Let _years_ be _duration_.[[Years]].
-        1. Let _months_ be _duration_.[[Months]].
-        1. Let _weeks_ be _duration_.[[Weeks]].
-        1. Let _days_ be _duration_.[[Days]].
-        1. Let _hours_ _duration_.[[Hours]].
-        1. Let _minutes_ _duration_.[[Minutes]].
-        1. Let _seconds_ be the mathematical value of _duration_.[[Seconds]].
-        1. Let _milliseconds_ be the mathematical value of _duration_.[[Milliseconds]].
-        1. Let _microseconds_ be the mathematical value of _duration_.[[Microseconds]].
-        1. Let _nanoseconds_ be the mathematical value of _duration_.[[Nanoseconds]].
+        1. Set _seconds_ to the mathematical value of _seconds_.
+        1. Set _milliseconds_ to the mathematical value of _milliseconds_.
+        1. Set _microseconds_ to the mathematical value of _microseconds_.
+        1. Set _nanoseconds_ to the mathematical value of _nanoseconds_.
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _microseconds_ to _microseconds_ + the integral part of _nanoseconds_ / 1000.
         1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
@@ -1511,17 +1510,19 @@
         1. If _minutes_ is not 0, then
           1. Set _timePart_ to the string concatenation of _timePart_, abs(_minutes_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
         1. If any of _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are not 0, then
-          1. Let _nanosecondsPart_, _microsecondsPart_, and _millisecondsPart_ be *""*.
-          1. If _nanoseconds_ is not 0, then
-            1. Set _nanosecondsPart_ to _nanoseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-            1. Set _microsecondsPart_ and _millisecondsPart_ to *"000"*.
-          1. If _microseconds_ is not 0, then
-            1. Set _microsecondsPart_ be _microseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-            1. Set _millisecondsPart_ to *"000"*.
-          1. If _milliseconds_ is not 0, then
-            1. Set _millisecondsPart_ to _milliseconds_ formatted as a three-digit decimal number, padded to the left with zeroes if necessary.
-          1. Let _decimalPart_ be the string-concatenation of _millisecondsPart_, _microsecondsPart_, and _nanosecondsPart_.
-          1. Let _secondsPart_ be _seconds_ formatted as a decimal number.
+          1. Let _fraction_ be abs(_milliseconds_) × 10<sup>6</sup> + abs(_microseconds_) × 10<sup>3</sup> + abs(_nanoseconds_).
+          1. Let _decimalPart_ be *""*.
+          1. If _precision_ is *"auto"*, then
+            1. If _fraction_ ≠ 0, then
+              1. Let _decimalPart_ be _fraction_ formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
+              1. Set _fractionString_ to the longest possible substring of _decimalPart_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
+          1. Else if _precision_ ≠ 0, then
+            1. Let _decimalPart_ be _fraction_ formatted as a decimal number.
+            1. Let _len_ be the length of _fractionString_.
+            1. If _len_ &gt; _precision_, then
+              1. Set _decimalPart_ to the substring of _decimalPart_ from 0 to min(_len_, _precision_).
+            1. Pad _decimalPart_ to the left with zeroes up to the length _precision_, if necessary.
+          1. Let _secondsPart_ be abs(_seconds_) formatted as a decimal number.
           1. If _decimalPart_ is not *""*, then
             1. Set _secondsPart_ to the string-concatenation of _secondsPart_, the code unit 0x002E (FULL STOP), and _decimalPart_.
           1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).

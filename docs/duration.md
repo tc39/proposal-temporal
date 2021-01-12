@@ -583,7 +583,21 @@ Object.assign({}, d).days; // => undefined
 Object.assign({}, d.getFields()).days; // => 3
 ```
 
-### duration.**toString**() : string
+### duration.**toString**(_options_?: object) : string
+
+**Parameters:**
+
+- `options` (optional object): An object with properties representing options for the operation.
+  The following options are recognized:
+  - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
+    Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+    The default is `'auto'`.
+  - `smallestUnit` (string): The smallest unit of time to include in the output string.
+    This option overrides `fractionalSecondDigits` if both are given.
+    Valid values are `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+  - `roundingMode` (string): How to handle the remainder.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    The default is `'trunc'`.
 
 **Returns:** the duration as an ISO 8601 string.
 
@@ -591,6 +605,12 @@ This method overrides `Object.prototype.toString()` and provides the ISO 8601 de
 
 > **NOTE**: If any of `duration.milliseconds`, `duration.microseconds`, or `duration.nanoseconds` are over 999, then deserializing from the result of `duration.toString()` will yield an equal but different object.
 > See [Duration balancing](./balancing.md#serialization) for more information.
+
+The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
+If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
+
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.Duration.round()`.
+Note that rounding may change the value of other units as well.
 
 Usage examples:
 
@@ -608,6 +628,13 @@ nobal = Temporal.Duration.from({ milliseconds: 3500 });
 console.log(`${nobal}`, nobal.seconds, nobal.milliseconds); // => PT3.500S 0 3500
 bal = Temporal.Duration.from({ milliseconds: 3500 }, { overflow: 'balance' });
 console.log(`${bal}`, bal.seconds, bal.milliseconds); // => PT3.500S 3 500
+
+d = Temporal.Duration.from('PT59.999999999S');
+d.toString({ smallestUnit: 'seconds' });   // => PT59S
+d.toString({ fractionalSecondDigits: 0 }); // => PT59S
+d.toString({ fractionalSecondDigits: 4 }); // => PT59.9999S
+d.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+// => PT60.00000000S
 ```
 
 ### duration.**toJSON**() : string
