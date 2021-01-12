@@ -8417,6 +8417,7 @@
       key: "dateFromFields",
       value: function dateFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
@@ -8431,6 +8432,7 @@
       key: "yearMonthFromFields",
       value: function yearMonthFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
@@ -8446,6 +8448,7 @@
       key: "monthDayFromFields",
       value: function monthDayFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
