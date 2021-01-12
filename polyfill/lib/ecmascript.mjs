@@ -677,6 +677,51 @@ export const ES = ObjectAssign({}, ES2020, {
         return { precision, unit: 'nanosecond', increment: 10 ** (9 - precision) };
     }
   },
+  ToDurationSecondsStringPrecision: (options) => {
+    const plural = new Map([
+      ['second', 'seconds'],
+      ['millisecond', 'milliseconds'],
+      ['microsecond', 'microseconds'],
+      ['nanosecond', 'nanoseconds']
+    ]);
+    const allowed = new Set(['seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
+    let smallestUnit = ES.GetOption(options, 'smallestUnit', [...allowed, ...plural.keys()], undefined);
+    if (plural.has(smallestUnit)) smallestUnit = plural.get(smallestUnit);
+    switch (smallestUnit) {
+      case 'seconds':
+        return { precision: 0, unit: 'seconds', increment: 1 };
+      case 'milliseconds':
+        return { precision: 3, unit: 'milliseconds', increment: 1 };
+      case 'microseconds':
+        return { precision: 6, unit: 'microseconds', increment: 1 };
+      case 'nanoseconds':
+        return { precision: 9, unit: 'nanoseconds', increment: 1 };
+      default: // fall through if option not given
+    }
+    let digits = options.fractionalSecondDigits;
+    if (digits === undefined || digits === 'auto') return { precision: 'auto', unit: 'nanoseconds', increment: 1 };
+    digits = ES.ToNumber(digits);
+    if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
+      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digits}`);
+    }
+    const precision = MathFloor(digits);
+    switch (precision) {
+      case 0:
+        return { precision, unit: 'seconds', increment: 1 };
+      case 1:
+      case 2:
+      case 3:
+        return { precision, unit: 'milliseconds', increment: 10 ** (3 - precision) };
+      case 4:
+      case 5:
+      case 6:
+        return { precision, unit: 'microseconds', increment: 10 ** (6 - precision) };
+      case 7:
+      case 8:
+      case 9:
+        return { precision, unit: 'nanoseconds', increment: 10 ** (9 - precision) };
+    }
+  },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const plural = new Map(
       [
@@ -1606,7 +1651,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
-  TemporalDurationToString: (duration) => {
+  TemporalDurationToString: (duration, precision, options = undefined) => {
     function formatNumber(num) {
       if (num <= NumberMaxSafeInteger) return num.toString(10);
       return bigInt(num).toString();
@@ -1624,6 +1669,25 @@ export const ES = ObjectAssign({}, ES2020, {
     let ns = GetSlot(duration, NANOSECONDS);
     const sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
 
+    if (options) {
+      const { unit, increment, roundingMode } = options;
+      ({ seconds, milliseconds: ms, microseconds: µs, nanoseconds: ns } = ES.RoundDuration(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        seconds,
+        ms,
+        µs,
+        ns,
+        increment,
+        unit,
+        roundingMode
+      ));
+    }
+
     const dateParts = [];
     if (years) dateParts.push(`${formatNumber(MathAbs(years))}Y`);
     if (months) dateParts.push(`${formatNumber(MathAbs(months))}M`);
@@ -1639,13 +1703,19 @@ export const ES = ObjectAssign({}, ES2020, {
     ({ quotient: total, remainder: ns } = total.divmod(1000));
     ({ quotient: total, remainder: µs } = total.divmod(1000));
     ({ quotient: seconds, remainder: ms } = total.divmod(1000));
-    ms = ms.toJSNumber();
-    µs = µs.toJSNumber();
-    ns = ns.toJSNumber();
-    if (ns) secondParts.unshift(`${MathAbs(ns)}`.padStart(3, '0'));
-    if (µs || secondParts.length) secondParts.unshift(`${MathAbs(µs)}`.padStart(3, '0'));
-    if (ms || secondParts.length) secondParts.unshift(`${MathAbs(ms)}`.padStart(3, '0'));
-    if (secondParts.length) secondParts.unshift('.');
+    let fraction = MathAbs(ms.toJSNumber()) * 1e6 + MathAbs(µs.toJSNumber()) * 1e3 + MathAbs(ns.toJSNumber());
+    let decimalPart;
+    if (precision === 'auto') {
+      if (fraction !== 0) {
+        decimalPart = `${fraction}`.padStart(9, '0');
+        while (decimalPart[decimalPart.length - 1] === '0') {
+          decimalPart = decimalPart.slice(0, -1);
+        }
+      }
+    } else if (precision !== 0) {
+      decimalPart = `${fraction}`.slice(0, precision).padStart(precision, '0');
+    }
+    if (decimalPart) secondParts.unshift('.', decimalPart);
     if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
     if (secondParts.length) timeParts.push(`${secondParts.join('')}S`);
     if (timeParts.length) timeParts.unshift('T');

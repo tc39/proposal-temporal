@@ -678,7 +678,7 @@ describe('Instant', () => {
       ['minutes', 'PT376435H24M', '-PT376435H23M'],
       ['seconds', 'PT376435H23M9S', '-PT376435H23M8S'],
       ['milliseconds', 'PT376435H23M8.149S', '-PT376435H23M8.148S'],
-      ['microseconds', 'PT376435H23M8.148530S', '-PT376435H23M8.148529S'],
+      ['microseconds', 'PT376435H23M8.14853S', '-PT376435H23M8.148529S'],
       ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
     ];
     incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
@@ -693,7 +693,7 @@ describe('Instant', () => {
       ['minutes', 'PT376435H23M', '-PT376435H24M'],
       ['seconds', 'PT376435H23M8S', '-PT376435H23M9S'],
       ['milliseconds', 'PT376435H23M8.148S', '-PT376435H23M8.149S'],
-      ['microseconds', 'PT376435H23M8.148529S', '-PT376435H23M8.148530S'],
+      ['microseconds', 'PT376435H23M8.148529S', '-PT376435H23M8.14853S'],
       ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
     ];
     incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
@@ -763,7 +763,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT376435H23M8.150S'
+        'PT376435H23M8.15S'
       );
     });
     it('rounds to an increment of microseconds', () => {
@@ -774,7 +774,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT376435H23M8.148530S'
+        'PT376435H23M8.14853S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
@@ -785,7 +785,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT376435H23M8.148529310S'
+        'PT376435H23M8.14852931S'
       );
     });
     it('valid hour increments divide into 24', () => {
@@ -997,7 +997,7 @@ describe('Instant', () => {
       ['minutes', 'PT440609H57M', '-PT440609H56M'],
       ['seconds', 'PT440609H56M4S', '-PT440609H56M3S'],
       ['milliseconds', 'PT440609H56M3.149S', '-PT440609H56M3.148S'],
-      ['microseconds', 'PT440609H56M3.148530S', '-PT440609H56M3.148529S'],
+      ['microseconds', 'PT440609H56M3.14853S', '-PT440609H56M3.148529S'],
       ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
     ];
     incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
@@ -1012,7 +1012,7 @@ describe('Instant', () => {
       ['minutes', 'PT440609H56M', '-PT440609H57M'],
       ['seconds', 'PT440609H56M3S', '-PT440609H56M4S'],
       ['milliseconds', 'PT440609H56M3.148S', '-PT440609H56M3.149S'],
-      ['microseconds', 'PT440609H56M3.148529S', '-PT440609H56M3.148530S'],
+      ['microseconds', 'PT440609H56M3.148529S', '-PT440609H56M3.14853S'],
       ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
     ];
     incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
@@ -1082,7 +1082,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT440609H56M3.150S'
+        'PT440609H56M3.15S'
       );
     });
     it('rounds to an increment of microseconds', () => {
@@ -1093,7 +1093,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT440609H56M3.148530S'
+        'PT440609H56M3.14853S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
@@ -1104,7 +1104,7 @@ describe('Instant', () => {
           roundingIncrement: 10,
           roundingMode: 'nearest'
         })}`,
-        'PT440609H56M3.148529310S'
+        'PT440609H56M3.14852931S'
       );
     });
     it('valid hour increments divide into 24', () => {

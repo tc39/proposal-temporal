@@ -555,9 +555,12 @@ export class Duration {
     if (!fields) throw new TypeError('invalid receiver');
     return fields;
   }
-  toString() {
+  toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return ES.TemporalDurationToString(this);
+    options = ES.NormalizeOptionsObject(options);
+    const { precision, unit, increment } = ES.ToDurationSecondsStringPrecision(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

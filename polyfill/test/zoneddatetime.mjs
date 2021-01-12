@@ -1404,19 +1404,19 @@ describe('ZonedDateTime', () => {
     it('rounds to an increment of milliseconds', () => {
       equal(
         `${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.860S'
+        'PT23356H17M4.86S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
         `${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.864200S'
+        'PT23356H17M4.8642S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
         `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.864197530S'
+        'PT23356H17M4.86419753S'
       );
     });
     it('valid hour increments divide into 24', () => {
@@ -1735,19 +1735,19 @@ describe('ZonedDateTime', () => {
     it('rounds to an increment of milliseconds', () => {
       equal(
         `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.860S'
+        'PT23356H17M4.86S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
         `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.864200S'
+        'PT23356H17M4.8642S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
         `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
-        'PT23356H17M4.864197530S'
+        'PT23356H17M4.86419753S'
       );
     });
     it('valid hour increments divide into 24', () => {

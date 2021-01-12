@@ -363,6 +363,79 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-todurationsecondsstringprecision" aoid="ToDurationSecondsStringPrecision">
+    <h1>ToDurationSecondsStringPrecision ( _normalizedOptions_ )</h1>
+    <p>
+      The abstract operation ToDurationSecondsStringPrecision combines the values of the options `smallestUnit` and `fractionalSecondDigits` to yield a precision for printing seconds to a string, and a rounding unit and increment.
+      The precision may be an integer 0 through 9 signifying a number of digits after the decimal point in the seconds, or the string *"auto"* signifying to drop trailing zeroes after the decimal point.
+    </p>
+    <p>
+      This operation differs from ToSecondsStringPrecision in that it is intended to be used with `Temporal.Duration`.
+      It returns plural unit strings and does not support minutes.
+    </p>
+    <emu-alg>
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* », *undefined*).
+      1. If the value of _smallestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
+        1. Set _smallestUnit_ to the corresponding Plural value of the same row.
+      1. If _smallestUnit_ is *"seconds"*, then
+        1. Return the new Record {
+            [[Precision]]: 0,
+            [[Unit]]: *"seconds"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"milliseconds"*, then
+        1. Return the new Record {
+            [[Precision]]: 3,
+            [[Unit]]: *"milliseconds"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"microseconds"*, then
+        1. Return the new Record {
+            [[Precision]]: 6,
+            [[Unit]]: *"microseconds"*,
+            [[Increment]]: 1
+          }.
+      1. If _smallestUnit_ is *"nanoseconds"*, then
+        1. Return the new Record {
+            [[Precision]]: 9,
+            [[Unit]]: *"nanoseconds"*,
+            [[Increment]]: 1
+          }.
+      1. Assert: _smallestUnit_ is *undefined*.
+      1. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
+      1. If _digits_ is *"auto"*, then
+        1. Return the new Record {
+            [[Precision]]: *"auto"*,
+            [[Unit]]: *"nanoseconds"*,
+            [[Increment]]: 1
+          }.
+      1. If _digits_ is 0, then
+        1. Return the new Record {
+            [[Precision]]: 0,
+            [[Unit]]: *"seconds"*,
+            [[Increment]]: 1
+          }.
+      1. If _digits_ is 1, 2, or 3, then
+        1. Return the new Record {
+            [[Precision]]: _digits_,
+            [[Unit]]: *"milliseconds"*,
+            [[Increment]]: 10<sup>3 − _digits_</sup>
+          }.
+      1. If _digits_ is 4, 5, or 6, then
+        1. Return the new Record {
+            [[Precision]]: _digits_,
+            [[Unit]]: *"microseconds"*,
+            [[Increment]]: 10<sup>6 − _digits_</sup>
+          }.
+      1. Assert: _digits_ is 7, 8, or 9.
+      1. Return the new Record {
+          [[Precision]]: _digits_,
+          [[Unit]]: *"nanoseconds"*,
+          [[Increment]]: 10<sup>9 − _digits_</sup>
+        }.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
     <h1>ToLargestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _defaultUnit_ )</h1>
     <emu-alg>

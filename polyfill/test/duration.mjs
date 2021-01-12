@@ -133,21 +133,21 @@ describe('Duration', () => {
     it('Duration.from("P1D") == P1D', () => equal(`${Duration.from('P1D')}`, 'P1D'));
     it('lowercase variant', () => equal(`${Duration.from('p1y1m1dt1h1m1s')}`, 'P1Y1M1DT1H1M1S'));
     it('upto nine decimal places work', () => {
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.100S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12S')}`, 'P1Y1M1W1DT1H1M1.120S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1S')}`, 'P1Y1M1W1DT1H1M1.1S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12S')}`, 'P1Y1M1W1DT1H1M1.12S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123S')}`, 'P1Y1M1W1DT1H1M1.123S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234S')}`, 'P1Y1M1W1DT1H1M1.123400S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345S')}`, 'P1Y1M1W1DT1H1M1.123450S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234S')}`, 'P1Y1M1W1DT1H1M1.1234S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345S')}`, 'P1Y1M1W1DT1H1M1.12345S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456S')}`, 'P1Y1M1W1DT1H1M1.123456S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234567S')}`, 'P1Y1M1W1DT1H1M1.123456700S');
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345678S')}`, 'P1Y1M1W1DT1H1M1.123456780S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.1234567S')}`, 'P1Y1M1W1DT1H1M1.1234567S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1.12345678S')}`, 'P1Y1M1W1DT1H1M1.12345678S');
       equal(`${Duration.from('P1Y1M1W1DT1H1M1.123456789S')}`, 'P1Y1M1W1DT1H1M1.123456789S');
     });
     it('above nine decimal places throw', () => {
       throws(() => Duration.from('P1Y1M1W1DT1H1M1.123456789123S'), RangeError);
     });
     it('variant decimal separator', () => {
-      equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.120S');
+      equal(`${Duration.from('P1Y1M1W1DT1H1M1,12S')}`, 'P1Y1M1W1DT1H1M1.12S');
     });
     it('decimal places only allowed in time units', () => {
       [
@@ -224,21 +224,21 @@ describe('Duration', () => {
   });
   describe('toString()', () => {
     it('excessive sub-second units balance themselves when serializing', () => {
-      equal(`${Duration.from({ milliseconds: 3500 })}`, 'PT3.500S');
-      equal(`${Duration.from({ microseconds: 3500 })}`, 'PT0.003500S');
-      equal(`${Duration.from({ nanoseconds: 3500 })}`, 'PT0.000003500S');
+      equal(`${Duration.from({ milliseconds: 3500 })}`, 'PT3.5S');
+      equal(`${Duration.from({ microseconds: 3500 })}`, 'PT0.0035S');
+      equal(`${Duration.from({ nanoseconds: 3500 })}`, 'PT0.0000035S');
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 1111, 1111, 1111)}`, 'PT1.112112111S');
-      equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.500S');
+      equal(`${Duration.from({ seconds: 120, milliseconds: 3500 })}`, 'PT123.5S');
     });
     it('negative sub-second units are balanced correctly', () => {
-      equal(`${Duration.from({ milliseconds: -250 })}`, '-PT0.250S');
-      equal(`${Duration.from({ milliseconds: -3500 })}`, '-PT3.500S');
-      equal(`${Duration.from({ microseconds: -250 })}`, '-PT0.000250S');
-      equal(`${Duration.from({ microseconds: -3500 })}`, '-PT0.003500S');
-      equal(`${Duration.from({ nanoseconds: -250 })}`, '-PT0.000000250S');
-      equal(`${Duration.from({ nanoseconds: -3500 })}`, '-PT0.000003500S');
+      equal(`${Duration.from({ milliseconds: -250 })}`, '-PT0.25S');
+      equal(`${Duration.from({ milliseconds: -3500 })}`, '-PT3.5S');
+      equal(`${Duration.from({ microseconds: -250 })}`, '-PT0.00025S');
+      equal(`${Duration.from({ microseconds: -3500 })}`, '-PT0.0035S');
+      equal(`${Duration.from({ nanoseconds: -250 })}`, '-PT0.00000025S');
+      equal(`${Duration.from({ nanoseconds: -3500 })}`, '-PT0.0000035S');
       equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, -1111, -1111, -1111)}`, '-PT1.112112111S');
-      equal(`${Duration.from({ seconds: -120, milliseconds: -3500 })}`, '-PT123.500S');
+      equal(`${Duration.from({ seconds: -120, milliseconds: -3500 })}`, '-PT123.5S');
     });
     it('emits a negative sign for a negative duration', () => {
       equal(`${Duration.from({ weeks: -1, days: -1 })}`, '-P1W1D');
@@ -253,6 +253,81 @@ describe('Duration', () => {
     it("serializing balance doesn't lose precision when values are precise", () => {
       const d = Duration.from({ milliseconds: Number.MAX_SAFE_INTEGER, microseconds: Number.MAX_SAFE_INTEGER });
       equal(`${d}`, 'PT9016206453995.731991S');
+    });
+    const d1 = new Duration(0, 0, 0, 0, 15, 23);
+    const d2 = new Duration(0, 0, 0, 0, 15, 23, 30);
+    const d3 = new Duration(0, 0, 0, 0, 15, 23, 30, 543, 200);
+    it('smallestUnits are aliases for fractional digits', () => {
+      equal(d3.toString({ smallestUnit: 'seconds' }), d3.toString({ fractionalSecondDigits: 0 }));
+      equal(d3.toString({ smallestUnit: 'milliseconds' }), d3.toString({ fractionalSecondDigits: 3 }));
+      equal(d3.toString({ smallestUnit: 'microseconds' }), d3.toString({ fractionalSecondDigits: 6 }));
+      equal(d3.toString({ smallestUnit: 'nanoseconds' }), d3.toString({ fractionalSecondDigits: 9 }));
+    });
+    it('throws on invalid or disallowed smallestUnit', () => {
+      ['eras', 'years', 'months', 'weeks', 'days', 'hours', 'minutes', 'nonsense'].forEach((smallestUnit) =>
+        throws(() => d1.toString({ smallestUnit }), RangeError)
+      );
+    });
+    it('accepts singular units', () => {
+      equal(d3.toString({ smallestUnit: 'second' }), d3.toString({ smallestUnit: 'seconds' }));
+      equal(d3.toString({ smallestUnit: 'millisecond' }), d3.toString({ smallestUnit: 'milliseconds' }));
+      equal(d3.toString({ smallestUnit: 'microsecond' }), d3.toString({ smallestUnit: 'microseconds' }));
+      equal(d3.toString({ smallestUnit: 'nanosecond' }), d3.toString({ smallestUnit: 'nanoseconds' }));
+    });
+    it('truncates or pads to 2 places', () => {
+      const options = { fractionalSecondDigits: 2 };
+      equal(d1.toString(options), 'PT15H23M0.00S');
+      equal(d2.toString(options), 'PT15H23M30.00S');
+      equal(d3.toString(options), 'PT15H23M30.54S');
+    });
+    it('pads to 7 places', () => {
+      const options = { fractionalSecondDigits: 7 };
+      equal(d1.toString(options), 'PT15H23M0.0000000S');
+      equal(d2.toString(options), 'PT15H23M30.0000000S');
+      equal(d3.toString(options), 'PT15H23M30.5432000S');
+    });
+    it('auto is the default', () => {
+      [d1, d2, d3].forEach((d) => equal(d.toString({ fractionalSecondDigits: 'auto' }), d.toString()));
+    });
+    it('throws on out of range or invalid fractionalSecondDigits', () => {
+      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
+        throws(() => d1.toString({ fractionalSecondDigits }), RangeError)
+      );
+    });
+    it('accepts and truncates fractional fractionalSecondDigits', () => {
+      equal(d3.toString({ fractionalSecondDigits: 5.5 }), 'PT15H23M30.54320S');
+    });
+    it('smallestUnit overrides fractionalSecondDigits', () => {
+      equal(d3.toString({ smallestUnit: 'seconds', fractionalSecondDigits: 9 }), 'PT15H23M30S');
+    });
+    it('throws on invalid roundingMode', () => {
+      throws(() => d1.toString({ roundingMode: 'cile' }), RangeError);
+    });
+    it('rounds to nearest', () => {
+      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'nearest' }), 'PT15H23M31S');
+      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }), 'PT15H23M30.543S');
+    });
+    it('rounds up', () => {
+      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'ceil' }), 'PT15H23M31S');
+      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), 'PT15H23M30.544S');
+    });
+    it('rounds down', () => {
+      equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'floor' }), '-PT15H23M31S');
+      equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'floor' }), '-PT15H23M30.544S');
+    });
+    it('truncates', () => {
+      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'trunc' }), 'PT15H23M30S');
+      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'trunc' }), 'PT15H23M30.543S');
+    });
+    it('rounding can affect units up to seconds', () => {
+      const d4 = Duration.from('P1Y1M1W1DT23H59M59.999999999S');
+      equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }), 'P1Y1M1W1DT23H59M60.00000000S');
+    });
+    it('options may only be an object or undefined', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+        throws(() => d1.toString(badOptions), TypeError)
+      );
+      [{}, () => {}, undefined].forEach((options) => equal(d1.toString(options), 'PT15H23M'));
     });
   });
   describe('toLocaleString()', () => {
@@ -1283,18 +1358,18 @@ describe('Duration', () => {
       equal(`${d.round({ smallestUnit: 'seconds', roundingIncrement: 15, relativeTo })}`, 'P5Y5M5W5DT5H5M');
     });
     it('rounds to an increment of milliseconds', () => {
-      equal(`${d.round({ smallestUnit: 'milliseconds', roundingIncrement: 10, relativeTo })}`, 'P5Y5M5W5DT5H5M5.010S');
+      equal(`${d.round({ smallestUnit: 'milliseconds', roundingIncrement: 10, relativeTo })}`, 'P5Y5M5W5DT5H5M5.01S');
     });
     it('rounds to an increment of microseconds', () => {
       equal(
         `${d.round({ smallestUnit: 'microseconds', roundingIncrement: 10, relativeTo })}`,
-        'P5Y5M5W5DT5H5M5.005010S'
+        'P5Y5M5W5DT5H5M5.00501S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
         `${d.round({ smallestUnit: 'nanoseconds', roundingIncrement: 10, relativeTo })}`,
-        'P5Y5M5W5DT5H5M5.005005010S'
+        'P5Y5M5W5DT5H5M5.00500501S'
       );
     });
     it('valid hour increments divide into 24', () => {
