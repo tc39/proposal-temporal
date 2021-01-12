@@ -1264,7 +1264,7 @@
         1. Let _zonedRelativeTo_ be *undefined*.
         1. If _relativeTo_ is not *undefined*, then
           1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_[[Nanoseconds]]).
+            1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
             1. Set _zonedRelativeTo_ to _relativeTo_.
             1. Set _relativeTo_ to ? GetTemporalDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
           1. Else,
