@@ -371,10 +371,23 @@ export class Duration {
       nanoseconds
     );
     options = ES.NormalizeOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    let smallestUnit = ES.ToSmallestTemporalDurationUnit(options, undefined);
+    let smallestUnitPresent = true;
+    if (!smallestUnit) {
+      smallestUnitPresent = false;
+      smallestUnit = 'nanoseconds';
+    }
     defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
     let relativeTo = ES.ToRelativeTemporalObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+    let largestUnit = ES.ToLargestTemporalUnit(options, undefined);
+    let largestUnitPresent = true;
+    if (!largestUnit) {
+      largestUnitPresent = false;
+      largestUnit = defaultLargestUnit;
+    }
+    if (!smallestUnitPresent && !largestUnitPresent) {
+      throw new RangeError('at least one of smallestUnit or largestUnit is required');
+    }
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
     const maximumIncrements = {
