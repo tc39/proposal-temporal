@@ -346,6 +346,7 @@ export class Duration {
   }
   round(options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+    if (options === undefined) throw new TypeError('options parameter is required');
     let years = GetSlot(this, YEARS);
     let months = GetSlot(this, MONTHS);
     let weeks = GetSlot(this, WEEKS);
