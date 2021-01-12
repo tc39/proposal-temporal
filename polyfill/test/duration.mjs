@@ -1150,16 +1150,16 @@ describe('Duration', () => {
     it('accepts datetime string equivalents or fields for relativeTo', () => {
       ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
-          equal(`${d.round({ relativeTo })}`, 'P5Y5M5W5DT5H5M5.005005005S');
+          equal(`${d.round({ smallestUnit: 'seconds', relativeTo })}`, 'P5Y5M5W5DT5H5M5S');
         }
       );
     });
     it("throws on relativeTo that can't be converted to datetime string", () => {
-      throws(() => d.round({ relativeTo: Symbol('foo') }), TypeError);
+      throws(() => d.round({ smallestUnit: 'seconds', relativeTo: Symbol('foo') }), TypeError);
     });
     it('throws on relativeTo that converts to an invalid datetime string', () => {
       [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
-        throws(() => d.round({ relativeTo }), RangeError);
+        throws(() => d.round({ smallestUnit: 'seconds', relativeTo }), RangeError);
       });
     });
     it('relativeTo object must contain at least the required correctly-spelled properties', () => {
@@ -1178,7 +1178,11 @@ describe('Duration', () => {
       throws(() => d2.round({ smallestUnit: 'nanoseconds', roundingMode: 'cile' }), RangeError);
     });
     it('throws if neither one of largestUnit or smallestUnit is given', () => {
-      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => throws(() => d.round(options), RangeError));
+      const hoursOnly = new Duration(0, 0, 0, 0, 1);
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => {
+        throws(() => d.round(options), RangeError);
+        throws(() => hoursOnly.round(options), RangeError);
+      });
     });
     it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
       equal(`${d2.round({ smallestUnit: 'days' })}`, 'P5D');
