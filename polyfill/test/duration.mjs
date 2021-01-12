@@ -1004,6 +1004,9 @@ describe('Duration', () => {
     it('options may only be an object', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
     });
+    it('throws without parameter', () => {
+      throws(() => d.round(), TypeError);
+    });
     it('throws on disallowed or invalid smallestUnit', () => {
       ['era', 'nonsense'].forEach((smallestUnit) => {
         throws(() => d.round({ smallestUnit }), RangeError);
@@ -1175,9 +1178,7 @@ describe('Duration', () => {
       throws(() => d2.round({ smallestUnit: 'nanoseconds', roundingMode: 'cile' }), RangeError);
     });
     it('throws if neither one of largestUnit or smallestUnit is given', () => {
-      [undefined, {}, () => {}, { roundingMode: 'ceil' }].forEach((options) =>
-        throws(() => d.round(options), RangeError)
-      );
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => throws(() => d.round(options), RangeError));
     });
     it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
       equal(`${d2.round({ smallestUnit: 'days' })}`, 'P5D');
