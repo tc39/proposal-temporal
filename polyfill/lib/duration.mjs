@@ -378,7 +378,6 @@ export class Duration {
       smallestUnit = 'nanoseconds';
     }
     defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-    let relativeTo = ES.ToRelativeTemporalObject(options);
     let largestUnit = ES.ToLargestTemporalUnit(options, undefined);
     let largestUnitPresent = true;
     if (!largestUnit) {
@@ -403,6 +402,7 @@ export class Duration {
       nanoseconds: 1000
     };
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    let relativeTo = ES.ToRelativeTemporalObject(options);
 
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(
       years,
