@@ -1217,6 +1217,7 @@ describe('Instant', () => {
       throws(() => inst.round(), TypeError);
     });
     it('throws without required smallestUnit parameter', () => {
+      throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
     it('throws on disallowed or invalid smallestUnit', () => {
