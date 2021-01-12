@@ -1191,6 +1191,7 @@ describe('DateTime', () => {
       throws(() => dt.round(), TypeError);
     });
     it('throws without required smallestUnit parameter', () => {
+      throws(() => dt.round({}), RangeError);
       throws(() => dt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
     it('throws on disallowed or invalid smallestUnit', () => {

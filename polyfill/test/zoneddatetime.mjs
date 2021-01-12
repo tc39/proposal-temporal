@@ -1855,6 +1855,7 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.round(), TypeError);
     });
     it('throws without required smallestUnit parameter', () => {
+      throws(() => zdt.round({}), RangeError);
       throws(() => zdt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
     it('throws on disallowed or invalid smallestUnit', () => {

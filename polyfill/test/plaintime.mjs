@@ -812,6 +812,7 @@ describe('Time', () => {
       throws(() => time.round(), TypeError);
     });
     it('throws without required smallestUnit parameter', () => {
+      throws(() => time.round({}), RangeError);
       throws(() => time.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
     it('throws on disallowed or invalid smallestUnit', () => {
