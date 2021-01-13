@@ -10369,6 +10369,7 @@
       key: "round",
       value: function round(options) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        if (options === undefined) throw new TypeError('options parameter is required');
         var years = GetSlot(this, YEARS);
         var months = GetSlot(this, MONTHS);
         var weeks = GetSlot(this, WEEKS);
@@ -10381,10 +10382,27 @@
         var nanoseconds = GetSlot(this, NANOSECONDS);
         var defaultLargestUnit = ES.DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
         options = ES.NormalizeOptionsObject(options);
-        var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+        var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, undefined);
+        var smallestUnitPresent = true;
+
+        if (!smallestUnit) {
+          smallestUnitPresent = false;
+          smallestUnit = 'nanoseconds';
+        }
+
         defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-        var relativeTo = ES.ToRelativeTemporalObject(options);
-        var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+        var largestUnit = ES.ToLargestTemporalUnit(options, undefined);
+        var largestUnitPresent = true;
+
+        if (!largestUnit) {
+          largestUnitPresent = false;
+          largestUnit = defaultLargestUnit;
+        }
+
+        if (!smallestUnitPresent && !largestUnitPresent) {
+          throw new RangeError('at least one of smallestUnit or largestUnit is required');
+        }
+
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
         var maximumIncrements = {
@@ -10400,6 +10418,7 @@
           nanoseconds: 1000
         };
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+        var relativeTo = ES.ToRelativeTemporalObject(options);
 
         var _ES$UnbalanceDuration = ES.UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo);
 
