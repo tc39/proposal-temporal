@@ -20,11 +20,23 @@ Temporal fixes these problems by:
 - Parsing a strictly specified string format
 - Supporting non-Gregorian calendars
 
+Temporal provides a number of separate types, in order to
+
+- Represent the information you have
+- Avoid buggy pattern of filling in 0 or UTC for missing info
+- Do appropriate calculations based on type
+
+
 ## Cookbook
 
 A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook.md).
 
 ## API Documentation
+
+The Temporal API follows a convention of using types whose names start with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) for objects which do not have an associated time zone.
+Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.
+
+Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
 
 ### **Temporal.now**
 
@@ -39,19 +51,49 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 - `Temporal.now.plainDateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
 - `Temporal.now.plainDateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
 
+```js
+console.log(
+  "Initialization complete",
+  Temporal.now.instant()
+);
+// example output:
+// Initialization complete 2020-11-16T09:00Z
+```
+
 See [Temporal.now Documentation](./now.md) for detailed documentation.
 
 ### **Temporal.Instant**
 
-A `Temporal.Instant` represents a fixed point in time (called **"exact time"**), without regard to calendar or location.
+A `Temporal.Instant` represents a fixed point in time (called **"exact time"**), without regard to calendar or location, e.g. July 20, 1969, at 20:17 UTC.
 For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.ZonedDateTime` or `Temporal.PlainDateTime`.
+
+```js
+const instant = Temporal.Instant.from("1969-07-20T20:17Z");
+instant.toString() // => "1969-07-20T20:17:00Z"
+instant.epochMilliseconds // => -14182980000
+```
 
 See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
 
 ### **Temporal.ZonedDateTime**
 
-A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular exact time from the perspective of a particular region on Earth.
+A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time object that represents a real event that has happened (or will happen) at a particular exact time from the perspective of a particular region on Earth, e.g. December 7th, 1995 at 3:24 AM in US Pacific time (in Gregorian calendar).
 This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).
+
+```js
+const zonedDateTime = Temporal.ZonedDateTime.from({
+    timeZone: 'America/Los_Angeles'
+    year: 1995,
+    month: 12,
+    day: 7,
+    hour: 3,
+    minute: 24,
+    second: 30,
+    millisecond: 0,
+    microsecond: 3,
+    nanosecond: 500
+}); // => 1995-12-07T03:24:30.000003500+08:00[America/Los_Angeles]
+```
 
 As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.PlainDateTime` (which includes `Temporal.Calendar`).
 
@@ -59,36 +101,70 @@ See [Temporal.ZonedDateTime Documentation](./zoneddatetime.md) for detailed docu
 
 ### **Temporal.PlainDate**
 
-A `Temporal.PlainDate` object represents a calendar date that is not associated with a particular time or time zone.
+A `Temporal.PlainDate` object represents a calendar date that is not associated with a particular time or time zone, e.g. August 24th, 2006.
+
+```js
+const date = Temporal.PlainDate.from({year: 2006, month: 8, day: 24}); // => 2006-08-24
+date.year // => 2006
+date.inLeapYear // => false
+date.toString() // => "2006-08-24"
+```
 
 This can also be converted to partial dates such as `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`.
 
 See [Temporal.PlainDate Documentation](./plaindate.md) for detailed documentation.
 
-#### Time Zones and Resolving Ambiguity
-
-Converting between wall-clock/calendar-date types (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time.
-
-Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
-
 ### **Temporal.PlainTime**
 
-A `Temporal.PlainTime` object represents a wall-clock time that is not associated with a particular date or time zone.
+A `Temporal.PlainTime` object represents a wall-clock time that is not associated with a particular date or time zone, e.g. 7:39 PM.
+
+```js
+const time = Temporal.PlainTime.from({
+  hour: 19,
+  minute: 39,
+  second: 9,
+  millisecond: 68,
+  microsecond: 346,
+  nanosecond: 205
+}); // => 19:39:09.068346205
+
+time.second // => 9
+time.toString() // => "19:39:09.068346205"
 
 See [Temporal.PlainTime Documentation](./plaintime.md) for detailed documentation.
 
 ### **Temporal.PlainDateTime**
 
-A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that does not carry time zone information.
+A `Temporal.PlainDateTime` represents a calendar date and wall-clock time that does not carry time zone information, e.g. December 7th, 1995 at 3:00 PM (in the Gregorian calendar).
+
 It can be converted to a `Temporal.ZonedDateTime` using a `Temporal.TimeZone`.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using `Temporal.ZonedDateTime` instead because that type automatically adjusts for Daylight Saving Time.
+
+```js
+const dateTime = Temporal.PlainDateTime.from({
+  year: 1995,
+  month: 12,
+  day: 7,
+  hour: 15
+}); // => 1995-12-07T15:00:00
+const dateTime1 = dateTime.with({
+  minutes: 17,
+  seconds: 19
+}); // => 1995-12-07T15:17:19
+```
 
 See [Temporal.PlainDateTime Documentation](./plaindatetime.md) for detailed documentation.
 
 ### **Temporal.PlainYearMonth**
 
 A date without a day component.
-This is useful to express things like "the November 2010 meeting".
+This is useful to express things like "the October 2020 meeting".
+
+```js
+const yearMonth = Temporal.PlainYearMonth.from({ year: 2020, month: 10 }); // => 2020-10
+yearMonth.daysInMonth // => 31
+yearMonth.daysInYear // => 366
+```
 
 See [Temporal.PlainYearMonth Documentation](./plainyearmonth.md) for detailed documentation.
 
@@ -97,12 +173,27 @@ See [Temporal.PlainYearMonth Documentation](./plainyearmonth.md) for detailed do
 A date without a year component.
 This is useful to express things like "Bastille Day is on the 14th of July".
 
+```js
+const monthDay = Temporal.PlainMonthDay.from({ month: 7, day: 14 }); // => 07-14
+const date = monthDay.toPlainDate({ year: 2030 });  // => 2030-07-14
+date.dayOfWeek // => 7
+```
+
 See [Temporal.PlainMonthDay Documentation](./plainmonthday.md) for detailed documentation.
 
 ### **Temporal.Duration**
 
-A `Temporal.Duration` expresses a length of time.
+A `Temporal.Duration` expresses a length of time, e.g. 5 minutes and 30 seconds.
 This is used for date/time arithmetic and for measuring differences between `Temporal` objects.
+
+```js
+const duration = Temporal.Duration.from({
+  hours: 130,
+  minutes: 20
+});
+
+duration.total({ largestUnit: 'minutes' }); // => 469200
+```
 
 See [Temporal.Duration Documentation](./duration.md) for detailed documentation.
 
@@ -115,7 +206,18 @@ See [Duration balancing](./balancing.md) for more on this topic.
 ### **Temporal.TimeZone**
 
 A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset, or UTC itself.
+Time zones translate from a date/time in UTC to a local date/time.
 Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Instant` and `Temporal.PlainDateTime` as well as finding out the offset at a specific `Temporal.Instant`.
+
+It is also possible to implement your own time zones.
+
+```js
+const timeZone = Temporal.TimeZone.from('Africa/Cairo');
+timeZone.getInstantFor('2000-01-01T00:00') // => 1999-12-31T22:00:00Z
+timeZone.getPlainDateTimeFor('2000-01-01T00:00Z') // => 2000-01-01T02:00:00
+timeZone.getPreviousTransition(Temporal.now.instant()) // => 2014-09-25T21:00:00Z
+timeZone.getNextTransition(Temporal.now.instant()) // => null
+```
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
 A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
@@ -124,6 +226,18 @@ A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal
 
 A `Temporal.Calendar` represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.
+
+Dates have associated `Temporal.Calendar` objects, to perform calendar-related math.
+Under the hood, this math is done by methods on the calendars.
+
+It is also possible to implement your own calendars.
+
+```js
+const calendar = Temporal.Calendar.from('iso8601');
+const date = calendar.dateFromFields({ year: 1999, month: 12, day: 31 }, {}, Temporal.PlainDate);
+date.monthsInYear // => 12
+date.daysInYear // => 365
+```
 
 See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
