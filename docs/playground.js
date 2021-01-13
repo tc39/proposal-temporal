@@ -3920,6 +3920,93 @@
           };
       }
     },
+    ToDurationSecondsStringPrecision: function ToDurationSecondsStringPrecision(options) {
+      var plural = new Map([['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']]);
+      var allowed = new Set(['seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
+      var smallestUnit = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(plural.keys())), undefined);
+      if (plural.has(smallestUnit)) smallestUnit = plural.get(smallestUnit);
+
+      switch (smallestUnit) {
+        case 'seconds':
+          return {
+            precision: 0,
+            unit: 'seconds',
+            increment: 1
+          };
+
+        case 'milliseconds':
+          return {
+            precision: 3,
+            unit: 'milliseconds',
+            increment: 1
+          };
+
+        case 'microseconds':
+          return {
+            precision: 6,
+            unit: 'microseconds',
+            increment: 1
+          };
+
+        case 'nanoseconds':
+          return {
+            precision: 9,
+            unit: 'nanoseconds',
+            increment: 1
+          };
+
+      }
+
+      var digits = options.fractionalSecondDigits;
+      if (digits === undefined || digits === 'auto') return {
+        precision: 'auto',
+        unit: 'nanoseconds',
+        increment: 1
+      };
+      digits = ES.ToNumber(digits);
+
+      if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
+        throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digits));
+      }
+
+      var precision = MathFloor(digits);
+
+      switch (precision) {
+        case 0:
+          return {
+            precision: precision,
+            unit: 'seconds',
+            increment: 1
+          };
+
+        case 1:
+        case 2:
+        case 3:
+          return {
+            precision: precision,
+            unit: 'milliseconds',
+            increment: Math.pow(10, 3 - precision)
+          };
+
+        case 4:
+        case 5:
+        case 6:
+          return {
+            precision: precision,
+            unit: 'microseconds',
+            increment: Math.pow(10, 6 - precision)
+          };
+
+        case 7:
+        case 8:
+        case 9:
+          return {
+            precision: precision,
+            unit: 'nanoseconds',
+            increment: Math.pow(10, 9 - precision)
+          };
+      }
+    },
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       var plural = new Map([['year', 'years'], ['month', 'months'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']].filter(function (_ref2) {
@@ -4884,7 +4971,9 @@
       var timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
-    TemporalDurationToString: function TemporalDurationToString(duration) {
+    TemporalDurationToString: function TemporalDurationToString(duration, precision) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
       function formatNumber(num) {
         if (num <= NumberMaxSafeInteger) return num.toString(10);
         return BigInteger(num).toString();
@@ -4901,6 +4990,20 @@
       var µs = GetSlot(duration, MICROSECONDS);
       var ns = GetSlot(duration, NANOSECONDS);
       var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
+
+      if (options) {
+        var unit = options.unit,
+            increment = options.increment,
+            roundingMode = options.roundingMode;
+
+        var _ES$RoundDuration = ES.RoundDuration(0, 0, 0, 0, 0, 0, seconds, ms, µs, ns, increment, unit, roundingMode);
+
+        seconds = _ES$RoundDuration.seconds;
+        ms = _ES$RoundDuration.milliseconds;
+        µs = _ES$RoundDuration.microseconds;
+        ns = _ES$RoundDuration.nanoseconds;
+      }
+
       var dateParts = [];
       if (years) dateParts.push("".concat(formatNumber(MathAbs(years)), "Y"));
       if (months) dateParts.push("".concat(formatNumber(MathAbs(months)), "M"));
@@ -4926,13 +5029,22 @@
 
       seconds = _total$divmod3.quotient;
       ms = _total$divmod3.remainder;
-      ms = ms.toJSNumber();
-      µs = µs.toJSNumber();
-      ns = ns.toJSNumber();
-      if (ns) secondParts.unshift("".concat(MathAbs(ns)).padStart(3, '0'));
-      if (µs || secondParts.length) secondParts.unshift("".concat(MathAbs(µs)).padStart(3, '0'));
-      if (ms || secondParts.length) secondParts.unshift("".concat(MathAbs(ms)).padStart(3, '0'));
-      if (secondParts.length) secondParts.unshift('.');
+      var fraction = MathAbs(ms.toJSNumber()) * 1e6 + MathAbs(µs.toJSNumber()) * 1e3 + MathAbs(ns.toJSNumber());
+      var decimalPart;
+
+      if (precision === 'auto') {
+        if (fraction !== 0) {
+          decimalPart = "".concat(fraction).padStart(9, '0');
+
+          while (decimalPart[decimalPart.length - 1] === '0') {
+            decimalPart = decimalPart.slice(0, -1);
+          }
+        }
+      } else if (precision !== 0) {
+        decimalPart = "".concat(fraction).slice(0, precision).padStart(precision, '0');
+      }
+
+      if (decimalPart) secondParts.unshift('.', decimalPart);
       if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
       if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
       if (timeParts.length) timeParts.unshift('T');
@@ -10405,8 +10517,21 @@
     }, {
       key: "toString",
       value: function toString() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return ES.TemporalDurationToString(this);
+        options = ES.NormalizeOptionsObject(options);
+
+        var _ES$ToDurationSeconds = ES.ToDurationSecondsStringPrecision(options),
+            precision = _ES$ToDurationSeconds.precision,
+            unit = _ES$ToDurationSeconds.unit,
+            increment = _ES$ToDurationSeconds.increment;
+
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+        return ES.TemporalDurationToString(this, precision, {
+          unit: unit,
+          increment: increment,
+          roundingMode: roundingMode
+        });
       }
     }, {
       key: "toJSON",
