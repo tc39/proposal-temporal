@@ -208,6 +208,9 @@ They provide a way to construct other Temporal objects from values in the calend
 None of the above methods need to be called directly except in specialized code.
 They are called indirectly when using `Temporal.PlainDate.from()`, `Temporal.PlainDateTime.from()`, `Temporal.PlainYearMonth.from()`, and `Temporal.PlainMonthDay.from()`.
 
+A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using `new constructor(...isoArgs)`.
+(This allows it to create custom subclasses of the built-in Temporal objects.)
+
 For example:
 
 ```javascript
@@ -252,6 +255,9 @@ If `date` is not a `Temporal.PlainDate` object, or `duration` not a `Temporal.Du
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using `add()` and `subtract()` of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
+
+A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using `new constructor(...isoArgs)`.
+(This allows it to create custom subclasses of the built-in Temporal objects.)
 
 For example:
 
