@@ -170,10 +170,13 @@ Compares two `Temporal.PlainDateTime` objects.
 Returns an integer indicating whether `one` comes before or after or is equal to `two`.
 
 - &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` are the same;
+- 0 if `one` and `two` are the same date and their `calendar` properties are also the same;
 - 1 if `one` comes after `two`.
 
 If `one` and `two` are not `Temporal.PlainDateTime` objects, then they will be converted to one as if they were passed to `Temporal.PlainDateTime.from()`.
+
+Note that this function will not return 0 if the two objects have different `calendar` properties, even if the actual dates and times are equal.
+If the dates and times are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
 
 This function can be used to sort arrays of `Temporal.PlainDateTime` objects.
 For example:
@@ -746,7 +749,7 @@ This function exists because it's not possible to compare using `datetime == oth
 
 If you don't need to know the order in which the two dates/times occur, then this function may be less typing and more efficient than `Temporal.PlainDateTime.compare`.
 
-Note that this function will return `true` if the two date/times are equal, even if they are expressed in different calendar systems.
+Note that this function will return `false` if the two objects have different `calendar` properties, even if the actual dates and times are equal.
 
 If `other` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 

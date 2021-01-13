@@ -124,10 +124,13 @@ Compares two `Temporal.PlainDate` objects.
 Returns an integer indicating whether `one` comes before or after or is equal to `two`.
 
 - &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` are the same;
+- 0 if `one` and `two` are the same date and their `calendar` properties are also the same;
 - 1 if `one` comes after `two`.
 
 If `one` or `two` are not `Temporal.PlainDate` objects, then they will be converted to one as if they were passed to `Temporal.PlainDate.from()`.
+
+Note that this function will not return 0 if the two objects have different `calendar` properties, even if the actual dates are equal.
+If the dates are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
 
 This function can be used to sort arrays of `Temporal.PlainDate` objects.
 For example:
@@ -540,7 +543,7 @@ This function exists because it's not possible to compare using `date == other` 
 
 If you don't need to know the order in which the two dates occur, then this function may be less typing and more efficient than `Temporal.PlainDate.compare`.
 
-Note that this function will return `true` if the two dates are equal, even if they are expressed in different calendar systems.
+Note that this function will return `false` if the two objects have different `calendar` properties, even if the actual dates are equal.
 
 If `other` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 

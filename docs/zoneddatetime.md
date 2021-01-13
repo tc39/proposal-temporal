@@ -228,6 +228,7 @@ This function can be used to sort arrays of `Temporal.ZonedDateTime` objects.
 Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
 Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
 
+Note that this function will not return 0 if the two objects have different `calendar` or `timeZone` properties, even if the exact timestamps are equal.
 If exact timestamps are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
 If those are equal too, then `.timeZone.id` will be compared lexicographically.
 
