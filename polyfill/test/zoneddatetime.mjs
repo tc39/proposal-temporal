@@ -189,6 +189,10 @@ describe('ZonedDateTime', () => {
       equal(zdt.toInstant().epochSeconds, Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3), 'epochSeconds');
       equal(zdt.toInstant().epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'epochMilliseconds');
     });
+    it('Temporal.ZonedDateTime.from(zonedDateTime) is not the same object)', () => {
+      const zdt = new ZonedDateTime(epochNanos, tz);
+      notEqual(ZonedDateTime.from(zdt), zdt);
+    });
 
     describe('ZonedDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       const zdt = new ZonedDateTime(epochNanos, new Temporal.TimeZone('UTC'));
