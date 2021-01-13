@@ -49,7 +49,7 @@ Overriding all the other members is optional.
 If you don't override the optional members, then they will behave as in the base calendar.
 
 The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
-The object must implement all of the `Temporal.Calendar` methods except for `id` and `fields()`.
+The object must implement all of the `Temporal.Calendar` properties and methods except for `id`, `fields()`, and `toJSON()`.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
 To interoperate with libraries or other code that you didn't write, then you should implement the `id` property and the `fields()` method as well.
@@ -351,4 +351,43 @@ Example usage:
 
 ```javascript
 Temporal.PlainDate.from('2020-05-29[c=gregory]').calendar.toString(); // => gregory
+```
+### calendar.**toJSON**() : string
+
+**Returns:** The string given by `calendar.id`.
+
+This method is the same as `calendar.toString()`.
+It is usually not called directly, but it can be called automatically by `JSON.stringify()`.
+
+The reverse operation, recovering a `Temporal.Calendar` object from a string, is `Temporal.Calendar.from()`, but it cannot be called automatically by `JSON.parse()`.
+If you need to rebuild a `Temporal.Calendar` object from a JSON string, then you need to know the names of the keys that should be interpreted as `Temporal.Calendar`s.
+In that case you can build a custom "reviver" function for your use case.
+
+When subclassing `Temporal.Calendar`, this method doesn't need to be overridden because the default implementation returns the result of calling `calendar.toString()`.
+
+Example usage:
+
+```js
+const user = {
+  id: 775,
+  username: 'robotcat',
+  password: 'hunter2', // Note: Don't really store passwords like that
+  userCalendar: Temporal.Calendar.from('gregory')
+};
+const str = JSON.stringify(user, null, 2);
+console.log(str);
+// =>
+// {
+//   "id": 775,
+//   "username": "robotcat",
+//   "password": "hunter2",
+//   "userCalendar": "gregory"
+// }
+
+// To rebuild from the string:
+function reviver(key, value) {
+  if (key.endsWith('Calendar')) return Temporal.Calendar.from(value);
+  return value;
+}
+JSON.parse(str, reviver);
 ```

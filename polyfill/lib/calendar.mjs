@@ -136,6 +136,9 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR_ID);
   }
+  toJSON() {
+    return ES.CalendarToString(this);
+  }
   static from(item) {
     if (ES.Type(item) === 'Object') {
       if (!('calendar' in item)) return item;
