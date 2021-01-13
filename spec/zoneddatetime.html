@@ -72,6 +72,8 @@
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_).
+        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, _item_.[[Nanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
         1. Return ? ToTemporalZonedDateTime(_item_, _constructor_, _overflow_, _disambiguation_, _offset_).
       </emu-alg>
     </emu-clause>
