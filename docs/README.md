@@ -33,8 +33,8 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 ## API Documentation
 
-Types whose name starts with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) do not, by convention, have an associated time zone.
-Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time.
+The Temporal API follows a convention of using types whose names start with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) for objects which do not have an associated time zone.
+Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.
 
 Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
 
@@ -213,10 +213,10 @@ It is also possible to implement your own time zones.
 
 ```js
 const timeZone = Temporal.TimeZone.from('Africa/Cairo');
-timeZone.getPossibleInstantsFor(...)
-timeZone.getPlainDateTimeFor(...)
-timeZone.getNextTransition(...)
-timeZone.getPreviousTransition(...)
+timeZone.getInstantFor('2000-01-01T00:00') // => 1999-12-31T22:00:00Z
+timeZone.getPlainDateTimeFor('2000-01-01T00:00Z') // => 2000-01-01T02:00:00
+timeZone.getPreviousTransition(Temporal.now.instant()) // => 2014-09-25T21:00:00Z
+timeZone.getNextTransition(Temporal.now.instant()) // => null
 ```
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
@@ -234,7 +234,7 @@ It is also possible to implement your own calendars.
 
 ```js
 const calendar = Temporal.Calendar.from('iso8601');
-const date = calendar.dateFromFields({ … });
+const date = calendar.dateFromFields({ year: 1999, month: 12, day: 31 }, {}, Temporal.PlainDate);
 date.monthsInYear // => 12
 date.daysInYear // => 365
 ```
