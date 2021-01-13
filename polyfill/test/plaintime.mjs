@@ -1004,21 +1004,18 @@ describe('Time', () => {
       equal(`${time.add({ months: 1 })}`, '15:23:30.123456789');
       equal(`${time.add({ years: 1 })}`, '15:23:30.123456789');
     });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => time.add({ hours: 1 }, { overflow }), RangeError)
-      );
-    });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
         throws(() => time.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => time.add({ hours: 1 }, badOptions), TypeError)
+    it('options is ignored', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n, {}, () => {}, undefined].forEach((options) =>
+        equal(`${time.add({ hours: 1 }, options)}`, '16:23:30.123456789')
       );
-      [{}, () => {}, undefined].forEach((options) => equal(`${time.add({ hours: 1 }, options)}`, '16:23:30.123456789'));
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        equal(`${time.add({ hours: 1 }, { overflow })}`, '16:23:30.123456789')
+      );
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => time.add({}), TypeError);
@@ -1056,22 +1053,17 @@ describe('Time', () => {
       equal(`${time.subtract({ months: 1 })}`, '15:23:30.123456789');
       equal(`${time.subtract({ years: 1 })}`, '15:23:30.123456789');
     });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => time.subtract({ hours: 1 }, { overflow }), RangeError)
-      );
-    });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
         throws(() => time.subtract({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => time.subtract({ hours: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
+    it('options is ignored', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n, {}, () => {}, undefined].forEach((options) =>
         equal(`${time.subtract({ hours: 1 }, options)}`, '14:23:30.123456789')
+      );
+      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+        equal(`${time.subtract({ hours: 1 }, { overflow })}`, '14:23:30.123456789')
       );
     });
     it('object must contain at least one correctly-spelled property', () => {

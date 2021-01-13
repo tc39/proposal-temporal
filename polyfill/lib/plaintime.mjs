@@ -152,13 +152,11 @@ export class PlainTime {
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  add(temporalDurationLike, options = undefined) {
+  add(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);
     let second = GetSlot(this, ISO_SECOND);
@@ -186,20 +184,18 @@ export class PlainTime {
       millisecond,
       microsecond,
       nanosecond,
-      overflow
+      'reject'
     ));
     const Construct = ES.SpeciesConstructor(this, PlainTime);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
     if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
     return result;
   }
-  subtract(temporalDurationLike, options = undefined) {
+  subtract(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);
     let second = GetSlot(this, ISO_SECOND);
@@ -227,7 +223,7 @@ export class PlainTime {
       millisecond,
       microsecond,
       nanosecond,
-      overflow
+      'reject'
     ));
     const Construct = ES.SpeciesConstructor(this, PlainTime);
     const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
