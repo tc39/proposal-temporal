@@ -359,45 +359,27 @@ time<span class="token punctuation">.</span><span class="token function">add</sp
   millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   microsecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   nanosecond<span class="token operator">:</span> <span class="token number">0</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 20:00</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>time.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
-<li><code>options</code> (optional object): An object with properties representing options for the addition.
-The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
-</ul>
-</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is the time indicated by <code>time</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
-<p>The <code>overflow</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
-However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>time.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span> nanoseconds<span class="token operator">:</span> <span class="token number">800</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:44:09.068347005</span></code></pre><h3 id="subtract"><a class="heading-link" href="#subtract"></a>time.<strong>subtract</strong>(<em>duration</em>: Temporal.Duration | object | string) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>duration</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
-<li><code>options</code> (optional object): An object with properties representing options for the subtraction.
-The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
-</ul>
-</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is the time indicated by <code>time</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>time</code>.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to <code>time</code>, or even the same time.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
-<p>The <code>overflow</code> parameter has no effect in the default ISO calendar, because the units of hours, minutes, and seconds are always the same length and therefore not ambiguous.
-However, it may have an effect in other calendars where those units are not always the same length.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

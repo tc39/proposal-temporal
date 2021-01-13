@@ -11129,7 +11129,6 @@
     }, {
       key: "add",
       value: function add(temporalDurationLike) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var years = duration.years,
@@ -11143,8 +11142,6 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options);
         var hour = GetSlot(this, ISO_HOUR);
         var minute = GetSlot(this, ISO_MINUTE);
         var second = GetSlot(this, ISO_SECOND);
@@ -11161,7 +11158,7 @@
         microsecond = _ES$AddTime.microsecond;
         nanosecond = _ES$AddTime.nanosecond;
 
-        var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
+        var _ES$RegulateTime2 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
 
         hour = _ES$RegulateTime2.hour;
         minute = _ES$RegulateTime2.minute;
@@ -11177,7 +11174,6 @@
     }, {
       key: "subtract",
       value: function subtract(temporalDurationLike) {
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
         var years = duration.years,
@@ -11191,8 +11187,6 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
-        var overflow = ES.ToTemporalOverflow(options);
         var hour = GetSlot(this, ISO_HOUR);
         var minute = GetSlot(this, ISO_MINUTE);
         var second = GetSlot(this, ISO_SECOND);
@@ -11209,7 +11203,7 @@
         microsecond = _ES$AddTime2.microsecond;
         nanosecond = _ES$AddTime2.nanosecond;
 
-        var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
+        var _ES$RegulateTime3 = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
 
         hour = _ES$RegulateTime3.hour;
         minute = _ES$RegulateTime3.minute;
