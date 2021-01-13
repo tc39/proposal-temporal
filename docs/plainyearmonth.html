@@ -303,10 +303,12 @@ ym <span class="token operator">=</span> Temporal<span class="token punctuation"
 Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
 <ul>
 <li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
-<li>0 if <code>one</code> and <code>two</code> are the same;</li>
+<li>0 if <code>one</code> and <code>two</code> are the same month and their <code>calendar</code> properties are also the same;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
 <p>If <code>one</code> and <code>two</code> are not <code>Temporal.PlainYearMonth</code> objects, then they will be converted to one as if they were passed to <code>Temporal.PlainYearMonth.from()</code>.</p>
+<p>Note that this function will not return 0 if the two objects have different <code>calendar</code> properties, even if the actual years and months are equal.
+If the months are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.</p>
 <p>This function can be used to sort arrays of <code>Temporal.PlainYearMonth</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -517,8 +519,8 @@ ym<span class="token punctuation">.</span><span class="token function">since</sp
 <p>Compares two <code>Temporal.PlainYearMonth</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>yearMonth == other</code> or <code>yearMonth === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainYearMonth</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainYearMonth.from()</code>.</p>
-<p>Note that equality of two months from different calendar systems only makes sense in a few cases, such as when the two calendar systems both use the Gregorian year.</p>
-<p>Even if you are using the same calendar system, if you don&#39;t need to know the order in which the two months occur, then this function may be less typing and more efficient than <code>Temporal.PlainYearMonth.compare</code>.</p>
+<p>Note that this function will return <code>false</code> if the two objects have different <code>calendar</code> properties, even if the actual years and months are equal.</p>
+<p>If you don&#39;t need to know the order in which the two months occur, then this function may be less typing and more efficient than <code>Temporal.PlainYearMonth.compare</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

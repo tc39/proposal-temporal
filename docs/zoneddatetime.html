@@ -444,7 +444,8 @@ zdt <span class="token operator">=</span> Temporal<span class="token punctuation
 <p>This function can be used to sort arrays of <code>Temporal.ZonedDateTime</code> objects.</p>
 <p>Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
 Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.</p>
-<p>If exact timestamps are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.
+<p>Note that this function will not return 0 if the two objects have different <code>calendar</code> or <code>timeZone</code> properties, even if the exact timestamps are equal.
+If exact timestamps are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.
 If those are equal too, then <code>.timeZone.id</code> will be compared lexicographically.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">arr <span class="token operator">=</span> <span class="token punctuation">[</span>

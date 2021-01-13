@@ -322,10 +322,12 @@ date <span class="token operator">=</span> Temporal<span class="token punctuatio
 Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
 <ul>
 <li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
-<li>0 if <code>one</code> and <code>two</code> are the same;</li>
+<li>0 if <code>one</code> and <code>two</code> are the same date and their <code>calendar</code> properties are also the same;</li>
 <li>1 if <code>one</code> comes after <code>two</code>.</li>
 </ul>
 <p>If <code>one</code> or <code>two</code> are not <code>Temporal.PlainDate</code> objects, then they will be converted to one as if they were passed to <code>Temporal.PlainDate.from()</code>.</p>
+<p>Note that this function will not return 0 if the two objects have different <code>calendar</code> properties, even if the actual dates are equal.
+If the dates are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.</p>
 <p>This function can be used to sort arrays of <code>Temporal.PlainDate</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -588,7 +590,7 @@ later<span class="token punctuation">.</span><span class="token function">since<
 <p>Compares two <code>Temporal.PlainDate</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>date == other</code> or <code>date === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If you don&#39;t need to know the order in which the two dates occur, then this function may be less typing and more efficient than <code>Temporal.PlainDate.compare</code>.</p>
-<p>Note that this function will return <code>true</code> if the two dates are equal, even if they are expressed in different calendar systems.</p>
+<p>Note that this function will return <code>false</code> if the two objects have different <code>calendar</code> properties, even if the actual dates are equal.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
