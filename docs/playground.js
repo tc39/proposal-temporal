@@ -3672,7 +3672,15 @@
         };
       }
 
-      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], ES.ToNumber);
+      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], function (v) {
+        v = ES.ToNumber(v);
+
+        if (MathFloor(v) !== v) {
+          throw new RangeError("unsupported fractional value ".concat(v));
+        }
+
+        return v;
+      });
       if (!props) throw new TypeError('invalid duration-like');
       var _props$years = props.years,
           years = _props$years === void 0 ? 0 : _props$years,
@@ -3694,19 +3702,6 @@
           microseconds = _props$microseconds === void 0 ? 0 : _props$microseconds,
           _props$nanoseconds = props.nanoseconds,
           nanoseconds = _props$nanoseconds === void 0 ? 0 : _props$nanoseconds;
-
-      if (!ES.IsInteger(years) || !ES.IsInteger(months) || !ES.IsInteger(weeks) || !ES.IsInteger(days)) {
-        throw new RangeError('non-time units cannot be fractional');
-      }
-
-      var _ES$DurationHandleFra2 = ES.DurationHandleFractions(hours % 1, MathTrunc(minutes), minutes % 1, MathTrunc(seconds), seconds % 1, MathTrunc(milliseconds), milliseconds % 1, MathTrunc(microseconds), microseconds % 1, MathTrunc(nanoseconds), nanoseconds % 1);
-
-      minutes = _ES$DurationHandleFra2.minutes;
-      seconds = _ES$DurationHandleFra2.seconds;
-      milliseconds = _ES$DurationHandleFra2.milliseconds;
-      microseconds = _ES$DurationHandleFra2.microseconds;
-      nanoseconds = _ES$DurationHandleFra2.nanoseconds;
-      hours = MathTrunc(hours);
       return {
         years: years,
         months: months,
