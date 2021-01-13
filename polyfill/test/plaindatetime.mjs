@@ -1336,7 +1336,7 @@ describe('DateTime', () => {
       equal(`${PlainDateTime.from('1976-11-18 15:23:30.001123')}`, '1976-11-18T15:23:30.001123'));
     it('DateTime.from("1976-11-18 15:23:30.001123456")', () =>
       equal(`${PlainDateTime.from('1976-11-18 15:23:30.001123456')}`, '1976-11-18T15:23:30.001123456'));
-    it('DateTime.from(1976-11-18) == 1976-11-18', () => {
+    it('DateTime.from(1976-11-18) is not the same object', () => {
       const orig = new PlainDateTime(1976, 11, 18, 15, 23, 20, 123, 456, 789);
       const actual = PlainDateTime.from(orig);
       notEqual(actual, orig);
