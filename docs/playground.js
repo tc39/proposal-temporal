@@ -8687,6 +8687,11 @@
         return GetSlot(this, CALENDAR_ID);
       }
     }, {
+      key: "toJSON",
+      value: function toJSON() {
+        return ES.CalendarToString(this);
+      }
+    }, {
       key: "id",
       get: function get() {
         return ES.CalendarToString(this);

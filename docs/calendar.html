@@ -205,6 +205,8 @@
 </li>
 <li><a href="#toString">toString</a>
 </li>
+<li><a href="#toJSON">toJSON</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -235,7 +237,7 @@ The class must override <code>toString()</code> to return its own identifier.
 Overriding all the other members is optional.
 If you don&#39;t override the optional members, then they will behave as in the base calendar.</p>
 <p>The other, more difficult, way to create a custom calendar is to create a plain object implementing the <code>Temporal.Calendar</code> protocol, without subclassing.
-The object must implement all of the <code>Temporal.Calendar</code> methods except for <code>id</code> and <code>fields()</code>.
+The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>id</code>, <code>fields()</code>, and <code>toJSON()</code>.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in <code>Temporal.Calendar</code> objects.
 To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> method as well.
@@ -431,7 +433,36 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
 <h3 id="toString"><a class="heading-link" href="#toString"></a>calendar.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>calendar.id</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the calendar&#39;s <code>id</code> property as a human-readable description.</p>
 <p>Example usage:</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29[c=gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => gregory</span></code></pre>    <footer>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29[c=gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => gregory</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>calendar.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>calendar.id</code>.</p>
+<p>This method is the same as <code>calendar.toString()</code>.
+It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
+<p>The reverse operation, recovering a <code>Temporal.Calendar</code> object from a string, is <code>Temporal.Calendar.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
+If you need to rebuild a <code>Temporal.Calendar</code> object from a JSON string, then you need to know the names of the keys that should be interpreted as <code>Temporal.Calendar</code>s.
+In that case you can build a custom &quot;reviver&quot; function for your use case.</p>
+<p>When subclassing <code>Temporal.Calendar</code>, this method doesn&#39;t need to be overridden because the default implementation returns the result of calling <code>calendar.toString()</code>.</p>
+<p>Example usage:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span>
+  id<span class="token operator">:</span> <span class="token number">775</span><span class="token punctuation">,</span>
+  username<span class="token operator">:</span> <span class="token string">'robotcat'</span><span class="token punctuation">,</span>
+  password<span class="token operator">:</span> <span class="token string">'hunter2'</span><span class="token punctuation">,</span> <span class="token comment">// Note: Don't really store passwords like that</span>
+  userCalendar<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'gregory'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// =></span>
+<span class="token comment">// {</span>
+<span class="token comment">//   "id": 775,</span>
+<span class="token comment">//   "username": "robotcat",</span>
+<span class="token comment">//   "password": "hunter2",</span>
+<span class="token comment">//   "userCalendar": "gregory"</span>
+<span class="token comment">// }</span>
+
+<span class="token comment">// To rebuild from the string:</span>
+<span class="token keyword">function</span> <span class="token function">reviver</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>key<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'Calendar'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
