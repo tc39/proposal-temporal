@@ -57,7 +57,7 @@ console.log(
   Temporal.now.instant()
 );
 // example output:
-// Initialization complete 2020-11-16T09:00Z
+// Initialization complete 2021-01-13T20:57:01.500944804Z
 ```
 
 See [Temporal.now Documentation](./now.md) for detailed documentation.
