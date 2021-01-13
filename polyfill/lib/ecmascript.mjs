@@ -519,7 +519,13 @@ export const ES = ObjectAssign({}, ES2020, {
         'weeks',
         'years'
       ],
-      ES.ToNumber
+      (v) => {
+        v = ES.ToNumber(v);
+        if (MathFloor(v) !== v) {
+          throw new RangeError(`unsupported fractional value ${v}`);
+        }
+        return v;
+      }
     );
     if (!props) throw new TypeError('invalid duration-like');
     let {
@@ -534,23 +540,6 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds = 0,
       nanoseconds = 0
     } = props;
-    if (!ES.IsInteger(years) || !ES.IsInteger(months) || !ES.IsInteger(weeks) || !ES.IsInteger(days)) {
-      throw new RangeError('non-time units cannot be fractional');
-    }
-    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
-      hours % 1,
-      MathTrunc(minutes),
-      minutes % 1,
-      MathTrunc(seconds),
-      seconds % 1,
-      MathTrunc(milliseconds),
-      milliseconds % 1,
-      MathTrunc(microseconds),
-      microseconds % 1,
-      MathTrunc(nanoseconds),
-      nanoseconds % 1
-    ));
-    hours = MathTrunc(hours);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
