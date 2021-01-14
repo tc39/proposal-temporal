@@ -171,15 +171,22 @@ DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toStr
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
-    const { year, month, day } = ES.ToRecord(fields, [['day'], ['month'], ['year']]);
+    let { year, month, day } = ES.ToTemporalDateFields(fields, []);
+    year = ES.ToInteger(year);
+    month = ES.ToInteger(month);
+    day = ES.ToInteger(day);
     return ES.RegulateDate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
-    const { year, month } = ES.ToRecord(fields, [['month'], ['year']]);
+    let { year, month } = ES.ToTemporalYearMonthFields(fields, []);
+    year = ES.ToInteger(year);
+    month = ES.ToInteger(month);
     return ES.RegulateYearMonth(year, month, overflow);
   },
   monthDayFromFields(fields, overflow) {
-    const { month, day } = ES.ToRecord(fields, [['day'], ['month']]);
+    let { month, day } = ES.ToTemporalMonthDayFields(fields, []);
+    month = ES.ToInteger(month);
+    day = ES.ToInteger(day);
     return ES.RegulateMonthDay(month, day, overflow);
   },
   fields(fields) {
