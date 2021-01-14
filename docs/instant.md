@@ -226,7 +226,7 @@ The value of this property is suitable to be passed to `new Temporal.Instant()`.
 
 - `timeZone` (object or string): either
   - a `Temporal.TimeZone` object
-  - an object implementing the [time zone protocol](./timezone.md#protocol)
+  - an object implementing the [time zone protocol](./timezone.md#custom-time-zones)
   - a string description of the time zone; either its IANA name or UTC offset
   - an object with a `timeZone` property whose value is any of the above.
 
@@ -255,7 +255,7 @@ timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
 
 - `item` (object): an object with properties to be combined with `instant`. The following properties are recognized:
   - `calendar` (required calendar identifier string, `Temporal.Calendar` object, or object implementing the calendar protocol): the calendar in which to interpret `instant`.
-  - `timeZone` (required time zone identifier string, `Temporal.TimeZone` object, or object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `instant`.
+  - `timeZone` (required time zone identifier string, `Temporal.TimeZone` object, or object implementing the [time zone protocol](./timezone.md#custom-time-zones)): the time zone in which to interpret `instant`.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
 
@@ -558,7 +558,7 @@ one.equals(one); // => true
 
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `timeZone` (string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+  - `timeZone` (string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
     The default is to use UTC.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.

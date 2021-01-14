@@ -653,7 +653,7 @@ Use `Temporal.PlainDate.compare()` for this, or `date.equals()` for equality.
 
 - `item` (object): an object with properties to be added to `date`. The following properties are recognized:
   - `plainTime` (optional `Temporal.PlainTime` or value convertible to one): a time of day on `date` used to merge into a `Temporal.ZonedDateTime`.
-  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `date` and `plainTime`.
+  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#custom-time-zones)): the time zone in which to interpret `date` and `plainTime`.
 
 **Returns:** a `Temporal.ZonedDateTime` object that represents the wall-clock time `plainTime` on the calendar date `date` projected into `timeZone`.
 

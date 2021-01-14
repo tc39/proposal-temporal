@@ -13,7 +13,7 @@ The `Temporal.now` object has several methods which give information about the c
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
@@ -47,7 +47,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 **Parameters:**
 
 - `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
@@ -107,7 +107,7 @@ console.log(`At ${nextTransition.toZonedDateTimeISO(tz)} the offset will change 
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDateTime` object representing the current system date and time in the reckoning of the ISO 8601 calendar.
@@ -143,7 +143,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 **Parameters:**
 
 - `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDateTime` object representing the current system date and time in the reckoning of the given calendar system.
@@ -157,7 +157,7 @@ If you only want to use the ISO 8601 calendar, use `Temporal.now.plainDateTimeIS
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDate` object representing the current system date in the reckoning of the ISO 8601 calendar.
@@ -180,7 +180,7 @@ if (date.month === 1 && date.day === 1) console.log('New year!');
 **Parameters:**
 
 - `calendar` (`Temporal.Calendar`, plain object, or string): The calendar system to get the current date and time in.
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDate` object representing the current system date in the reckoning of the given calendar.
@@ -200,7 +200,7 @@ if (date.month === 1 && date.day === 1) console.log('New year!');
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainTime` object representing the current system time in the reckoning of the ISO 8601 calendar.
