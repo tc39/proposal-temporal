@@ -8782,7 +8782,7 @@
       return GetSlot(date, ISO_DAY);
     },
     era: function era(date) {
-      if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.Date%'));
+      if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
       return undefined;
     },
     dayOfWeek: function dayOfWeek(date) {
