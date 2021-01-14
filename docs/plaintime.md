@@ -542,7 +542,7 @@ Use `Temporal.PlainTime.compare()` for this, or `time.equals()` for equality.
 
 - `item` (object): an object with properties to be added to `time`. The following properties are recognized:
   - `plainDate` (required `Temporal.PlainDate` or value convertible to one): a date used to merge into a `Temporal.ZonedDateTime` along with `time`.
-  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#protocol)): the time zone in which to interpret `time` and `plainDate`.
+  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#custom-time-zones)): the time zone in which to interpret `time` and `plainDate`.
 
 **Returns:** a `Temporal.ZonedDateTime` object that represents the clock `time` on the calendar `plainDate` projected into `timeZone`.
 

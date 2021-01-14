@@ -896,7 +896,7 @@ Use `Temporal.PlainDateTime.compare()` for this, or `datetime.equals()` for equa
 
 **Parameters:**
 
-- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#protocol), or a string.
+- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.
