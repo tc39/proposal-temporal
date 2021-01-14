@@ -207,7 +207,7 @@ impl['iso8601'] = {
     return GetSlot(date, ISO_DAY);
   },
   era(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.Date%'));
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return undefined;
   },
   dayOfWeek(date) {
