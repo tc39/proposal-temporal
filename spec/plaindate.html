@@ -305,7 +305,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDate_, _fieldNames_).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_, %Temporal.YearMonth%).
+        1. Return ? YearMonthFromFields(_calendar_, _fields_, %Temporal.PlainYearMonth%).
       </emu-alg>
     </emu-clause>
 
@@ -320,7 +320,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDate_, _fieldNames_).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.MonthDay%).
+        1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%).
       </emu-alg>
     </emu-clause>
 
