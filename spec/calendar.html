@@ -229,6 +229,18 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-consolidatecalendars" aoid="ConsolidateCalendars">
+      <h1>ConsolidateCalendars ( _one_, _two_ )</h1>
+      <emu-alg>
+        1. Let _calendarOne_ be ? CalendarToString(_one_).
+        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. If _calendarOne_ is _calendarTwo_, return _two_.
+        1. If _calendarOne_ is *"iso8601"*, return _two_.
+        1. If _calendarTwo_ is *"iso8601"*, return _one_.
+        1. Throw a *RangeError* exception.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
       <h1>IsLeapYear ( _year_ )</h1>
       <emu-alg>
