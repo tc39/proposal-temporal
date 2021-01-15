@@ -1,5 +1,9 @@
 name: Run tests
-on: pull_request
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   test-polyfill:
     runs-on: ubuntu-latest
