@@ -161,6 +161,8 @@
 </li>
 <li><a href="#Temporal-PlainTime">Temporal.PlainTime</a>
 </li>
+<li><a href="#Temporal-PlainDateTime">Temporal.PlainDateTime</a>
+</li>
 <li><a href="#Temporal-PlainYearMonth">Temporal.PlainYearMonth</a>
 </li>
 <li><a href="#Temporal-PlainMonthDay">Temporal.PlainMonthDay</a>
@@ -270,19 +272,11 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.068346205</span>
 
 time<span class="token punctuation">.</span>second <span class="token comment">// => 9</span>
-time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// => "19:39:09.068346205"</span>
-
-See <span class="token punctuation">[</span>Temporal<span class="token punctuation">.</span>PlainTime Documentation<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token operator">/</span>plaintime<span class="token punctuation">.</span>md<span class="token punctuation">)</span> <span class="token keyword">for</span> detailed documentation<span class="token punctuation">.</span>
-
-### <span class="token operator">**</span>Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token operator">**</span>
-
-<span class="token constant">A</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Temporal.PlainDateTime</span><span class="token template-punctuation string">`</span></span> represents a calendar date and wall<span class="token operator">-</span>clock time that does not carry time zone information<span class="token punctuation">,</span> e<span class="token punctuation">.</span>g<span class="token punctuation">.</span> December <span class="token number">7</span>th<span class="token punctuation">,</span> <span class="token number">1995</span> at <span class="token number">3</span><span class="token operator">:</span><span class="token number">00</span> <span class="token constant">PM</span> <span class="token punctuation">(</span><span class="token keyword">in</span> the Gregorian calendar<span class="token punctuation">)</span><span class="token punctuation">.</span>
-
-It can be converted to a <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Temporal.ZonedDateTime</span><span class="token template-punctuation string">`</span></span> using a <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Temporal.TimeZone</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span>
-For use cases that require a time zone<span class="token punctuation">,</span> especially using arithmetic or other derived values<span class="token punctuation">,</span> consider using <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Temporal.ZonedDateTime</span><span class="token template-punctuation string">`</span></span> instead because that type automatically adjusts <span class="token keyword">for</span> Daylight Saving Time<span class="token punctuation">.</span>
-
-<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token template-punctuation string">`</span></span>`js
-<span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// => "19:39:09.068346205"</span></code></pre><p>See <a href="./plaintime.html">Temporal.PlainTime Documentation</a> for detailed documentation.</p>
+<h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p>A <code>Temporal.PlainDateTime</code> represents a calendar date and wall-clock time that does not carry time zone information, e.g. December 7th, 1995 at 3:00 PM (in the Gregorian calendar).</p>
+<p>It can be converted to a <code>Temporal.ZonedDateTime</code> using a <code>Temporal.TimeZone</code>.
+For use cases that require a time zone, especially using arithmetic or other derived values, consider using <code>Temporal.ZonedDateTime</code> instead because that type automatically adjusts for Daylight Saving Time.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
   month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
   day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span>
