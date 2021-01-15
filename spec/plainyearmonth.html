@@ -27,10 +27,10 @@
           1. Throw a *TypeError* exception.
         1. If _referenceISODay_ is *undefined*, then
           1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
-        1. Let _y_ be ? ToInteger(_isoYear_).
-        1. Let _m_ be ? ToInteger(_isoMonth_).
+        1. Let _y_ be ? ToIntegerOrInfinity(_isoYear_).
+        1. Let _m_ be ? ToIntegerOrInfinity(_isoMonth_).
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
-        1. Let _ref_ be ? ToInteger(_referenceISODay_).
+        1. Let _ref_ be ? ToIntegerOrInfinity(_referenceISODay_).
         1. Return ? CreateTemporalYearMonth(_y_, _m_, _calendar_, _ref_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -470,7 +470,7 @@
           1. Let _value_ be ? Get(_item_, _property_).
           1. If _property_ is *"day"*, and _value_ is *undefined*, then
             1. Throw a *TypeError* exception.
-          1. Let _value_ be ? ToInteger(_value_).
+          1. Let _value_ be ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
         1. Return ? DateFromFields(_calendar_, _fields_, *"reject"*, %Temporal.PlainDate%).
       </emu-alg>
@@ -618,7 +618,7 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. If _property_ is either *"month"* or *"year"*, then
-              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
@@ -732,7 +732,7 @@
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
           1. If _property_ is either *"month"*, or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Perform ! CreateDataPropertyOrThrow(_result_, *"day"*, 1).
         1. Return _result_.

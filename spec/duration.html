@@ -29,20 +29,20 @@
       <p>
         When the `Temporal.Duration` function is called, the following steps are taken:
       </p>
-      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _y_ be ? ToInteger(_years_).
-        1. Let _mo_ be ? ToInteger(_months_).
-        1. Let _w_ be ? ToInteger(_weeks_).
-        1. Let _d_ be ? ToInteger(_days_).
-        1. Let _h_ be ? ToInteger(_hours_).
-        1. Let _m_ be ? ToInteger(_minutes_).
-        1. Let _s_ be ? ToInteger(_seconds_).
-        1. Let _ms_ be ? ToInteger(_milliseconds_).
-        1. Let _mis_ be ? ToInteger(_microseconds_).
-        1. Let _ns_ be ? ToInteger(_nanoseconds_).
+        1. Let _y_ be ? ToIntegerOrInfinity(_years_).
+        1. Let _mo_ be ? ToIntegerOrInfinity(_months_).
+        1. Let _w_ be ? ToIntegerOrInfinity(_weeks_).
+        1. Let _d_ be ? ToIntegerOrInfinity(_days_).
+        1. Let _h_ be ? ToIntegerOrInfinity(_hours_).
+        1. Let _m_ be ? ToIntegerOrInfinity(_minutes_).
+        1. Let _s_ be ? ToIntegerOrInfinity(_seconds_).
+        1. Let _ms_ be ? ToIntegerOrInfinity(_milliseconds_).
+        1. Let _mis_ be ? ToIntegerOrInfinity(_microseconds_).
+        1. Let _ns_ be ? ToIntegerOrInfinity(_nanoseconds_).
         1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -706,7 +706,7 @@
 
     <emu-clause id="sec-temporal-totemporaldurationrecord" aoid="ToTemporalDurationRecord">
       <h1>ToTemporalDurationRecord ( _temporalDurationLike_ )</h1>
-      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalDurationLike_) is Object.
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
@@ -813,7 +813,7 @@
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.

@@ -1113,34 +1113,34 @@
     <p>
       The ParseISODateTime abstract operation examines any |Time|, |DateTime| or |CalendarDateTime| string accepted by the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
     </p>
-    <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+    <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFractionalPart|, and |CalendarName| productions, or *undefined* if not present.
       1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
       1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
-      1. Set _year_ to ! ToInteger(_year_).
+      1. Set _year_ to ! ToIntegerOrInfinity(_year_).
       1. If _month_ is *undefined*, then
         1. Set _month_ to 1.
       1. Else,
-        1. Set _month_ to ! ToInteger(_month_).
+        1. Set _month_ to ! ToIntegerOrInfinity(_month_).
       1. If _day_ is *undefined*, then
         1. Set _day_ to 1.
       1. Else,
-        1. Set _day_ to ! ToInteger(_day_).
-      1. Set _hour_ to ! ToInteger(_hour_).
-      1. Set _minute_ to ! ToInteger(_minute_).
-      1. Set _second_ to ! ToInteger(_second_).
+        1. Set _day_ to ! ToIntegerOrInfinity(_day_).
+      1. Set _hour_ to ! ToIntegerOrInfinity(_hour_).
+      1. Set _minute_ to ! ToIntegerOrInfinity(_minute_).
+      1. Set _second_ to ! ToIntegerOrInfinity(_second_).
       1. If _second_ is 60, then
         1. Set _second_ to 59.
       1. If _fraction_ is not *undefined*, then
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _millisecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
-        1. Set _millisecond_ to ! ToInteger(_millisecond_).
+        1. Set _millisecond_ to ! ToIntegerOrInfinity(_millisecond_).
         1. Let _microsecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).
-        1. Set _microsecond_ to ! ToInteger(_microsecond_).
+        1. Set _microsecond_ to ! ToIntegerOrInfinity(_microsecond_).
         1. Let _nanosecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
-        1. Set _nanosecond_ to ! ToInteger(_nanosecond_).
+        1. Set _nanosecond_ to ! ToIntegerOrInfinity(_nanosecond_).
       1. Else,
         1. Let _millisecond_ be 0.
         1. Let _microsecond_ be 0.
@@ -1275,7 +1275,7 @@
     <p>
       The ParseTemporalDurationString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.Duration instance.
     </p>
-    <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+    <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDurationString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
@@ -1285,32 +1285,32 @@
         1. Let _factor_ be −1.
       1. Else,
         1. Let _factor_ be 1.
-      1. Set _years_ to ? ToInteger(_years_) × _factor_.
-      1. Set _months_ to ? ToInteger(_months_) × _factor_.
-      1. Set _weeks_ to ? ToInteger(_weeks_) × _factor_.
-      1. Set _days_ to ? ToInteger(_days_) × _factor_.
-      1. Set _hours_ to ? ToInteger(_hours_) × _factor_.
-      1. Set _minutes_ to ? ToInteger(_minutes_) × _factor_.
-      1. Set _seconds_ to ? ToInteger(_seconds_) × _factor_.
+      1. Set _years_ to ? ToIntegerOrInfinity(_years_) × _factor_.
+      1. Set _months_ to ? ToIntegerOrInfinity(_months_) × _factor_.
+      1. Set _weeks_ to ? ToIntegerOrInfinity(_weeks_) × _factor_.
+      1. Set _days_ to ? ToIntegerOrInfinity(_days_) × _factor_.
+      1. Set _hours_ to ? ToIntegerOrInfinity(_hours_) × _factor_.
+      1. Set _minutes_ to ? ToIntegerOrInfinity(_minutes_) × _factor_.
+      1. Set _seconds_ to ? ToIntegerOrInfinity(_seconds_) × _factor_.
       1. If _isoString_ contains a |TimeFractionalPart| production, then
         1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _milliseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
-        1. Set _milliseconds_ to ! ToInteger(_milliseconds_) × _factor_.
+        1. Set _milliseconds_ to ! ToIntegerOrInfinity(_milliseconds_) × _factor_.
         1. Let _microseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).
-        1. Set _microseconds_ to ! ToInteger(_microseconds_) × _factor_.
+        1. Set _microseconds_ to ! ToIntegerOrInfinity(_microseconds_) × _factor_.
         1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
-        1. Set _nanoseconds_ to ! ToInteger(_nanoseconds_) × _factor_.
+        1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_) × _factor_.
       1. Else,
         1. Let _milliseconds_ be 0.
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
       1. If _fHours_ is not *undefined*, then
-        1. Set _fHours_ to ! ToInteger(_fHours_) × _factor_ / 10 raised to the power of the length of _fHours_.
+        1. Set _fHours_ to ! ToIntegerOrInfinity(_fHours_) × _factor_ / 10 raised to the power of the length of _fHours_.
       1. Else,
         1. Set _fHours_ to 0.
       1. If _fMinutes_ is not *undefined*, then
-        1. Set _fMinutes_ to ! ToInteger(_fMinutes_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
+        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fMinutes_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
       1. Else,
         1. Set _fMinutes_ to 0.
       1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, 0, milliseconds, 0, microseconds, 0, nanoseconds).
@@ -1334,22 +1334,22 @@
     <p>
       The ParseTemporalMonthDayString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.PlainMonthDay instance.
     </p>
-    <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+    <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalMonthDayString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
       1. Let _year_, _month_ and _day_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth| and |DateDay| productions, or *undefined* if not present.
       1. If _year_ is not *undefined*, then
-        1. Set _year_ to ! ToInteger(_year_).
+        1. Set _year_ to ! ToIntegerOrInfinity(_year_).
       1. If _month_ is *undefined*, then
         1. Set _month_ to 1.
       1. Else,
-        1. Set _month_ to ! ToInteger(_month_).
+        1. Set _month_ to ! ToIntegerOrInfinity(_month_).
       1. If _day_ is *undefined*, then
         1. Set _day_ to 1.
       1. Else,
-        1. Set _day_ to ! ToInteger(_day_).
+        1. Set _day_ to ! ToIntegerOrInfinity(_day_).
       1. Return the new Record {
         [[Year]]: _year_,
         [[Month]]: _month_,
@@ -1399,17 +1399,17 @@
         1. Let _offsetString_ be *undefined*.
       1. Else,
         1. Assert: _sign_ is not *undefined*.
-        1. Set _hours_ to ! ToInteger(_hours_).
+        1. Set _hours_ to ! ToIntegerOrInfinity(_hours_).
         1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or the code unit 0x2212 (MINUS SIGN), then
           1. Set _sign_ to −1.
         1. Else,
           1. Set _sign_ to 1.
-        1. Set _minutes_ to ! ToInteger(_minute_).
-        1. Set _seconds_ to ! ToInteger(_seconds_).
+        1. Set _minutes_ to ! ToIntegerOrInfinity(_minute_).
+        1. Set _seconds_ to ! ToIntegerOrInfinity(_seconds_).
         1. If _fraction_ is not *undefined*, then
           1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
           1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 9 (exclusive).
-          1. Set _nanoseconds_ to ! ToInteger(_nanoseconds_).
+          1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_).
         1. Else,
           1. Let _nanoseconds_ be 0.
         1. Let _offsetNanoseconds_ be _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).
