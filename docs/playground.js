@@ -7429,6 +7429,12 @@
     function TimeZone(timeZoneIdentifier) {
       _classCallCheck(this, TimeZone);
 
+      // Note: if the argument is not passed, GetCanonicalTimeZoneIdentifier(undefined) will throw.
+      //       This check exists only to improve the error message.
+      if (arguments.length < 1) {
+        throw new RangeError('missing argument: identifier is required');
+      }
+
       timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
       CreateSlots(this);
       SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
@@ -8139,6 +8145,12 @@
     function Instant(epochNanoseconds) {
       _classCallCheck(this, Instant);
 
+      // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
+      //       to improve the error message.
+      if (arguments.length < 1) {
+        throw new TypeError('missing argument: epochNanoseconds is required');
+      }
+
       var ns = ES.ToBigInt(epochNanoseconds);
       ES.RejectInstantRange(ns);
       CreateSlots(this);
@@ -8504,6 +8516,12 @@
   var Calendar = /*#__PURE__*/function () {
     function Calendar(id) {
       _classCallCheck(this, Calendar);
+
+      // Note: if the argument is not passed, IsBuiltinCalendar("undefined") will fail. This check
+      //       exists only to improve the error message.
+      if (arguments.length < 1) {
+        throw new RangeError('missing argument: id is required');
+      }
 
       id = ES.ToString(id);
       if (!IsBuiltinCalendar(id)) throw new RangeError("invalid calendar identifier ".concat(id));
@@ -8988,7 +9006,13 @@
       isoYear = ES.ToInteger(isoYear);
       isoMonth = ES.ToInteger(isoMonth);
       isoDay = ES.ToInteger(isoDay);
-      calendar = ES.ToTemporalCalendar(calendar);
+      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      //       be rejected by RejectDate below. This check exists only to improve the error message.
+
+      if (arguments.length < 3) {
+        throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
+      }
+
       ES.RejectDate(isoYear, isoMonth, isoDay);
       ES.RejectDateRange(isoYear, isoMonth, isoDay);
       CreateSlots(this);
@@ -9536,7 +9560,14 @@
       millisecond = ES.ToInteger(millisecond);
       microsecond = ES.ToInteger(microsecond);
       nanosecond = ES.ToInteger(nanosecond);
-      calendar = ES.ToTemporalCalendar(calendar);
+      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      //       be rejected by RejectDateTime below. This check exists only to improve the error
+      //       message.
+
+      if (arguments.length < 3) {
+        throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
+      }
+
       ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
       ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
       CreateSlots(this);
@@ -10751,7 +10782,13 @@
       isoMonth = ES.ToInteger(isoMonth);
       isoDay = ES.ToInteger(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISOYear = ES.ToInteger(referenceISOYear);
+      referenceISOYear = ES.ToInteger(referenceISOYear); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      //       be rejected by RejectDate below. This check exists only to improve the error message.
+
+      if (arguments.length < 2) {
+        throw new RangeError('missing argument: isoMonth and isoDay are required');
+      }
+
       ES.RejectDate(referenceISOYear, isoMonth, isoDay);
       ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
       CreateSlots(this);
@@ -11608,7 +11645,13 @@
       isoYear = ES.ToInteger(isoYear);
       isoMonth = ES.ToInteger(isoMonth);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISODay = ES.ToInteger(referenceISODay);
+      referenceISODay = ES.ToInteger(referenceISODay); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      //       be rejected by RejectDate below. This check exists only to improve the error message.
+
+      if (arguments.length < 2) {
+        throw new RangeError('missing argument: isoYear and isoMonth are required');
+      }
+
       ES.RejectDate(isoYear, isoMonth, referenceISODay);
       ES.RejectYearMonthRange(isoYear, isoMonth);
       CreateSlots(this);
@@ -12037,6 +12080,14 @@
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ES.GetISO8601Calendar();
 
       _classCallCheck(this, ZonedDateTime);
+
+      // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
+      //       to improve the error message.
+      //       ToTemporalTimeZone(undefined) will end up calling TimeZone.from("undefined"), which
+      //       could succeed.
+      if (arguments.length < 1) {
+        throw new TypeError('missing argument: epochNanoseconds is required');
+      }
 
       epochNanoseconds = ES.ToBigInt(epochNanoseconds);
       timeZone = ES.ToTemporalTimeZone(timeZone);
