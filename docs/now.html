@@ -174,7 +174,7 @@
 <h2 id="methods">Methods</h2>
 <h3 id="zonedDateTimeISO"><a class="heading-link" href="#zonedDateTimeISO"></a>Temporal.now.<strong>zonedDateTimeISO</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
@@ -198,7 +198,7 @@ Object<span class="token punctuation">.</span><span class="token function">entri
 <span class="token comment">// Tokyo: 2020-09-18T17:17:48.441068438+09:00[Asia/Tokyo]</span></code></pre><h3 id="zonedDateTime"><a class="heading-link" href="#zonedDateTime"></a>Temporal.now.<strong>zonedDateTime</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
@@ -235,7 +235,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token comment">// example output:</span>
 <span class="token comment">// At 2021-03-14T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00</span></code></pre><h3 id="plainDateTimeISO"><a class="heading-link" href="#plainDateTimeISO"></a>Temporal.now.<strong>plainDateTimeISO</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDateTime</code> object representing the current system date and time in the reckoning of the ISO 8601 calendar.</p>
@@ -262,7 +262,7 @@ Object<span class="token punctuation">.</span><span class="token function">entri
 <h3 id="plainDateTime"><a class="heading-link" href="#plainDateTime"></a>Temporal.now.<strong>plainDateTime</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDateTime</code> object representing the current system date and time in the reckoning of the given calendar system.</p>
@@ -271,7 +271,7 @@ Optionally a time zone can be given in which the time is computed, instead of th
 <p>If you only want to use the ISO 8601 calendar, use <code>Temporal.now.plainDateTimeISO()</code>.</p>
 <h3 id="plainDateISO"><a class="heading-link" href="#plainDateISO"></a>Temporal.now.<strong>plainDateISO</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDate</code> object representing the current system date in the reckoning of the ISO 8601 calendar.</p>
@@ -284,7 +284,7 @@ date <span class="token operator">=</span> Temporal<span class="token punctuatio
 <span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New year!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="plainDate"><a class="heading-link" href="#plainDate"></a>Temporal.now.<strong>plainDate</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDate</code> object representing the current system date in the reckoning of the given calendar.</p>
@@ -295,7 +295,7 @@ Optionally a time zone can be given in which the time is computed, instead of th
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span><span class="token string">'persian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New year!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="plainTimeISO"><a class="heading-link" href="#plainTimeISO"></a>Temporal.now.<strong>plainTimeISO</strong>(<em>timeZone</em>: object | string = Temporal.now.timeZone()) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 If not given, the current system time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.PlainTime</code> object representing the current system time in the reckoning of the ISO 8601 calendar.</p>

@@ -339,7 +339,7 @@ The number of seconds is truncated towards zero.</p>
 <ul>
 <li><code>timeZone</code> (object or string): either<ul>
 <li>a <code>Temporal.TimeZone</code> object</li>
-<li>an object implementing the <a href="./timezone.html#protocol">time zone protocol</a></li>
+<li>an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a></li>
 <li>a string description of the time zone; either its IANA name or UTC offset</li>
 <li>an object with a <code>timeZone</code> property whose value is any of the above.</li>
 </ul>
@@ -360,7 +360,7 @@ timestamp<span class="token punctuation">.</span><span class="token function">to
 <ul>
 <li><code>item</code> (object): an object with properties to be combined with <code>instant</code>. The following properties are recognized:<ul>
 <li><code>calendar</code> (required calendar identifier string, <code>Temporal.Calendar</code> object, or object implementing the calendar protocol): the calendar in which to interpret <code>instant</code>.</li>
-<li><code>timeZone</code> (required time zone identifier string, <code>Temporal.TimeZone</code> object, or object implementing the <a href="./timezone.html#protocol">time zone protocol</a>): the time zone in which to interpret <code>instant</code>.</li>
+<li><code>timeZone</code> (required time zone identifier string, <code>Temporal.TimeZone</code> object, or object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>): the time zone in which to interpret <code>instant</code>.</li>
 </ul>
 </li>
 </ul>
@@ -588,7 +588,7 @@ one<span class="token punctuation">.</span><span class="token function">equals</
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>timeZone</code> (string or object): the time zone to express <code>instant</code> in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (string or object): the time zone to express <code>instant</code> in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
 The default is to use UTC.</li>
 <li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
 Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.

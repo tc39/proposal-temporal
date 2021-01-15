@@ -878,7 +878,7 @@ This is because it&#39;s not possible to compare <code>Temporal.PlainDateTime</c
 Use <code>Temporal.PlainDateTime.compare()</code> for this, or <code>datetime.equals()</code> for equality.</p>
 <h3 id="toZonedDateTime"><a class="heading-link" href="#toZonedDateTime"></a>datetime.<strong>toZonedDateTime</strong>(<em>timeZone</em> : object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#protocol">time zone protocol</a>, or a string.</li>
+<li><code>timeZone</code> (optional string or object): The time zone in which to interpret <code>dateTime</code>, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>dateTime</code> does not exist in the time zone, or exists more than once.
