@@ -6,6 +6,7 @@ esid: sec-temporal.instant
 features: [Symbol]
 ---*/
 
+assert.throws(TypeError, () => new Temporal.Instant(), "undefined");
 assert.throws(TypeError, () => new Temporal.Instant(undefined), "undefined");
 assert.throws(TypeError, () => new Temporal.Instant(null), "null");
 assert.throws(TypeError, () => new Temporal.Instant(42), "number");

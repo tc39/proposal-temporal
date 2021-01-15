@@ -39,6 +39,12 @@ export class PlainDate {
     isoDay = ES.ToInteger(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
 
+    // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+    //       be rejected by RejectDate below. This check exists only to improve the error message.
+    if (arguments.length < 3) {
+      throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
+    }
+
     ES.RejectDate(isoYear, isoMonth, isoDay);
     ES.RejectDateRange(isoYear, isoMonth, isoDay);
     CreateSlots(this);
