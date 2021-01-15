@@ -9,6 +9,12 @@ import bigInt from 'big-integer';
 
 export class Instant {
   constructor(epochNanoseconds) {
+    // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
+    //       to improve the error message.
+    if (arguments.length < 1) {
+      throw new TypeError('missing argument: epochNanoseconds is required');
+    }
+
     const ns = ES.ToBigInt(epochNanoseconds);
     ES.RejectInstantRange(ns);
     CreateSlots(this);

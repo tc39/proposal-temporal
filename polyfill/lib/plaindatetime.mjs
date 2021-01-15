@@ -87,6 +87,13 @@ export class PlainDateTime {
     nanosecond = ES.ToInteger(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
 
+    // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+    //       be rejected by RejectDateTime below. This check exists only to improve the error
+    //       message.
+    if (arguments.length < 3) {
+      throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
+    }
+
     ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
     ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
 

@@ -29,6 +29,13 @@ const ObjectAssign = Object.assign;
 
 export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) {
+    // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
+    //       to improve the error message.
+    //       ToTemporalTimeZone(undefined) will end up calling TimeZone.from("undefined"), which
+    //       could succeed.
+    if (arguments.length < 1) {
+      throw new TypeError('missing argument: epochNanoseconds is required');
+    }
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
     timeZone = ES.ToTemporalTimeZone(timeZone);
     calendar = ES.ToTemporalCalendar(calendar);

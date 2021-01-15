@@ -21,6 +21,12 @@ import {
 
 export class TimeZone {
   constructor(timeZoneIdentifier) {
+    // Note: if the argument is not passed, GetCanonicalTimeZoneIdentifier(undefined) will throw.
+    //       This check exists only to improve the error message.
+    if (arguments.length < 1) {
+      throw new RangeError('missing argument: identifier is required');
+    }
+
     timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
