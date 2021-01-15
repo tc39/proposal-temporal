@@ -130,6 +130,7 @@ const time = Temporal.PlainTime.from({
 
 time.second // => 9
 time.toString() // => "19:39:09.068346205"
+```
 
 See [Temporal.PlainTime Documentation](./plaintime.md) for detailed documentation.
 
