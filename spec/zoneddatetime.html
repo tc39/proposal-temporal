@@ -434,7 +434,7 @@
         1. Let _todayInstant_ be ? GetTemporalInstantFor(_timeZone_, _today_, *"compatible"*).
         1. Let _tomorrowInstant_ be ? GetTemporalInstantFor(_timeZone_, _tomorrow_, *"compatible"*).
         1. Let _diffNs_ be _tomorrowInstant_.[[Nanoseconds]] − _todayInstant_.[[Nanoseconds]].
-        1. Return 𝔽(_diffNs_ ÷ (3.6 × 10<sup>12</sup>)).
+        1. Return 𝔽(_diffNs_ / (3.6 × 10<sup>12</sup>)).
       </emu-alg>
     </emu-clause>
 
@@ -1425,7 +1425,7 @@
           1. Return the new Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
         1. If _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the new Record {
-            [[Days]]: the integral part of _nanoseconds_ ÷ _dayLengthNs_,
+            [[Days]]: the integral part of _nanoseconds_ / _dayLengthNs_,
             [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_,
             [[DayLength]]: _sign_ × _dayLengthNs_
             }.
