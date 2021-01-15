@@ -23,9 +23,9 @@
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
-        1. Let _y_ be ? ToInteger(_isoYear_).
-        1. Let _m_ be ? ToInteger(_isoMonth_).
-        1. Let _d_ be ? ToInteger(_isoDay_).
+        1. Let _y_ be ? ToIntegerOrInfinity(_isoYear_).
+        1. Let _m_ be ? ToIntegerOrInfinity(_isoMonth_).
+        1. Let _d_ be ? ToIntegerOrInfinity(_isoDay_).
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
         1. Return ? CreateTemporalDate(_y_, _m_, _d_, _calendar_, NewTarget).
       </emu-alg>
@@ -845,7 +845,7 @@
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
           1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Return _result_.
       </emu-alg>
@@ -863,7 +863,7 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
-              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.

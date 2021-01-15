@@ -27,10 +27,10 @@
           1. Throw a *TypeError* exception.
         1. If _referenceISOYear_ is not given, then
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
-        1. Let _m_ be ? ToInteger(_isoMonth_).
-        1. Let _d_ be ? ToInteger(_isoDay_).
+        1. Let _m_ be ? ToIntegerOrInfinity(_isoMonth_).
+        1. Let _d_ be ? ToIntegerOrInfinity(_isoDay_).
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
-        1. Let _ref_ be ? ToInteger(_referenceISOYear_).
+        1. Let _ref_ be ? ToIntegerOrInfinity(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>
       <emu-note>1972 is the first leap year after the Unix epoch.</emu-note>
@@ -255,7 +255,7 @@
           1. Let _value_ be ? Get(_item_, _property_).
           1. If _property_ is *"year"*, and _value_ is *undefined*, then
             1. Throw a *TypeError* exception.
-          1. Let _value_ be ? ToInteger(_value_).
+          1. Let _value_ be ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
         1. Return ? DateFromFields(_calendar_, _fields_, %Temporal.PlainDate%).
       </emu-alg>
@@ -403,7 +403,7 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. If _property_ is either *"month"* or *"day"*, then
-              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
@@ -498,7 +498,7 @@
           1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
           1. If _property_ is one of *"month"* or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Let _year_ be the first leap year after the Unix epoch (1972).
         1. Perform ! CreateDataPropertyOrThrow(_result_, *"year"*, _year_).

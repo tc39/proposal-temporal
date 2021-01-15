@@ -22,19 +22,19 @@
       <p>
         When the `Temporal.PlainDateTime` function is called, the following steps are taken:
       </p>
-      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _isoYear_ be ? ToInteger(_isoYear_).
-        1. Let _isoMonth_ be ? ToInteger(_isoMonth_).
-        1. Let _isoDay_ be ? ToInteger(_isoDay_).
-        1. Let _hour_ be ? ToInteger(_hour_).
-        1. Let _minute_ be ? ToInteger(_minute_).
-        1. Let _second_ be ? ToInteger(_second_).
-        1. Let _millisecond_ be ? ToInteger(_millisecond_).
-        1. Let _microsecond_ be ? ToInteger(_microsecond_).
-        1. Let _nanosecond_ be ? ToInteger(_nanosecond_).
+        1. Let _isoYear_ be ? ToIntegerOrInfinity(_isoYear_).
+        1. Let _isoMonth_ be ? ToIntegerOrInfinity(_isoMonth_).
+        1. Let _isoDay_ be ? ToIntegerOrInfinity(_isoDay_).
+        1. Let _hour_ be ? ToIntegerOrInfinity(_hour_).
+        1. Let _minute_ be ? ToIntegerOrInfinity(_minute_).
+        1. Let _second_ be ? ToIntegerOrInfinity(_second_).
+        1. Let _millisecond_ be ? ToIntegerOrInfinity(_millisecond_).
+        1. Let _microsecond_ be ? ToIntegerOrInfinity(_microsecond_).
+        1. Let _nanosecond_ be ? ToIntegerOrInfinity(_nanosecond_).
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
         1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, NewTarget).
       </emu-alg>
@@ -974,14 +974,14 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
-              1. Set _value_ to ? ToInteger(_value_).
+              1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
           1. Let _value_ be ? Get(_temporalDateTimeLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
@@ -1116,7 +1116,7 @@
 
     <emu-clause id="sec-temporal-totemporaldatetimefields" aoid="ToTemporalDateTimeFields">
       <h1>ToTemporalDateTimeFields ( _temporalDateTimeLike_, _fieldNames_ )</h1>
-      <emu-note>The value of ? ToInteger(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalDateTimeLike_) is Object.
         1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
@@ -1124,14 +1124,14 @@
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
           1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToInteger(_value_).
+            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
           1. Let _value_ be ? Get(_temporalDateTimeLike_, _property_).
           1. If _value_ is *undefined* and the Optional value of the current row is *false*, then
             1. Throw a *TypeError* exception.
-          1. Let _value_ be ? ToInteger(_value_).
+          1. Let _value_ be ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Return _result_.
       </emu-alg>
