@@ -58,7 +58,7 @@ function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = 
   hour = ES.ISODateTimePartString(hour);
   minute = ES.ISODateTimePartString(minute);
   const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendarID = ES.CalendarToString(GetSlot(dateTime, CALENDAR));
+  const calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
   const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
 }
@@ -412,8 +412,8 @@ export class PlainDateTime {
     other = ES.ToTemporalDateTime(other, PlainDateTime);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    const calendarId = ES.ToString(calendar);
+    const otherCalendarId = ES.ToString(otherCalendar);
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
@@ -505,8 +505,8 @@ export class PlainDateTime {
     other = ES.ToTemporalDateTime(other, PlainDateTime);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    const calendarId = ES.ToString(calendar);
+    const otherCalendarId = ES.ToString(otherCalendar);
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }

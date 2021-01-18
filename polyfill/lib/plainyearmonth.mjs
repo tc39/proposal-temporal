@@ -12,7 +12,7 @@ function YearMonthToString(yearMonth, showCalendar = 'auto') {
   const month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
   let resultString = `${year}-${month}`;
   const calendar = GetSlot(yearMonth, CALENDAR);
-  const calendarID = ES.CalendarToString(calendar);
+  const calendarID = ES.ToString(calendar);
   if (calendarID !== 'iso8601') {
     const day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
     resultString += `-${day}`;
@@ -175,8 +175,8 @@ export class PlainYearMonth {
     other = ES.ToTemporalYearMonth(other, PlainYearMonth);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarID = ES.CalendarToString(calendar);
-    const otherCalendarID = ES.CalendarToString(otherCalendar);
+    const calendarID = ES.ToString(calendar);
+    const otherCalendarID = ES.ToString(otherCalendar);
     if (calendarID !== otherCalendarID) {
       throw new RangeError(
         `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
@@ -248,8 +248,8 @@ export class PlainYearMonth {
     other = ES.ToTemporalYearMonth(other, PlainYearMonth);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarID = ES.CalendarToString(calendar);
-    const otherCalendarID = ES.CalendarToString(otherCalendar);
+    const calendarID = ES.ToString(calendar);
+    const otherCalendarID = ES.ToString(otherCalendar);
     if (calendarID !== otherCalendarID) {
       throw new RangeError(
         `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`

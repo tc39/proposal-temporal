@@ -300,7 +300,7 @@
           1. <mark>TODO: _era_, _dayPeriod_, _fractionalSecondDigits_.</mark>
           1. <ins>If _x_ has an [[InitializedTemporalDate]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Let _calendarOverride_ be _x_.[[Calendar]].</ins>
             1. <ins>Else if _calendar_ is *"iso8601"*, then</ins>
@@ -311,14 +311,14 @@
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).</ins>
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).</ins>
@@ -330,7 +330,7 @@
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _plainDateTime_, *"reject"*).</ins>
           1. <ins>If _x_ has an [[InitializedTemporalDateTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _instant_ be ? GetTemporalInstantFor(_timeZone_, _x_, *"reject"*).</ins>
@@ -339,7 +339,7 @@
             1. <ins>Let _instant_ be _x_.</ins>
           1. <ins>If _x_ has an [[InitializedTemporalZonedDateTime]] internal slot, then</ins>
             1. <ins>Let _pattern_ be _dateTimeFormat_.[[TemporalZonedDateTimePattern]].</ins>
-            1. <ins>Let _calendar_ be ? CalendarToString(_x_.[[Calendar]]).</ins>
+            1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _timeZone_ be ? TimeZoneToString(_x_.[[TimeZone]]).</ins>
