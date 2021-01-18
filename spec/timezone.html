@@ -118,7 +118,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
-        1. Return ? TimeZoneToString(_timeZone_).
+        1. Return ? ToString(_timeZone_).
       </emu-alg>
     </emu-clause>
 
@@ -297,9 +297,6 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Return _timeZone_.[[Identifier]].
       </emu-alg>
-      <p>
-        This function is the <dfn>%Temporal.TimeZone.prototype.toString%</dfn> intrinsic object.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.tojson">
@@ -309,7 +306,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
-        1. Return ? TimeZoneToString(_timeZone_).
+        1. Return ? ToString(_timeZone_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -593,15 +590,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-timezonetostring" aoid="TimeZoneToString">
-      <h1>TimeZoneToString ( _timeZone_ )</h1>
-      <emu-alg>
-        1. Let _toString_ be ? Get(_timeZone_, *"toString"*).
-        1. If _toString_ is *undefined*, set _toString_ to %Temporal.TimeZone.prototype.toString%.
-        1. Return be ? ToString(? Call(_toString_, _timeZone_, « »)).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-comparetimezone" aoid="CompareTimeZone">
       <h1>CompareTimeZone ( _one_, _two_ )</h1>
       <p>
@@ -609,8 +597,8 @@
         results of calling `toString()` on its arguments.
       </p>
       <emu-alg>
-        1. Let _calendarOne_ be ? TimeZoneToString(_one_).
-        1. Let _calendarTwo_ be ? TimeZoneToString(_two_).
+        1. Let _timeZoneOne_ be ? ToString(_one_).
+        1. Let _timeZoneTwo_ be ? ToString(_two_).
         1. Let _r_ be the result of performing Abstract Relational Comparison _timeZoneOne_ &lt; _timeZoneTwo_.
         1. If _r_ is *true*, return −1.
         1. Let _r_ be the result of performing Abstract Relational Comparison _timeZoneTwo_ &lt; _timeZoneOne_.
@@ -626,8 +614,8 @@
         calling `toString()` on its arguments are equal.
       </p>
       <emu-alg>
-        1. Let _timeZoneOne_ be ? TimeZoneToString(_one_).
-        1. Let _timeZoneTwo_ be ? TimeZoneToString(_two_).
+        1. Let _timeZoneOne_ be ? ToString(_one_).
+        1. Let _timeZoneTwo_ be ? ToString(_two_).
         1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
         1. Return *false*.
       </emu-alg>

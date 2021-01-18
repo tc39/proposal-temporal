@@ -113,7 +113,7 @@ function formatRange(a, b) {
     }
     const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
-    if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+    if (atz && btz && !ES.TimeZoneEquals(atz, btz)) {
       throw new RangeError('cannot format range between different time zones');
     }
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
@@ -131,7 +131,7 @@ function formatRangeToParts(a, b) {
     }
     const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
-    if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+    if (atz && btz && !ES.TimeZoneEquals(atz, btz)) {
       throw new RangeError('cannot format range between different time zones');
     }
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
@@ -369,7 +369,7 @@ function extractOverrides(temporalObj, main) {
     }
 
     let timeZone = GetSlot(temporalObj, TIME_ZONE);
-    const objTimeZone = ES.TimeZoneToString(timeZone);
+    const objTimeZone = ES.ToString(timeZone);
     if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
       throw new RangeError(`timeZone option ${main[TZ_GIVEN]} doesn't match actual time zone ${objTimeZone}`);
     }

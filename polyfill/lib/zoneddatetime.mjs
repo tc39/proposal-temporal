@@ -902,7 +902,7 @@ function zonedDateTimeToString(
   );
   let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
   if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, instant);
-  if (showTimeZone !== 'never') result += `[${ES.TimeZoneToString(tz)}]`;
+  if (showTimeZone !== 'never') result += `[${tz}]`;
   const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
   result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return result;

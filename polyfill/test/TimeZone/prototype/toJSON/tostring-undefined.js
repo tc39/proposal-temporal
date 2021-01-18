@@ -8,5 +8,4 @@ esid: sec-temporal.timezone.prototype.tojson
 const tz = Temporal.TimeZone.from('UTC');
 tz.toString = undefined;
 
-const result = tz.toJSON();
-assert.sameValue(result, 'UTC');
+assert.throws(TypeError, () => tz.toJSON());

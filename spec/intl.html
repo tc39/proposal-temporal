@@ -342,7 +342,7 @@
             1. <ins>Let _calendar_ be ? ToString(_x_.[[Calendar]]).</ins>
             1. <ins>If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
-            1. <ins>Let _timeZone_ be ? TimeZoneToString(_x_.[[TimeZone]]).</ins>
+            1. <ins>Let _timeZone_ be ? ToString(_x_.[[TimeZone]]).</ins>
             1. <ins>If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then</ins>
               1. <ins>Throw a *RangeError* exception.</ins>
             1. <ins>Let _instant_ be ? CreateTemporalInstant(_x_.[[Nanoseconds]]).</ins>

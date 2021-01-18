@@ -7,7 +7,11 @@ includes: [compareArray.js]
 ---*/
 
 const actual = [];
-const expected = ['get timeZone.toString', 'call timeZone.toString'];
+const expected = [
+  'get timeZone[@@toPrimitive]',
+  'get timeZone.toString',
+  'call timeZone.toString',
+];
 
 const timeZone = new Proxy(
   {
@@ -18,11 +22,19 @@ const timeZone = new Proxy(
   },
   {
     has(target, property) {
-      actual.push(`has timeZone.${property}`);
+      if (property === Symbol.toPrimitive) {
+        actual.push('has timeZone[@@toPrimitive]');
+      } else {
+        actual.push(`has timeZone.${property}`);
+      }
       return property in target;
     },
     get(target, property) {
-      actual.push(`get timeZone.${property}`);
+      if (property === Symbol.toPrimitive) {
+        actual.push('get timeZone[@@toPrimitive]');
+      } else {
+        actual.push(`get timeZone.${property}`);
+      }
       return target[property];
     }
   }
