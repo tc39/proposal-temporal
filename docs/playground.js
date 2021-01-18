@@ -1823,7 +1823,9 @@
   	}
   }
 
-  var throwTypeError = function () { throw new $TypeError(); };
+  var throwTypeError = function () {
+  	throw new $TypeError();
+  };
   var ThrowTypeError = $gOPD
   	? (function () {
   		try {
@@ -1977,11 +1979,19 @@
   var $concat = functionBind.call(Function.call, Array.prototype.concat);
   var $spliceApply = functionBind.call(Function.apply, Array.prototype.splice);
   var $replace = functionBind.call(Function.call, String.prototype.replace);
+  var $strSlice = functionBind.call(Function.call, String.prototype.slice);
 
   /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
   var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
   var reEscapeChar = /\\(\\)?/g; /** Used to match backslashes in property paths. */
   var stringToPath = function stringToPath(string) {
+  	var first = $strSlice(string, 0, 1);
+  	var last = $strSlice(string, -1);
+  	if (first === '%' && last !== '%') {
+  		throw new $SyntaxError('invalid intrinsic syntax, expected closing `%`');
+  	} else if (last === '%' && first !== '%') {
+  		throw new $SyntaxError('invalid intrinsic syntax, expected opening `%`');
+  	}
   	var result = [];
   	$replace(string, rePropName, function (match, number, quote, subString) {
   		result[result.length] = quote ? $replace(subString, reEscapeChar, '$1') : number || match;
@@ -2014,7 +2024,7 @@
   	throw new $SyntaxError('intrinsic ' + name + ' does not exist!');
   };
 
-  var GetIntrinsic = function GetIntrinsic(name, allowMissing) {
+  var getIntrinsic = function GetIntrinsic(name, allowMissing) {
   	if (typeof name !== 'string' || name.length === 0) {
   		throw new $TypeError('intrinsic name must be a non-empty string');
   	}
@@ -2038,6 +2048,17 @@
 
   	for (var i = 1, isOwn = true; i < parts.length; i += 1) {
   		var part = parts[i];
+  		var first = $strSlice(part, 0, 1);
+  		var last = $strSlice(part, -1);
+  		if (
+  			(
+  				(first === '"' || first === "'" || first === '`')
+  				|| (last === '"' || last === "'" || last === '`')
+  			)
+  			&& first !== last
+  		) {
+  			throw new $SyntaxError('property names with quotes must have matching quotes');
+  		}
   		if (part === 'constructor' || !isOwn) {
   			skipFurtherCaching = true;
   		}
@@ -2048,13 +2069,16 @@
   		if (src(INTRINSICS, intrinsicRealName)) {
   			value = INTRINSICS[intrinsicRealName];
   		} else if (value != null) {
+  			if (!(part in value)) {
+  				if (!allowMissing) {
+  					throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
+  				}
+  				return void undefined$1;
+  			}
   			if ($gOPD && (i + 1) >= parts.length) {
   				var desc = $gOPD(value, part);
   				isOwn = !!desc;
 
-  				if (!allowMissing && !(part in value)) {
-  					throw new $TypeError('base intrinsic for ' + name + ' exists, but the property is not available.');
-  				}
   				// By convention, when a data property is converted to an accessor
   				// property to emulate a data property that does not suffer from
   				// the override mistake, that accessor's getter is marked with
@@ -2085,12 +2109,13 @@
 
 
 
+  var $apply = getIntrinsic('%Function.prototype.apply%');
+  var $call = getIntrinsic('%Function.prototype.call%');
+  var $reflectApply = getIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
 
-  var $apply = GetIntrinsic('%Function.prototype.apply%');
-  var $call = GetIntrinsic('%Function.prototype.call%');
-  var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
-
-  var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+  var $gOPD = getIntrinsic('%Object.getOwnPropertyDescriptor%', true);
+  var $defineProperty = getIntrinsic('%Object.defineProperty%', true);
+  var $max = getIntrinsic('%Math.max%');
 
   if ($defineProperty) {
   	try {
@@ -2101,8 +2126,20 @@
   	}
   }
 
-  module.exports = function callBind() {
-  	return $reflectApply(functionBind, $call, arguments);
+  module.exports = function callBind(originalFunction) {
+  	var func = $reflectApply(functionBind, $call, arguments);
+  	if ($gOPD && $defineProperty) {
+  		var desc = $gOPD(func, 'length');
+  		if (desc.configurable) {
+  			// original length, plus the receiver, minus any additional arguments (after the receiver)
+  			$defineProperty(
+  				func,
+  				'length',
+  				{ value: 1 + $max(0, originalFunction.length - (arguments.length - 1)) }
+  			);
+  		}
+  	}
+  	return func;
   };
 
   var applyBind = function applyBind() {
@@ -2116,26 +2153,30 @@
   }
   });
 
-  var $indexOf = callBind(GetIntrinsic('String.prototype.indexOf'));
+  var $indexOf = callBind(getIntrinsic('String.prototype.indexOf'));
 
   var callBound = function callBoundIntrinsic(name, allowMissing) {
-  	var intrinsic = GetIntrinsic(name, !!allowMissing);
-  	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.')) {
+  	var intrinsic = getIntrinsic(name, !!allowMissing);
+  	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
   		return callBind(intrinsic);
   	}
   	return intrinsic;
   };
 
-  var $apply = GetIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
+  var $apply = getIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-call
+  // https://ecma-international.org/ecma-262/6.0/#sec-call
 
   var Call = function Call(F, V) {
   	var args = arguments.length > 2 ? arguments[2] : [];
   	return $apply(F, V, args);
   };
 
-  var $TypeError$1 = GetIntrinsic('%TypeError%');
+  // TODO: remove, semver-major
+
+  var GetIntrinsic = getIntrinsic;
+
+  var $TypeError$1 = getIntrinsic('%TypeError%');
 
   var isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
   	if (ES.Type(Desc) !== 'Object') {
@@ -2162,7 +2203,7 @@
   	return true;
   };
 
-  var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+  var $defineProperty = getIntrinsic('%Object.defineProperty%', true);
 
   if ($defineProperty) {
   	try {
@@ -2204,8 +2245,8 @@
   	return true;
   };
 
-  var $TypeError$2 = GetIntrinsic('%TypeError%');
-  var $SyntaxError$1 = GetIntrinsic('%SyntaxError%');
+  var $TypeError$2 = getIntrinsic('%TypeError%');
+  var $SyntaxError$1 = getIntrinsic('%SyntaxError%');
 
 
 
@@ -2249,7 +2290,7 @@
   	}
   };
 
-  // https://www.ecma-international.org/ecma-262/5.1/#sec-8
+  // https://ecma-international.org/ecma-262/5.1/#sec-8
 
   var Type = function Type(x) {
   	if (x === null) {
@@ -2272,7 +2313,7 @@
   	}
   };
 
-  // https://tc39.es/ecma262/2020/#sec-ecmascript-data-types-and-values
+  // https://ecma-international.org/ecma-262/11.0/#sec-ecmascript-data-types-and-values
 
   var Type$1 = function Type$1(x) {
   	if (typeof x === 'symbol') {
@@ -2284,7 +2325,7 @@
   	return Type(x);
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-frompropertydescriptor
+  // https://ecma-international.org/ecma-262/6.0/#sec-frompropertydescriptor
 
   var FromPropertyDescriptor = function FromPropertyDescriptor(Desc) {
   	if (typeof Desc === 'undefined') {
@@ -2315,7 +2356,7 @@
   	return obj;
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-isaccessordescriptor
+  // https://ecma-international.org/ecma-262/6.0/#sec-isaccessordescriptor
 
   var IsAccessorDescriptor = function IsAccessorDescriptor(Desc) {
   	if (typeof Desc === 'undefined') {
@@ -2331,7 +2372,7 @@
   	return true;
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-isdatadescriptor
+  // https://ecma-international.org/ecma-262/6.0/#sec-isdatadescriptor
 
   var IsDataDescriptor = function IsDataDescriptor(Desc) {
   	if (typeof Desc === 'undefined') {
@@ -2347,7 +2388,7 @@
   	return true;
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-ispropertykey
+  // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
 
   var IsPropertyKey = function IsPropertyKey(argument) {
   	return typeof argument === 'string' || typeof argument === 'symbol';
@@ -2357,7 +2398,7 @@
   	return a !== a;
   };
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.12
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.12
 
   var SameValue = function SameValue(x, y) {
   	if (x === y) { // 0 === -0, but they are not identical.
@@ -2367,7 +2408,7 @@
   	return _isNaN(x) && _isNaN(y);
   };
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.2
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.2
 
   var ToBoolean = function ToBoolean(value) { return !!value; };
 
@@ -2440,11 +2481,11 @@
   		return strClass === fnClass || strClass === genClass;
   	};
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.11
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.11
 
   var IsCallable = isCallable;
 
-  var $TypeError$3 = GetIntrinsic('%TypeError%');
+  var $TypeError$3 = getIntrinsic('%TypeError%');
 
 
 
@@ -2491,7 +2532,7 @@
   	return desc;
   };
 
-  var $TypeError$4 = GetIntrinsic('%TypeError%');
+  var $TypeError$4 = getIntrinsic('%TypeError%');
 
 
 
@@ -2504,7 +2545,7 @@
 
 
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-definepropertyorthrow
+  // https://ecma-international.org/ecma-262/6.0/#sec-definepropertyorthrow
 
   var DefinePropertyOrThrow = function DefinePropertyOrThrow(O, P, desc) {
   	if (Type$1(O) !== 'Object') {
@@ -2552,7 +2593,7 @@
   	DefinePropertyOrThrow$1 = null;
   }
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-isconstructor
+  // https://ecma-international.org/ecma-262/6.0/#sec-isconstructor
 
   if (DefinePropertyOrThrow$1 && $construct) {
   	var isConstructorMarker = {};
@@ -2580,8 +2621,8 @@
   }
   });
 
-  var $species = GetIntrinsic('%Symbol.species%', true);
-  var $TypeError$5 = GetIntrinsic('%TypeError%');
+  var $species = getIntrinsic('%Symbol.species%', true);
+  var $TypeError$5 = getIntrinsic('%TypeError%');
 
 
 
@@ -2609,9 +2650,9 @@
   	throw new $TypeError$5('no constructor found');
   };
 
-  var $abs = GetIntrinsic('%Math.abs%');
+  var $abs = getIntrinsic('%Math.abs%');
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
 
   var abs = function abs(x) {
   	return $abs(x);
@@ -2620,7 +2661,7 @@
   // var modulo = require('./modulo');
   var $floor = Math.floor;
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
 
   var floor = function floor(x) {
   	// return x - modulo(x, 1);
@@ -2631,7 +2672,7 @@
 
   var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-isinteger
+  // https://ecma-international.org/ecma-262/6.0/#sec-isinteger
 
   var IsInteger = function IsInteger(argument) {
   	if (typeof argument !== 'number' || _isNaN(argument) || !_isFinite(argument)) {
@@ -2641,9 +2682,9 @@
   	return floor(absValue) === absValue;
   };
 
-  var $abs$1 = GetIntrinsic('%Math.abs%');
+  var $abs$1 = getIntrinsic('%Math.abs%');
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
 
   var abs$1 = function abs(x) {
   	return $abs$1(x);
@@ -2652,14 +2693,14 @@
   // var modulo = require('./modulo');
   var $floor$1 = Math.floor;
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
 
   var floor$1 = function floor(x) {
   	// return x - modulo(x, 1);
   	return $floor$1(x);
   };
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.3
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.3
 
   var ToNumber = function ToNumber(value) {
   	return +value; // eslint-disable-line no-implicit-coercion
@@ -2669,7 +2710,7 @@
   	return number >= 0 ? 1 : -1;
   };
 
-  // http://www.ecma-international.org/ecma-262/5.1/#sec-9.4
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.4
 
   var ToInteger = function ToInteger(value) {
   	var number = ToNumber(value);
@@ -2678,7 +2719,7 @@
   	return sign(number) * floor$1(abs$1(number));
   };
 
-  var $test = GetIntrinsic('RegExp.prototype.test');
+  var $test = getIntrinsic('RegExp.prototype.test');
 
 
 
@@ -2826,7 +2867,7 @@
   	return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
   };
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
+  // https://ecma-international.org/ecma-262/6.0/#sec-toprimitive
 
   var ToPrimitive = function ToPrimitive(input) {
   	if (arguments.length > 1) {
@@ -2835,16 +2876,16 @@
   	return es2015(input);
   };
 
-  var $TypeError$6 = GetIntrinsic('%TypeError%');
-  var $Number = GetIntrinsic('%Number%');
-  var $RegExp = GetIntrinsic('%RegExp%');
-  var $parseInteger = GetIntrinsic('%parseInt%');
+  var $TypeError$6 = getIntrinsic('%TypeError%');
+  var $Number = getIntrinsic('%Number%');
+  var $RegExp = getIntrinsic('%RegExp%');
+  var $parseInteger = getIntrinsic('%parseInt%');
 
 
 
 
 
-  var $strSlice = callBound('String.prototype.slice');
+  var $strSlice$1 = callBound('String.prototype.slice');
   var isBinary = regexTester(/^0b[01]+$/i);
   var isOctal = regexTester(/^0o[0-7]+$/i);
   var isInvalidHexLiteral = regexTester(/^[-+]0x[0-9a-f]+$/i);
@@ -2867,7 +2908,7 @@
 
 
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-tonumber
+  // https://ecma-international.org/ecma-262/6.0/#sec-tonumber
 
   var ToNumber$1 = function ToNumber(argument) {
   	var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
@@ -2876,9 +2917,9 @@
   	}
   	if (typeof value === 'string') {
   		if (isBinary(value)) {
-  			return ToNumber($parseInteger($strSlice(value, 2), 2));
+  			return ToNumber($parseInteger($strSlice$1(value, 2), 2));
   		} else if (isOctal(value)) {
-  			return ToNumber($parseInteger($strSlice(value, 2), 8));
+  			return ToNumber($parseInteger($strSlice$1(value, 2), 8));
   		} else if (hasNonWS(value) || isInvalidHexLiteral(value)) {
   			return NaN;
   		} else {
@@ -2891,7 +2932,7 @@
   	return $Number(value);
   };
 
-  // https://www.ecma-international.org/ecma-262/11.0/#sec-tointeger
+  // https://ecma-international.org/ecma-262/11.0/#sec-tointeger
 
   var ToInteger$1 = function ToInteger$1(value) {
   	var number = ToNumber$1(value);
@@ -2901,8 +2942,8 @@
   	return number === 0 ? 0 : number;
   };
 
-  var $Math = GetIntrinsic('%Math%');
-  var $Number$1 = GetIntrinsic('%Number%');
+  var $Math = getIntrinsic('%Math%');
+  var $Number$1 = getIntrinsic('%Number%');
 
   var maxSafeInteger = $Number$1.MAX_SAFE_INTEGER || $Math.pow(2, 53) - 1;
 
@@ -2913,10 +2954,10 @@
   	return len;
   };
 
-  var $String = GetIntrinsic('%String%');
-  var $TypeError$7 = GetIntrinsic('%TypeError%');
+  var $String = getIntrinsic('%String%');
+  var $TypeError$7 = getIntrinsic('%TypeError%');
 
-  // https://www.ecma-international.org/ecma-262/6.0/#sec-tostring
+  // https://ecma-international.org/ecma-262/6.0/#sec-tostring
 
   var ToString = function ToString(argument) {
   	if (typeof argument === 'symbol') {
