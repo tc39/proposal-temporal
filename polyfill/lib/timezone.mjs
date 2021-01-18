@@ -41,7 +41,7 @@ export class TimeZone {
     }
   }
   get id() {
-    return ES.TimeZoneToString(this);
+    return ES.ToString(this);
   }
   getOffsetNanosecondsFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -220,7 +220,7 @@ export class TimeZone {
     return String(GetSlot(this, TIMEZONE_ID));
   }
   toJSON() {
-    return ES.TimeZoneToString(this);
+    return ES.ToString(this);
   }
   static from(item) {
     if (ES.Type(item) === 'Object') {
@@ -241,4 +241,3 @@ DefineIntrinsic('Temporal.TimeZone.prototype.getPlainDateTimeFor', TimeZone.prot
 DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
-DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);

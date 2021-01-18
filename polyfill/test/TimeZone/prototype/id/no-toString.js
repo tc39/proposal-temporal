@@ -20,7 +20,5 @@ Object.defineProperty(timeZone, "toString", {
 });
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.TimeZone.prototype, "id");
-const result = descriptor.get.call(timeZone);
-assert.sameValue(result, "UTC");
-
+assert.throws(TypeError, () => descriptor.get.call(timeZone));
 assert.compareArray(actual, expected);

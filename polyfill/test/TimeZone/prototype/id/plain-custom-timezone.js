@@ -8,6 +8,7 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
+  "get timeZone[@@toPrimitive]",
   "get timeZone.toString",
   "call timeZone.toString",
 ];
@@ -19,17 +20,24 @@ const timeZone = new Proxy({
   },
 }, {
   has(target, property) {
-    actual.push(`has timeZone.${property}`);
+    if (property === Symbol.toPrimitive) {
+      actual.push('has timeZone[@@toPrimitive]');
+    } else {
+      actual.push(`has timeZone.${property}`);
+    }
     return property in target;
   },
   get(target, property) {
-    actual.push(`get timeZone.${property}`);
+    if (property === Symbol.toPrimitive) {
+      actual.push('get timeZone[@@toPrimitive]');
+    } else {
+      actual.push(`get timeZone.${property}`);
+    }
     return target[property];
   },
 });
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.TimeZone.prototype, "id");
 const result = descriptor.get.call(timeZone);
-assert.sameValue(result, "time zone");
-
 assert.compareArray(actual, expected);
+assert.sameValue(result, "time zone");

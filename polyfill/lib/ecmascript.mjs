@@ -1509,13 +1509,13 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.TimeZoneFrom(identifier);
   },
   TimeZoneCompare: (one, two) => {
-    const tz1 = ES.TimeZoneToString(one);
-    const tz2 = ES.TimeZoneToString(two);
+    const tz1 = ES.ToString(one);
+    const tz2 = ES.ToString(two);
     return tz1 < tz2 ? -1 : tz1 > tz2 ? 1 : 0;
   },
   TimeZoneEquals: (one, two) => {
-    const tz1 = ES.TimeZoneToString(one);
-    const tz2 = ES.TimeZoneToString(two);
+    const tz1 = ES.ToString(one);
+    const tz2 = ES.ToString(two);
     return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {
@@ -1577,13 +1577,6 @@ export const ES = ObjectAssign({}, ES2020, {
       getInstantFor = GetIntrinsic('%Temporal.TimeZone.prototype.getInstantFor%');
     }
     return ES.Call(getInstantFor, timeZone, [dateTime, { disambiguation }]);
-  },
-  TimeZoneToString: (timeZone) => {
-    let toString = timeZone.toString;
-    if (toString === undefined) {
-      toString = GetIntrinsic('%Temporal.TimeZone.prototype.toString%');
-    }
-    return ES.ToString(ES.Call(toString, timeZone));
   },
   ISOYearString: (year) => {
     let yearString;
