@@ -104,6 +104,19 @@
       </p>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.plainmonthday.prototype.calendar">
+      <h1>get Temporal.PlainMonthDay.prototype.calendar</h1>
+      <p>
+        `Temporal.PlainMonthDay.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _plainMonthDay_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainMonthDay_, [[InitializedTemporalMonthDay]]).
+        1. Return _plainMonthDay_.[[Calendar]].
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.plainmonthday.prototype.month">
       <h1>get Temporal.PlainMonthDay.prototype.month</h1>
       <p>
