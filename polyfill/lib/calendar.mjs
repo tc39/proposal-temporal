@@ -171,22 +171,39 @@ DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toStr
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
-    let { year, month, day } = ES.ToTemporalDateFields(fields, []);
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
+    const result = {};
+    for (const name of ['day', 'month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { day, month, year } = result;
     return ES.RegulateDate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
-    let { year, month } = ES.ToTemporalYearMonthFields(fields, []);
-    year = ES.ToInteger(year);
-    month = ES.ToInteger(month);
+    const result = {};
+    for (const name of ['month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { month, year } = result;
     return ES.RegulateYearMonth(year, month, overflow);
   },
   monthDayFromFields(fields, overflow) {
-    let { month, day } = ES.ToTemporalMonthDayFields(fields, []);
-    month = ES.ToInteger(month);
-    day = ES.ToInteger(day);
+    const result = {};
+    for (const name of ['day', 'month']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { day, month } = result;
     return ES.RegulateMonthDay(month, day, overflow);
   },
   fields(fields) {

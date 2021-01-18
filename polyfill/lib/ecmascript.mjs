@@ -90,7 +90,7 @@ const BUILTIN_FIELDS = new Set([
   'nanoseconds'
 ]);
 
-const FREEFORM_FIELDS = new Set(['year', 'month', 'day']);
+const CALENDAR_FIELDS = new Set(['year', 'month', 'day']);
 
 import * as PARSE from './regex.mjs';
 
@@ -982,7 +982,7 @@ export const ES = ObjectAssign({}, ES2020, {
       } else {
         any = true;
       }
-      if (BUILTIN_FIELDS.has(property) && !FREEFORM_FIELDS.has(property)) {
+      if (BUILTIN_FIELDS.has(property) && !CALENDAR_FIELDS.has(property)) {
         result[property] = ES.ToInteger(value);
       } else {
         result[property] = value;

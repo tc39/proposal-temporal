@@ -10,6 +10,10 @@ const expected = [
   "get calendar",
   "get day",
   "valueOf day",
+  "get month",
+  "valueOf month",
+  "get year",
+  "valueOf year",
   "get hour",
   "valueOf hour",
   "get microsecond",
@@ -18,14 +22,10 @@ const expected = [
   "valueOf millisecond",
   "get minute",
   "valueOf minute",
-  "get month",
-  "valueOf month",
   "get nanosecond",
   "valueOf nanosecond",
   "get second",
-  "valueOf second",
-  "get year",
-  "valueOf year",
+  "valueOf second"
 ];
 const actual = [];
 const fields = {
