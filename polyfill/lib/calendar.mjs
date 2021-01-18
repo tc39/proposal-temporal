@@ -33,7 +33,7 @@ export class Calendar {
     }
   }
   get id() {
-    return ES.CalendarToString(this);
+    return ES.ToString(this);
   }
   dateFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -143,7 +143,7 @@ export class Calendar {
     return GetSlot(this, CALENDAR_ID);
   }
   toJSON() {
-    return ES.CalendarToString(this);
+    return ES.ToString(this);
   }
   static from(item) {
     if (ES.Type(item) === 'Object') {
@@ -167,7 +167,6 @@ export class Calendar {
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 DefineIntrinsic('Temporal.Calendar.prototype.fields', Calendar.prototype.fields);
-DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toString);
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {

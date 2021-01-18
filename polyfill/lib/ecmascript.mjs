@@ -1246,7 +1246,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = item.calendar;
       if (calendar) {
         calendar = ES.ToTemporalCalendar(calendar);
-        if (ES.CalendarToString(calendar) !== 'iso8601') {
+        if (ES.ToString(calendar) !== 'iso8601') {
           throw new RangeError('PlainTime can only have iso8601 calendar');
         }
       }
@@ -1449,11 +1449,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const array = ES.Call(fields, calendar, [fieldNames]);
     return ES.CreateListFromArrayLike(array, ['String']);
   },
-  CalendarToString: (calendar) => {
-    let toString = calendar.toString;
-    if (toString === undefined) toString = GetIntrinsic('%Temporal.Calendar.prototype.toString%');
-    return ES.ToString(ES.Call(toString, calendar));
-  },
 
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
@@ -1463,18 +1458,18 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.CalendarFrom(identifier);
   },
   CalendarCompare: (one, two) => {
-    const cal1 = ES.CalendarToString(one);
-    const cal2 = ES.CalendarToString(two);
+    const cal1 = ES.ToString(one);
+    const cal2 = ES.ToString(two);
     return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
   },
   CalendarEquals: (one, two) => {
-    const cal1 = ES.CalendarToString(one);
-    const cal2 = ES.CalendarToString(two);
+    const cal1 = ES.ToString(one);
+    const cal2 = ES.ToString(two);
     return cal1 === cal2;
   },
   ConsolidateCalendars: (one, two) => {
-    const sOne = ES.CalendarToString(one);
-    const sTwo = ES.CalendarToString(two);
+    const sOne = ES.ToString(one);
+    const sTwo = ES.ToString(two);
     if (sOne === sTwo || sOne === 'iso8601') {
       return two;
     } else if (sTwo === 'iso8601') {

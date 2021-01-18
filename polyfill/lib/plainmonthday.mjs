@@ -12,7 +12,7 @@ function MonthDayToString(monthDay, showCalendar = 'auto') {
   const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
   let resultString = `${month}-${day}`;
   const calendar = GetSlot(monthDay, CALENDAR);
-  const calendarID = ES.CalendarToString(calendar);
+  const calendarID = ES.ToString(calendar);
   if (calendarID !== 'iso8601') {
     const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
     resultString = `${year}-${resultString}`;

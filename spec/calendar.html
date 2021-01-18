@@ -35,15 +35,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendartostring" aoid="CalendarToString">
-      <h1>CalendarToString ( _calendar_ )</h1>
-      <emu-alg>
-        1. Let _toString_ be ? Get(_calendar_, *"toString"*).
-        1. If _toString_ is *undefined*, set _toString_ to %Temporal.Calendar.prototype.toString%.
-        1. Return ? ToString(? Call(_toString_ , _calendar_, « »)).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-calendarfields" aoid="CalendarFields">
       <h1>CalendarFields ( _calendar_, _fieldNames_ )</h1>
       <p>
@@ -209,8 +200,8 @@
     <emu-clause id="sec-temporal-comparecalendar" aoid="CompareCalendar">
       <h1>CompareCalendar ( _one_, _two_ )</h1>
       <emu-alg>
-        1. Let _calendarOne_ be ? CalendarToString(_one_).
-        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. Let _calendarOne_ be ? ToString(_one_).
+        1. Let _calendarTwo_ be ? ToString(_two_).
         1. Let _r_ be the result of performing Abstract Relational Comparison _calendarOne_ &lt; _calendarTwo_.
         1. If _r_ is *true*, return −1.
         1. Let _r_ be the result of performing Abstract Relational Comparison _calendarTwo_ &lt; _calendarOne_.
@@ -222,8 +213,8 @@
     <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
       <h1>CalendarEquals ( _one_, _two_ )</h1>
       <emu-alg>
-        1. Let _calendarOne_ be ? CalendarToString(_one_).
-        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. Let _calendarOne_ be ? ToString(_one_).
+        1. Let _calendarTwo_ be ? ToString(_two_).
         1. If _calendarOne_ is _calendarTwo_, return *true*.
         1. Return *false*.
       </emu-alg>
@@ -232,8 +223,8 @@
     <emu-clause id="sec-temporal-consolidatecalendars" aoid="ConsolidateCalendars">
       <h1>ConsolidateCalendars ( _one_, _two_ )</h1>
       <emu-alg>
-        1. Let _calendarOne_ be ? CalendarToString(_one_).
-        1. Let _calendarTwo_ be ? CalendarToString(_two_).
+        1. Let _calendarOne_ be ? ToString(_one_).
+        1. Let _calendarTwo_ be ? ToString(_two_).
         1. If _calendarOne_ is _calendarTwo_, return _two_.
         1. If _calendarOne_ is *"iso8601"*, return _two_.
         1. If _calendarTwo_ is *"iso8601"*, return _one_.
@@ -514,7 +505,7 @@
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
-        1. Return ? CalendarToString(_calendar_).
+        1. Return ? ToString(_calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -867,9 +858,6 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Return _calendar_.[[Identifier]].
       </emu-alg>
-      <p>
-        This function is the <dfn>%Temporal.Calendar.prototype.toString%</dfn> intrinsic object.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.tojson">
@@ -879,7 +867,7 @@
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
-        1. Return ? CalendarToString(_calendar_).
+        1. Return ? ToString(_calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

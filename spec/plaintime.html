@@ -632,7 +632,7 @@
           1. Let _calendar_ be ? Get(_item_, *"calendar"*).
           1. If _calendar_ is not *undefined*, then
             1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
-            1. If ? CalendarToString(_calendar_) is not *"iso8601"*, then
+            1. If ? ToString(_calendar_) is not *"iso8601"*, then
               1. Throw a *RangeError* exception.
           1. Let _result_ be ? ToTemporalTimeRecord(_item_).
           1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).

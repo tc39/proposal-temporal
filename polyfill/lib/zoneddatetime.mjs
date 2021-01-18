@@ -405,8 +405,8 @@ export class ZonedDateTime {
     other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    const calendarId = ES.ToString(calendar);
+    const otherCalendarId = ES.ToString(otherCalendar);
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
@@ -528,8 +528,8 @@ export class ZonedDateTime {
     other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.CalendarToString(calendar);
-    const otherCalendarId = ES.CalendarToString(otherCalendar);
+    const calendarId = ES.ToString(calendar);
+    const otherCalendarId = ES.ToString(otherCalendar);
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
@@ -903,7 +903,7 @@ function zonedDateTimeToString(
   let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
   if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, instant);
   if (showTimeZone !== 'never') result += `[${ES.TimeZoneToString(tz)}]`;
-  const calendarID = ES.CalendarToString(GetSlot(zdt, CALENDAR));
+  const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
   result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
   return result;
 }
