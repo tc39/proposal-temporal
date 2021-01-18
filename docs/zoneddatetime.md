@@ -379,7 +379,7 @@ Also, UTC has no DST and always has a zero offset, which means that any action y
 Therefore, you should almost always use `Temporal.Instant` to represent UTC times.
 When you want to convert UTC time to a real time zone, that's when `Temporal.ZonedDateTime` will be useful.
 
-To change the time zone while keeping the exact time constant, use `.with({timeZone})`.
+To change the time zone while keeping the exact time constant, use `.withTimeZone(timeZone)`.
 
 The time zone is a required property when creating `Temporal.ZonedDateTime` instances.
 If you don't know the time zone of your underlying data, please use `Temporal.Instant` and/or `Temporal.PlainDateTime`, neither of which have awareness of time zones.
@@ -393,17 +393,17 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24-08:00[America/Los_Angeles]');
 `Time zone is: ${zdt.timeZone}`;
   // => "Time zone is: America/Los_Angeles"
-zdt.with({ timeZone: 'Asia/Singapore' }).timeZone;
+zdt.withTimeZone('Asia/Singapore').timeZone;
   // => Asia/Singapore
-zdt.with({ timeZone: 'Asia/Chongqing' }).timeZone;
+zdt.withTimeZone('Asia/Chongqing').timeZone;
   // => Asia/Shanghai (time zone IDs are normalized, e.g. Asia/Chongqing -> Asia/Shanghai)
-zdt.with({ timeZone: '+05:00' }).timeZone;
+zdt.withTimeZone('+05:00').timeZone;
   // => +05:00
-zdt.with({ timeZone: '+05' }).timeZone;
+zdt.withTimeZone('+05').timeZone;
   // => +05:00 (normalized to canonical form)
-zdt.with({ timeZone: 'utc' }).timeZone;
+zdt.withTimeZone('utc').timeZone;
   // => UTC (normalized to canonical form which is uppercase)
-zdt.with({ timeZone: 'GMT' }).timeZone;
+zdt.withTimeZone('GMT').timeZone;
   // => UTC (normalized to canonical form)
 ```
 <!-- prettier-ignore-end -->
@@ -617,7 +617,7 @@ The presence of this field means that `zonedDateTime.toInstant()` requires no pa
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/Los_Angeles]');
 zdt.offset;
   // => "-07:00"
-zdt.with({ timeZone: 'Asia/Kolkata' }).offset;
+zdt.withTimeZone('Asia/Kolkata').offset;
   // => "+05:30"
 
 minus8Hours = '-08:00';
@@ -989,7 +989,7 @@ To calculate the difference between clock times only, use `.toPlainTime().until(
 
 If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
 Therefore, a `RangeError` will be thrown if `largestUnit` is `'days'` or larger and the two instances' time zones have different `id` fields.
-To work around this limitation, transform one of the instances to the other's time zone using `.with({timeZone: other.timeZone})` and then calculate the same-timezone difference.
+To work around this limitation, transform one of the instances to the other's time zone using `.withTimeZone(other.timeZone)` and then calculate the same-timezone difference.
 Because of the complexity and ambiguity involved in cross-timezone calculations involving days or larger units, `'hours'` is the default for `largestUnit`.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
@@ -1236,7 +1236,7 @@ The `locales` and `options` arguments are the same as in the constructor to [`In
 
 `options.timeZone` will be automatically set from the time zone of of `zonedDateTime`.
 If a different time zone ID is provided in `options.timeZone`, a RangeError will be thrown.
-To display a `Temporal.ZonedDateTime` value in a different time zone, use `with({timeZone}).toLocaleString()`.
+To display a `Temporal.ZonedDateTime` value in a different time zone, use `withTimeZone(timeZone).toLocaleString()`.
 
 Example usage:
 
@@ -1249,7 +1249,7 @@ options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 zdt.toLocaleString('de-DE', options); // => Sonntag, 1. Dezember 2019
 zdt.toLocaleString('de-DE', { timeZone: 'Pacific/Auckland' });
   // => RangeError: Time zone option Pacific/Auckland does not match actual time zone Europe/Berlin
-zdt.with({ timeZone: 'Pacific/Auckland' }).toLocaleString('de-DE'); // => 2.12.2019, 00:00:00
+zdt.withTimeZone('Pacific/Auckland').toLocaleString('de-DE'); // => 2.12.2019, 00:00:00
 zdt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => １２/１/２０１９, １２:００:００ PM
 ```
 <!-- prettier-ignore-end -->
