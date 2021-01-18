@@ -775,6 +775,22 @@ zdt.withPlainDate('2017-09-06[c=japanese]'); // => 2017-09-06T03:24:30-07:00[Ame
 zdt.withCalendar('japanese').withPlainDate('2017-09-06[c=hebrew]'); // => RangeError (calendar conflict)
 ```
 
+### zonedDateTime.**withTimeZone**(_timeZone_: object | string) : Temporal.ZonedDateTime
+
+**Parameters:**
+
+- `timeZone` (`Temporal.TimeZone` or plain object or string): The time zone into which to project `zonedDateTime`.
+
+**Returns:** a new `Temporal.ZonedDateTime` object which is the date indicated by `zonedDateTime`, projected into `timeZone`.
+
+Usage example:
+
+```javascript
+zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+09:00[Asia/Tokyo]');
+zdt.toString(); // => "1995-12-07T03:24:30+09:00[Asia/Tokyo]"
+zdt.withTimeZone('Africa/Accra').toString(); // => "1995-12-06T18:24:30+00:00[Africa/Accra]"
+```
+
 ### zonedDateTime.**withCalendar**(_calendar_: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
