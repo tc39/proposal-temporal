@@ -3181,7 +3181,6 @@
   var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
   var BUILTIN_FIELDS = new Set(['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
-  var CALENDAR_FIELDS = new Set(['year', 'month', 'day']);
   var ES2020 = {
     Call: Call,
     SpeciesConstructor: SpeciesConstructor,
@@ -4151,8 +4150,10 @@
         calendar = relativeTo.calendar;
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
 
-        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, relativeTo, 'constrain');
+        var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, 'constrain');
 
         year = _ES$InterpretTemporal.year;
         month = _ES$InterpretTemporal.month;
@@ -4276,7 +4277,6 @@
       return any ? any : false;
     },
     ToRecord: function ToRecord(bag, fields) {
-      var someRequired = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       if (ES.Type(bag) !== 'Object') return false;
       var result = {};
       var any = false;
@@ -4304,7 +4304,7 @@
             any = true;
           }
 
-          if (BUILTIN_FIELDS.has(property) && !CALENDAR_FIELDS.has(property)) {
+          if (BUILTIN_FIELDS.has(property)) {
             result[property] = ES.ToInteger(value);
           } else {
             result[property] = value;
@@ -4316,7 +4316,7 @@
         _iterator7.f();
       }
 
-      if (!any && someRequired) {
+      if (!any) {
         throw new TypeError('no supported properties found');
       }
 
@@ -4369,8 +4369,7 @@
       return ES.ToRecord(bag, entries);
     },
     ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
-      var someRequired = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      return ES.ToRecord(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]], someRequired);
+      return ES.ToRecord(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]);
     },
     ToTemporalYearMonthFields: function ToTemporalYearMonthFields(bag, fieldNames) {
       var entries = [['month'], ['year']]; // Add extra fields from the calendar at the end
@@ -4410,7 +4409,9 @@
         var _calendar = item.calendar;
         if (_calendar === undefined) _calendar = ES.GetISO8601Calendar();
         _calendar = ES.ToTemporalCalendar(_calendar);
-        return ES.DateFromFields(_calendar, item, constructor, overflow);
+        var fieldNames = ES.CalendarFields(_calendar, ['day', 'month', 'year']);
+        var fields = ES.ToTemporalDateFields(item, fieldNames);
+        return ES.DateFromFields(_calendar, fields, constructor, overflow);
       }
 
       var _ES$ParseTemporalDate = ES.ParseTemporalDateString(ES.ToString(item)),
@@ -4433,7 +4434,7 @@
       var month = GetSlot(date, ISO_MONTH);
       var day = GetSlot(date, ISO_DAY);
 
-      var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(fields, false),
+      var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(fields),
           hour = _ES$ToTemporalTimeRec.hour,
           minute = _ES$ToTemporalTimeRec.minute,
           second = _ES$ToTemporalTimeRec.second,
@@ -4470,8 +4471,10 @@
         calendar = item.calendar;
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fields = ES.ToTemporalDateTimeFields(item, fieldNames);
 
-        var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, item, overflow);
+        var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
         year = _ES$InterpretTemporal2.year;
         month = _ES$InterpretTemporal2.month;
@@ -4556,7 +4559,9 @@
         var _calendar2 = item.calendar;
         if (_calendar2 === undefined) _calendar2 = ES.GetISO8601Calendar();
         _calendar2 = ES.ToTemporalCalendar(_calendar2);
-        return ES.MonthDayFromFields(_calendar2, item, constructor, overflow);
+        var fieldNames = ES.CalendarFields(_calendar2, ['day', 'month']);
+        var fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+        return ES.MonthDayFromFields(_calendar2, fields, constructor, overflow);
       }
 
       var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
@@ -4636,7 +4641,9 @@
         var _calendar3 = item.calendar;
         if (_calendar3 === undefined) _calendar3 = ES.GetISO8601Calendar();
         _calendar3 = ES.ToTemporalCalendar(_calendar3);
-        return ES.YearMonthFromFields(_calendar3, item, constructor, overflow);
+        var fieldNames = ES.CalendarFields(_calendar3, ['month', 'year']);
+        var fields = ES.ToTemporalYearMonthFields(item, fieldNames);
+        return ES.YearMonthFromFields(_calendar3, fields, constructor, overflow);
       }
 
       var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
@@ -4716,8 +4723,10 @@
         calendar = item.calendar;
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
 
-        var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, item, overflow);
+        var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
         year = _ES$InterpretTemporal3.year;
         month = _ES$InterpretTemporal3.month;
@@ -4728,14 +4737,8 @@
         millisecond = _ES$InterpretTemporal3.millisecond;
         microsecond = _ES$InterpretTemporal3.microsecond;
         nanosecond = _ES$InterpretTemporal3.nanosecond;
-        timeZone = item['timeZone'];
-
-        if (timeZone === undefined) {
-          throw new TypeError('required property timeZone missing or undefined');
-        }
-
-        timeZone = ES.ToTemporalTimeZone(timeZone);
-        offset = item.offset;
+        timeZone = ES.ToTemporalTimeZone(fields.timeZone);
+        offset = fields.offset;
         if (offset !== undefined) offset = ES.ToString(offset);
       } else {
         var ianaName;
@@ -8788,58 +8791,25 @@
   DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toString);
   impl['iso8601'] = {
     dateFromFields: function dateFromFields(fields, overflow) {
-      var result = {};
+      var _ES$ToRecord = ES.ToRecord(fields, [['day'], ['month'], ['year']]),
+          year = _ES$ToRecord.year,
+          month = _ES$ToRecord.month,
+          day = _ES$ToRecord.day;
 
-      for (var _i = 0, _arr = ['day', 'month', 'year']; _i < _arr.length; _i++) {
-        var name = _arr[_i];
-        var value = fields[name];
-
-        if (value === undefined) {
-          throw new TypeError("required property '".concat(name, "' missing or undefined"));
-        }
-
-        result[name] = ES.ToInteger(value);
-      }
-
-      var day = result.day,
-          month = result.month,
-          year = result.year;
       return ES.RegulateDate(year, month, day, overflow);
     },
     yearMonthFromFields: function yearMonthFromFields(fields, overflow) {
-      var result = {};
+      var _ES$ToRecord2 = ES.ToRecord(fields, [['month'], ['year']]),
+          year = _ES$ToRecord2.year,
+          month = _ES$ToRecord2.month;
 
-      for (var _i2 = 0, _arr2 = ['month', 'year']; _i2 < _arr2.length; _i2++) {
-        var name = _arr2[_i2];
-        var value = fields[name];
-
-        if (value === undefined) {
-          throw new TypeError("required property '".concat(name, "' missing or undefined"));
-        }
-
-        result[name] = ES.ToInteger(value);
-      }
-
-      var month = result.month,
-          year = result.year;
       return ES.RegulateYearMonth(year, month, overflow);
     },
     monthDayFromFields: function monthDayFromFields(fields, overflow) {
-      var result = {};
+      var _ES$ToRecord3 = ES.ToRecord(fields, [['day'], ['month']]),
+          month = _ES$ToRecord3.month,
+          day = _ES$ToRecord3.day;
 
-      for (var _i3 = 0, _arr3 = ['day', 'month']; _i3 < _arr3.length; _i3++) {
-        var name = _arr3[_i3];
-        var value = fields[name];
-
-        if (value === undefined) {
-          throw new TypeError("required property '".concat(name, "' missing or undefined"));
-        }
-
-        result[name] = ES.ToInteger(value);
-      }
-
-      var day = result.day,
-          month = result.month;
       return ES.RegulateMonthDay(month, day, overflow);
     },
     fields: function fields(_fields2) {
@@ -8937,62 +8907,18 @@
       return _fields3;
     },
     dateFromFields: function dateFromFields(fields, overflow) {
-      var result = {}; // Intentionally alphabetical
-
-      for (var _i4 = 0, _arr4 = [['day'], ['era', 'ad'], ['month'], ['year']]; _i4 < _arr4.length; _i4++) {
-        var _arr4$_i = _slicedToArray(_arr4[_i4], 2),
-            name = _arr4$_i[0],
-            defaultValue = _arr4$_i[1];
-
-        var value = fields[name];
-
-        if (value === undefined) {
-          if (defaultValue === undefined) {
-            throw new TypeError("required property '".concat(name, "' missing or undefined"));
-          } else {
-            value = defaultValue;
-          }
-        }
-
-        if (name != 'era') {
-          value = ES.ToInteger(value);
-        }
-
-        result[name] = value;
-      }
-
-      var isoYear = gre.isoYear(result.year, result.era);
-      return impl['iso8601'].dateFromFields(_objectSpread2(_objectSpread2({}, result), {}, {
+      // Intentionally alphabetical
+      fields = ES.ToRecord(fields, [['day'], ['era', 'ad'], ['month'], ['year']]);
+      var isoYear = gre.isoYear(fields.year, fields.era);
+      return impl['iso8601'].dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
         year: isoYear
       }), overflow);
     },
     yearMonthFromFields: function yearMonthFromFields(fields, overflow) {
-      var result = {}; // Intentionally alphabetical
-
-      for (var _i5 = 0, _arr5 = [['era', 'ad'], ['month'], ['year']]; _i5 < _arr5.length; _i5++) {
-        var _arr5$_i = _slicedToArray(_arr5[_i5], 2),
-            name = _arr5$_i[0],
-            defaultValue = _arr5$_i[1];
-
-        var value = fields[name];
-
-        if (value === undefined) {
-          if (defaultValue === undefined) {
-            throw new TypeError("required property '".concat(name, "' missing or undefined"));
-          } else {
-            value = defaultValue;
-          }
-        }
-
-        if (name != 'era') {
-          value = ES.ToInteger(value);
-        }
-
-        result[name] = value;
-      }
-
-      var isoYear = gre.isoYear(result.year, result.era);
-      return impl['iso8601'].yearMonthFromFields(_objectSpread2(_objectSpread2({}, result), {}, {
+      // Intentionally alphabetical
+      fields = ES.ToRecord(fields, [['era', 'ad'], ['month'], ['year']]);
+      var isoYear = gre.isoYear(fields.year, fields.era);
+      return impl['iso8601'].yearMonthFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
         year: isoYear
       }), overflow);
     }
@@ -9030,8 +8956,8 @@
     // Note: C locale era names available at
     // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
     compareDate: function compareDate(one, two) {
-      for (var _i6 = 0, _arr6 = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i6 < _arr6.length; _i6++) {
-        var slot = _arr6[_i6];
+      for (var _i = 0, _arr = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i < _arr.length; _i++) {
+        var slot = _arr[_i];
         var val1 = GetSlot(one, slot);
         var val2 = GetSlot(two, slot);
         if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
@@ -9080,48 +9006,17 @@
     },
     dateFromFields: function dateFromFields(fields, overflow) {
       // Intentionally alphabetical
-      var result = {};
-
-      for (var _i7 = 0, _arr7 = ['day', 'era', 'month', 'year']; _i7 < _arr7.length; _i7++) {
-        var name = _arr7[_i7];
-        var value = fields[name];
-
-        if (value === undefined) {
-          throw new TypeError("required property '".concat(name, "' missing or undefined"));
-        }
-
-        if (name != 'era') {
-          value = ES.ToInteger(value);
-        }
-
-        result[name] = value;
-      }
-
-      var isoYear = jpn.isoYear(result.year, result.era);
-      return impl['iso8601'].dateFromFields(_objectSpread2(_objectSpread2({}, result), {}, {
+      fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);
+      var isoYear = jpn.isoYear(fields.year, fields.era);
+      return impl['iso8601'].dateFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
         year: isoYear
       }), overflow);
     },
     yearMonthFromFields: function yearMonthFromFields(fields, overflow) {
-      var result = {}; // Intentionally alphabetical
-
-      for (var _i8 = 0, _arr8 = ['era', 'month', 'year']; _i8 < _arr8.length; _i8++) {
-        var name = _arr8[_i8];
-        var value = fields[name];
-
-        if (value === undefined) {
-          throw new TypeError("required property '".concat(name, "' missing or undefined"));
-        }
-
-        if (name != 'era') {
-          value = ES.ToInteger(value);
-        }
-
-        result[name] = value;
-      }
-
-      var isoYear = jpn.isoYear(result.year, result.era);
-      return impl['iso8601'].yearMonthFromFields(_objectSpread2(_objectSpread2({}, result), {}, {
+      // Intentionally alphabetical
+      fields = ES.ToRecord(fields, [['era'], ['month'], ['year']]);
+      var isoYear = jpn.isoYear(fields.year, fields.era);
+      return impl['iso8601'].yearMonthFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
         year: isoYear
       }), overflow);
     }
