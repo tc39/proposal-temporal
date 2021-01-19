@@ -2,6 +2,11 @@
   "https://tc39.es/ecma262/": [
     {
       "type": "op",
+      "aoid": "CodePointsToString",
+      "id": "sec-codepointstostring"
+    },
+    {
+      "type": "op",
       "aoid": "NumberToBigInt",
       "id": "sec-numbertobigint"
     },
@@ -14,6 +19,11 @@
       "type": "op",
       "aoid": "RequireInternalSlot",
       "id": "sec-requireinternalslot"
+    },
+    {
+      "type": "op",
+      "aoid": "StringToCodePoints",
+      "id": "sec-stringtocodepoints"
     },
     {
       "type": "op",
@@ -34,11 +44,6 @@
   "https://tc39.es/ecma402/": [
     {
       "type": "op",
-      "aoid": "IsValidTimeZoneName",
-      "id": "sec-isvalidtimezonename"
-    },
-    {
-      "type": "op",
       "aoid": "BasicFormatMatcher",
       "id": "sec-basicformatmatcher"
     },
@@ -51,16 +56,6 @@
       "type": "op",
       "aoid": "CanonicalizeLocaleList",
       "id": "sec-canonicalizelocalelist"
-    },
-    {
-      "type": "op",
-      "aoid": "CanonicalizeTimeZoneName",
-      "id": "sec-canonicalizetimezonename"
-    },
-    {
-      "type": "op",
-      "aoid": "DefaultTimeZone",
-      "id": "sec-defaulttimezone"
     },
     {
       "type": "op",

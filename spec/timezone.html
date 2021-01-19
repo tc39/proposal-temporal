@@ -5,6 +5,99 @@
   <h1>Temporal.TimeZone Objects</h1>
   <p>A Temporal.TimeZone object is an immutable Object referencing a time zone.</p>
 
+  <emu-clause id="sec-time-zone-names">
+    <h1>Time Zone Names</h1>
+
+    <emu-note type="editor">
+      <p>
+        The normative intention of this section is that an implementation must support UTC and a local time zone, which may also be UTC, or a named time zone like `"Europe/London"`, or an offset time zone like `"+01:00"`; and that the local time zone must in any case be consistent with the time zone offsets that can be determined using `Date.prototype.getTimezoneOffset()`, `Date.prototype.toString()`, and `Date.prototype.toTimeString()`.
+        The exact formal definition of "local time zone" is still to be determined.
+      </p>
+    </emu-note>
+
+    <p>
+      An ECMAScript implementation must support a number of built-in time zones.
+      At a minimum, implementations must support a built-in time zone named *"UTC"*.
+      If the return value of DefaultTimeZone is different from *"UTC"*, and does not satisfy the syntax of a |TimeZoneNumericUTCOffset|, then implementations must support that time zone as a built-in time zone as well.
+      In addition, implementations may support any number of other built-in time zones.
+    </p>
+    <p>
+      Built-in time zones may be <dfn>named</dfn> time zones, represented by Strings for which IsValidTimeZoneName returns *true*.
+      They may also be <dfn>offset</dfn> time zones, represented by Strings that conform to the syntax of |TimeZoneNumericUTCOffset|.
+    <p>
+      <emu-xref href="#sec-temporal-timezone-constructor">The `Temporal.TimeZone` constructor</emu-xref>, when called with the name of a built-in time zone as the argument, will return a valid `Temporal.TimeZone` object.
+      When called with any other string, it will throw a *RangeError* exception.
+    </p>
+    <p>
+      Implementations are encouraged to support the Zone and Link names of the IANA Time Zone Database, and to use the best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations.
+    </p>
+    <p>
+      An ECMAScript implementation that includes the ECMA-402 Internationalization API has additional requirements for the built-in time zones that must be supported, as specified in the ECMA-402 specification.
+    </p>
+
+    <emu-clause id="sec-isvalidtimezonename" aoid="IsValidTimeZoneName">
+      <h1>IsValidTimeZoneName ( _timeZone_ )</h1>
+
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the IsValidTimeZoneName abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
+      </p>
+      <p>
+        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value. It returns *true* if _timeZone_, converted to upper case, is equal to one of the built-in named time zone names, converted to upper case.
+        It returns *false* otherwise.
+      </p>
+      <p>
+        Once IsValidTimeZoneName has returned *true* for a particular value of _timeZone_, for the lifetime of the surrounding agent, it may no longer return *false* for that value of _timeZone_, or for the value of CanonicalizeTimeZoneName(_timeZone_).
+      </p>
+      <p>The minimum implementation of IsValidTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
+      </p>
+
+      <emu-alg>
+        1. Assert: Type(_timeZone_) is String.
+        1. Let _tzText_ be ! StringToCodePoints(_timeZone_).
+        1. Let _tzUpperText_ be the result of toUppercase(_tzText_), according to the Unicode Default Case Conversion algorithm.
+        1. Let _tzUpper_ be ! CodePointsToString(_tzUpperText_).
+        1. If _tzUpper_ and *"UTC"* are the same sequence of code points, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-canonicalizetimezonename" aoid="CanonicalizeTimeZoneName">
+      <h1>CanonicalizeTimeZoneName ( _timeZone_ )</h1>
+
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the CanonicalizeTimeZoneName abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the CanonicalizeTimeZoneName abstract operation is used.
+      </p>
+      <p>
+        The abstract operation CanonicalizeTimeZoneName takes argument _timeZone_, a String value, and returns the canonical and case-regularized form of _timeZone_.
+      </p>
+      <p>
+        CanonicalizeTimeZoneName may only be called with a _timeZone_ parameter that is a valid time zone name according to IsValidTimeZoneName.
+      </p>
+      <p>The minimum implementation of CanonicalizeTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
+      </p>
+
+      <emu-alg>
+        1. Assert: Type(_timeZone_) is String.
+        1. Assert: ! IsValidTimeZoneName(_timeZone_) is *true*.
+        1. Return *"UTC"*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-defaulttimezone" aoid="DefaultTimeZone">
+      <h1>DefaultTimeZone ( )</h1>
+
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the DefaultTimeZone abstract operation is used.
+      </p>
+      <p>
+        The DefaultTimeZone abstract operation returns a String value representing the host environment's current time zone, which is either a valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name, or an offset conforming to the syntax of a |TimeZoneNumericUTCOffset|.
+      </p>
+    </emu-clause>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-timezone-constructor">
     <h1>The Temporal.TimeZone Constructor</h1>
     <p>
