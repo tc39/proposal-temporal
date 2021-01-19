@@ -90,8 +90,6 @@ const BUILTIN_FIELDS = new Set([
   'nanoseconds'
 ]);
 
-const CALENDAR_FIELDS = new Set(['year', 'month', 'day']);
-
 import * as PARSE from './regex.mjs';
 
 const ES2020 = {
@@ -832,6 +830,8 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = relativeTo.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       ({
         year,
         month,
@@ -842,7 +842,7 @@ export const ES = ObjectAssign({}, ES2020, {
         millisecond,
         microsecond,
         nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, relativeTo, 'constrain'));
+      } = ES.InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
       offset = relativeTo.offset;
       timeZone = relativeTo.timeZone;
     } else {
@@ -967,7 +967,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return any ? any : false;
   },
-  ToRecord: (bag, fields, someRequired = true) => {
+  ToRecord: (bag, fields) => {
     if (ES.Type(bag) !== 'Object') return false;
     const result = {};
     let any = false;
@@ -982,13 +982,13 @@ export const ES = ObjectAssign({}, ES2020, {
       } else {
         any = true;
       }
-      if (BUILTIN_FIELDS.has(property) && !CALENDAR_FIELDS.has(property)) {
+      if (BUILTIN_FIELDS.has(property)) {
         result[property] = ES.ToInteger(value);
       } else {
         result[property] = value;
       }
     }
-    if (!any && someRequired) {
+    if (!any) {
       throw new TypeError('no supported properties found');
     }
     return result;
@@ -1034,19 +1034,15 @@ export const ES = ObjectAssign({}, ES2020, {
     });
     return ES.ToRecord(bag, entries);
   },
-  ToTemporalTimeRecord: (bag, someRequired = true) => {
-    return ES.ToRecord(
-      bag,
-      [
-        ['hour', 0],
-        ['microsecond', 0],
-        ['millisecond', 0],
-        ['minute', 0],
-        ['nanosecond', 0],
-        ['second', 0]
-      ],
-      someRequired
-    );
+  ToTemporalTimeRecord: (bag) => {
+    return ES.ToRecord(bag, [
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['nanosecond', 0],
+      ['second', 0]
+    ]);
   },
   ToTemporalYearMonthFields: (bag, fieldNames) => {
     const entries = [['month'], ['year']];
@@ -1087,7 +1083,9 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      return ES.DateFromFields(calendar, item, constructor, overflow);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fields = ES.ToTemporalDateFields(item, fieldNames);
+      return ES.DateFromFields(calendar, fields, constructor, overflow);
     }
     let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
     ES.RejectDate(year, month, day);
@@ -1103,7 +1101,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields, false);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -1124,6 +1122,8 @@ export const ES = ObjectAssign({}, ES2020, {
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
 
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       ({
         year,
         month,
@@ -1134,7 +1134,7 @@ export const ES = ObjectAssign({}, ES2020, {
         millisecond,
         microsecond,
         nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, item, overflow));
+      } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow));
     } else {
       ({
         year,
@@ -1225,7 +1225,9 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      return ES.MonthDayFromFields(calendar, item, constructor, overflow);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+      const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+      return ES.MonthDayFromFields(calendar, fields, constructor, overflow);
     }
 
     let { month, day, referenceISOYear = 1972, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
@@ -1277,7 +1279,9 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      return ES.YearMonthFromFields(calendar, item, constructor, overflow);
+      const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+      const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
+      return ES.YearMonthFromFields(calendar, fields, constructor, overflow);
     }
 
     let { year, month, referenceISODay = 1, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
@@ -1364,6 +1368,8 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
       ({
         year,
         month,
@@ -1374,13 +1380,9 @@ export const ES = ObjectAssign({}, ES2020, {
         millisecond,
         microsecond,
         nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, item, overflow));
-      timeZone = item['timeZone'];
-      if (timeZone === undefined) {
-        throw new TypeError('required property timeZone missing or undefined');
-      }
-      timeZone = ES.ToTemporalTimeZone(timeZone);
-      offset = item.offset;
+      } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow));
+      timeZone = ES.ToTemporalTimeZone(fields.timeZone);
+      offset = fields.offset;
       if (offset !== undefined) offset = ES.ToString(offset);
     } else {
       let ianaName;
