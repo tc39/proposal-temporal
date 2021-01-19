@@ -9,9 +9,7 @@ features: [Reflect]
 
 const expected = [
   "get month",
-  "valueOf month",
-  "get year",
-  "valueOf year",
+  "get year"
 ];
 const actual = [];
 
@@ -38,6 +36,6 @@ Object.defineProperties(ObservedYearMonth.prototype, {
 const instance = new ObservedYearMonth(2000, 5);
 
 const result = instance.getFields();
-assert.sameValue(result.year, 2000, "year result");
-assert.sameValue(result.month, 5, "month result");
 assert.compareArray(actual, expected, "order of operations");
+assert.sameValue(result.year.valueOf(), 2000, "year result");
+assert.sameValue(result.month.valueOf(), 5, "month result");

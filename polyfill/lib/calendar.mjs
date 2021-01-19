@@ -171,15 +171,39 @@ DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toStr
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
-    const { year, month, day } = ES.ToRecord(fields, [['day'], ['month'], ['year']]);
+    const result = {};
+    for (const name of ['day', 'month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { day, month, year } = result;
     return ES.RegulateDate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
-    const { year, month } = ES.ToRecord(fields, [['month'], ['year']]);
+    const result = {};
+    for (const name of ['month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { month, year } = result;
     return ES.RegulateYearMonth(year, month, overflow);
   },
   monthDayFromFields(fields, overflow) {
-    const { month, day } = ES.ToRecord(fields, [['day'], ['month']]);
+    const result = {};
+    for (const name of ['day', 'month']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      result[name] = ES.ToInteger(value);
+    }
+    const { day, month } = result;
     return ES.RegulateMonthDay(month, day, overflow);
   },
   fields(fields) {
@@ -286,16 +310,44 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
   },
 
   dateFromFields(fields, overflow) {
+    const result = {};
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['day'], ['era', 'ad'], ['month'], ['year']]);
-    const isoYear = gre.isoYear(fields.year, fields.era);
-    return impl['iso8601'].dateFromFields({ ...fields, year: isoYear }, overflow);
+    for (const [name, defaultValue] of [['day'], ['era', 'ad'], ['month'], ['year']]) {
+      let value = fields[name];
+      if (value === undefined) {
+        if (defaultValue === undefined) {
+          throw new TypeError(`required property '${name}' missing or undefined`);
+        } else {
+          value = defaultValue;
+        }
+      }
+      if (name != 'era') {
+        value = ES.ToInteger(value);
+      }
+      result[name] = value;
+    }
+    const isoYear = gre.isoYear(result.year, result.era);
+    return impl['iso8601'].dateFromFields({ ...result, year: isoYear }, overflow);
   },
   yearMonthFromFields(fields, overflow) {
+    const result = {};
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['era', 'ad'], ['month'], ['year']]);
-    const isoYear = gre.isoYear(fields.year, fields.era);
-    return impl['iso8601'].yearMonthFromFields({ ...fields, year: isoYear }, overflow);
+    for (const [name, defaultValue] of [['era', 'ad'], ['month'], ['year']]) {
+      let value = fields[name];
+      if (value === undefined) {
+        if (defaultValue === undefined) {
+          throw new TypeError(`required property '${name}' missing or undefined`);
+        } else {
+          value = defaultValue;
+        }
+      }
+      if (name != 'era') {
+        value = ES.ToInteger(value);
+      }
+      result[name] = value;
+    }
+    const isoYear = gre.isoYear(result.year, result.era);
+    return impl['iso8601'].yearMonthFromFields({ ...result, year: isoYear }, overflow);
   }
 });
 
@@ -383,15 +435,35 @@ impl['japanese'] = ObjectAssign({}, impl['iso8601'], {
 
   dateFromFields(fields, overflow) {
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);
-    const isoYear = jpn.isoYear(fields.year, fields.era);
-    return impl['iso8601'].dateFromFields({ ...fields, year: isoYear }, overflow);
+    const result = {};
+    for (const name of ['day', 'era', 'month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      if (name != 'era') {
+        value = ES.ToInteger(value);
+      }
+      result[name] = value;
+    }
+    const isoYear = jpn.isoYear(result.year, result.era);
+    return impl['iso8601'].dateFromFields({ ...result, year: isoYear }, overflow);
   },
   yearMonthFromFields(fields, overflow) {
+    const result = {};
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['era'], ['month'], ['year']]);
-    const isoYear = jpn.isoYear(fields.year, fields.era);
-    return impl['iso8601'].yearMonthFromFields({ ...fields, year: isoYear }, overflow);
+    for (const name of ['era', 'month', 'year']) {
+      let value = fields[name];
+      if (value === undefined) {
+        throw new TypeError(`required property '${name}' missing or undefined`);
+      }
+      if (name != 'era') {
+        value = ES.ToInteger(value);
+      }
+      result[name] = value;
+    }
+    const isoYear = jpn.isoYear(result.year, result.era);
+    return impl['iso8601'].yearMonthFromFields({ ...result, year: isoYear }, overflow);
   }
 });
 

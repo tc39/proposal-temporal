@@ -9,7 +9,6 @@ features: [Reflect]
 
 const expected = [
   "get day",
-  "valueOf day",
   "get hour",
   "valueOf hour",
   "get microsecond",
@@ -19,13 +18,11 @@ const expected = [
   "get minute",
   "valueOf minute",
   "get month",
-  "valueOf month",
   "get nanosecond",
   "valueOf nanosecond",
   "get second",
   "valueOf second",
-  "get year",
-  "valueOf year"
+  "get year"
 ];
 const actual = [];
 
@@ -59,13 +56,13 @@ Object.defineProperties(ObservedDateTime.prototype, {
 const instance = new ObservedDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
 
 const result = instance.getFields();
-assert.sameValue(result.year, 2000, "year result");
-assert.sameValue(result.month, 5, "month result");
-assert.sameValue(result.day, 2, "day result");
+assert.compareArray(actual, expected, "order of operations");
+assert.sameValue(result.year.valueOf(), 2000, "year result");
+assert.sameValue(result.month.valueOf(), 5, "month result");
+assert.sameValue(result.day.valueOf(), 2, "day result");
 assert.sameValue(result.hour, 12, "hour result");
 assert.sameValue(result.minute, 34, "minute result");
 assert.sameValue(result.second, 56, "second result");
 assert.sameValue(result.millisecond, 987, "millisecond result");
 assert.sameValue(result.microsecond, 654, "microsecond result");
 assert.sameValue(result.nanosecond, 321, "nanosecond result");
-assert.compareArray(actual, expected, "order of operations");

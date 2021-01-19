@@ -1128,7 +1128,7 @@
     <emu-clause id="sec-temporal-totemporalzoneddatetime" aoid="ToTemporalZonedDateTime">
       <h1>ToTemporalZonedDateTime ( _item_ [ , _constructor_ [ , _overflow_, _disambiguation_, _offset_ ] ] )</h1>
       <p>
-        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
+        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.ZonedDateTime instance if possible, and throws otherwise.
       </p>
       <emu-alg>
         1. If _constructor_ is not given, set it to %Temporal.ZonedDateTime%.
@@ -1142,9 +1142,9 @@
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
-          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
-          1. Let _fields_ be ? ToTemporalZonedDateTimeFields(_item_, _fieldNames_).
           1. Let _timeZone_ be ? Get(_fields_, *"timeZone"*).
+          1. If _timeZone_ is *undefined*, then
+            1. Throw a *TypeError* exception.
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
           1. Let _offsetString_ be ? Get(_fields_, *"offset"*).
           1. If _offsetString_ is not *undefined*, set it to ? ToString(_offsetString_).
@@ -1259,7 +1259,6 @@
           1. Let _value_ be ? Get(_temporalDateLike_, _property_).
           1. If _property_ is one of *"day"*, *"month"*, or *"year"*, then
             1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. For each row of <emu-xref href="#table-temporal-temporalzoneddatetimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
