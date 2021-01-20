@@ -263,8 +263,6 @@
 </li>
 <li><a href="#toPlainMonthDay">toPlainMonthDay</a>
 </li>
-<li><a href="#getFields">getFields</a>
-</li>
 <li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
@@ -662,7 +660,7 @@ zdt<span class="token punctuation">.</span>offsetNanoseconds<span class="token p
 <p>The format used is defined in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC">ISO 8601</a> standard.</p>
 <p>The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.</p>
 <p>This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
-Therefore, this field is returned by <code>getFields()</code> and is accepted by <code>from</code> and <code>with</code>.
+Therefore, this field is accepted by <code>from</code> and <code>with</code>.
 The presence of this field means that <code>zonedDateTime.toInstant()</code> requires no parameters.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-01T01:30-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -677,14 +675,7 @@ daylightTime0130 <span class="token operator">=</span> Temporal<span class="toke
   <span class="token comment">// This is Pacific Daylight Time 1:30AM</span>
 repeated0130 <span class="token operator">=</span> daylightTime0130<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> offset<span class="token operator">:</span> minus8Hours <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => 2020-11-01T01:30-08:00[America/Los_Angeles]</span>
-  <span class="token comment">// This is Pacific Standard Time 1:30AM</span>
-<span class="token keyword">const</span> <span class="token punctuation">{</span> offset<span class="token punctuation">,</span> <span class="token operator">...</span>otherFields <span class="token punctuation">}</span> <span class="token operator">=</span> repeated0130<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>otherFields<span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2020-11-01T01:30-07:00[America/Los_Angeles]</span>
-zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token operator">...</span>otherFields<span class="token punctuation">,</span> offset <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> disambiguation<span class="token operator">:</span> <span class="token string">'earlier'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2020-11-01T01:30-08:00[America/Los_Angeles]</span>
-  <span class="token comment">// Note that the `{disambiguation: 'earlier'}` option is ignored because `offset`</span>
-  <span class="token comment">// is included in the input so the result is not ambiguous.</span></code></pre><!-- prettier-ignore-end -->
+  <span class="token comment">// This is Pacific Standard Time 1:30AM</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
@@ -1209,49 +1200,15 @@ zdt<span class="token punctuation">.</span><span class="token function">toPlainD
 zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07</span>
 zdt<span class="token punctuation">.</span><span class="token function">toPlainYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12</span>
 zdt<span class="token punctuation">.</span><span class="token function">toPlainMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 12-07</span>
-zdt<span class="token punctuation">.</span><span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>zonedDateTime.<strong>getFields</strong>() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>zonedDateTime</code>, including all date/time fields (expressed in the current calendar) as well as the <code>calendar</code>, <code>timeZone</code>, and <code>offset</code> properties.</p>
-<p>This method can be used to convert a <code>Temporal.ZonedDateTime</code> into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
-<p>This method is helpful when you want to use the ES6 &quot;object spread&quot; (<code>...</code>) feature (or equivalent code like <code>Object.assign</code>) on a <code>Temporal.ZonedDateTime</code> instance.<br>Because <code>Temporal.ZonedDateTime</code> fields are not &quot;own properties&quot; according to JavaScript, they cannot be enumerated by <code>...</code> or <code>Object.assign</code>.
-But calling <code>.getFields()</code> creates a new object whose properties can be enumerated by <code>...</code> or <code>Object.assign</code>.</p>
-<p>The <code>timeZone</code> and <code>calendar</code> properties are returned as objects, not as their string IDs.</p>
-<p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.</p>
-<blockquote>
-<p><strong>NOTE</strong>: The possible values for the <code>month</code> property of the returned object start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
-</blockquote>
-<p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">const</span> thisWontWork <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token operator">...</span>zdt<span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>thisWontWork<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => { "hour": 12 }</span>
-<span class="token comment">// There are no other properties because Temporal.ZonedDateTime has no enumerable own properties</span>
-
-<span class="token keyword">const</span> thisWillWork <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token operator">...</span>zdt<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> hour<span class="token operator">:</span> <span class="token number">12</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>thisWillWork<span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// => "{</span>
-<span class="token comment">//   "timeZone": "America/Los_Angeles",</span>
-<span class="token comment">//   "offsetNanoseconds": -28800000000000,</span>
-<span class="token comment">//   "day": 7,</span>
-<span class="token comment">//   "hour": 12,    // note that `hour` has been updated</span>
-<span class="token comment">//   "microsecond": 3,</span>
-<span class="token comment">//   "millisecond": 0,</span>
-<span class="token comment">//   "minute": 24,</span>
-<span class="token comment">//   "month": 12,</span>
-<span class="token comment">//   "nanosecond": 500,</span>
-<span class="token comment">//   "second": 30,</span>
-<span class="token comment">//   "year": 1995,</span>
-<span class="token comment">//   "calendar": {}</span>
-<span class="token comment">// }"</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>zonedDateTime.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>zonedDateTime</code> in the ISO 8601 calendar, including all date/time fields as well as the <code>calendar</code>, <code>timeZone</code>, and <code>offset</code> properties.
-Note that date/time properties have different names with an <code>iso</code> prefix to better differentiate from &quot;normal&quot; <code>getFields</code> results.</p>
+zdt<span class="token punctuation">.</span><span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03:24:30</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>zonedDateTime.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>zonedDateTime</code> in the ISO 8601 calendar, including all date/time fields as well as the <code>calendar</code>, <code>timeZone</code>, and <code>offset</code> properties.</p>
 <p>This is an advanced method that&#39;s mainly useful if you are implementing a custom calendar.
-Most developers will not need to use it.
-Instead, most applications will use <code>zonedDateTime.getFields()</code> (for fields in the current calendar) or <code>zonedDateTime.withCalendar(&#39;iso8601&#39;).getFields()</code> (for fields expressed using the ISO 8601 calendar).</p>
+Most developers will not need to use it.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// get a Temporal.ZonedDateTime in `japanese` calendar system</span>
 zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500+01:00[Europe/Paris]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// Year in japanese calendar is year 7 of Heisei era</span>
-zdt<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 7</span>
+zdt<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 7</span>
 zdt<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoYear<span class="token punctuation">;</span> <span class="token comment">// => 1995</span>
 
 <span class="token comment">// Instead of calling getISOFields, the pattern below is recommended for most use cases</span>

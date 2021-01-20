@@ -205,7 +205,7 @@ It also includes helper functions, e.g. to fetch the current time zone offset fo
 </ul>
 <p>There are two ways to get a human-readable calendar date and clock time from a <code>Temporal</code> type that stores exact time.</p>
 <ul>
-<li>If the exact time is already represented by a <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. <a href="./zoneddatetime.html#year"><code>.year</code></a>, <a href="./zoneddatetime.html#hour"><code>.hour</code></a>, <a href="./zoneddatetime.html#getFields"><code>.getFields()</code></a>, or <a href="./zoneddatetime.html#toLocaleString"><code>.toLocaleString()</code></a>.</li>
+<li>If the exact time is already represented by a <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. <a href="./zoneddatetime.html#year"><code>.year</code></a>, <a href="./zoneddatetime.html#hour"><code>.hour</code></a>, or <a href="./zoneddatetime.html#toLocaleString"><code>.toLocaleString()</code></a>.</li>
 <li>However, if the exact time is represented by a <a href="./instant.html"><code>Temporal.Instant</code></a>, use a time zone and optional calendar to create a <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a>. Example:</li>
 </ul>
 <!-- prettier-ignore-start -->

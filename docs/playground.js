@@ -9404,16 +9404,6 @@
         return ES.MonthDayFromFields(calendar, fields, MonthDay);
       }
     }, {
-      key: "getFields",
-      value: function getFields() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateFields(this, fieldNames);
-        fields.calendar = calendar;
-        return fields;
-      }
-    }, {
       key: "getISOFields",
       value: function getISOFields() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -10064,16 +10054,6 @@
       value: function toPlainTime() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         return ES.TemporalDateTimeToTime(this);
-      }
-    }, {
-      key: "getFields",
-      value: function getFields() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalDateTimeFields(this, fieldNames);
-        fields.calendar = calendar;
-        return fields;
       }
     }, {
       key: "getISOFields",
@@ -10952,16 +10932,6 @@
         return ES.DateFromFields(calendar, fields, Date);
       }
     }, {
-      key: "getFields",
-      value: function getFields() {
-        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
-        var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        fields.calendar = calendar;
-        return fields;
-      }
-    }, {
       key: "getISOFields",
       value: function getISOFields() {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
@@ -11551,14 +11521,6 @@
         return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
       }
     }, {
-      key: "getFields",
-      value: function getFields() {
-        var fields = ES.ToTemporalTimeRecord(this);
-        if (!fields) throw new TypeError('invalid receiver');
-        fields.calendar = GetSlot(this, CALENDAR);
-        return fields;
-      }
-    }, {
       key: "getISOFields",
       value: function getISOFields() {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -12004,16 +11966,6 @@
         ObjectAssign$7(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
         return ES.DateFromFields(calendar, fields, Date, 'reject');
-      }
-    }, {
-      key: "getFields",
-      value: function getFields() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
-        var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        fields.calendar = calendar;
-        return fields;
       }
     }, {
       key: "getISOFields",
@@ -12695,16 +12647,6 @@
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         return calendar.monthDayFromFields(fields, {}, MonthDay);
-      }
-    }, {
-      key: "getFields",
-      value: function getFields() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-        var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
-        fields.calendar = calendar;
-        return fields;
       }
     }, {
       key: "getISOFields",

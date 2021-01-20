@@ -183,8 +183,6 @@
 </li>
 <li><a href="#toPlainDate">toPlainDate</a>
 </li>
-<li><a href="#getFields">getFields</a>
-</li>
 <li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
@@ -416,20 +414,9 @@ md<span class="token punctuation">.</span><span class="token function">toPlainDa
   day<span class="token operator">:</span> <span class="token number">1</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> era<span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>monthDay.<strong>getFields</strong>() : { month: number, day: number, calendar: object, [propName: string]: unknown }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>monthDay</code>.</p>
-<p>This method can be used to convert a <code>Temporal.PlainMonthDay</code> into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
-<p>Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties.</p>
-<blockquote>
-<p><strong>NOTE</strong>: The possible values for the <code>month</code> property of the returned object start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
-</blockquote>
-<p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">)</span><span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> md<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 24</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>monthDay.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar, as well as the value of <code>monthDay.calendar</code>.</p>
+date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> era<span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> year<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>monthDay.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar, as well as the value of <code>monthDay.calendar</code>.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-Use <code>monthDay.getFields()</code> instead.</p>
+Most code will not need to use it.</p>
 <p>The value of the <code>isoYear</code> property will be equal to the <code>referenceISOYear</code> constructor argument passed when <code>monthDay</code> was constructed.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
