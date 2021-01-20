@@ -609,7 +609,7 @@ The format used is defined in the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8
 The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.
 
 This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
-Therefore, this field is returned by `getFields()` and is accepted by `from` and `with`.
+Therefore, this field is accepted by `from` and `with`.
 The presence of this field means that `zonedDateTime.toInstant()` requires no parameters.
 
 <!-- prettier-ignore-start -->
@@ -627,13 +627,6 @@ daylightTime0130 = Temporal.ZonedDateTime.from('2020-11-01T01:30-07:00[America/L
 repeated0130 = daylightTime0130.with({ offset: minus8Hours });
   // => 2020-11-01T01:30-08:00[America/Los_Angeles]
   // This is Pacific Standard Time 1:30AM
-const { offset, ...otherFields } = repeated0130.getFields();
-zdt = Temporal.ZonedDateTime.from(otherFields, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
-zdt = Temporal.ZonedDateTime.from({ ...otherFields, offset }, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
-  // Note that the `{disambiguation: 'earlier'}` option is ignored because `offset`
-  // is included in the input so the result is not ambiguous.
 ```
 <!-- prettier-ignore-end -->
 
@@ -1342,58 +1335,12 @@ zdt.toPlainMonthDay(); // => 12-07
 zdt.toPlainTime(); // => 03:24:30
 ```
 
-### zonedDateTime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object, [propName: string]: unknown }
-
-**Returns:** a plain object with properties equal to the fields of `zonedDateTime`, including all date/time fields (expressed in the current calendar) as well as the `calendar`, `timeZone`, and `offset` properties.
-
-This method can be used to convert a `Temporal.ZonedDateTime` into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
-
-This method is helpful when you want to use the ES6 "object spread" (`...`) feature (or equivalent code like `Object.assign`) on a `Temporal.ZonedDateTime` instance.  
-Because `Temporal.ZonedDateTime` fields are not "own properties" according to JavaScript, they cannot be enumerated by `...` or `Object.assign`.
-But calling `.getFields()` creates a new object whose properties can be enumerated by `...` or `Object.assign`.
-
-The `timeZone` and `calendar` properties are returned as objects, not as their string IDs.
-
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values.
-
-> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
-
-Usage example:
-
-```javascript
-zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500-08:00[America/Los_Angeles]');
-
-const thisWontWork = { ...zdt, hour: 12 };
-JSON.stringify(thisWontWork); // => { "hour": 12 }
-// There are no other properties because Temporal.ZonedDateTime has no enumerable own properties
-
-const thisWillWork = { ...zdt.getFields(), hour: 12 };
-JSON.stringify(thisWillWork, undefined, 2);
-// => "{
-//   "timeZone": "America/Los_Angeles",
-//   "offsetNanoseconds": -28800000000000,
-//   "day": 7,
-//   "hour": 12,    // note that `hour` has been updated
-//   "microsecond": 3,
-//   "millisecond": 0,
-//   "minute": 24,
-//   "month": 12,
-//   "nanosecond": 500,
-//   "second": 30,
-//   "year": 1995,
-//   "calendar": {}
-// }"
-```
-
 ### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object }
 
 **Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `calendar`, `timeZone`, and `offset` properties.
-Note that date/time properties have different names with an `iso` prefix to better differentiate from "normal" `getFields` results.
 
 This is an advanced method that's mainly useful if you are implementing a custom calendar.
 Most developers will not need to use it.
-Instead, most applications will use `zonedDateTime.getFields()` (for fields in the current calendar) or `zonedDateTime.withCalendar('iso8601').getFields()` (for fields expressed using the ISO 8601 calendar).
 
 Usage example:
 
@@ -1402,7 +1349,7 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]').withCalendar('japanese');
 
 // Year in japanese calendar is year 7 of Heisei era
-zdt.getFields().year; // => 7
+zdt.year; // => 7
 zdt.getISOFields().isoYear; // => 1995
 
 // Instead of calling getISOFields, the pattern below is recommended for most use cases

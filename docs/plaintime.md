@@ -599,29 +599,11 @@ date = Temporal.PlainDate.from('2006-08-24');
 time.toPlainDateTime(date); // => 2006-08-24T15:23:30.003
 ```
 
-### time.**getFields**() : { hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: Temporal.Calendar }
-
-**Returns:** a plain object with properties equal to the fields of `time`.
-
-This method can be used to convert a `Temporal.PlainTime` into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
-
-A `calendar` property is included and is always set to the ISO 8601 calendar.
-
-Usage example:
-
-```javascript
-time = Temporal.PlainTime.from('15:23:30.003');
-Object.assign({}, time).minute; // => undefined
-Object.assign({}, time.getFields()).minute; // => 23
-```
-
 ### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: Temporal.Calendar }
 
 **Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar.
 
 This method is present for forward compatibility with custom calendars.
-Use `time.getFields()` instead.
 
 Usage example:
 

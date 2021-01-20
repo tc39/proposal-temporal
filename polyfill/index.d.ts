@@ -845,7 +845,6 @@ export namespace Temporal {
     }): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
-    getFields(): DateFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1022,7 +1021,6 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
-    getFields(): DateTimeFields;
     getISOFields(): DateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1061,7 +1059,6 @@ export namespace Temporal {
     equals(other: Temporal.PlainMonthDay | MonthDayLike | string): boolean;
     with(monthDayLike: MonthDayLike, options?: AssignmentOptions): Temporal.PlainMonthDay;
     toPlainDate(year: { year: number }): Temporal.PlainDate;
-    getFields(): MonthDayFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1190,7 +1187,6 @@ export namespace Temporal {
       timeZone: TimeZoneProtocol | string;
       plainDate: Temporal.PlainDate | DateLike | string;
     }): Temporal.ZonedDateTime;
-    getFields(): TimeFields;
     getISOFields(): TimeFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1307,7 +1303,6 @@ export namespace Temporal {
       options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
     ): Temporal.Duration;
     toPlainDate(day: { day: number }): Temporal.PlainDate;
-    getFields(): YearMonthFields;
     getISOFields(): DateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1328,21 +1323,6 @@ export namespace Temporal {
     offset?: string;
     timeZone?: TimeZoneProtocol | string;
     calendar?: CalendarProtocol | string;
-  };
-
-  type ZonedDateTimeFields = {
-    year: number;
-    month: number;
-    day: number;
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    microsecond: number;
-    nanosecond: number;
-    offset: string;
-    timeZone: TimeZoneProtocol;
-    calendar: CalendarProtocol;
   };
 
   type ZonedDateTimeISOFields = {
@@ -1480,7 +1460,6 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
-    getFields(): ZonedDateTimeFields;
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

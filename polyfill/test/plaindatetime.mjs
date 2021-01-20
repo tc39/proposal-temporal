@@ -99,9 +99,6 @@ describe('DateTime', () => {
       it('DateTime.prototype.toPlainTime is a Function', () => {
         equal(typeof PlainDateTime.prototype.toPlainTime, 'function');
       });
-      it('DateTime.prototype.getFields is a Function', () => {
-        equal(typeof PlainDateTime.prototype.getFields, 'function');
-      });
       it('DateTime.prototype.getISOFields is a Function', () => {
         equal(typeof PlainDateTime.prototype.getISOFields, 'function');
       });
@@ -1590,58 +1587,6 @@ describe('DateTime', () => {
         throws(() => min.round({ smallestUnit, roundingMode: 'floor' }), RangeError);
         throws(() => max.round({ smallestUnit, roundingMode: 'ceil' }), RangeError);
       });
-    });
-  });
-  describe('dateTime.getFields() works', () => {
-    const calendar = Temporal.Calendar.from('iso8601');
-    const dt1 = PlainDateTime.from({
-      year: 1976,
-      month: 11,
-      day: 18,
-      hour: 15,
-      minute: 23,
-      second: 30,
-      millisecond: 123,
-      microsecond: 456,
-      nanosecond: 789,
-      calendar
-    });
-    const fields = dt1.getFields();
-    it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.day, 18);
-      equal(fields.hour, 15);
-      equal(fields.minute, 23);
-      equal(fields.second, 30);
-      equal(fields.millisecond, 123);
-      equal(fields.microsecond, 456);
-      equal(fields.nanosecond, 789);
-      equal(fields.calendar, calendar);
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
-      equal(fields2.hour, 15);
-      equal(fields2.minute, 23);
-      equal(fields2.second, 30);
-      equal(fields2.millisecond, 123);
-      equal(fields2.microsecond, 456);
-      equal(fields2.nanosecond, 789);
-      equal(fields2.calendar, calendar);
-    });
-    it('as input to from()', () => {
-      const dt2 = PlainDateTime.from(fields);
-      equal(PlainDateTime.compare(dt1, dt2), 0);
-    });
-    it('does not include era for ISO calendar', () => {
-      assert(!('era' in fields));
-    });
-    it('includes era for calendars that use it', () => {
-      const dt3 = PlainDateTime.from('1976-11-18T15:23:30.123456789[c=japanese]');
-      equal(dt3.getFields().era, 'showa');
     });
   });
   describe('dateTime.getISOFields() works', () => {

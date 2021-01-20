@@ -144,14 +144,6 @@ export class PlainMonthDay {
     const Date = GetIntrinsic('%Temporal.PlainDate%');
     return ES.DateFromFields(calendar, fields, Date);
   }
-  getFields() {
-    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
-    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-    fields.calendar = calendar;
-    return fields;
-  }
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return {

@@ -956,32 +956,12 @@ dt.toPlainMonthDay(); // => 12-07
 dt.toPlainTime(); // => 03:24:30.000003500
 ```
 
-### datetime.**getFields**() : { year: number, month: number, day: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, calendar: object, [propName: string]: unknown }
-
-**Returns:** a plain object with properties equal to the fields of `datetime`.
-
-This method can be used to convert a `Temporal.PlainDateTime` into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
-
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as `era`.
-
-> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
-
-Usage example:
-
-```javascript
-dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-Object.assign({}, dt).day; // => undefined
-Object.assign({}, dt.getFields()).day; // => 7
-```
-
 ### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }
 
 **Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the value of `datetime.calendar`.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use `datetime.getFields()` instead, or `datetime.withCalendar('iso8601').getFields()`.
 
 Usage example:
 
@@ -997,7 +977,7 @@ dt.equals(dt2); // => true
 
 // Date in other calendar
 dt = dt.withCalendar('hebrew');
-dt.getFields().day; // => 14
+dt.day; // => 14
 dt.getISOFields().isoDay; // => 7
 
 // Most likely what you need is this:

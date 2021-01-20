@@ -734,14 +734,6 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToTime(this);
   }
-  getFields() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
-    const fields = ES.ToTemporalDateTimeFields(this, fieldNames);
-    fields.calendar = calendar;
-    return fields;
-  }
   getISOFields() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return {

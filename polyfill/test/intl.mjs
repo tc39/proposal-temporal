@@ -251,14 +251,14 @@ describe('Intl', () => {
         equal(at.format(Temporal.PlainDate.from(t1)), '18.11.1976');
       });
       it('should work for YearMonth', () => {
-        const fields = Temporal.PlainYearMonth.from(t1).getFields();
-        equal(us.format(Temporal.PlainYearMonth.from({ ...fields, calendar: usCalendar })), '11/1976');
-        equal(at.format(Temporal.PlainYearMonth.from({ ...fields, calendar: atCalendar })), '11.1976');
+        const t = Temporal.PlainDate.from(t1);
+        equal(us.format(t.withCalendar(usCalendar).toPlainYearMonth()), '11/1976');
+        equal(at.format(t.withCalendar(atCalendar).toPlainYearMonth()), '11.1976');
       });
       it('should work for MonthDay', () => {
-        const fields = Temporal.PlainMonthDay.from(t1).getFields();
-        equal(us.format(Temporal.PlainMonthDay.from({ ...fields, calendar: usCalendar })), '11/18');
-        equal(at.format(Temporal.PlainMonthDay.from({ ...fields, calendar: atCalendar })), '18.11.');
+        const t = Temporal.PlainDate.from(t1);
+        equal(us.format(t.withCalendar(usCalendar).toPlainMonthDay()), '11/18');
+        equal(at.format(t.withCalendar(atCalendar).toPlainMonthDay()), '18.11.');
       });
       it('should not break legacy Date', () => {
         equal(us.format(start), '12/29/1922');
@@ -395,26 +395,26 @@ describe('Intl', () => {
         ]);
       });
       it('should work for YearMonth', () => {
-        const fields = Temporal.PlainYearMonth.from(t2).getFields();
-        deepEqual(us.formatToParts(Temporal.PlainYearMonth.from({ ...fields, calendar: usCalendar })), [
+        const t = Temporal.PlainDate.from(t2);
+        deepEqual(us.formatToParts(t.withCalendar(usCalendar).toPlainYearMonth()), [
           { type: 'month', value: '2' },
           { type: 'literal', value: '/' },
           { type: 'year', value: '2020' }
         ]);
-        deepEqual(at.formatToParts(Temporal.PlainYearMonth.from({ ...fields, calendar: atCalendar })), [
+        deepEqual(at.formatToParts(t.withCalendar(atCalendar).toPlainYearMonth()), [
           { type: 'month', value: '2' },
           { type: 'literal', value: '.' },
           { type: 'year', value: '2020' }
         ]);
       });
       it('should work for MonthDay', () => {
-        const fields = Temporal.PlainMonthDay.from(t2).getFields();
-        deepEqual(us.formatToParts(Temporal.PlainMonthDay.from({ ...fields, calendar: usCalendar })), [
+        const t = Temporal.PlainDate.from(t2);
+        deepEqual(us.formatToParts(t.withCalendar(usCalendar).toPlainMonthDay()), [
           { type: 'month', value: '2' },
           { type: 'literal', value: '/' },
           { type: 'day', value: '20' }
         ]);
-        deepEqual(at.formatToParts(Temporal.PlainMonthDay.from({ ...fields, calendar: atCalendar })), [
+        deepEqual(at.formatToParts(t.withCalendar(atCalendar).toPlainMonthDay()), [
           { type: 'day', value: '20' },
           { type: 'literal', value: '.' },
           { type: 'month', value: '2' },
@@ -474,37 +474,37 @@ describe('Intl', () => {
         equal(at.formatRange(Temporal.PlainDate.from(t1), Temporal.PlainDate.from(t2)), '18.11.1976 – 20.02.2020');
       });
       it('should work for YearMonth', () => {
-        const fields1 = Temporal.PlainYearMonth.from(t1).getFields();
-        const fields2 = Temporal.PlainYearMonth.from(t2).getFields();
+        const date1 = Temporal.PlainDate.from(t1);
+        const date2 = Temporal.PlainDate.from(t2);
         equal(
           us.formatRange(
-            Temporal.PlainYearMonth.from({ ...fields1, calendar: usCalendar }),
-            Temporal.PlainYearMonth.from({ ...fields2, calendar: usCalendar })
+            date1.withCalendar(usCalendar).toPlainYearMonth(),
+            date2.withCalendar(usCalendar).toPlainYearMonth()
           ),
           '11/1976 – 2/2020'
         );
         equal(
           at.formatRange(
-            Temporal.PlainYearMonth.from({ ...fields1, calendar: atCalendar }),
-            Temporal.PlainYearMonth.from({ ...fields2, calendar: atCalendar })
+            date1.withCalendar(atCalendar).toPlainYearMonth(),
+            date2.withCalendar(atCalendar).toPlainYearMonth()
           ),
           '11.1976 – 02.2020'
         );
       });
       it('should work for MonthDay', () => {
-        const fields1 = Temporal.PlainMonthDay.from(t1).getFields();
-        const fields2 = Temporal.PlainMonthDay.from(t2).getFields();
+        const date1 = Temporal.PlainDate.from(t1);
+        const date2 = Temporal.PlainDate.from(t2);
         equal(
           us.formatRange(
-            Temporal.PlainMonthDay.from({ ...fields2, calendar: usCalendar }),
-            Temporal.PlainMonthDay.from({ ...fields1, calendar: usCalendar })
+            date2.withCalendar(usCalendar).toPlainMonthDay(),
+            date1.withCalendar(usCalendar).toPlainMonthDay()
           ),
           '2/20 – 11/18'
         );
         equal(
           at.formatRange(
-            Temporal.PlainMonthDay.from({ ...fields2, calendar: atCalendar }),
-            Temporal.PlainMonthDay.from({ ...fields1, calendar: atCalendar })
+            date2.withCalendar(atCalendar).toPlainMonthDay(),
+            date1.withCalendar(atCalendar).toPlainMonthDay()
           ),
           '20.02. – 18.11.'
         );
@@ -770,12 +770,12 @@ describe('Intl', () => {
         ]);
       });
       it('should work for YearMonth', () => {
-        const fields1 = Temporal.PlainYearMonth.from(t1).getFields();
-        const fields2 = Temporal.PlainYearMonth.from(t2).getFields();
+        const date1 = Temporal.PlainDate.from(t1);
+        const date2 = Temporal.PlainDate.from(t2);
         deepEqual(
           us.formatRangeToParts(
-            Temporal.PlainYearMonth.from({ ...fields1, calendar: usCalendar }),
-            Temporal.PlainYearMonth.from({ ...fields2, calendar: usCalendar })
+            date1.withCalendar(usCalendar).toPlainYearMonth(),
+            date2.withCalendar(usCalendar).toPlainYearMonth()
           ),
           [
             { type: 'month', value: '11', source: 'startRange' },
@@ -789,8 +789,8 @@ describe('Intl', () => {
         );
         deepEqual(
           at.formatRangeToParts(
-            Temporal.PlainYearMonth.from({ ...fields1, calendar: atCalendar }),
-            Temporal.PlainYearMonth.from({ ...fields2, calendar: atCalendar })
+            date1.withCalendar(atCalendar).toPlainYearMonth(),
+            date2.withCalendar(atCalendar).toPlainYearMonth()
           ),
           [
             { type: 'month', value: '11', source: 'startRange' },
@@ -804,12 +804,12 @@ describe('Intl', () => {
         );
       });
       it('should work for MonthDay', () => {
-        const fields1 = Temporal.PlainMonthDay.from(t1).getFields();
-        const fields2 = Temporal.PlainMonthDay.from(t2).getFields();
+        const date1 = Temporal.PlainDate.from(t1);
+        const date2 = Temporal.PlainDate.from(t2);
         deepEqual(
           us.formatRangeToParts(
-            Temporal.PlainMonthDay.from({ ...fields2, calendar: usCalendar }),
-            Temporal.PlainMonthDay.from({ ...fields1, calendar: usCalendar })
+            date2.withCalendar(usCalendar).toPlainMonthDay(),
+            date1.withCalendar(usCalendar).toPlainMonthDay()
           ),
           [
             { type: 'month', value: '2', source: 'startRange' },
@@ -823,8 +823,8 @@ describe('Intl', () => {
         );
         deepEqual(
           at.formatRangeToParts(
-            Temporal.PlainMonthDay.from({ ...fields2, calendar: atCalendar }),
-            Temporal.PlainMonthDay.from({ ...fields1, calendar: atCalendar })
+            date2.withCalendar(atCalendar).toPlainMonthDay(),
+            date1.withCalendar(atCalendar).toPlainMonthDay()
           ),
           [
             { type: 'day', value: '20', source: 'startRange' },

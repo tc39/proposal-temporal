@@ -588,32 +588,12 @@ ym = Temporal.PlainYearMonth.from('2019-06');
 ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
 
-### yearMonth.**getFields**() : { year: number, month: number, calendar: object, [propName: string]: unknown }
-
-**Returns:** a plain object with properties equal to the fields of `yearMonth`.
-
-This method can be used to convert a `Temporal.PlainYearMonth` into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
-
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as `era`.
-
-> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
-
-Usage example:
-
-```javascript
-ym = Temporal.PlainDateTime.from('2019-06');
-Object.assign({}, ym).year; // => undefined
-Object.assign({}, ym.getFields()).year; // => 2019
-```
-
 ### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
 
 **Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the value of `yearMonth.calendar`.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use `yearMonth.getFields()` instead.
 
 The value of the `isoDay` property will be equal to the `referenceISODay` constructor argument passed when `yearMonth` was constructed.
 

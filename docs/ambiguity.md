@@ -56,7 +56,7 @@ In Temporal:
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
-- If the exact time is already represented by a [`Temporal.ZonedDateTime`](./zoneddatetime.md) instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. [`.year`](./zoneddatetime.md#year), [`.hour`](./zoneddatetime.md#hour), [`.getFields()`](./zoneddatetime.md#getFields), or [`.toLocaleString()`](./zoneddatetime.md#toLocaleString).
+- If the exact time is already represented by a [`Temporal.ZonedDateTime`](./zoneddatetime.md) instance then the wall-clock time values are trivially available using the properties and methods of that type, e.g. [`.year`](./zoneddatetime.md#year), [`.hour`](./zoneddatetime.md#hour), or [`.toLocaleString()`](./zoneddatetime.md#toLocaleString).
 - However, if the exact time is represented by a [`Temporal.Instant`](./instant.md), use a time zone and optional calendar to create a [`Temporal.ZonedDateTime`](./zoneddatetime.md). Example:
 
 <!-- prettier-ignore-start -->
