@@ -4590,7 +4590,7 @@
         if (calendar) {
           calendar = ES.ToTemporalCalendar(calendar);
 
-          if (ES.CalendarToString(calendar) !== 'iso8601') {
+          if (ES.ToString(calendar) !== 'iso8601') {
             throw new RangeError('PlainTime can only have iso8601 calendar');
           }
         }
@@ -4796,11 +4796,6 @@
       var array = ES.Call(fields, calendar, [fieldNames]);
       return ES.CreateListFromArrayLike(array, ['String']);
     },
-    CalendarToString: function CalendarToString(calendar) {
-      var toString = calendar.toString;
-      if (toString === undefined) toString = GetIntrinsic$1('%Temporal.Calendar.prototype.toString%');
-      return ES.ToString(ES.Call(toString, calendar));
-    },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
       if (ES.Type(calendarLike) === 'Object') {
         return calendarLike;
@@ -4810,18 +4805,18 @@
       return ES.CalendarFrom(identifier);
     },
     CalendarCompare: function CalendarCompare(one, two) {
-      var cal1 = ES.CalendarToString(one);
-      var cal2 = ES.CalendarToString(two);
+      var cal1 = ES.ToString(one);
+      var cal2 = ES.ToString(two);
       return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
     },
     CalendarEquals: function CalendarEquals(one, two) {
-      var cal1 = ES.CalendarToString(one);
-      var cal2 = ES.CalendarToString(two);
+      var cal1 = ES.ToString(one);
+      var cal2 = ES.ToString(two);
       return cal1 === cal2;
     },
     ConsolidateCalendars: function ConsolidateCalendars(one, two) {
-      var sOne = ES.CalendarToString(one);
-      var sTwo = ES.CalendarToString(two);
+      var sOne = ES.ToString(one);
+      var sTwo = ES.ToString(two);
 
       if (sOne === sTwo || sOne === 'iso8601') {
         return two;
@@ -4874,13 +4869,13 @@
       return ES.TimeZoneFrom(identifier);
     },
     TimeZoneCompare: function TimeZoneCompare(one, two) {
-      var tz1 = ES.TimeZoneToString(one);
-      var tz2 = ES.TimeZoneToString(two);
+      var tz1 = ES.ToString(one);
+      var tz2 = ES.ToString(two);
       return tz1 < tz2 ? -1 : tz1 > tz2 ? 1 : 0;
     },
     TimeZoneEquals: function TimeZoneEquals(one, two) {
-      var tz1 = ES.TimeZoneToString(one);
-      var tz2 = ES.TimeZoneToString(two);
+      var tz1 = ES.ToString(one);
+      var tz2 = ES.ToString(two);
       return tz1 === tz2;
     },
     TemporalDateTimeToDate: function TemporalDateTimeToDate(dateTime) {
@@ -4944,15 +4939,6 @@
       return ES.Call(getInstantFor, timeZone, [dateTime, {
         disambiguation: disambiguation
       }]);
-    },
-    TimeZoneToString: function TimeZoneToString(timeZone) {
-      var toString = timeZone.toString;
-
-      if (toString === undefined) {
-        toString = GetIntrinsic$1('%Temporal.TimeZone.prototype.toString%');
-      }
-
-      return ES.ToString(ES.Call(toString, timeZone));
     },
     ISOYearString: function ISOYearString(year) {
       var yearString;
@@ -7678,12 +7664,12 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        return ES.TimeZoneToString(this);
+        return ES.ToString(this);
       }
     }, {
       key: "id",
       get: function get() {
-        return ES.TimeZoneToString(this);
+        return ES.ToString(this);
       }
     }], [{
       key: "from",
@@ -7709,7 +7695,6 @@
   DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
   DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);
-  DefineIntrinsic('Temporal.TimeZone.prototype.toString', TimeZone.prototype.toString);
 
   var DATE = Symbol('date');
   var YM = Symbol('ym');
@@ -7839,7 +7824,7 @@
           bformatter = _extractOverrides4.formatter,
           btz = _extractOverrides4.timeZone;
 
-      if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+      if (atz && btz && !ES.TimeZoneEquals(atz, btz)) {
         throw new RangeError('cannot format range between different time zones');
       }
 
@@ -7868,7 +7853,7 @@
           bformatter = _extractOverrides6.formatter,
           btz = _extractOverrides6.timeZone;
 
-      if (atz && btz && ES.TimeZoneToString(atz) !== ES.TimeZoneToString(btz)) {
+      if (atz && btz && !ES.TimeZoneEquals(atz, btz)) {
         throw new RangeError('cannot format range between different time zones');
       }
 
@@ -8053,7 +8038,7 @@
       var isoYear = GetSlot(temporalObj, ISO_YEAR);
       var isoMonth = GetSlot(temporalObj, ISO_MONTH);
       var referenceISODay = GetSlot(temporalObj, ISO_DAY);
-      var calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+      var calendar = ES.ToString(GetSlot(temporalObj, CALENDAR));
 
       if (calendar !== main[CAL_ID]) {
         throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
@@ -8074,7 +8059,7 @@
 
       var isoDay = GetSlot(temporalObj, ISO_DAY);
 
-      var _calendar = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+      var _calendar = ES.ToString(GetSlot(temporalObj, CALENDAR));
 
       if (_calendar !== main[CAL_ID]) {
         throw new RangeError("cannot format PlainMonthDay with calendar ".concat(_calendar, " in locale with calendar ").concat(main[CAL_ID]));
@@ -8095,7 +8080,7 @@
 
       var _isoDay = GetSlot(temporalObj, ISO_DAY);
 
-      var _calendar2 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+      var _calendar2 = ES.ToString(GetSlot(temporalObj, CALENDAR));
 
       if (_calendar2 !== 'iso8601' && _calendar2 !== main[CAL_ID]) {
         throw new RangeError("cannot format PlainDate with calendar ".concat(_calendar2, " in locale with calendar ").concat(main[CAL_ID]));
@@ -8128,7 +8113,7 @@
 
       var _nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
 
-      var _calendar3 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+      var _calendar3 = ES.ToString(GetSlot(temporalObj, CALENDAR));
 
       if (_calendar3 !== 'iso8601' && _calendar3 !== main[CAL_ID]) {
         throw new RangeError("cannot format PlainDateTime with calendar ".concat(_calendar3, " in locale with calendar ").concat(main[CAL_ID]));
@@ -8147,14 +8132,14 @@
     }
 
     if (ES.IsTemporalZonedDateTime(temporalObj)) {
-      var _calendar4 = ES.CalendarToString(GetSlot(temporalObj, CALENDAR));
+      var _calendar4 = ES.ToString(GetSlot(temporalObj, CALENDAR));
 
       if (_calendar4 !== 'iso8601' && _calendar4 !== main[CAL_ID]) {
         throw new RangeError("cannot format ZonedDateTime with calendar ".concat(_calendar4, " in locale with calendar ").concat(main[CAL_ID]));
       }
 
       var timeZone = GetSlot(temporalObj, TIME_ZONE);
-      var objTimeZone = ES.TimeZoneToString(timeZone);
+      var objTimeZone = ES.ToString(timeZone);
 
       if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
         throw new RangeError("timeZone option ".concat(main[TZ_GIVEN], " doesn't match actual time zone ").concat(objTimeZone));
@@ -8748,12 +8733,12 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        return ES.CalendarToString(this);
+        return ES.ToString(this);
       }
     }, {
       key: "id",
       get: function get() {
-        return ES.CalendarToString(this);
+        return ES.ToString(this);
       }
     }], [{
       key: "from",
@@ -8788,7 +8773,6 @@
   MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
   DefineIntrinsic('Temporal.Calendar.prototype.fields', Calendar.prototype.fields);
-  DefineIntrinsic('Temporal.Calendar.prototype.toString', Calendar.prototype.toString);
   impl['iso8601'] = {
     dateFromFields: function dateFromFields(fields, overflow) {
       var _ES$ToRecord = ES.ToRecord(fields, [['day'], ['month'], ['year']]),
@@ -9033,7 +9017,7 @@
     var year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
     var month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
     var day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-    var calendarID = ES.CalendarToString(GetSlot(date, CALENDAR));
+    var calendarID = ES.ToString(GetSlot(date, CALENDAR));
     var calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
     return "".concat(year, "-").concat(month, "-").concat(day).concat(calendar);
   }
@@ -9190,8 +9174,8 @@
         other = ES.ToTemporalDate(other, PlainDate);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -9233,8 +9217,8 @@
         other = ES.ToTemporalDate(other, PlainDate);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -9565,7 +9549,7 @@
     hour = ES.ISODateTimePartString(hour);
     minute = ES.ISODateTimePartString(minute);
     var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-    var calendarID = ES.CalendarToString(GetSlot(dateTime, CALENDAR));
+    var calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
     var calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
     return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
   }
@@ -9801,8 +9785,8 @@
         other = ES.ToTemporalDateTime(other, PlainDateTime);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -9861,8 +9845,8 @@
         other = ES.ToTemporalDateTime(other, PlainDateTime);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -10781,7 +10765,7 @@
     var day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
     var resultString = "".concat(month, "-").concat(day);
     var calendar = GetSlot(monthDay, CALENDAR);
-    var calendarID = ES.CalendarToString(calendar);
+    var calendarID = ES.ToString(calendar);
 
     if (calendarID !== 'iso8601') {
       var year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
@@ -11626,7 +11610,7 @@
     var month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
     var resultString = "".concat(year, "-").concat(month);
     var calendar = GetSlot(yearMonth, CALENDAR);
-    var calendarID = ES.CalendarToString(calendar);
+    var calendarID = ES.ToString(calendar);
 
     if (calendarID !== 'iso8601') {
       var day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
@@ -11806,8 +11790,8 @@
         other = ES.ToTemporalYearMonth(other, PlainYearMonth);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarID = ES.CalendarToString(calendar);
-        var otherCalendarID = ES.CalendarToString(otherCalendar);
+        var calendarID = ES.ToString(calendar);
+        var otherCalendarID = ES.ToString(otherCalendar);
 
         if (calendarID !== otherCalendarID) {
           throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
@@ -11854,8 +11838,8 @@
         other = ES.ToTemporalYearMonth(other, PlainYearMonth);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarID = ES.CalendarToString(calendar);
-        var otherCalendarID = ES.CalendarToString(otherCalendar);
+        var calendarID = ES.ToString(calendar);
+        var otherCalendarID = ES.ToString(otherCalendar);
 
         if (calendarID !== otherCalendarID) {
           throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
@@ -12288,8 +12272,8 @@
         other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -12386,8 +12370,8 @@
         other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
         var calendar = GetSlot(this, CALENDAR);
         var otherCalendar = GetSlot(other, CALENDAR);
-        var calendarId = ES.CalendarToString(calendar);
-        var otherCalendarId = ES.CalendarToString(otherCalendar);
+        var calendarId = ES.ToString(calendar);
+        var otherCalendarId = ES.ToString(otherCalendar);
 
         if (calendarId !== otherCalendarId) {
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
@@ -12913,8 +12897,8 @@
     var seconds = ES.FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
     var result = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds);
     if (showOffset !== 'never') result += ES.GetOffsetStringFor(tz, instant);
-    if (showTimeZone !== 'never') result += "[".concat(ES.TimeZoneToString(tz), "]");
-    var calendarID = ES.CalendarToString(GetSlot(zdt, CALENDAR));
+    if (showTimeZone !== 'never') result += "[".concat(tz, "]");
+    var calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
     result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
     return result;
   }
