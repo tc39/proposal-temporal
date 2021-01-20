@@ -21,8 +21,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-const ObjectAssign = Object.assign;
-
 function TemporalDateToString(date, showCalendar = 'auto') {
   const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
   const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
@@ -133,8 +131,8 @@ export class PlainDate {
     if (!props) {
       throw new TypeError('invalid date-like');
     }
-    const fields = ES.ToTemporalDateFields(this, fieldNames);
-    ObjectAssign(fields, props);
+    let fields = ES.ToTemporalDateFields(this, fieldNames);
+    fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);

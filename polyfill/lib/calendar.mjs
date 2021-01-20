@@ -64,6 +64,10 @@ export class Calendar {
     fields = ES.CreateListFromArrayLike(fields, ['String']);
     return impl[GetSlot(this, CALENDAR_ID)].fields(fields);
   }
+  mergeFields(fields, additionalFields) {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    return impl[GetSlot(this, CALENDAR_ID)].mergeFields(fields, additionalFields);
+  }
   dateAdd(date, duration, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
@@ -182,6 +186,9 @@ impl['iso8601'] = {
   },
   fields(fields) {
     return fields;
+  },
+  mergeFields(fields, additionalFields) {
+    return { ...fields, ...additionalFields };
   },
   dateAdd(date, duration, overflow) {
     const { years, months, weeks, days } = duration;

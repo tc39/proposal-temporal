@@ -347,6 +347,39 @@ Temporal.Calendar.from('iso8601').fields(['month', 'day']);
 ```
 <!-- prettier-ignore-end -->
 
+### calendar.**mergeFields**(_fields_: object, _additionalFields_: object) : object
+
+**Parameters:**
+
+- `fields` (object): A plain object with properties representing calendar units.
+- `additionalFields` (object): Another plain object with properties representing calendar units.
+
+**Returns:** a new object with properties from both `fields` and `additionalFields`.
+
+This method does not need to be called directly except in specialized code.
+It is called indirectly when using the `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainMonthDay`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
+
+Custom calendars should override this method if they allow a calendar unit to be specified in more than one way.
+(For example, the Gregorian calendar allows years to be specified either by a `year` property or a combination of `era` and `eraYear`.)
+The overridden implementation should return an object with some or all of the properties from the original `fields` object and `additionalFields` copied onto it.
+
+When subclassing `Temporal.Calendar`, this method doesn't need to be overridden, unless your calendar adds more ways to specify a unit other than the built-in properties `monthCode`, `era`, and `eraYear`.
+The default implementation copies all properties from `additionalFields` onto `fields`, taking into account that months may be specified either by `month` or `monthCode` properties, and any other special cases required by built-in calendars.
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```js
+// In built-in calendars, this method copies properties, taking `month`
+// and `monthCode` into account
+Temporal.Calendar.from('iso8601').mergeFields(
+  { year: 2006, month: 7, day: 31 },
+  { monthCode: '8' }
+);
+// => { year: 2006, monthCode: '8', day: 31 }
+```
+<!-- prettier-ignore-end -->
+
 ### calendar.**toString**() : string
 
 **Returns:** The string given by `calendar.id`.

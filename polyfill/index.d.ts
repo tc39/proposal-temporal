@@ -681,6 +681,7 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     fields?(fields: Array<string>): Array<string>;
+    mergeFields?(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
   }
 
@@ -757,6 +758,7 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     fields(fields: Array<string>): Array<string>;
+    mergeFields(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
   }
 
