@@ -86,8 +86,8 @@ export class PlainMonthDay {
     if (!props) {
       throw new TypeError('invalid month-day-like');
     }
-    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-    ObjectAssign(fields, props);
+    let fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+    fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);

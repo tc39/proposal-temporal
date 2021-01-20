@@ -21,8 +21,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-const ObjectAssign = Object.assign;
-
 function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = undefined) {
   let year = GetSlot(dateTime, ISO_YEAR);
   let month = GetSlot(dateTime, ISO_MONTH);
@@ -224,8 +222,8 @@ export class PlainDateTime {
     if (!props) {
       throw new TypeError('invalid date-time-like');
     }
-    const fields = ES.ToTemporalDateTimeFields(this, fieldNames);
-    ObjectAssign(fields, props);
+    let fields = ES.ToTemporalDateTimeFields(this, fieldNames);
+    fields = ES.CalendarMergeFields(calendar, fields, props);
     const {
       year,
       month,

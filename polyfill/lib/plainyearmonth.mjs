@@ -103,8 +103,8 @@ export class PlainYearMonth {
     if (!props) {
       throw new TypeError('invalid year-month-like');
     }
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    ObjectAssign(fields, props);
+    let fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+    fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);

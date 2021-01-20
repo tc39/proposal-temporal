@@ -170,10 +170,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
-        1. For each value _property_ in _fieldNames_, do
-          1. Let _value_ be ? Get(_partialMonthDay_, _property_).
-          1. If _value_ is not *undefined*, then
-            1. Perform ? Set(_fields_, _property_, _value_).
+        1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
         1. Let _constructor_ be ? SpeciesConstructor(_monthDay_, %Temporal.PlainMonthDay%).
         1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _overflow_).
       </emu-alg>

@@ -529,6 +529,134 @@ describe('Userland calendar', () => {
       delete Temporal.ZonedDateTime.prototype.season;
     });
   });
+
+  describe('calendar with nontrivial mergeFields implementation', () => {
+    // Contrived example of a calendar identical to the ISO calendar except that
+    // you can specify years as a combination of `century` (the 21st century is
+    // the year 2001 through 2100) and `centuryYear` (1-100)
+    class CenturyCalendar extends Temporal.Calendar {
+      constructor() {
+        super('iso8601');
+      }
+      toString() {
+        return 'century';
+      }
+      century(date) {
+        const { isoYear } = date.getISOFields();
+        return Math.ceil(isoYear / 100);
+      }
+      centuryYear(date) {
+        const { isoYear } = date.getISOFields();
+        return isoYear % 100;
+      }
+      _validateFields(fields) {
+        const { year, century, centuryYear } = fields;
+        if ((century === undefined) !== (centuryYear === undefined)) {
+          throw new TypeError('pass either both or neither of century and centuryYear');
+        }
+        if (year === undefined) return (century - 1) * 100 + centuryYear;
+        if (century !== undefined) {
+          let centuryCalculatedYear = (century - 1) * 100 + centuryYear;
+          if (year !== centuryCalculatedYear) {
+            throw new RangeError('year must agree with century/centuryYear if both given');
+          }
+        }
+        return year;
+      }
+      dateFromFields(fields, options, constructor) {
+        const isoYear = this._validateFields(fields);
+        return super.dateFromFields({ ...fields, year: isoYear }, options, constructor);
+      }
+      yearMonthFromFields(fields, options, constructor) {
+        const isoYear = this._validateFields(fields);
+        return super.yearMonthFromFields({ ...fields, year: isoYear }, options, constructor);
+      }
+      monthDayFromFields(fields, options, constructor) {
+        const isoYear = this._validateFields(fields);
+        return super.monthDayFromFields({ ...fields, year: isoYear }, options, constructor);
+      }
+      fields(fields) {
+        fields = fields.slice();
+        if (fields.includes('year')) fields.push('century', 'centuryYear');
+        return fields;
+      }
+      mergeFields(fields, additionalFields) {
+        const { year, century, centuryYear, ...original } = fields;
+        const { year: newYear, century: newCentury, centuryYear: newCenturyYear } = additionalFields;
+        if (newYear === undefined) {
+          original.century = century;
+          original.centuryYear = centuryYear;
+        }
+        if (newCentury === undefined && newCenturyYear === undefined) {
+          original.year === year;
+        }
+        return { ...original, ...additionalFields };
+      }
+    }
+    const calendar = new CenturyCalendar();
+    const datetime = new Temporal.PlainDateTime(2019, 9, 15, 0, 0, 0, 0, 0, 0, calendar);
+    const date = new Temporal.PlainDate(2019, 9, 15, calendar);
+    const yearmonth = new Temporal.PlainYearMonth(2019, 9, calendar);
+    const zoned = new Temporal.ZonedDateTime(1568505600_000_000_000n, 'UTC', calendar);
+    before(() => {
+      const propDesc = {
+        century: {
+          get() {
+            return this.calendar.century(this);
+          },
+          configurable: true
+        },
+        centuryYear: {
+          get() {
+            return this.calendar.centuryYear(this);
+          },
+          configurable: true
+        }
+      };
+      Object.defineProperties(Temporal.PlainDateTime.prototype, propDesc);
+      Object.defineProperties(Temporal.PlainDate.prototype, propDesc);
+      Object.defineProperties(Temporal.PlainYearMonth.prototype, propDesc);
+      Object.defineProperties(Temporal.ZonedDateTime.prototype, propDesc);
+    });
+    it('property getters work', () => {
+      equal(datetime.century, 21);
+      equal(datetime.centuryYear, 19);
+      equal(date.century, 21);
+      equal(date.centuryYear, 19);
+      equal(yearmonth.century, 21);
+      equal(yearmonth.centuryYear, 19);
+      equal(zoned.century, 21);
+      equal(zoned.centuryYear, 19);
+    });
+    it('correctly resolves century in with()', () => {
+      equal(`${datetime.with({ century: 20 })}`, '1919-09-15T00:00:00[c=century]');
+      equal(`${date.with({ century: 20 })}`, '1919-09-15[c=century]');
+      equal(`${yearmonth.with({ century: 20 })}`, '1919-09-01[c=century]');
+      equal(`${zoned.with({ century: 20 })}`, '1919-09-15T00:00:00+00:00[UTC][c=century]');
+    });
+    it('correctly resolves centuryYear in with()', () => {
+      equal(`${datetime.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00[c=century]');
+      equal(`${date.with({ centuryYear: 5 })}`, '2005-09-15[c=century]');
+      equal(`${yearmonth.with({ centuryYear: 5 })}`, '2005-09-01[c=century]');
+      equal(`${zoned.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00+00:00[UTC][c=century]');
+    });
+    it('correctly resolves year in with()', () => {
+      equal(`${datetime.with({ year: 1974 })}`, '1974-09-15T00:00:00[c=century]');
+      equal(`${date.with({ year: 1974 })}`, '1974-09-15[c=century]');
+      equal(`${yearmonth.with({ year: 1974 })}`, '1974-09-01[c=century]');
+      equal(`${zoned.with({ year: 1974 })}`, '1974-09-15T00:00:00+00:00[UTC][c=century]');
+    });
+    after(() => {
+      delete Temporal.PlainDateTime.prototype.century;
+      delete Temporal.PlainDateTime.prototype.centuryYear;
+      delete Temporal.PlainDate.prototype.century;
+      delete Temporal.PlainDate.prototype.centuryYear;
+      delete Temporal.PlainYearMonth.prototype.century;
+      delete Temporal.PlainYearMonth.prototype.centuryYear;
+      delete Temporal.ZonedDateTime.prototype.century;
+      delete Temporal.ZonedDateTime.prototype.centuryYear;
+    });
+  });
 });
 
 import { normalize } from 'path';

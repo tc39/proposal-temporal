@@ -1448,6 +1448,11 @@ export const ES = ObjectAssign({}, ES2020, {
     if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
     return ES.CreateListFromArrayLike(fieldNames, ['String']);
   },
+  CalendarMergeFields: (calendar, fields, additionalFields) => {
+    let mergeFields = calendar.mergeFields;
+    if (mergeFields === undefined) return { ...fields, ...additionalFields };
+    return ES.Call(mergeFields, calendar, [fields, additionalFields]);
+  },
 
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {

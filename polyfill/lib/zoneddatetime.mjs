@@ -25,7 +25,6 @@ import {
 import bigInt from 'big-integer';
 
 const ArrayPrototypePush = Array.prototype.push;
-const ObjectAssign = Object.assign;
 
 export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) {
@@ -217,8 +216,8 @@ export class ZonedDateTime {
     if (!props) {
       throw new TypeError('invalid zoned-date-time-like');
     }
-    const fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
-    ObjectAssign(fields, props);
+    let fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+    fields = ES.CalendarMergeFields(calendar, fields, props);
     let {
       year,
       month,

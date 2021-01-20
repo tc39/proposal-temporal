@@ -49,6 +49,19 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-calendarmergefields" aoid="CalendarMergeFields">
+      <h1>CalendarMergeFields ( _calendar_, _fields_, _additionalFields_ )</h1>
+      <p>
+        The CalendarMergeFields abstract operation merges the properties of two Objects _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_ Object, falling back to a default operation if not present.
+      </p>
+      <emu-alg>
+        1. Let _mergeFields_ be ? Get(_calendar_, *"mergeFields"*).
+        1. If _fields_ is *undefined*, then
+          1. Return ? ISOMergeFields(_fields_, _additionalFields_).
+        1. Return ? Call(_mergeFields_, _calendar_, « _fields_, _additionalFields_ »).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendardateadd" aoid="CalendarDateAdd">
       <h1>CalendarDateAdd ( _calendar_, _date_, _duration_, _constructor_ [ , _overflow_ ] )</h1>
       <emu-alg>
@@ -390,6 +403,27 @@
         1. If _dateOrDateTime_ does not have an [[ISODay]] internal slot, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISODay]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-isomergefields" aoid="ISOMergeFields">
+      <h1>ISOMergeFields ( _fields_, _additionalFields_ )</h1>
+      <p>
+        The abstract operation ISOMergeFields implements the calendar-specific logic in the `Temporal.Calendar.mergeFields` method for the ISO 8601 calendar.
+      </p>
+      <emu-alg>
+        1. Let _merged_ be ? OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _originalKeys_ be ? _fields_.[[OwnPropertyKeys]]().
+        1. For each element _nextKey_ of _originalKeys_, do
+          1. Let _propValue_ be ? Get(_fields_, _nextKey_).
+          1. If _propValue_ is not *undefined*, then
+            1. Perform ? Set(_merged_, _nextKey_, _propValue_, *true*).
+        1. Let _newKeys_ be ? _additionalFields_.[[OwnPropertyKeys]]().
+        1. For each element _nextKey_ of _newKeys_, do
+          1. Let _propValue_ be ? Get(_additionalFields_, _nextKey_).
+          1. If _propValue_ is not *undefined*, then
+            1. Perform ? Set(_merged_, _nextKey_, _propValue_, *true*).
+        1. Return _merged_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -842,6 +876,26 @@
         1. Set _fields_ to ? ToObject(_fields_).
         1. Let _fieldNames_ be ? CreateListFromArrayLike(_fields_, « String »).
         1. Return ? CreateArrayFromList(_fieldNames_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.mergefields">
+      <h1>Temporal.Calendar.prototype.mergeFields ( _fields_, _additionalFields_ )</h1>
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `mergeFields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `mergeFields` method is used.
+      </p>
+      <p>
+        The `mergeFields` method takes two arguments, _fields_ and _additionalFields_.
+        The following steps are taken:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
+        1. Set _fields_ to ? ToObject(_fields_).
+        1. Set _additionalFields_ to ? ToObject(_additionalFields_).
+        1. Return ? ISOMergeFields(_fields_, _additionalFields_).
       </emu-alg>
     </emu-clause>
 
