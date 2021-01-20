@@ -16,3 +16,5 @@ coverage:
         flags:
           - tests
           - test262
+fixes:
+  - "::polyfill/"
