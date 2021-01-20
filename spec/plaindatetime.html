@@ -727,22 +727,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.plaindatetime.prototype.getfields">
-      <h1>Temporal.PlainDateTime.prototype.getFields ( )</h1>
-      <p>
-        The following steps are taken:
-      </p>
-      <emu-alg>
-        1. Let _dateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"nanosecond"*, *"second"*, *"year"* »).
-        1. Let _fields_ be ? ToTemporalDateTimeFields(_dateTime_, _fieldNames_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
-        1. Return _fields_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.plaindatetime.prototype.getisofields">
       <h1>Temporal.PlainDateTime.prototype.getISOFields ( )</h1>
       <p>

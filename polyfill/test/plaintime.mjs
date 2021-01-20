@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, notEqual, throws, deepEqual } = assert;
+const { equal, notEqual, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { PlainTime, PlainDateTime } = Temporal;
@@ -74,9 +74,6 @@ describe('Time', () => {
       });
       it('Time.prototype.toZonedDateTime is a Function', () => {
         equal(typeof PlainTime.prototype.toZonedDateTime, 'function');
-      });
-      it('Time.prototype.getFields is a Function', () => {
-        equal(typeof PlainTime.prototype.getFields, 'function');
       });
       it('Time.prototype.getISOFields is a Function', () => {
         equal(typeof PlainTime.prototype.getISOFields, 'function');
@@ -1199,11 +1196,11 @@ describe('Time', () => {
     it('Time.from(number) is converted to string', () => equal(`${PlainTime.from(1523)}`, `${PlainTime.from('1523')}`));
     it('Time.from(time) returns the same properties', () => {
       const t = PlainTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
-      deepEqual(PlainTime.from(t).getFields(), t.getFields());
+      equal(PlainTime.from(t).toString(), t.toString());
     });
     it('Time.from(dateTime) returns the same time properties', () => {
       const dt = PlainDateTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
-      deepEqual(PlainTime.from(dt).getFields(), dt.toPlainTime().getFields());
+      equal(PlainTime.from(dt).toString(), dt.toPlainTime().toString());
     });
     it('Time.from(time) is not the same object', () => {
       const t = PlainTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
@@ -1310,33 +1307,6 @@ describe('Time', () => {
 
     const iso = '20:18:32';
     it(`Temporal.PlainTime.from("${iso}") === (${iso})`, () => equal(`${PlainTime.from(iso)}`, iso));
-  });
-  describe('time.getFields() works', () => {
-    const t1 = PlainTime.from('15:23:30.123456789');
-    const fields = t1.getFields();
-    it('fields', () => {
-      equal(fields.hour, 15);
-      equal(fields.minute, 23);
-      equal(fields.second, 30);
-      equal(fields.millisecond, 123);
-      equal(fields.microsecond, 456);
-      equal(fields.nanosecond, 789);
-      equal(fields.calendar.id, 'iso8601');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.hour, 15);
-      equal(fields2.minute, 23);
-      equal(fields2.second, 30);
-      equal(fields2.millisecond, 123);
-      equal(fields2.microsecond, 456);
-      equal(fields2.nanosecond, 789);
-      equal(fields2.calendar.id, 'iso8601');
-    });
-    it('as input to from()', () => {
-      const t2 = PlainTime.from(fields);
-      equal(PlainTime.compare(t1, t2), 0);
-    });
   });
   describe('time.getISOFields() works', () => {
     const t1 = PlainTime.from('15:23:30.123456789');

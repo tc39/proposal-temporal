@@ -81,9 +81,6 @@ describe('Date', () => {
       it('Date.prototype.toPlainMonthDay is a Function', () => {
         equal(typeof PlainDate.prototype.toPlainMonthDay, 'function');
       });
-      it('Date.prototype.getFields is a Function', () => {
-        equal(typeof PlainDate.prototype.getFields, 'function');
-      });
       it('Date.prototype.getISOFields is a Function', () => {
         equal(typeof PlainDate.prototype.getISOFields, 'function');
       });
@@ -1092,35 +1089,6 @@ describe('Date', () => {
         throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
         throws(() => max.add({ days: 1 }, { overflow }), RangeError);
       });
-    });
-  });
-  describe('date.getFields() works', () => {
-    const calendar = Temporal.Calendar.from('iso8601');
-    const d1 = PlainDate.from({ year: 1976, month: 11, day: 18, calendar });
-    const fields = d1.getFields();
-    it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.day, 18);
-      equal(fields.calendar, calendar);
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
-      equal(fields2.calendar, calendar);
-    });
-    it('as input to from()', () => {
-      const d2 = PlainDate.from(fields);
-      equal(PlainDate.compare(d1, d2), 0);
-    });
-    it('does not include era for ISO calendar', () => {
-      assert(!('era' in fields));
-    });
-    it('includes era for calendars that use it', () => {
-      const d3 = PlainDate.from('1976-11-18[c=japanese]');
-      equal(d3.getFields().era, 'showa');
     });
   });
   describe('date.getISOFields() works', () => {

@@ -489,12 +489,6 @@ export class PlainTime {
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
-  getFields() {
-    const fields = ES.ToTemporalTimeRecord(this);
-    if (!fields) throw new TypeError('invalid receiver');
-    fields.calendar = GetSlot(this, CALENDAR);
-    return fields;
-  }
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return {

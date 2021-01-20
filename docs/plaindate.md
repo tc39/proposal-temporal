@@ -735,32 +735,12 @@ date.toPlainYearMonth(); // => 2006-08
 date.toPlainMonthDay(); // => 08-24
 ```
 
-### date.**getFields**() : { year: number, month: number, day: number, calendar: object, [propName: string]: unknown }
-
-**Returns:** a plain object with properties equal to the fields of `date`.
-
-This method can be used to convert a `Temporal.PlainDate` into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.
-
-Note that if using a different calendar from ISO 8601, these will be the calendar-specific values and may include extra properties such as `era`.
-
-> **NOTE**: The possible values for the `month` property of the returned object start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
-
-Usage example:
-
-```javascript
-date = Temporal.PlainDate.from('2006-08-24');
-Object.assign({}, date).day; // => undefined
-Object.assign({}, date.getFields()).day; // => 24
-```
-
 ### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
 
 **Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the value of `date.calendar`.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
-Use `date.getFields()` instead, or `date.withCalendar('iso8601').getFields()`.
 
 Usage example:
 
@@ -774,7 +754,7 @@ date.equals(date2); // => true
 
 // Date in other calendar
 date = date.withCalendar('hebrew');
-date.getFields().day; // => 30
+date.day; // => 30
 date.getISOFields().isoDay; // => 24
 
 // Most likely what you need is this:

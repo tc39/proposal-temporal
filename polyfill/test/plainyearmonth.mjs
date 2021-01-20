@@ -32,9 +32,6 @@ describe('YearMonth', () => {
       it('YearMonth.prototype.toString is a Function', () => {
         equal(typeof PlainYearMonth.prototype.toString, 'function');
       });
-      it('YearMonth.prototype.getFields is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.getFields, 'function');
-      });
       it('YearMonth.prototype.getISOFields is a Function', () => {
         equal(typeof PlainYearMonth.prototype.getISOFields, 'function');
       });
@@ -742,33 +739,6 @@ describe('YearMonth', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
         throws(() => ym1.toString({ calendarName }), RangeError);
       });
-    });
-  });
-  describe('yearMonth.getFields() works', () => {
-    const calendar = Temporal.Calendar.from('iso8601');
-    const ym1 = PlainYearMonth.from({ year: 1976, month: 11, calendar });
-    const fields = ym1.getFields();
-    it('fields', () => {
-      equal(fields.year, 1976);
-      equal(fields.month, 11);
-      equal(fields.calendar, calendar);
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.year, 1976);
-      equal(fields2.month, 11);
-      equal(fields2.calendar, calendar);
-    });
-    it('as input to from()', () => {
-      const ym2 = PlainYearMonth.from(fields);
-      equal(PlainYearMonth.compare(ym1, ym2), 0);
-    });
-    it('does not include era for ISO calendar', () => {
-      assert(!('era' in fields));
-    });
-    it('includes era for calendars that use it', () => {
-      const ym3 = PlainYearMonth.from('1976-11-01[c=japanese]');
-      equal(ym3.getFields().era, 'showa');
     });
   });
   describe('yearMonth.getISOFields() works', () => {

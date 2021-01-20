@@ -363,14 +363,6 @@ export class PlainYearMonth {
     const Date = GetIntrinsic('%Temporal.PlainDate%');
     return ES.DateFromFields(calendar, fields, Date, 'reject');
   }
-  getFields() {
-    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    fields.calendar = calendar;
-    return fields;
-  }
   getISOFields() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return {

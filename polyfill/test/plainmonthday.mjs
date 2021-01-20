@@ -26,9 +26,6 @@ describe('MonthDay', () => {
       it('MonthDay.prototype.toString is a Function', () => {
         equal(typeof PlainMonthDay.prototype.toString, 'function');
       });
-      it('MonthDay.prototype.getFields is a Function', () => {
-        equal(typeof PlainMonthDay.prototype.getFields, 'function');
-      });
       it('MonthDay.prototype.getISOFields is a Function', () => {
         equal(typeof PlainMonthDay.prototype.getISOFields, 'function');
       });
@@ -237,26 +234,6 @@ describe('MonthDay', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
         throws(() => md1.toString({ calendarName }), RangeError);
       });
-    });
-  });
-  describe('monthDay.getFields() works', () => {
-    const calendar = Temporal.Calendar.from('iso8601');
-    const md1 = PlainMonthDay.from({ month: 11, day: 18, calendar });
-    const fields = md1.getFields();
-    it('fields', () => {
-      equal(fields.month, 11);
-      equal(fields.day, 18);
-      equal(fields.calendar, calendar);
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.month, 11);
-      equal(fields2.day, 18);
-      equal(fields2.calendar, calendar);
-    });
-    it('as input to from()', () => {
-      const md2 = PlainMonthDay.from(fields);
-      assert(md1.equals(md2));
     });
   });
   describe('monthDay.getISOFields() works', () => {
