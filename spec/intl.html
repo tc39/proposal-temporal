@@ -927,6 +927,38 @@
           </emu-alg>
         </emu-clause>
 
+        <emu-clause id="sec-temporal.calendar.prototype.era">
+          <h1>Temporal.Calendar.prototype.era ( _dateOrDateTime_ )</h1>
+          <p>
+            The `era` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Return *undefined*.
+            1. Let _era_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_era_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal.calendar.prototype.erayear">
+          <h1>Temporal.Calendar.prototype.eraYear ( _dateOrDateTime_ )</h1>
+          <p>
+            The `eraYear` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Return *undefined*.
+            1. Let _eraYear_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return 𝔽(_eraYear_).
+          </emu-alg>
+        </emu-clause>
+
         <emu-clause id="sup-temporal.calendar.prototype.year">
           <h1>Temporal.Calendar.prototype.year ( _dateOrDateTime_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.year"></emu-xref>.</p>
@@ -1187,6 +1219,36 @@
             1. Return ? FormatDateTime(_dateFormat_, _temporalDate_).
           </emu-alg>
         </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plaindate.prototype.era">
+          <h1>get Temporal.PlainDate.prototype.era</h1>
+          <p>
+            `Temporal.PlainDate.prototype.era` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainDate_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+            1. Let _calendar_ be _plainDate_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"era"*).
+            1. Return ? Call(_method_, _calendar_, « _plainDate_ »).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plaindate.prototype.erayear">
+          <h1>get Temporal.PlainDate.prototype.eraYear</h1>
+          <p>
+            `Temporal.PlainDate.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainDate_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+            1. Let _calendar_ be _plainDate_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
+            1. Return ? Call(_method_, _calendar_, « _plainDate_ »).
+          </emu-alg>
+        </emu-clause>
       </emu-clause>
 
       <emu-clause id="sup-properties-of-the-temporal-plaindatetime-prototype-object">
@@ -1203,6 +1265,36 @@
             1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
             1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
             1. Return ? FormatDateTime(_dateFormat_, _dateTime_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plaindatetime.prototype.era">
+          <h1>get Temporal.PlainDateTime.prototype.era</h1>
+          <p>
+            `Temporal.PlainDate.prototype.era` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainDateTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
+            1. Let _calendar_ be _plainDateTime_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"era"*).
+            1. Return ? Call(_method_, _calendar_, « _plainDateTime_ »).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plaindatetime.prototype.erayear">
+          <h1>get Temporal.PlainDateTime.prototype.eraYear</h1>
+          <p>
+            `Temporal.PlainDateTime.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainDateTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
+            1. Let _calendar_ be _plainDateTime_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
+            1. Return ? Call(_method_, _calendar_, « _plainDateTime_ »).
           </emu-alg>
         </emu-clause>
       </emu-clause>
@@ -1259,6 +1351,36 @@
             1. Return ? FormatDateTime(_dateFormat_, _yearMonth_).
           </emu-alg>
         </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plainyearmonth.prototype.era">
+          <h1>get Temporal.PlainYearMonth.prototype.era</h1>
+          <p>
+            `Temporal.PlainYearMonth.prototype.era` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainYearMonth_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
+            1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"era"*).
+            1. Return ? Call(_method_, _calendar_, « _plainYearMonth_ »).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.plainyearmonth.prototype.erayear">
+          <h1>get Temporal.PlainYearMonth.prototype.eraYear</h1>
+          <p>
+            `Temporal.PlainYearMonth.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _plainYearMonth_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
+            1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
+            1. Return ? Call(_method_, _calendar_, « _plainYearMonth_ »).
+          </emu-alg>
+        </emu-clause>
       </emu-clause>
 
       <emu-clause id="sup-properties-of-the-temporal-zoneddatetime-prototype-object">
@@ -1275,6 +1397,36 @@
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
             1. Return ? FormatDateTime(_dateFormat_, _zonedDateTime_).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.zoneddatetime.prototype.era">
+          <h1>get Temporal.ZonedDateTime.prototype.era</h1>
+          <p>
+            `Temporal.ZonedDateTime.prototype.era` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _zonedDateTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+            1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"era"*).
+            1. Return ? Call(_method_, _calendar_, « _zonedDateTime_ »).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sec-get-temporal.zoneddatetime.prototype.erayear">
+          <h1>get Temporal.ZonedDateTime.prototype.eraYear</h1>
+          <p>
+            `Temporal.ZonedDateTime.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+            Its get accessor function performs the following steps:
+          </p>
+          <emu-alg>
+            1. Let _zonedDateTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+            1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
+            1. Return ? Call(_method_, _calendar_, « _zonedDateTime_ »).
           </emu-alg>
         </emu-clause>
       </emu-clause>
