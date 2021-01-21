@@ -232,9 +232,6 @@ describe('Userland calendar', () => {
       return { year, days };
     }
     const obj = {
-      get id() {
-        return this.toString();
-      },
       toString() {
         return 'decimal';
       },
@@ -263,36 +260,6 @@ describe('Userland calendar', () => {
       day(date) {
         const { days } = isoToDecimal(date);
         return (days % 10) + 1;
-      },
-      hour(time) {
-        const { seconds } = isoToDecimal(time);
-        return Math.floor(seconds / 100);
-      },
-      minute(time) {
-        const { seconds } = isoToDecimal(time);
-        return Math.floor(seconds / 10) % 10;
-      },
-      second(time) {
-        const { seconds } = isoToDecimal(time);
-        return seconds % 10;
-      },
-      millisecond(time) {
-        const { isoMillisecond } = time.getISOFields();
-        return isoMillisecond;
-      },
-      microsecond(time) {
-        const { isoMicrosecond } = time.getISOFields();
-        return isoMicrosecond;
-      },
-      nanosecond(time) {
-        const { isoNanosecond } = time.getISOFields();
-        return isoNanosecond;
-      },
-      era() {
-        return undefined;
-      },
-      fields(fields) {
-        return fields.slice();
       }
     };
 
@@ -302,7 +269,6 @@ describe('Userland calendar', () => {
     const md = Temporal.PlainMonthDay.from({ month: 2, day: 9, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
-    it('.id property', () => equal(obj.id, 'decimal'));
     // FIXME: what should happen in Temporal.Calendar.from(obj)?
     it('.id is not available in from()', () => {
       throws(() => Temporal.Calendar.from('decimal'), RangeError);
@@ -442,15 +408,15 @@ describe('Userland calendar', () => {
         const tz = Temporal.TimeZone.from('UTC');
         const inst = Temporal.Instant.fromEpochSeconds(0);
         const dt = tz.getPlainDateTimeFor(inst, 'decimal');
-        equal(dt.calendar.id, 'decimal');
+        equal(`${dt.calendar}`, 'decimal');
       });
       it('works for Temporal.now.plainDateTime', () => {
         const nowDateTime = Temporal.now.plainDateTime('decimal', 'UTC');
-        equal(nowDateTime.calendar.id, 'decimal');
+        equal(`${nowDateTime.calendar}`, 'decimal');
       });
       it('works for Temporal.now.plainDate', () => {
         const nowDate = Temporal.now.plainDate('decimal', 'UTC');
-        equal(nowDate.calendar.id, 'decimal');
+        equal(`${nowDate.calendar}`, 'decimal');
       });
       after(() => {
         Temporal.Calendar.from = originalTemporalCalendarFrom;
