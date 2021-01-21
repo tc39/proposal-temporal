@@ -9,9 +9,7 @@ esid: sec-temporal.plainyearmonth.from
 // constrain
 
 assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: -Infinity, month: 1 }, { overflow: 'constrain' }));
-let result = Temporal.PlainYearMonth.from({ year: 1970, month: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
+assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: 1970, month: -Infinity }, { overflow: 'constrain' }));
 
 // reject
 
@@ -28,8 +26,8 @@ const obj = {
 
 assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: obj, month: 1 }, { overflow: 'constrain' }));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");
-result = Temporal.PlainYearMonth.from({ year: 1970, month: obj }, { overflow: 'constrain' });
-assert.sameValue(calls, 2, "it fetches the primitive value");
+assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: 1970, month: obj }, { overflow: 'constrain' }));
+assert.sameValue(calls, 2, "it fails after fetching the primitive value");
 
 assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: obj, month: 1 }, { overflow: 'reject' }));
 assert.sameValue(calls, 3, "it fails after fetching the primitive value");

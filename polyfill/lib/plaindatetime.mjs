@@ -122,15 +122,27 @@ export class PlainDateTime {
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).year(this);
+    const result = GetSlot(this, CALENDAR).year(this);
+    if (result === undefined) {
+      throw new RangeError('calendar year result must be an integer');
+    }
+    return ES.ToInteger(result);
   }
   get month() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).month(this);
+    const result = GetSlot(this, CALENDAR).month(this);
+    if (result === undefined) {
+      throw new RangeError('calendar month result must be a positive integer');
+    }
+    return ES.ToPositiveInteger(result);
   }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).day(this);
+    const result = GetSlot(this, CALENDAR).day(this);
+    if (result === undefined) {
+      throw new RangeError('calendar day result must be a positive integer');
+    }
+    return ES.ToPositiveInteger(result);
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -158,7 +170,19 @@ export class PlainDateTime {
   }
   get era() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).era(this);
+    let result = GetSlot(this, CALENDAR).era(this);
+    if (result !== undefined) {
+      result = ES.ToString(result);
+    }
+    return result;
+  }
+  get eraYear() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    let result = GetSlot(this, CALENDAR).eraYear(this);
+    if (result !== undefined) {
+      result = ES.ToInteger(result);
+    }
+    return result;
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
