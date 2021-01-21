@@ -464,30 +464,6 @@ describe('Userland calendar', () => {
     class SeasonCalendar extends Temporal.Calendar {
       constructor() {
         super('iso8601');
-        Object.defineProperty(Temporal.PlainDateTime.prototype, 'season', {
-          get() {
-            return this.calendar.season(this);
-          },
-          configurable: true
-        });
-        Object.defineProperty(Temporal.PlainDate.prototype, 'season', {
-          get() {
-            return this.calendar.season(this);
-          },
-          configurable: true
-        });
-        Object.defineProperty(Temporal.PlainYearMonth.prototype, 'season', {
-          get() {
-            return this.calendar.season(this);
-          },
-          configurable: true
-        });
-        Object.defineProperty(Temporal.PlainMonthDay.prototype, 'season', {
-          get() {
-            return this.calendar.season(this);
-          },
-          configurable: true
-        });
       }
       toString() {
         return 'season';
@@ -523,6 +499,20 @@ describe('Userland calendar', () => {
     const date = new Temporal.PlainDate(2019, 9, 15, calendar);
     const yearmonth = new Temporal.PlainYearMonth(2019, 9, calendar);
     const monthday = new Temporal.PlainMonthDay(9, 15, calendar);
+    const zoned = new Temporal.ZonedDateTime(1568505600_000_000_000n, 'UTC', calendar);
+    before(() => {
+      const propDesc = {
+        get() {
+          return this.calendar.season(this);
+        },
+        configurable: true
+      };
+      Object.defineProperty(Temporal.PlainDateTime.prototype, 'season', propDesc);
+      Object.defineProperty(Temporal.PlainDate.prototype, 'season', propDesc);
+      Object.defineProperty(Temporal.PlainYearMonth.prototype, 'season', propDesc);
+      Object.defineProperty(Temporal.PlainMonthDay.prototype, 'season', propDesc);
+      Object.defineProperty(Temporal.ZonedDateTime.prototype, 'season', propDesc);
+    });
     it('property getter works', () => {
       equal(datetime.season, 3);
       equal(datetime.month, 3);
@@ -532,6 +522,8 @@ describe('Userland calendar', () => {
       equal(yearmonth.month, 3);
       equal(monthday.season, 3);
       equal(monthday.month, 3);
+      equal(zoned.season, 3);
+      equal(zoned.month, 3);
     });
     it('accepts season in from()', () => {
       equal(
@@ -544,24 +536,31 @@ describe('Userland calendar', () => {
       );
       equal(`${Temporal.PlainYearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`, '2019-09-01[c=season]');
       equal(`${Temporal.PlainMonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[c=season]');
+      equal(
+        `${Temporal.ZonedDateTime.from({ year: 2019, season: 3, month: 3, day: 15, timeZone: 'UTC', calendar })}`,
+        '2019-09-15T00:00:00+00:00[UTC][c=season]'
+      );
     });
     it('accepts season in with()', () => {
       equal(`${datetime.with({ season: 2 })}`, '2019-06-15T00:00:00[c=season]');
       equal(`${date.with({ season: 2 })}`, '2019-06-15[c=season]');
       equal(`${yearmonth.with({ season: 2 })}`, '2019-06-01[c=season]');
       equal(`${monthday.with({ season: 2 })}`, '1972-06-15[c=season]');
+      equal(`${zoned.with({ season: 2 })}`, '2019-06-15T00:00:00+00:00[UTC][c=season]');
     });
     it('translates month correctly in with()', () => {
       equal(`${datetime.with({ month: 2 })}`, '2019-08-15T00:00:00[c=season]');
       equal(`${date.with({ month: 2 })}`, '2019-08-15[c=season]');
       equal(`${yearmonth.with({ month: 2 })}`, '2019-08-01[c=season]');
       equal(`${monthday.with({ month: 2 })}`, '1972-08-15[c=season]');
+      equal(`${zoned.with({ month: 2 })}`, '2019-08-15T00:00:00+00:00[UTC][c=season]');
     });
     after(() => {
       delete Temporal.PlainDateTime.prototype.season;
       delete Temporal.PlainDate.prototype.season;
       delete Temporal.PlainYearMonth.prototype.season;
       delete Temporal.PlainMonthDay.prototype.season;
+      delete Temporal.ZonedDateTime.prototype.season;
     });
   });
 });
