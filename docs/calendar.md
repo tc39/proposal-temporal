@@ -321,7 +321,7 @@ Temporal.Calendar.from('chinese').dateUntil(
 ); // => P1M2D
 ```
 
-### calendar.**fields**(fields: array<string>) : array<string>
+### calendar.**fields**(_fields_: array<string>) : array<string>
 
 **Parameters:**
 
@@ -330,7 +330,7 @@ Temporal.Calendar.from('chinese').dateUntil(
 **Returns:** a new list of field names.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
+It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainMonthDay`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
 
 Custom calendars should override this method if they require more fields with which to denote the date than the standard `year`, `month`, and `day` (for example, `era`).
 The input array contains the field names that are necessary for a particular operation (for example, `'month'` and `'day'` for `Temporal.PlainMonthDay.prototype.with()`), and the method should make a copy of the array and add whichever extra fields are necessary.
