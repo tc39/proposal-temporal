@@ -1445,9 +1445,8 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   CalendarFields: (calendar, fieldNames) => {
     let fields = calendar.fields;
-    if (fields === undefined) fields = GetIntrinsic('%Temporal.Calendar.prototype.fields%');
-    const array = ES.Call(fields, calendar, [fieldNames]);
-    return ES.CreateListFromArrayLike(array, ['String']);
+    if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
+    return ES.CreateListFromArrayLike(fieldNames, ['String']);
   },
 
   ToTemporalCalendar: (calendarLike) => {

@@ -38,14 +38,14 @@
     <emu-clause id="sec-temporal-calendarfields" aoid="CalendarFields">
       <h1>CalendarFields ( _calendar_, _fieldNames_ )</h1>
       <p>
-        The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object, falling back to the intrinsic operation if not present.
+        The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object, falling back to a default operation if not present.
       </p>
       <emu-alg>
         1. Let _fields_ be ? Get(_calendar_, *"fields"*).
-        1. If _fields_ is *undefined*, set _fields_ to %Temporal.Calendar.prototype.fields%.
         1. Let _fieldsArray_ be ? CreateArrayFromList(_fieldNames_).
-        1. Let _arrayLike_ be ? Call(_method_, _calendar_, « _fieldsArray_ »).
-        1. Return ? CreateListFromArrayLike(_arrayLike_, « String »).
+        1. If _fields_ is not *undefined*, then
+          1. Set _fieldsArray_ to ? Call(_fields_, _calendar_, « _fieldsArray_ »).
+        1. Return ? CreateListFromArrayLike(_fieldsArray_, « String »).
       </emu-alg>
     </emu-clause>
 
@@ -843,9 +843,6 @@
         1. Let _fieldNames_ be ? CreateListFromArrayLike(_fields_, « String »).
         1. Return ? CreateArrayFromList(_fieldNames_).
       </emu-alg>
-      <p>
-        This function is the <dfn>%Temporal.Calendar.prototype.fields%</dfn> intrinsic object.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.tostring">

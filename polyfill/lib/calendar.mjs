@@ -166,7 +166,6 @@ export class Calendar {
 
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
-DefineIntrinsic('Temporal.Calendar.prototype.fields', Calendar.prototype.fields);
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
