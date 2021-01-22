@@ -203,8 +203,6 @@
 </li>
 <li><a href="#total">total</a>
 </li>
-<li><a href="#getFields">getFields</a>
-</li>
 <li><a href="#toString">toString</a>
 </li>
 <li><a href="#toJSON">toJSON</a>
@@ -662,13 +660,7 @@ d<span class="token punctuation">.</span><span class="token function">total</spa
   unit<span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">,</span>
   relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2.39247311827957</span>
-<span class="token comment">// FIXME: update the result above after duration rounding is fixed</span></code></pre><h3 id="getFields"><a class="heading-link" href="#getFields"></a>duration.<strong>getFields</strong>() : { years: number, months: number, weeks: number, days: number, hours: number, minutes: number, seconds: number, milliseconds: number, microseconds: number, nanoseconds: number }</h3><p><strong>Returns:</strong> a plain object with properties equal to the fields of <code>duration</code>.</p>
-<p>This method can be used to convert a <code>Temporal.Duration</code> into a record-like data structure.
-It returns a new plain JavaScript object, with all the fields as enumerable, writable, own data properties.</p>
-<p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'P1Y2M3DT4H5M6.987654321S'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> d<span class="token punctuation">)</span><span class="token punctuation">.</span>days<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
-Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> d<span class="token punctuation">.</span><span class="token function">getFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>days<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>duration.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<span class="token comment">// FIXME: update the result above after duration rounding is fixed</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>duration.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
