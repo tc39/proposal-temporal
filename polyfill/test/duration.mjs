@@ -35,9 +35,6 @@ describe('Duration', () => {
       it('Duration.prototype.subtract is a Function', () => {
         equal(typeof Duration.prototype.subtract, 'function');
       });
-      it('Duration.prototype.getFields is a Function', () => {
-        equal(typeof Duration.prototype.getFields, 'function');
-      });
       it('Duration.prototype.negated is a Function', () => {
         equal(typeof Duration.prototype.negated, 'function');
       });
@@ -841,75 +838,6 @@ describe('Duration', () => {
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
-  });
-  describe('duration.getFields() works', () => {
-    const d1 = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
-    const fields = d1.getFields();
-    it('fields', () => {
-      equal(fields.years, 5);
-      equal(fields.months, 5);
-      equal(fields.weeks, 5);
-      equal(fields.days, 5);
-      equal(fields.hours, 5);
-      equal(fields.minutes, 5);
-      equal(fields.seconds, 5);
-      equal(fields.milliseconds, 5);
-      equal(fields.microseconds, 5);
-      equal(fields.nanoseconds, 5);
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.years, 5);
-      equal(fields2.months, 5);
-      equal(fields2.weeks, 5);
-      equal(fields2.days, 5);
-      equal(fields2.hours, 5);
-      equal(fields2.minutes, 5);
-      equal(fields2.seconds, 5);
-      equal(fields2.milliseconds, 5);
-      equal(fields2.microseconds, 5);
-      equal(fields2.nanoseconds, 5);
-    });
-    it('as input to from()', () => {
-      const d2 = Duration.from(fields);
-      equal(d2.years, 5);
-      equal(d2.months, 5);
-      equal(d2.weeks, 5);
-      equal(d2.days, 5);
-      equal(d2.hours, 5);
-      equal(d2.minutes, 5);
-      equal(d2.seconds, 5);
-      equal(d2.milliseconds, 5);
-      equal(d2.microseconds, 5);
-      equal(d2.nanoseconds, 5);
-    });
-    it('as input to with()', () => {
-      const d2 = Duration.from('P300YT20S').with(fields);
-      equal(d2.years, 5);
-      equal(d2.months, 5);
-      equal(d2.weeks, 5);
-      equal(d2.days, 5);
-      equal(d2.hours, 5);
-      equal(d2.minutes, 5);
-      equal(d2.seconds, 5);
-      equal(d2.milliseconds, 5);
-      equal(d2.microseconds, 5);
-      equal(d2.nanoseconds, 5);
-    });
-    it('has correct sign', () => {
-      const fields = Duration.from('-P5Y5M5W5DT5H5M5.005005005S');
-      equal(fields.years, -5);
-      equal(fields.months, -5);
-      equal(fields.weeks, -5);
-      equal(fields.days, -5);
-      equal(fields.hours, -5);
-      equal(fields.minutes, -5);
-      equal(fields.seconds, -5);
-      equal(fields.milliseconds, -5);
-      equal(fields.microseconds, -5);
-      equal(fields.nanoseconds, -5);
-    });
-    it('does not include the sign field', () => assert(!('sign' in fields)));
   });
   describe("Comparison operators don't work", () => {
     const d1 = Duration.from('P3DT1H');
