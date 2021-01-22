@@ -53,9 +53,9 @@ describe('Userland calendar', () => {
     // FIXME: what should happen in Temporal.Calendar.from(obj)?
     it('.id is not available in from()', () => {
       throws(() => Temporal.Calendar.from('zero-based'), RangeError);
-      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=zero-based]'), RangeError);
+      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][u-ca-zero-based]'), RangeError);
     });
-    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[c=zero-based]'));
+    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[u-ca-zero-based]'));
     it('Temporal.PlainDate fields', () => {
       equal(date.year, 2020);
       equal(date.month, 5);
@@ -69,7 +69,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.PlainDate.from('2020-06-05');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=zero-based]'));
+    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[u-ca-zero-based]'));
     it('Temporal.PlainDateTime fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
@@ -89,7 +89,7 @@ describe('Userland calendar', () => {
       const dt2 = Temporal.PlainDateTime.from('2020-06-05T12:00');
       assert(dt2.withCalendar(obj).equals(dt));
     });
-    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-06-01[c=zero-based]'));
+    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-06-01[u-ca-zero-based]'));
     it('Temporal.PlainYearMonth fields', () => {
       equal(dt.year, 2020);
       equal(dt.month, 5);
@@ -98,7 +98,7 @@ describe('Userland calendar', () => {
       const ym2 = ym.with({ month: 0 });
       equal(ym2.month, 0);
     });
-    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1972-06-05[c=zero-based]'));
+    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1972-06-05[u-ca-zero-based]'));
     it('Temporal.PlainMonthDay fields', () => {
       equal(dt.month, 5);
       equal(dt.day, 5);
@@ -140,18 +140,18 @@ describe('Userland calendar', () => {
         const tz = Temporal.Calendar.from('zero-based');
         assert(tz instanceof ZeroBasedCalendar);
       });
-      const iso = '1970-01-01T00:00+00:00[c=zero-based]';
+      const iso = '1970-01-01T00:00+00:00[u-ca-zero-based]';
       it.skip('works for Calendar.from(ISO string)', () => {
         const tz = Temporal.Calendar.from(iso);
         assert(tz instanceof ZeroBasedCalendar);
       });
       it('works for Date.from(iso)', () => {
         const d = Temporal.PlainDate.from(iso);
-        equal(`${d}`, '1970-01-01[c=zero-based]');
+        equal(`${d}`, '1970-01-01[u-ca-zero-based]');
       });
       it('works for Date.from(props)', () => {
         const d = Temporal.PlainDate.from({ year: 1970, month: 0, day: 1, calendar: 'zero-based' });
-        equal(`${d}`, '1970-01-01[c=zero-based]');
+        equal(`${d}`, '1970-01-01[u-ca-zero-based]');
       });
       it('works for Date.withCalendar', () => {
         const d = Temporal.PlainDate.from('1970-01-01');
@@ -159,11 +159,11 @@ describe('Userland calendar', () => {
       });
       it('works for DateTime.from(iso)', () => {
         const dt = Temporal.PlainDateTime.from(iso);
-        equal(`${dt}`, '1970-01-01T00:00:00[c=zero-based]');
+        equal(`${dt}`, '1970-01-01T00:00:00[u-ca-zero-based]');
       });
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.PlainDateTime.from({ year: 1970, month: 0, day: 1, hour: 12, calendar: 'zero-based' });
-        equal(`${dt}`, '1970-01-01T12:00:00[c=zero-based]');
+        equal(`${dt}`, '1970-01-01T12:00:00[u-ca-zero-based]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
@@ -171,19 +171,19 @@ describe('Userland calendar', () => {
       });
       it('works for YearMonth.from(iso)', () => {
         const ym = Temporal.PlainYearMonth.from(iso);
-        equal(`${ym}`, '1970-01-01[c=zero-based]');
+        equal(`${ym}`, '1970-01-01[u-ca-zero-based]');
       });
       it('works for YearMonth.from(props)', () => {
         const ym = Temporal.PlainYearMonth.from({ year: 1970, month: 0, calendar: 'zero-based' });
-        equal(`${ym}`, '1970-01-01[c=zero-based]');
+        equal(`${ym}`, '1970-01-01[u-ca-zero-based]');
       });
       it('works for MonthDay.from(iso)', () => {
         const md = Temporal.PlainMonthDay.from(iso);
-        equal(`${md}`, '1970-01-01[c=zero-based]');
+        equal(`${md}`, '1970-01-01[u-ca-zero-based]');
       });
       it('works for MonthDay.from(props)', () => {
         const md = Temporal.PlainMonthDay.from({ month: 0, day: 1, calendar: 'zero-based' });
-        equal(`${md}`, '1972-01-01[c=zero-based]');
+        equal(`${md}`, '1972-01-01[u-ca-zero-based]');
       });
       it('works for TimeZone.getPlainDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
@@ -272,9 +272,9 @@ describe('Userland calendar', () => {
     // FIXME: what should happen in Temporal.Calendar.from(obj)?
     it('.id is not available in from()', () => {
       throws(() => Temporal.Calendar.from('decimal'), RangeError);
-      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][c=decimal]'), RangeError);
+      throws(() => Temporal.Calendar.from('2020-06-05T09:34-07:00[America/Vancouver][u-ca-decimal]'), RangeError);
     });
-    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[c=decimal]'));
+    it('Temporal.PlainDate.from()', () => equal(`${date}`, '2020-06-05[u-ca-decimal]'));
     it('Temporal.PlainDate fields', () => {
       equal(date.year, 184);
       equal(date.month, 2);
@@ -288,7 +288,7 @@ describe('Userland calendar', () => {
       const date2 = Temporal.PlainDate.from('2020-06-05T12:00');
       assert(date2.withCalendar(obj).equals(date));
     });
-    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[c=decimal]'));
+    it('Temporal.PlainDateTime.from()', () => equal(`${dt}`, '2020-06-05T12:00:00[u-ca-decimal]'));
     it('Temporal.PlainDateTime fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
@@ -308,7 +308,7 @@ describe('Userland calendar', () => {
       const dt2 = Temporal.PlainDateTime.from('2020-06-05T12:00');
       assert(dt2.withCalendar(obj).equals(dt));
     });
-    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-05-28[c=decimal]'));
+    it('Temporal.PlainYearMonth.from()', () => equal(`${ym}`, '2020-05-28[u-ca-decimal]'));
     it('Temporal.PlainYearMonth fields', () => {
       equal(dt.year, 184);
       equal(dt.month, 2);
@@ -317,7 +317,7 @@ describe('Userland calendar', () => {
       const ym2 = ym.with({ year: 0 });
       equal(ym2.year, 0);
     });
-    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1970-01-19[c=decimal]'));
+    it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1970-01-19[u-ca-decimal]'));
     it('Temporal.PlainMonthDay fields', () => {
       equal(dt.month, 2);
       equal(dt.day, 9);
@@ -359,18 +359,18 @@ describe('Userland calendar', () => {
         const cal = Temporal.Calendar.from('decimal');
         assert(Object.is(cal, obj));
       });
-      const iso = '1970-01-01T00:00+00:00[c=decimal]';
+      const iso = '1970-01-01T00:00+00:00[u-ca-decimal]';
       it.skip('works for Calendar.from(ISO string)', () => {
         const cal = Temporal.Calendar.from(iso);
         assert(Object.is(cal, obj));
       });
       it('works for Date.from(iso)', () => {
         const d = Temporal.PlainDate.from(iso);
-        equal(`${d}`, '1970-01-01[c=decimal]');
+        equal(`${d}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for Date.from(props)', () => {
         const d = Temporal.PlainDate.from({ year: 0, month: 1, day: 1, calendar: 'decimal' });
-        equal(`${d}`, '1970-01-01[c=decimal]');
+        equal(`${d}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for Date.withCalendar', () => {
         const d = Temporal.PlainDate.from('1970-01-01');
@@ -378,11 +378,11 @@ describe('Userland calendar', () => {
       });
       it('works for DateTime.from(iso)', () => {
         const dt = Temporal.PlainDateTime.from(iso);
-        equal(`${dt}`, '1970-01-01T00:00:00[c=decimal]');
+        equal(`${dt}`, '1970-01-01T00:00:00[u-ca-decimal]');
       });
       it('works for DateTime.from(props)', () => {
         const dt = Temporal.PlainDateTime.from({ year: 0, month: 1, day: 1, hour: 12, calendar: 'decimal' });
-        equal(`${dt}`, '1970-01-01T12:00:00[c=decimal]');
+        equal(`${dt}`, '1970-01-01T12:00:00[u-ca-decimal]');
       });
       it('works for DateTime.withCalendar', () => {
         const dt = Temporal.PlainDateTime.from('1970-01-01T00:00');
@@ -390,19 +390,19 @@ describe('Userland calendar', () => {
       });
       it('works for YearMonth.from(iso)', () => {
         const ym = Temporal.PlainYearMonth.from(iso);
-        equal(`${ym}`, '1970-01-01[c=decimal]');
+        equal(`${ym}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for YearMonth.from(props)', () => {
         const ym = Temporal.PlainYearMonth.from({ year: 0, month: 1, calendar: 'decimal' });
-        equal(`${ym}`, '1970-01-01[c=decimal]');
+        equal(`${ym}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for MonthDay.from(iso)', () => {
         const md = Temporal.PlainMonthDay.from(iso);
-        equal(`${md}`, '1970-01-01[c=decimal]');
+        equal(`${md}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for MonthDay.from(props)', () => {
         const md = Temporal.PlainMonthDay.from({ month: 1, day: 1, calendar: 'decimal' });
-        equal(`${md}`, '1970-01-01[c=decimal]');
+        equal(`${md}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for TimeZone.getPlainDateTimeFor', () => {
         const tz = Temporal.TimeZone.from('UTC');
@@ -494,32 +494,35 @@ describe('Userland calendar', () => {
     it('accepts season in from()', () => {
       equal(
         `${Temporal.PlainDateTime.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
-        '2019-09-15T00:00:00[c=season]'
+        '2019-09-15T00:00:00[u-ca-season]'
       );
       equal(
         `${Temporal.PlainDate.from({ year: 2019, season: 3, month: 3, day: 15, calendar })}`,
-        '2019-09-15[c=season]'
+        '2019-09-15[u-ca-season]'
       );
-      equal(`${Temporal.PlainYearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`, '2019-09-01[c=season]');
-      equal(`${Temporal.PlainMonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[c=season]');
+      equal(
+        `${Temporal.PlainYearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`,
+        '2019-09-01[u-ca-season]'
+      );
+      equal(`${Temporal.PlainMonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[u-ca-season]');
       equal(
         `${Temporal.ZonedDateTime.from({ year: 2019, season: 3, month: 3, day: 15, timeZone: 'UTC', calendar })}`,
-        '2019-09-15T00:00:00+00:00[UTC][c=season]'
+        '2019-09-15T00:00:00+00:00[UTC][u-ca-season]'
       );
     });
     it('accepts season in with()', () => {
-      equal(`${datetime.with({ season: 2 })}`, '2019-06-15T00:00:00[c=season]');
-      equal(`${date.with({ season: 2 })}`, '2019-06-15[c=season]');
-      equal(`${yearmonth.with({ season: 2 })}`, '2019-06-01[c=season]');
-      equal(`${monthday.with({ season: 2 })}`, '1972-06-15[c=season]');
-      equal(`${zoned.with({ season: 2 })}`, '2019-06-15T00:00:00+00:00[UTC][c=season]');
+      equal(`${datetime.with({ season: 2 })}`, '2019-06-15T00:00:00[u-ca-season]');
+      equal(`${date.with({ season: 2 })}`, '2019-06-15[u-ca-season]');
+      equal(`${yearmonth.with({ season: 2 })}`, '2019-06-01[u-ca-season]');
+      equal(`${monthday.with({ season: 2 })}`, '1972-06-15[u-ca-season]');
+      equal(`${zoned.with({ season: 2 })}`, '2019-06-15T00:00:00+00:00[UTC][u-ca-season]');
     });
     it('translates month correctly in with()', () => {
-      equal(`${datetime.with({ month: 2 })}`, '2019-08-15T00:00:00[c=season]');
-      equal(`${date.with({ month: 2 })}`, '2019-08-15[c=season]');
-      equal(`${yearmonth.with({ month: 2 })}`, '2019-08-01[c=season]');
-      equal(`${monthday.with({ month: 2 })}`, '1972-08-15[c=season]');
-      equal(`${zoned.with({ month: 2 })}`, '2019-08-15T00:00:00+00:00[UTC][c=season]');
+      equal(`${datetime.with({ month: 2 })}`, '2019-08-15T00:00:00[u-ca-season]');
+      equal(`${date.with({ month: 2 })}`, '2019-08-15[u-ca-season]');
+      equal(`${yearmonth.with({ month: 2 })}`, '2019-08-01[u-ca-season]');
+      equal(`${monthday.with({ month: 2 })}`, '1972-08-15[u-ca-season]');
+      equal(`${zoned.with({ month: 2 })}`, '2019-08-15T00:00:00+00:00[UTC][u-ca-season]');
     });
     after(() => {
       delete Temporal.PlainDateTime.prototype.season;
@@ -629,22 +632,22 @@ describe('Userland calendar', () => {
       equal(zoned.centuryYear, 19);
     });
     it('correctly resolves century in with()', () => {
-      equal(`${datetime.with({ century: 20 })}`, '1919-09-15T00:00:00[c=century]');
-      equal(`${date.with({ century: 20 })}`, '1919-09-15[c=century]');
-      equal(`${yearmonth.with({ century: 20 })}`, '1919-09-01[c=century]');
-      equal(`${zoned.with({ century: 20 })}`, '1919-09-15T00:00:00+00:00[UTC][c=century]');
+      equal(`${datetime.with({ century: 20 })}`, '1919-09-15T00:00:00[u-ca-century]');
+      equal(`${date.with({ century: 20 })}`, '1919-09-15[u-ca-century]');
+      equal(`${yearmonth.with({ century: 20 })}`, '1919-09-01[u-ca-century]');
+      equal(`${zoned.with({ century: 20 })}`, '1919-09-15T00:00:00+00:00[UTC][u-ca-century]');
     });
     it('correctly resolves centuryYear in with()', () => {
-      equal(`${datetime.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00[c=century]');
-      equal(`${date.with({ centuryYear: 5 })}`, '2005-09-15[c=century]');
-      equal(`${yearmonth.with({ centuryYear: 5 })}`, '2005-09-01[c=century]');
-      equal(`${zoned.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00+00:00[UTC][c=century]');
+      equal(`${datetime.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00[u-ca-century]');
+      equal(`${date.with({ centuryYear: 5 })}`, '2005-09-15[u-ca-century]');
+      equal(`${yearmonth.with({ centuryYear: 5 })}`, '2005-09-01[u-ca-century]');
+      equal(`${zoned.with({ centuryYear: 5 })}`, '2005-09-15T00:00:00+00:00[UTC][u-ca-century]');
     });
     it('correctly resolves year in with()', () => {
-      equal(`${datetime.with({ year: 1974 })}`, '1974-09-15T00:00:00[c=century]');
-      equal(`${date.with({ year: 1974 })}`, '1974-09-15[c=century]');
-      equal(`${yearmonth.with({ year: 1974 })}`, '1974-09-01[c=century]');
-      equal(`${zoned.with({ year: 1974 })}`, '1974-09-15T00:00:00+00:00[UTC][c=century]');
+      equal(`${datetime.with({ year: 1974 })}`, '1974-09-15T00:00:00[u-ca-century]');
+      equal(`${date.with({ year: 1974 })}`, '1974-09-15[u-ca-century]');
+      equal(`${yearmonth.with({ year: 1974 })}`, '1974-09-01[u-ca-century]');
+      equal(`${zoned.with({ year: 1974 })}`, '1974-09-15T00:00:00+00:00[UTC][u-ca-century]');
     });
     after(() => {
       delete Temporal.PlainDateTime.prototype.century;

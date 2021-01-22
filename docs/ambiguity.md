@@ -83,7 +83,7 @@ zdt = instant.toZonedDateTime('Asia/Tokyo', 'iso8601').toLocaleString('ja-jp', f
   // this is identical to the result of toZonedDateTime() above
 
 zdt = instant.toZonedDateTime('Asia/Tokyo', 'japanese');
-  // => 2019-09-03T17:34:05+09:00[Asia/Tokyo][c=japanese]
+  // => 2019-09-03T17:34:05+09:00[Asia/Tokyo][u-ca-japanese]
 zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
   // => "Sep 3, 1 Reiwa, 5:34:05 PM"
 zdt.year;

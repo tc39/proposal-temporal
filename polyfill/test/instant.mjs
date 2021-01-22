@@ -464,7 +464,7 @@ describe('Instant', () => {
       equal(`${Instant.from('1976-11-18T15Z')}`, '1976-11-18T15:00:00Z');
     });
     it('ignores any specified calendar', () =>
-      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[c=discord]')}`, '1976-11-18T15:23:30.123456789Z'));
+      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[u-ca-discord]')}`, '1976-11-18T15:23:30.123456789Z'));
     it('no junk at end of string', () => throws(() => Instant.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
   });
   describe('Instant.add works', () => {
@@ -1392,13 +1392,13 @@ describe('Instant', () => {
       const timeZone = Temporal.TimeZone.from('UTC');
       const zdt = inst.toZonedDateTime({ timeZone, calendar: 'gregory' });
       equal(inst.epochNanoseconds, zdt.epochNanoseconds);
-      equal(`${zdt}`, '1976-11-18T14:23:30.123456789+00:00[UTC][c=gregory]');
+      equal(`${zdt}`, '1976-11-18T14:23:30.123456789+00:00[UTC][u-ca-gregory]');
     });
     it('time zone parameter non-UTC', () => {
       const timeZone = Temporal.TimeZone.from('America/New_York');
       const zdt = inst.toZonedDateTime({ timeZone, calendar: 'gregory' });
       equal(inst.epochNanoseconds, zdt.epochNanoseconds);
-      equal(`${zdt}`, '1976-11-18T09:23:30.123456789-05:00[America/New_York][c=gregory]');
+      equal(`${zdt}`, '1976-11-18T09:23:30.123456789-05:00[America/New_York][u-ca-gregory]');
     });
   });
 });

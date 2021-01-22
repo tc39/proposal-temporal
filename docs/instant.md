@@ -274,13 +274,13 @@ Example usage:
 epoch = Temporal.Instant.fromEpochSeconds(0);
 timeZone = Temporal.TimeZone.from('America/New_York');
 epoch.toZonedDateTime({ timeZone, calendar: 'gregory' });
-  // => 1969-12-31T19:00-05:00[America/New_York][c=gregory]
+  // => 1969-12-31T19:00-05:00[America/New_York][u-ca-gregory]
 
 // What time was the Unix epoch in Tokyo in the Japanese calendar?
 timeZone = Temporal.TimeZone.from('Asia/Tokyo');
 calendar = Temporal.Calendar.from('japanese');
 zdt = epoch.toZonedDateTime({ timeZone, calendar });
-  // => 1970-01-01T09:00+09:00[Asia/Tokyo][c=japanese]
+  // => 1970-01-01T09:00+09:00[Asia/Tokyo][u-ca-japanese]
 console.log(zdt.year, zdt.era);
   // => 45 showa
 ```

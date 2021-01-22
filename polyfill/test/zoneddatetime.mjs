@@ -257,8 +257,8 @@ describe('ZonedDateTime', () => {
       it('zdt.inLeapYear is true', () => equal(zdt.inLeapYear, true));
       it('zdt.offset is +01:00', () => equal(zdt.offset, '+01:00'));
       it('zdt.offsetNanoseconds is 3600e9', () => equal(zdt.offsetNanoseconds, 3600e9));
-      it('string output is 1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][c=gregory]', () =>
-        equal(`${zdt}`, '1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][c=gregory]'));
+      it('string output is 1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][u-ca-gregory]', () =>
+        equal(`${zdt}`, '1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][u-ca-gregory]'));
     });
 
     it('casts time zone', () => {
@@ -968,18 +968,18 @@ describe('ZonedDateTime', () => {
     it('result contains a non-ISO calendar if present in the input', () => {
       equal(
         `${zdt.withCalendar('japanese').withPlainDate('2008-09-06')}`,
-        '2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]'
+        '2008-09-06T03:24:30-07:00[America/Los_Angeles][u-ca-japanese]'
       );
     });
     it('calendar is unchanged if input has ISO calendar', () => {
       equal(
-        `${zdt.withPlainDate('2008-09-06[c=japanese]')}`,
-        '2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]'
+        `${zdt.withPlainDate('2008-09-06[u-ca-japanese]')}`,
+        '2008-09-06T03:24:30-07:00[America/Los_Angeles][u-ca-japanese]'
       );
     });
     it('throws if both `this` and `other` have a non-ISO calendar', () => {
       throws(
-        () => zdt.withCalendar('gregory').withPlainDate('2008-09-06-07:00[America/Los_Angeles][c=japanese]'),
+        () => zdt.withCalendar('gregory').withPlainDate('2008-09-06-07:00[America/Los_Angeles][u-ca-japanese]'),
         RangeError
       );
     });
@@ -1005,7 +1005,7 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.withTimeZone('America/Los_Angeles')}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     });
     it('keeps instant and calendar the same', () => {
-      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][c=gregory]');
+      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][u-ca-gregory]');
       const zdt2 = zdt.withTimeZone('America/Vancouver');
       equal(zdt.epochNanoseconds, zdt2.epochNanoseconds);
       equal(zdt2.calendar.id, 'gregory');
@@ -1017,13 +1017,16 @@ describe('ZonedDateTime', () => {
     const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     it('zonedDateTime.withCalendar(japanese) works', () => {
       const cal = Temporal.Calendar.from('japanese');
-      equal(`${zdt.withCalendar(cal)}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][c=japanese]');
+      equal(`${zdt.withCalendar(cal)}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][u-ca-japanese]');
     });
     it('casts its argument', () => {
-      equal(`${zdt.withCalendar('japanese')}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][c=japanese]');
+      equal(
+        `${zdt.withCalendar('japanese')}`,
+        '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][u-ca-japanese]'
+      );
     });
     it('keeps instant and time zone the same', () => {
-      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][c=gregory]');
+      const zdt = ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][u-ca-gregory]');
       const zdt2 = zdt.withCalendar('japanese');
       equal(zdt.epochNanoseconds, zdt2.epochNanoseconds);
       equal(zdt2.calendar.id, 'japanese');
@@ -2041,7 +2044,7 @@ describe('ZonedDateTime', () => {
     const cal = Temporal.Calendar.from('gregory');
     const zdt = new ZonedDateTime(0n, tz, cal);
     it('constructed from equivalent parameters are equal', () => {
-      const zdt2 = ZonedDateTime.from('1969-12-31T19:00-05:00[America/New_York][c=gregory]');
+      const zdt2 = ZonedDateTime.from('1969-12-31T19:00-05:00[America/New_York][u-ca-gregory]');
       assert(zdt.equals(zdt2));
       assert(zdt2.equals(zdt));
     });
@@ -2058,7 +2061,7 @@ describe('ZonedDateTime', () => {
       assert(!zdt.equals(zdt2));
     });
     it('casts its argument', () => {
-      assert(zdt.equals('1969-12-31T19:00-05:00[America/New_York][c=gregory]'));
+      assert(zdt.equals('1969-12-31T19:00-05:00[America/New_York][u-ca-gregory]'));
       assert(
         zdt.equals({
           year: 1969,
@@ -2095,11 +2098,11 @@ describe('ZonedDateTime', () => {
       equal(zdt1.toString({ calendarName: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
       equal(
         zdt1.withCalendar('gregory').toString({ calendarName: 'auto' }),
-        '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]'
+        '1976-11-18T15:23:00+01:00[Europe/Vienna][u-ca-gregory]'
       );
     });
     it('shows ISO calendar if calendarName = always', () => {
-      equal(zdt1.toString({ calendarName: 'always' }), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=iso8601]');
+      equal(zdt1.toString({ calendarName: 'always' }), '1976-11-18T15:23:00+01:00[Europe/Vienna][u-ca-iso8601]');
     });
     it('omits non-ISO calendar if calendarName = never', () => {
       equal(
@@ -2109,7 +2112,7 @@ describe('ZonedDateTime', () => {
     });
     it('default is calendar = auto', () => {
       equal(zdt1.toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
-      equal(zdt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna][c=gregory]');
+      equal(zdt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna][u-ca-gregory]');
     });
     it('throws on invalid calendar', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
@@ -2132,7 +2135,7 @@ describe('ZonedDateTime', () => {
       const zdt = zdt1.withCalendar('gregory');
       equal(zdt.toString({ timeZoneName: 'never', calendarName: 'never' }), '1976-11-18T15:23:00+01:00');
       equal(zdt.toString({ offset: 'never', calendarName: 'never' }), '1976-11-18T15:23:00[Europe/Vienna]');
-      equal(zdt.toString({ offset: 'never', timeZoneName: 'never' }), '1976-11-18T15:23:00[c=gregory]');
+      equal(zdt.toString({ offset: 'never', timeZoneName: 'never' }), '1976-11-18T15:23:00[u-ca-gregory]');
       equal(zdt.toString({ offset: 'never', timeZoneName: 'never', calendarName: 'never' }), '1976-11-18T15:23:00');
     });
     it('truncates to minute', () => {

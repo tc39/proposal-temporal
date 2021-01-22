@@ -286,7 +286,7 @@ const temporalTimeZoneIdentifier = withCode(choice(timeZoneNumericUTCOffset, tim
   if (!('offset' in data)) data.offset = undefined;
 });
 const calendarName = withCode(choice(...calendarNames), (data, result) => (data.calendar = result));
-const calendar = seq('[c=', calendarName, ']');
+const calendar = seq('[u-ca-', calendarName, ']');
 const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))

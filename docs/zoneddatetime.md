@@ -88,7 +88,7 @@ Any non-object value is converted to a string, which is expected to be an ISO 86
 For example:
 
 ```
-2020-08-05T20:06:13+09:00[Asia/Tokyo][c=japanese]
+2020-08-05T20:06:13+09:00[Asia/Tokyo][u-ca-japanese]
 ```
 
 If the string isn't valid, then a `RangeError` will be thrown regardless of the value of `overflow`.
@@ -177,7 +177,7 @@ Example usage:
 <!-- prettier-ignore-start -->
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo]');
-zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo][c=islamic]');
+zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo][u-ca-islamic]');
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30');  // RangeError; time zone ID required
 zdt = Temporal.ZonedDateTime.from('1995-12-07T01:24:30Z');  // RangeError; time zone ID required
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00');  // RangeError; time zone ID required
@@ -333,7 +333,7 @@ dt.millisecond; // => 0
 dt.microsecond; // => 3
 dt.nanosecond;  // => 500
 
-dt = Temporal.ZonedDateTime.from('2019-02-23T03:24:30.000003500[Europe/Rome][c=hebrew]');
+dt = Temporal.ZonedDateTime.from('2019-02-23T03:24:30.000003500[Europe/Rome][u-ca-hebrew]');
 dt.year;        // => 5779
 dt.month;       // => 6
 dt.monthCode;   // => "5L"
@@ -462,7 +462,7 @@ As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`
 Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
 
 ```javascript
-date = Temporal.ZonedDateTime.from('-000015-01-01T12:30[Europe/Rome][c=gregory]');
+date = Temporal.ZonedDateTime.from('-000015-01-01T12:30[Europe/Rome][u-ca-gregory]');
 date.era;
 // => "bc"
 date.eraYear;
@@ -821,9 +821,9 @@ zdt.withPlainDate('2018-09-15'); // => 2018-09-15T03:24:30-07:00[America/Los_Ang
 zdt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30-07:00[America/Los_Angeles]
 
 // result contains a non-ISO calendar if present in the input
-zdt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]
-zdt.withPlainDate('2017-09-06[c=japanese]'); // => 2017-09-06T03:24:30-07:00[America/Los_Angeles][c=japanese]
-zdt.withCalendar('japanese').withPlainDate('2017-09-06[c=hebrew]'); // => RangeError (calendar conflict)
+zdt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30-07:00[America/Los_Angeles][u-ca-japanese]
+zdt.withPlainDate('2017-09-06[u-ca-japanese]'); // => 2017-09-06T03:24:30-07:00[America/Los_Angeles][u-ca-japanese]
+zdt.withCalendar('japanese').withPlainDate('2017-09-06[u-ca-hebrew]'); // => RangeError (calendar conflict)
 ```
 
 ### zonedDateTime.**withTimeZone**(_timeZone_: object | string) : Temporal.ZonedDateTime
@@ -853,7 +853,7 @@ zdt.withTimeZone('Africa/Accra').toString(); // => "1995-12-06T18:24:30+00:00[Af
 Usage example:
 
 ```javascript
-zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+09:00[Asia/Tokyo][c=japanese]');
+zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+09:00[Asia/Tokyo][u-ca-japanese]');
 `${zdt.era} ${zdt.year}`; // => "heisei 7"
 zdt.withCalendar('iso8601').year; // => 1995
 ```
@@ -1242,7 +1242,7 @@ zdt1.equals(zdt1); // => true
 Examples:
 
 - `2011-12-03T10:15:30+01:00[Europe/Paris]`
-- `2011-12-03T10:15:30+09:00[Asia/Tokyo][c=japanese]`
+- `2011-12-03T10:15:30+09:00[Asia/Tokyo][u-ca-japanese]`
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `zonedDateTime`.
 The string is "round-trippable".
@@ -1269,7 +1269,7 @@ Example usage:
 zdt = Temporal.ZonedDateTime.from({ year: 2019, month: 12, day: 1, hour: 12, timeZone: 'Africa/Lagos' });
 zdt.toString(); // => 2019-12-01T12:00+01:00[Africa/Lagos]
 zdt.withCalendar('japanese');
-zdt.toString(); // => 2019-12-01T12:00+01:00[Africa/Lagos][c=japanese]
+zdt.toString(); // => 2019-12-01T12:00+01:00[Africa/Lagos][u-ca-japanese]
 ```
 
 ### zonedDateTime.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string

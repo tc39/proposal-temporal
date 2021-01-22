@@ -113,12 +113,12 @@ md = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 
 
 // non-ISO calendars
 md = Temporal.PlainMonthDay.from({ monthCode: '5L', day: 15, calendar: 'hebrew' });
-// => 2019-02-20[c=hebrew]
+// => 2019-02-20[u-ca-hebrew]
 md = Temporal.PlainMonthDay.from({ month: 6, day: 15, year: 5779, calendar: 'hebrew' });
-// => 2019-02-20[c=hebrew]
+// => 2019-02-20[u-ca-hebrew]
 md = Temporal.PlainMonthDay.from({ month: 6, day: 15, calendar: 'hebrew' });
 // => throws (either year or monthCode is required)
-md = Temporal.PlainMonthDay.from('2019-02-20[c=hebrew]');
+md = Temporal.PlainMonthDay.from('2019-02-20[u-ca-hebrew]');
 md.monthCode; // => "5L"
 md.day; // => 15
 md.month; // undefined (month property is not present in this type; use monthCode instead)
@@ -147,7 +147,7 @@ md.monthCode; // => "8"
 md.day; // => 24
 md.month; // undefined (month property is not present in this type; use monthCode instead)
 
-md = Temporal.PlainMonthDay.from('2019-02-20[c=hebrew]');
+md = Temporal.PlainMonthDay.from('2019-02-20[u-ca-hebrew]');
 md.monthCode; // => "5L"
 md.day; // => 15
 md.month; // undefined (month property is not present in this type; use monthCode instead)

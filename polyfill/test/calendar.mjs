@@ -100,10 +100,10 @@ describe('Calendar', () => {
       }
       it('other types with a calendar are accepted', () => {
         [
-          Temporal.PlainDate.from('1976-11-18[c=gregory]'),
-          Temporal.PlainDateTime.from('1976-11-18[c=gregory]'),
-          Temporal.PlainMonthDay.from('1972-11-18[c=gregory]'),
-          Temporal.PlainYearMonth.from('1976-11-01[c=gregory]')
+          Temporal.PlainDate.from('1976-11-18[u-ca-gregory]'),
+          Temporal.PlainDateTime.from('1976-11-18[u-ca-gregory]'),
+          Temporal.PlainMonthDay.from('1972-11-18[u-ca-gregory]'),
+          Temporal.PlainYearMonth.from('1976-11-01[u-ca-gregory]')
         ].forEach((obj) => {
           const calFrom = Calendar.from(obj);
           assert(calFrom instanceof Calendar);
@@ -129,7 +129,7 @@ describe('Calendar', () => {
       it('throws with bad identifier', () => {
         throws(() => Calendar.from('local'), RangeError);
         throws(() => Calendar.from('iso-8601'), RangeError);
-        throws(() => Calendar.from('[c=iso8601]'), RangeError);
+        throws(() => Calendar.from('[u-ca-iso8601]'), RangeError);
       });
       it('throws with bad value in property bag', () => {
         throws(() => Calendar.from({ calendar: 'local' }), RangeError);
@@ -138,8 +138,8 @@ describe('Calendar', () => {
     });
     describe('Calendar.from(ISO string)', () => {
       test('1994-11-05T08:15:30-05:00', 'iso8601');
-      test('1994-11-05T08:15:30-05:00[c=gregory]', 'gregory');
-      test('1994-11-05T13:15:30Z[c=japanese]', 'japanese');
+      test('1994-11-05T08:15:30-05:00[u-ca-gregory]', 'gregory');
+      test('1994-11-05T13:15:30Z[u-ca-japanese]', 'japanese');
       function test(isoString, id) {
         const calendar = Calendar.from(isoString);
         it(`Calendar.from(${isoString}) is a calendar`, () => assert(calendar instanceof Calendar));
@@ -363,26 +363,26 @@ describe('Calendar', () => {
 describe('Built-in calendars (not standardized yet)', () => {
   describe('gregory', () => {
     it('era AD', () => {
-      const date = Temporal.PlainDate.from('1999-12-31[c=gregory]');
+      const date = Temporal.PlainDate.from('1999-12-31[u-ca-gregory]');
       equal(date.era, 'ad');
       equal(date.year, 1999);
     });
     it('era BC', () => {
-      const date = Temporal.PlainDate.from('-000001-12-31[c=gregory]');
+      const date = Temporal.PlainDate.from('-000001-12-31[u-ca-gregory]');
       equal(date.era, 'bc');
       equal(date.year, 2);
     });
     it('can create from fields with era AD', () => {
       const date = Temporal.PlainDate.from({ era: 'ad', year: 1999, month: 12, day: 31, calendar: 'gregory' });
-      equal(`${date}`, '1999-12-31[c=gregory]');
+      equal(`${date}`, '1999-12-31[u-ca-gregory]');
     });
     it('era AD is the default', () => {
       const date = Temporal.PlainDate.from({ year: 1999, month: 12, day: 31, calendar: 'gregory' });
-      equal(`${date}`, '1999-12-31[c=gregory]');
+      equal(`${date}`, '1999-12-31[u-ca-gregory]');
     });
     it('can create from fields with era BC', () => {
       const date = Temporal.PlainDate.from({ era: 'bc', year: 2, month: 12, day: 31, calendar: 'gregory' });
-      equal(`${date}`, '-000001-12-31[c=gregory]');
+      equal(`${date}`, '-000001-12-31[u-ca-gregory]');
     });
   });
 });
