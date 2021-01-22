@@ -20,16 +20,18 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the month into.
-- `referenceISODay` (optional number): A reference day, used for disambiguation when implementing other calendar systems.
-  You can omit this parameter unless using a non-ISO-8601 calendar.
+- `referenceISODay` (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
+  For the ISO 8601 calendar, this parameter will default to 1 if omitted.
+  For other calendars, it's the callers responsibility to set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
+
+> NOTE: To avoid infinite recursion, `referenceISODay` is accepted as-is without validating that the day provided is actually the first day of the month in the desired calendar system.
+> This lack of validation means that `equals` or `compare` may return `false` for `Temporal.PlainYearMonth` instances where the year and month and day are identical, but the reference days don't match.
+> For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
+> For other calendars, use `Temporal.PlainYearMonth.from()` which will automatically set the correct always set the `referenceISODay` to the first of the month when constructing the new object.
 
 **Returns:** a new `Temporal.PlainYearMonth` object.
 
-Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
-Otherwise, `Temporal.PlainYearMonth.from()`, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.
-
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./plaindate.md#toPlainYearMonth) on any valid `Temporal.PlainDate` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
@@ -40,7 +42,15 @@ Usage examples:
 
 ```javascript
 // The June 2019 meeting
-ym = new Temporal.PlainYearMonth(2019, 6); // => 2019-06
+ym = new Temporal.PlainYearMonth(2019, 6);
+// => 2019-06
+
+// Non-ISO calendar
+ym = new Temporal.PlainYearMonth(2019, 2, Temporal.Calendar.from('hebrew'), 6);
+// => 2019-02-06[c=hebrew]
+ym.monthCode; // => "5L"
+ym.month; // => 6
+ym.year; // => 5779
 ```
 
 ## Static methods
@@ -60,8 +70,7 @@ ym = new Temporal.PlainYearMonth(2019, 6); // => 2019-06
 
 This static method creates a new `Temporal.PlainYearMonth` object from another value.
 If the value is another `Temporal.PlainYearMonth` object, a new object representing the same month is returned.
-If the value is any other object, it must have `year` and `month` properties, and optionally `era` and `calendar` properties.
-If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
+If the value is any other object, it must have `year` (or `era` and `eraYear`), `month` (or `monthCode`) properties, and optionally a `calendar` property.
 A `Temporal.PlainYearMonth` will be constructed from these properties.
 
 If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
@@ -146,9 +155,23 @@ sorted.join(' '); // => 1930-02 2006-08 2015-07
 
 ### yearMonth.**month** : number
 
-The above read-only properties allow accessing the year and month individually.
+### yearMonth.**monthCode** : string
 
-> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+The above read-only properties allow accessing the year or month individually.
+
+- `year` is a signed integer representing the number of years relative to a calendar-specific anchor date.
+  For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
+  However, some calendars like Japanese may use a different anchor.
+- `month` is a positive integer representing the ordinal index of the month in the current year.
+  For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different `month` value depending on the year.
+  The first month in every year has `month` equal to `1`.
+  The last month of every year has `month` equal to the `monthsInYear` property.
+  `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+  For calendars that do not use leap months, `monthCode` is the same as `month.toString()`.
+
+Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
+Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
 
 Usage examples:
 
@@ -156,16 +179,37 @@ Usage examples:
 ym = Temporal.PlainYearMonth.from('2019-06');
 ym.year; // => 2019
 ym.month; // => 6
+ym.monthCode; // => "6"
+
+ym = Temporal.PlainYearMonth.from('2019-02-23[c=hebrew]');
+ym.year; // => 5779
+ym.month; // => 6
+ym.monthCode; // => "5L"
+ym.day; // => 18
 ```
 
 ### yearMonth.**calendar** : object
 
 The `calendar` read-only property gives the calendar that the `year` and `month` properties are interpreted in.
 
-### yearmonth.**era** : unknown
+### yearMonth.**era** : string | undefined
 
-The `era` read-only property is `undefined` when using the ISO 8601 calendar.
-It's used for calendar systems that specify an era in addition to the year.
+### yearMonth.**eraYear** : number | undefined
+
+In calendars that use eras, the `era` and `eraYear` read-only properties can be used together to resolve an era-relative year.
+Both properties are `undefined` when using the ISO 8601 calendar.
+As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`.
+Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
+
+```javascript
+ym = Temporal.PlainYearMonth.from('-000015-01-01[c=gregory]');
+ym.era;
+// => "bc"
+ym.eraYear;
+// => 16
+ym.year;
+// => -15
+```
 
 ### yearMonth.**daysInMonth** : number
 

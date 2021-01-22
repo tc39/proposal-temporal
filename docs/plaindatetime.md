@@ -78,14 +78,13 @@ datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:
 
 This static method creates a new `Temporal.PlainDateTime` object from another value.
 If the value is another `Temporal.PlainDateTime` object, a new object representing the same date and time is returned.
-If the value is any other object, a `Temporal.PlainDateTime` will be constructed from the values of any `era`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
+If the value is any other object, a `Temporal.PlainDateTime` will be constructed from the values of any `year` (or `era` and `eraYear`), `month` (or `monthCode`), `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and `calendar` properties that are present.
 
-At least the `year`, `month`, and `day` properties must be present.
-If `calendar` is a calendar that requires `era` (such as the Japanese calendar), then the `era` property must also be present.
+At least the `year` (or `era` and `eraYear`), `month` (or `monthCode`), and `day` properties must be present.
 Default values for other missing fields are determined by the calendar.
 
 If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-In this calendar, `era` is ignored, and the default values for other missing fields are all 0.
+Any other missing properties will be assumed to be 0 (for time fields).
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time zone part is optional and will be ignored.
@@ -194,7 +193,13 @@ sorted.join(' ');
 
 ### datetime.**year** : number
 
+### datetime.**era** : string | undefined
+
+### datetime.**eraYear** : number | undefined
+
 ### datetime.**month** : number
+
+### datetime.**monthCode** : string
 
 ### datetime.**day** : number
 
@@ -210,9 +215,34 @@ sorted.join(' ');
 
 ### datetime.**nanosecond**: number
 
-The above read-only properties allow accessing each component of the date or time individually.
+The above read-only properties allow accessing each component of a date or time individually.
 
-> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+Date unit details:
+
+- `year` is a signed integer representing the number of years relative to a calendar-specific epoch.
+  For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
+  However, some calendars like Japanese may use a different anchor.
+- `month` is a positive integer representing the ordinal index of the month in the current year.
+  For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different `month` value depending on the year.
+  The first month in every year has `month` equal to `1`.
+  The last month of every year has `month` equal to the `monthsInYear` property.
+  `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+  For calendars that do not use leap months, `monthCode` is the same as `month.toString()`.
+- `day` is a positive integer representing the day of the month.
+
+Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
+Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
+
+Time unit details:
+
+- `hour` is an integer between 0 and 23
+- `minute` is an integer between 0 and 59
+- `second` is an integer between 0 and 59.
+  If 60 (for a leap second) was provided to `from` or `with`, 59 will stored and will be returned by this property.
+- `millisecond` is an integer between 0 and 999
+- `microsecond` is an integer between 0 and 999
+- `nanosecond` is an integer between 0 and 999
 
 Usage examples:
 
@@ -221,7 +251,20 @@ Usage examples:
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.year;        // => 1995
 dt.month;       // => 12
+dt.monthCode;   // => "12"
 dt.day;         // => 7
+dt.hour;        // => 3
+dt.minute;      // => 24
+dt.second;      // => 30
+dt.millisecond; // => 0
+dt.microsecond; // => 3
+dt.nanosecond;  // => 500
+
+dt = Temporal.PlainDate.from('2019-02-23T03:24:30.000003500[c=hebrew]');
+dt.year;        // => 5779
+dt.month;       // => 6
+dt.monthCode;   // => "5L"
+dt.day;         // => 18
 dt.hour;        // => 3
 dt.minute;      // => 24
 dt.second;      // => 30
@@ -235,10 +278,24 @@ dt.nanosecond;  // => 500
 
 The `calendar` read-only property gives the calendar that the `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties are interpreted in.
 
-### datetime.**era** : unknown
+### datetime.**era** : string | undefined
 
-The `era` read-only property is `undefined` when using the ISO 8601 calendar.
-It's used for calendar systems that specify an era in addition to the year.
+### datetime.**eraYear** : number | undefined
+
+In calendars that use eras, the `era` and `eraYear` read-only properties can be used together to resolve an era-relative year.
+Both properties are `undefined` when using the ISO 8601 calendar.
+As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`.
+Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
+
+```javascript
+date = Temporal.PlainDateTime.from('-000015-01-01T12:30[c=gregory]');
+date.era;
+// => "bc"
+date.eraYear;
+// => 16
+date.year;
+// => -15
+```
 
 ### datetime.**dayOfWeek** : number
 

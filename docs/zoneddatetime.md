@@ -74,8 +74,8 @@ new Temporal.ZonedDateTime(0n, 'America/Los_Angeles'); // same, but shorter
 
 This static method creates a new `Temporal.ZonedDateTime` object from another value.
 If the value is another `Temporal.ZonedDateTime` object, a new but otherwise identical object will be returned.
-If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `timeZone`, `offset`, `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
-At least the `timeZone`, `year`, `month`, and `day` properties must be present. Other properties are optional.
+If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `year` (or `era` and `eraYear`), `month` (or `monthCode`), `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
+At least the `timeZone`, `year` (or `era` and `eraYear`), `month` (or `monthCode`), and `day` properties must be present. Other properties are optional.
 If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
 Any other missing properties will be assumed to be 0 (for time fields).
 
@@ -288,18 +288,62 @@ Temporal.Instant.compare(one.toInstant(), two.toInstant());
 
 ### zonedDateTime.**nanosecond**: number
 
-The above read-only properties allow accessing each component of the date or time individually.
-Keep in mind that the values above are dependent on the calendar.
-For example:
+The above read-only properties allow accessing each component of a date or time individually.
+
+Date unit details:
+
+- `year` is a signed integer representing the number of years relative to a calendar-specific epoch.
+  For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
+  However, some calendars like Japanese may use a different anchor.
+- `month` is a positive integer representing the ordinal index of the month in the current year.
+  For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different `month` value depending on the year.
+  The first month in every year has `month` equal to `1`.
+  The last month of every year has `month` equal to the `monthsInYear` property.
+  `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+  For calendars that do not use leap months, `monthCode` is the same as `month.toString()`.
+- `day` is a positive integer representing the day of the month.
+
+Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
+Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
+
+Time unit details:
+
+- `hour` is an integer between 0 and 23
+- `minute` is an integer between 0 and 59
+- `second` is an integer between 0 and 59.
+  If 60 (for a leap second) was provided to `from` or `with`, 59 will stored and will be returned by this property.
+- `millisecond` is an integer between 0 and 999
+- `microsecond` is an integer between 0 and 999
+- `nanosecond` is an integer between 0 and 999
+
+Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
-inIsoCalendar = Temporal.ZonedDateTime.from('2020-02-01T12:30+09:00[Asia/Tokyo]');
-  // => 2020-02-01T12:30+09:00[Asia/Tokyo]
-inIsoCalendar.year;
-  // => 2020
-inIsoCalendar.withCalendar('japanese').year;
-  // => 2
+dt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500[Europe/Rome]');
+dt.year;        // => 1995
+dt.month;       // => 12
+dt.monthCode;   // => "12"
+dt.day;         // => 7
+dt.hour;        // => 3
+dt.minute;      // => 24
+dt.second;      // => 30
+dt.millisecond; // => 0
+dt.microsecond; // => 3
+dt.nanosecond;  // => 500
+
+dt = Temporal.ZonedDateTime.from('2019-02-23T03:24:30.000003500[Europe/Rome][c=hebrew]');
+dt.year;        // => 5779
+dt.month;       // => 6
+dt.monthCode;   // => "5L"
+dt.day;         // => 18
+dt.hour;        // => 3
+dt.minute;      // => 24
+dt.second;      // => 30
+dt.millisecond; // => 0
+dt.microsecond; // => 3
+dt.nanosecond;  // => 500
 ```
 <!-- prettier-ignore-end -->
 
@@ -408,10 +452,24 @@ zdt.withTimeZone('GMT').timeZone;
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**era** : unknown
+### zonedDateTime.**era** : string | undefined
 
-The `era` read-only property is `undefined` when using the ISO 8601 calendar.
-It's used for calendar systems that specify an era in addition to the year.
+### zonedDateTime.**eraYear** : number | undefined
+
+In calendars that use eras, the `era` and `eraYear` read-only properties can be used together to resolve an era-relative year.
+Both properties are `undefined` when using the ISO 8601 calendar.
+As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`.
+Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
+
+```javascript
+date = Temporal.ZonedDateTime.from('-000015-01-01T12:30[Europe/Rome][c=gregory]');
+date.era;
+// => "bc"
+date.eraYear;
+// => 16
+date.year;
+// => -15
+```
 
 ### zonedDateTime.**dayOfWeek** : number
 

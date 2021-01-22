@@ -63,10 +63,11 @@ date = new Temporal.PlainDate(2020, 3, 14); // => 2020-03-14
 
 This static method creates a new `Temporal.PlainDate` object from another value.
 If the value is another `Temporal.PlainDate` object, a new object representing the same date is returned.
-If the value is any other object, it must have `year`, `month`, and `day` properties, and optionally the `calendar` property.
-A `Temporal.PlainDate` will be constructed from these properties.
+If the value is any other object, it:
 
-If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+- Must have a `year` property or (for calendars that support eras) an `era` and `eraYear` property.
+- Must have either a number `month` property or a string `monthCode` property.
+- May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.
@@ -149,20 +150,42 @@ sorted.join(' '); // => 1930-02-18 2006-08-24 2015-07-14
 
 ### date.**month** : number
 
+### date.**monthCode** : string
+
 ### date.**day** : number
 
-The above read-only properties allow accessing each component of the date individually.
+The above read-only properties allow accessing each component of a date individually.
 
-> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `year` is a signed integer representing the number of years relative to a calendar-specific epoch.
+  For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
+  However, some calendars like Japanese may use a different anchor.
+- `month` is a positive integer representing the ordinal index of the month in the current year.
+  For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different `month` value depending on the year.
+  The first month in every year has `month` equal to `1`.
+  The last month of every year has `month` equal to the `monthsInYear` property.
+  `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+  For calendars that do not use leap months, `monthCode` is the same as `month.toString()`.
+- `day` is a positive integer representing the day of the month.
+
+Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
+Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
 
 Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24');
-date.year;  // => 2006
-date.month; // => 8
-date.day;   // => 24
+date.year;      // => 2006
+date.month;     // => 8
+date.monthCode; // => "8"
+date.day;       // => 24
+
+date = Temporal.PlainDate.from('2019-02-23[c=hebrew]');
+date.year;      // => 5779
+date.month;     // => 6
+date.monthCode; // => "5L"
+date.day;       // => 18
 ```
 <!-- prettier-ignore-end -->
 
@@ -170,10 +193,24 @@ date.day;   // => 24
 
 The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
 
-### date.**era** : unknown
+### date.**era** : string | undefined
 
-The `era` read-only property is `undefined` when using the ISO 8601 calendar.
-It's used for calendar systems that specify an era in addition to the year.
+### date.**eraYear** : number | undefined
+
+In calendars that use eras, the `era` and `eraYear` read-only properties can be used together to resolve an era-relative year.
+Both properties are `undefined` when using the ISO 8601 calendar.
+As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`.
+Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
+
+```javascript
+date = Temporal.PlainDate.from('-000015-01-01[c=gregory]');
+date.era;
+// => "bc"
+date.eraYear;
+// => 16
+date.year;
+// => -15
+```
 
 ### date.**dayOfWeek** : number
 
