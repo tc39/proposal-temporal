@@ -356,13 +356,13 @@ describe('DateTime', () => {
       equal(`${dt.withPlainDate('2018-09-15')}`, '2018-09-15T03:24:30');
     });
     it('result contains a non-ISO calendar if present in the input', () => {
-      equal(`${dt.withCalendar('japanese').withPlainDate('2008-09-06')}`, '2008-09-06T03:24:30[c=japanese]');
+      equal(`${dt.withCalendar('japanese').withPlainDate('2008-09-06')}`, '2008-09-06T03:24:30[u-ca-japanese]');
     });
     it('calendar is unchanged if input has ISO calendar', () => {
-      equal(`${dt.withPlainDate('2008-09-06[c=japanese]')}`, '2008-09-06T03:24:30[c=japanese]');
+      equal(`${dt.withPlainDate('2008-09-06[u-ca-japanese]')}`, '2008-09-06T03:24:30[u-ca-japanese]');
     });
     it('throws if both `this` and `other` have a non-ISO calendar', () => {
-      throws(() => dt.withCalendar('gregory').withPlainDate('2008-09-06[c=japanese]'), RangeError);
+      throws(() => dt.withCalendar('gregory').withPlainDate('2008-09-06[u-ca-japanese]'), RangeError);
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => dt.withPlainDate({}), TypeError);
@@ -1654,17 +1654,17 @@ describe('DateTime', () => {
     });
     it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(dt1.toString({ calendarName: 'auto' }), '1976-11-18T15:23:00');
-      equal(dt1.withCalendar('gregory').toString({ calendarName: 'auto' }), '1976-11-18T15:23:00[c=gregory]');
+      equal(dt1.withCalendar('gregory').toString({ calendarName: 'auto' }), '1976-11-18T15:23:00[u-ca-gregory]');
     });
     it('shows ISO calendar if calendarName = always', () => {
-      equal(dt1.toString({ calendarName: 'always' }), '1976-11-18T15:23:00[c=iso8601]');
+      equal(dt1.toString({ calendarName: 'always' }), '1976-11-18T15:23:00[u-ca-iso8601]');
     });
     it('omits non-ISO calendar if calendarName = never', () => {
       equal(dt1.withCalendar('gregory').toString({ calendarName: 'never' }), '1976-11-18T15:23:00');
     });
     it('default is calendar = auto', () => {
       equal(dt1.toString(), '1976-11-18T15:23:00');
-      equal(dt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00[c=gregory]');
+      equal(dt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00[u-ca-gregory]');
     });
     it('throws on invalid calendar', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {

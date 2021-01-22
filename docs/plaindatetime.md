@@ -130,7 +130,7 @@ dt = Temporal.PlainDateTime.from(Temporal.PlainDate.from('1995-12-07T03:24:30'))
 
 calendar = Temporal.Calendar.from('hebrew');
 dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
-  // => 1995-12-07T03:24:30[c=hebrew]
+  // => 1995-12-07T03:24:30[u-ca-hebrew]
 dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
   // => same as above
 
@@ -260,7 +260,7 @@ dt.millisecond; // => 0
 dt.microsecond; // => 3
 dt.nanosecond;  // => 500
 
-dt = Temporal.PlainDate.from('2019-02-23T03:24:30.000003500[c=hebrew]');
+dt = Temporal.PlainDate.from('2019-02-23T03:24:30.000003500[u-ca-hebrew]');
 dt.year;        // => 5779
 dt.month;       // => 6
 dt.monthCode;   // => "5L"
@@ -288,7 +288,7 @@ As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`
 Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
 
 ```javascript
-date = Temporal.PlainDateTime.from('-000015-01-01T12:30[c=gregory]');
+date = Temporal.PlainDateTime.from('-000015-01-01T12:30[u-ca-gregory]');
 date.era;
 // => "bc"
 date.eraYear;
@@ -519,9 +519,9 @@ dt.withPlainDate('2018-09-15'); // => 2018-09-15T03:24:30
 dt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30
 
 // result contains a non-ISO calendar if present in the input
-dt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30[c=japanese]
-dt.withPlainDate('2017-09-06[c=japanese]'); // => 2017-09-06T03:24:30[c=japanese]
-dt.withCalendar('japanese').withPlainDate('2017-09-06[c=hebrew]'); // => RangeError (calendar conflict)
+dt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30[u-ca-japanese]
+dt.withPlainDate('2017-09-06[u-ca-japanese]'); // => 2017-09-06T03:24:30[u-ca-japanese]
+dt.withCalendar('japanese').withPlainDate('2017-09-06[u-ca-hebrew]'); // => RangeError (calendar conflict)
 ```
 
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime
@@ -537,7 +537,7 @@ This method is the same as `datetime.with({ calendar })`, but may be more effici
 Usage example:
 
 ```javascript
-dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500[c=japanese]');
+dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500[u-ca-japanese]');
 dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.000003500
 ```
 

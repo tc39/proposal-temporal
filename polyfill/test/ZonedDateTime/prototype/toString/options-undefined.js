@@ -13,13 +13,13 @@ const datetime = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC", calen
 const explicit = datetime.toString(undefined);
 assert.sameValue(
   explicit,
-  "2000-05-02T12:34:56.98765+00:00[UTC][c=custom]",
+  "2000-05-02T12:34:56.98765+00:00[UTC][u-ca-custom]",
   "default show options are auto, precision is auto, and rounding is trunc"
 );
 
 const implicit = datetime.toString();
 assert.sameValue(
   implicit,
-  "2000-05-02T12:34:56.98765+00:00[UTC][c=custom]",
+  "2000-05-02T12:34:56.98765+00:00[UTC][u-ca-custom]",
   "default show options are auto, precision is auto, and rounding is trunc"
 );

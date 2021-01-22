@@ -11,7 +11,7 @@ const calendar = {
 const yearmonth = new Temporal.PlainYearMonth(2000, 5, calendar);
 
 const explicit = yearmonth.toString(undefined);
-assert.sameValue(explicit, "2000-05-01[c=custom]", "default show-calendar option is auto");
+assert.sameValue(explicit, "2000-05-01[u-ca-custom]", "default show-calendar option is auto");
 
 const implicit = yearmonth.toString();
-assert.sameValue(implicit, "2000-05-01[c=custom]", "default show-calendar option is auto");
+assert.sameValue(implicit, "2000-05-01[u-ca-custom]", "default show-calendar option is auto");

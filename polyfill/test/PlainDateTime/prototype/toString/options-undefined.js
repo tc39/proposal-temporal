@@ -13,13 +13,13 @@ const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0,
 const explicit = datetime.toString(undefined);
 assert.sameValue(
   explicit,
-  "2000-05-02T12:34:56.98765[c=custom]",
+  "2000-05-02T12:34:56.98765[u-ca-custom]",
   "default show-calendar option is auto, precision is auto, and rounding is trunc"
 );
 
 const implicit = datetime.toString();
 assert.sameValue(
   implicit,
-  "2000-05-02T12:34:56.98765[c=custom]",
+  "2000-05-02T12:34:56.98765[u-ca-custom]",
   "default show-calendar option is auto, precision is auto, and rounding is trunc"
 );

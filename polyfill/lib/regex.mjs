@@ -1,7 +1,30 @@
+// Per specification,
+//   TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar?
+//     TZChar? TZChar? TZChar? TZChar? TZChar? TZChar?
+//   but not one of `.` or `..` or
+//     CalChar `-` CalChar CalChar `-` CalendarNameComponent
+// In plain words, 1 to 14 letters, periods, underscores, or dashes, but not
+// starting with a dash, and not consisting only of one or two periods, and not
+// of the form (letter)-(2 letters)-(3 or more letters) which conflicts with
+// calComponent
+const tzComponentNotBCP47 = new RegExp(
+  [
+    '\\.\\.[-A-Za-z._]{1,12}',
+    '\\.[-A-Za-z_][-A-Za-z._]{0,12}',
+    '_[-A-Za-z._]{0,13}',
+    '[a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,12})?',
+    '[a-zA-Z]-(?:[-._][-A-Za-z._]{0,11})?',
+    '[a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,10})?',
+    '[a-zA-Z]-[a-zA-Z][a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,9})?',
+    '[a-zA-Z]-[a-zA-Z][a-zA-Z]-(?:[-._][-A-Za-z._]{0,8})?',
+    '[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,7})?',
+    '[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z](?:[-._][-A-Za-z._]{0,6})?'
+  ].join('|')
+);
 const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
 const offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
 export const timeZoneID = new RegExp(
-  `(?:${tzComponent.source}(?:\\/(?:${tzComponent.source}))*|Etc/GMT[-+]\\d{1,2}|${offsetNoCapture.source})`
+  `(?:(?:${tzComponentNotBCP47.source})(?:\\/(?:${tzComponent.source}))*|Etc/GMT[-+]\\d{1,2}|${offsetNoCapture.source})`
 );
 
 const calComponent = /[A-Za-z0-9]{3,8}/;
@@ -12,7 +35,7 @@ export const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
 const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[(${timeZoneID.source})\\])?`);
-const calendar = new RegExp(`\\[c=(${calendarID.source})\\]`);
+const calendar = new RegExp(`\\[u-ca-(${calendarID.source})\\]`);
 
 export const instant = new RegExp(
   `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}(?:${calendar.source})?$`,
