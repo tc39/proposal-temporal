@@ -4792,9 +4792,13 @@
     },
     CalendarFields: function CalendarFields(calendar, fieldNames) {
       var fields = calendar.fields;
-      if (fields === undefined) fields = GetIntrinsic$1('%Temporal.Calendar.prototype.fields%');
-      var array = ES.Call(fields, calendar, [fieldNames]);
-      return ES.CreateListFromArrayLike(array, ['String']);
+      if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
+      return ES.CreateListFromArrayLike(fieldNames, ['String']);
+    },
+    CalendarMergeFields: function CalendarMergeFields(calendar, fields, additionalFields) {
+      var mergeFields = calendar.mergeFields;
+      if (mergeFields === undefined) return _objectSpread2(_objectSpread2({}, fields), additionalFields);
+      return ES.Call(mergeFields, calendar, [fields, additionalFields]);
     },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
       if (ES.Type(calendarLike) === 'Object') {
@@ -8619,6 +8623,12 @@
         return impl[GetSlot(this, CALENDAR_ID)].fields(_fields);
       }
     }, {
+      key: "mergeFields",
+      value: function mergeFields(fields, additionalFields) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return impl[GetSlot(this, CALENDAR_ID)].mergeFields(fields, additionalFields);
+      }
+    }, {
       key: "dateAdd",
       value: function dateAdd(date, duration, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -8772,7 +8782,6 @@
   }();
   MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
-  DefineIntrinsic('Temporal.Calendar.prototype.fields', Calendar.prototype.fields);
   impl['iso8601'] = {
     dateFromFields: function dateFromFields(fields, overflow) {
       var _ES$ToRecord = ES.ToRecord(fields, [['day'], ['month'], ['year']]),
@@ -8798,6 +8807,9 @@
     },
     fields: function fields(_fields2) {
       return _fields2;
+    },
+    mergeFields: function mergeFields(fields, additionalFields) {
+      return _objectSpread2(_objectSpread2({}, fields), additionalFields);
     },
     dateAdd: function dateAdd(date, duration, overflow) {
       var years = duration.years,
@@ -9010,8 +9022,6 @@
     return ArrayIncludes.call(BUILTIN_CALENDAR_IDS, id);
   }
 
-  var ObjectAssign$3 = Object.assign;
-
   function TemporalDateToString(date) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
@@ -9084,7 +9094,7 @@
         }
 
         var fields = ES.ToTemporalDateFields(this, fieldNames);
-        ObjectAssign$3(fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, props);
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainDate);
@@ -9510,8 +9520,6 @@
   }();
   MakeIntrinsicClass(PlainDate, 'Temporal.PlainDate');
 
-  var ObjectAssign$4 = Object.assign;
-
   function DateTimeToString(dateTime, precision) {
     var showCalendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'auto';
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
@@ -9636,7 +9644,7 @@
         }
 
         var fields = ES.ToTemporalDateTimeFields(this, fieldNames);
-        ObjectAssign$4(fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, props);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow),
             year = _ES$InterpretTemporal.year,
@@ -10757,7 +10765,7 @@
   }();
   MakeIntrinsicClass(Duration, 'Temporal.Duration');
 
-  var ObjectAssign$5 = Object.assign;
+  var ObjectAssign$3 = Object.assign;
 
   function MonthDayToString(monthDay) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
@@ -10840,7 +10848,7 @@
         }
 
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        ObjectAssign$5(fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, props);
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainMonthDay);
@@ -10911,7 +10919,7 @@
             entries.push([fieldName, undefined]);
           }
         });
-        ObjectAssign$5(fields, ES.ToRecord(item, entries));
+        ObjectAssign$3(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
         return ES.DateFromFields(calendar, fields, Date);
       }
@@ -11045,7 +11053,7 @@
     return ES.SystemTimeZone();
   }
 
-  var ObjectAssign$6 = Object.assign;
+  var ObjectAssign$4 = Object.assign;
 
   function TemporalTimeToString(time, precision) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
@@ -11142,7 +11150,7 @@
 
         var fields = ES.ToTemporalTimeRecord(this);
 
-        var _ObjectAssign = ObjectAssign$6(fields, props),
+        var _ObjectAssign = ObjectAssign$4(fields, props),
             hour = _ObjectAssign.hour,
             minute = _ObjectAssign.minute,
             second = _ObjectAssign.second,
@@ -11602,7 +11610,7 @@
   }();
   MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
 
-  var ObjectAssign$7 = Object.assign;
+  var ObjectAssign$5 = Object.assign;
 
   function YearMonthToString(yearMonth) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
@@ -11685,7 +11693,7 @@
         }
 
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        ObjectAssign$7(fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, props);
         options = ES.NormalizeOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var Construct = ES.SpeciesConstructor(this, PlainYearMonth);
@@ -11947,7 +11955,7 @@
             entries.push([fieldName, undefined]);
           }
         });
-        ObjectAssign$7(fields, ES.ToRecord(item, entries));
+        ObjectAssign$5(fields, ES.ToRecord(item, entries));
         var Date = GetIntrinsic$1('%Temporal.PlainDate%');
         return ES.DateFromFields(calendar, fields, Date, 'reject');
       }
@@ -12051,7 +12059,6 @@
   MakeIntrinsicClass(PlainYearMonth, 'Temporal.PlainYearMonth');
 
   var ArrayPrototypePush$1 = Array.prototype.push;
-  var ObjectAssign$8 = Object.assign;
   var ZonedDateTime = /*#__PURE__*/function () {
     function ZonedDateTime(epochNanoseconds, timeZone) {
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ES.GetISO8601Calendar();
@@ -12121,7 +12128,7 @@
         }
 
         var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
-        ObjectAssign$8(fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, props);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow),
             year = _ES$InterpretTemporal.year,

@@ -203,6 +203,8 @@
 </li>
 <li><a href="#fields">fields</a>
 </li>
+<li><a href="#mergeFields">mergeFields</a>
+</li>
 <li><a href="#toString">toString</a>
 </li>
 <li><a href="#toJSON">toJSON</a>
@@ -240,7 +242,7 @@ If you don&#39;t override the optional members, then they will behave as in the 
 The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>id</code>, <code>fields()</code>, and <code>toJSON()</code>.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in <code>Temporal.Calendar</code> objects.
-To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> method as well.
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> and <code>toJSON()</code> methods as well.
 Your object must not have a <code>calendar</code> property, so that it can be distinguished in <code>Temporal.Calendar.from()</code> from other Temporal objects that have a calendar.</p>
 <p>The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in <a href="https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier">Unicode Technical Standard 35</a>.</p>
 <h2 id="constructor">Constructor</h2>
@@ -414,13 +416,13 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(fields: array<string>) : array<string></h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(<em>fields</em>: array<string>) : array<string></h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>fields</code> (array of strings): A list of field names.</li>
 </ul>
 <p><strong>Returns:</strong> a new list of field names.</p>
 <p>This method does not need to be called directly except in specialized code.
-It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, and <code>Temporal.PlainYearMonth</code>.</p>
+It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainMonthDay</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.ZonedDateTime</code>.</p>
 <p>Custom calendars should override this method if they require more fields with which to denote the date than the standard <code>year</code>, <code>month</code>, and <code>day</code> (for example, <code>era</code>).
 The input array contains the field names that are necessary for a particular operation (for example, <code>&#39;month&#39;</code> and <code>&#39;day&#39;</code> for <code>Temporal.PlainMonthDay.prototype.with()</code>), and the method should make a copy of the array and add whichever extra fields are necessary.</p>
 <p>When subclassing <code>Temporal.Calendar</code>, this method doesn&#39;t need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of <code>fields</code>.</p>
@@ -429,6 +431,29 @@ The input array contains the field names that are necessary for a particular ope
 <pre class="language-js"><code class="language-js"><span class="token comment">// In built-in calendars, this method just makes a copy of the input array</span>
 Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fields</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'month'</span><span class="token punctuation">,</span> <span class="token string">'day'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => ['month', 'day']</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="mergeFields"><a class="heading-link" href="#mergeFields"></a>calendar.<strong>mergeFields</strong>(<em>fields</em>: object, <em>additionalFields</em>: object) : object</h3><p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fields</code> (object): A plain object with properties representing calendar units.</li>
+<li><code>additionalFields</code> (object): Another plain object with properties representing calendar units.</li>
+</ul>
+<p><strong>Returns:</strong> a new object with properties from both <code>fields</code> and <code>additionalFields</code>.</p>
+<p>This method does not need to be called directly except in specialized code.
+It is called indirectly when using the <code>with()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainMonthDay</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.ZonedDateTime</code>.</p>
+<p>Custom calendars should override this method if they allow a calendar unit to be specified in more than one way.
+(For example, the Gregorian calendar allows years to be specified either by a <code>year</code> property or a combination of <code>era</code> and <code>eraYear</code>.)
+The overridden implementation should return an object with some or all of the properties from the original <code>fields</code> object and <code>additionalFields</code> copied onto it.</p>
+<p>When subclassing <code>Temporal.Calendar</code>, this method doesn&#39;t need to be overridden, unless your calendar adds more ways to specify a unit other than the built-in properties <code>monthCode</code>, <code>era</code>, and <code>eraYear</code>.
+The default implementation copies all properties from <code>additionalFields</code> onto <code>fields</code>, taking into account that months may be specified either by <code>month</code> or <code>monthCode</code> properties, and any other special cases required by built-in calendars.</p>
+<p>Usage example:</p>
+<!-- prettier-ignore-start -->
+<pre class="language-js"><code class="language-js"><span class="token comment">// In built-in calendars, this method copies properties, taking `month`</span>
+<span class="token comment">// and `monthCode` into account</span>
+Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mergeFields</span><span class="token punctuation">(</span>
+  <span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2006</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> monthCode<span class="token operator">:</span> <span class="token string">'8'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// => { year: 2006, monthCode: '8', day: 31 }</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="toString"><a class="heading-link" href="#toString"></a>calendar.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>calendar.id</code>.</p>
 <p>This method overrides <code>Object.prototype.toString()</code> and provides the calendar&#39;s <code>id</code> property as a human-readable description.</p>
