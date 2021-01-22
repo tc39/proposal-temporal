@@ -20,18 +20,22 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
-- `referenceISOYear` (optional number): A reference year, used for disambiguation when implementing other calendar systems.
-  The default is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
-  You can omit this parameter unless using a non-ISO-8601 calendar.
+- `referenceISOYear` (optional for ISO 8601 calendar; required for other calendars):
+  A reference year in the ISO 8601 calendar for disambiguation when implementing calendar systems.
+  The default for the ISO 8601 calendar is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
+  This value is required for other calendar systems, but can cause serious problems if not set correctly.
 
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
-Use this constructor if you have the correct parameters for the date already as individual number values, or you are implementing a custom calendar.
-Otherwise, `Temporal.PlainMonthDay.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+> NOTE: To avoid infinite recursion, the `referenceISOYear` is accepted as-is without validating that the year contains the specified month and day in the desired calendar and without replacing the year with a canonical value like `from` and `with` will do.
+> These limitations mean that `equals` or `compare` may return `false` for `Temporal.PlainMonthDay` instances where the month and day are identical, but the reference years don't match.
+> For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
+> For other calendars, use the `from` method which will always set the same reference year for the same month, day, and calendar.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
-Together, `referenceISOYear`, `isoMonth` and `isoDay` must represent a valid date in that calendar.
-For example, February 29 (Leap day in the ISO 8601 calendar) is a valid value for `Temporal.PlainMonthDay`, even though that date does not occur every year, because the default value of `referenceISOYear` is a leap year.
+
+The `referenceISOYear` ensures that month/day combinations like February 29 (a leap day in the ISO 8601 calendar) or 15 Adar I (in a leap month in the Hebrew calendar) can be used for `Temporal.PlainMonthDay`, even though those dates don't occur every calendar year.
+`referenceISOYear` corresponds to a calendar year where this month and day actually exist.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -42,6 +46,12 @@ Usage examples:
 md = new Temporal.PlainMonthDay(3, 14); // => 03-14
 // Leap day
 md = new Temporal.PlainMonthDay(2, 29); // => 02-29
+
+// 1 Adar I (first day of a leap month) in the Hebrew calendar
+md = new Temporal.PlainYearMonth(2, 6, Temporal.Calendar.from('hebrew'), 2019);
+// => 2019-02-06[c=hebrew]
+md.monthCode; // => "5L"
+md.day; // => 1
 ```
 
 ## Static methods
@@ -60,19 +70,27 @@ md = new Temporal.PlainMonthDay(2, 29); // => 02-29
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
 This static method creates a new `Temporal.PlainMonthDay` object from another value.
-If the value is another `Temporal.PlainMonthDay` object, a new object representing the same month and day is returned.
-If the value is any other object, it must have `month` and `day` properties, and optionally a `calendar` property, and a `Temporal.PlainMonthDay` will be constructed from these properties.
+If the value is a `Temporal.PlainMonthDay`, `Temporal.PlainDate`, `Temporal.PlainDateTime`, or `Temporal.ZonedDateTime` object, a new object representing the object's same month and day is returned.
+If the value is any other object, it:
 
-If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+- Must have a `day` property
+- Must have either a string `monthCode` property OR both `month` and `year` integer number properties.
+- May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
+
+Some calendars like Hebrew or Chinese have leap months which causes `month` to be ambiguous without knowing the year.
+Therefore, if neither `monthCode` nor `year` is provided, a `RangeError` will be thrown (regardless of calendar used) to encourage calendar-independent code.
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
-Any parts of the string other than the month and the day are optional and will be ignored.
+For the ISO 8601 calendar, only the month and day will be parsed from the string.
+For other calendars, the year and calendar are also parsed in addition to month and day.
+Any other parts of the string are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
 The `overflow` option works as follows:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, with "nearest" defined by the calendar.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+  If `day`, `month` and `year` are provided, that calendar date must exist in the provided calendar or a `RangeError` will be thrown.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -87,42 +105,67 @@ md = Temporal.PlainMonthDay.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');
 // => 08-24
 md === Temporal.PlainMonthDay.from(md); // => true
 
-md = Temporal.PlainMonthDay.from({ month: 8, day: 24 }); // => 08-24
+md = Temporal.PlainMonthDay.from({ monthCode: '8', day: 24 }); // => 08-24
 md = Temporal.PlainMonthDay.from(Temporal.PlainDate.from('2006-08-24'));
 // => same as above; Temporal.PlainDate has month and day properties
 
 // Different overflow modes
-md = Temporal.PlainMonthDay.from({ month: 13, day: 1 }, { overflow: 'constrain' });
+md = Temporal.PlainMonthDay.from({ month: 13, day: 1, year: 2000 }, { overflow: 'constrain' });
 // => 12-01
-md = Temporal.PlainMonthDay.from({ month: -1, day: 1 }, { overflow: 'constrain' });
+md = Temporal.PlainMonthDay.from({ month: -1, day: 1, year: 2000 }, { overflow: 'constrain' });
 // => 01-01
-md = Temporal.PlainMonthDay.from({ month: 13, day: 1 }, { overflow: 'reject' });
+md = Temporal.PlainMonthDay.from({ month: 13, day: 1, year: 2000 }, { overflow: 'reject' });
 // throws
-md = Temporal.PlainMonthDay.from({ month: -1, day: 1 }, { overflow: 'reject' });
+md = Temporal.PlainMonthDay.from({ month: -1, day: 1, year: 2000 }, { overflow: 'reject' });
 // throws
+md = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 'reject' });
+// throws (this year is not a leap year in the ISO calendar)
+
+// non-ISO calendars
+md = Temporal.PlainMonthDay.from({ monthCode: '5L', day: 15, calendar: 'hebrew' });
+// => 2019-02-20[c=hebrew]
+md = Temporal.PlainMonthDay.from({ month: 6, day: 15, year: 5779, calendar: 'hebrew' });
+// => 2019-02-20[c=hebrew]
+md = Temporal.PlainMonthDay.from({ month: 6, day: 15, calendar: 'hebrew' });
+// => throws (either year or monthCode is required)
+md = Temporal.PlainMonthDay.from('2019-02-20[c=hebrew]');
+md.monthCode; // => "5L"
+md.day; // => 15
+md.month; // undefined (month property is not present in this type; use monthCode instead)
 ```
 
 ## Properties
 
-### monthDay.**month** : number
+### monthDay.**monthCode** : string
 
 ### monthDay.**day** : number
 
 The above read-only properties allow accessing each component of the date individually.
 
-> **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+  For example, `'2'` is the `monthCode` for February in the ISO calendar, while `'8L'` is the month code for a leap month in the Chinese calendar when the leap month repeats the 8th month.
+- `day` is a positive integer representing the day of the month.
+
+Note that this type has no `month` property, because `month` is ambiguous for some calendars without knowing the year.
+Instead, the `monthCode` property is used which is year-independent in all calendars.
 
 Usage examples:
 
 ```javascript
 md = Temporal.PlainMonthDay.from('08-24');
-md.month; // => 8
+md.monthCode; // => "8"
 md.day; // => 24
+md.month; // undefined (month property is not present in this type; use monthCode instead)
+
+md = Temporal.PlainMonthDay.from('2019-02-20[c=hebrew]');
+md.monthCode; // => "5L"
+md.day; // => 15
+md.month; // undefined (month property is not present in this type; use monthCode instead)
 ```
 
 ### monthDay.**calendar** : object
 
-The `calendar` read-only property gives the calendar that the `month` and `day` properties are interpreted in.
+The `calendar` read-only property gives the calendar that the `monthCode` and `day` properties are interpreted in.
 
 ## Methods
 
@@ -130,12 +173,16 @@ The `calendar` read-only property gives the calendar that the `month` and `day` 
 
 **Parameters:**
 
-- `monthDayLike` (object): an object with some or all of the properties of a `Temporal.PlainMonthDay`.
+- `monthDayLike` (object): an object with some or all of the properties that are accepted by `Temporal.PlainMonthDay.from`.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
+
+Note that there are two ways to change the month: providing `monthCode` or providing both `month` and `year`.
+If only `month` is provided, then a `RangeError` will be thrown because `month` is ambiguous in some calendars without knowing the year.
+If `monthCode` is provided in addition to `month` and/or `year`, then the properties must not conflict or a `RangeError` will be thrown.
 
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
@@ -246,7 +293,7 @@ Example usage:
 
 ```js
 ({ calendar } = new Intl.DateTimeFormat().resolvedOptions());
-md = Temporal.PlainMonthDay.from({ month: 8, day: 24, calendar });
+md = Temporal.PlainMonthDay.from({ monthCode: '8', day: 24, calendar });
 md.toLocaleString(); // => example output: 08-24
 // Same as above, but explicitly specifying the calendar:
 md.toLocaleString(undefined, { calendar });
@@ -272,7 +319,7 @@ Example usage:
 ```js
 const holiday = {
   name: 'Canada Day',
-  holidayMonthDay: Temporal.PlainMonthDay.from({ month: 7, day: 1 })
+  holidayMonthDay: Temporal.PlainMonthDay.from({ monthCode: '7', day: 1 })
 };
 const str = JSON.stringify(holiday, null, 2);
 console.log(str);
@@ -325,11 +372,11 @@ Example:
 ```javascript
 md = Temporal.PlainMonthDay.from({
   calendar: 'japanese',
-  month: 1,
+  monthCode: '1',
   day: 1
 });
 
-date = md.toPlainDate({ era: 'reiwa', year: 2 });
+date = md.toPlainDate({ era: 'reiwa', eraYear: 2 });
 ```
 
 ### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }

@@ -18,7 +18,7 @@ Some places use another calendar system as the main calendar, or have a separate
 > **NOTE:** The Temporal polyfill currently only includes the ISO 8601 calendar, but the Temporal proposal will eventually provide all the calendars supported by Intl.
 > See [issue #541](https://github.com/tc39/proposal-temporal/issues/541).
 
-### When to use the `Temporal.Calendar`
+### When to use `Temporal.Calendar`
 
 It is best practice to specify a calendar system when performing calendar-sensitive operations, which are those involving arithmetic or other calculation in months or years.
 
@@ -35,6 +35,46 @@ To perform arithmetic consistently with the `toLocaleString()` calendar system:
 const calendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
 date.withCalendar(calendar).add({ months: 1 });
 ```
+
+### Invariants Across Calendars
+
+The following "invariants" (statements that are always true) hold for all built-in calendars, and SHOULD hold for properly-authored custom calendars:
+
+- `year`, `month`, `day` are always integers that increase as time goes forward
+- `month` and `day` are always positive integers
+- `date.month === 1` during the first month of any year
+- `date.month === date.monthsInYear` during the last month of any year
+- `month` is always continuous (no gaps)
+- Any date can be serialized to an object using only four properties: `{ year, month, day, calendar }`
+
+### Writing Cross-Calendar Code
+
+Here are best practices for writing code that will work regardless of the calendar used:
+
+- Validate or coerce the calendar of all external input. If your code receives date data from an external source, you should validate that its calendar is what you expect or coerce it to a known calendar via the `withCalendar` method. Otherwise, a sophisticated attacker could change the behavior of your app or introduce security or performance issues by introducing an unexpected calendar.
+- Use `compare` methods (e.g. `Temporal.PlainDate.compare(date1, '2000-01-01')`) instead of manually comparing individual properties (e.g. `date.year > 2000`) whose meaning may vary across calendars.
+- Never compare field values in different calendars. A `month` or `year` in one calendar is unrelated to the same property values in another calendar. If dates in different calendars must be compared, use `compare`.
+- When comparing dates for equality that might be in different calendars, convert them both to the same calendar using `withCalendar`. The same ISO date in different calendars will return `false` from the `equals` method and will return a non-zero value from `compare` because the calendars are not equal.
+- When looping through all months in a year, use `monthsPerYear` as the upper bound instead of assuming that every year has 12 months.
+- Don't assume that `date.month===12` is the last month of the year. Instead, use `date.month===date.monthsInYear`.
+- Use `until` or `since` to count years, months, or days between dates. Manually calculating differences (e.g. `Math.floor(months/12)`) will fail for some calendars.
+- Use `daysPerMonth` instead of assuming that each month has the same number of days in every year.
+- Days in a month are not always continuous. There can be gaps due to political changes in calendars and/or time zones. For this reason, instead of looping through a month from 1 to `date.daysInMonth`, it's better to start a loop with the first day of the month (`.with({day: 1})`) and `add` one day at a time until the `month` property returns a different value.
+- Use `daysInYear` instead of assuming that every year has 365 days (366 in a leap year).
+- Don't assume that `inLeapYear===true` implies that the year is one day longer than a regular year. Some calendars add leap months, making the year 29 or 30 days longer than a normal year!
+- Use `toLocaleString` to format dates to users. DO NOT localize manually with code like `${month}/${day}/${year}`.
+- Don't assume that `month` has the same name in every year. Some calendars like Hebrew or Chinese have leap months that cause months to vary across years.
+- Use the correct property to refer to months. If you care about the order of the month in a particular year (e..g. when looping through all the months in a year) use `month`. If you care about the month regardless of what year it is (e.g. storing a birthday), use the `monthCode` string property.
+- When using the `Temporal.PlainMonthDay` type (e.g. for birthdays or holidays), use its `monthCode` property only. The `month` property is not present on this type because some calendars' month indexes vary from year to year.
+- When calling `Temporal.PlainMonthDay.prototype.toPlainDate(year)`, be prepared for the resulting date to have a different day of the month and/or a different month, because leap days and leap months are not present in every year.
+- Use `toLocaleString` to fetch month names instead instead of caching an array of names. Example: `date.toLocaleString('en-US', { calendar: date.calendar, month: 'long' })`. If you absolutely must cache month names, a string key like `${date.calendar.id}|{date.monthCode}|{date.inLeapYear}` will work for all built-in calendars.
+- Don't assume that `era` or `eraYear` properties are always present. They are not present in some calendars.
+- `era` and `eraYear` should always be used as a pair. Don't use one property without also using the other.
+- Don't combine `month` and `monthCode` in the same property bag. Pick one month representation and use it consistently.
+- Don't combine `year` and `era`/`eraYear` in the same property bag. Pick one year representation and use it consistently.
+- Read the documentation of your calendar to determine the meaning of `monthCode` and `era`.
+- Don't show `monthCode` and `era` values in a UI. Instead, use `toLocaleString` to convert these values into localized strings.
+- Don't assume that the year before `{ eraYear: 1 }` is the last year of the previous era. Some calendars have a "year zero", and the oldest era in era-using calendars typically allows negative `eraYear` values.
 
 ### Custom calendars
 
@@ -137,9 +177,15 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 
 ## Methods
 
+### calendar.**era**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | object | string) : string | undefined
+
+### calendar.**eraYear**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | object | string) : number | undefined
+
 ### calendar.**year**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | object | string) : number
 
-### calendar.**month**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | Temporal.PlainMonthDay | object | string) : number
+### calendar.**month**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | object | string) : number
+
+### calendar.**monthCode**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | Temporal.PlainMonthDay | object | string) : string
 
 ### calendar.**day**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainMonthDay | object | string) : number
 
@@ -176,10 +222,12 @@ They are called indirectly when reading the various properties of `Temporal.Zone
 For example:
 
 ```javascript
-const date = Temporal.PlainDate.from('2020-05-29').withCalendar('hebrew');
-date.year; // => 5780
+const date = Temporal.PlainDate.from('2019-02-06').withCalendar('hebrew');
+date.year; // => 5779
 date.calendar.year(date); // same result, but calling the method directly
-date.daysInYear; // => 355
+date.monthCode; // => "5L"
+date.calendar.monthCode(date); // same result, but calling the method directly
+date.daysInYear; // => 385
 date.calendar.daysInYear(date); // same result, but calling the method directly
 ```
 
@@ -214,22 +262,20 @@ A custom implementation of these methods would convert the calendar-space argume
 For example:
 
 ```javascript
-date = Temporal.PlainDate.from({ year: 5780, month: 9, day: 6, calendar: 'hebrew' }, { overflow: 'reject' });
-date.year; // => 5780
-date.month; // => 9
-date.day; // => 6
-date.toString(); // => 2020-05-29[c=hebrew]
+date = Temporal.PlainDate.from({ year: 5779, monthCode: '5L', day: 18, calendar: 'hebrew' });
+date.year; // => 5779
+date.month; // => 6
+date.monthCode; // => "5L"
+date.day; // => 18
+date.toString(); // => 2019-02-23[c=hebrew]
+date.toLocaleString('en-US', { calendar: 'hebrew' }); // => "18 Adar I 5779"
 
-// same result, but calling the method directly:
+// same result, but calling the method directly and using month index instead of month code:
 date = Temporal.Calendar.from('hebrew').dateFromFields(
-  { year: 5780, month: 9, day: 6 },
-  { overflow: 'reject' },
+  { year: 5779, month: 6, day: 18 },
+  { overflow: 'constrain' },
   Temporal.PlainDate
 );
-date.year; // => 5780
-date.month; // => 9
-date.day; // => 6
-date.toString(); // => 2020-05-29[c=hebrew]
 ```
 
 ### calendar.**dateAdd**(_date_: Temporal.PlainDate | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.PlainDate
@@ -332,8 +378,9 @@ Temporal.Calendar.from('chinese').dateUntil(
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainMonthDay`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
 
-Custom calendars should override this method if they require more fields with which to denote the date than the standard `year`, `month`, and `day` (for example, `era`).
-The input array contains the field names that are necessary for a particular operation (for example, `'month'` and `'day'` for `Temporal.PlainMonthDay.prototype.with()`), and the method should make a copy of the array and add whichever extra fields are necessary.
+Custom calendars should override this method if they accept fields in `from()` or `with()` other than the standard set of built-in calendar fields: `year`, `month`, `monthCode`, and `day`.
+The input array contains the field names that are necessary for a particular operation (for example, `'monthCode'`, and `'day'` for `Temporal.PlainMonthDay.prototype.with()`).
+The method should make a copy of the array and add additional fields as needed.
 
 When subclassing `Temporal.Calendar`, this method doesn't need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of `fields`.
 
@@ -342,8 +389,8 @@ Usage example:
 <!-- prettier-ignore-start -->
 ```js
 // In built-in calendars, this method just makes a copy of the input array
-Temporal.Calendar.from('iso8601').fields(['month', 'day']);
-// => ['month', 'day']
+Temporal.Calendar.from('iso8601').fields(['monthCode', 'day']);
+// => ['monthCode', 'day']
 ```
 <!-- prettier-ignore-end -->
 
@@ -391,6 +438,7 @@ Example usage:
 ```javascript
 Temporal.PlainDate.from('2020-05-29[c=gregory]').calendar.toString(); // => gregory
 ```
+
 ### calendar.**toJSON**() : string
 
 **Returns:** The string given by `calendar.id`.
