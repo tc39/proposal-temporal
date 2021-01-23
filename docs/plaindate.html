@@ -165,11 +165,15 @@
 </li>
 <li><a href="#month">month</a>
 </li>
+<li><a href="#monthCode">monthCode</a>
+</li>
 <li><a href="#day">day</a>
 </li>
 <li><a href="#calendar">calendar</a>
 </li>
 <li><a href="#era">era</a>
+</li>
+<li><a href="#eraYear">eraYear</a>
 </li>
 <li><a href="#dayOfWeek">dayOfWeek</a>
 </li>
@@ -270,9 +274,12 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code> object.</p>
 <p>This static method creates a new <code>Temporal.PlainDate</code> object from another value.
 If the value is another <code>Temporal.PlainDate</code> object, a new object representing the same date is returned.
-If the value is any other object, it must have <code>year</code>, <code>month</code>, and <code>day</code> properties, and optionally the <code>calendar</code> property.
-A <code>Temporal.PlainDate</code> will be constructed from these properties.</p>
-<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
+If the value is any other object, it:</p>
+<ul>
+<li>Must have a <code>year</code> property or (for calendars that support eras) an <code>era</code> and <code>eraYear</code> property.</li>
+<li>Must have either a number <code>month</code> property or a string <code>monthCode</code> property.</li>
+<li>May have a <code>calendar</code> property. If omitted, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a> will be used by default.</li>
+</ul>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any time or time zone part is optional and will be ignored.
 If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
@@ -333,21 +340,48 @@ two <span class="token operator">=</span> Temporal<span class="token punctuation
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1930-02-18'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1930-02-18 2006-08-24 2015-07-14</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="year"><a class="heading-link" href="#year"></a>date.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>date.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>date.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
-<blockquote>
-<p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
-</blockquote>
+<h3 id="year"><a class="heading-link" href="#year"></a>date.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>date.<strong>month</strong> : number</h3><h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>date.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>date.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of a date individually.</p>
+<ul>
+<li><code>year</code> is a signed integer representing the number of years relative to a calendar-specific epoch.
+For calendars that use eras, the anchor is usually aligned with the latest era so that <code>eraYear === year</code> for all dates in that era.
+However, some calendars like Japanese may use a different anchor.</li>
+<li><code>month</code> is a positive integer representing the ordinal index of the month in the current year.
+For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different <code>month</code> value depending on the year.
+The first month in every year has <code>month</code> equal to <code>1</code>.
+The last month of every year has <code>month</code> equal to the <code>monthsInYear</code> property.
+<code>month</code> values start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</li>
+<li><code>monthCode</code> is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+For calendars that do not use leap months, <code>monthCode</code> is the same as <code>month.toString()</code>.</li>
+<li><code>day</code> is a positive integer representing the day of the month.</li>
+</ul>
+<p>Either <code>month</code> or <code>monthCode</code> can be used in <code>from</code> or <code>with</code> to refer to the month.
+Similarly, in calendars that user eras an <code>era</code>/<code>eraYear</code> pair can be used in place of <code>year</code> when calling <code>from</code> or <code>with</code>.</p>
 <p>Usage examples:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span>year<span class="token punctuation">;</span>  <span class="token comment">// => 2006</span>
-date<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 8</span>
-date<span class="token punctuation">.</span>day<span class="token punctuation">;</span>   <span class="token comment">// => 24</span></code></pre><!-- prettier-ignore-end -->
+date<span class="token punctuation">.</span>year<span class="token punctuation">;</span>      <span class="token comment">// => 2006</span>
+date<span class="token punctuation">.</span>month<span class="token punctuation">;</span>     <span class="token comment">// => 8</span>
+date<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "8"</span>
+date<span class="token punctuation">.</span>day<span class="token punctuation">;</span>       <span class="token comment">// => 24</span>
+
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[c=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date<span class="token punctuation">.</span>year<span class="token punctuation">;</span>      <span class="token comment">// => 5779</span>
+date<span class="token punctuation">.</span>month<span class="token punctuation">;</span>     <span class="token comment">// => 6</span>
+date<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "5L"</span>
+date<span class="token punctuation">.</span>day<span class="token punctuation">;</span>       <span class="token comment">// => 18</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="calendar"><a class="heading-link" href="#calendar"></a>date.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code>, <code>month</code>, and <code>day</code> properties are interpreted in.</p>
-<h3 id="era"><a class="heading-link" href="#era"></a>date.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
-It&#39;s used for calendar systems that specify an era in addition to the year.</p>
-<h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>date.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
+<h3 id="era"><a class="heading-link" href="#era"></a>date.<strong>era</strong> : string | undefined</h3><h3 id="eraYear"><a class="heading-link" href="#eraYear"></a>date.<strong>eraYear</strong> : number | undefined</h3><p>In calendars that use eras, the <code>era</code> and <code>eraYear</code> read-only properties can be used together to resolve an era-relative year.
+Both properties are <code>undefined</code> when using the ISO 8601 calendar.
+As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.
+Unlike <code>year</code>, <code>eraYear</code> may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.</p>
+<pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-000015-01-01[c=gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date<span class="token punctuation">.</span>era<span class="token punctuation">;</span>
+<span class="token comment">// => "bc"</span>
+date<span class="token punctuation">.</span>eraYear<span class="token punctuation">;</span>
+<span class="token comment">// => 16</span>
+date<span class="token punctuation">.</span>year<span class="token punctuation">;</span>
+<span class="token comment">// => -15</span></code></pre><h3 id="dayOfWeek"><a class="heading-link" href="#dayOfWeek"></a>date.<strong>dayOfWeek</strong> : number</h3><p>The <code>dayOfWeek</code> read-only property gives the weekday number that the date falls on.
 For the ISO 8601 calendar, the weekday number is defined as in the ISO 8601 standard: a value between 1 and 7, inclusive, with Monday being 1, and Sunday 7.
 For an overview, see <a href="https://en.wikipedia.org/wiki/ISO_8601#Week_dates">ISO 8601 on Wikipedia</a>.</p>
 <p>Usage example:</p>

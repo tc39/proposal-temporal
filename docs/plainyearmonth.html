@@ -165,9 +165,13 @@
 </li>
 <li><a href="#month">month</a>
 </li>
+<li><a href="#monthCode">monthCode</a>
+</li>
 <li><a href="#calendar">calendar</a>
 </li>
 <li><a href="#era">era</a>
+</li>
+<li><a href="#eraYear">eraYear</a>
 </li>
 <li><a href="#daysInMonth">daysInMonth</a>
 </li>
@@ -220,14 +224,22 @@ A <code>Temporal.PlainYearMonth</code> can be converted into a <code>Temporal.Pl
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the month into.</li>
-<li><code>referenceISODay</code> (optional number): A reference day, used for disambiguation when implementing other calendar systems.
-You can omit this parameter unless using a non-ISO-8601 calendar.</li>
+<li><code>referenceISODay</code> (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
+For the ISO 8601 calendar, this parameter will default to 1 if omitted.
+For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.</li>
 </ul>
+<blockquote>
+<p>The <code>calendar</code> and <code>referenceISODay</code> parameters should be avoided because <code>equals</code> or <code>compare</code> will consider <code>new Temporal.PlainYearMonth(2000, 3, &#39;iso8601&#39;, 14)</code> and <code>PlainYearMonth(2000, 3, &#39;iso8601&#39;, 1)</code> unequal even though they refer to the same year and month.
+When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the <code>from()</code> method which will automatically set a valid and <code>equals</code>-compatible reference day.</p>
+</blockquote>
+<blockquote>
+<p>NOTE: To avoid infinite recursion, <code>referenceISODay</code> is accepted as-is without validating that the day provided is actually the first day of the month in the desired calendar system.
+This lack of validation means that <code>equals</code> or <code>compare</code> may return <code>false</code> for <code>Temporal.PlainYearMonth</code> instances where the year and month and day are identical, but the reference days don&#39;t match.
+For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
+For other calendars, use <code>Temporal.PlainYearMonth.from()</code> which will automatically set the correct always set the <code>referenceISODay</code> to the first of the month when constructing the new object.</p>
+</blockquote>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object.</p>
-<p>Use this constructor if you have the correct parameters already as individual number values in the ISO 8601 calendar, or you are implementing a custom calendar.
-Otherwise, <code>Temporal.PlainYearMonth.from()</code>, which accepts more kinds of input, allows months in other calendar systems, and allows controlling the overflow behaviour, is probably more convenient.</p>
-<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
-Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>referenceISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./plaindate.html#toPlainYearMonth"><code>toPlainYearMonth()</code></a> on any valid <code>Temporal.PlainDate</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
 <blockquote>
@@ -235,7 +247,8 @@ If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, the
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// The June 2019 meeting</span>
-ym <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainYearMonth</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06</span></code></pre><h2 id="static-methods">Static methods</h2>
+ym <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainYearMonth</span><span class="token punctuation">(</span><span class="token number">2019</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// => 2019-06</span></code></pre><h2 id="static-methods">Static methods</h2>
 <h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainYearMonth.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainYearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired month.</li>
@@ -250,8 +263,7 @@ The default is <code>constrain</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object.</p>
 <p>This static method creates a new <code>Temporal.PlainYearMonth</code> object from another value.
 If the value is another <code>Temporal.PlainYearMonth</code> object, a new object representing the same month is returned.
-If the value is any other object, it must have <code>year</code> and <code>month</code> properties, and optionally <code>era</code> and <code>calendar</code> properties.
-If <code>calendar</code> is a calendar that requires <code>era</code> (such as the Japanese calendar), then the <code>era</code> property must also be present.
+If the value is any other object, it must have <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>) properties, and optionally a <code>calendar</code> property.
 A <code>Temporal.PlainYearMonth</code> will be constructed from these properties.</p>
 <p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 In this calendar, <code>era</code> is ignored.</p>
@@ -314,17 +326,43 @@ two <span class="token operator">=</span> Temporal<span class="token punctuation
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1930-02'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1930-02 2006-08 2015-07</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="year"><a class="heading-link" href="#year"></a>yearMonth.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>yearMonth.<strong>month</strong> : number</h3><p>The above read-only properties allow accessing the year and month individually.</p>
-<blockquote>
-<p><strong>NOTE</strong>: The possible values for the <code>month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
-</blockquote>
+<h3 id="year"><a class="heading-link" href="#year"></a>yearMonth.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>yearMonth.<strong>month</strong> : number</h3><h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>yearMonth.<strong>monthCode</strong> : string</h3><p>The above read-only properties allow accessing the year or month individually.</p>
+<ul>
+<li><code>year</code> is a signed integer representing the number of years relative to a calendar-specific anchor date.
+For calendars that use eras, the anchor is usually aligned with the latest era so that <code>eraYear === year</code> for all dates in that era.
+However, some calendars like Japanese may use a different anchor.</li>
+<li><code>month</code> is a positive integer representing the ordinal index of the month in the current year.
+For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different <code>month</code> value depending on the year.
+The first month in every year has <code>month</code> equal to <code>1</code>.
+The last month of every year has <code>month</code> equal to the <code>monthsInYear</code> property.
+<code>month</code> values start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</li>
+<li><code>monthCode</code> is a calendar-specific, non-empty string which identifies the month in a year-independent way.
+For calendars that do not use leap months, <code>monthCode</code> is the same as <code>month.toString()</code>.</li>
+</ul>
+<p>Either <code>month</code> or <code>monthCode</code> can be used in <code>from</code> or <code>with</code> to refer to the month.
+Similarly, in calendars that user eras an <code>era</code>/<code>eraYear</code> pair can be used in place of <code>year</code> when calling <code>from</code> or <code>with</code>.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2019</span>
-ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>yearMonth.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code> and <code>month</code> properties are interpreted in.</p>
-<h3 id="era"><a class="heading-link" href="#era"></a>yearmonth.<strong>era</strong> : unknown</h3><p>The <code>era</code> read-only property is <code>undefined</code> when using the ISO 8601 calendar.
-It&#39;s used for calendar systems that specify an era in addition to the year.</p>
-<h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>yearMonth.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
+ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
+ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "6"</span>
+
+ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[c=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 5779</span>
+ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
+ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "5L"</span>
+ym<span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 18</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>yearMonth.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code> and <code>month</code> properties are interpreted in.</p>
+<h3 id="era"><a class="heading-link" href="#era"></a>yearMonth.<strong>era</strong> : string | undefined</h3><h3 id="eraYear"><a class="heading-link" href="#eraYear"></a>yearMonth.<strong>eraYear</strong> : number | undefined</h3><p>In calendars that use eras, the <code>era</code> and <code>eraYear</code> read-only properties can be used together to resolve an era-relative year.
+Both properties are <code>undefined</code> when using the ISO 8601 calendar.
+As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.
+Unlike <code>year</code>, <code>eraYear</code> may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.</p>
+<pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-000015-01-01[c=gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ym<span class="token punctuation">.</span>era<span class="token punctuation">;</span>
+<span class="token comment">// => "bc"</span>
+ym<span class="token punctuation">.</span>eraYear<span class="token punctuation">;</span>
+<span class="token comment">// => 16</span>
+ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span>
+<span class="token comment">// => -15</span></code></pre><h3 id="daysInMonth"><a class="heading-link" href="#daysInMonth"></a>yearMonth.<strong>daysInMonth</strong> : number</h3><p>The <code>daysInMonth</code> read-only property gives the number of days in the month.
 This is 28, 29, 30, or 31, depending on the month and whether the year is a leap year.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Attempt to write some mnemonic poetry</span>
