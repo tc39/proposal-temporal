@@ -470,8 +470,6 @@ export namespace Temporal {
     nanoseconds?: number;
   };
 
-  type DurationFields = Required<DurationLike>;
-
   /**
    *
    * A `Temporal.Duration` represents an immutable duration of time which can be
@@ -479,7 +477,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/duration.html for more details.
    */
-  export class Duration implements DurationFields {
+  export class Duration {
     static from(item: Temporal.Duration | DurationLike | string): Temporal.Duration;
     static compare(
       one: Temporal.Duration | DurationLike | string,
@@ -517,7 +515,6 @@ export namespace Temporal {
     subtract(other: Temporal.Duration | DurationLike | string, options?: DurationRoundOptions): Temporal.Duration;
     round(options: DurationRoundOptions): Temporal.Duration;
     total(options: DurationTotalOptions): number;
-    getFields(): DurationFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(): string;
