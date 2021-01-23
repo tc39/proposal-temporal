@@ -888,12 +888,12 @@ export namespace Temporal {
     isoYear: number;
     isoMonth: number;
     isoDay: number;
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    microsecond: number;
-    nanosecond: number;
+    isoHour: number;
+    isoMinute: number;
+    isoSecond: number;
+    isoMillisecond: number;
+    isoMicrosecond: number;
+    isoNanosecond: number;
     calendar: CalendarProtocol;
   };
 
@@ -1084,13 +1084,13 @@ export namespace Temporal {
     calendar?: Temporal.Calendar | 'iso8601';
   };
 
-  type TimeFields = {
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    microsecond: number;
-    nanosecond: number;
+  type TimeISOFields = {
+    isoHour: number;
+    isoMinute: number;
+    isoSecond: number;
+    isoMillisecond: number;
+    isoMicrosecond: number;
+    isoNanosecond: number;
     calendar: Temporal.Calendar;
   };
 
@@ -1109,7 +1109,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/time.html for more details.
    */
-  export class PlainTime implements TimeFields {
+  export class PlainTime {
     static from(item: Temporal.PlainTime | TimeLike | string, options?: AssignmentOptions): Temporal.PlainTime;
     static compare(
       one: Temporal.PlainTime | TimeLike | string,
@@ -1195,7 +1195,7 @@ export namespace Temporal {
       timeZone: TimeZoneProtocol | string;
       plainDate: Temporal.PlainDate | DateLike | string;
     }): Temporal.ZonedDateTime;
-    getISOFields(): TimeFields;
+    getISOFields(): TimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;
@@ -1339,12 +1339,12 @@ export namespace Temporal {
     isoYear: number;
     isoMonth: number;
     isoDay: number;
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    microsecond: number;
-    nanosecond: number;
+    isoHour: number;
+    isoMinute: number;
+    isoSecond: number;
+    isoMillisecond: number;
+    isoMicrosecond: number;
+    isoNanosecond: number;
     offsetNanoseconds: number;
     timeZone: TimeZoneProtocol;
     calendar: CalendarProtocol;
