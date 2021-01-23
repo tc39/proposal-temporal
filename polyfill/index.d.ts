@@ -768,13 +768,6 @@ export namespace Temporal {
     calendar?: CalendarProtocol | string;
   };
 
-  type DateFields = {
-    year: number;
-    month: number;
-    day: number;
-    calendar: CalendarProtocol;
-  };
-
   type DateISOFields = {
     isoYear: number;
     isoMonth: number;
@@ -791,7 +784,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/date.html for more details.
    */
-  export class PlainDate implements DateFields {
+  export class PlainDate {
     static from(item: Temporal.PlainDate | DateLike | string, options?: AssignmentOptions): Temporal.PlainDate;
     static compare(
       one: Temporal.PlainDate | DateLike | string,
@@ -868,19 +861,6 @@ export namespace Temporal {
     calendar?: CalendarProtocol | string;
   };
 
-  type DateTimeFields = {
-    year: number;
-    month: number;
-    day: number;
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    microsecond: number;
-    nanosecond: number;
-    calendar: CalendarProtocol;
-  };
-
   type DateTimeISOFields = {
     isoYear: number;
     isoMonth: number;
@@ -904,7 +884,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/datetime.html for more details.
    */
-  export class PlainDateTime implements DateTimeFields {
+  export class PlainDateTime {
     static from(
       item: Temporal.PlainDateTime | DateTimeLike | string,
       options?: AssignmentOptions
@@ -1039,12 +1019,6 @@ export namespace Temporal {
     calendar?: CalendarProtocol | string;
   };
 
-  type MonthDayFields = {
-    month: number;
-    day: number;
-    calendar: CalendarProtocol;
-  };
-
   /**
    * A `Temporal.PlainMonthDay` represents a particular day on the calendar, but
    * without a year. For example, it could be used to represent a yearly
@@ -1052,7 +1026,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/monthday.html for more details.
    */
-  export class PlainMonthDay implements MonthDayFields {
+  export class PlainMonthDay {
     static from(
       item: Temporal.PlainMonthDay | MonthDayLike | string,
       options?: AssignmentOptions
@@ -1262,12 +1236,6 @@ export namespace Temporal {
     calendar?: CalendarProtocol | string;
   };
 
-  type YearMonthFields = {
-    year: number;
-    month: number;
-    calendar: CalendarProtocol;
-  };
-
   /**
    * A `Temporal.PlainYearMonth` represents a particular month on the calendar. For
    * example, it could be used to represent a particular instance of a monthly
@@ -1275,7 +1243,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/yearmonth.html for more details.
    */
-  export class PlainYearMonth implements YearMonthFields {
+  export class PlainYearMonth {
     static from(
       item: Temporal.PlainYearMonth | YearMonthLike | string,
       options?: AssignmentOptions
