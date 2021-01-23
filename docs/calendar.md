@@ -40,8 +40,8 @@ date.withCalendar(calendar).add({ months: 1 });
 
 The following "invariants" (statements that are always true) hold for all built-in calendars, and SHOULD hold for properly-authored custom calendars:
 
-- `year`, `month`, `day` are always integers that increase as time goes forward
-- `month` and `day` are always positive integers
+- `year` is always an integer that increases as time goes forward
+- `month` and `day` are always positive integers that increase as time goes forward, except they reset at the boundary of a year or month, respectively
 - `date.month === 1` during the first month of any year
 - `date.month === date.monthsInYear` during the last month of any year
 - `month` is always continuous (no gaps)
@@ -51,14 +51,14 @@ The following "invariants" (statements that are always true) hold for all built-
 
 Here are best practices for writing code that will work regardless of the calendar used:
 
-- Validate or coerce the calendar of all external input. If your code receives date data from an external source, you should validate that its calendar is what you expect or coerce it to a known calendar via the `withCalendar` method. Otherwise, a sophisticated attacker could change the behavior of your app or introduce security or performance issues by introducing an unexpected calendar.
+- Validate or coerce the calendar of all external input. If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO calendar using `withCalendar('iso8601')`. Otherwise, you may end up with unexpected behavior in your app or introduce security or performance issues by introducing an unexpected calendar.
 - Use `compare` methods (e.g. `Temporal.PlainDate.compare(date1, '2000-01-01')`) instead of manually comparing individual properties (e.g. `date.year > 2000`) whose meaning may vary across calendars.
 - Never compare field values in different calendars. A `month` or `year` in one calendar is unrelated to the same property values in another calendar. If dates in different calendars must be compared, use `compare`.
 - When comparing dates for equality that might be in different calendars, convert them both to the same calendar using `withCalendar`. The same ISO date in different calendars will return `false` from the `equals` method and will return a non-zero value from `compare` because the calendars are not equal.
-- When looping through all months in a year, use `monthsPerYear` as the upper bound instead of assuming that every year has 12 months.
+- When looping through all months in a year, use `monthsInYear` as the upper bound instead of assuming that every year has 12 months.
 - Don't assume that `date.month===12` is the last month of the year. Instead, use `date.month===date.monthsInYear`.
 - Use `until` or `since` to count years, months, or days between dates. Manually calculating differences (e.g. `Math.floor(months/12)`) will fail for some calendars.
-- Use `daysPerMonth` instead of assuming that each month has the same number of days in every year.
+- Use `daysInMonth` instead of assuming that each month has the same number of days in every year.
 - Days in a month are not always continuous. There can be gaps due to political changes in calendars and/or time zones. For this reason, instead of looping through a month from 1 to `date.daysInMonth`, it's better to start a loop with the first day of the month (`.with({day: 1})`) and `add` one day at a time until the `month` property returns a different value.
 - Use `daysInYear` instead of assuming that every year has 365 days (366 in a leap year).
 - Don't assume that `inLeapYear===true` implies that the year is one day longer than a regular year. Some calendars add leap months, making the year 29 or 30 days longer than a normal year!
@@ -379,7 +379,7 @@ This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
 
 Custom calendars should override this method if they accept fields in `from()` or `with()` other than the standard set of built-in calendar fields: `year`, `month`, `monthCode`, and `day`.
-The input array contains the field names that are necessary for a particular operation (for example, `'monthCode'`, and `'day'` for `Temporal.PlainMonthDay.prototype.with()`).
+The input array contains the field names that are necessary for a particular operation (for example, `'monthCode'` and `'day'` for `Temporal.PlainMonthDay.prototype.with()`).
 The method should make a copy of the array and add additional fields as needed.
 
 When subclassing `Temporal.Calendar`, this method doesn't need to be overridden, unless your calendar requires extra fields, because the default implementation returns a copy of `fields`.
@@ -388,7 +388,7 @@ Usage example:
 
 <!-- prettier-ignore-start -->
 ```js
-// In built-in calendars, this method just makes a copy of the input array
+// In the ISO calendar, this method just makes a copy of the input array
 Temporal.Calendar.from('iso8601').fields(['monthCode', 'day']);
 // => ['monthCode', 'day']
 ```
