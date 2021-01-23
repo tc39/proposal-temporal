@@ -1064,7 +1064,8 @@
           Sign? DurationDesignator DurationTime
 
       TemporalInstantString :
-          Date DateTimeSeparator TimeSpec? TimeZoneOffsetRequired
+          Date TimeZoneOffsetRequired
+          Date DateTimeSeparator TimeSpec TimeZoneOffsetRequired
 
       TemporalDateString :
           CalendarDateTime
@@ -1096,7 +1097,8 @@
           DateTime
 
       TemporalZonedDateTimeString :
-          Date DateTimeSeparator TimeSpec? TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
+          Date TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
+          Date DateTimeSeparator TimeSpec TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
 
       TemporalCalendarString :
           CalendarName
