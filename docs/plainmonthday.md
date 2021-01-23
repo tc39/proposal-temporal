@@ -23,14 +23,12 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 - `referenceISOYear` (optional for ISO 8601 calendar; required for other calendars):
   A reference year in the ISO 8601 calendar for disambiguation when implementing calendar systems.
   The default for the ISO 8601 calendar is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
-  This value is required for other calendar systems, but can cause serious problems if not set correctly.
+  This value is required for other calendar systems. If you don't know what to put here, use the `from` method instead.
 
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
-> NOTE: To avoid infinite recursion, the `referenceISOYear` is accepted as-is without validating that the year contains the specified month and day in the desired calendar and without replacing the year with a canonical value like `from` and `with` will do.
-> These limitations mean that `equals` or `compare` may return `false` for `Temporal.PlainMonthDay` instances where the month and day are identical, but the reference years don't match.
-> For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
-> For other calendars, use the `from` method which will always set the same reference year for the same month, day, and calendar.
+> The `calendar` and `referenceISOYear` parameters should be avoided because `equals` or `compare` will consider these two objects unequal: `new Temporal.PlainMonthDay(3, 14, 'iso8601', 1970)` and `new Temporal.PlainMonthDay(3, 14, 'iso8601`, 2000)`.
+> When creating instances for non-ISO-8601 calendars (other than when implementing a custom calendar) use the `from()` method which will automatically set a valid and consistent reference year for all calendars.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 
