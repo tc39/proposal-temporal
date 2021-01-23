@@ -27,8 +27,8 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
-> The `calendar` and `referenceISOYear` parameters should be avoided because `equals` or `compare` will consider these two objects unequal: `new Temporal.PlainMonthDay(3, 14, 'iso8601', 1970)` and `new Temporal.PlainMonthDay(3, 14, 'iso8601`, 2000)`.
-> When creating instances for non-ISO-8601 calendars (other than when implementing a custom calendar) use the `from()` method which will automatically set a valid and consistent reference year for all calendars.
+> The `calendar` and `referenceISOYear` parameters should be avoided because `equals` or `compare` will consider `new Temporal.PlainMonthDay(3, 14, 'iso8601', 1977)` and `new Temporal.PlainMonthDay(3, 14, 'iso8601', 2000)` unequal even though they refer to the same month and day.
+> When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the `from()` method which will automatically set a valid and `equals`-compatible reference year.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 
@@ -44,12 +44,6 @@ Usage examples:
 md = new Temporal.PlainMonthDay(3, 14); // => 03-14
 // Leap day
 md = new Temporal.PlainMonthDay(2, 29); // => 02-29
-
-// 1 Adar I (first day of a leap month) in the Hebrew calendar
-md = new Temporal.PlainYearMonth(2, 6, Temporal.Calendar.from('hebrew'), 2019);
-// => 2019-02-06[c=hebrew]
-md.monthCode; // => "5L"
-md.day; // => 1
 ```
 
 ## Static methods
@@ -72,11 +66,9 @@ If the value is a `Temporal.PlainMonthDay`, `Temporal.PlainDate`, `Temporal.Plai
 If the value is any other object, it:
 
 - Must have a `day` property
-- Must have either a string `monthCode` property OR both `month` and `year` integer number properties.
+- Must have either a string `monthCode` or `month` property.
+  If `month` is used and `calendar` is provided, then `year` must be provided as well because `month` is ambiguous in some calendars without knowing the year.
 - May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
-
-Some calendars like Hebrew or Chinese have leap months which causes `month` to be ambiguous without knowing the year.
-Therefore, if neither `monthCode` nor `year` is provided, a `RangeError` will be thrown (regardless of calendar used) to encourage calendar-independent code.
 
 Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 For the ISO 8601 calendar, only the month and day will be parsed from the string.
@@ -178,8 +170,8 @@ The `calendar` read-only property gives the calendar that the `monthCode` and `d
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
-Note that there are two ways to change the month: providing `monthCode` or providing both `month` and `year`.
-If only `month` is provided, then a `RangeError` will be thrown because `month` is ambiguous in some calendars without knowing the year.
+There are two ways to change the month: providing `monthCode` or `month`.
+If `month` is used and `calendar` is provided, then `year` must be provided as well because `month` is ambiguous in some calendars without knowing the year.
 If `monthCode` is provided in addition to `month` and/or `year`, then the properties must not conflict or a `RangeError` will be thrown.
 
 **Returns:** a new `Temporal.PlainMonthDay` object.

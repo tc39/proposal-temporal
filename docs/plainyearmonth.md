@@ -22,7 +22,10 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 - `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the month into.
 - `referenceISODay` (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
   For the ISO 8601 calendar, this parameter will default to 1 if omitted.
-  For other calendars, it's the callers responsibility to set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
+  For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
+
+> The `calendar` and `referenceISODay` parameters should be avoided because `equals` or `compare` will consider `new Temporal.PlainYearMonth(2000, 3, 'iso8601', 14)` and `PlainYearMonth(2000, 3, 'iso8601', 1)` unequal even though they refer to the same year and month.
+> When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the `from()` method which will automatically set a valid and `equals`-compatible reference day.
 
 > NOTE: To avoid infinite recursion, `referenceISODay` is accepted as-is without validating that the day provided is actually the first day of the month in the desired calendar system.
 > This lack of validation means that `equals` or `compare` may return `false` for `Temporal.PlainYearMonth` instances where the year and month and day are identical, but the reference days don't match.
@@ -44,13 +47,6 @@ Usage examples:
 // The June 2019 meeting
 ym = new Temporal.PlainYearMonth(2019, 6);
 // => 2019-06
-
-// Non-ISO calendar
-ym = new Temporal.PlainYearMonth(2019, 2, Temporal.Calendar.from('hebrew'), 6);
-// => 2019-02-06[c=hebrew]
-ym.monthCode; // => "5L"
-ym.month; // => 6
-ym.year; // => 5779
 ```
 
 ## Static methods
