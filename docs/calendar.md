@@ -38,7 +38,7 @@ date.withCalendar(calendar).add({ months: 1 });
 
 ### Invariants Across Calendars
 
-The following "invariants" (statements that are always true) hold for all built-in calendars, and SHOULD hold for properly-authored custom calendars:
+The following "invariants" (statements that are always true) hold for all built-in calendars, and should also hold for any properly-authored custom calendar that supports years, months, and days units:
 
 - `year` is always an integer that increases as time goes forward
 - `month` and `day` are always positive integers that increase as time goes forward, except they reset at the boundary of a year or month, respectively
