@@ -348,11 +348,10 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, dateTimeSeparator, [timeSpec], timeZoneOffsetRequired);
+const instant = seq(date, [seq(dateTimeSeparator, timeSpec)], timeZoneOffsetRequired);
 const zonedDateTime = seq(
   date,
-  dateTimeSeparator,
-  [timeSpec],
+  seq([dateTimeSeparator, timeSpec]),
   [timeZoneNumericUTCOffset],
   timeZoneBracketedAnnotation,
   [calendar]
