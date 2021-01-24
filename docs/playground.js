@@ -10571,13 +10571,6 @@
         return total;
       }
     }, {
-      key: "getFields",
-      value: function getFields() {
-        var fields = ES.ToRecord(this, [['days'], ['hours'], ['microseconds'], ['milliseconds'], ['minutes'], ['months'], ['nanoseconds'], ['seconds'], ['weeks'], ['years']]);
-        if (!fields) throw new TypeError('invalid receiver');
-        return fields;
-      }
-    }, {
       key: "toString",
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
