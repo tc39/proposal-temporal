@@ -553,22 +553,6 @@ export class Duration {
     );
     return total;
   }
-  getFields() {
-    const fields = ES.ToRecord(this, [
-      ['days'],
-      ['hours'],
-      ['microseconds'],
-      ['milliseconds'],
-      ['minutes'],
-      ['months'],
-      ['nanoseconds'],
-      ['seconds'],
-      ['weeks'],
-      ['years']
-    ]);
-    if (!fields) throw new TypeError('invalid receiver');
-    return fields;
-  }
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
