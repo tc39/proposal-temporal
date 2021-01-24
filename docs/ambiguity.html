@@ -231,7 +231,7 @@ zdt <span class="token operator">=</span> instant<span class="token punctuation"
   <span class="token comment">// this is identical to the result of toZonedDateTime() above</span>
 
 zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">,</span> <span class="token string">'japanese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// => 2019-09-03T17:34:05+09:00[Asia/Tokyo][c=japanese]</span>
+  <span class="token comment">// => 2019-09-03T17:34:05+09:00[Asia/Tokyo][u-ca-japanese]</span>
 zdt<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-us'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token operator">...</span>formatOptions<span class="token punctuation">,</span> calendar<span class="token operator">:</span> zdt<span class="token punctuation">.</span>calendar <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => "Sep 3, 1 Reiwa, 5:34:05 PM"</span>
 zdt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>

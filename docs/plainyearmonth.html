@@ -347,7 +347,7 @@ ym<span class="token punctuation">.</span>year<span class="token punctuation">;<
 ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
 ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "6"</span>
 
-ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[c=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[u-ca-hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 5779</span>
 ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
 ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "5L"</span>
@@ -356,7 +356,7 @@ ym<span class="token punctuation">.</span>day<span class="token punctuation">;</
 Both properties are <code>undefined</code> when using the ISO 8601 calendar.
 As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.
 Unlike <code>year</code>, <code>eraYear</code> may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.</p>
-<pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-000015-01-01[c=gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-000015-01-01[u-ca-gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>era<span class="token punctuation">;</span>
 <span class="token comment">// => "bc"</span>
 ym<span class="token punctuation">.</span>eraYear<span class="token punctuation">;</span>

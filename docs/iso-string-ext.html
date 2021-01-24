@@ -176,15 +176,7 @@ In the current spec, we accept this but don&#39;t emit it.</p>
 Therefore, we are proposing the following extension:
 <em>Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
 <p>For example, when parsed, the following string would represent the date <strong>28 Iyar 5780</strong> in the Hebrew calendar:</p>
-<pre><code>2020-05-22[c=hebrew]</code></pre><p>The syntax of the calendar suffix is currently being discussed with the CalConnect and IETF Calsify standards bodies.
-Options being considered include:</p>
-<ul>
-<li><code>[c=hebrew]</code>, using the same non-standard syntax as time zone names, with <code>c=</code> to distinguish the calendar identifier from a time zone identifier.</li>
-<li><code>[ca=hebrew]</code>, using the same non-standard syntax as time zone names, with <code>ca=</code> to distinguish the calendar identifier from a time zone identifier.</li>
-<li><code>[hebrew]</code>, distinguished from time zone names by starting with a lowercase letter.</li>
-<li><code>{hebrew}</code>, using a different type of bracket.</li>
-<li><code>{ca-hebrew}</code>, including a UTS 35 locale identifier key.</li>
-</ul>
+<pre><code>2020-05-22[u-ca-hebrew]</code></pre><p>The syntax of the calendar suffix is currently being proposed for standardization with the CalConnect and IETF Calsify standards bodies.</p>
 <p>The calendar identifiers <a href="http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">are defined by CLDR</a> as <a href="http://unicode.org/reports/tr35/#unicode_locale_extensions">a sequence of 3-8 character BCP47 subtags</a>.
 The list of calendar identifiers currently supported by CLDR is:</p>
 <ul>
@@ -209,7 +201,7 @@ The list of calendar identifiers currently supported by CLDR is:</p>
 <li><code>islamicc</code> (deprecated in favor of <code>islamic-civil</code>)</li>
 </ul>
 <p>Example of a maximal length string containing both an IANA time zone name and a calendar system:</p>
-<pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis]{islamic-umalqura}</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> use the <code>Temporal.PlainDate</code> data model when in a non-ISO calendar system.
+<pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis][u-ca-islamic-umalqura]</code></pre><h3 id="calendar-dependent-yearmonth-and-monthday"><a class="heading-link" href="#calendar-dependent-yearmonth-and-monthday"></a>Calendar-dependent YearMonth and MonthDay</h3><p>Based on the data model discussion in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>, <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> use the <code>Temporal.PlainDate</code> data model when in a non-ISO calendar system.
 For example, a <code>Temporal</code> object using the Hebrew calendar might store &quot;Iyar 5780&quot; in a <code>Temporal.YearMonth</code> using <code>2020-04-25</code> which is the first day of that month in the ISO calendar.</p>
 <p>When expressed as an ISO string, we would say:</p>
 <pre><code>2020-04-25{hebrew}</code></pre><p>Because it is ambiguous whether that string represents a <code>Temporal.PlainDate</code>, <code>Temporal.YearMonth</code>, or <code>Temporal.MonthDay</code>, the appropriate <code>Temporal</code> constructor must be chosen in order to get the expected data type back out.</p>
