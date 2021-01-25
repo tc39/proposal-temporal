@@ -3065,7 +3065,6 @@ export const ES = ObjectAssign({}, ES2020, {
     overflow
   ) => {
     // Add the time part
-    // FIXME: use calendar.timeAdd()
     let deltaDays = 0;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
       hour,
