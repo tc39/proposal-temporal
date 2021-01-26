@@ -107,10 +107,9 @@ export class PlainYearMonth {
     fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
 
     const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, fields, Construct, overflow);
+    return ES.YearMonthFromFields(calendar, fields, Construct, options);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -120,7 +119,6 @@ export class PlainYearMonth {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
 
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const calendar = GetSlot(this, CALENDAR);
@@ -133,7 +131,7 @@ export class PlainYearMonth {
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
     const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, overflow);
+    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -155,7 +153,6 @@ export class PlainYearMonth {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
 
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const calendar = GetSlot(this, CALENDAR);
@@ -168,7 +165,7 @@ export class PlainYearMonth {
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
     const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, overflow);
+    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -206,7 +203,8 @@ export class PlainYearMonth {
     const otherDate = ES.DateFromFields(calendar, { ...otherFields, day: 1 }, TemporalDate);
     const thisDate = ES.DateFromFields(calendar, { ...thisFields, day: 1 }, TemporalDate);
 
-    const result = calendar.dateUntil(thisDate, otherDate, { largestUnit });
+    const untilOptions = { ...options, largestUnit };
+    const result = calendar.dateUntil(thisDate, otherDate, untilOptions);
     if (smallestUnit === 'months' && roundingIncrement === 1) return result;
 
     let { years, months } = result;
@@ -279,7 +277,8 @@ export class PlainYearMonth {
     const otherDate = ES.DateFromFields(calendar, { ...otherFields, day: 1 }, TemporalDate);
     const thisDate = ES.DateFromFields(calendar, { ...thisFields, day: 1 }, TemporalDate);
 
-    let { years, months } = calendar.dateUntil(thisDate, otherDate, { largestUnit });
+    const untilOptions = { ...options, largestUnit };
+    let { years, months } = calendar.dateUntil(thisDate, otherDate, untilOptions);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     if (smallestUnit === 'months' && roundingIncrement === 1) {
       return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -361,7 +360,7 @@ export class PlainYearMonth {
     ObjectAssign(fields, ES.ToRecord(item, entries));
 
     const Date = GetIntrinsic('%Temporal.PlainDate%');
-    return ES.DateFromFields(calendar, fields, Date, 'reject');
+    return ES.DateFromFields(calendar, fields, Date, { overflow: 'reject' });
   }
   getISOFields() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -374,8 +373,8 @@ export class PlainYearMonth {
   }
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalYearMonth(item)) {
+      ES.ToTemporalOverflow(options); // validate and ignore
       const year = GetSlot(item, ISO_YEAR);
       const month = GetSlot(item, ISO_MONTH);
       const calendar = GetSlot(item, CALENDAR);
@@ -384,7 +383,7 @@ export class PlainYearMonth {
       if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
       return result;
     }
-    return ES.ToTemporalYearMonth(item, this, overflow);
+    return ES.ToTemporalYearMonth(item, this, options);
   }
   static compare(one, two) {
     one = ES.ToTemporalYearMonth(one, PlainYearMonth);

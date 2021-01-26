@@ -69,10 +69,10 @@
       <emu-alg>
         1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Perform ? ToTemporalOverflow(_options_).
           1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
-        1. Return ? ToTemporalYearMonth(_item_, _constructor_, _overflow_).
+        1. Return ? ToTemporalYearMonth(_item_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -241,11 +241,10 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _partialYearMonth_ be ? ToPartialYearMonth(_temporalYearMonthLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
         1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_, _constructor_, _overflow_).
+        1. Return ? YearMonthFromFields(_calendar_, _fields_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -262,7 +261,6 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -273,10 +271,10 @@
           1. Let _day_ be 1.
         1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
         1. Let _durationToAdd_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _overflow_).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _options_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
         1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -293,7 +291,6 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -304,10 +301,10 @@
           1. Let _day_ be 1.
         1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
         1. Let _durationToAdd_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _overflow_).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _options_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
         1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _overflow_).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -337,7 +334,8 @@
         1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.PlainDate%).
-        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _largestUnit_).
+        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
@@ -373,7 +371,8 @@
         1. Let _thisFields_ be ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_, %Temporal.PlainDate%).
-        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _largestUnit_).
+        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
@@ -474,7 +473,9 @@
             1. Throw a *TypeError* exception.
           1. Let _value_ be ? ToIntegerOrInfinity(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
-        1. Return ? DateFromFields(_calendar_, _fields_, *"reject"*, %Temporal.PlainDate%).
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
+        1. Return ? DateFromFields(_calendar_, _fields_, _options_, %Temporal.PlainDate%).
       </emu-alg>
     </emu-clause>
 
@@ -563,21 +564,21 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-totemporalyearmonth" aoid="ToTemporalYearMonth">
-      <h1>ToTemporalYearMonth ( _item_ [ , _constructor_ [ , _overflow_ ] ] )</h1>
+      <h1>ToTemporalYearMonth ( _item_ [ , _constructor_ [ , _options_ ] ] )</h1>
       <p>
         The abstract operation ToTemporalYearMonth returns its argument _item_ if it is already a Temporal.PlainYearMonth instance, converts _item_ to a new Temporal.PlainYearMonth instance if possible, and throws otherwise.
       </p>
       <emu-alg>
         1. If _constructor_ is not given, set it to %Temporal.PlainYearMonth%.
-        1. If _overflow_ is not given, set it to *"constrain"*.
-        1. Assert: _overflow_ is one of *"constrain"* or *"reject"*.
+        1. If _options_ is not given, set it to ! OrdinaryObjectCreate(%Object.prototype%).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
           1. Let _fields_ be ? ToTemporalYearMonthFields(_item_, _fieldNames_).
-          1. Return ? YearMonthFromFields(_calendar_, _fields_, _overflow_, _constructor_).
+          1. Return ? YearMonthFromFields(_calendar_, _fields_, _constructor_, _options_).
+        1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
         1. If _result_.[[Day]] is *undefined*, then

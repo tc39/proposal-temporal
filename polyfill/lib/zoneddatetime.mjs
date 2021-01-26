@@ -194,7 +194,6 @@ export class ZonedDateTime {
     }
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const offset = ES.ToTemporalOffset(options, 'prefer');
 
@@ -228,7 +227,7 @@ export class ZonedDateTime {
       millisecond,
       microsecond,
       nanosecond
-    } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+    } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
     const offsetNs = ES.ParseOffsetString(fields.offset);
     const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
       year,
@@ -345,7 +344,6 @@ export class ZonedDateTime {
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
     const epochNanoseconds = ES.AddZonedDateTime(
@@ -362,7 +360,7 @@ export class ZonedDateTime {
       milliseconds,
       microseconds,
       nanoseconds,
-      overflow
+      options
     );
     const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
     const result = new Construct(epochNanoseconds, timeZone, calendar);
@@ -375,7 +373,6 @@ export class ZonedDateTime {
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
     const epochNanoseconds = ES.AddZonedDateTime(
@@ -392,7 +389,7 @@ export class ZonedDateTime {
       -milliseconds,
       -microseconds,
       -nanoseconds,
-      overflow
+      options
     );
     const Construct = ES.SpeciesConstructor(this, ZonedDateTime);
     const result = new Construct(epochNanoseconds, timeZone, calendar);
@@ -451,6 +448,7 @@ export class ZonedDateTime {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
+      const untilOptions = { ...options, largestUnit };
       ({
         years,
         months,
@@ -462,7 +460,7 @@ export class ZonedDateTime {
         milliseconds,
         microseconds,
         nanoseconds
-      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit));
+      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
       ({
         years,
         months,
@@ -575,6 +573,7 @@ export class ZonedDateTime {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
+      const untilOptions = { ...options, largestUnit };
       ({
         years,
         months,
@@ -586,7 +585,7 @@ export class ZonedDateTime {
         milliseconds,
         microseconds,
         nanoseconds
-      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit));
+      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
       ({
         years,
         months,
@@ -691,7 +690,7 @@ export class ZonedDateTime {
     const calendar = GetSlot(this, CALENDAR);
     const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
     const instantStart = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
-    const endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 'constrain');
+    const endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
     const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
       year,
@@ -836,13 +835,13 @@ export class ZonedDateTime {
   }
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
-    const offset = ES.ToTemporalOffset(options, 'reject');
     if (ES.IsTemporalZonedDateTime(item)) {
+      ES.ToTemporalOverflow(options); // validate and ignore
+      ES.ToTemporalDisambiguation(options);
+      ES.ToTemporalOffset(options, 'reject');
       return new ZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
     }
-    return ES.ToTemporalZonedDateTime(item, this, overflow, disambiguation, offset);
+    return ES.ToTemporalZonedDateTime(item, this, options);
   }
   static compare(one, two) {
     one = ES.ToTemporalZonedDateTime(one, ZonedDateTime);
