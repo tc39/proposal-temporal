@@ -291,6 +291,13 @@ However, most other code will assume that custom calendars act like built-in <co
 To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> and <code>toJSON()</code> methods as well.
 Your object must not have a <code>calendar</code> property, so that it can be distinguished in <code>Temporal.Calendar.from()</code> from other Temporal objects that have a calendar.</p>
 <p>The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in <a href="https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier">Unicode Technical Standard 35</a>.</p>
+<p>Custom calendars are responsible for interpreting and validating all inputs, including options.
+Calendars should (and built-in calendars will) throw a TypeError if a required option is missing or has the wrong type, but throw a RangeError if it&#39;s present but has an invalid value.</p>
+<p>Calendars are also responsible for assigning default values.
+For example, if the <code>overflow</code> option is undefined, it will be interpreted by built-in calendars as <code>&#39;constrain&#39;</code>.
+Custom calendars should maintain this behavior unless there&#39;s a good reason not to.
+Calendars can also accept additional non-default values for existing options or can accept new options that built-in calendars don&#39;t.
+When adding new options, calendar authors should use a unique prefix, e.g. the name of the calendar, to avoid potential conflicts with future options which may be used by Temporal.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Calendar"><a class="heading-link" href="#new-Temporal-Calendar"></a><strong>new Temporal.Calendar</strong>(<em>calendarIdentifier</em>: string) : Temporal.Calendar</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -449,9 +456,13 @@ The default is <code>&#39;auto&#39;</code>.</li>
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the time elapsed after <code>one</code> and until <code>two</code>.</p>
 <p>If either of <code>one</code> or <code>two</code> are not <code>Temporal.PlainDate</code> objects, then they will be converted to one as if they were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>This method does not need to be called directly except in specialized code.
-It is called indirectly when using the <code>until()</code> and <code>since()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, and <code>Temporal.PlainYearMonth</code>.</p>
+It is called indirectly when using the <code>until()</code> and <code>since()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.ZonedDateTime</code>.</p>
 <p>If <code>one</code> is later than <code>two</code>, then the resulting duration should be negative.</p>
 <p>The default <code>largestUnit</code> value of <code>&#39;auto&#39;</code> is the same as <code>&#39;days&#39;</code>.</p>
+<blockquote>
+<p><strong>NOTE:</strong> Unlike <code>Temporal.Calendar.dateAdd()</code>, the <code>options</code> object that this method receives is not always the same object passed to the respective <code>until()</code> or <code>since()</code> method.
+Depending on the type, a copy may be made of the object.</p>
+</blockquote>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">d1 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'chinese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 d2 <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'chinese'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
