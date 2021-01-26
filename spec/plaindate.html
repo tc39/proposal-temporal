@@ -165,6 +165,24 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.plaindate.prototype.monthCode">
+      <h1>get Temporal.PlainDate.prototype.monthCode</h1>
+      <p>
+        `Temporal.PlainDate.prototype.monthCode` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _temporalDate_.[[Calendar]].
+        1. Let _method_ be ? Get(_calendar_, *"monthCode"*).
+        1. Let _result_ be ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. If _result_ is *undefined*, then
+          1. Throw a *RangeError* exception.
+        1. Return ? ToString(_result_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.plaindate.prototype.day">
       <h1>get Temporal.PlainDate.prototype.day</h1>
       <p>
@@ -312,7 +330,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDate_, _fieldNames_).
         1. Return ? YearMonthFromFields(_calendar_, _fields_, %Temporal.PlainYearMonth%).
       </emu-alg>
@@ -327,7 +345,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDate_, _fieldNames_).
         1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%).
       </emu-alg>
@@ -407,7 +425,7 @@
         1. If _timeZoneProperty_ is not *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Let _partialDate_ be ? PreparePartialTemporalFields(_temporalDateLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? ToTemporalDateFields(_temporalDate_, _fieldNames_).
@@ -728,7 +746,7 @@
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
-          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
+          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? ToTemporalDateFields(_item_, _fieldNames_).
           1. Return ? DateFromFields(_calendar_, _fields_, _constructor_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).

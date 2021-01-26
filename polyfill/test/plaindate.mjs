@@ -33,6 +33,9 @@ describe('Date', () => {
       it('Date.prototype has month', () => {
         assert('month' in PlainDate.prototype);
       });
+      it('Date.prototype has monthCode', () => {
+        assert('monthCode' in PlainDate.prototype);
+      });
       it('Date.prototype has day', () => {
         assert('day' in PlainDate.prototype);
       });
@@ -108,6 +111,7 @@ describe('Date', () => {
     });
     it('date.year is 1976', () => equal(date.year, 1976));
     it('date.month is 11', () => equal(date.month, 11));
+    it('date.monthCode is "11"', () => equal(date.monthCode, '11'));
     it('date.day is 18', () => equal(date.day, 18));
     it('date.calendar is the object', () => equal(date.calendar, calendar));
     it('date.dayOfWeek is 4', () => equal(date.dayOfWeek, 4));
@@ -119,7 +123,7 @@ describe('Date', () => {
   });
   describe('date fields', () => {
     const date = new PlainDate(2019, 10, 6);
-    const datetime = { year: 2019, month: 10, day: 1, hour: 14, minute: 20, second: 36 };
+    const datetime = { year: 2019, month: 10, monthCode: '10', day: 1, hour: 14, minute: 20, second: 36 };
     const fromed = new PlainDate(2019, 10, 1);
     it(`(${date}).dayOfWeek === 7`, () => equal(date.dayOfWeek, 7));
     it(`Temporal.PlainDate.from(${date}) is not the same object)`, () => notEqual(PlainDate.from(date), date));
@@ -137,6 +141,12 @@ describe('Date', () => {
     it('date.with({ month: 5 } works', () => {
       const date = original.with({ month: 5 });
       equal(`${date}`, '1976-05-18');
+    });
+    it('date.with({ monthCode: "5" }) works', () => {
+      equal(`${original.with({ monthCode: '5' })}`, '1976-05-18');
+    });
+    it('month and monthCode must agree', () => {
+      throws(() => original.with({ month: 5, monthCode: '6' }), RangeError);
     });
     it('date.with({ day: 17 } works', () => {
       const date = original.with({ day: 17 });
@@ -925,6 +935,12 @@ describe('Date', () => {
     });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
+    it('can be constructed with month and without monthCode', () =>
+      equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
+    it('can be constructed with monthCode and without month', () =>
+      equal(`${PlainDate.from({ year: 1976, monthCode: '11', day: 18 })}`, '1976-11-18'));
+    it('month and monthCode must agree', () =>
+      throws(() => PlainDate.from({ year: 1976, month: 11, monthCode: '12', day: 18 }), RangeError));
     it('Date.from({ year: 2019, day: 15 }) throws', () =>
       throws(() => PlainDate.from({ year: 2019, day: 15 }), TypeError));
     it('Date.from({ month: 12 }) throws', () => throws(() => PlainDate.from({ month: 12 }), TypeError));

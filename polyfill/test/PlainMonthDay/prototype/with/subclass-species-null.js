@@ -25,7 +25,7 @@ MyMonthDay.prototype.constructor = {
 };
 
 const result = instance.with({ day: 20 });
-assert.sameValue(result.month, 5, "month result");
+assert.sameValue(result.monthCode, "5", "monthCode result");
 assert.sameValue(result.day, 20, "day result");
 assert.sameValue(called, 1);
 assert.sameValue(Object.getPrototypeOf(result), Temporal.PlainMonthDay.prototype);

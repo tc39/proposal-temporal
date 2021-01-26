@@ -49,6 +49,9 @@ describe('Calendar', () => {
       it('Calendar.prototype.month is a Function', () => {
         equal(typeof Calendar.prototype.month, 'function');
       });
+      it('Calendar.prototype.monthCode is a Function', () => {
+        equal(typeof Calendar.prototype.monthCode, 'function');
+      });
       it('Calendar.prototype.day is a Function', () => {
         equal(typeof Calendar.prototype.day, 'function');
       });
@@ -186,13 +189,27 @@ describe('Calendar', () => {
     it('accepts Date', () => equal(iso.month(Temporal.PlainDate.from('1994-11-05')), res));
     it('accepts DateTime', () => equal(iso.month(Temporal.PlainDateTime.from('1994-11-05T08:15:30')), res));
     it('accepts YearMonth', () => equal(iso.month(Temporal.PlainYearMonth.from('1994-11')), res));
-    it('accepts MonthDay', () => equal(iso.month(Temporal.PlainMonthDay.from('11-05')), res));
+    it('does not accept MonthDay', () => throws(() => iso.month(Temporal.PlainMonthDay.from('11-05')), TypeError));
     it('casts argument', () => {
       equal(iso.month({ year: 1994, month: 11, day: 5 }), res);
       equal(iso.month('1994-11-05'), res);
     });
     it('object must contain at least the required properties', () => {
       throws(() => iso.month({ year: 2000 }), TypeError);
+    });
+  });
+  describe('Calendar.monthCode()', () => {
+    const res = '11';
+    it('accepts Date', () => equal(iso.monthCode(Temporal.PlainDate.from('1994-11-05')), res));
+    it('accepts DateTime', () => equal(iso.monthCode(Temporal.PlainDateTime.from('1994-11-05T08:15:30')), res));
+    it('accepts YearMonth', () => equal(iso.monthCode(Temporal.PlainYearMonth.from('1994-11')), res));
+    it('accepts MonthDay', () => equal(iso.monthCode(Temporal.PlainMonthDay.from('11-05')), res));
+    it('casts argument', () => {
+      equal(iso.monthCode({ year: 1994, month: 11, day: 5 }), res);
+      equal(iso.monthCode('1994-11-05'), res);
+    });
+    it('object must contain at least the required properties', () => {
+      throws(() => iso.monthCode({ year: 2000 }), TypeError);
     });
   });
   describe('Calendar.day()', () => {

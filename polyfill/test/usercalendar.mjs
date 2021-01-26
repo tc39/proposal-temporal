@@ -26,19 +26,25 @@ describe('Userland calendar', () => {
         return 'two-based';
       }
       dateFromFields(fields, options, constructor) {
-        fields.month--;
-        return super.dateFromFields(fields, options, constructor);
+        let { year, month, monthCode, day } = fields;
+        if (month === undefined) month = +monthCode;
+        return super.dateFromFields({ year, monthCode: `${month - 1}`, day }, options, constructor);
       }
       yearMonthFromFields(fields, options, constructor) {
-        fields.month--;
-        return super.yearMonthFromFields(fields, options, constructor);
+        let { year, month, monthCode } = fields;
+        if (month === undefined) month = +monthCode;
+        return super.yearMonthFromFields({ year, monthCode: `${month - 1}` }, options, constructor);
       }
       monthDayFromFields(fields, options, constructor) {
-        fields.month--;
-        return super.monthDayFromFields(fields, options, constructor);
+        let { month, monthCode, day } = fields;
+        if (month === undefined) month = +monthCode;
+        return super.monthDayFromFields({ monthCode: `${month - 1}`, day }, options, constructor);
       }
       month(date) {
         return date.getISOFields().isoMonth + 1;
+      }
+      monthCode(date) {
+        return `${this.month(date)}`;
       }
     }
 
@@ -46,7 +52,7 @@ describe('Userland calendar', () => {
     const date = Temporal.PlainDate.from({ year: 2020, month: 5, day: 5, calendar: obj });
     const dt = Temporal.PlainDateTime.from({ year: 2020, month: 5, day: 5, hour: 12, calendar: obj });
     const ym = Temporal.PlainYearMonth.from({ year: 2020, month: 5, calendar: obj });
-    const md = Temporal.PlainMonthDay.from({ month: 5, day: 5, calendar: obj });
+    const md = Temporal.PlainMonthDay.from({ monthCode: '5', day: 5, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
     it('.id property', () => equal(obj.id, 'two-based'));
@@ -100,12 +106,12 @@ describe('Userland calendar', () => {
     });
     it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1972-04-05[u-ca-two-based]'));
     it('Temporal.PlainMonthDay fields', () => {
-      equal(dt.month, 5);
-      equal(dt.day, 5);
+      equal(md.monthCode, '5');
+      equal(md.day, 5);
     });
     it('monthday.with()', () => {
-      const md2 = md.with({ month: 2 });
-      equal(md2.month, 2);
+      const md2 = md.with({ monthCode: '2' });
+      equal(md2.monthCode, '2');
     });
     it('timezone.getPlainDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
@@ -182,7 +188,7 @@ describe('Userland calendar', () => {
         equal(`${md}`, '1970-01-01[u-ca-two-based]');
       });
       it('works for MonthDay.from(props)', () => {
-        const md = Temporal.PlainMonthDay.from({ month: 2, day: 1, calendar: 'two-based' });
+        const md = Temporal.PlainMonthDay.from({ monthCode: '2', day: 1, calendar: 'two-based' });
         equal(`${md}`, '1972-01-01[u-ca-two-based]');
       });
       it('works for TimeZone.getPlainDateTimeFor', () => {
@@ -237,17 +243,23 @@ describe('Userland calendar', () => {
       },
       dateFromFields(fields, options, constructor) {
         const { overflow = 'constrain' } = options ? options : {};
-        const isoDateTime = decimalToISO(fields.year, fields.month, fields.day, 0, 0, 0, overflow);
-        return new constructor(isoDateTime.year, isoDateTime.month, isoDateTime.day, this);
+        let { month, monthCode } = fields;
+        if (month === undefined) month = +monthCode;
+        const isoDate = decimalToISO(fields.year, month, fields.day, 0, 0, 0, overflow);
+        return new constructor(isoDate.year, isoDate.month, isoDate.day, this);
       },
       yearMonthFromFields(fields, options, constructor) {
         const { overflow = 'constrain' } = options ? options : {};
-        const isoDate = decimalToISO(fields.year, fields.month, 1, 0, 0, 0, overflow);
+        let { month, monthCode } = fields;
+        if (month === undefined) month = +monthCode;
+        const isoDate = decimalToISO(fields.year, month, 1, 0, 0, 0, overflow);
         return new constructor(isoDate.year, isoDate.month, this, isoDate.day);
       },
       monthDayFromFields(fields, options, constructor) {
         const { overflow = 'constrain' } = options ? options : {};
-        const isoDate = decimalToISO(0, fields.month, fields.day, 0, 0, 0, overflow);
+        let { month, monthCode } = fields;
+        if (month === undefined) month = +monthCode;
+        const isoDate = decimalToISO(0, month, fields.day, 0, 0, 0, overflow);
         return new constructor(isoDate.month, isoDate.day, this, isoDate.year);
       },
       year(date) {
@@ -256,6 +268,9 @@ describe('Userland calendar', () => {
       month(date) {
         const { days } = isoToDecimal(date);
         return Math.floor(days / 10) + 1;
+      },
+      monthCode(date) {
+        return `${this.month(date)}`;
       },
       day(date) {
         const { days } = isoToDecimal(date);
@@ -266,7 +281,7 @@ describe('Userland calendar', () => {
     const date = Temporal.PlainDate.from({ year: 184, month: 2, day: 9, calendar: obj });
     const dt = Temporal.PlainDateTime.from({ year: 184, month: 2, day: 9, hour: 12, calendar: obj });
     const ym = Temporal.PlainYearMonth.from({ year: 184, month: 2, calendar: obj });
-    const md = Temporal.PlainMonthDay.from({ month: 2, day: 9, calendar: obj });
+    const md = Temporal.PlainMonthDay.from({ monthCode: '2', day: 9, calendar: obj });
 
     it('is a calendar', () => equal(typeof obj, 'object'));
     // FIXME: what should happen in Temporal.Calendar.from(obj)?
@@ -319,12 +334,12 @@ describe('Userland calendar', () => {
     });
     it('Temporal.PlainMonthDay.from()', () => equal(`${md}`, '1970-01-19[u-ca-decimal]'));
     it('Temporal.PlainMonthDay fields', () => {
-      equal(dt.month, 2);
-      equal(dt.day, 9);
+      equal(md.monthCode, '2');
+      equal(md.day, 9);
     });
     it('monthday.with()', () => {
-      const md2 = md.with({ month: 1 });
-      equal(md2.month, 1);
+      const md2 = md.with({ monthCode: '1' });
+      equal(md2.monthCode, '1');
     });
     it('timezone.getPlainDateTimeFor()', () => {
       const tz = Temporal.TimeZone.from('UTC');
@@ -401,7 +416,7 @@ describe('Userland calendar', () => {
         equal(`${md}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for MonthDay.from(props)', () => {
-        const md = Temporal.PlainMonthDay.from({ month: 1, day: 1, calendar: 'decimal' });
+        const md = Temporal.PlainMonthDay.from({ monthCode: '1', day: 1, calendar: 'decimal' });
         equal(`${md}`, '1970-01-01[u-ca-decimal]');
       });
       it('works for TimeZone.getPlainDateTimeFor', () => {
@@ -438,25 +453,35 @@ describe('Userland calendar', () => {
         const { isoMonth } = date.getISOFields();
         return ((isoMonth - 1) % 3) + 1;
       }
+      monthCode(date) {
+        return `${this.month(date)}`;
+      }
       season(date) {
         const { isoMonth } = date.getISOFields();
         return Math.floor((isoMonth - 1) / 3) + 1;
       }
+      _isoMonthCode(fields) {
+        const month = fields.month || +fields.monthCode;
+        return `${(fields.season - 1) * 3 + month}`;
+      }
       dateFromFields(fields, options, constructor) {
-        const isoMonth = (fields.season - 1) * 3 + fields.month;
-        return super.dateFromFields({ ...fields, month: isoMonth }, options, constructor);
+        const monthCode = this._isoMonthCode(fields);
+        delete fields.month;
+        return super.dateFromFields({ ...fields, monthCode }, options, constructor);
       }
       yearMonthFromFields(fields, options, constructor) {
-        const isoMonth = (fields.season - 1) * 3 + fields.month;
-        return super.yearMonthFromFields({ ...fields, month: isoMonth }, options, constructor);
+        const monthCode = this._isoMonthCode(fields);
+        delete fields.month;
+        return super.yearMonthFromFields({ ...fields, monthCode }, options, constructor);
       }
       monthDayFromFields(fields, options, constructor) {
-        const isoMonth = (fields.season - 1) * 3 + fields.month;
-        return super.monthDayFromFields({ ...fields, month: isoMonth }, options, constructor);
+        const monthCode = this._isoMonthCode(fields);
+        delete fields.month;
+        return super.monthDayFromFields({ ...fields, monthCode }, options, constructor);
       }
       fields(fields) {
         fields = fields.slice();
-        if (fields.includes('month')) fields.push('season');
+        if (fields.includes('month') || fields.includes('monthCode')) fields.push('season');
         return fields;
       }
     }
@@ -482,14 +507,18 @@ describe('Userland calendar', () => {
     it('property getter works', () => {
       equal(datetime.season, 3);
       equal(datetime.month, 3);
+      equal(datetime.monthCode, '3');
       equal(date.season, 3);
       equal(date.month, 3);
+      equal(date.monthCode, '3');
       equal(yearmonth.season, 3);
       equal(yearmonth.month, 3);
+      equal(yearmonth.monthCode, '3');
       equal(monthday.season, 3);
-      equal(monthday.month, 3);
+      equal(monthday.monthCode, '3');
       equal(zoned.season, 3);
       equal(zoned.month, 3);
+      equal(zoned.monthCode, '3');
     });
     it('accepts season in from()', () => {
       equal(
@@ -504,7 +533,10 @@ describe('Userland calendar', () => {
         `${Temporal.PlainYearMonth.from({ year: 2019, season: 3, month: 3, calendar })}`,
         '2019-09-01[u-ca-season]'
       );
-      equal(`${Temporal.PlainMonthDay.from({ season: 3, month: 3, day: 15, calendar })}`, '1972-09-15[u-ca-season]');
+      equal(
+        `${Temporal.PlainMonthDay.from({ season: 3, monthCode: '3', day: 15, calendar })}`,
+        '1972-09-15[u-ca-season]'
+      );
       equal(
         `${Temporal.ZonedDateTime.from({ year: 2019, season: 3, month: 3, day: 15, timeZone: 'UTC', calendar })}`,
         '2019-09-15T00:00:00+00:00[UTC][u-ca-season]'
@@ -521,7 +553,7 @@ describe('Userland calendar', () => {
       equal(`${datetime.with({ month: 2 })}`, '2019-08-15T00:00:00[u-ca-season]');
       equal(`${date.with({ month: 2 })}`, '2019-08-15[u-ca-season]');
       equal(`${yearmonth.with({ month: 2 })}`, '2019-08-01[u-ca-season]');
-      equal(`${monthday.with({ month: 2 })}`, '1972-08-15[u-ca-season]');
+      equal(`${monthday.with({ monthCode: '2' })}`, '1972-08-15[u-ca-season]');
       equal(`${zoned.with({ month: 2 })}`, '2019-08-15T00:00:00+00:00[UTC][u-ca-season]');
     });
     after(() => {

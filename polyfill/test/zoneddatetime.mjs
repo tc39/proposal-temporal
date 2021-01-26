@@ -41,6 +41,9 @@ describe('ZonedDateTime', () => {
       it('ZonedDateTime.prototype has month', () => {
         assert('month' in ZonedDateTime.prototype);
       });
+      it('ZonedDateTime.prototype has monthCode', () => {
+        assert('monthCode' in ZonedDateTime.prototype);
+      });
       it('ZonedDateTime.prototype has day', () => {
         assert('day' in ZonedDateTime.prototype);
       });
@@ -199,6 +202,7 @@ describe('ZonedDateTime', () => {
       });
       it('zdt.year is 1976', () => equal(zdt.year, 1976));
       it('zdt.month is 11', () => equal(zdt.month, 11));
+      it('zdt.monthCode is "11"', () => equal(zdt.monthCode, '11'));
       it('zdt.day is 18', () => equal(zdt.day, 18));
       it('zdt.hour is 15', () => equal(zdt.hour, 15));
       it('zdt.minute is 23', () => equal(zdt.minute, 23));
@@ -236,6 +240,7 @@ describe('ZonedDateTime', () => {
       it('zdt.era is ad', () => equal(zdt.era, 'ad'));
       it('zdt.year is 1976', () => equal(zdt.year, 1976));
       it('zdt.month is 11', () => equal(zdt.month, 11));
+      it('zdt.monthCode is "11"', () => equal(zdt.monthCode, '11'));
       it('zdt.day is 18', () => equal(zdt.day, 18));
       it('zdt.hour is 16', () => equal(zdt.hour, 16));
       it('zdt.minute is 23', () => equal(zdt.minute, 23));
@@ -519,9 +524,30 @@ describe('ZonedDateTime', () => {
   });
   describe('property bags', () => {
     const lagos = Temporal.TimeZone.from('Africa/Lagos');
+    it('can be constructed with monthCode and without month', () => {
+      equal(
+        `${ZonedDateTime.from({ year: 1976, monthCode: '11', day: 18, timeZone: lagos })}`,
+        '1976-11-18T00:00:00+01:00[Africa/Lagos]'
+      );
+    });
+    it('can be constructed with month and without monthCode', () => {
+      equal(
+        `${ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: lagos })}`,
+        '1976-11-18T00:00:00+01:00[Africa/Lagos]'
+      );
+    });
+    it('month and monthCode must agree', () => {
+      throws(
+        () => ZonedDateTime.from({ year: 1976, month: 11, monthCode: '12', day: 18, timeZone: lagos }),
+        RangeError
+      );
+    });
     it('ZonedDateTime.from({}) throws', () => throws(() => ZonedDateTime.from({}), TypeError));
     it('ZonedDateTime.from(required prop undefined) throws', () =>
-      throws(() => ZonedDateTime.from({ year: undefined, month: 11, day: 18, timeZone: lagos }), TypeError));
+      throws(
+        () => ZonedDateTime.from({ year: 1976, month: undefined, monthCode: undefined, day: 18, timeZone: lagos }),
+        TypeError
+      ));
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: lagos }, badOptions), TypeError)
@@ -708,6 +734,12 @@ describe('ZonedDateTime', () => {
     });
     it('zdt.with({ month: 5 } works', () => {
       equal(`${zdt.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    });
+    it('zdt.with({ monthCode: "5" }) works', () => {
+      equal(`${zdt.with({ monthCode: '5' })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    });
+    it('month and monthCode must agree', () => {
+      throws(() => zdt.with({ month: 5, monthCode: '6' }), RangeError);
     });
     it('zdt.with({ day: 5 } works', () => {
       equal(`${zdt.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');

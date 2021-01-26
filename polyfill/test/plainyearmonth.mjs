@@ -20,6 +20,12 @@ describe('YearMonth', () => {
       equal(typeof PlainYearMonth.prototype, 'object');
     });
     describe('YearMonth.prototype', () => {
+      it('YearMonth.prototype has month', () => {
+        assert('month' in PlainYearMonth.prototype);
+      });
+      it('YearMonth.prototype has monthCode', () => {
+        assert('monthCode' in PlainYearMonth.prototype);
+      });
       it('YearMonth.prototype.until is a Function', () => {
         equal(typeof PlainYearMonth.prototype.until, 'function');
       });
@@ -55,6 +61,7 @@ describe('YearMonth', () => {
     });
     it('ym.year is 1976', () => equal(ym.year, 1976));
     it('ym.month is 11', () => equal(ym.month, 11));
+    it('ym.monthCode is "11"', () => equal(ym.monthCode, '11'));
     it('ym.daysInMonth is 30', () => equal(ym.daysInMonth, 30));
     it('ym.daysInYear is 366', () => equal(ym.daysInYear, 366));
     it('ym.monthsInYear is 12', () => equal(ym.monthsInYear, 12));
@@ -64,8 +71,12 @@ describe('YearMonth', () => {
         equal(`${PlainYearMonth.from('2019-10-01T09:00:00Z')}`, '2019-10'));
       it("YearMonth.from('1976-11') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11')}`, '1976-11'));
       it("YearMonth.from('1976-11-18') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11-18')}`, '1976-11'));
-      it('YearMonth.from({ year: 2019, month: 11 }) == 2019-11', () =>
+      it('can be constructed with monthCode and without month', () =>
+        equal(`${PlainYearMonth.from({ year: 2019, monthCode: '11' })}`, '2019-11'));
+      it('can be constructed with month and without monthCode', () =>
         equal(`${PlainYearMonth.from({ year: 2019, month: 11 })}`, '2019-11'));
+      it('month and monthCode must agree', () =>
+        throws(() => PlainYearMonth.from({ year: 2019, month: 11, monthCode: '12' }), RangeError));
       it('YearMonth.from(2019-11) is not the same object', () => {
         const orig = new PlainYearMonth(2019, 11);
         const actu = PlainYearMonth.from(orig);
@@ -73,6 +84,8 @@ describe('YearMonth', () => {
       });
       it('YearMonth.from({ year: 2019 }) throws', () => throws(() => PlainYearMonth.from({ year: 2019 }), TypeError));
       it('YearMonth.from({ month: 6 }) throws', () => throws(() => PlainYearMonth.from({ month: 6 }), TypeError));
+      it('YearMonth.from({ monthCode: "6" }) throws', () =>
+        throws(() => PlainYearMonth.from({ monthCode: '6' }), TypeError));
       it('YearMonth.from({}) throws', () => throws(() => PlainYearMonth.from({}), TypeError));
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => PlainYearMonth.from({ year: undefined, month: 6 }), TypeError));
@@ -146,6 +159,8 @@ describe('YearMonth', () => {
       const ym = PlainYearMonth.from('2019-10');
       it('with(2020)', () => equal(`${ym.with({ year: 2020 })}`, '2020-10'));
       it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
+      it('with(monthCode)', () => equal(`${ym.with({ monthCode: '9' })}`, '2019-09'));
+      it('month and monthCode must agree', () => throws(() => ym.with({ month: 9, monthCode: '10' }), RangeError));
     });
   });
   describe('YearMonth.with() works', () => {

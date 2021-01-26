@@ -995,6 +995,24 @@
           </emu-alg>
         </emu-clause>
 
+        <emu-clause id="sup-temporal.calendar.prototype.monthcode">
+          <h1>Temporal.Calendar.prototype.monthCode ( _dateOrDateTime_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.monthcode"></emu-xref>.</p>
+          <p>
+            The `monthCode` method takes one argument _dateOrDateTime_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _monthCode_ be ? ISOMonthCode(_dateOrDateTime_).
+            1. Else,
+              1. Let _monthCode_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
+            1. Return _monthCode_.
+          </emu-alg>
+        </emu-clause>
+
         <emu-clause id="sup-temporal.calendar.prototype.day">
           <h1>Temporal.Calendar.prototype.day ( _dateOrDateTime_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.day"></emu-xref>.</p>

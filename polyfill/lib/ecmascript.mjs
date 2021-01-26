@@ -847,7 +847,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = relativeTo.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       ({
         year,
@@ -1025,6 +1025,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const entries = [
       ['day', undefined],
       ['month', undefined],
+      ['monthCode', undefined],
       ['year', undefined]
     ];
     // Add extra fields from the calendar at the end
@@ -1043,6 +1044,7 @@ export const ES = ObjectAssign({}, ES2020, {
       ['millisecond', 0],
       ['minute', 0],
       ['month', undefined],
+      ['monthCode', undefined],
       ['nanosecond', 0],
       ['second', 0],
       ['year', undefined]
@@ -1058,7 +1060,9 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalMonthDayFields: (bag, fieldNames) => {
     const entries = [
       ['day', undefined],
-      ['month', undefined]
+      ['month', undefined],
+      ['monthCode', undefined],
+      ['year', undefined]
     ];
     // Add extra fields from the calendar at the end
     fieldNames.forEach((fieldName) => {
@@ -1081,6 +1085,7 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalYearMonthFields: (bag, fieldNames) => {
     const entries = [
       ['month', undefined],
+      ['monthCode', undefined],
       ['year', undefined]
     ];
     // Add extra fields from the calendar at the end
@@ -1099,6 +1104,7 @@ export const ES = ObjectAssign({}, ES2020, {
       ['millisecond', 0],
       ['minute', 0],
       ['month', undefined],
+      ['monthCode', undefined],
       ['nanosecond', 0],
       ['offset', undefined],
       ['second', 0],
@@ -1125,7 +1131,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateFields(item, fieldNames);
       return ES.DateFromFields(calendar, fields, constructor, options);
     }
@@ -1166,7 +1172,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
 
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       ({
         year,
@@ -1268,10 +1274,14 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalMonthDay(item)) return item;
       let calendar = item.calendar;
+      let calendarAbsent = calendar === undefined;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+      if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined) {
+        fields.monthCode = ES.ToString(fields.month);
+      }
       return ES.MonthDayFromFields(calendar, fields, constructor, options);
     }
 
@@ -1325,7 +1335,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
       const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
       return ES.YearMonthFromFields(calendar, fields, constructor, options);
     }

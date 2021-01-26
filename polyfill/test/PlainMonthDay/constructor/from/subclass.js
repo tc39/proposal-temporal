@@ -17,7 +17,7 @@ class MyMonthDay extends Temporal.PlainMonthDay {
 }
 
 const result = MyMonthDay.from("05-02");
-assert.sameValue(result.month, 5, "month result");
+assert.sameValue(result.monthCode, "5", "monthCode result");
 assert.sameValue(result.day, 2, "day result");
 assert.sameValue(called, true);
 assert.sameValue(Object.getPrototypeOf(result), MyMonthDay.prototype);

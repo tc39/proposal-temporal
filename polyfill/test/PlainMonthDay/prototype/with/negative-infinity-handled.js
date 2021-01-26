@@ -10,12 +10,10 @@ const instance = new Temporal.PlainMonthDay(5, 2);
 
 // constrain
 
-assert.throws(RangeError, () => instance.with({ month: -Infinity }, { overflow: 'constrain' }));
 assert.throws(RangeError, () => instance.with({ day: -Infinity }, { overflow: 'constrain' }));
 
 // reject
 
-assert.throws(RangeError, () => instance.with({ month: -Infinity }, { overflow: 'reject' }));
 assert.throws(RangeError, () => instance.with({ day: -Infinity }, { overflow: 'reject' }));
 
 let calls = 0;
@@ -26,12 +24,8 @@ const obj = {
   }
 };
 
-assert.throws(RangeError, () => instance.with({ month: obj }, { overflow: 'constrain' }));
-assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => instance.with({ day: obj }, { overflow: 'constrain' }));
-assert.sameValue(calls, 2, "it fails after fetching the primitive value");
+assert.sameValue(calls, 1, "it fails after fetching the primitive value");
 
-assert.throws(RangeError, () => instance.with({ month: obj }, { overflow: 'reject' }));
-assert.sameValue(calls, 3, "it fails after fetching the primitive value");
 assert.throws(RangeError, () => instance.with({ day: obj }, { overflow: 'reject' }));
-assert.sameValue(calls, 4, "it fails after fetching the primitive value");
+assert.sameValue(calls, 2, "it fails after fetching the primitive value");

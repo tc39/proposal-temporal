@@ -69,6 +69,12 @@ export class PlainYearMonth {
     }
     return ES.ToPositiveInteger(result);
   }
+  get monthCode() {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    let result = GetSlot(this, CALENDAR).monthCode(this);
+    if (result !== undefined) result = ES.ToString(result);
+    return result;
+  }
   get calendar() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR);
@@ -118,7 +124,7 @@ export class PlainYearMonth {
     }
 
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
     const props = ES.ToPartialRecord(temporalYearMonthLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid year-month-like');
@@ -142,7 +148,7 @@ export class PlainYearMonth {
 
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? calendar.daysInMonth(this) : 1;
@@ -176,7 +182,7 @@ export class PlainYearMonth {
 
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? calendar.daysInMonth(this) : 1;
@@ -216,7 +222,7 @@ export class PlainYearMonth {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
     const thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
@@ -290,7 +296,7 @@ export class PlainYearMonth {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
     const thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
@@ -366,7 +372,7 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
 
-    const receiverFieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
 
     const inputFieldNames = ES.CalendarFields(calendar, ['day']);
