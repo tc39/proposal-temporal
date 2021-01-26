@@ -393,17 +393,17 @@
         The abstract operation ISOMergeFields implements the calendar-specific logic in the `Temporal.Calendar.mergeFields` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. Let _merged_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _originalKeys_ be ? _fields_.[[OwnPropertyKeys]]().
+        1. Let _merged_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _originalKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
         1. For each element _nextKey_ of _originalKeys_, do
           1. Let _propValue_ be ? Get(_fields_, _nextKey_).
           1. If _propValue_ is not *undefined*, then
             1. Perform ? Set(_merged_, _nextKey_, _propValue_, *true*).
-        1. Let _newKeys_ be ? _additionalFields_.[[OwnPropertyKeys]]().
+        1. Let _newKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
         1. For each element _nextKey_ of _newKeys_, do
           1. Let _propValue_ be ? Get(_additionalFields_, _nextKey_).
           1. If _propValue_ is not *undefined*, then
-            1. Perform ? Set(_merged_, _nextKey_, _propValue_, *true*).
+            1. Perform ! CreateDataPropertyOrThrow(_merged_, _nextKey_, _propValue_).
         1. Return _merged_.
       </emu-alg>
     </emu-clause>
