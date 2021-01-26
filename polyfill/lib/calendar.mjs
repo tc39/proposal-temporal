@@ -321,9 +321,9 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
   dateFromFields(fields, overflow) {
     // Intentionally alphabetical
     fields = ES.PrepareTemporalFields(fields, [
+      ['day'],
       ['era', undefined],
       ['eraYear', undefined],
-      ['day'],
       ['month'],
       ['year', undefined]
     ]);
