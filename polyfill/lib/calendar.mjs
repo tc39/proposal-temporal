@@ -110,6 +110,10 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].era(date);
   }
+  eraYear(date) {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    return impl[GetSlot(this, CALENDAR_ID)].eraYear(date);
+  }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].dayOfWeek(date);
@@ -173,15 +177,15 @@ DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
-    const { year, month, day } = ES.ToRecord(fields, [['day'], ['month'], ['year']]);
+    const { year, month, day } = ES.PrepareTemporalFields(fields, [['day'], ['month'], ['year']]);
     return ES.RegulateDate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
-    const { year, month } = ES.ToRecord(fields, [['month'], ['year']]);
+    const { year, month } = ES.PrepareTemporalFields(fields, [['month'], ['year']]);
     return ES.RegulateYearMonth(year, month, overflow);
   },
   monthDayFromFields(fields, overflow) {
-    const { month, day } = ES.ToRecord(fields, [['day'], ['month']]);
+    const { month, day } = ES.PrepareTemporalFields(fields, [['day'], ['month']]);
     return ES.RegulateMonthDay(month, day, overflow);
   },
   fields(fields) {
@@ -212,6 +216,14 @@ impl['iso8601'] = {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_YEAR);
   },
+  era(date) {
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+    return undefined;
+  },
+  eraYear(date) {
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+    return undefined;
+  },
   month(date) {
     if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_MONTH);
@@ -219,10 +231,6 @@ impl['iso8601'] = {
   day(date) {
     if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_DAY);
-  },
-  era(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    return undefined;
   },
   dayOfWeek(date) {
     date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
@@ -266,8 +274,28 @@ impl['iso8601'] = {
 
 // Implementation details for Gregorian calendar
 const gre = {
-  isoYear(year, era) {
-    return era === 'bc' ? -(year - 1) : year;
+  isoYear(eraYear, era) {
+    return era === 'bc' ? -(eraYear - 1) : eraYear;
+  },
+  validateFields(fields) {
+    if ((fields.era === undefined || fields.eraYear === undefined) && fields.year === undefined) {
+      throw new TypeError(
+        "required properties missing or undefined: must include 'year' and/or both 'era' and 'eraYear'"
+      );
+    }
+    if (fields.eraYear === undefined) {
+      return;
+    }
+    if (fields.eraYear < 1) {
+      throw new RangeError('the Gregorian calendar does not support negative or zero years');
+    }
+    if (fields.year === undefined) {
+      return;
+    }
+    const yearEra = gre.isoYear(fields.eraYear, fields.era);
+    if (yearEra !== fields.year) {
+      throw new RangeError("the provided 'era' and 'eraYear' conflict with the provided 'year'");
+    }
   }
 };
 
@@ -279,27 +307,46 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
   },
-  year(date) {
+  eraYear(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     const isoYear = GetSlot(date, ISO_YEAR);
     return isoYear < 1 ? -isoYear + 1 : isoYear;
   },
-
   fields(fields) {
-    if (fields.includes('year')) fields.push('era');
+    if (fields.includes('year')) fields.push('eraYear');
+    if (fields.includes('eraYear')) fields.push('era');
+    else if (fields.includes('era')) fields.push('eraYear');
     return fields;
   },
-
   dateFromFields(fields, overflow) {
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['day'], ['era', 'ad'], ['month'], ['year']]);
-    const isoYear = gre.isoYear(fields.year, fields.era);
+    fields = ES.PrepareTemporalFields(fields, [
+      ['era', undefined],
+      ['eraYear', undefined],
+      ['day'],
+      ['month'],
+      ['year', undefined]
+    ]);
+    gre.validateFields(fields);
+    let isoYear = fields.year;
+    if (fields.era !== undefined) {
+      isoYear = gre.isoYear(fields.eraYear, fields.era);
+    }
     return impl['iso8601'].dateFromFields({ ...fields, year: isoYear }, overflow);
   },
   yearMonthFromFields(fields, overflow) {
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['era', 'ad'], ['month'], ['year']]);
-    const isoYear = gre.isoYear(fields.year, fields.era);
+    fields = ES.PrepareTemporalFields(fields, [
+      ['era', undefined],
+      ['eraYear', undefined],
+      ['month'],
+      ['year', undefined]
+    ]);
+    gre.validateFields(fields);
+    let isoYear = fields.year;
+    if (fields.era !== undefined) {
+      isoYear = gre.isoYear(fields.eraYear, fields.era);
+    }
     return impl['iso8601'].yearMonthFromFields({ ...fields, year: isoYear }, overflow);
   }
 });
@@ -358,11 +405,37 @@ const jpn = {
     return idx - 1;
   },
 
-  isoYear(year, era) {
+  validateFields(fields) {
+    if ((fields.era === undefined || fields.eraYear === undefined) && fields.year === undefined) {
+      throw new TypeError(
+        "required properties missing or undefined: must include 'year' and/or both 'era' and 'eraYear'"
+      );
+    }
+    if (fields.eraYear === undefined) {
+      return;
+    }
+    if (fields.eraYear < 1 && fields.era !== jpn.eraNames[0]) {
+      throw new RangeError(
+        "this implementation of the Japanese calendar does not accept 'eraYear' less than 1 unless the era is 'meiji'"
+      );
+    }
+    if (fields.year === undefined) {
+      return;
+    }
+    const yearEra = jpn.isoYear(fields.eraYear, fields.era);
+    // Note: This uses ISO year as the algorithmic year for this implementation
+    // of the Japanese calendar. It intends all client to use the era and
+    // eraYear, and chooses ISO 8601 year for algorithm year only to ease
+    // conversion.
+    if (yearEra !== fields.year) {
+      throw new RangeError("the provided 'era' and 'eraYear' conflict with the provided 'year'");
+    }
+  },
+
+  isoYear(eraYear, era) {
     const eraIdx = jpn.eraNames.indexOf(era);
     if (eraIdx === -1) throw new RangeError(`invalid era ${era}`);
-
-    return year + jpn.eraAddends[eraIdx];
+    return eraYear + jpn.eraAddends[eraIdx];
   }
 };
 
@@ -373,7 +446,8 @@ impl['japanese'] = ObjectAssign({}, impl['iso8601'], {
     }
     return jpn.eraNames[jpn.findEra(date)];
   },
-  year(date) {
+
+  eraYear(date) {
     if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
       date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     }
@@ -382,20 +456,24 @@ impl['japanese'] = ObjectAssign({}, impl['iso8601'], {
   },
 
   fields(fields) {
-    if (fields.includes('year')) fields.push('era');
+    if (fields.includes('year')) fields.push('eraYear');
+    if (fields.includes('eraYear')) fields.push('era');
+    else if (fields.includes('era')) fields.push('eraYear');
     return fields;
   },
 
   dateFromFields(fields, overflow) {
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['day'], ['era'], ['month'], ['year']]);
-    const isoYear = jpn.isoYear(fields.year, fields.era);
+    fields = ES.PrepareTemporalFields(fields, [['day'], ['era'], ['eraYear'], ['month'], ['year', undefined]]);
+    jpn.validateFields(fields);
+    const isoYear = jpn.isoYear(fields.eraYear, fields.era);
     return impl['iso8601'].dateFromFields({ ...fields, year: isoYear }, overflow);
   },
   yearMonthFromFields(fields, overflow) {
     // Intentionally alphabetical
-    fields = ES.ToRecord(fields, [['era'], ['month'], ['year']]);
-    const isoYear = jpn.isoYear(fields.year, fields.era);
+    fields = ES.PrepareTemporalFields(fields, [['era'], ['eraYear'], ['month'], ['year', undefined]]);
+    jpn.validateFields(fields);
+    const isoYear = jpn.isoYear(fields.eraYear, fields.era);
     return impl['iso8601'].yearMonthFromFields({ ...fields, year: isoYear }, overflow);
   }
 });

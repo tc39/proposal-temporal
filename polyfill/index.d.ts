@@ -630,6 +630,7 @@ export namespace Temporal {
     ): number;
     day(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainMonthDay | DateLike | string): number;
     era(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): string | undefined;
+    eraYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number | undefined;
     dayOfWeek?(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
     dayOfYear?(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
     weekOfYear?(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
@@ -647,12 +648,12 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | DateLike | string
     ): boolean;
     dateFromFields(
-      fields: { year: number; month: number; day: number },
+      fields: { year: number | undefined; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainDate>
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: { year: number; month: number },
+      fields: { year: number | undefined; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainYearMonth>
     ): Temporal.PlainYearMonth;
@@ -709,6 +710,7 @@ export namespace Temporal {
     ): number;
     day(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainMonthDay | DateLike | string): number;
     era(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): string | undefined;
+    eraYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number | undefined;
     dayOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
     dayOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
     weekOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number;
@@ -724,17 +726,17 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | DateLike | string
     ): boolean;
     dateFromFields(
-      fields: { year: number; month: number; day: number },
+      fields: { year: number | undefined; month: number; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainDate>
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: { year: number; month: number },
+      fields: { year: number | undefined; month: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainYearMonth>
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
-      fields: { month: number; day: number },
+      fields: { month: number | undefined; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainMonthDay>
     ): Temporal.PlainMonthDay;
@@ -799,6 +801,8 @@ export namespace Temporal {
       two: Temporal.PlainDate | DateLike | string
     ): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol);
+    readonly era: string | undefined;
+    readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
     readonly day: number;
@@ -924,6 +928,8 @@ export namespace Temporal {
       nanosecond?: number,
       calendar?: CalendarProtocol
     );
+    readonly era: string | undefined;
+    readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
     readonly day: number;
@@ -1282,6 +1288,8 @@ export namespace Temporal {
       two: Temporal.PlainYearMonth | YearMonthLike | string
     ): ComparisonResult;
     constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, referenceISODay?: number);
+    readonly era: string | undefined;
+    readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
     readonly calendar: CalendarProtocol;
@@ -1352,6 +1360,8 @@ export namespace Temporal {
       two: Temporal.ZonedDateTime | ZonedDateTimeLike | string
     ): ComparisonResult;
     constructor(epochNanoseconds: bigint, timeZone: TimeZoneProtocol | string, calendar?: CalendarProtocol | string);
+    readonly era: string | undefined;
+    readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
     readonly day: number;

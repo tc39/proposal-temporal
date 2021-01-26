@@ -128,7 +128,10 @@
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"month"*).
-        1. Return ? Call(_method_, _calendar_, « _monthDay_ »).
+        1. Let _result_ be ? Call(_method_, _calendar_, « _monthDay_ »).
+        1. If _result_ is not *undefined*, then
+          1. Set _result_ to ? ToPositiveIntegerOrInfinity(_result_).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
@@ -143,7 +146,10 @@
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _method_ be ? Get(_calendar_, *"month"*).
-        1. Return ? Call(_method_, _calendar_, « _monthDay_ »).
+        1. Let _result_ be ? Call(_method_, _calendar_, « _monthDay_ »).
+        1. If _result_ is not *undefined*, then
+          1. Set _result_ to ? ToPositiveIntegerOrInfinity(_result_).
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
@@ -166,7 +172,7 @@
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
-        1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_, _fieldNames_).
+        1. Let _partialMonthDay_ be ? PreparePartialTemporalFields(_temporalMonthDayLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
@@ -260,13 +266,11 @@
         1. If Type(_item_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"year"* »).
-        1. For each value _property_ of _inputFieldNames_, do
-          1. Let _value_ be ? Get(_item_, _property_).
-          1. If _property_ is *"year"*, and _value_ is *undefined*, then
-            1. Throw a *TypeError* exception.
-          1. Let _value_ be ? ToIntegerOrInfinity(_value_).
-          1. Perform ! CreateDataPropertyOrThrow(_fields_, _property_, _value_).
-        1. Return ? DateFromFields(_calendar_, _fields_, %Temporal.PlainDate%).
+        1. Let _inputFields_ be ? PrepareTemporalFields(_item_, _inputFieldNames_, «»).
+        1. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
+        1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_, %Temporal.PlainDate%).
       </emu-alg>
     </emu-clause>
 
@@ -384,26 +388,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-topartialmonthday" aoid="ToPartialMonthDay">
-      <h1>ToPartialMonthDay ( _temporalMonthDayLike_, _fieldNames_ )</h1>
-      <emu-alg>
-        1. If Type(_temporalMonthDayLike_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _any_ be *false*.
-        1. For each value _property_ of _fieldNames_, do
-          1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
-          1. If _value_ is not *undefined*, then
-            1. Set _any_ to *true*.
-            1. If _property_ is either *"month"* or *"day"*, then
-              1. Set _value_ to ? ToIntegerOrInfinity(_value_).
-            1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
-        1. If _any_ is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Return _result_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-regulatemonthday" aoid="RegulateMonthDay">
       <h1>RegulateMonthDay ( _month_, _day_, _overflow_ )</h1>
       <emu-alg>
@@ -485,17 +469,7 @@
     <emu-clause id="sec-temporal-totemporalmonthdayfields" aoid="ToTemporalMonthDayFields">
       <h1>ToTemporalMonthDayFields ( _temporalMonthDayLike_, _fieldNames_ )</h1>
       <emu-alg>
-        1. Assert: Type(_temporalMonthDayLike_) is Object.
-        1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. For each value _property_ of _fieldNames_, do
-          1. Let _value_ be ? Get(_temporalMonthDayLike_, _property_).
-          1. If _property_ is one of *"month"* or *"year"*, then
-            1. If _value_ is *undefined*, throw a *TypeError* exception.
-            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
-          1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
-        1. Let _year_ be the first leap year after the Unix epoch (1972).
-        1. Perform ! CreateDataPropertyOrThrow(_result_, *"year"*, _year_).
-        1. Return _result_.
+        1. Return ? PrepareTemporalFields(_temporalMonthDayLike_, _fieldNames_, «»).
       </emu-alg>
     </emu-clause>
 

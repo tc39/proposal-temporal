@@ -91,7 +91,7 @@ describe('Intl', () => {
     it("works when the object's calendar is the same as the locale's calendar", () => {
       const dt = Temporal.PlainDateTime.from({
         era: 'showa',
-        year: 51,
+        eraYear: 51,
         month: 11,
         day: 18,
         hour: 15,
@@ -149,7 +149,7 @@ describe('Intl', () => {
       equal(date.toLocaleString('en', { second: 'numeric' }), '11/18/1976');
     });
     it("works when the object's calendar is the same as the locale's calendar", () => {
-      const d = Temporal.PlainDate.from({ era: 'showa', year: 51, month: 11, day: 18, calendar: 'japanese' });
+      const d = Temporal.PlainDate.from({ era: 'showa', eraYear: 51, month: 11, day: 18, calendar: 'japanese' });
       const result = d.toLocaleString('en-US-u-ca-japanese');
       assert(result === '11/18/51' || result === '11/18/51 S');
     });
@@ -179,7 +179,7 @@ describe('Intl', () => {
       equal(yearmonth.toLocaleString('en', { weekday: 'long' }), '11/1976');
     });
     it("works when the object's calendar is the same as the locale's calendar", () => {
-      const ym = Temporal.PlainYearMonth.from({ era: 'showa', year: 51, month: 11, calendar: 'japanese' });
+      const ym = Temporal.PlainYearMonth.from({ era: 'showa', eraYear: 51, month: 11, calendar: 'japanese' });
       const result = ym.toLocaleString('en-US-u-ca-japanese');
       assert(result === '11/51' || result === '11/51 S');
     });

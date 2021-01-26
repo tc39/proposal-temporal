@@ -9,27 +9,9 @@ esid: sec-temporal.plaindatetime.from
 // constrain
 
 assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: -Infinity, month: 1, day: 1 }, { overflow: 'constrain' }));
-let result = Temporal.PlainDateTime.from({ year: 1970, month: -Infinity, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
-result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
-result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, hour: -Infinity }, { overflow: 'constrain' });
+assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: 1970, month: -Infinity, day: 1 }, { overflow: 'constrain' }));
+assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: 1970, month: 1, day: -Infinity }, { overflow: 'constrain' }));
+let result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, hour: -Infinity }, { overflow: 'constrain' });
 assert.sameValue(result.year, 1970);
 assert.sameValue(result.month, 1);
 assert.sameValue(result.day, 1);
@@ -112,10 +94,10 @@ const obj = {
 
 assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: obj, month: 1, day: 1 }, { overflow: 'constrain' }));
 assert.sameValue(calls, 1, "it fails after fetching the primitive value");
-result = Temporal.PlainDateTime.from({ year: 1970, month: obj, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(calls, 2, "it fetches the primitive value");
-result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: obj }, { overflow: 'constrain' });
-assert.sameValue(calls, 3, "it fetches the primitive value");
+assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: 1970, month: obj, day: 1 }, { overflow: 'constrain' }));
+assert.sameValue(calls, 2, "it fails after fetching the primitive value");
+assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: 1970, month: 1, day: obj }, { overflow: 'constrain' }));
+assert.sameValue(calls, 3, "it fails after fetching the primitive value");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, hour: obj }, { overflow: 'constrain' });
 assert.sameValue(calls, 4, "it fetches the primitive value");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, minute: obj }, { overflow: 'constrain' });

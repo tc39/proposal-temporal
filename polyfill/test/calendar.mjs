@@ -365,15 +365,17 @@ describe('Built-in calendars (not standardized yet)', () => {
     it('era AD', () => {
       const date = Temporal.PlainDate.from('1999-12-31[u-ca-gregory]');
       equal(date.era, 'ad');
+      equal(date.eraYear, 1999);
       equal(date.year, 1999);
     });
     it('era BC', () => {
       const date = Temporal.PlainDate.from('-000001-12-31[u-ca-gregory]');
       equal(date.era, 'bc');
-      equal(date.year, 2);
+      equal(date.eraYear, 2);
+      equal(date.year, -1);
     });
     it('can create from fields with era AD', () => {
-      const date = Temporal.PlainDate.from({ era: 'ad', year: 1999, month: 12, day: 31, calendar: 'gregory' });
+      const date = Temporal.PlainDate.from({ era: 'ad', eraYear: 1999, month: 12, day: 31, calendar: 'gregory' });
       equal(`${date}`, '1999-12-31[u-ca-gregory]');
     });
     it('era AD is the default', () => {
@@ -381,7 +383,7 @@ describe('Built-in calendars (not standardized yet)', () => {
       equal(`${date}`, '1999-12-31[u-ca-gregory]');
     });
     it('can create from fields with era BC', () => {
-      const date = Temporal.PlainDate.from({ era: 'bc', year: 2, month: 12, day: 31, calendar: 'gregory' });
+      const date = Temporal.PlainDate.from({ era: 'bc', eraYear: 2, month: 12, day: 31, calendar: 'gregory' });
       equal(`${date}`, '-000001-12-31[u-ca-gregory]');
     });
   });

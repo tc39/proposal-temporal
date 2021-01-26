@@ -69,15 +69,27 @@ export class ZonedDateTime {
   }
   get year() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).year(dateTime(this));
+    const result = GetSlot(this, CALENDAR).year(dateTime(this));
+    if (result === undefined) {
+      throw new RangeError('calendar year result must be an integer');
+    }
+    return ES.ToInteger(result);
   }
   get month() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).month(dateTime(this));
+    const result = GetSlot(this, CALENDAR).month(dateTime(this));
+    if (result === undefined) {
+      throw new RangeError('calendar month result must be a positive integer');
+    }
+    return ES.ToPositiveInteger(result);
   }
   get day() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).day(dateTime(this));
+    const result = GetSlot(this, CALENDAR).day(dateTime(this));
+    if (result === undefined) {
+      throw new RangeError('calendar day result must be a positive integer');
+    }
+    return ES.ToPositiveInteger(result);
   }
   get hour() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -105,7 +117,19 @@ export class ZonedDateTime {
   }
   get era() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).era(dateTime(this));
+    let result = GetSlot(this, CALENDAR).era(dateTime(this));
+    if (result !== undefined) {
+      result = ES.ToString(result);
+    }
+    return result;
+  }
+  get eraYear() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    let result = GetSlot(this, CALENDAR).eraYear(dateTime(this));
+    if (result !== undefined) {
+      result = ES.ToInteger(result);
+    }
+    return result;
   }
   get epochSeconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
