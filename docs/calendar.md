@@ -97,6 +97,15 @@ Your object must not have a `calendar` property, so that it can be distinguished
 
 The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
 
+Custom calendars are responsible for interpreting and validating all inputs, including options.
+Calendars should (and built-in calendars will) throw a TypeError if a required option is missing or has the wrong type, but throw a RangeError if it's present but has an invalid value.
+
+Calendars are also responsible for assigning default values.
+For example, if the `overflow` option is undefined, it will be interpreted by built-in calendars as `'constrain'`.
+Custom calendars should maintain this behavior unless there's a good reason not to.
+Calendars can also accept additional non-default values for existing options or can accept new options that built-in calendars don't.
+When adding new options, calendar authors should use a unique prefix, e.g. the name of the calendar, to avoid potential conflicts with future options which may be used by Temporal.
+
 ## Constructor
 
 ### **new Temporal.Calendar**(_calendarIdentifier_: string) : Temporal.Calendar
@@ -346,11 +355,14 @@ date.toString(); // => 2020-06-28[u-ca-islamic]
 If either of `one` or `two` are not `Temporal.PlainDate` objects, then they will be converted to one as if they were passed to `Temporal.PlainDate.from()`.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using the `until()` and `since()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
+It is called indirectly when using the `until()` and `since()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
 
 If `one` is later than `two`, then the resulting duration should be negative.
 
 The default `largestUnit` value of `'auto'` is the same as `'days'`.
+
+> **NOTE:** Unlike `Temporal.Calendar.dateAdd()`, the `options` object that this method receives is not always the same object passed to the respective `until()` or `since()` method.
+> Depending on the type, a copy may be made of the object.
 
 For example:
 

@@ -135,10 +135,9 @@ export class PlainDate {
     fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
 
     const Construct = ES.SpeciesConstructor(this, PlainDate);
-    return ES.DateFromFields(calendar, fields, Construct, overflow);
+    return ES.DateFromFields(calendar, fields, Construct, options);
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -150,7 +149,10 @@ export class PlainDate {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    options = ES.NormalizeOptionsObject(options);
+
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
@@ -162,7 +164,10 @@ export class PlainDate {
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    options = ES.NormalizeOptionsObject(options);
+
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
@@ -192,7 +197,7 @@ export class PlainDate {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const result = calendar.dateUntil(this, other, { largestUnit });
+    const result = calendar.dateUntil(this, other, options);
     if (smallestUnit === 'days' && roundingIncrement === 1) return result;
 
     let { years, months, weeks, days } = result;
@@ -249,7 +254,7 @@ export class PlainDate {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    let { years, months, weeks, days } = calendar.dateUntil(this, other, { largestUnit });
+    let { years, months, weeks, days } = calendar.dateUntil(this, other, options);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     if (smallestUnit === 'days' && roundingIncrement === 1) {
       return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
@@ -414,8 +419,8 @@ export class PlainDate {
   }
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalDate(item)) {
+      ES.ToTemporalOverflow(options); // validate and ignore
       const year = GetSlot(item, ISO_YEAR);
       const month = GetSlot(item, ISO_MONTH);
       const day = GetSlot(item, ISO_DAY);
@@ -424,7 +429,7 @@ export class PlainDate {
       if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
       return result;
     }
-    return ES.ToTemporalDate(item, this, overflow);
+    return ES.ToTemporalDate(item, this, options);
   }
   static compare(one, two) {
     one = ES.ToTemporalDate(one, PlainDate);

@@ -70,10 +70,10 @@
       <emu-alg>
         1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
+          1. Perform ? ToTemporalOverflow(_options_).
           1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOYear]], _item_.[[Calendar]]).
-        1. Return ? ToTemporalMonthDay(_item_, _constructor_, _overflow_).
+        1. Return ? ToTemporalMonthDay(_item_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -168,11 +168,10 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
         1. Let _partialMonthDay_ be ? ToPartialMonthDay(_temporalMonthDayLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
         1. Let _constructor_ be ? SpeciesConstructor(_monthDay_, %Temporal.PlainMonthDay%).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _overflow_).
+        1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -356,21 +355,21 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-totemporalmonthday" aoid="ToTemporalMonthDay">
-      <h1>ToTemporalMonthDay ( _item_ [ , _constructor_ [ , _overflow_ ] ] )</h1>
+      <h1>ToTemporalMonthDay ( _item_ [ , _constructor_ [ , _options_ ] ] )</h1>
       <p>
         The abstract operation ToTemporalMonthDay returns its argument _item_ if it is already a Temporal.PlainMonthDay instance, converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.
       </p>
       <emu-alg>
         1. If _constructor_ is not given, set it to %Temporal.PlainMonthDay%.
-        1. If _overflow_ is not given, set it to *"constrain"*.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. If _options_ is not given, set it to ! OrdinaryObjectCreate(%Object.prototype%).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"* »).
           1. Let _fields_ be ? ToTemporalMonthDayFields(_item_, _fieldNames_).
-          1. Return ? MonthDayFromFields(_calendar_, _fields_, _overflow_, _constructor_).
+          1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _options_).
+        1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
         1. If _result_.[[Year]] is *undefined*, then

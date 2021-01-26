@@ -205,7 +205,6 @@ export class PlainDateTime {
     }
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, [
       'day',
@@ -234,7 +233,7 @@ export class PlainDateTime {
       millisecond,
       microsecond,
       nanosecond
-    } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+    } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
 
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
     const result = new Construct(
@@ -317,7 +316,6 @@ export class PlainDateTime {
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
       GetSlot(this, ISO_YEAR),
@@ -340,7 +338,7 @@ export class PlainDateTime {
       milliseconds,
       microseconds,
       nanoseconds,
-      overflow
+      options
     );
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
     const result = new Construct(
@@ -364,7 +362,6 @@ export class PlainDateTime {
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
       GetSlot(this, ISO_YEAR),
@@ -387,7 +384,7 @@ export class PlainDateTime {
       -milliseconds,
       -microseconds,
       -nanoseconds,
-      overflow
+      options
     );
     const Construct = ES.SpeciesConstructor(this, PlainDateTime);
     const result = new Construct(
@@ -454,7 +451,8 @@ export class PlainDateTime {
       GetSlot(other, ISO_MICROSECOND),
       GetSlot(other, ISO_NANOSECOND),
       calendar,
-      largestUnit
+      largestUnit,
+      options
     );
 
     ({
@@ -547,7 +545,8 @@ export class PlainDateTime {
       GetSlot(other, ISO_MICROSECOND),
       GetSlot(other, ISO_NANOSECOND),
       calendar,
-      largestUnit
+      largestUnit,
+      options
     );
 
     ({
@@ -750,8 +749,8 @@ export class PlainDateTime {
 
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalDateTime(item)) {
+      ES.ToTemporalOverflow(options); // validate and ignore
       const year = GetSlot(item, ISO_YEAR);
       const month = GetSlot(item, ISO_MONTH);
       const day = GetSlot(item, ISO_DAY);
@@ -766,7 +765,7 @@ export class PlainDateTime {
       if (!ES.IsTemporalDateTime(result)) throw new TypeError('invalid result');
       return result;
     }
-    return ES.ToTemporalDateTime(item, this, overflow);
+    return ES.ToTemporalDateTime(item, this, options);
   }
   static compare(one, two) {
     one = ES.ToTemporalDateTime(one, PlainDateTime);

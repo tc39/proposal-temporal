@@ -858,7 +858,7 @@
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, return 0.
         1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
         1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instant_).
-        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_, *"constrain"*).
+        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_).
         1. Let _instantAfter_ be ? CreateTemporalInstant(_after_).
         1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instantAfter_).
         1. Return _offsetAfter_ − _offsetBefore_.
@@ -887,7 +887,7 @@
       <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <emu-alg>
         1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, *"constrain"*).
+          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
           1. Set _nanoseconds_ to _endNs_ − _relativeTo_.[[Nanoseconds]].
         1. Else,
           1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
@@ -1168,8 +1168,8 @@
           1. Assert: _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot.
           1. Let _timeZone_ be _relativeTo_.[[TimeZone]].
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
-          1. Let _intermediateNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, *"constrain"*).
-          1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, *"constrain"*).
+          1. Let _intermediateNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_).
+          1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
           1. If _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
             1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanoseconds"*, *"nearest"*).
             1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
@@ -1250,7 +1250,7 @@
         The abstract operation MoveRelativeZonedDateTime adjusts the calendar part of a Temporal.ZonedDateTime instance for use as the "relative-to" parameter of another operation.
       </p>
       <emu-alg>
-        1. Let _intermediateNs_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, *"constrain"*).
+        1. Let _intermediateNs_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _intermediate_ be ? CreateTemporalZonedDateTime(_intermediateNs_, _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
@@ -1420,8 +1420,8 @@
             }.
         1. Let _timeRemainderNs_ be ? TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
         1. Let _direction_ be ! Sign(_timeRemainderNs_).
-        1. Let _dayStart_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, *"constrain"*).
-        1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, *"constrain"*).
+        1. Let _dayStart_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be _dayEnd_ − _dayStart_.
         1. If (_timeRemainderNs_ − _dayLengthNs_) × _direction_ &lt; 0, then
           1. Return the new Record {

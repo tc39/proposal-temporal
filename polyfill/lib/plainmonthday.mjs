@@ -90,10 +90,9 @@ export class PlainMonthDay {
     fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
 
     const Construct = ES.SpeciesConstructor(this, PlainMonthDay);
-    const result = ES.MonthDayFromFields(calendar, fields, Construct, overflow);
+    const result = ES.MonthDayFromFields(calendar, fields, Construct, options);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }
@@ -155,8 +154,8 @@ export class PlainMonthDay {
   }
   static from(item, options = undefined) {
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalMonthDay(item)) {
+      ES.ToTemporalOverflow(options); // validate and ignore
       const month = GetSlot(item, ISO_MONTH);
       const day = GetSlot(item, ISO_DAY);
       const calendar = GetSlot(item, CALENDAR);
@@ -165,7 +164,7 @@ export class PlainMonthDay {
       if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
       return result;
     }
-    return ES.ToTemporalMonthDay(item, this, overflow);
+    return ES.ToTemporalMonthDay(item, this, options);
   }
 }
 

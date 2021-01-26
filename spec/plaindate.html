@@ -68,10 +68,10 @@
       <emu-alg>
         1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDate]] internal slot, then
+          1. Perform ? ToTemporalOverflow(_options_).
           1. Return ? CreateTemporalDateFromStatic(_constructor_, _item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
-        1. Return ? ToTemporalDate(_item_, _constructor_, _overflow_).
+        1. Return ? ToTemporalDate(_item_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -354,12 +354,9 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Let _dateAddOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_dateAddOptions_, *"overflow"*, _overflow_).
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
         1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
-        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _duration_, _dateAddOptions_, _constructor_ »).
+        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _duration_, _options_, _constructor_ »).
       </emu-alg>
     </emu-clause>
 
@@ -376,13 +373,10 @@
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _negatedDuration_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
-        1. Let _dateAddOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_dateAddOptions_, *"overflow"*, _overflow_).
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
         1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
-        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _negatedDuration_, _dateAddOptions_, _constructor_ »).
+        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _negatedDuration_, _options_, _constructor_ »).
       </emu-alg>
     </emu-clause>
 
@@ -407,11 +401,10 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
         1. Let _partialDate_ be ? ToPartialDate(_temporalDateLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _fields_ be ? ToTemporalDateFields(_temporalDate_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialDate_).
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
-        1. Return ? DateFromFields(_calendar_, _fields_, _constructor_, _overflow_).
+        1. Return ? DateFromFields(_calendar_, _fields_, _constructor_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -447,7 +440,7 @@
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _options_).
         1. If _smallestUnit_ is not *"days"* or _roundingIncrement_ ≠ 1, then
           1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
           1. Set _result_ to ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -474,7 +467,7 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _other_, _temporalDate_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _other_, _temporalDate_, _options_).
         1. If _smallestUnit_ is *"days"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
@@ -715,21 +708,21 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-totemporaldate" aoid="ToTemporalDate">
-      <h1>ToTemporalDate ( _item_ [ , _constructor_ [ , _overflow_ ] ] )</h1>
+      <h1>ToTemporalDate ( _item_ [ , _constructor_ [ , _options_ ] ] )</h1>
       <p>
         The abstract operation ToTemporalDate returns its argument _item_ if it is already a Temporal.PlainDate instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
         1. If _constructor_ is not given, set it to %Temporal.PlainDate%.
-        1. If _overflow_ is not given, set it to *"constrain"*.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. If _options_ is not present, set it to ! OrdinaryObjectCreate(%Object.prototype%).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
           1. Let _fields_ be ? ToTemporalDateFields(_item_, _fieldNames_).
-          1. Return ? DateFromFields(_calendar_, _fields_, _constructor_, _overflow_).
+          1. Return ? DateFromFields(_calendar_, _fields_, _constructor_, _options_).
+        1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalDateString(_string_).
         1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
