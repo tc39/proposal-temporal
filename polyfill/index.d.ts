@@ -625,6 +625,15 @@ export namespace Temporal {
         | DateLike
         | string
     ): number;
+    monthCode(
+      date:
+        | Temporal.PlainDate
+        | Temporal.PlainDateTime
+        | Temporal.PlainYearMonth
+        | Temporal.PlainMonthDay
+        | DateLike
+        | string
+    ): string;
     day(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainMonthDay | DateLike | string): number;
     era(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): string | undefined;
     eraYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number | undefined;
@@ -645,17 +654,17 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | DateLike | string
     ): boolean;
     dateFromFields(
-      fields: { year: number | undefined; month: number; day: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainDate>
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: { year: number | undefined; month: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainYearMonth>
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
-      fields: { month: number; day: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainMonthDay>
     ): Temporal.PlainMonthDay;
@@ -705,6 +714,15 @@ export namespace Temporal {
         | DateLike
         | string
     ): number;
+    monthCode(
+      date:
+        | Temporal.PlainDate
+        | Temporal.PlainDateTime
+        | Temporal.PlainYearMonth
+        | Temporal.PlainMonthDay
+        | DateLike
+        | string
+    ): string;
     day(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainMonthDay | DateLike | string): number;
     era(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): string | undefined;
     eraYear(date: Temporal.PlainDate | Temporal.PlainDateTime | DateLike | string): number | undefined;
@@ -723,17 +741,17 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | DateLike | string
     ): boolean;
     dateFromFields(
-      fields: { year: number | undefined; month: number; day: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainDate>
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: { year: number | undefined; month: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainYearMonth>
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
-      fields: { month: number | undefined; day: number },
+      fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
       options: AssignmentOptions,
       constructor: ConstructorOf<Temporal.PlainMonthDay>
     ): Temporal.PlainMonthDay;
@@ -764,6 +782,7 @@ export namespace Temporal {
   export type DateLike = {
     year?: number;
     month?: number;
+    monthCode?: string;
     day?: number;
     calendar?: CalendarProtocol | string;
   };
@@ -795,6 +814,7 @@ export namespace Temporal {
     readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
+    readonly monthCode: string;
     readonly day: number;
     readonly calendar: CalendarProtocol;
     readonly dayOfWeek: number;
@@ -851,6 +871,7 @@ export namespace Temporal {
   export type DateTimeLike = {
     year?: number;
     month?: number;
+    monthCode?: string;
     day?: number;
     hour?: number;
     minute?: number;
@@ -909,6 +930,7 @@ export namespace Temporal {
     readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
+    readonly monthCode: string;
     readonly day: number;
     readonly hour: number;
     readonly minute: number;
@@ -1014,7 +1036,9 @@ export namespace Temporal {
   }
 
   export type MonthDayLike = {
+    year?: number;
     month?: number;
+    monthCode?: string;
     day?: number;
     calendar?: CalendarProtocol | string;
   };
@@ -1032,7 +1056,7 @@ export namespace Temporal {
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
     constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, referenceISOYear?: number);
-    readonly month: number;
+    readonly monthCode: string;
     readonly day: number;
     readonly calendar: CalendarProtocol;
     equals(other: Temporal.PlainMonthDay | MonthDayLike | string): boolean;
@@ -1233,6 +1257,7 @@ export namespace Temporal {
   export type YearMonthLike = {
     year?: number;
     month?: number;
+    monthCode?: string;
     calendar?: CalendarProtocol | string;
   };
 
@@ -1257,6 +1282,7 @@ export namespace Temporal {
     readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
+    readonly monthCode: string;
     readonly calendar: CalendarProtocol;
     readonly daysInMonth: number;
     readonly daysInYear: number;
@@ -1288,6 +1314,7 @@ export namespace Temporal {
   export type ZonedDateTimeLike = {
     year?: number;
     month?: number;
+    monthCode?: string;
     day?: number;
     hour?: number;
     minute?: number;
@@ -1329,6 +1356,7 @@ export namespace Temporal {
     readonly eraYear: number | undefined;
     readonly year: number;
     readonly month: number;
+    readonly monthCode: string;
     readonly day: number;
     readonly hour: number;
     readonly minute: number;

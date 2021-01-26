@@ -102,6 +102,10 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].month(date);
   }
+  monthCode(date) {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    return impl[GetSlot(this, CALENDAR_ID)].monthCode(date);
+  }
   day(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].day(date);
@@ -177,22 +181,42 @@ DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
 impl['iso8601'] = {
   dateFromFields(fields, overflow) {
-    const { year, month, day } = ES.PrepareTemporalFields(fields, [['day'], ['month'], ['year']]);
+    fields = ES.PrepareTemporalFields(fields, [['day'], ['month', undefined], ['monthCode', undefined], ['year']]);
+    fields = resolveNonLunisolarMonth(fields);
+    const { year, month, day } = fields;
     return ES.RegulateDate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
-    const { year, month } = ES.PrepareTemporalFields(fields, [['month'], ['year']]);
+    fields = ES.PrepareTemporalFields(fields, [['month', undefined], ['monthCode', undefined], ['year']]);
+    fields = resolveNonLunisolarMonth(fields);
+    const { year, month } = fields;
     return ES.RegulateYearMonth(year, month, overflow);
   },
   monthDayFromFields(fields, overflow) {
-    const { month, day } = ES.PrepareTemporalFields(fields, [['day'], ['month']]);
+    fields = ES.PrepareTemporalFields(fields, [
+      ['day'],
+      ['month', undefined],
+      ['monthCode', undefined],
+      ['year', undefined]
+    ]);
+    if (fields.month !== undefined && fields.year === undefined && fields.monthCode === undefined) {
+      throw new TypeError('either year or monthCode required with month');
+    }
+    fields = resolveNonLunisolarMonth(fields);
+    const { month, day } = fields;
     return ES.RegulateMonthDay(month, day, overflow);
   },
   fields(fields) {
     return fields;
   },
   mergeFields(fields, additionalFields) {
-    return { ...fields, ...additionalFields };
+    const { month, monthCode, ...original } = fields;
+    const { month: newMonth, monthCode: newMonthCode } = additionalFields;
+    if (newMonth === undefined && newMonthCode === undefined) {
+      original.month = month;
+      original.monthCode = monthCode;
+    }
+    return { ...original, ...additionalFields };
   },
   dateAdd(date, duration, overflow) {
     const { years, months, weeks, days } = duration;
@@ -225,8 +249,13 @@ impl['iso8601'] = {
     return undefined;
   },
   month(date) {
+    if (ES.IsTemporalMonthDay(date)) throw new TypeError('use monthCode on PlainMonthDay instead');
     if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_MONTH);
+  },
+  monthCode(date) {
+    if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+    return ES.ToString(GetSlot(date, ISO_MONTH));
   },
   day(date) {
     if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
@@ -271,6 +300,35 @@ impl['iso8601'] = {
 // Note: other built-in calendars than iso8601 are not part of the Temporal
 // proposal for ECMA-262. These calendars will be standardized as part of
 // ECMA-402.
+
+function monthCodeNumberPart(monthCode) {
+  const month = +monthCode;
+  if (isNaN(month)) throw new RangeError(`Invalid month code: ${monthCode}`);
+  return month;
+}
+
+/**
+ * Safely merge a month, monthCode pair into an integer month.
+ * If both are present, make sure they match.
+ * This logic doesn't work for lunisolar calendars!
+ * */
+function resolveNonLunisolarMonth(calendarDate) {
+  let { month, monthCode } = calendarDate;
+  if (monthCode === undefined) {
+    if (month === undefined) throw new TypeError('Either month or monthCode are required');
+    monthCode = `${month}`;
+  } else {
+    const numberPart = monthCodeNumberPart(monthCode);
+    if (month !== undefined && month !== numberPart) {
+      throw new RangeError(`monthCode ${monthCode} and month ${month} must match if both are present`);
+    }
+    if (monthCode !== `${numberPart}`) {
+      throw new RangeError(`Invalid month code: ${monthCode}. Expected numeric string`);
+    }
+    month = numberPart;
+  }
+  return { ...calendarDate, month, monthCode };
+}
 
 // Implementation details for Gregorian calendar
 const gre = {
@@ -324,7 +382,8 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
       ['day'],
       ['era', undefined],
       ['eraYear', undefined],
-      ['month'],
+      ['month', undefined],
+      ['monthCode', undefined],
       ['year', undefined]
     ]);
     gre.validateFields(fields);
@@ -339,7 +398,8 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
     fields = ES.PrepareTemporalFields(fields, [
       ['era', undefined],
       ['eraYear', undefined],
-      ['month'],
+      ['month', undefined],
+      ['monthCode', undefined],
       ['year', undefined]
     ]);
     gre.validateFields(fields);
@@ -348,6 +408,26 @@ impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
       isoYear = gre.isoYear(fields.eraYear, fields.era);
     }
     return impl['iso8601'].yearMonthFromFields({ ...fields, year: isoYear }, overflow);
+  },
+  monthDayFromFields(fields, overflow) {
+    // Intentionally alphabetical
+    fields = ES.PrepareTemporalFields(fields, [
+      ['day'],
+      ['era', undefined],
+      ['eraYear', undefined],
+      ['month', undefined],
+      ['monthCode', undefined],
+      ['year', undefined]
+    ]);
+    // validateFields doesn't validate month and monthCode; chaining up to
+    // impl['iso8601'] does. We only need to validate year/era/eraYear if we
+    // have month without monthCode.
+    if (fields.month !== undefined && fields.monthCode === undefined) gre.validateFields(fields);
+    let isoYear = fields.year;
+    if (fields.era !== undefined) {
+      isoYear = gre.isoYear(fields.eraYear, fields.era);
+    }
+    return impl['iso8601'].monthDayFromFields({ ...fields, year: isoYear }, overflow);
   }
 });
 

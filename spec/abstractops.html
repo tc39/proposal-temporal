@@ -569,7 +569,7 @@
         1. If _value_ has either an [[InitializedTemporalDateTime]] or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _value_.
         1. Let _calendar_ be ? GetOptionalTemporalCalendar(_value_).
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"year"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalDateTimeFields(_value_, _fieldNames_).
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"constrain"*).
@@ -1513,6 +1513,11 @@
           <tr>
             <td>*"month"*</td>
             <td>ToPositiveIntegerOrInfinity</td>
+            <td>*undefined*</td>
+          </tr>
+          <tr>
+            <td>*"monthCode"*</td>
+            <td>ToString</td>
             <td>*undefined*</td>
           </tr>
           <tr>

@@ -20,7 +20,7 @@ const instance = MyMonthDay.from("11-30");
 assert.sameValue(called, 1);
 
 const result = instance.with({ day: 31 });
-assert.sameValue(result.month, 11, "month result");
+assert.sameValue(result.monthCode, "11", "monthCode result");
 assert.sameValue(result.day, 30, "day result");
 assert.sameValue(called, 2);
 

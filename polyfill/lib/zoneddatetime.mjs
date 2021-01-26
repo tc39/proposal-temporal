@@ -83,6 +83,14 @@ export class ZonedDateTime {
     }
     return ES.ToPositiveInteger(result);
   }
+  get monthCode() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    const result = GetSlot(this, CALENDAR).monthCode(dateTime(this));
+    if (result === undefined) {
+      throw new RangeError('calendar monthCode result must be a string');
+    }
+    return ES.ToString(result);
+  }
   get day() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const result = GetSlot(this, CALENDAR).day(dateTime(this));
@@ -230,6 +238,7 @@ export class ZonedDateTime {
       'millisecond',
       'minute',
       'month',
+      'monthCode',
       'nanosecond',
       'second',
       'year'
@@ -826,7 +835,7 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     return calendar.yearMonthFromFields(fields, {}, YearMonth);
   }
@@ -834,7 +843,7 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     return calendar.monthDayFromFields(fields, {}, MonthDay);
   }

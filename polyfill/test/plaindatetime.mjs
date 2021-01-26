@@ -33,6 +33,9 @@ describe('DateTime', () => {
       it('DateTime.prototype has month', () => {
         assert('month' in PlainDateTime.prototype);
       });
+      it('DateTime.prototype has monthCode', () => {
+        assert('monthCode' in PlainDateTime.prototype);
+      });
       it('DateTime.prototype has day', () => {
         assert('day' in PlainDateTime.prototype);
       });
@@ -127,6 +130,7 @@ describe('DateTime', () => {
       });
       it('datetime.year is 1976', () => equal(datetime.year, 1976));
       it('datetime.month is 11', () => equal(datetime.month, 11));
+      it('datetime.monthCode is "11"', () => equal(datetime.monthCode, '11'));
       it('datetime.day is 18', () => equal(datetime.day, 18));
       it('datetime.hour is 15', () => equal(datetime.hour, 15));
       it('datetime.minute is 23', () => equal(datetime.minute, 23));
@@ -151,6 +155,7 @@ describe('DateTime', () => {
       });
       it('datetime.year is 1976', () => equal(datetime.year, 1976));
       it('datetime.month is 11', () => equal(datetime.month, 11));
+      it('datetime.monthCode is "11"', () => equal(datetime.monthCode, '11'));
       it('datetime.day is 18', () => equal(datetime.day, 18));
       it('datetime.hour is 15', () => equal(datetime.hour, 15));
       it('datetime.minute is 23', () => equal(datetime.minute, 23));
@@ -174,6 +179,7 @@ describe('DateTime', () => {
       });
       it('datetime.year is 1976', () => equal(datetime.year, 1976));
       it('datetime.month is 11', () => equal(datetime.month, 11));
+      it('datetime.monthCode is "11"', () => equal(datetime.monthCode, '11'));
       it('datetime.day is 18', () => equal(datetime.day, 18));
       it('datetime.hour is 15', () => equal(datetime.hour, 15));
       it('datetime.minute is 23', () => equal(datetime.minute, 23));
@@ -197,6 +203,7 @@ describe('DateTime', () => {
       });
       it('datetime.year is 1976', () => equal(datetime.year, 1976));
       it('datetime.month is 11', () => equal(datetime.month, 11));
+      it('datetime.monthCode is "11"', () => equal(datetime.monthCode, '11'));
       it('datetime.day is 18', () => equal(datetime.day, 18));
       it('datetime.hour is 15', () => equal(datetime.hour, 15));
       it('datetime.minute is 23', () => equal(datetime.minute, 23));
@@ -220,6 +227,7 @@ describe('DateTime', () => {
       });
       it('datetime.year is 1976', () => equal(datetime.year, 1976));
       it('datetime.month is 11', () => equal(datetime.month, 11));
+      it('datetime.monthCode is "11"', () => equal(datetime.monthCode, '11'));
       it('datetime.day is 18', () => equal(datetime.day, 18));
       it('datetime.hour is 15', () => equal(datetime.hour, 15));
       it('datetime.minute is 23', () => equal(datetime.minute, 23));
@@ -261,6 +269,12 @@ describe('DateTime', () => {
     });
     it('datetime.with({ month: 5 } works', () => {
       equal(`${datetime.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789');
+    });
+    it('datetime.with({ monthCode: "5" } works', () => {
+      equal(`${datetime.with({ monthCode: '5' })}`, '1976-05-18T15:23:30.123456789');
+    });
+    it('month and monthCode must agree', () => {
+      throws(() => datetime.with({ month: 5, monthCode: '6' }), RangeError);
     });
     it('datetime.with({ day: 5 } works', () => {
       equal(`${datetime.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789');
@@ -1339,17 +1353,23 @@ describe('DateTime', () => {
       notEqual(actual, orig);
     });
     it('DateTime.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18T00:00:00', () =>
+      equal(`${PlainDateTime.from({ year: 1976, month: 11, monthCode: '11', day: 18 })}`, '1976-11-18T00:00:00'));
+    it('can be constructed with month and without monthCode', () =>
       equal(`${PlainDateTime.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T00:00:00'));
+    it('can be constructed with monthCode and without month', () =>
+      equal(`${PlainDateTime.from({ year: 1976, monthCode: '11', day: 18 })}`, '1976-11-18T00:00:00'));
+    it('month and monthCode must agree', () =>
+      throws(() => PlainDateTime.from({ year: 1976, month: 11, monthCode: '12', day: 18 }), RangeError));
     it('DateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 }) == 1976-11-18T00:00:00.123', () =>
       equal(`${PlainDateTime.from({ year: 1976, month: 11, day: 18, millisecond: 123 })}`, '1976-11-18T00:00:00.123'));
-    it('DateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }) throws', () =>
+    it('DateTime.from({ year: 1976, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }) throws', () =>
       throws(
-        () => PlainDateTime.from({ month: 11, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }),
+        () => PlainDateTime.from({ year: 1976, day: 18, hour: 15, minute: 23, second: 30, millisecond: 123 }),
         TypeError
       ));
     it('DateTime.from({}) throws', () => throws(() => PlainDateTime.from({}), TypeError));
     it('DateTime.from(required prop undefined) throws', () =>
-      throws(() => PlainDateTime.from({ year: undefined, month: 11, day: 18 }), TypeError));
+      throws(() => PlainDateTime.from({ year: 1976, month: undefined, monthCode: undefined, day: 18 }), TypeError));
     it('DateTime.from(ISO string leap second) is constrained', () => {
       equal(`${PlainDateTime.from('2016-12-31T23:59:60')}`, '2016-12-31T23:59:59');
     });

@@ -25,7 +25,7 @@ const instance = MyMonthDay.from("05-02");
 assert.sameValue(called, 1);
 
 const result = instance.with({ day: 20 });
-assert.sameValue(result.month, 5, "month result");
+assert.sameValue(result.monthCode, "5", "monthCode result");
 assert.sameValue(result.day, 20, "day result");
 assert.sameValue(called, 2);
 assert.sameValue(Object.getPrototypeOf(result), MyMonthDay.prototype);

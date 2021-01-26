@@ -136,6 +136,12 @@ export class PlainDateTime {
     }
     return ES.ToPositiveInteger(result);
   }
+  get monthCode() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    let result = GetSlot(this, CALENDAR).monthCode(this);
+    if (result !== undefined) result = ES.ToString(result);
+    return result;
+  }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const result = GetSlot(this, CALENDAR).day(this);
@@ -237,6 +243,7 @@ export class PlainDateTime {
       'millisecond',
       'minute',
       'month',
+      'monthCode',
       'nanosecond',
       'second',
       'year'
@@ -739,7 +746,7 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     return ES.YearMonthFromFields(calendar, fields, YearMonth);
   }
@@ -747,7 +754,7 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     return ES.MonthDayFromFields(calendar, fields, MonthDay);
   }

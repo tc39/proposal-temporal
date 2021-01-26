@@ -6,10 +6,10 @@ esid: sec-temporal.plainmonthday.prototype.with
 ---*/
 
 const monthday = new Temporal.PlainMonthDay(2, 2);
-const fields = { month: 13 };
+const fields = { day: 100 };
 
 const explicit = monthday.with(fields, undefined);
-assert.sameValue(explicit.month, 12, "default overflow is constrain");
+assert.sameValue(explicit.day, 29, "default overflow is constrain");
 
 const implicit = monthday.with(fields);
-assert.sameValue(implicit.month, 12, "default overflow is constrain");
+assert.sameValue(implicit.day, 29, "default overflow is constrain");

@@ -97,6 +97,14 @@ export class PlainDate {
     }
     return ES.ToPositiveInteger(result);
   }
+  get monthCode() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    let result = GetSlot(this, CALENDAR).monthCode(this);
+    if (result === undefined) {
+      throw new RangeError('calendar monthCode result must be a string');
+    }
+    return ES.ToString(result);
+  }
   get day() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const result = GetSlot(this, CALENDAR).day(this);
@@ -150,7 +158,7 @@ export class PlainDate {
     }
 
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
     const props = ES.ToPartialRecord(temporalDateLike, fieldNames);
     if (!props) {
       throw new TypeError('invalid date-like');
@@ -420,7 +428,7 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
     return ES.YearMonthFromFields(calendar, fields, YearMonth);
   }
@@ -428,7 +436,7 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     return ES.MonthDayFromFields(calendar, fields, MonthDay);
   }

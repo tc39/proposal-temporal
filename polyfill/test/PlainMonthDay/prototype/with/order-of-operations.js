@@ -14,11 +14,17 @@ const expected = [
   "valueOf day",
   "get month",
   "valueOf month",
+  "get monthCode",
+  "toString monthCode",
+  "get year",
+  "valueOf year",
 ];
 const actual = [];
 const fields = {
   month: 1.7,
+  monthCode: "1",
   day: 1.7,
+  year: 1.7,
 };
 const argument = new Proxy(fields, {
   get(target, key) {
@@ -31,6 +37,10 @@ const argument = new Proxy(fields, {
       valueOf() {
         actual.push(`valueOf ${key}`);
         return result;
+      },
+      toString() {
+        actual.push(`toString ${key}`);
+        return result.toString();
       }
     };
   },
@@ -40,6 +50,6 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.with(argument);
-assert.sameValue(result.month, 1, "month result");
+assert.sameValue(result.monthCode, "1", "monthCode result");
 assert.sameValue(result.day, 1, "day result");
 assert.compareArray(actual, expected, "order of operations");
