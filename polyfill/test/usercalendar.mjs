@@ -185,7 +185,7 @@ describe('Userland calendar', () => {
       });
       it('works for MonthDay.from(iso)', () => {
         const md = Temporal.PlainMonthDay.from(iso);
-        equal(`${md}`, '1970-01-01[u-ca-two-based]');
+        equal(`${md}`, '1972-01-01[u-ca-two-based]');
       });
       it('works for MonthDay.from(props)', () => {
         const md = Temporal.PlainMonthDay.from({ monthCode: '2', day: 1, calendar: 'two-based' });

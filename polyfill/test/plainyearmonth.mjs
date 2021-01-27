@@ -77,10 +77,37 @@ describe('YearMonth', () => {
         equal(`${PlainYearMonth.from({ year: 2019, month: 11 })}`, '2019-11'));
       it('month and monthCode must agree', () =>
         throws(() => PlainYearMonth.from({ year: 2019, month: 11, monthCode: '12' }), RangeError));
+      it('ignores day when determining the ISO reference day from year/month', () => {
+        const one = PlainYearMonth.from({ year: 2019, month: 11, day: 1 });
+        const two = PlainYearMonth.from({ year: 2019, month: 11, day: 2 });
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
+      });
+      it('ignores day when determining the ISO reference day from year/monthCode', () => {
+        const one = PlainYearMonth.from({ year: 2019, monthCode: '11', day: 1 });
+        const two = PlainYearMonth.from({ year: 2019, monthCode: '11', day: 2 });
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
+      });
+      it('ignores day when determining the ISO reference day from era/eraYear/month', () => {
+        const one = PlainYearMonth.from({ era: 'ad', eraYear: 2019, month: 11, day: 1, calendar: 'gregory' });
+        const two = PlainYearMonth.from({ era: 'ad', eraYear: 2019, month: 11, day: 2, calendar: 'gregory' });
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
+      });
+      it('ignores day when determining the ISO reference day from era/eraYear/monthCode', () => {
+        const one = PlainYearMonth.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 1, calendar: 'gregory' });
+        const two = PlainYearMonth.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 2, calendar: 'gregory' });
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
+      });
       it('YearMonth.from(2019-11) is not the same object', () => {
         const orig = new PlainYearMonth(2019, 11);
         const actu = PlainYearMonth.from(orig);
         notEqual(actu, orig);
+      });
+      it('ignores day when determining the ISO reference day from other Temporal object', () => {
+        const plainDate1 = Temporal.PlainDate.from('1976-11-01');
+        const plainDate2 = Temporal.PlainDate.from('1976-11-18');
+        const one = PlainYearMonth.from(plainDate1);
+        const two = PlainYearMonth.from(plainDate2);
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('YearMonth.from({ year: 2019 }) throws', () => throws(() => PlainYearMonth.from({ year: 2019 }), TypeError));
       it('YearMonth.from({ month: 6 }) throws', () => throws(() => PlainYearMonth.from({ month: 6 }), TypeError));
@@ -119,6 +146,11 @@ describe('YearMonth', () => {
         equal(`${PlainYearMonth.from('1976-11-18T15:23')}`, '1976-11');
         equal(`${PlainYearMonth.from('1976-11-18T15')}`, '1976-11');
         equal(`${PlainYearMonth.from('1976-11-18')}`, '1976-11');
+      });
+      it('ignores day when determining the ISO reference day from string', () => {
+        const one = PlainYearMonth.from('1976-11-01');
+        const two = PlainYearMonth.from('1976-11-18');
+        equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('no junk at end of string', () => throws(() => PlainYearMonth.from('1976-11junk'), RangeError));
       it('options may only be an object or undefined', () => {
@@ -183,6 +215,9 @@ describe('YearMonth', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${ym.with({ month: 1, years: 2020 })}`, '2019-01');
+    });
+    it('day is ignored when determining ISO reference day', () => {
+      equal(ym.with({ year: ym.year, day: 31 }).getISOFields().isoDay, ym.getISOFields().isoDay);
     });
   });
   describe('YearMonth.compare() works', () => {

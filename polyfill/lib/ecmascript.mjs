@@ -1290,10 +1290,10 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectDate(referenceISOYear, month, day);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
-    if (referenceISOYear === undefined) referenceISOYear = 1972;
-    let result = new constructor(month, day, calendar, referenceISOYear);
-    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
-    return result;
+
+    const PlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
+    let result = new PlainMonthDay(month, day, calendar, referenceISOYear);
+    return ES.MonthDayFromFields(calendar, result, constructor, {});
   },
   ToTemporalTime: (item, constructor, overflow = 'constrain') => {
     let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
@@ -1345,9 +1345,10 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectDate(year, month, referenceISODay);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
-    let result = new constructor(year, month, calendar, referenceISODay);
-    if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-    return result;
+
+    const PlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
+    let result = new PlainYearMonth(year, month, calendar, referenceISODay);
+    return ES.YearMonthFromFields(calendar, result, constructor, {});
   },
   InterpretTemporalZonedDateTimeOffset: (
     year,
