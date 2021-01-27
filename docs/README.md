@@ -82,7 +82,7 @@ This type is optimized for use cases that require a time zone, including DST-saf
 
 ```js
 const zonedDateTime = Temporal.ZonedDateTime.from({
-    timeZone: 'America/Los_Angeles'
+    timeZone: 'America/Los_Angeles',
     year: 1995,
     month: 12,
     day: 7,
