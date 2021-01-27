@@ -601,14 +601,11 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
-        1. If _result_.[[Day]] is *undefined*, then
-          1. Let _referenceISODay_ be 1.
-        1. Else,
-          1. Let _referenceISODay_ be _result_.[[Day]].
-        1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _referenceISODay_) is *false*, then
-          1. Throw a *RangeError* exception.
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_result_.[[Calendar]]).
-        1. Set _result_ to ? RegulateYearMonth(_result_.[[Year]], _result_.[[Month]], _overflow_).
+        1. If _result_.[[Day]] is *undefined*, then
+          1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], 1) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _calendar_, *undefined*).
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _referenceISODay_).
         1. Let _canonicalYearMonthOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Return ? YearMonthFromFields(_calendar_, _result_, _constructor_, _canonicalYearMonthOptions_).

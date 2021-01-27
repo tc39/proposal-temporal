@@ -1286,13 +1286,18 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     ES.ToTemporalOverflow(options); // validate and ignore
-    let { month, day, referenceISOYear = 1972, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
-    ES.RejectDate(referenceISOYear, month, day);
+    let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
 
+    if (referenceISOYear === undefined) {
+      ES.RejectDate(1972, month, day);
+      const result = new constructor(month, day, calendar);
+      if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
+      return result;
+    }
     const PlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-    let result = new PlainMonthDay(month, day, calendar, referenceISOYear);
+    const result = new PlainMonthDay(month, day, calendar, referenceISOYear);
     return ES.MonthDayFromFields(calendar, result, constructor, {});
   },
   ToTemporalTime: (item, constructor, overflow = 'constrain') => {
@@ -1341,13 +1346,18 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     ES.ToTemporalOverflow(options); // validate and ignore
-    let { year, month, referenceISODay = 1, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-    ES.RejectDate(year, month, referenceISODay);
+    let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
 
+    if (referenceISODay === undefined) {
+      ES.RejectDate(year, month, 1);
+      const result = new constructor(year, month, calendar);
+      if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
+      return result;
+    }
     const PlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-    let result = new PlainYearMonth(year, month, calendar, referenceISODay);
+    const result = new PlainYearMonth(year, month, calendar, referenceISODay);
     return ES.YearMonthFromFields(calendar, result, constructor, {});
   },
   InterpretTemporalZonedDateTimeOffset: (
