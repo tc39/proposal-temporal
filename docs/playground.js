@@ -4685,13 +4685,21 @@
       var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(ES.ToString(item)),
           month = _ES$ParseTemporalMont.month,
           day = _ES$ParseTemporalMont.day,
-          _ES$ParseTemporalMont2 = _ES$ParseTemporalMont.referenceISOYear,
-          referenceISOYear = _ES$ParseTemporalMont2 === void 0 ? 1972 : _ES$ParseTemporalMont2,
+          referenceISOYear = _ES$ParseTemporalMont.referenceISOYear,
           calendar = _ES$ParseTemporalMont.calendar;
 
-      ES.RejectDate(referenceISOYear, month, day);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+
+      if (referenceISOYear === undefined) {
+        ES.RejectDate(1972, month, day);
+
+        var _result = new constructor(month, day, calendar);
+
+        if (!ES.IsTemporalMonthDay(_result)) throw new TypeError('invalid result');
+        return _result;
+      }
+
       var PlainMonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
       var result = new PlainMonthDay(month, day, calendar, referenceISOYear);
       return ES.MonthDayFromFields(calendar, result, constructor, {});
@@ -4768,13 +4776,21 @@
       var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(ES.ToString(item)),
           year = _ES$ParseTemporalYear.year,
           month = _ES$ParseTemporalYear.month,
-          _ES$ParseTemporalYear2 = _ES$ParseTemporalYear.referenceISODay,
-          referenceISODay = _ES$ParseTemporalYear2 === void 0 ? 1 : _ES$ParseTemporalYear2,
+          referenceISODay = _ES$ParseTemporalYear.referenceISODay,
           calendar = _ES$ParseTemporalYear.calendar;
 
-      ES.RejectDate(year, month, referenceISODay);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+
+      if (referenceISODay === undefined) {
+        ES.RejectDate(year, month, 1);
+
+        var _result2 = new constructor(year, month, calendar);
+
+        if (!ES.IsTemporalYearMonth(_result2)) throw new TypeError('invalid result');
+        return _result2;
+      }
+
       var PlainYearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
       var result = new PlainYearMonth(year, month, calendar, referenceISODay);
       return ES.YearMonthFromFields(calendar, result, constructor, {});
