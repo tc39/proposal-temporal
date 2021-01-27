@@ -4692,10 +4692,9 @@
       ES.RejectDate(referenceISOYear, month, day);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      if (referenceISOYear === undefined) referenceISOYear = 1972;
-      var result = new constructor(month, day, calendar, referenceISOYear);
-      if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
-      return result;
+      var PlainMonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
+      var result = new PlainMonthDay(month, day, calendar, referenceISOYear);
+      return ES.MonthDayFromFields(calendar, result, constructor, {});
     },
     ToTemporalTime: function ToTemporalTime(item, constructor) {
       var overflow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'constrain';
@@ -4776,9 +4775,9 @@
       ES.RejectDate(year, month, referenceISODay);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      var result = new constructor(year, month, calendar, referenceISODay);
-      if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-      return result;
+      var PlainYearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
+      var result = new PlainYearMonth(year, month, calendar, referenceISODay);
+      return ES.YearMonthFromFields(calendar, result, constructor, {});
     },
     InterpretTemporalZonedDateTimeOffset: function InterpretTemporalZonedDateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs, timeZone, disambiguation, offsetOpt) {
       var DateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
