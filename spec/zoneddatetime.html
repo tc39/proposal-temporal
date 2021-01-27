@@ -989,8 +989,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDateTime_, _fieldNames_).
         1. Let _yearMonthFromFields_ be ? Get(_calendar_, *"yearMonthFromFields"*).
@@ -1009,8 +1009,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDateTime_, _fieldNames_).
         1. Let _monthDayFromFields_ be ? Get(_calendar_, *"monthDayFromFields"*).
