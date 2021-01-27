@@ -91,6 +91,42 @@
     return target;
   }
 
+  function _objectWithoutPropertiesLoose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
+
+    for (i = 0; i < sourceKeys.length; i++) {
+      key = sourceKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      target[key] = source[key];
+    }
+
+    return target;
+  }
+
+  function _objectWithoutProperties(source, excluded) {
+    if (source == null) return {};
+
+    var target = _objectWithoutPropertiesLoose(source, excluded);
+
+    var key, i;
+
+    if (Object.getOwnPropertySymbols) {
+      var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+      for (i = 0; i < sourceSymbolKeys.length; i++) {
+        key = sourceSymbolKeys[i];
+        if (excluded.indexOf(key) >= 0) continue;
+        if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+        target[key] = source[key];
+      }
+    }
+
+    return target;
+  }
+
   function _slicedToArray(arr, i) {
     return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
@@ -4197,7 +4233,7 @@
         calendar = relativeTo.calendar;
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, {
@@ -4385,7 +4421,7 @@
     },
     // field access in the following operations is intentionally alphabetical
     ToTemporalDateFields: function ToTemporalDateFields(bag, fieldNames) {
-      var entries = [['day', undefined], ['month', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref8) {
@@ -4400,7 +4436,7 @@
       return ES.PrepareTemporalFields(bag, entries);
     },
     ToTemporalDateTimeFields: function ToTemporalDateTimeFields(bag, fieldNames) {
-      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref10) {
@@ -4415,7 +4451,7 @@
       return ES.PrepareTemporalFields(bag, entries);
     },
     ToTemporalMonthDayFields: function ToTemporalMonthDayFields(bag, fieldNames) {
-      var entries = [['day', undefined], ['month', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref12) {
@@ -4433,7 +4469,7 @@
       return ES.PrepareTemporalFields(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]);
     },
     ToTemporalYearMonthFields: function ToTemporalYearMonthFields(bag, fieldNames) {
-      var entries = [['month', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref14) {
@@ -4448,7 +4484,7 @@
       return ES.PrepareTemporalFields(bag, entries);
     },
     ToTemporalZonedDateTimeFields: function ToTemporalZonedDateTimeFields(bag, fieldNames) {
-      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['nanosecond', 0], ['offset', undefined], ['second', 0], ['timeZone'], ['year', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['offset', undefined], ['second', 0], ['timeZone'], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref16) {
@@ -4477,7 +4513,7 @@
         var _calendar = item.calendar;
         if (_calendar === undefined) _calendar = ES.GetISO8601Calendar();
         _calendar = ES.ToTemporalCalendar(_calendar);
-        var fieldNames = ES.CalendarFields(_calendar, ['day', 'month', 'year']);
+        var fieldNames = ES.CalendarFields(_calendar, ['day', 'month', 'monthCode', 'year']);
         var fields = ES.ToTemporalDateFields(item, fieldNames);
         return ES.DateFromFields(_calendar, fields, constructor, options);
       }
@@ -4543,7 +4579,7 @@
         calendar = item.calendar;
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var fields = ES.ToTemporalDateTimeFields(item, fieldNames);
 
         var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
@@ -4631,10 +4667,16 @@
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalMonthDay(item)) return item;
         var _calendar2 = item.calendar;
+        var calendarAbsent = _calendar2 === undefined;
         if (_calendar2 === undefined) _calendar2 = ES.GetISO8601Calendar();
         _calendar2 = ES.ToTemporalCalendar(_calendar2);
-        var fieldNames = ES.CalendarFields(_calendar2, ['day', 'month']);
+        var fieldNames = ES.CalendarFields(_calendar2, ['day', 'month', 'monthCode', 'year']);
         var fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+
+        if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined) {
+          fields.monthCode = ES.ToString(fields.month);
+        }
+
         return ES.MonthDayFromFields(_calendar2, fields, constructor, options);
       }
 
@@ -4717,7 +4759,7 @@
         var _calendar3 = item.calendar;
         if (_calendar3 === undefined) _calendar3 = ES.GetISO8601Calendar();
         _calendar3 = ES.ToTemporalCalendar(_calendar3);
-        var fieldNames = ES.CalendarFields(_calendar3, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(_calendar3, ['month', 'monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(item, fieldNames);
         return ES.YearMonthFromFields(_calendar3, fields, constructor, options);
       }
@@ -8744,6 +8786,12 @@
         return impl[GetSlot(this, CALENDAR_ID)].month(date);
       }
     }, {
+      key: "monthCode",
+      value: function monthCode(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        return impl[GetSlot(this, CALENDAR_ID)].monthCode(date);
+      }
+    }, {
       key: "day",
       value: function day(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -8859,32 +8907,52 @@
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
   impl['iso8601'] = {
     dateFromFields: function dateFromFields(fields, overflow) {
-      var _ES$PrepareTemporalFi = ES.PrepareTemporalFields(fields, [['day'], ['month'], ['year']]),
-          year = _ES$PrepareTemporalFi.year,
-          month = _ES$PrepareTemporalFi.month,
-          day = _ES$PrepareTemporalFi.day;
-
+      fields = ES.PrepareTemporalFields(fields, [['day'], ['month', undefined], ['monthCode', undefined], ['year']]);
+      fields = resolveNonLunisolarMonth(fields);
+      var _fields2 = fields,
+          year = _fields2.year,
+          month = _fields2.month,
+          day = _fields2.day;
       return ES.RegulateDate(year, month, day, overflow);
     },
     yearMonthFromFields: function yearMonthFromFields(fields, overflow) {
-      var _ES$PrepareTemporalFi2 = ES.PrepareTemporalFields(fields, [['month'], ['year']]),
-          year = _ES$PrepareTemporalFi2.year,
-          month = _ES$PrepareTemporalFi2.month;
-
+      fields = ES.PrepareTemporalFields(fields, [['month', undefined], ['monthCode', undefined], ['year']]);
+      fields = resolveNonLunisolarMonth(fields);
+      var _fields3 = fields,
+          year = _fields3.year,
+          month = _fields3.month;
       return ES.RegulateYearMonth(year, month, overflow);
     },
     monthDayFromFields: function monthDayFromFields(fields, overflow) {
-      var _ES$PrepareTemporalFi3 = ES.PrepareTemporalFields(fields, [['day'], ['month']]),
-          month = _ES$PrepareTemporalFi3.month,
-          day = _ES$PrepareTemporalFi3.day;
+      fields = ES.PrepareTemporalFields(fields, [['day'], ['month', undefined], ['monthCode', undefined], ['year', undefined]]);
 
+      if (fields.month !== undefined && fields.year === undefined && fields.monthCode === undefined) {
+        throw new TypeError('either year or monthCode required with month');
+      }
+
+      fields = resolveNonLunisolarMonth(fields);
+      var _fields4 = fields,
+          month = _fields4.month,
+          day = _fields4.day;
       return ES.RegulateMonthDay(month, day, overflow);
     },
-    fields: function fields(_fields2) {
-      return _fields2;
+    fields: function fields(_fields5) {
+      return _fields5;
     },
     mergeFields: function mergeFields(fields, additionalFields) {
-      return _objectSpread2(_objectSpread2({}, fields), additionalFields);
+      var month = fields.month,
+          monthCode = fields.monthCode,
+          original = _objectWithoutProperties(fields, ["month", "monthCode"]);
+
+      var newMonth = additionalFields.month,
+          newMonthCode = additionalFields.monthCode;
+
+      if (newMonth === undefined && newMonthCode === undefined) {
+        original.month = month;
+        original.monthCode = monthCode;
+      }
+
+      return _objectSpread2(_objectSpread2({}, original), additionalFields);
     },
     dateAdd: function dateAdd(date, duration, overflow) {
       var years = duration.years,
@@ -8912,8 +8980,13 @@
       return undefined;
     },
     month: function month(date) {
+      if (ES.IsTemporalMonthDay(date)) throw new TypeError('use monthCode on PlainMonthDay instead');
       if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
       return GetSlot(date, ISO_MONTH);
+    },
+    monthCode: function monthCode(date) {
+      if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
+      return ES.ToString(GetSlot(date, ISO_MONTH));
     },
     day: function day(date) {
       if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
@@ -8957,7 +9030,46 @@
   }; // Note: other built-in calendars than iso8601 are not part of the Temporal
   // proposal for ECMA-262. These calendars will be standardized as part of
   // ECMA-402.
-  // Implementation details for Gregorian calendar
+
+  function monthCodeNumberPart(monthCode) {
+    var month = +monthCode;
+    if (isNaN(month)) throw new RangeError("Invalid month code: ".concat(monthCode));
+    return month;
+  }
+  /**
+   * Safely merge a month, monthCode pair into an integer month.
+   * If both are present, make sure they match.
+   * This logic doesn't work for lunisolar calendars!
+   * */
+
+
+  function resolveNonLunisolarMonth(calendarDate) {
+    var month = calendarDate.month,
+        monthCode = calendarDate.monthCode;
+
+    if (monthCode === undefined) {
+      if (month === undefined) throw new TypeError('Either month or monthCode are required');
+      monthCode = "".concat(month);
+    } else {
+      var numberPart = monthCodeNumberPart(monthCode);
+
+      if (month !== undefined && month !== numberPart) {
+        throw new RangeError("monthCode ".concat(monthCode, " and month ").concat(month, " must match if both are present"));
+      }
+
+      if (monthCode !== "".concat(numberPart)) {
+        throw new RangeError("Invalid month code: ".concat(monthCode, ". Expected numeric string"));
+      }
+
+      month = numberPart;
+    }
+
+    return _objectSpread2(_objectSpread2({}, calendarDate), {}, {
+      month: month,
+      monthCode: monthCode
+    });
+  } // Implementation details for Gregorian calendar
+
 
   var gre = {
     isoYear: function isoYear(eraYear, era) {
@@ -9000,14 +9112,14 @@
       var isoYear = GetSlot(date, ISO_YEAR);
       return isoYear < 1 ? -isoYear + 1 : isoYear;
     },
-    fields: function fields(_fields3) {
-      if (_fields3.includes('year')) _fields3.push('eraYear');
-      if (_fields3.includes('eraYear')) _fields3.push('era');else if (_fields3.includes('era')) _fields3.push('eraYear');
-      return _fields3;
+    fields: function fields(_fields6) {
+      if (_fields6.includes('year')) _fields6.push('eraYear');
+      if (_fields6.includes('eraYear')) _fields6.push('era');else if (_fields6.includes('era')) _fields6.push('eraYear');
+      return _fields6;
     },
     dateFromFields: function dateFromFields(fields, overflow) {
       // Intentionally alphabetical
-      fields = ES.PrepareTemporalFields(fields, [['era', undefined], ['eraYear', undefined], ['day'], ['month'], ['year', undefined]]);
+      fields = ES.PrepareTemporalFields(fields, [['day'], ['era', undefined], ['eraYear', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]);
       gre.validateFields(fields);
       var isoYear = fields.year;
 
@@ -9021,7 +9133,7 @@
     },
     yearMonthFromFields: function yearMonthFromFields(fields, overflow) {
       // Intentionally alphabetical
-      fields = ES.PrepareTemporalFields(fields, [['era', undefined], ['eraYear', undefined], ['month'], ['year', undefined]]);
+      fields = ES.PrepareTemporalFields(fields, [['era', undefined], ['eraYear', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]);
       gre.validateFields(fields);
       var isoYear = fields.year;
 
@@ -9030,6 +9142,23 @@
       }
 
       return impl['iso8601'].yearMonthFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
+        year: isoYear
+      }), overflow);
+    },
+    monthDayFromFields: function monthDayFromFields(fields, overflow) {
+      // Intentionally alphabetical
+      fields = ES.PrepareTemporalFields(fields, [['day'], ['era', undefined], ['eraYear', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]); // validateFields doesn't validate month and monthCode; chaining up to
+      // impl['iso8601'] does. We only need to validate year/era/eraYear if we
+      // have month without monthCode.
+
+      if (fields.month !== undefined && fields.monthCode === undefined) gre.validateFields(fields);
+      var isoYear = fields.year;
+
+      if (fields.era !== undefined) {
+        isoYear = gre.isoYear(fields.eraYear, fields.era);
+      }
+
+      return impl['iso8601'].monthDayFromFields(_objectSpread2(_objectSpread2({}, fields), {}, {
         year: isoYear
       }), overflow);
     }
@@ -9137,10 +9266,10 @@
       var eraIdx = jpn.findEra(date);
       return GetSlot(date, ISO_YEAR) - jpn.eraAddends[eraIdx];
     },
-    fields: function fields(_fields4) {
-      if (_fields4.includes('year')) _fields4.push('eraYear');
-      if (_fields4.includes('eraYear')) _fields4.push('era');else if (_fields4.includes('era')) _fields4.push('eraYear');
-      return _fields4;
+    fields: function fields(_fields7) {
+      if (_fields7.includes('year')) _fields7.push('eraYear');
+      if (_fields7.includes('eraYear')) _fields7.push('era');else if (_fields7.includes('era')) _fields7.push('eraYear');
+      return _fields7;
     },
     dateFromFields: function dateFromFields(fields, overflow) {
       // Intentionally alphabetical
@@ -9230,7 +9359,7 @@
         }
 
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalDateLike, fieldNames);
 
         if (!props) {
@@ -9524,7 +9653,7 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         return ES.YearMonthFromFields(calendar, fields, YearMonth);
       }
@@ -9534,7 +9663,7 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         return ES.MonthDayFromFields(calendar, fields, MonthDay);
       }
@@ -9602,6 +9731,18 @@
         }
 
         return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar monthCode result must be a string');
+        }
+
+        return ES.ToString(result);
       }
     }, {
       key: "day",
@@ -9813,7 +9954,7 @@
 
         options = ES.NormalizeOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         var props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
 
         if (!props) {
@@ -10202,7 +10343,7 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         return ES.YearMonthFromFields(calendar, fields, YearMonth);
       }
@@ -10212,7 +10353,7 @@
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         return ES.MonthDayFromFields(calendar, fields, MonthDay);
       }
@@ -10268,6 +10409,14 @@
         }
 
         return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+        if (result !== undefined) result = ES.ToString(result);
+        return result;
       }
     }, {
       key: "day",
@@ -11045,7 +11194,7 @@
         }
 
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
 
         if (!props) {
@@ -11108,7 +11257,7 @@
       value: function toPlainDate(item) {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
-        var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
         var inputFieldNames = ES.CalendarFields(calendar, ['year']);
         var entries = [['year']]; // Add extra fields from the calendar at the end
@@ -11139,16 +11288,16 @@
         };
       }
     }, {
-      key: "month",
+      key: "monthCode",
       get: function get() {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).month(this);
+        var result = GetSlot(this, CALENDAR).monthCode(this);
 
         if (result === undefined) {
-          throw new RangeError('calendar month result must be a positive integer');
+          throw new RangeError('calendar monthCode result must be a string');
         }
 
-        return ES.ToPositiveInteger(result);
+        return ES.ToString(result);
       }
     }, {
       key: "day",
@@ -11902,7 +12051,7 @@
         }
 
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalYearMonthLike, fieldNames);
 
         if (!props) {
@@ -11939,7 +12088,7 @@
         options = ES.NormalizeOptionsObject(options);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? calendar.daysInMonth(this) : 1;
@@ -11990,7 +12139,7 @@
         options = ES.NormalizeOptionsObject(options);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? calendar.daysInMonth(this) : 1;
@@ -12026,7 +12175,7 @@
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
@@ -12077,7 +12226,7 @@
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var TemporalDate = GetIntrinsic$1('%Temporal.PlainDate%');
@@ -12159,7 +12308,7 @@
       value: function toPlainDate(item) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         var calendar = GetSlot(this, CALENDAR);
-        var receiverFieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
         var inputFieldNames = ES.CalendarFields(calendar, ['day']);
         var entries = [['day']]; // Add extra fields from the calendar at the end
@@ -12214,6 +12363,14 @@
         }
 
         return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+        if (result !== undefined) result = ES.ToString(result);
+        return result;
       }
     }, {
       key: "calendar",
@@ -12370,7 +12527,7 @@
         var offset = ES.ToTemporalOffset(options, 'prefer');
         var timeZone = GetSlot(this, TIME_ZONE);
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'nanosecond', 'second', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ArrayPrototypePush$1.call(fieldNames, 'offset');
         var props = ES.ToPartialRecord(temporalZonedDateTimeLike, fieldNames);
 
@@ -12882,7 +13039,7 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var YearMonth = GetIntrinsic$1('%Temporal.PlainYearMonth%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         return calendar.yearMonthFromFields(fields, {}, YearMonth);
       }
@@ -12892,7 +13049,7 @@
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var MonthDay = GetIntrinsic$1('%Temporal.PlainMonthDay%');
         var calendar = GetSlot(this, CALENDAR);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         return calendar.monthDayFromFields(fields, {}, MonthDay);
       }
@@ -12952,6 +13109,18 @@
         }
 
         return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(dateTime(this));
+
+        if (result === undefined) {
+          throw new RangeError('calendar monthCode result must be a string');
+        }
+
+        return ES.ToString(result);
       }
     }, {
       key: "day",
