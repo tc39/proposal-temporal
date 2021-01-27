@@ -1,3 +1,38 @@
+## 0.7.0
+
+- New APIs:
+  - Temporal.Calendar.era
+  - Temporal.Calendar.eraYear
+  - Temporal.Calendar.mergeFields
+  - Temporal.Calendar.monthCode
+  - Temporal.Calendar.toJSON
+  - Temporal.PlainDate.era
+  - Temporal.PlainDate.eraYear
+  - Temporal.PlainDate.monthCode
+  - Temporal.PlainDateTime.era
+  - Temporal.PlainDateTime.eraYear
+  - Temporal.PlainDateTime.monthCode
+  - Temporal.PlainMonthDay.monthCode
+  - Temporal.PlainYearMonth.era
+  - Temporal.PlainYearMonth.eraYear
+  - Temporal.PlainYearMonth.monthCode
+  - Temporal.PlainZonedDateTime.era
+  - Temporal.PlainZonedDateTime.eraYear
+  - Temporal.PlainZonedDateTime.monthCode
+- Removals:
+  - Temporal.Duration.getFields
+  - Temporal.PlainDate.getFields
+  - Temporal.PlainDateTime.getFields
+  - Temporal.PlainMonthDay.getFields
+  - Temporal.PlainTime.getFields
+  - Temporal.PlainYearMonth.getFields
+  - Temporal.ZonedDateTime.getFields
+- Removed the options argument from Temporal.PlainTime.add() and Temporal.PlainTime.subtract().
+- Temporal.Duration.toString() gains `fractionalSecondDigits`,
+  `smallestUnit`, and `roundingMode` options to control the precision
+  used in the output string.
+- The form of the calendar annotation in ISO strings is changed from `[c=calendar]` to `[u-ca-calendar]`.
+
 ## 0.6.0
 
 - API renames:
