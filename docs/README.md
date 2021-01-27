@@ -149,8 +149,8 @@ const dateTime = Temporal.PlainDateTime.from({
   hour: 15
 }); // => 1995-12-07T15:00:00
 const dateTime1 = dateTime.with({
-  minutes: 17,
-  seconds: 19
+  minute: 17,
+  second: 19
 }); // => 1995-12-07T15:17:19
 ```
 
