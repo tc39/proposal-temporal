@@ -44,10 +44,37 @@ describe('MonthDay', () => {
       it("MonthDay.from('1976-11-18') == (11-18)", () => equal(`${PlainMonthDay.from('1976-11-18')}`, '11-18'));
       it('MonthDay.from({ monthCode: "11", day: 18 }) == 11-18', () =>
         equal(`${PlainMonthDay.from({ monthCode: '11', day: 18 })}`, '11-18'));
+      it('ignores year when determining the ISO reference year from month/day', () => {
+        const one = PlainMonthDay.from({ year: 2019, month: 11, day: 18 });
+        const two = PlainMonthDay.from({ year: 1979, month: 11, day: 18 });
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
+      });
+      it('ignores era/eraYear when determining the ISO reference year from month/day', () => {
+        const one = PlainMonthDay.from({ era: 'ad', eraYear: 2019, month: 11, day: 18, calendar: 'gregory' });
+        const two = PlainMonthDay.from({ era: 'ad', eraYear: 1979, month: 11, day: 18, calendar: 'gregory' });
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
+      });
+      it('ignores year when determining the ISO reference year from monthCode/day', () => {
+        const one = PlainMonthDay.from({ year: 2019, monthCode: '11', day: 18 });
+        const two = PlainMonthDay.from({ year: 1979, monthCode: '11', day: 18 });
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
+      });
+      it('ignores era/eraYear when determining the ISO reference year from monthCode/day', () => {
+        const one = PlainMonthDay.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 18, calendar: 'gregory' });
+        const two = PlainMonthDay.from({ era: 'ad', eraYear: 1979, monthCode: '11', day: 18, calendar: 'gregory' });
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
+      });
       it('MonthDay.from(11-18) is not the same object', () => {
         const orig = new PlainMonthDay(11, 18);
         const actu = PlainMonthDay.from(orig);
         notEqual(actu, orig);
+      });
+      it('ignores year when determining the ISO reference year from other Temporal object', () => {
+        const plainDate1 = Temporal.PlainDate.from('2019-11-18');
+        const plainDate2 = Temporal.PlainDate.from('1976-11-18');
+        const one = PlainMonthDay.from(plainDate1);
+        const two = PlainMonthDay.from(plainDate2);
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('MonthDay.from({month, day}) allowed if calendar absent', () =>
         equal(`${PlainMonthDay.from({ month: 11, day: 18 })}`, '11-18'));
@@ -102,6 +129,11 @@ describe('MonthDay', () => {
       it('RFC 3339 month-day syntax', () => {
         equal(`${PlainMonthDay.from('--11-18')}`, '11-18');
         equal(`${PlainMonthDay.from('--1118')}`, '11-18');
+      });
+      it('ignores year when determining the ISO reference year from string', () => {
+        const one = PlainMonthDay.from('2019-11-18');
+        const two = PlainMonthDay.from('1976-11-18');
+        equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('no junk at end of string', () => throws(() => PlainMonthDay.from('11-18junk'), RangeError));
       it('options may only be an object or undefined', () => {
@@ -193,6 +225,9 @@ describe('MonthDay', () => {
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${md.with({ monthCode: '12', days: 1 })}`, '12-15');
+    });
+    it('year is ignored when determining ISO reference year', () => {
+      equal(md.with({ year: 1900 }).getISOFields().isoYear, md.getISOFields().isoYear);
     });
   });
   describe('MonthDay.equals()', () => {
