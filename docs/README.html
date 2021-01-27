@@ -243,7 +243,7 @@ instant<span class="token punctuation">.</span>epochMilliseconds <span class="to
 <h3 id="Temporal-ZonedDateTime"><a class="heading-link" href="#Temporal-ZonedDateTime"></a><strong>Temporal.ZonedDateTime</strong></h3><p>A <code>Temporal.ZonedDateTime</code> is a timezone-aware, calendar-aware date/time object that represents a real event that has happened (or will happen) at a particular exact time from the perspective of a particular region on Earth, e.g. December 7th, 1995 at 3:24 AM in US Pacific time (in Gregorian calendar).
 This type is optimized for use cases that require a time zone, including DST-safe arithmetic and interoperability with RFC 5545 (iCalendar).</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> zonedDateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-    timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span>
+    timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span>
     year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
     month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
     day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span>
@@ -283,8 +283,8 @@ For use cases that require a time zone, especially using arithmetic or other der
   hour<span class="token operator">:</span> <span class="token number">15</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T15:00:00</span>
 <span class="token keyword">const</span> dateTime1 <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  minutes<span class="token operator">:</span> <span class="token number">17</span><span class="token punctuation">,</span>
-  seconds<span class="token operator">:</span> <span class="token number">19</span>
+  minute<span class="token operator">:</span> <span class="token number">17</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token number">19</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T15:17:19</span></code></pre><p>See <a href="./plaindatetime.html">Temporal.PlainDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainYearMonth"><a class="heading-link" href="#Temporal-PlainYearMonth"></a><strong>Temporal.PlainYearMonth</strong></h3><p>A date without a day component.
 This is useful to express things like &quot;the October 2020 meeting&quot;.</p>
