@@ -214,6 +214,16 @@ describe('Intl', () => {
   });
 
   describe('Non-ISO Calendars', () => {
+    const testChineseData = new Date('2001-02-01T00:00Z').toLocaleString('en-US-u-ca-chinese', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      era: 'short',
+      timeZone: 'UTC'
+    });
+    const hasOutdatedChineseIcuData = !testChineseData.endsWith('2001');
+    const itOrSkip = (id) => ((id === 'chinese' || id === 'dangi') && hasOutdatedChineseIcuData ? it.skip : it);
+
     it('verify that Intl.DateTimeFormat.formatToParts output matches snapshot data', () => {
       // This test isn't testing Temporal. Instead, it's verifying that the
       // output of Intl.DateTimeFormat.formatToParts for non-ISO calendars
@@ -349,7 +359,7 @@ describe('Intl', () => {
           if (val[type]) val = val[type];
           return val;
         };
-        it(`from: ${id} ${name} ${getValues('from') === RangeError ? ' (throws)' : ''}`, () => {
+        itOrSkip(id)(`from: ${id} ${name} ${getValues('from') === RangeError ? ' (throws)' : ''}`, () => {
           const values = getValues('from');
           if (values === RangeError) {
             // Some calendars will fail due to Chromium bugs noted in the test definitions
@@ -410,7 +420,7 @@ describe('Intl', () => {
           });
           equal(dateRoundtrip4.toString(), inCal.toString());
         });
-        it(`with: ${id} ${name} ${getValues('with') === RangeError ? ' (throws)' : ''}`, () => {
+        itOrSkip(id)(`with: ${id} ${name} ${getValues('with') === RangeError ? ' (throws)' : ''}`, () => {
           const values = getValues('with');
           const inCal = date.withCalendar(id);
           if (values === RangeError) {
@@ -512,7 +522,7 @@ describe('Intl', () => {
       for (let [unit, { duration, results, startDate }] of Object.entries(tests)) {
         const values = results[id];
         duration = Temporal.Duration.from(duration);
-        it(`${id} add ${duration}`, () => {
+        itOrSkip(id)(`${id} add ${duration}`, () => {
           // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const start = Temporal.PlainDate.from({ ...startDate, calendar: id });
           const end = start.add(duration);
@@ -574,7 +584,7 @@ describe('Intl', () => {
     for (let id of calendars) {
       let { year, leap, days } = daysInMonthCases[id];
       let date = Temporal.PlainDate.from({ year, month: 1, day: 1, calendar: id });
-      it(`${id} leap year check for year ${year}`, () => {
+      itOrSkip(id)(`${id} leap year check for year ${year}`, () => {
         if (typeof leap === 'boolean') {
           equal(date.inLeapYear, leap);
         } else {
@@ -583,7 +593,7 @@ describe('Intl', () => {
           equal(leapMonth.monthCode, leap);
         }
       });
-      it(`${id} months check for year ${year}`, () => {
+      itOrSkip(id)(`${id} months check for year ${year}`, () => {
         const { monthsInYear } = date;
         equal(monthsInYear, days.length);
         // This loop counts backwards so we'll have the right test for the month
