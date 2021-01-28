@@ -213,6 +213,421 @@ describe('Intl', () => {
     });
   });
 
+  describe('Non-ISO Calendars', () => {
+    it('verify that Intl.DateTimeFormat.formatToParts output matches snapshot data', () => {
+      // This test isn't testing Temporal. Instead, it's verifying that the
+      // output of Intl.DateTimeFormat.formatToParts for non-ISO calendars
+      // hasn't changed. There are a number of outstanding bugs in this output
+      // that, when fixed, will break other tests. So this test is a signal that
+      // other tests are broken because the comparison data needs to be updated,
+      // not necessarily because Temporal is broken.
+      // prettier-ignore
+      // eslint-disable-next-line max-len, no-console, brace-style
+      const year2000Content = ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew', 'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'japanese', 'persian', 'roc'].map((id) => `${id}: ${new Date('2000-01-01T00:00Z').toLocaleDateString('en-us', { calendar: id, timeZone: 'UTC' })}`).join('\n');
+      const year2000Snapshot =
+        'iso8601: 1/1/2000\n' +
+        'buddhist: 1/1/2543 BE\n' +
+        'chinese: 11/25/1999\n' +
+        'coptic: 4/22/1716 ERA1\n' +
+        'dangi: 11/25/1999\n' +
+        'ethioaa: 4/22/7492 ERA0\n' +
+        'ethiopic: 4/22/1992 ERA1\n' +
+        'hebrew: 23 Tevet 5760\n' +
+        'indian: 10/11/1921 Saka\n' +
+        'islamic: 9/25/1420 AH\n' +
+        'islamic-umalqura: 9/24/1420 AH\n' +
+        'islamic-tbla: 9/25/1420 AH\n' +
+        'islamic-civil: 9/24/1420 AH\n' +
+        'islamic-rgsa: 9/25/1420 AH\n' +
+        'islamicc: 9/24/1420 AH\n' +
+        'japanese: 1/1/12 H\n' +
+        'persian: 10/11/1378 AP\n' +
+        'roc: 1/1/89 Minguo';
+      equal(year2000Content, year2000Snapshot);
+
+      // prettier-ignore
+      // eslint-disable-next-line max-len, no-console, brace-style
+      const year1Content = ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew', 'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'japanese', 'persian', 'roc'].map((id) => `${id}: ${new Date('0001-01-01T00:00Z').toLocaleDateString('en-us', { calendar: id, timeZone: 'UTC' })}`).join('\n');
+      const year1Snapshot =
+        'iso8601: 1/1/1\n' +
+        'buddhist: 1/3/544 BE\n' +
+        'chinese: 11/21/0\n' +
+        'coptic: 5/8/284 ERA0\n' +
+        'dangi: 11/21/0\n' +
+        'ethioaa: 5/8/5493 ERA0\n' +
+        'ethiopic: 5/8/5493 ERA0\n' +
+        'hebrew: 18 Tevet 3761\n' +
+        'indian: 10/11/-78 Saka\n' +
+        'islamic: -7/20/-639 AH\n' +
+        'islamic-umalqura: 5/18/-640 AH\n' +
+        'islamic-tbla: 5/19/-640 AH\n' +
+        'islamic-civil: 5/18/-640 AH\n' +
+        'islamic-rgsa: -7/20/-639 AH\n' +
+        'islamicc: 5/18/-640 AH\n' +
+        'japanese: 1/3/-643 Taika (645–650)\n' +
+        'persian: 10/11/-621 AP\n' +
+        'roc: 1/3/1911 Before R.O.C.';
+      equal(year1Content, year1Snapshot);
+    });
+
+    const fromWithCases = {
+      iso8601: { year2000: { year: 2000, month: 1, day: 1 }, year1: { year: 1, month: 1, day: 1 } },
+      buddhist: {
+        year2000: { year: 2543, month: 1, day: 1, era: 'be' },
+        year1: { year: 544, month: 1, day: 3, era: 'be' }
+      },
+      chinese: {
+        year2000: { year: 1999, month: 11, day: 25 },
+        // There's a 3bis (4th month) leap month in this year
+        year1: { year: 0, month: 12, monthCode: '11', day: 21 }
+      },
+      coptic: {
+        year2000: { year: 1716, month: 4, day: 22, era: 'era1' },
+        year1: { year: -283, eraYear: 284, month: 5, day: 8, era: 'era0' }
+      },
+      dangi: {
+        year2000: { year: 1999, month: 11, day: 25 },
+        // There's a 3bis (4th month) leap month in this year
+        year1: { year: 0, month: 12, monthCode: '11', day: 21 }
+      },
+      ethioaa: {
+        year2000: { year: 7492, month: 4, day: 22, era: 'era0' },
+        year1: { year: 5493, month: 5, day: 8, era: 'era0' }
+      },
+      ethiopic: {
+        year2000: { eraYear: 1992, year: 7492, month: 4, day: 22, era: 'era1' },
+        year1: { year: 5493, month: 5, day: 8, era: 'era0' }
+      },
+      hebrew: { year2000: { year: 5760, month: 4, day: 23 }, year1: { year: 3761, month: 4, day: 18 } },
+      indian: {
+        year2000: { year: 1921, month: 10, day: 11, era: 'saka' },
+        // with() fails due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
+        // from() succeeds because the bug only gets triggered before 1/1/1 ISO.
+        year1: RangeError
+      },
+      // Older islamic dates will fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10527
+      islamic: { year2000: { year: 1420, month: 9, day: 25, era: 'ah' }, year1: RangeError },
+      'islamic-umalqura': {
+        year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
+        year1: { year: -640, month: 5, day: 18, era: 'ah' }
+      },
+      'islamic-tbla': {
+        year2000: { year: 1420, month: 9, day: 25, era: 'ah' },
+        year1: { year: -640, month: 5, day: 19, era: 'ah' }
+      },
+      'islamic-civil': {
+        year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
+        year1: { year: -640, month: 5, day: 18, era: 'ah' }
+      },
+      'islamic-rgsa': { year2000: { year: 1420, month: 9, day: 25, era: 'ah' }, year1: RangeError },
+      islamicc: {
+        year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
+        year1: { year: -640, month: 5, day: 18, era: 'ah' }
+      },
+      // TODO: Figure out how to handle dates before Taika (the first recorded Japanese era)
+      japanese: {
+        year2000: { year: 2000, eraYear: 12, month: 1, day: 1, era: 'heisei' },
+        year1: RangeError
+      },
+      persian: {
+        year2000: { year: 1378, month: 10, day: 11, era: 'ap' },
+        year1: { year: -621, month: 10, day: 11, era: 'ap' }
+      },
+      roc: {
+        year2000: { year: 89, month: 1, day: 1, era: 'minguo' },
+        year1: { year: -1910, eraYear: 1911, month: 1, day: 3, era: 'before-roc' }
+      }
+    };
+    for (let [id, tests] of Object.entries(fromWithCases)) {
+      const dates = {
+        year2000: Temporal.PlainDate.from('2000-01-01'),
+        year1: Temporal.PlainDate.from('0001-01-01')
+      };
+      for (const [name, date] of Object.entries(dates)) {
+        const getValues = (type) => {
+          let val = tests[name];
+          if (val[type]) val = val[type];
+          return val;
+        };
+        it(`from: ${id} ${name} ${getValues('from') === RangeError ? ' (throws)' : ''}`, () => {
+          const values = getValues('from');
+          if (values === RangeError) {
+            // Some calendars will fail due to Chromium bugs noted in the test definitions
+            throws(() => {
+              const inCal = date.withCalendar(id);
+              Temporal.PlainDate.from({
+                calendar: id,
+                year: inCal.year,
+                day: inCal.day,
+                monthCode: inCal.monthCode
+              });
+            }, RangeError);
+            return;
+          }
+          const inCal = date.withCalendar(id);
+          equal(`${name} ${id} day: ${inCal.day}`, `${name} ${id} day: ${values.day}`);
+          if (values.eraYear === undefined && values.era !== undefined) values.eraYear = values.year;
+
+          equal(`${name} ${id} eraYear: ${inCal.eraYear}`, `${name} ${id} eraYear: ${values.eraYear}`);
+          equal(`${name} ${id} era: ${inCal.era}`, `${name} ${id} era: ${values.era}`);
+          equal(`${name} ${id} year: ${inCal.year}`, `${name} ${id} year: ${values.year}`);
+
+          equal(`${name} ${id} month: ${inCal.month}`, `${name} ${id} month: ${values.month}`);
+          if (values.monthCode === undefined) values.monthCode = `${values.month}`;
+          equal(`${name} ${id} monthCode: ${inCal.monthCode}`, `${name} ${id} monthCode: ${values.monthCode}`);
+
+          if (values.era) {
+            // Now reverse the operation: create using calendar dates and verify
+            // that the same ISO date is returned.
+            const dateRoundtrip1 = Temporal.PlainDate.from({
+              calendar: id,
+              eraYear: values.eraYear,
+              era: values.era,
+              day: values.day,
+              monthCode: values.monthCode
+            });
+            equal(dateRoundtrip1.toString(), inCal.toString());
+          }
+          const dateRoundtrip2 = Temporal.PlainDate.from({
+            calendar: id,
+            year: values.year,
+            day: values.day,
+            monthCode: values.monthCode
+          });
+          equal(dateRoundtrip2.toString(), inCal.toString());
+          const dateRoundtrip3 = Temporal.PlainDate.from({
+            calendar: id,
+            year: values.year,
+            day: values.day,
+            month: values.month
+          });
+          equal(dateRoundtrip3.toString(), inCal.toString());
+          const dateRoundtrip4 = Temporal.PlainDate.from({
+            calendar: id,
+            year: values.year,
+            day: values.day,
+            monthCode: values.monthCode
+          });
+          equal(dateRoundtrip4.toString(), inCal.toString());
+        });
+        it(`with: ${id} ${name} ${getValues('with') === RangeError ? ' (throws)' : ''}`, () => {
+          const values = getValues('with');
+          const inCal = date.withCalendar(id);
+          if (values === RangeError) {
+            // Some calendars will fail due to Chromium bugs noted in the test definitions
+            throws(() => inCal.with({ day: 1 }).year, RangeError);
+            return;
+          }
+          const afterWithDay = inCal.with({ day: 1 });
+          let t = '(after setting year)';
+          equal(`${t} year: ${afterWithDay.year}`, `${t} year: ${inCal.year}`);
+          equal(`${t} month: ${afterWithDay.month}`, `${t} month: ${inCal.month}`);
+          equal(`${t} day: ${afterWithDay.day}`, `${t} day: 1`);
+          const afterWithMonth = afterWithDay.with({ month: 1 });
+          t = '(after setting month)';
+          equal(`${t} year: ${afterWithMonth.year}`, `${t} year: ${inCal.year}`);
+          equal(`${t} month: ${afterWithMonth.month}`, `${t} month: 1`);
+          equal(`${t} day: ${afterWithMonth.day}`, `${t} day: 1`);
+          const afterWithYear = afterWithMonth.with({ year: 2020 });
+          t = '(after setting day)';
+          equal(`${t} year: ${afterWithYear.year}`, `${t} year: 2020`);
+          equal(`${t} month: ${afterWithYear.month}`, `${t} month: 1`);
+          equal(`${t} day: ${afterWithYear.day}`, `${t} day: 1`);
+        });
+      }
+    }
+    /*
+      // This code below is useful for generating the snapshot content below in
+      // case more variations are needed.
+      year1Content = ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew',
+          'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc',
+          'japanese', 'persian', 'roc'].map((id) => {
+        const end = Temporal.PlainDate.from({ year: 2000, month: 1, day: 1, calendar: id }).add({months: 6});
+        const { year, month, day, monthCode, eraYear, era } = end;
+        const quotedId = id.includes('-') ? `'${id}'` : id;
+        return `  ${quotedId}: { year: ${year}, month: ${month}, day: ${day}, monthCode: '${monthCode
+                }', eraYear: ${eraYear}, era: ${era ? `'${era}'` : undefined} }`;
+      }).join(',\n');
+    */
+    const addDaysWeeksCases = {
+      iso8601: { year: 2000, month: 10, day: 7, monthCode: '10', eraYear: undefined, era: undefined },
+      buddhist: { year: 2000, month: 10, day: 8, monthCode: '10', eraYear: 2000, era: 'be' },
+      chinese: { year: 2000, month: 10, day: 16, monthCode: '10', eraYear: undefined, era: undefined },
+      coptic: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era1' },
+      dangi: { year: 2000, month: 10, day: 16, monthCode: '10', eraYear: undefined, era: undefined },
+      ethioaa: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era0' },
+      ethiopic: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era0' },
+      hebrew: { year: 2000, month: 10, day: 14, monthCode: '10', eraYear: undefined, era: undefined },
+      indian: { year: 2000, month: 10, day: 6, monthCode: '10', eraYear: 2000, era: 'saka' },
+      islamic: { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      'islamic-umalqura': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      'islamic-tbla': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      'islamic-civil': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      'islamic-rgsa': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      islamicc: { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
+      japanese: { year: 2000, month: 10, day: 7, monthCode: '10', eraYear: 12, era: 'heisei' },
+      persian: { year: 2000, month: 10, day: 5, monthCode: '10', eraYear: 2000, era: 'ap' },
+      roc: { year: 2000, month: 10, day: 8, monthCode: '10', eraYear: 2000, era: 'minguo' }
+    };
+    const addMonthsCases = {
+      iso8601: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: undefined, era: undefined },
+      buddhist: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'be' },
+      chinese: { year: 2001, month: 6, day: 1, monthCode: '5', eraYear: undefined, era: undefined },
+      coptic: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era1' },
+      dangi: { year: 2001, month: 6, day: 1, monthCode: '5', eraYear: undefined, era: undefined },
+      ethioaa: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era0' },
+      ethiopic: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era0' },
+      hebrew: { year: 2001, month: 6, day: 1, monthCode: '5L', eraYear: undefined, era: undefined },
+      indian: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'saka' },
+      islamic: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      'islamic-umalqura': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      'islamic-tbla': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      'islamic-civil': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      'islamic-rgsa': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      islamicc: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
+      japanese: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 13, era: 'heisei' },
+      persian: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ap' },
+      roc: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'minguo' }
+    };
+    const addYearsMonthsDaysCases = Object.entries(addMonthsCases).reduce((obj, entry) => {
+      obj[entry[0]] = { ...entry[1], day: 4 };
+      return obj;
+    }, {});
+    const tests = {
+      days: { duration: { days: 280 }, results: addDaysWeeksCases, startDate: { year: 2000, month: 1, day: 1 } },
+      weeks: { duration: { weeks: 40 }, results: addDaysWeeksCases, startDate: { year: 2000, month: 1, day: 1 } },
+      // 2001 is a leap year in both ICU lunisolar calendars: Hebrew and
+      // Chinese/Dangi. By adding 6 months we're ensuring that addition
+      // recognizes the leap month.
+      months: { duration: { months: 6 }, results: addMonthsCases, startDate: { year: 2000, month: 12, day: 1 } },
+      years: {
+        duration: { years: 3, months: 6, days: 3 },
+        results: addYearsMonthsDaysCases,
+        startDate: { year: 1997, month: 12, day: 1 }
+      }
+    };
+    // let totalNow = 0;
+    const calendars = Object.keys(addMonthsCases);
+    for (let id of calendars) {
+      for (let [unit, { duration, results, startDate }] of Object.entries(tests)) {
+        const values = results[id];
+        duration = Temporal.Duration.from(duration);
+        it(`${id} add ${duration}`, () => {
+          // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+          const start = Temporal.PlainDate.from({ ...startDate, calendar: id });
+          const end = start.add(duration);
+          equal(`add ${unit} ${id} day: ${end.day}`, `add ${unit} ${id} day: ${values.day}`);
+          equal(`add ${unit} ${id} eraYear: ${end.eraYear}`, `add ${unit} ${id} eraYear: ${values.eraYear}`);
+          equal(`add ${unit} ${id} era: ${end.era}`, `add ${unit} ${id} era: ${values.era}`);
+          equal(`add ${unit} ${id} year: ${end.year}`, `add ${unit} ${id} year: ${values.year}`);
+          equal(`add ${unit} ${id} month: ${end.month}`, `add ${unit} ${id} month: ${values.month}`);
+          equal(`add ${unit} ${id} monthCode: ${end.monthCode}`, `add ${unit} ${id} monthCode: ${values.monthCode}`);
+          const calculatedStart = end.subtract(duration);
+          equal(`start ${calculatedStart.toString()}`, `start ${start.toString()}`);
+          const diff = start.until(end, { largestUnit: unit });
+          equal(`diff ${unit} ${id}: ${diff}`, `diff ${unit} ${id}: ${duration}`);
+          // const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+          // totalNow += ms;
+          // console.log(`${id} add ${duration}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
+        });
+      }
+    }
+    /*
+      // content for tests below
+      ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew',
+                'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc',
+                'japanese', 'persian', 'roc'].map((id) => {
+        const date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 1, calendar: id });
+        const monthsInYear = date.monthsInYear;
+        const daysInMonthArray = [];
+        let { year, inLeapYear: leap } = date;
+        for (let i = 1; i <= monthsInYear; i++) {
+          const monthStart = date.with({month: i});
+          const { monthCode, daysInMonth } = monthStart;
+          daysInMonthArray.push(monthStart.daysInMonth);
+          if (monthStart.monthCode.endsWith('L')) leap = `'${monthCode}'`;
+        }
+        const quotedId = id.includes('-') ? `'${id}'` : id;
+        return `${quotedId}: { year: ${year}, leap: ${leap}, days: [${daysInMonthArray.join(', ')}] }`;
+      }).join(',\n');
+    */
+    const daysInMonthCases = {
+      iso8601: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
+      buddhist: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
+      chinese: { year: 2001, leap: '4L', days: [30, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
+      coptic: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
+      dangi: { year: 2001, leap: '4L', days: [30, 30, 30, 29, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
+      ethioaa: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
+      ethiopic: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
+      hebrew: { year: 2001, leap: '5L', days: [30, 30, 30, 29, 30, 30, 29, 30, 29, 30, 29, 30, 29] },
+      indian: { year: 2001, leap: false, days: [30, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] },
+      islamic: { year: 2001, leap: false, days: [29, 30, 29, 29, 30, 29, 30, 30, 29, 30, 30, 29] },
+      'islamic-umalqura': { year: 2001, leap: true, days: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30] },
+      'islamic-tbla': { year: 2001, leap: true, days: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30] },
+      'islamic-civil': { year: 2001, leap: true, days: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30] },
+      'islamic-rgsa': { year: 2001, leap: false, days: [29, 30, 29, 29, 30, 29, 30, 30, 29, 30, 30, 29] },
+      islamicc: { year: 2001, leap: true, days: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30] },
+      japanese: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
+      persian: { year: 2001, leap: false, days: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29] },
+      roc: { year: 2001, leap: true, days: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] }
+    };
+    for (let id of calendars) {
+      let { year, leap, days } = daysInMonthCases[id];
+      let date = Temporal.PlainDate.from({ year, month: 1, day: 1, calendar: id });
+      it(`${id} leap year check for year ${year}`, () => {
+        if (typeof leap === 'boolean') {
+          equal(date.inLeapYear, leap);
+        } else {
+          equal(date.inLeapYear, true);
+          const leapMonth = date.with({ monthCode: leap });
+          equal(leapMonth.monthCode, leap);
+        }
+      });
+      it(`${id} months check for year ${year}`, () => {
+        const { monthsInYear } = date;
+        equal(monthsInYear, days.length);
+        // This loop counts backwards so we'll have the right test for the month
+        // before a leap month in lunisolar calendars.
+        for (let i = monthsInYear, leapMonthIndex = undefined; i >= 1; i--) {
+          const monthStart = date.with({ month: i });
+          const { month, monthCode, daysInMonth } = monthStart;
+          equal(
+            `${id} month ${i} (code ${monthCode}) days: ${daysInMonth}`,
+            `${id} month ${i} (code ${monthCode}) days: ${days[i - 1]}`
+          );
+          if (monthCode.endsWith('L')) {
+            equal(date.with({ monthCode }).monthCode, monthCode);
+            leapMonthIndex = i;
+          } else {
+            if (leapMonthIndex && i === leapMonthIndex - 1) {
+              const inLeapMonth = monthStart.with({ monthCode: `${month}L` });
+              equal(inLeapMonth.monthCode, `${monthCode}L`);
+            } else {
+              throws(() => monthStart.with({ monthCode: `${month}L` }, { overflow: 'reject' }), RangeError);
+              if (['chinese', 'dangi'].includes(id)) {
+                if (i === 1 || i === 12 || i === 13) {
+                  throws(() => monthStart.with({ monthCode: `${month}L` }), RangeError);
+                } else {
+                  // verify that non-leap "L" months are constrained down to last day of previous month
+                  const fakeL = monthStart.with({ monthCode: `${month}L`, day: 5 });
+                  equal(fakeL.monthCode, `${month}`);
+                  equal(fakeL.day, fakeL.daysInMonth);
+                }
+              }
+            }
+            if (!['chinese', 'dangi', 'hebrew'].includes(id)) {
+              // leap months should only be allowed for lunisolar calendars
+              throws(() => monthStart.with({ monthCode: `${month}L` }), RangeError);
+            }
+          }
+          throws(() => monthStart.with({ day: daysInMonth + 1 }, { overflow: 'reject' }), RangeError);
+          const oneDayPastMonthEnd = monthStart.with({ day: daysInMonth + 1 });
+          equal(oneDayPastMonthEnd.day, daysInMonth);
+        }
+      });
+    }
+  });
+
   describe('DateTimeFormat', () => {
     describe('supportedLocalesOf', () => {
       it('should return an Array', () => assert(Array.isArray(Intl.DateTimeFormat.supportedLocalesOf())));
