@@ -3,9 +3,8 @@
 **Polyfill for [Proposal: Temporal](https://github.com/tc39/proposal-temporal)**
 
 **NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
-The API will change before the proposal reaches Stage 3, based on feedback that we receive during this time.
-Please give us your feedback in the [issue tracker](https://github.com/tc39/proposal-temporal/issues) and by taking the [survey](https://forms.gle/iL9iZg7Y9LvH41Nv8).
-More info: https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/
+The API may change before the proposal reaches Stage 3, based on feedback from TC39 reviews and implementation in JS engines.
+Please report bugs in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
 
 Please run the polyfill with Node.js 12 or later.
 
