@@ -22,7 +22,7 @@ This proposal is currently [Stage 2](https://github.com/tc39/proposals#stage-2).
 
 At the time of writing, all the major design decisions that we are aware of have been made.
 The proposal is under review by the TC39 delegates and the bar for making subsequent changes is high.
-Nonetheless, changes may occur as the result of further research during Stage 2 and Stage 3 of the TC39 process.
+Nonetheless, changes may occur as the result of feedback from TC39 reviews and implementation in JS engines.
 
 Stage 3 Reviewers:
 
@@ -54,7 +54,7 @@ A complete polyfill can be found [here](./polyfill).
 When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools.
 
 **NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
-The API may change before the proposal reaches Stage 4.
+The API may change before the proposal reaches Stage 3.
 
 ## Documentation
 
