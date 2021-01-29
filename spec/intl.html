@@ -316,6 +316,95 @@
       </p>
     </emu-clause>
 
+    <emu-clause id="sec-formatdatetimepattern" aoid="FormatDateTimePattern">
+      <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ )</h1>
+
+      <p>
+      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (with must be <mark>TODO: describe type</mark>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a Number value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. <del>Let _x_ be TimeClip(_x_).</del>
+        1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
+        1. Let _locale_ be _dateTimeFormat_.[[Locale]].
+        1. Let _nfOptions_ be ObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
+        1. Let _nf_ be ? Construct(%NumberFormat%, « _locale_, _nfOptions_ »).
+        1. Let _nf2Options_ be ObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, 2).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
+        1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
+        1. Let _fractionalSecondDigits_ be _dateTimeFormat_.[[FractionalSecondDigits]].
+        1. If _fractionalSecondDigits_ is not *undefined*, then
+          1. Let _nf3Options_ be ObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
+          1. Let _nf3_ be ? Construct(%NumberFormat%, « _locale_, _nf3Options_ »).
+        1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _result_ be a new empty List.
+        1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
+        1. For each element _patternPart_ of _patternParts_, in List order, do
+          1. Let _p_ be _patternPart_.[[Type]].
+          1. If _p_ is *"literal"*, then
+            1. Append a new Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"fractionalSecondDigits"*, then
+            1. Let _v_ be _tm_.[[Millisecond]].
+            1. Let _v_ be floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Let _fv_ be FormatNumeric(_nf3_, _v_).
+            1. Append a new Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } as the last element of _result_.
+          1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
+            1. If _rangeFormatOptions_ is not *undefined*, let _f_ be the value of _rangeFormatOptions_'s field whose name matches _p_.
+            1. Else, let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
+            1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
+            1. If _p_ is *"year"* and _v_ ≤ 0, let _v_ be 1 - _v_.
+            1. If _p_ is *"month"*, increase _v_ by 1.
+            1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h11"* or *"h12"*, then
+              1. Let _v_ be _v_ modulo 12.
+              1. If _v_ is 0 and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h12"*, let _v_ be 12.
+            1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h24"*, then
+              1. If _v_ is 0, let _v_ be 24.
+            1. <ins>If _p_ is *timeZoneName*, then</ins>
+              1. <ins>If _tm_ has a [[timeZoneName]] field, then</ins>
+                1. <ins>Set _v_ to _tm_.[[timeZoneName]].</ins>
+              1. <ins>Else,</ins>
+                1. <ins>Set _v_ to _dateTimeFormat_.[[TimeZone]].</ins>
+            1. If _f_ is *"numeric"*, then
+              1. Let _fv_ be FormatNumeric(_nf_, _v_).
+            1. Else if _f_ is *"2-digit"*, then
+              1. Let _fv_ be FormatNumeric(_nf2_, _v_).
+              1. If the *"length"* property of _fv_ is greater than 2, let _fv_ be the substring of _fv_ containing the last two characters.
+            1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Day]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"month"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[day]] is *undefined*.  If _p_ is *"timeZoneName"*, then the String value may also depend on the value of the [[InDST]] field of _tm_. If _p_ is *"era"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Era]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"era"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[era]] is *undefined*. If the implementation does not have a localized representation of _f_, then use _f_ itself.
+            1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"ampm"*, then
+            1. Let _v_ be _tm_.[[Hour]].
+            1. If _v_ is greater than 11, then
+              1. Let _fv_ be an implementation and locale dependent String value representing *"post meridiem"*.
+            1. Else,
+              1. Let _fv_ be an implementation and locale dependent String value representing *"ante meridiem"*.
+            1. Append a new Record { [[Type]]: *"dayPeriod"*, [[Value]]: _fv_ } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"relatedYear"*, then
+            1. Let _v_ be _tm_.[[RelatedYear]].
+            1. Let _fv_ be FormatNumeric(_nf_, _v_).
+            1. Append a new Record { [[Type]]: *"relatedYear"*, [[Value]]: _fv_ } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"yearName"*, then
+            1. Let _v_ be _tm_.[[YearName]].
+            1. Append a new Record { [[Type]]: *"yearName"*, [[Value]]: _v_ } as the last element of the list _result_.
+          1. Else,
+            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_epochNanoseconds_</ins> and _p_.
+            1. Append a new Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } as the last element of _result_.
+        1. Return _result_.
+      </emu-alg>
+
+      <emu-note>
+        It is recommended that implementations use the locale and calendar dependent strings provided by the Common Locale Data Repository (available at <a href="http://cldr.unicode.org">http://cldr.unicode.org</a>), and use CLDR *"abbreviated"* strings for DateTimeFormat *"short"* strings, and CLDR *"wide"* strings for DateTimeFormat *"long"* strings.
+      </emu-note>
+
+      <emu-note>
+        It is recommended that implementations use the time zone information of the IANA Time Zone Database.
+      </emu-note>
+
+    </emu-clause>
+
     <emu-clause id="sec-partitiondatetimepattern" aoid="PartitionDateTimePattern">
       <h1>PartitionDateTimePattern ( _dateTimeFormat_, _x_ )</h1>
 
@@ -385,71 +474,8 @@
           1. Set _x_ to TimeClip(_x_).
           1. If _x_ is *NaN*, throw a *RangeError* exception.
           1. <ins>Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.</ins>
-        1. Let _locale_ be _dateTimeFormat_.[[Locale]].
-        1. Let _nfOptions_ be ObjectCreate(*null*).
-        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
-        1. Let _nf_ be ? Construct(%NumberFormat%, « _locale_, _nfOptions_ »).
-        1. Let _nf2Options_ be ObjectCreate(*null*).
-        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, 2).
-        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
-        1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
-        1. Let _fractionalSecondDigits_ be _dateTimeFormat_.[[FractionalSecondDigits]].
-        1. If _fractionalSecondDigits_ is not *undefined*, then
-          1. Let _nf3Options_ be ObjectCreate(*null*).
-          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
-          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
-          1. Let _nf3_ be ? Construct(%NumberFormat%, « _locale_, _nf3Options_ »).
-        1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
-        1. Let _result_ be a new empty List.
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
-        1. For each element _patternPart_ of _patternParts_, in List order, do
-          1. Let _p_ be _patternPart_.[[Type]].
-          1. If _p_ is *"literal"*, then
-            1. Append a new Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } as the last element of the list _result_.
-          1. Else if _p_ is equal to *"fractionalSecondDigits"*, then
-            1. Let _v_ be _tm_.[[Millisecond]].
-            1. Let _v_ be floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
-            1. Let _fv_ be FormatNumeric(_nf3_, _v_).
-            1. Append a new Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } as the last element of _result_.
-          1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
-            1. Let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
-            1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
-            1. If _p_ is *"year"* and _v_ ≤ 0, let _v_ be 1 - _v_.
-            1. If _p_ is *"month"*, increase _v_ by 1.
-            1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h11"* or *"h12"*, then
-              1. Let _v_ be _v_ modulo 12.
-              1. If _v_ is 0 and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h12"*, let _v_ be 12.
-            1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h24"*, then
-              1. If _v_ is 0, let _v_ be 24.
-            1. <ins>If _p_ is *timeZoneName*, then</ins>
-              1. <ins>If _tm_ has a [[timeZoneName]] field, then</ins>
-                1. <ins>Set _v_ to _tm_.[[timeZoneName]].</ins>
-              1. <ins>Else,</ins>
-                1. <ins>Set _v_ to _dateTimeFormat_.[[TimeZone]].</ins>
-            1. If _f_ is *"numeric"*, then
-              1. Let _fv_ be FormatNumeric(_nf_, _v_).
-            1. Else if _f_ is *"2-digit"*, then
-              1. Let _fv_ be FormatNumeric(_nf2_, _v_).
-              1. If the *"length"* property of _fv_ is greater than 2, let _fv_ be the substring of _fv_ containing the last two characters.
-            1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"*, then the String value may also depend on whether <del>_dateTimeFormat_ has a [[Day]]</del><ins>_pattern_ has a [[day]]</ins> internal slot. If _p_ is *"timeZoneName"*, then the String value may also depend on the value of the [[InDST]] field of _tm_. If _p_ is *"era"*, then the String value may also depend on whether <del>_dateTimeFormat_ has a [[Era]]</del><ins>_pattern_ has a [[era]]</ins> internal slot and if the implementation does not have a localized representation of _f_, then use _f_ itself.
-            1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
-          1. Else if _p_ is equal to *"ampm"*, then
-            1. Let _v_ be _tm_.[[Hour]].
-            1. If _v_ is greater than 11, then
-              1. Let _fv_ be an implementation and locale dependent String value representing *"post meridiem"*.
-            1. Else,
-              1. Let _fv_ be an implementation and locale dependent String value representing *"ante meridiem"*.
-            1. Append a new Record { [[Type]]: *"dayPeriod"*, [[Value]]: _fv_ } as the last element of the list _result_.
-          1. Else if _p_ is equal to *"relatedYear"*, then
-            1. Let _v_ be _tm_.[[RelatedYear]].
-            1. Let _fv_ be FormatNumeric(_nf_, _v_).
-            1. Append a new Record { [[Type]]: *"relatedYear"*, [[Value]]: _fv_ } as the last element of the list _result_.
-          1. Else if _p_ is equal to *"yearName"*, then
-            1. Let _v_ be _tm_.[[YearName]].
-            1. Append a new Record { [[Type]]: *"yearName"*, [[Value]]: _v_ } as the last element of the list _result_.
-          1. Else,
-            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_epochNanoseconds_</ins> and _p_.
-            1. Append a new Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } as the last element of _result_.
+        1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, *undefined*).
         1. Return _result_.
       </emu-alg>
 
