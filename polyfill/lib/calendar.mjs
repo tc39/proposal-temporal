@@ -442,13 +442,13 @@ const nonIsoHelperBase = {
         result.month = +matches[1];
         if (result.month < 1) {
           throw new RangeError(
-            `Invalid month ${value} from ${isoString}[c=${this.id}]` +
+            `Invalid month ${value} from ${isoString}[u-ca-${this.id}]` +
               ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10527)'
           );
         }
         if (result.month > 13) {
           throw new RangeError(
-            `Invalid month ${value} from ${isoString}[c=${this.id}]` +
+            `Invalid month ${value} from ${isoString}[u-ca-${this.id}]` +
               ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
           );
         }
@@ -475,7 +475,7 @@ const nonIsoHelperBase = {
       // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
       // output of Intl.DateTimeFormat.formatToParts.
       throw new RangeError(
-        `Intl.DateTimeFormat.formatToParts is missing year for ${this.id} calendar. Try Node 14+ or a modern browser.`
+        `Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`
       );
     }
     const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
@@ -1404,12 +1404,14 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const newYearGuess = dateTimeFormat.formatToParts(legacyDate);
       const calendarMonthString = newYearGuess.find((tv) => tv.type === 'month').value;
       const calendarDay = +newYearGuess.find((tv) => tv.type === 'day').value;
-      const calendarYearToVerify = +newYearGuess.find((tv) => tv.type === 'relatedYear').value;
-      if (calendarYearToVerify === undefined) {
+      let calendarYearToVerify = newYearGuess.find((tv) => tv.type === 'relatedYear');
+      if (calendarYearToVerify !== undefined) {
+        calendarYearToVerify = +calendarYearToVerify.value;
+      } else {
         // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
         // output of Intl.DateTimeFormat.formatToParts.
         throw new RangeError(
-          `Intl.DateTimeFormat.formatToParts is missing year for ${this.id} calendar. Try Node 14+ or a modern browser.`
+          `Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`
         );
       }
       return { calendarMonthString, calendarDay, calendarYearToVerify };
