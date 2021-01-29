@@ -196,6 +196,7 @@
         1. <del>If _dateTimeFormat_.[[Hour]] is *undefined*, then</del>
           1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
+          1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
         1. <del>Else,</del>
           1. <del>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</del>
           1. <del>Let _hc_ be _dateTimeFormat_.[[HourCycle]].</del>
@@ -216,9 +217,24 @@
           1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
           1. <del>If _dateTimeformat_.[[HourCycle]] is *"h11"* or *"h12"*, then</del>
             1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
+            1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns12]].</del>
           1. <del>Else,</del>
             1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
+            1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
+        1. <del>Else,</del>
+          1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
+          1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
+        1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
+        1. <ins>Let _needDefaults_ be *true*.</ins>
+        1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+          1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
+            1. <ins>Set _needDefaults_ to *false*.</ins>
+        1. <ins>If _needDefaults_ is *true*, then</ins>
+          1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
+        1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _limitedOptions_, _formats_, _hc_)</ins>.
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>_bestFormat_.[[pattern]]</ins>.
+        1. Set _dateTimeFormat_.[[RangePatterns]] to <del>_rangePatterns_</del><ins>_bestFormat_.[[rangePatterns]]</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>Let _needDefaults_ be *true*.</ins>
@@ -559,7 +575,9 @@
         1. If _bestFormat_.[[hour]] is not *undefined*, then
           1. If _hc_ is *"h11"* or *"h12"*, then
             1. Set _bestFormat_.[[pattern]] to _bestFormat_.[[pattern12]].
+            1. Set _bestFormat_.[[rangePatterns]] to _bestFormat_.[[rangePatterns12]].
           1. Remove the [[pattern12]] field from _bestFormat_.
+          1. Remove the [[rangePatterns12]] field from _bestFormat_.
           1. Set _bestFormat_.[[hourCycle]] to _hc_.
         1. Else,
           1. Set _bestFormat_.[[hourCycle]] to *undefined*.
@@ -891,6 +909,7 @@
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
       <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
       <li>[[Pattern]]<ins>, [[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+      <li>[[RangePatterns]] is a Record as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
     </ul>
 
     <p>
