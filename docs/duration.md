@@ -36,7 +36,7 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 
 ## Constructor
 
-### **new Temporal.Duration**(_years_?: number, _months_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number) : Temporal.Duration
+### **new Temporal.Duration**(_years_?: number, _months_?: number, _weeks_?: number, _days_?: number, _hours_?: number, _minutes_?: number, _seconds_?: number, _milliseconds_?: number, _microseconds_?: number, _nanoseconds_?: number) : Temporal.Duration
 
 **Parameters:**
 
