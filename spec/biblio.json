@@ -124,5 +124,12 @@
       "aoid": "PartitionDurationFormatPattern",
       "id": "sec-partitiondurationformatpattern"
     }
+  ],
+  "https://tc39.es/proposal-intl-DateTimeFormat-formatRange/": [
+    {
+      "type": "clause",
+      "number": 3,
+      "id": "table-datetimeformat-rangepatternfields"
+    }
   ]
 }

@@ -232,7 +232,7 @@
         1. <ins>If _needDefaults_ is *true*, then</ins>
           1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
             1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
-        1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _limitedOptions_, _formats_, _hc_)</ins>.
+        1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_)</ins>.
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>_bestFormat_.[[pattern]]</ins>.
         1. Set _dateTimeFormat_.[[RangePatterns]] to <del>_rangePatterns_</del><ins>_bestFormat_.[[rangePatterns]]</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
@@ -336,7 +336,7 @@
       <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ )</h1>
 
       <p>
-      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (with must be <mark>TODO: describe type</mark>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a Number value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
+      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which must be <mark>TODO: describe type</mark>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a Number value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
       </p>
 
       <emu-alg>
@@ -418,7 +418,6 @@
       <emu-note>
         It is recommended that implementations use the time zone information of the IANA Time Zone Database.
       </emu-note>
-
     </emu-clause>
 
     <emu-clause id="sec-partitiondatetimepattern" aoid="PartitionDateTimePattern">
@@ -551,7 +550,7 @@
         1. For each _rangePatternPart_ in _rangePattern_.[[PatternParts]], do
           1. <mark>TODO: perhaps try to make the patterns play better with _rangePatternPart_.[[Pattern]].</mark>
           1. <del>Let _pattern_ be _rangePatternPart_.[[Pattern]].</del>
-          1. Let _source_ be _rangePatternPart_.[[Source]]
+          1. Let _source_ be _rangePatternPart_.[[Source]].
           1. If _source_ is *"startRange"* or *"shared"*, then
             1. Let _z_ be _x_<ins>.[[epochNanoseconds]]</ins>.
             1. <ins>Let _pattern_ be _x_.[[pattern]].</ins>
@@ -565,11 +564,10 @@
           1. Add all elements in _partResult_ to _result_ in order.
         1. Return _result_.
       </emu-alg>
-
     </emu-clause>
 
     <emu-clause id="sec-formatdatetimerange" aoid="FormatDateTimeRange">
-      <h1>FormatDateTimeRange( _dateTimeFormat_, _x_, _y_ )</h1>
+      <h1>FormatDateTimeRange ( _dateTimeFormat_, _x_, _y_ )</h1>
 
       <p>
         The FormatDateTimeRange abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value) and _y_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), and performs the following steps:
@@ -582,7 +580,6 @@
           1. Set _result_ to a String value produced by concatenating _result_ and _part_.[[Value]].
         1. Return _result_.
       </emu-alg>
-
     </emu-clause>
 
     <emu-clause id="sec-formatdatetimerangetoparts" aoid="FormatDateTimeRangeToParts">
@@ -605,7 +602,6 @@
           1. Increment _n_ by 1.
         1. Return _result_.
       </emu-alg>
-
     </emu-clause>
 
     <ins class="block">
