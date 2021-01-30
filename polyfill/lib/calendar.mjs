@@ -369,8 +369,8 @@ class OneObjectCache {
     this.report();
   }
   report() {
-    if (this.calls === 0) return;
     /*
+    if (this.calls === 0) return;
     const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - this.now;
     const hitRate = ((100 * this.hits) / this.calls).toFixed(0);
     console.log(`${this.calls} calls in ${ms.toFixed(2)}ms. Hits: ${this.hits} (${hitRate}%). Misses: ${this.misses}.`);
@@ -500,7 +500,7 @@ const nonIsoHelperBase = {
       if (typeof monthCode !== 'string') {
         throw new RangeError(`monthCode must be a string, not ${ES.Type(monthCode).toLowerCase()}`);
       }
-      if (!/^(1?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+      if (!/^M(1?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
     }
   },
   /**
@@ -521,12 +521,12 @@ const nonIsoHelperBase = {
     if (year === undefined) year = eraYear;
     if (eraYear === undefined) eraYear = year;
     if (monthCode !== undefined) {
-      month = +monthCode;
+      month = +monthCode.slice(1);
     }
     // For calendars that always use the same era, set it here so that derived
     // calendars won't need to implement this method simply to set the era.
     if (this.constantEra) calendarDate = { ...calendarDate, era: this.constantEra };
-    return { ...calendarDate, year, eraYear, month, monthCode: `${month}` };
+    return { ...calendarDate, year, eraYear, month, monthCode: `M${month}` };
   },
   regulateMonthDayNaive(calendarDate, overflow, cache) {
     const largestMonth = this.monthsInYear(calendarDate, cache);
@@ -884,26 +884,26 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
     return { year: year - 3760, month: 1, day: 1 };
   },
   months: {
-    Tishri: { leap: 1, regular: 1, monthCode: '1', days: 30 },
-    Heshvan: { leap: 2, regular: 2, monthCode: '2', days: { min: 29, max: 30 } },
-    Kislev: { leap: 3, regular: 3, monthCode: '3', days: { min: 29, max: 30 } },
-    Tevet: { leap: 4, regular: 4, monthCode: '4', days: 29 },
-    Shevat: { leap: 5, regular: 5, monthCode: '5', days: 30 },
-    Adar: { leap: undefined, regular: 6, monthCode: '6', days: 29 },
-    'Adar I': { leap: 6, regular: undefined, monthCode: '5L', days: 30 },
-    'Adar II': { leap: 7, regular: undefined, monthCode: '6', days: 29 },
-    Nisan: { leap: 8, regular: 7, monthCode: '7', days: 30 },
-    Iyar: { leap: 9, regular: 8, monthCode: '8', days: 29 },
-    Sivan: { leap: 10, regular: 9, monthCode: '9', days: 30 },
-    Tamuz: { leap: 11, regular: 10, monthCode: '10', days: 29 },
-    Av: { leap: 12, regular: 11, monthCode: '11', days: 30 },
-    Elul: { leap: 13, regular: 12, monthCode: '12', days: 29 }
+    Tishri: { leap: 1, regular: 1, monthCode: 'M1', days: 30 },
+    Heshvan: { leap: 2, regular: 2, monthCode: 'M2', days: { min: 29, max: 30 } },
+    Kislev: { leap: 3, regular: 3, monthCode: 'M3', days: { min: 29, max: 30 } },
+    Tevet: { leap: 4, regular: 4, monthCode: 'M4', days: 29 },
+    Shevat: { leap: 5, regular: 5, monthCode: 'M5', days: 30 },
+    Adar: { leap: undefined, regular: 6, monthCode: 'M6', days: 29 },
+    'Adar I': { leap: 6, regular: undefined, monthCode: 'M5L', days: 30 },
+    'Adar II': { leap: 7, regular: undefined, monthCode: 'M6', days: 29 },
+    Nisan: { leap: 8, regular: 7, monthCode: 'M7', days: 30 },
+    Iyar: { leap: 9, regular: 8, monthCode: 'M8', days: 29 },
+    Sivan: { leap: 10, regular: 9, monthCode: 'M9', days: 30 },
+    Tamuz: { leap: 11, regular: 10, monthCode: 'M10', days: 29 },
+    Av: { leap: 12, regular: 11, monthCode: 'M11', days: 30 },
+    Elul: { leap: 13, regular: 12, monthCode: 'M12', days: 29 }
   },
   getMonthCode(year, month) {
     if (this.inLeapYear({ year })) {
-      return month === 6 ? '5L' : `${month < 6 ? month : month - 1}`;
+      return month === 6 ? 'M5L' : `M${month < 6 ? month : month - 1}`;
     } else {
-      return `${month}`;
+      return `M${month}`;
     }
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
@@ -935,11 +935,11 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
       this.validateCalendarDate(calendarDate);
       if (month === undefined) {
         if (monthCode.endsWith('L')) {
-          if (monthCode !== '5L') throw new RangeError(`Hebrew leap month must have monthCode 5L, not ${monthCode}`);
+          if (monthCode !== 'M5L') throw new RangeError(`Hebrew leap month must have monthCode M5L, not ${monthCode}`);
           month = 6;
           if (!this.inLeapYear({ year })) {
             if (overflow === 'reject') {
-              throw new RangeError(`Hebrew monthCode 5L is invalid in year ${year} which is not a leap year`);
+              throw new RangeError(`Hebrew monthCode M5L is invalid in year ${year} which is not a leap year`);
             } else {
               // constrain to last day of previous month (Av)
               month = 5;
@@ -1471,7 +1471,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       // month. Below we'll normalize the output.
       year = eraYear;
       if (monthExtra && monthExtra !== 'bis') throw new RangeError(`Unexpected leap month suffix: ${monthExtra}`);
-      const monthCode = monthExtra === undefined ? `${month}` : `${month}L`;
+      const monthCode = monthExtra === undefined ? `M${month}` : `M${month}L`;
       const monthString = `${month}${monthExtra || ''}`;
       const months = this.getMonthList(year, cache);
       const monthInfo = months[monthString];
@@ -1486,17 +1486,17 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       if (eraYear === undefined) eraYear = year;
       if (month === undefined) {
         const months = this.getMonthList(year, cache);
-        let monthInfo = months[monthCode.replace('L', 'bis')];
+        let monthInfo = months[monthCode.replace('L', 'bis').slice(1)];
         month = monthInfo && monthInfo.monthIndex;
         // If this leap month isn't present in this year, constrain down to the last day of the previous month.
         if (
           month === undefined &&
           monthCode.endsWith('L') &&
-          !['1L', '12L', '13L'].includes(monthCode) &&
+          !['M1L', 'M12L', 'M13L'].includes(monthCode) &&
           overflow === 'constrain'
         ) {
-          const withoutL = monthCode.slice(0, -1);
-          monthInfo = months[withoutL];
+          const withoutML = monthCode.slice(1, -1);
+          monthInfo = months[withoutML];
           if (monthInfo) {
             ({ daysInMonth: day, monthIndex: month } = monthInfo);
           }
@@ -1505,7 +1505,12 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           throw new RangeError(`Unmatched month ${monthCode} in Chinese year ${year}`);
         }
       }
-      if (monthCode === undefined) monthCode = +month;
+      if (monthCode === undefined) {
+        const months = this.getMonthList(year, cache);
+        const matchingMonthEntry = Object.entries(months).find(([, v]) => v.monthIndex === month);
+        if (matchingMonthEntry === undefined) throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
+        monthCode = `M${matchingMonthEntry[0].replace('bis', 'L')}`;
+      }
       return { ...calendarDate, year, eraYear, month, monthCode, day };
     }
   },

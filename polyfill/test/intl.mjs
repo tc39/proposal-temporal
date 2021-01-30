@@ -402,7 +402,7 @@ describe('Intl', () => {
       chinese: {
         year2000: { year: 1999, month: 11, day: 25 },
         // There's a 3bis (4th month) leap month in this year
-        year1: { year: 0, month: 12, monthCode: '11', day: 21 }
+        year1: { year: 0, month: 12, monthCode: 'M11', day: 21 }
       },
       coptic: {
         year2000: { year: 1716, month: 4, day: 22, era: 'era1' },
@@ -411,7 +411,7 @@ describe('Intl', () => {
       dangi: {
         year2000: { year: 1999, month: 11, day: 25 },
         // There's a 3bis (4th month) leap month in this year
-        year1: { year: 0, month: 12, monthCode: '11', day: 21 }
+        year1: { year: 0, month: 12, monthCode: 'M11', day: 21 }
       },
       ethioaa: {
         year2000: { year: 7492, month: 4, day: 22, era: 'era0' },
@@ -512,7 +512,7 @@ describe('Intl', () => {
           equal(`${name} ${id} year: ${inCal.year}`, `${name} ${id} year: ${values.year}`);
 
           equal(`${name} ${id} month: ${inCal.month}`, `${name} ${id} month: ${values.month}`);
-          if (values.monthCode === undefined) values.monthCode = `${values.month}`;
+          if (values.monthCode === undefined) values.monthCode = `M${values.month}`;
           equal(`${name} ${id} monthCode: ${inCal.monthCode}`, `${name} ${id} monthCode: ${values.monthCode}`);
 
           if (values.era) {
@@ -581,57 +581,57 @@ describe('Intl', () => {
     /*
       // This code below is useful for generating the snapshot content below in
       // case more variations are needed.
-      year1Content = ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew',
+      year1Content = ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'gregory', 'hebrew',
           'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc',
           'japanese', 'persian', 'roc'].map((id) => {
         const end = Temporal.PlainDate.from({ year: 2000, month: 1, day: 1, calendar: id }).add({months: 6});
         const { year, month, day, monthCode, eraYear, era } = end;
         const quotedId = id.includes('-') ? `'${id}'` : id;
-        return `  ${quotedId}: { year: ${year}, month: ${month}, day: ${day}, monthCode: '${monthCode
+        return `  ${quotedId}: { year: ${year}, month: ${month}, day: ${day}, monthCode: 'M${monthCode
                 }', eraYear: ${eraYear}, era: ${era ? `'${era}'` : undefined} }`;
       }).join(',\n');
     */
     const addDaysWeeksCases = {
-      iso8601: { year: 2000, month: 10, day: 7, monthCode: '10', eraYear: undefined, era: undefined },
-      buddhist: { year: 2000, month: 10, day: 8, monthCode: '10', eraYear: 2000, era: 'be' },
-      chinese: { year: 2000, month: 10, day: 16, monthCode: '10', eraYear: undefined, era: undefined },
-      coptic: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era1' },
-      dangi: { year: 2000, month: 10, day: 16, monthCode: '10', eraYear: undefined, era: undefined },
-      ethioaa: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era0' },
-      ethiopic: { year: 2000, month: 10, day: 11, monthCode: '10', eraYear: 2000, era: 'era0' },
-      gregory: { year: 2000, month: 10, day: 7, monthCode: '10', eraYear: 2000, era: 'ad' },
-      hebrew: { year: 2000, month: 10, day: 14, monthCode: '10', eraYear: undefined, era: undefined },
-      indian: { year: 2000, month: 10, day: 6, monthCode: '10', eraYear: 2000, era: 'saka' },
-      islamic: { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      'islamic-umalqura': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      'islamic-tbla': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      'islamic-civil': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      'islamic-rgsa': { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      islamicc: { year: 2000, month: 10, day: 15, monthCode: '10', eraYear: 2000, era: 'ah' },
-      japanese: { year: 2000, month: 10, day: 7, monthCode: '10', eraYear: 12, era: 'heisei' },
-      persian: { year: 2000, month: 10, day: 5, monthCode: '10', eraYear: 2000, era: 'ap' },
-      roc: { year: 2000, month: 10, day: 8, monthCode: '10', eraYear: 2000, era: 'minguo' }
+      iso8601: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: undefined, era: undefined },
+      buddhist: { year: 2000, month: 10, day: 8, monthCode: 'M10', eraYear: 2000, era: 'be' },
+      chinese: { year: 2000, month: 10, day: 16, monthCode: 'M10', eraYear: undefined, era: undefined },
+      coptic: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era1' },
+      dangi: { year: 2000, month: 10, day: 16, monthCode: 'M10', eraYear: undefined, era: undefined },
+      ethioaa: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era0' },
+      ethiopic: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era0' },
+      gregory: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: 2000, era: 'ad' },
+      hebrew: { year: 2000, month: 10, day: 14, monthCode: 'M10', eraYear: undefined, era: undefined },
+      indian: { year: 2000, month: 10, day: 6, monthCode: 'M10', eraYear: 2000, era: 'saka' },
+      islamic: { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      'islamic-umalqura': { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      'islamic-tbla': { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      'islamic-civil': { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      'islamic-rgsa': { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      islamicc: { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
+      japanese: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: 12, era: 'heisei' },
+      persian: { year: 2000, month: 10, day: 5, monthCode: 'M10', eraYear: 2000, era: 'ap' },
+      roc: { year: 2000, month: 10, day: 8, monthCode: 'M10', eraYear: 2000, era: 'minguo' }
     };
     const addMonthsCases = {
-      iso8601: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: undefined, era: undefined },
-      buddhist: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'be' },
-      chinese: { year: 2001, month: 6, day: 1, monthCode: '5', eraYear: undefined, era: undefined },
-      coptic: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era1' },
-      dangi: { year: 2001, month: 6, day: 1, monthCode: '5', eraYear: undefined, era: undefined },
-      ethioaa: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era0' },
-      ethiopic: { year: 2001, month: 5, day: 1, monthCode: '5', eraYear: 2001, era: 'era0' },
-      gregory: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ad' },
-      hebrew: { year: 2001, month: 6, day: 1, monthCode: '5L', eraYear: undefined, era: undefined },
-      indian: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'saka' },
-      islamic: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      'islamic-umalqura': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      'islamic-tbla': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      'islamic-civil': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      'islamic-rgsa': { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      islamicc: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ah' },
-      japanese: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 13, era: 'heisei' },
-      persian: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'ap' },
-      roc: { year: 2001, month: 6, day: 1, monthCode: '6', eraYear: 2001, era: 'minguo' }
+      iso8601: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: undefined, era: undefined },
+      buddhist: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'be' },
+      chinese: { year: 2001, month: 6, day: 1, monthCode: 'M5', eraYear: undefined, era: undefined },
+      coptic: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era1' },
+      dangi: { year: 2001, month: 6, day: 1, monthCode: 'M5', eraYear: undefined, era: undefined },
+      ethioaa: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era0' },
+      ethiopic: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era0' },
+      gregory: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ad' },
+      hebrew: { year: 2001, month: 6, day: 1, monthCode: 'M5L', eraYear: undefined, era: undefined },
+      indian: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'saka' },
+      islamic: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      'islamic-umalqura': { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      'islamic-tbla': { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      'islamic-civil': { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      'islamic-rgsa': { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      islamicc: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
+      japanese: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 13, era: 'heisei' },
+      persian: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ap' },
+      roc: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'minguo' }
     };
     const addYearsMonthsDaysCases = Object.entries(addMonthsCases).reduce((obj, entry) => {
       obj[entry[0]] = { ...entry[1], day: 4 };
@@ -678,7 +678,7 @@ describe('Intl', () => {
     }
     /*
       // content for tests below
-      ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'hebrew',
+      ['iso8601', 'buddhist', 'chinese', 'coptic', 'dangi', 'ethioaa', 'ethiopic', 'gregory', hebrew',
                 'indian', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc',
                 'japanese', 'persian', 'roc'].map((id) => {
         const date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 1, calendar: id });
@@ -689,7 +689,7 @@ describe('Intl', () => {
           const monthStart = date.with({month: i});
           const { monthCode, daysInMonth } = monthStart;
           daysInMonthArray.push(monthStart.daysInMonth);
-          if (monthStart.monthCode.endsWith('L')) leap = `'${monthCode}'`;
+          if (monthStart.monthCode.endsWith('L')) leap = `'M${monthCode}'`;
         }
         const quotedId = id.includes('-') ? `'${id}'` : id;
         return `${quotedId}: { year: ${year}, leap: ${leap}, days: [${daysInMonthArray.join(', ')}] }`;
@@ -698,13 +698,13 @@ describe('Intl', () => {
     const daysInMonthCases = {
       iso8601: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
       buddhist: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
-      chinese: { year: 2001, leap: '4L', days: [30, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
+      chinese: { year: 2001, leap: 'M4L', days: [30, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
       coptic: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
-      dangi: { year: 2001, leap: '4L', days: [30, 30, 30, 29, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
+      dangi: { year: 2001, leap: 'M4L', days: [30, 30, 30, 29, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
       ethioaa: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
       ethiopic: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
       gregory: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
-      hebrew: { year: 2001, leap: '5L', days: [30, 30, 30, 29, 30, 30, 29, 30, 29, 30, 29, 30, 29] },
+      hebrew: { year: 2001, leap: 'M5L', days: [30, 30, 30, 29, 30, 30, 29, 30, 29, 30, 29, 30, 29] },
       indian: { year: 2001, leap: false, days: [30, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 30] },
       islamic: { year: 2001, leap: false, days: [29, 30, 29, 29, 30, 29, 30, 30, 29, 30, 30, 29] },
       'islamic-umalqura': { year: 2001, leap: true, days: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30] },
@@ -716,6 +716,7 @@ describe('Intl', () => {
       persian: { year: 2001, leap: false, days: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29] },
       roc: { year: 2001, leap: true, days: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] }
     };
+    // totalNow = 0;
     for (let id of calendars) {
       let { year, leap, days } = daysInMonthCases[id];
       let date =
@@ -732,6 +733,7 @@ describe('Intl', () => {
         }
       });
       itOrSkip(id)(`${id} months check for year ${year}`, () => {
+        // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
         const { monthsInYear } = date;
         equal(monthsInYear, days.length);
         // This loop counts backwards so we'll have the right test for the month
@@ -748,30 +750,33 @@ describe('Intl', () => {
             leapMonthIndex = i;
           } else {
             if (leapMonthIndex && i === leapMonthIndex - 1) {
-              const inLeapMonth = monthStart.with({ monthCode: `${month}L` });
+              const inLeapMonth = monthStart.with({ monthCode: `M${month}L` });
               equal(inLeapMonth.monthCode, `${monthCode}L`);
             } else {
-              throws(() => monthStart.with({ monthCode: `${month}L` }, { overflow: 'reject' }), RangeError);
+              throws(() => monthStart.with({ monthCode: `M${month}L` }, { overflow: 'reject' }), RangeError);
               if (['chinese', 'dangi'].includes(id)) {
                 if (i === 1 || i === 12 || i === 13) {
-                  throws(() => monthStart.with({ monthCode: `${month}L` }), RangeError);
+                  throws(() => monthStart.with({ monthCode: `M${month}L` }), RangeError);
                 } else {
                   // verify that non-leap "L" months are constrained down to last day of previous month
-                  const fakeL = monthStart.with({ monthCode: `${month}L`, day: 5 });
-                  equal(fakeL.monthCode, `${month}`);
+                  const fakeL = monthStart.with({ monthCode: `M${month}L`, day: 5 });
+                  equal(fakeL.monthCode, `M${month}`);
                   equal(fakeL.day, fakeL.daysInMonth);
                 }
               }
             }
             if (!['chinese', 'dangi', 'hebrew'].includes(id)) {
               // leap months should only be allowed for lunisolar calendars
-              throws(() => monthStart.with({ monthCode: `${month}L` }), RangeError);
+              throws(() => monthStart.with({ monthCode: `M${month}L` }), RangeError);
             }
           }
           throws(() => monthStart.with({ day: daysInMonth + 1 }, { overflow: 'reject' }), RangeError);
           const oneDayPastMonthEnd = monthStart.with({ day: daysInMonth + 1 });
           equal(oneDayPastMonthEnd.day, daysInMonth);
         }
+        // const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+        // totalNow += ms;
+        // console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
       });
     }
   });
