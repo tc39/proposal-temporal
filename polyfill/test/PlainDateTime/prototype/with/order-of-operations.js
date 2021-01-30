@@ -35,7 +35,7 @@ const actual = [];
 const fields = {
   year: 1.7,
   month: 1.7,
-  monthCode: "1",
+  monthCode: "M1",
   day: 1.7,
   hour: 1.7,
   minute: 1.7,
@@ -71,7 +71,7 @@ const result = instance.with(argument);
 assert.sameValue(result.era, undefined, "era result");
 assert.sameValue(result.year, 1, "year result");
 assert.sameValue(result.month, 1, "month result");
-assert.sameValue(result.monthCode, "1", "monthCode result");
+assert.sameValue(result.monthCode, "M1", "monthCode result");
 assert.sameValue(result.day, 1, "day result");
 assert.sameValue(result.hour, 1, "hour result");
 assert.sameValue(result.minute, 1, "minute result");

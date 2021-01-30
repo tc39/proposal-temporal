@@ -1280,7 +1280,7 @@ export const ES = ObjectAssign({}, ES2020, {
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
       if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined) {
-        fields.monthCode = ES.ToString(fields.month);
+        fields.monthCode = `M${ES.ToString(fields.month)}`;
       }
       return ES.MonthDayFromFields(calendar, fields, constructor, options);
     }

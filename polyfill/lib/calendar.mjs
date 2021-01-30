@@ -255,7 +255,7 @@ impl['iso8601'] = {
   },
   monthCode(date) {
     if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    return ES.ToString(GetSlot(date, ISO_MONTH));
+    return `M${ES.ToString(GetSlot(date, ISO_MONTH))}`;
   },
   day(date) {
     if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
@@ -302,7 +302,10 @@ impl['iso8601'] = {
 // ECMA-402.
 
 function monthCodeNumberPart(monthCode) {
-  const month = +monthCode;
+  if (!monthCode.startsWith('M')) {
+    throw new RangeError(`Invalid month code: ${monthCode}.  Month codes must start with M.`);
+  }
+  const month = +monthCode.slice(1);
   if (isNaN(month)) throw new RangeError(`Invalid month code: ${monthCode}`);
   return month;
 }
@@ -316,14 +319,14 @@ function resolveNonLunisolarMonth(calendarDate) {
   let { month, monthCode } = calendarDate;
   if (monthCode === undefined) {
     if (month === undefined) throw new TypeError('Either month or monthCode are required');
-    monthCode = `${month}`;
+    monthCode = `M${month}`;
   } else {
     const numberPart = monthCodeNumberPart(monthCode);
     if (month !== undefined && month !== numberPart) {
       throw new RangeError(`monthCode ${monthCode} and month ${month} must match if both are present`);
     }
-    if (monthCode !== `${numberPart}`) {
-      throw new RangeError(`Invalid month code: ${monthCode}. Expected numeric string`);
+    if (monthCode !== `M${numberPart}`) {
+      throw new RangeError(`Invalid month code: ${monthCode}`);
     }
     month = numberPart;
   }

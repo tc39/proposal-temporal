@@ -9,10 +9,10 @@ esid: sec-temporal.plainmonthday.from
 // constrain
 
 let result = Temporal.PlainMonthDay.from({ month: Infinity, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "12");
+assert.sameValue(result.monthCode, "M12");
 assert.sameValue(result.day, 1);
 result = Temporal.PlainMonthDay.from({ month: 1, day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "1");
+assert.sameValue(result.monthCode, "M1");
 assert.sameValue(result.day, 31);
 
 // reject

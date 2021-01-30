@@ -202,7 +202,7 @@ describe('ZonedDateTime', () => {
       });
       it('zdt.year is 1976', () => equal(zdt.year, 1976));
       it('zdt.month is 11', () => equal(zdt.month, 11));
-      it('zdt.monthCode is "11"', () => equal(zdt.monthCode, '11'));
+      it('zdt.monthCode is "M11"', () => equal(zdt.monthCode, 'M11'));
       it('zdt.day is 18', () => equal(zdt.day, 18));
       it('zdt.hour is 15', () => equal(zdt.hour, 15));
       it('zdt.minute is 23', () => equal(zdt.minute, 23));
@@ -240,7 +240,7 @@ describe('ZonedDateTime', () => {
       it('zdt.era is ce', () => equal(zdt.era, 'ce'));
       it('zdt.year is 1976', () => equal(zdt.year, 1976));
       it('zdt.month is 11', () => equal(zdt.month, 11));
-      it('zdt.monthCode is "11"', () => equal(zdt.monthCode, '11'));
+      it('zdt.monthCode is "M11"', () => equal(zdt.monthCode, 'M11'));
       it('zdt.day is 18', () => equal(zdt.day, 18));
       it('zdt.hour is 16', () => equal(zdt.hour, 16));
       it('zdt.minute is 23', () => equal(zdt.minute, 23));
@@ -526,7 +526,7 @@ describe('ZonedDateTime', () => {
     const lagos = Temporal.TimeZone.from('Africa/Lagos');
     it('can be constructed with monthCode and without month', () => {
       equal(
-        `${ZonedDateTime.from({ year: 1976, monthCode: '11', day: 18, timeZone: lagos })}`,
+        `${ZonedDateTime.from({ year: 1976, monthCode: 'M11', day: 18, timeZone: lagos })}`,
         '1976-11-18T00:00:00+01:00[Africa/Lagos]'
       );
     });
@@ -538,7 +538,7 @@ describe('ZonedDateTime', () => {
     });
     it('month and monthCode must agree', () => {
       throws(
-        () => ZonedDateTime.from({ year: 1976, month: 11, monthCode: '12', day: 18, timeZone: lagos }),
+        () => ZonedDateTime.from({ year: 1976, month: 11, monthCode: 'M12', day: 18, timeZone: lagos }),
         RangeError
       );
     });
@@ -735,11 +735,11 @@ describe('ZonedDateTime', () => {
     it('zdt.with({ month: 5 } works', () => {
       equal(`${zdt.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
     });
-    it('zdt.with({ monthCode: "5" }) works', () => {
-      equal(`${zdt.with({ monthCode: '5' })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    it('zdt.with({ monthCode: "M5" }) works', () => {
+      equal(`${zdt.with({ monthCode: 'M5' })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
     });
     it('month and monthCode must agree', () => {
-      throws(() => zdt.with({ month: 5, monthCode: '6' }), RangeError);
+      throws(() => zdt.with({ month: 5, monthCode: 'M6' }), RangeError);
     });
     it('zdt.with({ day: 5 } works', () => {
       equal(`${zdt.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
