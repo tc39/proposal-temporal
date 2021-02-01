@@ -255,7 +255,7 @@ They provide a way to construct other Temporal objects from values in the calend
 - `options`: (object): An object with properties representing options for constructing the Temporal object.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values in `fields`.
-    Allowed values are `constrain`, `balance`, and `reject`.
+    Allowed values are `constrain`, and `reject`.
     The default is `constrain`.
 - `constructor` (function): The constructor function of the Temporal type to construct.
   This is used when subclassing Temporal objects.
