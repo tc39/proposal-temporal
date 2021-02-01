@@ -738,8 +738,8 @@ describe('Intl', () => {
         equal(monthsInYear, days.length);
         // This loop counts backwards so we'll have the right test for the month
         // before a leap month in lunisolar calendars.
-        for (let i = monthsInYear, leapMonthIndex = undefined; i >= 1; i--) {
-          const monthStart = date.with({ month: i });
+        for (let i = monthsInYear, leapMonthIndex = undefined, monthStart = undefined; i >= 1; i--) {
+          monthStart = monthStart ? monthStart.add({ months: -1 }) : date.add({ months: monthsInYear - 1 });
           const { month, monthCode, daysInMonth } = monthStart;
           equal(
             `${id} month ${i} (code ${monthCode}) days: ${daysInMonth}`,
@@ -760,7 +760,7 @@ describe('Intl', () => {
                 } else {
                   // verify that non-leap "L" months are constrained down to last day of previous month
                   const fakeL = monthStart.with({ monthCode: `M${month}L`, day: 5 });
-                  equal(fakeL.monthCode, `M${month}`);
+                  equal(`fake leap month ${fakeL.monthCode}`, `fake leap month M${month}`);
                   equal(fakeL.day, fakeL.daysInMonth);
                 }
               }

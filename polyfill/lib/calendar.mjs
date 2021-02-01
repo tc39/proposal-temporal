@@ -70,8 +70,7 @@ export class Calendar {
     duration = ES.ToTemporalDuration(duration, GetIntrinsic('%Temporal.Duration%'));
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    const { year, month, day } = impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow);
-    return new constructor(year, month, day, this);
+    return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow, constructor, this);
   }
   dateUntil(one, two, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -217,12 +216,13 @@ impl['iso8601'] = {
     }
     return { ...original, ...additionalFields };
   },
-  dateAdd(date, duration, overflow) {
+  dateAdd(date, duration, overflow, constructor, calendar) {
     const { years, months, weeks, days } = duration;
-    const year = GetSlot(date, ISO_YEAR);
-    const month = GetSlot(date, ISO_MONTH);
-    const day = GetSlot(date, ISO_DAY);
-    return ES.AddDate(year, month, day, years, months, weeks, days, overflow);
+    let year = GetSlot(date, ISO_YEAR);
+    let month = GetSlot(date, ISO_MONTH);
+    let day = GetSlot(date, ISO_DAY);
+    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, overflow));
+    return new constructor(year, month, day, calendar);
   },
   dateUntil(one, two, largestUnit) {
     return ES.DifferenceDate(
@@ -347,12 +347,19 @@ function resolveNonLunisolarMonth(calendarDate) {
  * because each object's cache is thrown away when the object is GC-ed.
  */
 class OneObjectCache {
-  constructor() {
+  constructor(cacheToClone = undefined) {
     this.map = new Map();
     this.calls = 0;
     this.now = globalThis.performance ? globalThis.performance.now() : Date.now();
     this.hits = 0;
     this.misses = 0;
+    if (cacheToClone !== undefined) {
+      let i = cacheToClone.length;
+      for (const entry of cacheToClone.map.entries()) {
+        if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
+        this.map.set(...entry);
+      }
+    }
   }
   get(key) {
     const result = this.map.get(key);
@@ -383,6 +390,13 @@ class OneObjectCache {
   }
 }
 OneObjectCache.objectMap = new WeakMap();
+OneObjectCache.MAX_CACHE_ENTRIES = 1000;
+/**
+ * Returns a WeakMap-backed cache that's used to store expensive results
+ * that are associated with a particular Temporal object instance.
+ *
+ * @param obj - object to associate with the cache
+ */
 OneObjectCache.getCacheForObject = function (obj) {
   let cache = OneObjectCache.objectMap.get(obj);
   if (!cache) {
@@ -483,6 +497,18 @@ const nonIsoHelperBase = {
     if (calendarDate.month === undefined) throw new RangeError(`Missing month converting ${JSON.stringify(isoDate)}`);
     if (calendarDate.day === undefined) throw new RangeError(`Missing day converting ${JSON.stringify(isoDate)}`);
     cache.set(key, calendarDate);
+    // Also cache the reverse mapping
+    ['constrain', 'reject'].forEach((overflow) => {
+      const keyReverse = JSON.stringify({
+        func: 'calendarToIsoDate',
+        year: calendarDate.year,
+        month: calendarDate.month,
+        day: calendarDate.day,
+        overflow,
+        id: this.id
+      });
+      cache.set(keyReverse, isoDate);
+    });
     return calendarDate;
   },
   validateCalendarDate(calendarDate) {
@@ -543,6 +569,7 @@ const nonIsoHelperBase = {
     return { ...calendarDate, month, day };
   },
   calendarToIsoDate(date, overflow = 'constrain', cache) {
+    const originalDate = date;
     // First, normalize the calendar date to ensure that (year, month, day)
     // are all present, converting monthCode and eraYear if needed.
     date = this.adjustCalendarDate(date, cache, overflow, false);
@@ -553,8 +580,28 @@ const nonIsoHelperBase = {
 
     const { year, month, day } = date;
     const key = JSON.stringify({ func: 'calendarToIsoDate', year, month, day, overflow, id: this.id });
-    const cached = cache.get(key);
+    let cached = cache.get(key);
     if (cached) return cached;
+    // If YMD are present in the input but the input has been constrained
+    // already, then cache both the original value and the constrained value.
+    let keyOriginal;
+    if (
+      originalDate.year !== undefined &&
+      originalDate.month !== undefined &&
+      originalDate.day !== undefined &&
+      (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)
+    ) {
+      keyOriginal = JSON.stringify({
+        func: 'calendarToIsoDate',
+        year: originalDate.year,
+        month: originalDate.month,
+        day: originalDate.day,
+        overflow,
+        id: this.id
+      });
+      cached = cache.get(keyOriginal);
+      if (cached) return cached;
+    }
 
     // First, try to roughly guess the result
     let isoEstimate = this.estimateIsoDate({ year, month, day });
@@ -597,6 +644,7 @@ const nonIsoHelperBase = {
     // If the initial guess is not in the same month, then then bisect the
     // distance to the target, starting with 8 days per step.
     let increment = 8;
+    let maybeConstrained = false;
     while (sign) {
       isoEstimate = this.addDaysIso(isoEstimate, sign * increment);
       const oldRoundtripEstimate = roundtripEstimate;
@@ -607,7 +655,13 @@ const nonIsoHelperBase = {
         diff = simpleDateDiff(date, roundtripEstimate);
         if (diff.years === 0 && diff.months === 0) {
           isoEstimate = calculateSameMonthResult(diff.days);
-          sign = 0; // signal the loop condition that there's a match.
+          // Signal the loop condition that there's a match.
+          sign = 0;
+          // If the calendar day is larger than the minimal length for this
+          // month, then it might be larger than the actual length of the month.
+          // So we won't cache it as the correct calendar date for this ISO
+          // date.
+          maybeConstrained = date.day > this.minimumMonthLength(date);
         } else if (oldSign && sign !== oldSign) {
           if (increment > 1) {
             // If the estimate overshot the target, try again with a smaller increment
@@ -625,6 +679,7 @@ const nonIsoHelperBase = {
               const order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
               // If current value is larger, then back up to the previous value.
               if (order > 0) isoEstimate = this.addDaysIso(isoEstimate, -1);
+              maybeConstrained = true;
               sign = 0;
             }
           }
@@ -632,6 +687,27 @@ const nonIsoHelperBase = {
       }
     }
     cache.set(key, isoEstimate);
+    if (keyOriginal) cache.set(keyOriginal, isoEstimate);
+    if (
+      date.year === undefined ||
+      date.month === undefined ||
+      date.day === undefined ||
+      date.monthCode === undefined ||
+      (this.hasEra && (date.era === undefined || date.eraYear === undefined))
+    ) {
+      throw new RangeError('Unexpected missing property');
+    }
+    if (!maybeConstrained) {
+      // Also cache the reverse mapping
+      const keyReverse = JSON.stringify({
+        func: 'isoToCalendarDate',
+        isoYear: isoEstimate.year,
+        isoMonth: isoEstimate.month,
+        isoDay: isoEstimate.day,
+        id: this.id
+      });
+      cache.set(keyReverse, date);
+    }
     return isoEstimate;
   },
   temporalToCalendarDate(date, cache) {
@@ -1460,8 +1536,8 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     return result;
   },
   estimateIsoDate(calendarDate) {
-    const { year } = calendarDate;
-    return { year, month: 1, day: 1 };
+    const { year, month } = calendarDate;
+    return { year, month: month >= 12 ? 12 : month + 1, day: 1 };
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
     let { year, month, monthExtra, day, monthCode, eraYear } = calendarDate;
@@ -1499,6 +1575,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           monthInfo = months[withoutML];
           if (monthInfo) {
             ({ daysInMonth: day, monthIndex: month } = monthInfo);
+            monthCode = `M${withoutML}`;
           }
         }
         if (month === undefined) {
@@ -1531,7 +1608,7 @@ const nonIsoGeneralImpl = {
   dateFromFields(fields, overflow, constructor, calendar) {
     const cache = new OneObjectCache();
     // Intentionally alphabetical
-    fields = this.toRecord(cache, fields, [
+    fields = ES.PrepareTemporalFields(fields, [
       ['day'],
       ['era', undefined],
       ['eraYear', undefined],
@@ -1547,7 +1624,7 @@ const nonIsoGeneralImpl = {
   yearMonthFromFields(fields, overflow, constructor, calendar) {
     const cache = new OneObjectCache();
     // Intentionally alphabetical
-    fields = this.toRecord(cache, fields, [
+    fields = ES.PrepareTemporalFields(fields, [
       ['era', undefined],
       ['eraYear', undefined],
       ['month', undefined],
@@ -1568,7 +1645,7 @@ const nonIsoGeneralImpl = {
     // or `year` must be provided because `month` is ambiguous without a year or
     // a code.
     const cache = new OneObjectCache();
-    fields = this.toRecord(cache, fields, [
+    fields = ES.PrepareTemporalFields(fields, [
       ['day'],
       ['month', undefined],
       ['year', undefined],
@@ -1581,32 +1658,6 @@ const nonIsoGeneralImpl = {
     const result = new constructor(month, day, calendar, /* referenceISOYear */ year);
     cache.setObject(result);
     return result;
-  },
-  /**
-   * ES.PrepareTemporalFields is an expensive operation for this prototype
-   * implementation because it calls all properties without any caching,
-   * resulting in 1+ expensive (and redundant) calls.  This method checks to see
-   * if this access can be optimized if the bag is a Temporal object by
-   * converting to a calendar date in one call and then using the resulting
-   * plain-object bag.
-   */
-  toRecord(cache, bag, fields) {
-    let bagCache, key;
-    if (
-      ES.IsTemporalZonedDateTime(bag) ||
-      ES.IsTemporalDateTime(bag) ||
-      ES.IsTemporalDate(bag) ||
-      ES.IsTemporalMonthDay(bag) ||
-      ES.IsTemporalYearMonth(bag)
-    ) {
-      bagCache = OneObjectCache.getCacheForObject(bag);
-      key = JSON.stringify({ func: 'toRecord', fields });
-      const cached = bagCache.get(key);
-      if (cached) return cached;
-      return this.helper.temporalToCalendarDate(bag, cache);
-    }
-    // If it's not a Temporal object, no caching because it could mutate
-    return ES.PrepareTemporalFields(bag, fields);
   },
   fields(fields) {
     if (fields.includes('year')) fields = [...fields, 'era', 'eraYear'];
@@ -1632,13 +1683,18 @@ const nonIsoGeneralImpl = {
     }
     return { ...original, ...additionalFields };
   },
-  dateAdd(date, duration, overflow) {
+  dateAdd(date, duration, overflow, constructor, calendar) {
     const { years, months, weeks, days } = duration;
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     const added = this.helper.addCalendar(calendarDate, { years, months, weeks, days }, overflow, cache);
     const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', cache);
-    return isoAdded;
+    const { year, month, day } = isoAdded;
+    const newTemporalObject = new constructor(year, month, day, calendar);
+    // The new object's cache starts with the cache of the old object
+    const newCache = new OneObjectCache(cache);
+    newCache.setObject(newTemporalObject);
+    return newTemporalObject;
   },
   dateUntil(one, two, largestUnit) {
     const cacheOne = OneObjectCache.getCacheForObject(one);
