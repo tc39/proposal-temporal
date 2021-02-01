@@ -397,7 +397,9 @@ describe('Intl', () => {
       iso8601: { year2000: { year: 2000, month: 1, day: 1 }, year1: { year: 1, month: 1, day: 1 } },
       buddhist: {
         year2000: { year: 2543, month: 1, day: 1, era: 'be' },
-        year1: { year: 544, month: 1, day: 3, era: 'be' }
+        // Pre-1582 (ISO) dates are broken by https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+        year1: RangeError
+        // year1: { year: 544, month: 1, day: 1, era: 'be' }
       },
       chinese: {
         year2000: { year: 1999, month: 11, day: 25 },
@@ -459,10 +461,11 @@ describe('Intl', () => {
         year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
         year1: { year: -640, month: 5, day: 18, era: 'ah' }
       },
-      // TODO: Figure out how to handle dates before Taika (the first recorded Japanese era)
       japanese: {
         year2000: { year: 2000, eraYear: 12, month: 1, day: 1, era: 'heisei' },
+        // Pre-1582 dates are broken by https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
         year1: RangeError
+        // year1: { year: 1, eraYear: 1, month: 1, day: 1, era: 'ad' }
       },
       persian: {
         year2000: { year: 1378, month: 10, day: 11, era: 'ap' },
@@ -470,7 +473,9 @@ describe('Intl', () => {
       },
       roc: {
         year2000: { year: 89, month: 1, day: 1, era: 'minguo' },
-        year1: { year: -1910, eraYear: 1911, month: 1, day: 3, era: 'before-roc' }
+        // Pre-1582 dates are broken by https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+        year1: RangeError
+        // year1: { year: -1910, eraYear: 1911, month: 1, day: 3, era: 'before-roc' }
       }
     };
     for (let [id, tests] of Object.entries(fromWithCases)) {
@@ -561,7 +566,7 @@ describe('Intl', () => {
             return;
           }
           const afterWithDay = inCal.with({ day: 1 });
-          let t = '(after setting year)';
+          let t = '(after setting day)';
           equal(`${t} year: ${afterWithDay.year}`, `${t} year: ${inCal.year}`);
           equal(`${t} month: ${afterWithDay.month}`, `${t} month: ${inCal.month}`);
           equal(`${t} day: ${afterWithDay.day}`, `${t} day: 1`);
@@ -570,9 +575,11 @@ describe('Intl', () => {
           equal(`${t} year: ${afterWithMonth.year}`, `${t} year: ${inCal.year}`);
           equal(`${t} month: ${afterWithMonth.month}`, `${t} month: 1`);
           equal(`${t} day: ${afterWithMonth.day}`, `${t} day: 1`);
-          const afterWithYear = afterWithMonth.with({ year: 2020 });
-          t = '(after setting day)';
-          equal(`${t} year: ${afterWithYear.year}`, `${t} year: 2020`);
+          // FYI: we're using 2220 here because it's larger than the ISO year 1582
+          // in all calendars affected by https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+          const afterWithYear = afterWithMonth.with({ year: 2220 });
+          t = '(after setting year)';
+          equal(`${t} year: ${afterWithYear.year}`, `${t} year: 2220`);
           equal(`${t} month: ${afterWithYear.month}`, `${t} month: 1`);
           equal(`${t} day: ${afterWithYear.day}`, `${t} day: 1`);
         });
@@ -593,7 +600,8 @@ describe('Intl', () => {
     */
     const addDaysWeeksCases = {
       iso8601: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: undefined, era: undefined },
-      buddhist: { year: 2000, month: 10, day: 8, monthCode: 'M10', eraYear: 2000, era: 'be' },
+      // See https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+      buddhist: RangeError, // { year: 2000, month: 10, day: 8, monthCode: 'M10', eraYear: 2000, era: 'be' },
       chinese: { year: 2000, month: 10, day: 16, monthCode: 'M10', eraYear: undefined, era: undefined },
       coptic: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era1' },
       dangi: { year: 2000, month: 10, day: 16, monthCode: 'M10', eraYear: undefined, era: undefined },
@@ -614,7 +622,8 @@ describe('Intl', () => {
     };
     const addMonthsCases = {
       iso8601: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: undefined, era: undefined },
-      buddhist: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'be' },
+      // See https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+      buddhist: RangeError, // { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'be' },
       chinese: { year: 2001, month: 6, day: 1, monthCode: 'M5', eraYear: undefined, era: undefined },
       coptic: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era1' },
       dangi: { year: 2001, month: 6, day: 1, monthCode: 'M5', eraYear: undefined, era: undefined },
@@ -634,7 +643,7 @@ describe('Intl', () => {
       roc: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'minguo' }
     };
     const addYearsMonthsDaysCases = Object.entries(addMonthsCases).reduce((obj, entry) => {
-      obj[entry[0]] = { ...entry[1], day: 4 };
+      obj[entry[0]] = entry[1] === RangeError ? RangeError : { ...entry[1], day: 4 };
       return obj;
     }, {});
     const tests = {
@@ -658,6 +667,10 @@ describe('Intl', () => {
         duration = Temporal.Duration.from(duration);
         itOrSkip(id)(`${id} add ${duration}`, () => {
           // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+          if (values === RangeError) {
+            throws(() => Temporal.PlainDate.from({ ...startDate, calendar: id }));
+            return;
+          }
           const start = Temporal.PlainDate.from({ ...startDate, calendar: id });
           const end = start.add(duration);
           equal(`add ${unit} ${id} day: ${end.day}`, `add ${unit} ${id} day: ${values.day}`);
@@ -697,7 +710,8 @@ describe('Intl', () => {
     */
     const daysInMonthCases = {
       iso8601: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
-      buddhist: { year: 2001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
+      // Buddhist uses 4001 to avoid https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+      buddhist: { year: 4001, leap: false, days: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] },
       chinese: { year: 2001, leap: 'M4L', days: [30, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
       coptic: { year: 2001, leap: false, days: [30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 5] },
       dangi: { year: 2001, leap: 'M4L', days: [30, 30, 30, 29, 29, 30, 29, 29, 30, 29, 30, 29, 30] },
@@ -779,6 +793,59 @@ describe('Intl', () => {
         // console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
       });
     }
+  });
+
+  describe('Japanese eras', () => {
+    it('Reiwa (2019-)', () => {
+      let date = Temporal.PlainDate.from({ era: 'reiwa', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '2020-01-01[u-ca-japanese]');
+    });
+    it('Heisei (1989-2019)', () => {
+      let date = Temporal.PlainDate.from({ era: 'heisei', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1990-01-01[u-ca-japanese]');
+    });
+    it('Showa (1926-1989)', () => {
+      let date = Temporal.PlainDate.from({ era: 'showa', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1927-01-01[u-ca-japanese]');
+    });
+    it('Taisho (1912-1926)', () => {
+      let date = Temporal.PlainDate.from({ era: 'taisho', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1913-01-01[u-ca-japanese]');
+    });
+    it('Meiji (1868-1912)', () => {
+      let date = Temporal.PlainDate.from({ era: 'meiji', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1869-01-01[u-ca-japanese]');
+    });
+    it('Dates in same year before Japanese era starts will resolve to previous era', () => {
+      let date = Temporal.PlainDate.from({ era: 'reiwa', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '2019-01-01[u-ca-japanese]');
+      equal(date.era, 'heisei');
+      equal(date.eraYear, 31);
+      date = Temporal.PlainDate.from({ era: 'heisei', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1989-01-01[u-ca-japanese]');
+      equal(date.era, 'showa');
+      equal(date.eraYear, 64);
+      date = Temporal.PlainDate.from({ era: 'showa', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1926-01-01[u-ca-japanese]');
+      equal(date.era, 'taisho');
+      equal(date.eraYear, 15);
+      date = Temporal.PlainDate.from({ era: 'taisho', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1912-01-01[u-ca-japanese]');
+      equal(date.era, 'meiji');
+      equal(date.eraYear, 45);
+      date = Temporal.PlainDate.from({ era: 'meiji', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
+      equal(`${date}`, '1868-01-01[u-ca-japanese]');
+      equal(date.era, 'ad');
+      equal(date.eraYear, 1868);
+      throws(
+        () => Temporal.PlainDate.from({ era: 'bc', eraYear: 1, month: 1, day: 1, calendar: 'japanese' }),
+        RangeError
+      );
+      // uncomment & revise `throws` above if https://bugs.chromium.org/p/chromium/issues/detail?id=1173158 is resolved
+      // equal(`${date}`, '+000000-01-01[u-ca-japanese]');
+      // equal(date.era, 'bc');
+      // equal(date.eraYear, 1);
+    });
   });
 
   describe('DateTimeFormat', () => {

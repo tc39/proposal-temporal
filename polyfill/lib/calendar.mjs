@@ -492,6 +492,15 @@ const nonIsoHelperBase = {
         `Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`
       );
     }
+    // Handle pre-Meiji Japanese eras that are present in Intl output but not
+    // yet (maybe never) used by Temporal (see #526)
+    if (this.reviseIntlEra) {
+      const { era, eraYear } = this.reviseIntlEra(result, isoDate);
+      result.era = era;
+      result.eraYear = eraYear;
+    }
+    if (this.checkJulianBug) this.checkJulianBug(result, isoDate);
+
     const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
     if (calendarDate.year === undefined) throw new RangeError(`Missing year converting ${JSON.stringify(isoDate)}`);
     if (calendarDate.month === undefined) throw new RangeError(`Missing month converting ${JSON.stringify(isoDate)}`);
@@ -1215,8 +1224,8 @@ function adjustEras(eras) {
   // match eras in index order, with the last era getting the remaining older
   // years. Any reverse-signed era must be at the end.
   eras.sort((e1, e2) => {
-    if (e1.reverseOf) return e2;
-    if (e2.reverseOf) return e1;
+    if (e1.reverseOf) return 1;
+    if (e2.reverseOf) return -1;
     return e2.isoEpoch.year - e1.isoEpoch.year;
   });
 
@@ -1272,9 +1281,9 @@ const makeHelperGregorian = (id, originalEras) => {
           throw new RangeError(`Input ${name} ${currentValue} doesn't match calculated value ${value}`);
         }
       };
-
-      let { year, eraYear, era } = calendarDate;
-      if (year != null) {
+      const eraFromYear = (year) => {
+        let eraYear;
+        const adjustedCalendarDate = { ...calendarDate, year };
         const matchingEra = this.eras.find((e, i) => {
           if (i === this.eras.length - 1) {
             if (e.reverseOf) {
@@ -1289,7 +1298,7 @@ const makeHelperGregorian = (id, originalEras) => {
             eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
             return true;
           }
-          const comparison = nonIsoHelperBase.compareCalendarDates(calendarDate, e.anchorEpoch);
+          const comparison = nonIsoHelperBase.compareCalendarDates(adjustedCalendarDate, e.anchorEpoch);
           if (comparison >= 0) {
             eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
             return true;
@@ -1297,7 +1306,12 @@ const makeHelperGregorian = (id, originalEras) => {
           return false;
         });
         if (!matchingEra) throw new RangeError(`Year ${year} was not matched by any era`);
-        era = matchingEra.name;
+        return { eraYear, era: matchingEra.name };
+      };
+
+      let { year, eraYear, era } = calendarDate;
+      if (year != null) {
+        ({ eraYear, era } = eraFromYear(year));
         checkField('era', era);
         checkField('eraYear', eraYear);
       } else if (eraYear != null) {
@@ -1313,6 +1327,11 @@ const makeHelperGregorian = (id, originalEras) => {
           year = eraYear + matchingEra.anchorEpoch.year - (matchingEra.hasYearZero ? 0 : 1);
         }
         checkField('year', year);
+        // We'll accept dates where the month/day is earlier than the start of
+        // the era or after its end as long as it's in the same year. If that
+        // happens, we'll adjust the era/eraYear pair to be the correct era for
+        // the `year`.
+        ({ eraYear, era } = eraFromYear(year));
       } else {
         throw new RangeError('Either `year` or `eraYear` and `era` are required');
       }
@@ -1333,7 +1352,27 @@ const makeHelperGregorian = (id, originalEras) => {
       const { anchorEra } = this;
       const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
       return ES.RegulateDate(isoYearEstimate, month, day, 'constrain');
-    }
+    },
+    // Several calendars based on the Gregorian calendar use Julian dates (not
+    // proleptic Gregorian dates) before the Julian switchover in Oct 1582. See
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
+    checkJulianBug(calendarDate, isoDate) {
+      if (this.vulnerableToJulianBug) {
+        const beforeJulianSwitch = this.compareCalendarDates(isoDate, { year: 1582, month: 10, day: 15 }) < 0;
+        if (beforeJulianSwitch) {
+          const testDate = new Date('+001001-01-01T00:00Z').toLocaleDateString(`en-US-u-ca-${this.id}`, {
+            timeZone: 'UTC'
+          });
+          if (testDate.startsWith('12')) {
+            throw new RangeError(
+              `calendar '${this.id}' is broken for ISO dates before 1582-10-15` +
+                ' (see https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)'
+            );
+          }
+        }
+      }
+    },
+    vulnerableToJulianBug: false
   });
 };
 
@@ -1386,14 +1425,24 @@ const helperEthiopic = makeHelperOrthodox('ethiopic', [
   { name: 'era1', isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
 ]);
 
-const helperRoc = makeHelperGregorian('roc', [
-  { name: 'minguo', isoEpoch: { year: 1912, month: 1, day: 1 } },
-  { name: 'before-roc', reverseOf: 'minguo' }
-]);
+const helperRoc = ObjectAssign(
+  {},
+  makeHelperGregorian('roc', [
+    { name: 'minguo', isoEpoch: { year: 1912, month: 1, day: 1 } },
+    { name: 'before-roc', reverseOf: 'minguo' }
+  ]),
+  {
+    vulnerableToJulianBug: true
+  }
+);
 
-const helperBuddhist = makeHelperGregorian('buddhist', [
-  { name: 'be', hasYearZero: true, isoEpoch: { year: -543, month: 1, day: 1 } }
-]);
+const helperBuddhist = ObjectAssign(
+  {},
+  makeHelperGregorian('buddhist', [{ name: 'be', hasYearZero: true, isoEpoch: { year: -543, month: 1, day: 1 } }]),
+  {
+    vulnerableToJulianBug: true
+  }
+);
 
 const helperGregory = makeHelperGregorian('gregory', [
   { name: 'ad', isoEpoch: { year: 1, month: 1, day: 1 } },
@@ -1430,18 +1479,30 @@ const helperJapanese = ObjectAssign(
   // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
   makeHelperGregorian('japanese', [
     // The Japanese calendar `year` is just the ISO year, because (unlike other
-    // ICU calendars) there's no obvious "default era". So we use the ISO year.
-    { name: undefined, isoEpoch: { year: 1, month: 1, day: 1 } },
-    { name: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
-    { name: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
-    { name: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
+    // ICU calendars) there's no obvious "default era", we use the ISO year.
+    // Pre-Meiji eras are unstable (they change a lot due to historical
+    // scholarship) so we're tentatively using AD/BC for those older eras. This
+    // may change depending on the resolution of
+    // https://github.com/tc39/proposal-temporal/issues/526.
+    { name: 'reiwa', isoEpoch: { year: 2019, month: 5, day: 1 }, anchorEpoch: { year: 2019, month: 5, day: 1 } },
     { name: 'heisei', isoEpoch: { year: 1989, month: 1, day: 8 }, anchorEpoch: { year: 1989, month: 1, day: 8 } },
-    { name: 'reiwa', isoEpoch: { year: 2019, month: 5, day: 1 }, anchorEpoch: { year: 2019, month: 5, day: 1 } }
+    { name: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
+    { name: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
+    { name: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
+    { name: 'ad', isoEpoch: { year: 1, month: 1, day: 1 } },
+    { name: 'bc', reverseOf: 'ad' }
   ]),
   {
     // The last 3 Japanese eras confusingly return only one character in the
     // default "short" era, so need to use the long format.
-    eraLength: 'long'
+    eraLength: 'long',
+    vulnerableToJulianBug: true,
+    reviseIntlEra(calendarDate, isoDate) {
+      const { era, eraYear } = calendarDate;
+      const { year: isoYear } = isoDate;
+      if (this.eras.find((e) => e.name === era)) return { era, eraYear };
+      return isoYear < 1 ? { era: 'bc', eraYear: 1 - isoYear } : { era: 'ad', eraYear: isoYear };
+    }
   }
 );
 
