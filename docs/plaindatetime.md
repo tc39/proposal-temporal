@@ -14,12 +14,25 @@ A `Temporal.PlainDateTime` can be converted to a `Temporal.ZonedDateTime` using 
 
 A `Temporal.PlainDateTime` can be converted into any of the types mentioned above using conversion methods like `toZonedDateTime` or `toPlainDate`.
 
-"Calendar date" and "wall-clock time" refer to the concept of time as expressed in everyday usage.
-`Temporal.PlainDateTime` does not represent an exact point in time; that is what exact-time types like `Temporal.ZonedDateTime` and `Temporal.Instant` are for.
+Because `Temporal.PlainDateTime` does not represent an exact point in time, most date/time use cases are better handled using exact time types like `Temporal.ZonedDateTime` and `Temporal.Instant`.
+But there are cases where `Temporal.PlainDateTime` is the correct type to use:
 
-One example of when it may be appropriate to use `Temporal.PlainDateTime` and not `Temporal.ZonedDateTime` nor `Temporal.Instant` is when integrating with wearable devices.
-FitBit, for example, always records sleep data in the user's wall-clock time, wherever they are in the world.
-Storing the time zone is not needed, and the plain (not exact) time is needed, because otherwise they would be recorded as sleeping at strange hours when travelling.
+- Representing timezone-specific events where the time zone is not stored together with the date/time data.
+  In this case, `Temporal.PlainDateTime` is an intermediate step before converting to/from `Temporal.ZonedDateTime` or `Temporal.Instant` using the separate time zone.
+  Examples:
+  - When the time zone is stored separately in a separate database column or a per-user setting.
+  - Implicit time zones, e.g. stock exchange data that is always `America/New_York`
+  - Interacting with poorly-designed legacy systems that record data in the server's non-UTC time zone.
+- Passing data to/from a component that is unaware of time zones, e.g. a UI date/time picker.
+- Modeling events that happen at the same local time in every time zone.
+  For example, the British Commonwealth observes a [two minute silence](https://en.wikipedia.org/wiki/Two-minute_silence) every November 11th at 11:00AM in local time.
+- When time zone is irrelevant, e.g. a sleep tracking device that only cares about the local time you went to sleep and woke up, regardless of where in the world you are.
+- Parsing local time from ISO 8601 strings like `2020-04-09T16:08-08:00` that have a numeric offset without an IANA time zone like `America/Los_Angeles`.
+  These strings can also be parsed by `Temporal.Absolute`, but to parse the local date and time then `Temporal.PlainDateTime.from` is required.
+- Performing arithmetic that deliberately ignores DST.
+  Example: in a day-planner UI, the visual height of a meeting may be the same even if DST skips or repeats an hour.
+
+To learn more about time zones and DST best practices, visit [Time Zones and Resolving Ambiguity](./ambiguity.md).
 
 ## Constructor
 
