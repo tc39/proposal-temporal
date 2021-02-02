@@ -571,7 +571,9 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     for (const property of disallowedProperties) {
       if (record[property] !== 0) {
-        throw new RangeError(`invalid duration field ${property}`);
+        throw new RangeError(
+          `Duration field ${property} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
+        );
       }
     }
     return record;
