@@ -848,6 +848,41 @@ describe('Intl', () => {
     });
   });
 
+  describe('Hebrew leap months', () => {
+    it('Valid leap month: Adar I 5779', () => {
+      let date = Temporal.PlainDate.from({ year: 5779, month: 6, day: 1, calendar: 'hebrew' });
+      equal(date.month, 6);
+      equal(date.monthCode, 'M5L');
+      equal(date.day, 1);
+      date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M5L', day: 1, calendar: 'hebrew' });
+      equal(date.month, 6);
+      equal(date.monthCode, 'M5L');
+      equal(date.day, 1);
+    });
+    it('Invalid leap months: e.g. M2L', () => {
+      for (let i = 1; i <= 12; i++) {
+        if (i === 5) continue; // M5L is the only valid month (Adar I)
+        throws(
+          () => Temporal.PlainDate.from({ year: 5779, monthCode: `M${i}L`, day: 1, calendar: 'hebrew' }),
+          RangeError
+        );
+      }
+    });
+    it('Leap month in non-leap year (reject): Adar I 5780', () => {
+      throws(
+        () =>
+          Temporal.PlainDate.from({ year: 5780, monthCode: 'M5L', day: 1, calendar: 'hebrew' }, { overflow: 'reject' }),
+        RangeError
+      );
+    });
+    it('Leap month in non-leap year (constrain): 15 Adar I 5780 => 30 Av 5780', () => {
+      const date = Temporal.PlainDate.from({ year: 5780, monthCode: 'M5L', day: 15, calendar: 'hebrew' });
+      equal(date.month, 5);
+      equal(date.monthCode, 'M5');
+      equal(date.day, 30);
+    });
+  });
+
   describe('DateTimeFormat', () => {
     describe('supportedLocalesOf', () => {
       it('should return an Array', () => assert(Array.isArray(Intl.DateTimeFormat.supportedLocalesOf())));

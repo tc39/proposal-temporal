@@ -1029,6 +1029,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
               // constrain to last day of previous month (Av)
               month = 5;
               day = 30;
+              monthCode = 'M5';
             }
           }
         } else {
@@ -1038,7 +1039,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
         }
       }
       if (monthCode === undefined) monthCode = this.getMonthCode(year, month);
-      return { ...calendarDate, month, monthCode, year, eraYear };
+      return { ...calendarDate, day, month, monthCode, year, eraYear };
     }
   },
   // All built-in calendars except Chinese/Dangi and Hebrew use an era
