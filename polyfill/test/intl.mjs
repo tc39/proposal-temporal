@@ -424,8 +424,8 @@ describe('Intl', () => {
         year1: { year: 5493, month: 5, day: 8, era: 'era0' }
       },
       gregory: {
-        year2000: { year: 2000, month: 1, day: 1, era: 'ad' },
-        year1: { year: 1, month: 1, day: 1, era: 'ad' }
+        year2000: { year: 2000, month: 1, day: 1, era: 'ce' },
+        year1: { year: 1, month: 1, day: 1, era: 'ce' }
       },
       hebrew: { year2000: { year: 5760, month: 4, day: 23 }, year1: { year: 3761, month: 4, day: 18 } },
       indian: {
@@ -465,7 +465,7 @@ describe('Intl', () => {
         year2000: { year: 2000, eraYear: 12, month: 1, day: 1, era: 'heisei' },
         // Pre-1582 dates are broken by https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
         year1: RangeError
-        // year1: { year: 1, eraYear: 1, month: 1, day: 1, era: 'ad' }
+        // year1: { year: 1, eraYear: 1, month: 1, day: 1, era: 'ce' }
       },
       persian: {
         year2000: { year: 1378, month: 10, day: 11, era: 'ap' },
@@ -607,7 +607,7 @@ describe('Intl', () => {
       dangi: { year: 2000, month: 10, day: 16, monthCode: 'M10', eraYear: undefined, era: undefined },
       ethioaa: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era0' },
       ethiopic: { year: 2000, month: 10, day: 11, monthCode: 'M10', eraYear: 2000, era: 'era0' },
-      gregory: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: 2000, era: 'ad' },
+      gregory: { year: 2000, month: 10, day: 7, monthCode: 'M10', eraYear: 2000, era: 'ce' },
       hebrew: { year: 2000, month: 10, day: 14, monthCode: 'M10', eraYear: undefined, era: undefined },
       indian: { year: 2000, month: 10, day: 6, monthCode: 'M10', eraYear: 2000, era: 'saka' },
       islamic: { year: 2000, month: 10, day: 15, monthCode: 'M10', eraYear: 2000, era: 'ah' },
@@ -629,7 +629,7 @@ describe('Intl', () => {
       dangi: { year: 2001, month: 6, day: 1, monthCode: 'M5', eraYear: undefined, era: undefined },
       ethioaa: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era0' },
       ethiopic: { year: 2001, month: 5, day: 1, monthCode: 'M5', eraYear: 2001, era: 'era0' },
-      gregory: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ad' },
+      gregory: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ce' },
       hebrew: { year: 2001, month: 6, day: 1, monthCode: 'M5L', eraYear: undefined, era: undefined },
       indian: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'saka' },
       islamic: { year: 2001, month: 6, day: 1, monthCode: 'M6', eraYear: 2001, era: 'ah' },
@@ -835,15 +835,15 @@ describe('Intl', () => {
       equal(date.eraYear, 45);
       date = Temporal.PlainDate.from({ era: 'meiji', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
       equal(`${date}`, '1868-01-01[u-ca-japanese]');
-      equal(date.era, 'ad');
+      equal(date.era, 'ce');
       equal(date.eraYear, 1868);
       throws(
-        () => Temporal.PlainDate.from({ era: 'bc', eraYear: 1, month: 1, day: 1, calendar: 'japanese' }),
+        () => Temporal.PlainDate.from({ era: 'bce', eraYear: 1, month: 1, day: 1, calendar: 'japanese' }),
         RangeError
       );
       // uncomment & revise `throws` above if https://bugs.chromium.org/p/chromium/issues/detail?id=1173158 is resolved
       // equal(`${date}`, '+000000-01-01[u-ca-japanese]');
-      // equal(date.era, 'bc');
+      // equal(date.era, 'bce');
       // equal(date.eraYear, 1);
     });
   });

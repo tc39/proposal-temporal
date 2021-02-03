@@ -1288,7 +1288,7 @@ const makeHelperGregorian = (id, originalEras) => {
         const matchingEra = this.eras.find((e, i) => {
           if (i === this.eras.length - 1) {
             if (e.reverseOf) {
-              // This is a reverse-sign era (like BC) which must be the oldest
+              // This is a reverse-sign era (like BCE) which must be the oldest
               // era. Count years backwards.
               if (year > 0) throw new RangeError(`Signed year ${year} is invalid for era ${e.name}`);
               eraYear = e.anchorEpoch.year - year;
@@ -1409,7 +1409,7 @@ const makeHelperOrthodox = (id, originalEras) => {
 
 // `coptic` and `ethiopic` calendars are very similar to `ethioaa` calendar,
 // with the following differences:
-// - Coptic uses BC-like positive numbers for years before its epoch (the other
+// - Coptic uses BCE-like positive numbers for years before its epoch (the other
 //   two use negative year numbers before epoch)
 // - Coptic has a different epoch date
 // - Ethiopic has an additional second era that starts at the same date as the
@@ -1445,10 +1445,21 @@ const helperBuddhist = ObjectAssign(
   }
 );
 
-const helperGregory = makeHelperGregorian('gregory', [
-  { name: 'ad', isoEpoch: { year: 1, month: 1, day: 1 } },
-  { name: 'bc', reverseOf: 'ad' }
-]);
+const helperGregory = ObjectAssign(
+  {},
+  makeHelperGregorian('gregory', [
+    { name: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
+    { name: 'bce', reverseOf: 'ce' }
+  ]),
+  {
+    reviseIntlEra(calendarDate /*, isoDate*/) {
+      let { era, eraYear } = calendarDate;
+      if (era === 'bc') era = 'bce';
+      if (era === 'ad') era = 'ce';
+      return { era, eraYear };
+    }
+  }
+);
 
 const helperJapanese = ObjectAssign(
   {},
@@ -1482,7 +1493,7 @@ const helperJapanese = ObjectAssign(
     // The Japanese calendar `year` is just the ISO year, because (unlike other
     // ICU calendars) there's no obvious "default era", we use the ISO year.
     // Pre-Meiji eras are unstable (they change a lot due to historical
-    // scholarship) so we're tentatively using AD/BC for those older eras. This
+    // scholarship) so we're tentatively using CE/BCE for those older eras. This
     // may change depending on the resolution of
     // https://github.com/tc39/proposal-temporal/issues/526.
     { name: 'reiwa', isoEpoch: { year: 2019, month: 5, day: 1 }, anchorEpoch: { year: 2019, month: 5, day: 1 } },
@@ -1490,8 +1501,8 @@ const helperJapanese = ObjectAssign(
     { name: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
     { name: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
     { name: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
-    { name: 'ad', isoEpoch: { year: 1, month: 1, day: 1 } },
-    { name: 'bc', reverseOf: 'ad' }
+    { name: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
+    { name: 'bce', reverseOf: 'ce' }
   ]),
   {
     // The last 3 Japanese eras confusingly return only one character in the
@@ -1502,7 +1513,7 @@ const helperJapanese = ObjectAssign(
       const { era, eraYear } = calendarDate;
       const { year: isoYear } = isoDate;
       if (this.eras.find((e) => e.name === era)) return { era, eraYear };
-      return isoYear < 1 ? { era: 'bc', eraYear: 1 - isoYear } : { era: 'ad', eraYear: isoYear };
+      return isoYear < 1 ? { era: 'bce', eraYear: 1 - isoYear } : { era: 'ce', eraYear: isoYear };
     }
   }
 );
