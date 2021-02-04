@@ -61,7 +61,7 @@ describe('YearMonth', () => {
     });
     it('ym.year is 1976', () => equal(ym.year, 1976));
     it('ym.month is 11', () => equal(ym.month, 11));
-    it('ym.monthCode is "11"', () => equal(ym.monthCode, '11'));
+    it('ym.monthCode is "M11"', () => equal(ym.monthCode, 'M11'));
     it('ym.daysInMonth is 30', () => equal(ym.daysInMonth, 30));
     it('ym.daysInYear is 366', () => equal(ym.daysInYear, 366));
     it('ym.monthsInYear is 12', () => equal(ym.monthsInYear, 12));
@@ -72,19 +72,19 @@ describe('YearMonth', () => {
       it("YearMonth.from('1976-11') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11')}`, '1976-11'));
       it("YearMonth.from('1976-11-18') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11-18')}`, '1976-11'));
       it('can be constructed with monthCode and without month', () =>
-        equal(`${PlainYearMonth.from({ year: 2019, monthCode: '11' })}`, '2019-11'));
+        equal(`${PlainYearMonth.from({ year: 2019, monthCode: 'M11' })}`, '2019-11'));
       it('can be constructed with month and without monthCode', () =>
         equal(`${PlainYearMonth.from({ year: 2019, month: 11 })}`, '2019-11'));
       it('month and monthCode must agree', () =>
-        throws(() => PlainYearMonth.from({ year: 2019, month: 11, monthCode: '12' }), RangeError));
+        throws(() => PlainYearMonth.from({ year: 2019, month: 11, monthCode: 'M12' }), RangeError));
       it('ignores day when determining the ISO reference day from year/month', () => {
         const one = PlainYearMonth.from({ year: 2019, month: 11, day: 1 });
         const two = PlainYearMonth.from({ year: 2019, month: 11, day: 2 });
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('ignores day when determining the ISO reference day from year/monthCode', () => {
-        const one = PlainYearMonth.from({ year: 2019, monthCode: '11', day: 1 });
-        const two = PlainYearMonth.from({ year: 2019, monthCode: '11', day: 2 });
+        const one = PlainYearMonth.from({ year: 2019, monthCode: 'M11', day: 1 });
+        const two = PlainYearMonth.from({ year: 2019, monthCode: 'M11', day: 2 });
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('ignores day when determining the ISO reference day from era/eraYear/month', () => {
@@ -93,8 +93,8 @@ describe('YearMonth', () => {
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('ignores day when determining the ISO reference day from era/eraYear/monthCode', () => {
-        const one = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 1, calendar: 'gregory' });
-        const two = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 2, calendar: 'gregory' });
+        const one = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: 'M11', day: 1, calendar: 'gregory' });
+        const two = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: 'M11', day: 2, calendar: 'gregory' });
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('YearMonth.from(2019-11) is not the same object', () => {
@@ -111,8 +111,8 @@ describe('YearMonth', () => {
       });
       it('YearMonth.from({ year: 2019 }) throws', () => throws(() => PlainYearMonth.from({ year: 2019 }), TypeError));
       it('YearMonth.from({ month: 6 }) throws', () => throws(() => PlainYearMonth.from({ month: 6 }), TypeError));
-      it('YearMonth.from({ monthCode: "6" }) throws', () =>
-        throws(() => PlainYearMonth.from({ monthCode: '6' }), TypeError));
+      it('YearMonth.from({ monthCode: "M6" }) throws', () =>
+        throws(() => PlainYearMonth.from({ monthCode: 'M6' }), TypeError));
       it('YearMonth.from({}) throws', () => throws(() => PlainYearMonth.from({}), TypeError));
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => PlainYearMonth.from({ year: undefined, month: 6 }), TypeError));
@@ -191,8 +191,8 @@ describe('YearMonth', () => {
       const ym = PlainYearMonth.from('2019-10');
       it('with(2020)', () => equal(`${ym.with({ year: 2020 })}`, '2020-10'));
       it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
-      it('with(monthCode)', () => equal(`${ym.with({ monthCode: '9' })}`, '2019-09'));
-      it('month and monthCode must agree', () => throws(() => ym.with({ month: 9, monthCode: '10' }), RangeError));
+      it('with(monthCode)', () => equal(`${ym.with({ monthCode: 'M9' })}`, '2019-09'));
+      it('month and monthCode must agree', () => throws(() => ym.with({ month: 9, monthCode: 'M10' }), RangeError));
     });
   });
   describe('YearMonth.with() works', () => {

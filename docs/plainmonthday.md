@@ -95,7 +95,7 @@ md = Temporal.PlainMonthDay.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');
 // => 08-24
 md === Temporal.PlainMonthDay.from(md); // => true
 
-md = Temporal.PlainMonthDay.from({ monthCode: '8', day: 24 }); // => 08-24
+md = Temporal.PlainMonthDay.from({ monthCode: 'M8', day: 24 }); // => 08-24
 md = Temporal.PlainMonthDay.from(Temporal.PlainDate.from('2006-08-24'));
 // => same as above; Temporal.PlainDate has month and day properties
 
@@ -112,14 +112,14 @@ md = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 
 // throws (this year is not a leap year in the ISO calendar)
 
 // non-ISO calendars
-md = Temporal.PlainMonthDay.from({ monthCode: '5L', day: 15, calendar: 'hebrew' });
+md = Temporal.PlainMonthDay.from({ monthCode: 'M5L', day: 15, calendar: 'hebrew' });
 // => 2019-02-20[u-ca-hebrew]
 md = Temporal.PlainMonthDay.from({ month: 6, day: 15, year: 5779, calendar: 'hebrew' });
 // => 2019-02-20[u-ca-hebrew]
 md = Temporal.PlainMonthDay.from({ month: 6, day: 15, calendar: 'hebrew' });
 // => throws (either year or monthCode is required)
 md = Temporal.PlainMonthDay.from('2019-02-20[u-ca-hebrew]');
-md.monthCode; // => "5L"
+md.monthCode; // => "M5L"
 md.day; // => 15
 md.month; // undefined (month property is not present in this type; use monthCode instead)
 ```
@@ -132,8 +132,10 @@ md.month; // undefined (month property is not present in this type; use monthCod
 
 The above read-only properties allow accessing each component of the date individually.
 
-- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
-  For example, `'2'` is the `monthCode` for February in the ISO calendar, while `'8L'` is the month code for a leap month in the Chinese calendar when the leap month repeats the 8th month.
+- `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
+  For common (non-leap) months, `monthCode` should be `M${month}`.
+  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
+  Examples: `'M2'` => February; `'M8L'` => repeated 8th month in the Chinese calendar; `'M5L'` => Adar I in the Hebrew calendar.
 - `day` is a positive integer representing the day of the month.
 
 Note that this type has no `month` property, because `month` is ambiguous for some calendars without knowing the year.
@@ -283,7 +285,7 @@ Example usage:
 
 ```js
 ({ calendar } = new Intl.DateTimeFormat().resolvedOptions());
-md = Temporal.PlainMonthDay.from({ monthCode: '8', day: 24, calendar });
+md = Temporal.PlainMonthDay.from({ monthCode: 'M8', day: 24, calendar });
 md.toLocaleString(); // => example output: 08-24
 // Same as above, but explicitly specifying the calendar:
 md.toLocaleString(undefined, { calendar });
@@ -309,7 +311,7 @@ Example usage:
 ```js
 const holiday = {
   name: 'Canada Day',
-  holidayMonthDay: Temporal.PlainMonthDay.from({ monthCode: '7', day: 1 })
+  holidayMonthDay: Temporal.PlainMonthDay.from({ monthCode: 'M7', day: 1 })
 };
 const str = JSON.stringify(holiday, null, 2);
 console.log(str);
@@ -362,7 +364,7 @@ Example:
 ```javascript
 md = Temporal.PlainMonthDay.from({
   calendar: 'japanese',
-  monthCode: '1',
+  monthCode: 'M1',
   day: 1
 });
 

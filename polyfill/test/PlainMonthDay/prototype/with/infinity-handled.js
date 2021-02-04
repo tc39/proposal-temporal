@@ -11,7 +11,7 @@ const instance = new Temporal.PlainMonthDay(5, 2);
 // constrain
 
 let result = instance.with({ day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "5");
+assert.sameValue(result.monthCode, "M5");
 assert.sameValue(result.day, 31);
 
 // reject

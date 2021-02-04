@@ -199,7 +199,7 @@ describe('Calendar', () => {
     });
   });
   describe('Calendar.monthCode()', () => {
-    const res = '11';
+    const res = 'M11';
     it('accepts Date', () => equal(iso.monthCode(Temporal.PlainDate.from('1994-11-05')), res));
     it('accepts DateTime', () => equal(iso.monthCode(Temporal.PlainDateTime.from('1994-11-05T08:15:30')), res));
     it('accepts YearMonth', () => equal(iso.monthCode(Temporal.PlainYearMonth.from('1994-11')), res));

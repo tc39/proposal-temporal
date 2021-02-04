@@ -163,8 +163,10 @@ The above read-only properties allow accessing the year or month individually.
   The first month in every year has `month` equal to `1`.
   The last month of every year has `month` equal to the `monthsInYear` property.
   `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
-- `monthCode` is a calendar-specific, non-empty string which identifies the month in a year-independent way.
-  For calendars that do not use leap months, `monthCode` is the same as `month.toString()`.
+- `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
+  For common (non-leap) months, `monthCode` should be `M${month}`.
+  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
+  Examples: `'M2'` => February; `'M8L'` => repeated 8th month in the Chinese calendar; `'M5L'` => Adar I in the Hebrew calendar.
 
 Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
 Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.

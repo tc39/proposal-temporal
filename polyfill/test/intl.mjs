@@ -190,7 +190,7 @@ describe('Intl', () => {
   });
   describe('monthday.toLocaleString()', () => {
     const calendar = new Intl.DateTimeFormat('en').resolvedOptions().calendar;
-    const monthday = Temporal.PlainMonthDay.from({ monthCode: '11', day: 18, calendar });
+    const monthday = Temporal.PlainMonthDay.from({ monthCode: 'M11', day: 18, calendar });
     it(`(${monthday.toString()}).toLocaleString('en-US', { timeZone: 'America/New_York' })`, () =>
       equal(`${monthday.toLocaleString('en', { timeZone: 'America/New_York' })}`, '11/18'));
     it(`(${monthday.toString()}).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })`, () =>
@@ -204,7 +204,7 @@ describe('Intl', () => {
       equal(monthday.toLocaleString('en', { weekday: 'long' }), '11/18');
     });
     it("works when the object's calendar is the same as the locale's calendar", () => {
-      const md = Temporal.PlainMonthDay.from({ monthCode: '11', day: 18, calendar: 'japanese' });
+      const md = Temporal.PlainMonthDay.from({ monthCode: 'M11', day: 18, calendar: 'japanese' });
       equal(`${md.toLocaleString('en-US-u-ca-japanese')}`, '11/18');
     });
     it('throws when the calendar is not equal to the locale calendar', () => {

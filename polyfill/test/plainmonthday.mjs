@@ -42,8 +42,8 @@ describe('MonthDay', () => {
         equal(`${PlainMonthDay.from('2019-10-01T09:00:00Z')}`, '10-01'));
       it("MonthDay.from('11-18') == (11-18)", () => equal(`${PlainMonthDay.from('11-18')}`, '11-18'));
       it("MonthDay.from('1976-11-18') == (11-18)", () => equal(`${PlainMonthDay.from('1976-11-18')}`, '11-18'));
-      it('MonthDay.from({ monthCode: "11", day: 18 }) == 11-18', () =>
-        equal(`${PlainMonthDay.from({ monthCode: '11', day: 18 })}`, '11-18'));
+      it('MonthDay.from({ monthCode: "M11", day: 18 }) == 11-18', () =>
+        equal(`${PlainMonthDay.from({ monthCode: 'M11', day: 18 })}`, '11-18'));
       it('ignores year when determining the ISO reference year from month/day', () => {
         const one = PlainMonthDay.from({ year: 2019, month: 11, day: 18 });
         const two = PlainMonthDay.from({ year: 1979, month: 11, day: 18 });
@@ -55,13 +55,13 @@ describe('MonthDay', () => {
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('ignores year when determining the ISO reference year from monthCode/day', () => {
-        const one = PlainMonthDay.from({ year: 2019, monthCode: '11', day: 18 });
-        const two = PlainMonthDay.from({ year: 1979, monthCode: '11', day: 18 });
+        const one = PlainMonthDay.from({ year: 2019, monthCode: 'M11', day: 18 });
+        const two = PlainMonthDay.from({ year: 1979, monthCode: 'M11', day: 18 });
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('ignores era/eraYear when determining the ISO reference year from monthCode/day', () => {
-        const one = PlainMonthDay.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 18, calendar: 'gregory' });
-        const two = PlainMonthDay.from({ era: 'ce', eraYear: 1979, monthCode: '11', day: 18, calendar: 'gregory' });
+        const one = PlainMonthDay.from({ era: 'ce', eraYear: 2019, monthCode: 'M11', day: 18, calendar: 'gregory' });
+        const two = PlainMonthDay.from({ era: 'ce', eraYear: 1979, monthCode: 'M11', day: 18, calendar: 'gregory' });
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('MonthDay.from(11-18) is not the same object', () => {
@@ -95,8 +95,8 @@ describe('MonthDay', () => {
         );
       });
       it('MonthDay.from({ day: 15 }) throws', () => throws(() => PlainMonthDay.from({ day: 15 }), TypeError));
-      it('MonthDay.from({ monthCode: "12" }) throws', () =>
-        throws(() => PlainMonthDay.from({ monthCode: '12' }), TypeError));
+      it('MonthDay.from({ monthCode: "M12" }) throws', () =>
+        throws(() => PlainMonthDay.from({ monthCode: 'M12' }), TypeError));
       it('MonthDay.from({}) throws', () => throws(() => PlainMonthDay.from({}), TypeError));
       it('MonthDay.from(required prop undefined) throws', () =>
         throws(() => PlainMonthDay.from({ monthCode: undefined, day: 15 }), TypeError));
@@ -178,7 +178,7 @@ describe('MonthDay', () => {
     describe('getters', () => {
       let md = new PlainMonthDay(1, 15);
       it("(1-15).monthCode === '1'", () => {
-        equal(md.monthCode, '1');
+        equal(md.monthCode, 'M1');
       });
       it("(1-15).day === '15'", () => {
         equal(`${md.day}`, '15');
@@ -187,19 +187,19 @@ describe('MonthDay', () => {
     });
     describe('.with()', () => {
       const md = PlainMonthDay.from('01-22');
-      it('with(12-)', () => equal(`${md.with({ monthCode: '12' })}`, '12-22'));
+      it('with(12-)', () => equal(`${md.with({ monthCode: 'M12' })}`, '12-22'));
       it('with(-15)', () => equal(`${md.with({ day: 15 })}`, '01-15'));
     });
   });
   describe('MonthDay.with()', () => {
     const md = PlainMonthDay.from('01-15');
-    it('with({monthCode})', () => equal(`${md.with({ monthCode: '12' })}`, '12-15'));
+    it('with({monthCode})', () => equal(`${md.with({ monthCode: 'M12' })}`, '12-15'));
     it('with({month}) not accepted', () => {
       throws(() => md.with({ month: 12 }), TypeError);
     });
-    it('with({month, monthCode}) accepted', () => equal(`${md.with({ month: 12, monthCode: '12' })}`, '12-15'));
+    it('with({month, monthCode}) accepted', () => equal(`${md.with({ month: 12, monthCode: 'M12' })}`, '12-15'));
     it('month and monthCode must agree', () => {
-      throws(() => md.with({ month: 12, monthCode: '11' }), RangeError);
+      throws(() => md.with({ month: 12, monthCode: 'M11' }), RangeError);
     });
     it('with({year, month}) accepted', () => equal(`${md.with({ year: 2000, month: 12 })}`, '12-15'));
     it('throws on bad overflow', () => {
@@ -224,7 +224,7 @@ describe('MonthDay', () => {
       throws(() => md.with({ months: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
-      equal(`${md.with({ monthCode: '12', days: 1 })}`, '12-15');
+      equal(`${md.with({ monthCode: 'M12', days: 1 })}`, '12-15');
     });
     it('year is ignored when determining ISO reference year', () => {
       equal(md.with({ year: 1900 }).getISOFields().isoYear, md.getISOFields().isoYear);
@@ -281,7 +281,7 @@ describe('MonthDay', () => {
   });
   describe('MonthDay.toString()', () => {
     const md1 = PlainMonthDay.from('11-18');
-    const md2 = PlainMonthDay.from({ monthCode: '11', day: 18, calendar: 'gregory' });
+    const md2 = PlainMonthDay.from({ monthCode: 'M11', day: 18, calendar: 'gregory' });
     it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(md1.toString({ calendarName: 'auto' }), '11-18');
       equal(md2.toString({ calendarName: 'auto' }), '1972-11-18[u-ca-gregory]');
