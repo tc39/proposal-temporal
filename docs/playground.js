@@ -4673,7 +4673,7 @@
         var fields = ES.ToTemporalMonthDayFields(item, fieldNames);
 
         if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined) {
-          fields.monthCode = ES.ToString(fields.month);
+          fields.monthCode = "M".concat(ES.ToString(fields.month));
         }
 
         return ES.MonthDayFromFields(_calendar2, fields, constructor, options);
@@ -9000,7 +9000,7 @@
     },
     monthCode: function monthCode(date) {
       if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
-      return ES.ToString(GetSlot(date, ISO_MONTH));
+      return "M".concat(ES.ToString(GetSlot(date, ISO_MONTH)));
     },
     day: function day(date) {
       if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
@@ -9046,7 +9046,11 @@
   // ECMA-402.
 
   function monthCodeNumberPart(monthCode) {
-    var month = +monthCode;
+    if (!monthCode.startsWith('M')) {
+      throw new RangeError("Invalid month code: ".concat(monthCode, ".  Month codes must start with M."));
+    }
+
+    var month = +monthCode.slice(1);
     if (isNaN(month)) throw new RangeError("Invalid month code: ".concat(monthCode));
     return month;
   }
@@ -9063,7 +9067,7 @@
 
     if (monthCode === undefined) {
       if (month === undefined) throw new TypeError('Either month or monthCode are required');
-      monthCode = "".concat(month);
+      monthCode = "M".concat(month);
     } else {
       var numberPart = monthCodeNumberPart(monthCode);
 
@@ -9071,8 +9075,8 @@
         throw new RangeError("monthCode ".concat(monthCode, " and month ").concat(month, " must match if both are present"));
       }
 
-      if (monthCode !== "".concat(numberPart)) {
-        throw new RangeError("Invalid month code: ".concat(monthCode, ". Expected numeric string"));
+      if (monthCode !== "M".concat(numberPart)) {
+        throw new RangeError("Invalid month code: ".concat(monthCode));
       }
 
       month = numberPart;
