@@ -333,7 +333,7 @@ function resolveNonLunisolarMonth(calendarDate) {
 // Implementation details for Gregorian calendar
 const gre = {
   isoYear(eraYear, era) {
-    return era === 'bc' ? -(eraYear - 1) : eraYear;
+    return era === 'bce' ? -(eraYear - 1) : eraYear;
   },
   validateFields(fields) {
     if ((fields.era === undefined || fields.eraYear === undefined) && fields.year === undefined) {
@@ -359,11 +359,11 @@ const gre = {
 
 // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
 // numbering rules, which we do not currently use in Temporal, and the addition
-// of BC/AD eras which means no negative years or year 0.
+// of BCE/CE eras which means no negative years or year 0.
 impl['gregory'] = ObjectAssign({}, impl['iso8601'], {
   era(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
+    return GetSlot(date, ISO_YEAR) < 1 ? 'bce' : 'ce';
   },
   eraYear(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));

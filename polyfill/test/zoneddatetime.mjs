@@ -237,7 +237,7 @@ describe('ZonedDateTime', () => {
         assert(zdt);
         equal(typeof zdt, 'object');
       });
-      it('zdt.era is ad', () => equal(zdt.era, 'ad'));
+      it('zdt.era is ce', () => equal(zdt.era, 'ce'));
       it('zdt.year is 1976', () => equal(zdt.year, 1976));
       it('zdt.month is 11', () => equal(zdt.month, 11));
       it('zdt.monthCode is "11"', () => equal(zdt.monthCode, '11'));

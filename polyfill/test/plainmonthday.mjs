@@ -50,8 +50,8 @@ describe('MonthDay', () => {
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('ignores era/eraYear when determining the ISO reference year from month/day', () => {
-        const one = PlainMonthDay.from({ era: 'ad', eraYear: 2019, month: 11, day: 18, calendar: 'gregory' });
-        const two = PlainMonthDay.from({ era: 'ad', eraYear: 1979, month: 11, day: 18, calendar: 'gregory' });
+        const one = PlainMonthDay.from({ era: 'ce', eraYear: 2019, month: 11, day: 18, calendar: 'gregory' });
+        const two = PlainMonthDay.from({ era: 'ce', eraYear: 1979, month: 11, day: 18, calendar: 'gregory' });
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('ignores year when determining the ISO reference year from monthCode/day', () => {
@@ -60,8 +60,8 @@ describe('MonthDay', () => {
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('ignores era/eraYear when determining the ISO reference year from monthCode/day', () => {
-        const one = PlainMonthDay.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 18, calendar: 'gregory' });
-        const two = PlainMonthDay.from({ era: 'ad', eraYear: 1979, monthCode: '11', day: 18, calendar: 'gregory' });
+        const one = PlainMonthDay.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 18, calendar: 'gregory' });
+        const two = PlainMonthDay.from({ era: 'ce', eraYear: 1979, monthCode: '11', day: 18, calendar: 'gregory' });
         equal(one.getISOFields().isoYear, two.getISOFields().isoYear);
       });
       it('MonthDay.from(11-18) is not the same object', () => {
@@ -90,7 +90,7 @@ describe('MonthDay', () => {
       });
       it('MonthDay.from({era, eraYear, month, day}) allowed in other calendar', () => {
         equal(
-          `${PlainMonthDay.from({ era: 'ad', eraYear: 1970, month: 11, day: 18, calendar: 'gregory' })}`,
+          `${PlainMonthDay.from({ era: 'ce', eraYear: 1970, month: 11, day: 18, calendar: 'gregory' })}`,
           '1972-11-18[u-ca-gregory]'
         );
       });
