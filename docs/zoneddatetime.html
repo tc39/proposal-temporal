@@ -609,10 +609,10 @@ zdt<span class="token punctuation">.</span><span class="token function">withTime
 <h3 id="era"><a class="heading-link" href="#era"></a>zonedDateTime.<strong>era</strong> : string | undefined</h3><h3 id="eraYear"><a class="heading-link" href="#eraYear"></a>zonedDateTime.<strong>eraYear</strong> : number | undefined</h3><p>In calendars that use eras, the <code>era</code> and <code>eraYear</code> read-only properties can be used together to resolve an era-relative year.
 Both properties are <code>undefined</code> when using the ISO 8601 calendar.
 As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.
-Unlike <code>year</code>, <code>eraYear</code> may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.</p>
+Unlike <code>year</code>, <code>eraYear</code> may decrease as time proceeds because some eras (like the BCE era in the Gregorian calendar) count years backwards.</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-000015-01-01T12:30[Europe/Rome][u-ca-gregory]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>era<span class="token punctuation">;</span>
-<span class="token comment">// => "bc"</span>
+<span class="token comment">// => "bce"</span>
 date<span class="token punctuation">.</span>eraYear<span class="token punctuation">;</span>
 <span class="token comment">// => 16</span>
 date<span class="token punctuation">.</span>year<span class="token punctuation">;</span>

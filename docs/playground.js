@@ -1828,11 +1828,6 @@
 
   var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
 
-  /* globals
-  	AggregateError,
-  	SharedArrayBuffer,
-  */
-
   var undefined$1;
 
   var $SyntaxError = SyntaxError;
@@ -7611,6 +7606,11 @@
     }
 
     _createClass(TimeZone, [{
+      key: "id",
+      get: function get() {
+        return ES.ToString(this);
+      }
+    }, {
       key: "getOffsetNanosecondsFor",
       value: function getOffsetNanosecondsFor(instant) {
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -7798,11 +7798,6 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        return ES.ToString(this);
-      }
-    }, {
-      key: "id",
-      get: function get() {
         return ES.ToString(this);
       }
     }], [{
@@ -8328,6 +8323,33 @@
     }
 
     _createClass(Instant, [{
+      key: "epochSeconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return +value.divide(1e9);
+      }
+    }, {
+      key: "epochMilliseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
+        return +value.divide(1e6);
+      }
+    }, {
+      key: "epochMicroseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return bigIntIfAvailable$1(value.divide(1e3));
+      }
+    }, {
+      key: "epochNanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+        return bigIntIfAvailable$1(GetSlot(this, EPOCHNANOSECONDS));
+      }
+    }, {
       key: "add",
       value: function add(temporalDurationLike) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -8571,33 +8593,6 @@
         var TemporalZonedDateTime = GetIntrinsic$1('%Temporal.ZonedDateTime%');
         return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
       }
-    }, {
-      key: "epochSeconds",
-      get: function get() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return +value.divide(1e9);
-      }
-    }, {
-      key: "epochMilliseconds",
-      get: function get() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
-        return +value.divide(1e6);
-      }
-    }, {
-      key: "epochMicroseconds",
-      get: function get() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return bigIntIfAvailable$1(value.divide(1e3));
-      }
-    }, {
-      key: "epochNanoseconds",
-      get: function get() {
-        if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        return bigIntIfAvailable$1(GetSlot(this, EPOCHNANOSECONDS));
-      }
     }], [{
       key: "fromEpochSeconds",
       value: function fromEpochSeconds(epochSeconds) {
@@ -8699,6 +8694,11 @@
     }
 
     _createClass(Calendar, [{
+      key: "id",
+      get: function get() {
+        return ES.ToString(this);
+      }
+    }, {
       key: "dateFromFields",
       value: function dateFromFields(fields, options, constructor) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -8885,11 +8885,6 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        return ES.ToString(this);
-      }
-    }, {
-      key: "id",
-      get: function get() {
         return ES.ToString(this);
       }
     }], [{
@@ -9092,7 +9087,7 @@
 
   var gre = {
     isoYear: function isoYear(eraYear, era) {
-      return era === 'bc' ? -(eraYear - 1) : eraYear;
+      return era === 'bce' ? -(eraYear - 1) : eraYear;
     },
     validateFields: function validateFields(fields) {
       if ((fields.era === undefined || fields.eraYear === undefined) && fields.year === undefined) {
@@ -9119,12 +9114,12 @@
     }
   }; // 'iso8601' calendar is equivalent to 'gregory' except for ISO 8601 week
   // numbering rules, which we do not currently use in Temporal, and the addition
-  // of BC/AD eras which means no negative years or year 0.
+  // of BCE/CE eras which means no negative years or year 0.
 
   impl['gregory'] = ObjectAssign$2({}, impl['iso8601'], {
     era: function era(date) {
       if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
-      return GetSlot(date, ISO_YEAR) < 1 ? 'bc' : 'ad';
+      return GetSlot(date, ISO_YEAR) < 1 ? 'bce' : 'ce';
     },
     eraYear: function eraYear(date) {
       if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
@@ -9360,6 +9355,132 @@
     }
 
     _createClass(PlainDate, [{
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).era(this);
+
+        if (result !== undefined) {
+          result = ES.ToString(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "eraYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).eraYear(this);
+
+        if (result !== undefined) {
+          result = ES.ToInteger(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).year(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar year result must be an integer');
+        }
+
+        return ES.ToInteger(result);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).month(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar month result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar monthCode result must be a string');
+        }
+
+        return ES.ToString(result);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).day(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar day result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "dayOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfWeek(this);
+      }
+    }, {
+      key: "dayOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfYear(this);
+      }
+    }, {
+      key: "weekOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).weekOfYear(this);
+      }
+    }, {
+      key: "daysInWeek",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInWeek(this);
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
+      }
+    }, {
+      key: "inLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).inLeapYear(this);
+      }
+    }, {
       key: "with",
       value: function _with(temporalDateLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -9697,132 +9818,6 @@
           isoYear: GetSlot(this, ISO_YEAR)
         };
       }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).era(this);
-
-        if (result !== undefined) {
-          result = ES.ToString(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "eraYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).eraYear(this);
-
-        if (result !== undefined) {
-          result = ES.ToInteger(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "year",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).year(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar year result must be an integer');
-        }
-
-        return ES.ToInteger(result);
-      }
-    }, {
-      key: "month",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).month(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar month result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "monthCode",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).monthCode(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar monthCode result must be a string');
-        }
-
-        return ES.ToString(result);
-      }
-    }, {
-      key: "day",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).day(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar day result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "dayOfWeek",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfWeek(this);
-      }
-    }, {
-      key: "dayOfYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfYear(this);
-      }
-    }, {
-      key: "weekOfYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).weekOfYear(this);
-      }
-    }, {
-      key: "daysInWeek",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInWeek(this);
-      }
-    }, {
-      key: "daysInMonth",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInMonth(this);
-      }
-    }, {
-      key: "daysInYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(this);
-      }
-    }, {
-      key: "monthsInYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).monthsInYear(this);
-      }
-    }, {
-      key: "inLeapYear",
-      get: function get() {
-        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).inLeapYear(this);
-      }
     }], [{
       key: "from",
       value: function from(item) {
@@ -9954,6 +9949,164 @@
     }
 
     _createClass(PlainDateTime, [{
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).year(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar year result must be an integer');
+        }
+
+        return ES.ToInteger(result);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).month(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar month result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+        if (result !== undefined) result = ES.ToString(result);
+        return result;
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).day(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar day result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "hour",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_HOUR);
+      }
+    }, {
+      key: "minute",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MINUTE);
+      }
+    }, {
+      key: "second",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_SECOND);
+      }
+    }, {
+      key: "millisecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MILLISECOND);
+      }
+    }, {
+      key: "microsecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MICROSECOND);
+      }
+    }, {
+      key: "nanosecond",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_NANOSECOND);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).era(this);
+
+        if (result !== undefined) {
+          result = ES.ToString(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "eraYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).eraYear(this);
+
+        if (result !== undefined) {
+          result = ES.ToInteger(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "dayOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfWeek(this);
+      }
+    }, {
+      key: "dayOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfYear(this);
+      }
+    }, {
+      key: "weekOfYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).weekOfYear(this);
+      }
+    }, {
+      key: "daysInWeek",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInWeek(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
+      }
+    }, {
+      key: "inLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).inLeapYear(this);
+      }
+    }, {
       key: "with",
       value: function _with(temporalDateTimeLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -10399,164 +10552,6 @@
           isoYear: GetSlot(this, ISO_YEAR)
         };
       }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "year",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).year(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar year result must be an integer');
-        }
-
-        return ES.ToInteger(result);
-      }
-    }, {
-      key: "month",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).month(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar month result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "monthCode",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).monthCode(this);
-        if (result !== undefined) result = ES.ToString(result);
-        return result;
-      }
-    }, {
-      key: "day",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).day(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar day result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "hour",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_HOUR);
-      }
-    }, {
-      key: "minute",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MINUTE);
-      }
-    }, {
-      key: "second",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_SECOND);
-      }
-    }, {
-      key: "millisecond",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MILLISECOND);
-      }
-    }, {
-      key: "microsecond",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MICROSECOND);
-      }
-    }, {
-      key: "nanosecond",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_NANOSECOND);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).era(this);
-
-        if (result !== undefined) {
-          result = ES.ToString(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "eraYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).eraYear(this);
-
-        if (result !== undefined) {
-          result = ES.ToInteger(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "dayOfWeek",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfWeek(this);
-      }
-    }, {
-      key: "dayOfYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfYear(this);
-      }
-    }, {
-      key: "weekOfYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).weekOfYear(this);
-      }
-    }, {
-      key: "daysInWeek",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInWeek(this);
-      }
-    }, {
-      key: "daysInYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(this);
-      }
-    }, {
-      key: "daysInMonth",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInMonth(this);
-      }
-    }, {
-      key: "monthsInYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).monthsInYear(this);
-      }
-    }, {
-      key: "inLeapYear",
-      get: function get() {
-        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).inLeapYear(this);
-      }
     }], [{
       key: "from",
       value: function from(item) {
@@ -10661,6 +10656,78 @@
     }
 
     _createClass(Duration, [{
+      key: "years",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, YEARS);
+      }
+    }, {
+      key: "months",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MONTHS);
+      }
+    }, {
+      key: "weeks",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, WEEKS);
+      }
+    }, {
+      key: "days",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, DAYS);
+      }
+    }, {
+      key: "hours",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, HOURS);
+      }
+    }, {
+      key: "minutes",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MINUTES);
+      }
+    }, {
+      key: "seconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, SECONDS);
+      }
+    }, {
+      key: "milliseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MILLISECONDS);
+      }
+    }, {
+      key: "microseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, MICROSECONDS);
+      }
+    }, {
+      key: "nanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, NANOSECONDS);
+      }
+    }, {
+      key: "sign",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
+      }
+    }, {
+      key: "blank",
+      get: function get() {
+        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
+      }
+    }, {
       key: "with",
       value: function _with(durationLike) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -10994,78 +11061,6 @@
       value: function valueOf() {
         throw new TypeError('use compare() to compare Temporal.Duration');
       }
-    }, {
-      key: "years",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, YEARS);
-      }
-    }, {
-      key: "months",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, MONTHS);
-      }
-    }, {
-      key: "weeks",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, WEEKS);
-      }
-    }, {
-      key: "days",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, DAYS);
-      }
-    }, {
-      key: "hours",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, HOURS);
-      }
-    }, {
-      key: "minutes",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, MINUTES);
-      }
-    }, {
-      key: "seconds",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, SECONDS);
-      }
-    }, {
-      key: "milliseconds",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, MILLISECONDS);
-      }
-    }, {
-      key: "microseconds",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, MICROSECONDS);
-      }
-    }, {
-      key: "nanoseconds",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, NANOSECONDS);
-      }
-    }, {
-      key: "sign",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
-      }
-    }, {
-      key: "blank",
-      get: function get() {
-        if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return ES.DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
-      }
     }], [{
       key: "from",
       value: function from(item) {
@@ -11195,6 +11190,36 @@
     }
 
     _createClass(PlainMonthDay, [{
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar monthCode result must be a string');
+        }
+
+        return ES.ToString(result);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).day(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar day result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
       key: "with",
       value: function _with(temporalMonthDayLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -11305,36 +11330,6 @@
           isoMonth: GetSlot(this, ISO_MONTH),
           isoYear: GetSlot(this, ISO_YEAR)
         };
-      }
-    }, {
-      key: "monthCode",
-      get: function get() {
-        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).monthCode(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar monthCode result must be a string');
-        }
-
-        return ES.ToString(result);
-      }
-    }, {
-      key: "day",
-      get: function get() {
-        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).day(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar day result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
       }
     }], [{
       key: "from",
@@ -11508,6 +11503,48 @@
     }
 
     _createClass(PlainTime, [{
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "hour",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_HOUR);
+      }
+    }, {
+      key: "minute",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MINUTE);
+      }
+    }, {
+      key: "second",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_SECOND);
+      }
+    }, {
+      key: "millisecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MILLISECOND);
+      }
+    }, {
+      key: "microsecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_MICROSECOND);
+      }
+    }, {
+      key: "nanosecond",
+      get: function get() {
+        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, ISO_NANOSECOND);
+      }
+    }, {
       key: "with",
       value: function _with(temporalTimeLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -11911,48 +11948,6 @@
           isoSecond: GetSlot(this, ISO_SECOND)
         };
       }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "hour",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_HOUR);
-      }
-    }, {
-      key: "minute",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MINUTE);
-      }
-    }, {
-      key: "second",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_SECOND);
-      }
-    }, {
-      key: "millisecond",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MILLISECOND);
-      }
-    }, {
-      key: "microsecond",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_MICROSECOND);
-      }
-    }, {
-      key: "nanosecond",
-      get: function get() {
-        if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, ISO_NANOSECOND);
-      }
     }], [{
       key: "from",
       value: function from(item) {
@@ -12052,6 +12047,92 @@
     }
 
     _createClass(PlainYearMonth, [{
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).year(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar year result must be an integer');
+        }
+
+        return ES.ToInteger(result);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).month(this);
+
+        if (result === undefined) {
+          throw new RangeError('calendar month result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(this);
+        if (result !== undefined) result = ES.ToString(result);
+        return result;
+      }
+    }, {
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).era(this);
+
+        if (result !== undefined) {
+          result = ES.ToString(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "eraYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).eraYear(this);
+
+        if (result !== undefined) {
+          result = ES.ToInteger(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(this);
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(this);
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(this);
+      }
+    }, {
+      key: "inLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).inLeapYear(this);
+      }
+    }, {
       key: "with",
       value: function _with(temporalYearMonthLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -12359,92 +12440,6 @@
           isoYear: GetSlot(this, ISO_YEAR)
         };
       }
-    }, {
-      key: "year",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).year(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar year result must be an integer');
-        }
-
-        return ES.ToInteger(result);
-      }
-    }, {
-      key: "month",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).month(this);
-
-        if (result === undefined) {
-          throw new RangeError('calendar month result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "monthCode",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).monthCode(this);
-        if (result !== undefined) result = ES.ToString(result);
-        return result;
-      }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).era(this);
-
-        if (result !== undefined) {
-          result = ES.ToString(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "eraYear",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).eraYear(this);
-
-        if (result !== undefined) {
-          result = ES.ToInteger(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "daysInMonth",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInMonth(this);
-      }
-    }, {
-      key: "daysInYear",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(this);
-      }
-    }, {
-      key: "monthsInYear",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).monthsInYear(this);
-      }
-    }, {
-      key: "inLeapYear",
-      get: function get() {
-        if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).inLeapYear(this);
-      }
     }], [{
       key: "from",
       value: function from(item) {
@@ -12524,6 +12519,230 @@
     }
 
     _createClass(ZonedDateTime, [{
+      key: "calendar",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR);
+      }
+    }, {
+      key: "timeZone",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, TIME_ZONE);
+      }
+    }, {
+      key: "year",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).year(dateTime(this));
+
+        if (result === undefined) {
+          throw new RangeError('calendar year result must be an integer');
+        }
+
+        return ES.ToInteger(result);
+      }
+    }, {
+      key: "month",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).month(dateTime(this));
+
+        if (result === undefined) {
+          throw new RangeError('calendar month result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "monthCode",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).monthCode(dateTime(this));
+
+        if (result === undefined) {
+          throw new RangeError('calendar monthCode result must be a string');
+        }
+
+        return ES.ToString(result);
+      }
+    }, {
+      key: "day",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).day(dateTime(this));
+
+        if (result === undefined) {
+          throw new RangeError('calendar day result must be a positive integer');
+        }
+
+        return ES.ToPositiveInteger(result);
+      }
+    }, {
+      key: "hour",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_HOUR);
+      }
+    }, {
+      key: "minute",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_MINUTE);
+      }
+    }, {
+      key: "second",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_SECOND);
+      }
+    }, {
+      key: "millisecond",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_MILLISECOND);
+      }
+    }, {
+      key: "microsecond",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_MICROSECOND);
+      }
+    }, {
+      key: "nanosecond",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(dateTime(this), ISO_NANOSECOND);
+      }
+    }, {
+      key: "era",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).era(dateTime(this));
+
+        if (result !== undefined) {
+          result = ES.ToString(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "eraYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var result = GetSlot(this, CALENDAR).eraYear(dateTime(this));
+
+        if (result !== undefined) {
+          result = ES.ToInteger(result);
+        }
+
+        return result;
+      }
+    }, {
+      key: "epochSeconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return +value.divide(1e9);
+      }
+    }, {
+      key: "epochMilliseconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return +value.divide(1e6);
+      }
+    }, {
+      key: "epochMicroseconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var value = GetSlot(this, EPOCHNANOSECONDS);
+        return bigIntIfAvailable$2(value.divide(1e3));
+      }
+    }, {
+      key: "epochNanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return bigIntIfAvailable$2(GetSlot(this, EPOCHNANOSECONDS));
+      }
+    }, {
+      key: "dayOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfWeek(dateTime(this));
+      }
+    }, {
+      key: "dayOfYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).dayOfYear(dateTime(this));
+      }
+    }, {
+      key: "weekOfYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).weekOfYear(dateTime(this));
+      }
+    }, {
+      key: "hoursInDay",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        var dt = dateTime(this);
+        var DateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
+        var year = GetSlot(dt, ISO_YEAR);
+        var month = GetSlot(dt, ISO_MONTH);
+        var day = GetSlot(dt, ISO_DAY);
+        var today = new DateTime(year, month, day, 0, 0, 0, 0, 0, 0);
+        var tomorrowFields = ES.AddDate(year, month, day, 0, 0, 0, 1, 'reject');
+        var tomorrow = new DateTime(tomorrowFields.year, tomorrowFields.month, tomorrowFields.day, 0, 0, 0, 0, 0, 0);
+        var timeZone = GetSlot(this, TIME_ZONE);
+        var todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
+        var tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
+        return tomorrowNs.subtract(todayNs).toJSNumber() / 3.6e12;
+      }
+    }, {
+      key: "daysInWeek",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInWeek(dateTime(this));
+      }
+    }, {
+      key: "daysInMonth",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInMonth(dateTime(this));
+      }
+    }, {
+      key: "daysInYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).daysInYear(dateTime(this));
+      }
+    }, {
+      key: "monthsInYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).monthsInYear(dateTime(this));
+      }
+    }, {
+      key: "inLeapYear",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return GetSlot(this, CALENDAR).inLeapYear(dateTime(this));
+      }
+    }, {
+      key: "offset",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
+      }
+    }, {
+      key: "offsetNanoseconds",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return ES.GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
+      }
+    }, {
       key: "with",
       value: function _with(temporalZonedDateTimeLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -13092,230 +13311,6 @@
           offset: ES.GetOffsetStringFor(tz, GetSlot(this, INSTANT)),
           timeZone: tz
         };
-      }
-    }, {
-      key: "calendar",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR);
-      }
-    }, {
-      key: "timeZone",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, TIME_ZONE);
-      }
-    }, {
-      key: "year",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).year(dateTime(this));
-
-        if (result === undefined) {
-          throw new RangeError('calendar year result must be an integer');
-        }
-
-        return ES.ToInteger(result);
-      }
-    }, {
-      key: "month",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).month(dateTime(this));
-
-        if (result === undefined) {
-          throw new RangeError('calendar month result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "monthCode",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).monthCode(dateTime(this));
-
-        if (result === undefined) {
-          throw new RangeError('calendar monthCode result must be a string');
-        }
-
-        return ES.ToString(result);
-      }
-    }, {
-      key: "day",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).day(dateTime(this));
-
-        if (result === undefined) {
-          throw new RangeError('calendar day result must be a positive integer');
-        }
-
-        return ES.ToPositiveInteger(result);
-      }
-    }, {
-      key: "hour",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_HOUR);
-      }
-    }, {
-      key: "minute",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_MINUTE);
-      }
-    }, {
-      key: "second",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_SECOND);
-      }
-    }, {
-      key: "millisecond",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_MILLISECOND);
-      }
-    }, {
-      key: "microsecond",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_MICROSECOND);
-      }
-    }, {
-      key: "nanosecond",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(dateTime(this), ISO_NANOSECOND);
-      }
-    }, {
-      key: "era",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).era(dateTime(this));
-
-        if (result !== undefined) {
-          result = ES.ToString(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "eraYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var result = GetSlot(this, CALENDAR).eraYear(dateTime(this));
-
-        if (result !== undefined) {
-          result = ES.ToInteger(result);
-        }
-
-        return result;
-      }
-    }, {
-      key: "epochSeconds",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return +value.divide(1e9);
-      }
-    }, {
-      key: "epochMilliseconds",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return +value.divide(1e6);
-      }
-    }, {
-      key: "epochMicroseconds",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var value = GetSlot(this, EPOCHNANOSECONDS);
-        return bigIntIfAvailable$2(value.divide(1e3));
-      }
-    }, {
-      key: "epochNanoseconds",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return bigIntIfAvailable$2(GetSlot(this, EPOCHNANOSECONDS));
-      }
-    }, {
-      key: "dayOfWeek",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfWeek(dateTime(this));
-      }
-    }, {
-      key: "dayOfYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).dayOfYear(dateTime(this));
-      }
-    }, {
-      key: "weekOfYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).weekOfYear(dateTime(this));
-      }
-    }, {
-      key: "hoursInDay",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var dt = dateTime(this);
-        var DateTime = GetIntrinsic$1('%Temporal.PlainDateTime%');
-        var year = GetSlot(dt, ISO_YEAR);
-        var month = GetSlot(dt, ISO_MONTH);
-        var day = GetSlot(dt, ISO_DAY);
-        var today = new DateTime(year, month, day, 0, 0, 0, 0, 0, 0);
-        var tomorrowFields = ES.AddDate(year, month, day, 0, 0, 0, 1, 'reject');
-        var tomorrow = new DateTime(tomorrowFields.year, tomorrowFields.month, tomorrowFields.day, 0, 0, 0, 0, 0, 0);
-        var timeZone = GetSlot(this, TIME_ZONE);
-        var todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
-        var tomorrowNs = GetSlot(ES.GetTemporalInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-        return tomorrowNs.subtract(todayNs).toJSNumber() / 3.6e12;
-      }
-    }, {
-      key: "daysInWeek",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInWeek(dateTime(this));
-      }
-    }, {
-      key: "daysInMonth",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInMonth(dateTime(this));
-      }
-    }, {
-      key: "daysInYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).daysInYear(dateTime(this));
-      }
-    }, {
-      key: "monthsInYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).monthsInYear(dateTime(this));
-      }
-    }, {
-      key: "inLeapYear",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return GetSlot(this, CALENDAR).inLeapYear(dateTime(this));
-      }
-    }, {
-      key: "offset",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
-      }
-    }, {
-      key: "offsetNanoseconds",
-      get: function get() {
-        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        return ES.GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
       }
     }], [{
       key: "from",
