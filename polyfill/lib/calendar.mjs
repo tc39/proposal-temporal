@@ -528,9 +528,8 @@ const nonIsoHelperBase = {
     if (year === undefined && eraYear === undefined) throw new TypeError('year or eraYear is required');
     if (month === undefined && monthCode === undefined) throw new TypeError('month or monthCode is required');
     if (day === undefined) throw new RangeError('Missing day');
-    if (eraYear !== undefined && era === undefined && this.hasEra) throw new TypeError('era is required');
-    if (era !== undefined && !this.hasEra) throw new RangeError(`No eras in ${this.id} calendar`);
-    if (era !== undefined && eraYear === undefined && this.hasEra) throw new TypeError('eraYear is required');
+    if (eraYear !== undefined && era === undefined && this.hasEra) throw new TypeError('era is required with eraYear');
+    if (era !== undefined && eraYear === undefined && this.hasEra) throw new TypeError('eraYear is required with era');
     if (monthCode !== undefined) {
       if (typeof monthCode !== 'string') {
         throw new RangeError(`monthCode must be a string, not ${ES.Type(monthCode).toLowerCase()}`);
@@ -617,10 +616,12 @@ const nonIsoHelperBase = {
     const calculateSameMonthResult = (diffDays) => {
       // If the estimate is in the same year & month as the target, then we can
       // calculate the result exactly and short-circuit any additional logic.
-      // This optimization assumes that months are continuous (no skipped days)
-      // so it breaks in the case of calendar changes like 1582's skipping of
-      // days in October in the Roman calendar. This is just a prototype
-      // implementation so this error is OK for now.
+      // This optimization assumes that months are continuous. It would break if
+      // a calendar skipped days, like the Julian->Gregorian switchover. But the
+      // only ICU calendars that currently skip days (japanese/roc/buddhist) is
+      // a bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
+      // that's currently detected by `checkJulianBug()` which will throw. So
+      // this optimization should be safe for all ICU calendars.
       let testIsoEstimate = this.addDaysIso(isoEstimate, diffDays);
       if (date.day > this.minimumMonthLength(date)) {
         // There's a chance that the calendar date is out of range. Throw or
@@ -682,7 +683,7 @@ const nonIsoHelperBase = {
             // original date was an invalid value that will be constrained or
             // rejected here.
             if (overflow === 'reject') {
-              throw new RangeError(`Can't find ISO date from calendar date: ${JSON.stringify({ year, month, day })}`);
+              throw new RangeError(`Can't find ISO date from calendar date: ${JSON.stringify({ ...originalDate })}`);
             } else {
               // To constrain, pick the earliest value
               const order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
@@ -730,7 +731,6 @@ const nonIsoHelperBase = {
     date1 = ES.PrepareTemporalFields(date1, [['day'], ['month'], ['year']]);
     date2 = ES.PrepareTemporalFields(date2, [['day'], ['month'], ['year']]);
     if (date1.year !== date2.year) return ES.ComparisonResult(date1.year - date2.year);
-    // NOTE: we're assuming that month numbers correspond to chronological order for a given year
     if (date1.month !== date2.month) return ES.ComparisonResult(date1.month - date2.month);
     if (date1.day !== date2.day) return ES.ComparisonResult(date1.day - date2.day);
     return 0;
@@ -824,25 +824,25 @@ const nonIsoHelperBase = {
     return { years, months, weeks, days };
   },
   daysInMonth(calendarDate, cache) {
-    // Add the length of the smallest possible month. If it rolls over to the
-    // next month, then back up to the end of the previous month to know its day
-    // count. If it doesn't roll over, add the same number of days again until
-    // we get a rollover.
-    //
-    // NOTE: This won't work for months where days are skipped (e.g. Gregorian
-    // switchover) which is OK because this is a prototype implementation.
-    const { month: originalCalendarMonth } = calendarDate;
-    const increment = this.minimumMonthLength(calendarDate);
-
+    // Add enough days to roll over to the next month. One we're in the next
+    // month, we can calculate the length of the current month. NOTE: This
+    // algorithm assumes that months are continuous. It would break if a
+    // calendar skipped days, like the Julian->Gregorian switchover. But the
+    // only ICU calendars that currently skip days (japanese/roc/buddhist) is a
+    // bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
+    // that's currently detected by `checkJulianBug()` which will throw. So this
+    // code should be safe for all ICU calendars.
+    const { day } = calendarDate;
+    const max = this.maximumMonthLength(calendarDate);
+    const min = this.minimumMonthLength(calendarDate);
     // easiest case: we already know the month length if min and max are the same.
-    if (increment === this.maximumMonthLength(calendarDate)) return increment;
+    if (min === max) return min;
 
-    let addedIsoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
-    let addedCalendarDate;
-    do {
-      addedIsoDate = this.addDaysIso(addedIsoDate, increment);
-      addedCalendarDate = this.isoToCalendarDate(addedIsoDate, cache);
-    } while (addedCalendarDate.month === originalCalendarMonth);
+    // Add enough days to get into the next month, without skipping it
+    const increment = day <= max - min ? max : min;
+    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
+    const addedIsoDate = this.addDaysIso(isoDate, increment);
+    const addedCalendarDate = this.isoToCalendarDate(addedIsoDate, cache);
 
     // Now back up to the last day of the original month
     const endOfMonthIso = this.addDaysIso(addedIsoDate, -addedCalendarDate.day);
