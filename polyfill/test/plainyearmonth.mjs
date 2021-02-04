@@ -88,13 +88,13 @@ describe('YearMonth', () => {
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('ignores day when determining the ISO reference day from era/eraYear/month', () => {
-        const one = PlainYearMonth.from({ era: 'ad', eraYear: 2019, month: 11, day: 1, calendar: 'gregory' });
-        const two = PlainYearMonth.from({ era: 'ad', eraYear: 2019, month: 11, day: 2, calendar: 'gregory' });
+        const one = PlainYearMonth.from({ era: 'ce', eraYear: 2019, month: 11, day: 1, calendar: 'gregory' });
+        const two = PlainYearMonth.from({ era: 'ce', eraYear: 2019, month: 11, day: 2, calendar: 'gregory' });
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('ignores day when determining the ISO reference day from era/eraYear/monthCode', () => {
-        const one = PlainYearMonth.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 1, calendar: 'gregory' });
-        const two = PlainYearMonth.from({ era: 'ad', eraYear: 2019, monthCode: '11', day: 2, calendar: 'gregory' });
+        const one = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 1, calendar: 'gregory' });
+        const two = PlainYearMonth.from({ era: 'ce', eraYear: 2019, monthCode: '11', day: 2, calendar: 'gregory' });
         equal(one.getISOFields().isoDay, two.getISOFields().isoDay);
       });
       it('YearMonth.from(2019-11) is not the same object', () => {

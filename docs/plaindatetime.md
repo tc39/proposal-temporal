@@ -285,12 +285,12 @@ The `calendar` read-only property gives the calendar that the `year`, `month`, `
 In calendars that use eras, the `era` and `eraYear` read-only properties can be used together to resolve an era-relative year.
 Both properties are `undefined` when using the ISO 8601 calendar.
 As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`.
-Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BC era in the Gregorian calendar) count years backwards.
+Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BCE era in the Gregorian calendar) count years backwards.
 
 ```javascript
 date = Temporal.PlainDateTime.from('-000015-01-01T12:30[u-ca-gregory]');
 date.era;
-// => "bc"
+// => "bce"
 date.eraYear;
 // => 16
 date.year;
