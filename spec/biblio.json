@@ -111,6 +111,11 @@
       "type": "clause",
       "number": "Table 8",
       "id": "table-datetimeformat-tolocaltime-record"
+    },
+    {
+      "type": "op",
+      "aoid": "DateTimeStyleFormat",
+      "id": "sec-date-time-style-format"
     }
   ],
   "https://tc39.es/proposal-intl-duration-format/": [
