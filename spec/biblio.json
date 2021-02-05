@@ -101,6 +101,11 @@
       "type": "term",
       "term": "%NumberFormat%",
       "id": "sec-intl-numberformat-constructor"
+    },
+    {
+      "type": "clause",
+      "number": "Table 7",
+      "id": "table-datetimeformat-components"
     }
   ],
   "https://tc39.es/proposal-intl-duration-format/": [
