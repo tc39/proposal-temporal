@@ -160,12 +160,34 @@
             1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
         1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
-        1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
         1. Let _matcher_ be ? GetOption(_options_, *"formatMatcher"*, *"string"*, « *"basic"*, *"best fit"* », *"best fit"*).
-        1. <del>If _matcher_ is *"basic"*, then</del>
-          1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
-        1. <del>Else,</del>
-          1. <del>Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).</del>
+        1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
+        1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
+        1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
+        1. Set _dateTimeFormat_.[[TimeStyle]] to _timeStyle_.
+        1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
+          1. For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, do
+            1. Let _prop_ be the name given in the Property column of the row.
+            1. Let _p_ be _opt_.[[&lt;_prop_&gt;]].
+            1. If _p_ is not *undefined*, then
+              1. Throw a *TypeError* exception.
+          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).
+          1. <mark>TODO: figure out how to deal with Temporal objects here.</mark>
+        1. Else,
+          1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
+          1. <del>If _matcher_ is *"basic"*, then</del>
+            1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
+          1. <del>Else,</del>
+            1. <del>Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).</del>
+          1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
+          1. <ins>Let _needDefaults_ be *true*.</ins>
+          1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+            1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
+              1. <ins>Set _needDefaults_ to *false*.</ins>
+          1. <ins>If _needDefaults_ is *true*, then</ins>
+            1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+              1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
+          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_).</ins>
         1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do</del>
           1. <del>Let _prop_ be the name given in the Property column of the row.</del>
           1. <del>Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].</del>
@@ -196,18 +218,7 @@
             1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
           1. <del>Else,</del>
             1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
-        1. <del>Else,</del>
-          1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
-          1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
-        1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
-        1. <ins>Let _needDefaults_ be *true*.</ins>
-        1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
-          1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
-            1. <ins>Set _needDefaults_ to *false*.</ins>
-        1. <ins>If _needDefaults_ is *true*, then</ins>
-          1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
-            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
-        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_)</ins>.
+        1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>_bestFormat_.[[pattern]]</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>Let _needDefaults_ be *true*.</ins>
@@ -699,6 +710,9 @@
             1. <ins>Else,</ins>
               1. <ins>Assert: the Location value of the current row is ~pattern~.</ins>
               1. <ins>Let _v_ be the value of _dtf_.[[Pattern]]'s internal slot whose name is the Internal Slot value of the current row.</ins>
+          1. If the Internal Slot value of the current row is an Internal Slot value in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
+            1. If _dtf_.[[DateStyle]] is not *undefined* or _dtf_.[[TimeStyle]] is not *undefined*, then
+              1. Let _v_ be *undefined*.
           1. If _v_ is not *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
         1. Return _options_.
@@ -793,6 +807,16 @@
             <td><del>[[TimeZoneName]]</del><ins>[[timeZoneName]]</ins></td>
             <td>*"timeZoneName"*</td>
             <td><ins>~pattern~</ins></td>
+          <tr>
+            <td>[[DateStyle]]</td>
+            <td>*"dateStyle"*</td>
+            <td><ins>~object~</ins></td>
+          </tr>
+          <tr>
+            <td>[[TimeStyle]]</td>
+            <td>*"timeStyle"*</td>
+            <td><ins>~object~</ins></td>
+          </tr>
           </tr>
         </table>
       </emu-table>
@@ -834,6 +858,7 @@
       <li><del>[[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[TimeZoneName]] are each either *undefined*, indicating that the component is not used for formatting, or one of the String values given in <emu-xref href="#table-datetimeformat-components"></emu-xref>, indicating how the component should be presented in the formatted output.</del></li>
       <li><del>[[FractionalSecondDigits]] is either *undefined* or a positive, non-negative integer Number value indicating the fraction digits to be used for fractional seconds. Numbers will be rounded or padded with trailing zeroes if necessary.</del></li>
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
+      <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
       <li>[[Pattern]]<ins>, [[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
     </ul>
 
