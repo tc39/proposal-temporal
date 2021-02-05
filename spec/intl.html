@@ -154,7 +154,10 @@
         1. Let _opt_ be a new Record.
         1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the name given in the Property column of the row.
-          1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
+          1. If _prop_ is *"fractionalSecondDigits"*, then
+            1. Let _value_ be ? GetNumberOption(options, *"fractionalSecondDigits"*, 1, 3, *undefined*).
+          1. Else,
+            1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
         1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
         1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
@@ -379,6 +382,12 @@
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, 2).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
         1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
+        1. Let _fractionalSecondDigits_ be _dateTimeFormat_.[[FractionalSecondDigits]].
+        1. If _fractionalSecondDigits_ is not *undefined*, then
+          1. Let _nf3Options_ be ObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
+          1. Let _nf3_ be ? Construct(%NumberFormat%, « _locale_, _nf3Options_ »).
         1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. Let _result_ be a new empty List.
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
@@ -386,6 +395,11 @@
           1. Let _p_ be _patternPart_.[[Type]].
           1. If _p_ is *"literal"*, then
             1. Append a new Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"fractionalSecondDigits"*, then
+            1. Let _v_ be _tm_.[[Millisecond]].
+            1. Let _v_ be floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Let _fv_ be FormatNumeric(_nf3_, _v_).
+            1. Append a new Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } as the last element of _result_.
           1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
             1. Let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
@@ -609,6 +623,13 @@
             </td>
           </tr>
           <tr>
+            <td>[[Millisecond]]</td>
+            <td>
+              <del>`msFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <ins>! msFromTime(_tz_ / 10<sup>6</sup>)</ins>
+            </td>
+          </tr>
+          <tr>
             <td><ins>[[Nanosecond]]</td>
             <td><ins>_tz_ modulo 10<sup>9</sup></td>
           </tr>
@@ -764,6 +785,11 @@
             <td><ins>~pattern~</ins></td>
           </tr>
           <tr>
+            <td><del>[[FractionalSecondDigits]]</del><ins>[[fractionalSecondDigits]]</td>
+            <td>*"fractionalSecondDigits"*</td>
+            <td><ins>~pattern~</ins></td>
+          </tr>
+          <tr>
             <td><del>[[TimeZoneName]]</del><ins>[[timeZoneName]]</ins></td>
             <td>*"timeZoneName"*</td>
             <td><ins>~pattern~</ins></td>
@@ -806,6 +832,7 @@
       <li>[[NumberingSystem]] is a String value with the *"type"* given in Unicode Technical Standard 35 for the numbering system used for formatting.</li>
       <li>[[TimeZone]] is a String value with the IANA time zone name of the time zone used for formatting.</li>
       <li><del>[[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[TimeZoneName]] are each either *undefined*, indicating that the component is not used for formatting, or one of the String values given in <emu-xref href="#table-datetimeformat-components"></emu-xref>, indicating how the component should be presented in the formatted output.</del></li>
+      <li><del>[[FractionalSecondDigits]] is either *undefined* or a positive, non-negative integer Number value indicating the fraction digits to be used for fractional seconds. Numbers will be rounded or padded with trailing zeroes if necessary.</del></li>
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
       <li>[[Pattern]]<ins>, [[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
     </ul>
