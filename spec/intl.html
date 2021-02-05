@@ -784,6 +784,11 @@
             <td><ins>~pattern~</ins></td>
           </tr>
           <tr>
+            <td><del>[[DayPeriod]]</del><ins>[[dayPeriod]]</ins></td>
+            <td>*"dayPeriod"*</td>
+            <td><ins>~pattern~</ins></td>
+          </tr>
+          <tr>
             <td><del>[[Hour]]</del><ins>[[hour]]</ins></td>
             <td>*"hour"*</td>
             <td><ins>~pattern~</ins></td>
@@ -855,7 +860,7 @@
       <li>[[Calendar]] is a String value with the *"type"* given in Unicode Technical Standard 35 for the calendar used for formatting.</li>
       <li>[[NumberingSystem]] is a String value with the *"type"* given in Unicode Technical Standard 35 for the numbering system used for formatting.</li>
       <li>[[TimeZone]] is a String value with the IANA time zone name of the time zone used for formatting.</li>
-      <li><del>[[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[Hour]], [[Minute]], [[Second]], [[TimeZoneName]] are each either *undefined*, indicating that the component is not used for formatting, or one of the String values given in <emu-xref href="#table-datetimeformat-components"></emu-xref>, indicating how the component should be presented in the formatted output.</del></li>
+      <li><del>[[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[DayPeriod]], [[Hour]], [[Minute]], [[Second]], [[TimeZoneName]] are each either *undefined*, indicating that the component is not used for formatting, or one of the String values given in <emu-xref href="#table-datetimeformat-components"></emu-xref>, indicating how the component should be presented in the formatted output.</del></li>
       <li><del>[[FractionalSecondDigits]] is either *undefined* or a positive, non-negative integer Number value indicating the fraction digits to be used for fractional seconds. Numbers will be rounded or padded with trailing zeroes if necessary.</del></li>
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
       <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
