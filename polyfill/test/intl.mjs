@@ -481,6 +481,16 @@ describe('Intl', () => {
         // year1: { year: -1910, eraYear: 1911, month: 1, day: 3, era: 'before-roc' }
       }
     };
+    // The current non-ISO calendar implementation is quite slow because it's
+    // not calculating calendar info directly but is parsing the output of
+    // `Intl.DateTimeFormat.formatToParts`. The advantage of this approach for a
+    // non-production polyfill is that the results of Temporal will always match
+    // the results of legacy Date and Intl calls. The downside is that it's
+    // slooooooooow! To help diagnose and fix perf issues in future PRs, we're
+    // leaving logging code below which would normally have been removed. To
+    // measure perf, just set logPerf=true.
+    const logPerf = false;
+    let totalNow = 0;
     for (let [id, tests] of Object.entries(fromWithCases)) {
       const dates = {
         year2000: Temporal.PlainDate.from('2000-01-01'),
@@ -497,6 +507,7 @@ describe('Intl', () => {
           fromValues === RangeError ||
           ((nodeVersion === '14' || nodeVersion === '12') && fromValues.nodeBefore15 === RangeError);
         itOrSkip(id)(`from: ${id} ${name} ${fromErrorExpected ? ' (throws)' : ''}`, () => {
+          const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const values = fromValues;
           if (fromErrorExpected) {
             // Some calendars will fail due to Chromium bugs noted in the test definitions
@@ -534,6 +545,20 @@ describe('Intl', () => {
               monthCode: values.monthCode
             });
             equal(dateRoundtrip1.toString(), inCal.toString());
+
+            // ensure that mismatches of year vs. era/eraYear are caught
+            throws(
+              () =>
+                Temporal.PlainDate.from({
+                  calendar: id,
+                  eraYear: values.eraYear,
+                  era: values.era,
+                  day: values.day,
+                  monthCode: values.monthCode,
+                  year: values.year + 1
+                }),
+              RangeError
+            );
           }
           const dateRoundtrip2 = Temporal.PlainDate.from({
             calendar: id,
@@ -556,12 +581,29 @@ describe('Intl', () => {
             monthCode: values.monthCode
           });
           equal(dateRoundtrip4.toString(), inCal.toString());
+          // ensure that mismatches of month vs. monthCode are caught
+          throws(
+            () =>
+              Temporal.PlainDate.from({
+                calendar: id,
+                day: values.day,
+                month: values.month === 1 ? 2 : values.month - 1,
+                monthCode: values.monthCode,
+                year: values.year
+              }),
+            RangeError
+          );
+          const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+          totalNow += ms;
+          // eslint-disable-next-line no-console
+          if (logPerf) console.log(`from: ${id} ${name}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
         });
         const withValues = getValues('with');
         const withErrorExpected =
           withValues === RangeError ||
           ((nodeVersion === '14' || nodeVersion === '12') && withValues.nodeBefore15 === RangeError);
         itOrSkip(id)(`with: ${id} ${name} ${withErrorExpected ? ' (throws)' : ''}`, () => {
+          const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const inCal = date.withCalendar(id);
           if (withErrorExpected) {
             // Some calendars will fail due to Chromium bugs noted in the test definitions
@@ -585,6 +627,10 @@ describe('Intl', () => {
           equal(`${t} year: ${afterWithYear.year}`, `${t} year: 2220`);
           equal(`${t} month: ${afterWithYear.month}`, `${t} month: 1`);
           equal(`${t} day: ${afterWithYear.day}`, `${t} day: 1`);
+          const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+          totalNow += ms;
+          // eslint-disable-next-line no-console
+          if (logPerf) console.log(`with: ${id} ${name}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
         });
       }
     }
@@ -662,14 +708,13 @@ describe('Intl', () => {
         startDate: { year: 1997, month: 12, day: 1 }
       }
     };
-    // let totalNow = 0;
     const calendars = Object.keys(addMonthsCases);
     for (let id of calendars) {
       for (let [unit, { duration, results, startDate }] of Object.entries(tests)) {
         const values = results[id];
         duration = Temporal.Duration.from(duration);
         itOrSkip(id)(`${id} add ${duration}`, () => {
-          // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+          const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           if (values === RangeError) {
             throws(() => Temporal.PlainDate.from({ ...startDate, calendar: id }));
             return;
@@ -686,9 +731,10 @@ describe('Intl', () => {
           equal(`start ${calculatedStart.toString()}`, `start ${start.toString()}`);
           const diff = start.until(end, { largestUnit: unit });
           equal(`diff ${unit} ${id}: ${diff}`, `diff ${unit} ${id}: ${duration}`);
-          // const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
-          // totalNow += ms;
-          // console.log(`${id} add ${duration}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
+          const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+          totalNow += ms;
+          // eslint-disable-next-line no-console
+          if (logPerf) console.log(`${id} add ${duration}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
         });
       }
     }
@@ -733,7 +779,7 @@ describe('Intl', () => {
       persian: { year: 2001, leap: false, days: [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29] },
       roc: { year: 2001, leap: true, days: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] }
     };
-    // totalNow = 0;
+    totalNow = 0;
     for (let id of calendars) {
       let { year, leap, days } = daysInMonthCases[id];
       let date =
@@ -750,7 +796,7 @@ describe('Intl', () => {
         }
       });
       itOrSkip(id)(`${id} months check for year ${year}`, () => {
-        // const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+        const now = globalThis.performance ? globalThis.performance.now() : Date.now();
         const { monthsInYear } = date;
         equal(monthsInYear, days.length);
         // This loop counts backwards so we'll have the right test for the month
@@ -791,9 +837,10 @@ describe('Intl', () => {
           const oneDayPastMonthEnd = monthStart.with({ day: daysInMonth + 1 });
           equal(oneDayPastMonthEnd.day, daysInMonth);
         }
-        // const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
-        // totalNow += ms;
-        // console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
+        const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
+        totalNow += ms;
+        // eslint-disable-next-line no-console
+        if (logPerf) console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
       });
     }
   });

@@ -521,7 +521,7 @@ const nonIsoHelperBase = {
     return calendarDate;
   },
   validateCalendarDate(calendarDate) {
-    let { month, year, day, eraYear, monthCode, monthExtra } = calendarDate;
+    let { era, month, year, day, eraYear, monthCode, monthExtra } = calendarDate;
     // When there's a suffix (e.g. "5bis" for a leap month in Chinese calendar)
     // the derived class must deal with it.
     if (monthExtra !== undefined) throw new RangeError('Unexpected `monthExtra` value');
@@ -533,6 +533,14 @@ const nonIsoHelperBase = {
         throw new RangeError(`monthCode must be a string, not ${ES.Type(monthCode).toLowerCase()}`);
       }
       if (!/^M(1?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+    }
+    if (this.constantEra) {
+      if (era !== undefined && era !== this.constantEra) {
+        throw new RangeError(`era must be ${this.constantEra}, not ${era}`);
+      }
+      if (eraYear !== undefined && year !== undefined && eraYear !== year) {
+        throw new RangeError(`eraYear ${eraYear} does not match year ${year}`);
+      }
     }
   },
   /**
@@ -550,15 +558,18 @@ const nonIsoHelperBase = {
     if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
     this.validateCalendarDate(calendarDate);
     let { month, year, eraYear, monthCode } = calendarDate;
-    if (year === undefined) year = eraYear;
-    if (eraYear === undefined) eraYear = year;
-    if (monthCode !== undefined) {
-      month = +monthCode.slice(1);
-    }
+
     // For calendars that always use the same era, set it here so that derived
     // calendars won't need to implement this method simply to set the era.
-    if (this.constantEra) calendarDate = { ...calendarDate, era: this.constantEra };
-    return { ...calendarDate, year, eraYear, month, monthCode: `M${month}` };
+    if (this.constantEra) {
+      // year and eraYear always match when there's only one possible era
+      if (year === undefined) year = eraYear;
+      if (eraYear === undefined) eraYear = year;
+      calendarDate = { ...calendarDate, era: this.constantEra, year, eraYear };
+    }
+
+    ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate));
+    return { ...calendarDate, month, monthCode };
   },
   regulateMonthDayNaive(calendarDate, overflow, cache) {
     const largestMonth = this.monthsInYear(calendarDate, cache);
@@ -1033,8 +1044,14 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
           // if leap month is before this one, the month index is one more than the month code
           if (this.inLeapYear({ year }) && month > 6) month++;
         }
+      } else if (monthCode === undefined) {
+        monthCode = this.getMonthCode(year, month);
+      } else {
+        const calculatedMonthCode = this.getMonthCode(year, month);
+        if (calculatedMonthCode !== monthCode) {
+          throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Hebrew year ${year}`);
+        }
       }
-      if (monthCode === undefined) monthCode = this.getMonthCode(year, month);
       return { ...calendarDate, day, month, monthCode, year, eraYear };
     }
   },
@@ -1686,12 +1703,19 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (month === undefined) {
           throw new RangeError(`Unmatched month ${monthCode} in Chinese year ${year}`);
         }
-      }
-      if (monthCode === undefined) {
+      } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
         const matchingMonthEntry = Object.entries(months).find(([, v]) => v.monthIndex === month);
         if (matchingMonthEntry === undefined) throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
         monthCode = `M${matchingMonthEntry[0].replace('bis', 'L')}`;
+      } else {
+        // Both month and monthCode are present. Make sure they don't conflict.
+        const months = this.getMonthList(year, cache);
+        let monthInfo = months[monthCode.replace('L', 'bis').slice(1)];
+        if (!monthInfo) throw new RangeError(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
+        if (month !== monthInfo.monthIndex) {
+          throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`);
+        }
       }
       return { ...calendarDate, year, eraYear, month, monthCode, day };
     }
