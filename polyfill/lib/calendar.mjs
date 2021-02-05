@@ -638,19 +638,20 @@ const nonIsoHelperBase = {
       }
       return testIsoEstimate;
     };
+    let sign = 0;
     let roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
     let diff = simpleDateDiff(date, roundtripEstimate);
-    const diffTotalDaysEstimate = diff.years * 365 + diff.months * 30 + diff.days;
-    isoEstimate = this.addDaysIso(isoEstimate, diffTotalDaysEstimate);
-    roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
-    diff = simpleDateDiff(date, roundtripEstimate);
-    let sign = 0;
-    if (diff.years === 0 && diff.months === 0) {
-      isoEstimate = calculateSameMonthResult(diff.days);
-    } else {
-      sign = this.compareCalendarDates(date, roundtripEstimate);
+    if (diff.years !== 0 || diff.months !== 0 || diff.days !== 0) {
+      const diffTotalDaysEstimate = diff.years * 365 + diff.months * 30 + diff.days;
+      isoEstimate = this.addDaysIso(isoEstimate, diffTotalDaysEstimate);
+      roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
+      diff = simpleDateDiff(date, roundtripEstimate);
+      if (diff.years === 0 && diff.months === 0) {
+        isoEstimate = calculateSameMonthResult(diff.days);
+      } else {
+        sign = this.compareCalendarDates(date, roundtripEstimate);
+      }
     }
-
     // If the initial guess is not in the same month, then then bisect the
     // distance to the target, starting with 8 days per step.
     let increment = 8;
@@ -992,20 +993,17 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
     }
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
-    // The current Intl implementation skips index 6 (Adar I) in non-leap years
     let { year, eraYear, month, monthCode, day, monthExtra } = calendarDate;
     if (year === undefined) year = eraYear;
     if (eraYear === undefined) eraYear = year;
     if (fromLegacyDate) {
-      // DateTimeFormat.formatToParts returns either a numeric string (e.g. "4")
-      // or the name of a month (e.g. "Tevet"), even when the month format is
-      // set to 'numeric. Even running the same exact code in the Chrome dev
-      // tools debugger yields different results!  I assume it's a caching bug
-      // somewhere in the Intl code. I've not been able to reproduce the cause
-      // of the divergent behavior. But given that this implementation is a
-      // prototype and will be thrown away in a few months, for now we'll defend
-      // against this behavior here by handling either a numeric string or a
-      // name.
+      // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
+      // output returns the numeric equivalent of `month` as a string, meaning
+      // that `'6'` in a leap year is Adar I, while `'6'` in a non-leap year
+      // means Adar. In this case, `month` will already be correct and no action
+      // is needed. However, in Node 14 and later formatToParts returns the name
+      // of the Hebrew month (e.g. "Tevet"), so we'll need to look up the
+      // correct `month` using the string name as a key.
       if (monthExtra) {
         const monthInfo = this.months[monthExtra];
         if (!monthInfo) throw new RangeError(`Unrecognized month from formatToParts: ${monthExtra}`);
@@ -1115,21 +1113,46 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
     return 12;
   },
   minimumMonthLength(calendarDate) {
-    const { month } = calendarDate;
-    if (month === 1) return this.inLeapYear(calendarDate) ? 31 : 30;
-    return month <= 6 ? 31 : 30;
+    return this.getMonthInfo(calendarDate).length;
   },
   maximumMonthLength(calendarDate) {
-    return this.minimumMonthLength(calendarDate);
+    return this.getMonthInfo(calendarDate).length;
   },
   constantEra: 'saka',
+  // Indian months always start at the same well-known Gregorian month and
+  // day. So this conversion is easy and fast. See
+  // https://en.wikipedia.org/wiki/Indian_national_calendar
+  months: {
+    1: { length: 30, month: 3, day: 22, leap: { length: 31, month: 3, day: 21 } },
+    2: { length: 31, month: 4, day: 21 },
+    3: { length: 31, month: 5, day: 22 },
+    4: { length: 31, month: 6, day: 22 },
+    5: { length: 31, month: 7, day: 23 },
+    6: { length: 31, month: 8, day: 23 },
+    7: { length: 30, month: 9, day: 23 },
+    8: { length: 30, month: 10, day: 23 },
+    9: { length: 30, month: 11, day: 22 },
+    10: { length: 30, month: 12, day: 22 },
+    11: { length: 30, month: 1, nextYear: true, day: 21 },
+    12: { length: 30, month: 2, nextYear: true, day: 20 }
+  },
+  getMonthInfo(calendarDate) {
+    const { month } = calendarDate;
+    let monthInfo = this.months[month];
+    if (monthInfo === undefined) throw new RangeError(`Invalid month: ${month}`);
+    if (this.inLeapYear(calendarDate) && monthInfo.leap) monthInfo = monthInfo.leap;
+    return monthInfo;
+  },
   estimateIsoDate(calendarDate) {
-    const { year } = this.adjustCalendarDate(calendarDate);
-    // The Indian calendar has a 1:1 correspondence to the ISO calendar. Indian
-    // months always start at the same well-known Gregorian month and day. So
-    // this conversion could be easy and much faster. See
-    // https://en.wikipedia.org/wiki/Indian_national_calendar
-    return { year: year + 78, month: 1, day: 1 };
+    // FYI, this "estimate" is always the exact ISO date, which makes the Indian
+    // calendar fast!
+    calendarDate = this.adjustCalendarDate(calendarDate);
+    const monthInfo = this.getMonthInfo(calendarDate);
+    const isoYear = calendarDate.year + 78 + (monthInfo.nextYear ? 1 : 0);
+    const isoMonth = monthInfo.month;
+    const isoDay = monthInfo.day;
+    const isoDate = ES.AddDate(isoYear, isoMonth, isoDay, 0, 0, 0, calendarDate.day - 1, 'constrain');
+    return isoDate;
   }
 });
 
@@ -1185,9 +1208,9 @@ function adjustEras(eras) {
     throw new RangeError('Invalid era data: only one era can count years backwards');
   }
 
-  // Find the "anchor era" which is the default era used when eraYear is
-  // specified without also providing an era. Reversed eras can never be
-  // anchors. The era without an `anchorEpoch` property is the anchor.
+  // Find the "anchor era" which is the era used for (era-less) `year`. Reversed
+  // eras can never be anchors. The era without an `anchorEpoch` property is the
+  // anchor.
   let anchorEra;
   eras.forEach((e) => {
     if (e.isAnchor || (!e.anchorEpoch && !e.reverseOf)) {
