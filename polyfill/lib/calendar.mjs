@@ -492,14 +492,14 @@ const nonIsoHelperBase = {
         `Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`
       );
     }
-    // Handle pre-Meiji Japanese eras that are present in Intl output but not
-    // yet (maybe never) used by Temporal (see #526)
+    // Translate eras that may be handled differently by Temporal vs. by Intl
+    // (e.g. Japanese pre-Meiji eras). See #526 for details.
     if (this.reviseIntlEra) {
       const { era, eraYear } = this.reviseIntlEra(result, isoDate);
       result.era = era;
       result.eraYear = eraYear;
     }
-    if (this.checkJulianBug) this.checkJulianBug(result, isoDate);
+    if (this.checkIcuBugs) this.checkIcuBugs(result, isoDate);
 
     const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
     if (calendarDate.year === undefined) throw new RangeError(`Missing year converting ${JSON.stringify(isoDate)}`);
@@ -521,15 +521,13 @@ const nonIsoHelperBase = {
     return calendarDate;
   },
   validateCalendarDate(calendarDate) {
-    let { month, year, day, era, eraYear, monthCode, monthExtra } = calendarDate;
+    let { month, year, day, eraYear, monthCode, monthExtra } = calendarDate;
     // When there's a suffix (e.g. "5bis" for a leap month in Chinese calendar)
     // the derived class must deal with it.
     if (monthExtra !== undefined) throw new RangeError('Unexpected `monthExtra` value');
     if (year === undefined && eraYear === undefined) throw new TypeError('year or eraYear is required');
     if (month === undefined && monthCode === undefined) throw new TypeError('month or monthCode is required');
     if (day === undefined) throw new RangeError('Missing day');
-    if (eraYear !== undefined && era === undefined && this.hasEra) throw new TypeError('era is required with eraYear');
-    if (era !== undefined && eraYear === undefined && this.hasEra) throw new TypeError('eraYear is required with era');
     if (monthCode !== undefined) {
       if (typeof monthCode !== 'string') {
         throw new RangeError(`monthCode must be a string, not ${ES.Type(monthCode).toLowerCase()}`);
@@ -620,7 +618,7 @@ const nonIsoHelperBase = {
       // a calendar skipped days, like the Julian->Gregorian switchover. But the
       // only ICU calendars that currently skip days (japanese/roc/buddhist) is
       // a bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-      // that's currently detected by `checkJulianBug()` which will throw. So
+      // that's currently detected by `checkIcuBugs()` which will throw. So
       // this optimization should be safe for all ICU calendars.
       let testIsoEstimate = this.addDaysIso(isoEstimate, diffDays);
       if (date.day > this.minimumMonthLength(date)) {
@@ -831,7 +829,7 @@ const nonIsoHelperBase = {
     // calendar skipped days, like the Julian->Gregorian switchover. But the
     // only ICU calendars that currently skip days (japanese/roc/buddhist) is a
     // bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-    // that's currently detected by `checkJulianBug()` which will throw. So this
+    // that's currently detected by `checkIcuBugs()` which will throw. So this
     // code should be safe for all ICU calendars.
     const { day } = calendarDate;
     const max = this.maximumMonthLength(calendarDate);
@@ -1153,6 +1151,20 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
     const isoDay = monthInfo.day;
     const isoDate = ES.AddDate(isoYear, isoMonth, isoDay, 0, 0, 0, calendarDate.day - 1, 'constrain');
     return isoDate;
+  },
+  // https://bugs.chromium.org/p/v8/issues/detail?id=10529 causes Intl's Indian
+  // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
+  // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
+  // expected.
+  vulnerableToBceBug:
+    new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', { timeZone: 'UTC' }) !== '10/11/-79 Saka',
+  checkIcuBugs(calendarDate, isoDate) {
+    if (this.vulnerableToBceBug && isoDate.year < 1) {
+      throw new RangeError(
+        `calendar '${this.id}' is broken for ISO dates before 0001-01-01` +
+          ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
+      );
+    }
   }
 });
 
@@ -1380,23 +1392,21 @@ const makeHelperGregorian = (id, originalEras) => {
     // Several calendars based on the Gregorian calendar use Julian dates (not
     // proleptic Gregorian dates) before the Julian switchover in Oct 1582. See
     // https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
-    checkJulianBug(calendarDate, isoDate) {
-      if (this.vulnerableToJulianBug) {
-        const beforeJulianSwitch = this.compareCalendarDates(isoDate, { year: 1582, month: 10, day: 15 }) < 0;
+    v8IsVulnerableToJulianBug: new Date('+001001-01-01T00:00Z')
+      .toLocaleDateString('en-US-u-ca-japanese', { timeZone: 'UTC' })
+      .startsWith('12'),
+    calendarIsVulnerableToJulianBug: false,
+    checkIcuBugs(calendarDate, isoDate) {
+      if (this.calendarIsVulnerableToJulianBug && this.v8IsVulnerableToJulianBug) {
+        const beforeJulianSwitch = ES.CompareTemporalDate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
         if (beforeJulianSwitch) {
-          const testDate = new Date('+001001-01-01T00:00Z').toLocaleDateString(`en-US-u-ca-${this.id}`, {
-            timeZone: 'UTC'
-          });
-          if (testDate.startsWith('12')) {
-            throw new RangeError(
-              `calendar '${this.id}' is broken for ISO dates before 1582-10-15` +
-                ' (see https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)'
-            );
-          }
+          throw new RangeError(
+            `calendar '${this.id}' is broken for ISO dates before 1582-10-15` +
+              ' (see https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)'
+          );
         }
       }
-    },
-    vulnerableToJulianBug: false
+    }
   });
 };
 
@@ -1456,7 +1466,7 @@ const helperRoc = ObjectAssign(
     { name: 'before-roc', reverseOf: 'minguo' }
   ]),
   {
-    vulnerableToJulianBug: true
+    calendarIsVulnerableToJulianBug: true
   }
 );
 
@@ -1464,7 +1474,7 @@ const helperBuddhist = ObjectAssign(
   {},
   makeHelperGregorian('buddhist', [{ name: 'be', hasYearZero: true, isoEpoch: { year: -543, month: 1, day: 1 } }]),
   {
-    vulnerableToJulianBug: true
+    calendarIsVulnerableToJulianBug: true
   }
 );
 
@@ -1486,8 +1496,24 @@ const helperGregory = ObjectAssign(
 
 const helperJapanese = ObjectAssign(
   {},
-  // NOTE: For convenience, this hacky implementation only supports the most
-  // recent five eras, those of the modern period. For the full list, see:
+  // NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
+  // before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
+  // eras include:
+  // - Start/end dates of older eras are not precisely defined, which is
+  //   challenging given Temporal's need for precision
+  // - Some era dates and/or names are disputed by historians
+  // - As historical research proceeds, new eras are discovered and existing era
+  //   dates are modified, leading to considerable churn which is not good for
+  //   Temporal use.
+  //  - The earliest era (in 645 CE) may not end up being the earliest depending
+  //    on future historical scholarship
+  //  - Before Meiji, Japan used a lunar (or lunisolar?) calendar but AFAIK
+  //    that's not reflected in the ICU implementation.
+  //
+  // For more discussion: https://github.com/tc39/proposal-temporal/issues/526.
+  //
+  // Here's a full list of CLDR/ICU eras:
+  // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
   // https://github.com/unicode-org/cldr/blob/master/common/supplemental/supplementalData.xml#L4310-L4546
   //
   // NOTE: Japan started using the Gregorian calendar in 6 Meiji, replacing a
@@ -1499,26 +1525,9 @@ const helperJapanese = ObjectAssign(
   // '1 1, 6 Meiji, 12:00:00 PM'
   // > new Date('1872-12-31T12:00').toLocaleString(...args)
   // '12 31, 5 Meiji, 12:00:00 PM'
-  //
-  // Era codes are constants consisting of the romanized era name.
-  // Unfortunately these are not unique throughout history, so this should be
-  // solved: https://github.com/tc39/proposal-temporal/issues/526
-  // Otherwise, we'd have to introduce some era numbering system, which (as far
-  // as I can tell from Wikipedia) the calendar doesn't have, so would be
-  // non-standard and confusing, requiring API consumers to figure out "now what
-  // number is the Reiwa (current) era?" My understanding is also that this
-  // starting point for eras (0645-06-19) is not the only possible one, since
-  // there are unofficial eras before that.
-  // https://en.wikipedia.org/wiki/Japanese_era_name
-  // Note: C locale era names available at
-  // https://github.com/unicode-org/icu/blob/master/icu4c/source/data/locales/root.txt#L1582-L1818
   makeHelperGregorian('japanese', [
     // The Japanese calendar `year` is just the ISO year, because (unlike other
     // ICU calendars) there's no obvious "default era", we use the ISO year.
-    // Pre-Meiji eras are unstable (they change a lot due to historical
-    // scholarship) so we're tentatively using CE/BCE for those older eras. This
-    // may change depending on the resolution of
-    // https://github.com/tc39/proposal-temporal/issues/526.
     { name: 'reiwa', isoEpoch: { year: 2019, month: 5, day: 1 }, anchorEpoch: { year: 2019, month: 5, day: 1 } },
     { name: 'heisei', isoEpoch: { year: 1989, month: 1, day: 8 }, anchorEpoch: { year: 1989, month: 1, day: 8 } },
     { name: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
@@ -1531,7 +1540,7 @@ const helperJapanese = ObjectAssign(
     // The last 3 Japanese eras confusingly return only one character in the
     // default "short" era, so need to use the long format.
     eraLength: 'long',
-    vulnerableToJulianBug: true,
+    calendarIsVulnerableToJulianBug: true,
     reviseIntlEra(calendarDate, isoDate) {
       const { era, eraYear } = calendarDate;
       const { year: isoYear } = isoDate;
@@ -1727,9 +1736,6 @@ const nonIsoGeneralImpl = {
       ['monthCode', undefined],
       ['year', undefined]
     ]);
-    if (fields.month === undefined && typeof fields.monthCode !== 'string') {
-      throw new TypeError(`monthCode must be a string, not ${ES.Type(fields.monthCode).toLowerCase()}`);
-    }
     const { year, month, day } = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
     const result = new constructor(year, month, calendar, /* referenceISODay = */ day);
     cache.setObject(result);

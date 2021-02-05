@@ -433,7 +433,10 @@ describe('Intl', () => {
         // with() fails due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
         // from() succeeds because the bug only gets triggered before 1/1/1 ISO.
         // Fixed in Node 15
-        year1: { nodeBefore15: RangeError, year: -78, month: 10, day: 11, era: 'saka' }
+        year1: {
+          with: { nodeBefore15: RangeError, year: -78, month: 10, day: 11, era: 'saka' },
+          from: { year: -78, month: 10, day: 11, era: 'saka' }
+        }
       },
       // Older islamic dates will fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10527
       // Fixed in Node 15
@@ -793,6 +796,42 @@ describe('Intl', () => {
         // console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
       });
     }
+  });
+
+  describe('Indian calendar', () => {
+    it('throws in Node 12 & 14 before 1 CE', () => {
+      // Dates before ISO 1 fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
+      // Fixed in Node 15
+      const vulnerableToBceBug =
+        new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', { timeZone: 'UTC' }) !== '10/11/-79 Saka';
+      if (vulnerableToBceBug) {
+        throws(() => Temporal.PlainDate.from('0000-01-01').withCalendar('indian').day, RangeError);
+      }
+    });
+    it('handles leap days', () => {
+      const leapYearFirstDay = Temporal.PlainDate.from('2004-03-21[u-ca-indian]');
+      equal(leapYearFirstDay.year, 2004 - 78);
+      equal(leapYearFirstDay.month, 1);
+      equal(leapYearFirstDay.day, 1);
+
+      const leapYearLastDay = leapYearFirstDay.with({ day: 31 });
+      equal(leapYearLastDay.year, 2004 - 78);
+      equal(leapYearLastDay.month, 1);
+      equal(leapYearLastDay.day, 31);
+    });
+    it('handles non-leap years', () => {
+      const nonLeapYearFirstDay = Temporal.PlainDate.from('2005-03-22[u-ca-indian]');
+      equal(nonLeapYearFirstDay.year, 2005 - 78);
+      equal(nonLeapYearFirstDay.month, 1);
+      equal(nonLeapYearFirstDay.day, 1);
+
+      const leapYearLastDay = nonLeapYearFirstDay.with({ day: 31 });
+      equal(leapYearLastDay.year, 2005 - 78);
+      equal(leapYearLastDay.month, 1);
+      equal(leapYearLastDay.day, 30);
+
+      throws(() => nonLeapYearFirstDay.with({ day: 31 }, { overflow: 'reject' }));
+    });
   });
 
   describe('Japanese eras', () => {
