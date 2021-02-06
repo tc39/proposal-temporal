@@ -314,10 +314,15 @@ function monthCodeNumberPart(monthCode) {
  * If both are present, make sure they match.
  * This logic doesn't work for lunisolar calendars!
  * */
-function resolveNonLunisolarMonth(calendarDate) {
+function resolveNonLunisolarMonth(calendarDate, overflow = undefined, monthsPerYear = 12) {
   let { month, monthCode } = calendarDate;
   if (monthCode === undefined) {
     if (month === undefined) throw new TypeError('Either month or monthCode are required');
+    // The ISO calendar uses the default (undefined) value because it does
+    // constrain/reject after this method returns. Non-ISO calendars, however,
+    // rely on this function to constrain/reject out-of-range `month` values.
+    if (overflow === 'reject') ES.RejectToRange(month, 1, monthsPerYear);
+    if (overflow === 'constrain') month = ES.ConstrainToRange(month, 1, monthsPerYear);
     monthCode = `M${month}`;
   } else {
     const numberPart = monthCodeNumberPart(monthCode);
@@ -328,6 +333,7 @@ function resolveNonLunisolarMonth(calendarDate) {
       throw new RangeError(`Invalid month code: ${monthCode}`);
     }
     month = numberPart;
+    if (month < 1 || month > monthsPerYear) throw new RangeError(`Invalid monthCode: ${monthCode}`);
   }
   return { ...calendarDate, month, monthCode };
 }
@@ -554,9 +560,10 @@ const nonIsoHelperBase = {
    * - no eras or a constant era defined in `.constantEra`
    * - non-lunisolar calendar (no leap months)
    * */
-  adjustCalendarDate(calendarDate /*, cache, overflow, fromLegacyDate = false */) {
+  adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
     if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
     this.validateCalendarDate(calendarDate);
+    const largestMonth = this.monthsInYear(calendarDate, cache);
     let { month, year, eraYear, monthCode } = calendarDate;
 
     // For calendars that always use the same era, set it here so that derived
@@ -568,20 +575,18 @@ const nonIsoHelperBase = {
       calendarDate = { ...calendarDate, era: this.constantEra, year, eraYear };
     }
 
-    ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate));
+    ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate, overflow, largestMonth));
     return { ...calendarDate, month, monthCode };
   },
   regulateMonthDayNaive(calendarDate, overflow, cache) {
     const largestMonth = this.monthsInYear(calendarDate, cache);
     let { month, day } = calendarDate;
     if (overflow === 'reject') {
-      if (month < 1 || month > largestMonth) throw new RangeError(`Invalid month: ${month}`);
-      if (day < 1 || day > this.maximumMonthLength(calendarDate)) throw new RangeError(`Invalid day: ${day}`);
+      ES.RejectToRange(month, 1, largestMonth);
+      ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
     } else {
-      if (month < 1) month = 1;
-      if (month > largestMonth) month = largestMonth;
-      if (day < 1) day = 1;
-      if (day > this.maximumMonthLength(calendarDate)) day = this.maximumMonthLength(calendarDate);
+      month = ES.ConstrainToRange(month, 1, largestMonth);
+      day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ ...calendarDate, month }));
     }
     return { ...calendarDate, month, day };
   },
@@ -592,7 +597,8 @@ const nonIsoHelperBase = {
     date = this.adjustCalendarDate(date, cache, overflow, false);
 
     // Fix obviously out-of-bounds values. Values that are valid generally, but
-    // not in this particular year, will be handled lower below.
+    // not in this particular year, may not be caught here for some calendars.
+    // If so, these will be handled lower below.
     date = this.regulateMonthDayNaive(date, overflow, cache);
 
     const { year, month, day } = date;
@@ -910,37 +916,38 @@ const nonIsoHelperBase = {
       if (year === undefined && (era === undefined || eraYear === undefined)) {
         throw new TypeError('`monthCode`, `year`, or `era` and `eraYear` is required');
       }
-      ({ monthCode, year } = this.adjustCalendarDate({ year, month, monthCode, day, era, eraYear }));
+      ({ monthCode, year } = this.adjustCalendarDate({ year, month, monthCode, day, era, eraYear }, cache, overflow));
     }
 
     let isoYear, isoMonth, isoDay;
-    let closest;
-    // Look backwards starting from 1972 up to 100 years to find a year that
-    // has this month and day. Normal months and days will match immediately,
-    // but for leap days and leap months we may have to look for a while.
+    let closestCalendar, closestIso;
+    // Look backwards starting from the calendar year of 1972-01-01 up to 100
+    // calendar years to find a year that has this month and day. Normal months
+    // and days will match immediately, but for leap days and leap months we may
+    // have to look for a while.
     const startDateIso = { year: 1972, month: 1, day: 1 };
     const { year: calendarYear } = this.isoToCalendarDate(startDateIso, cache);
     for (let i = 0; i < 100; i++) {
-      const testCalendarDate = { day, monthCode, year: calendarYear - i };
+      let testCalendarDate = this.adjustCalendarDate({ day, monthCode, year: calendarYear - i }, cache);
       const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
       const roundTripCalendarDate = this.isoToCalendarDate(isoDate, cache);
       ({ year: isoYear, month: isoMonth, day: isoDay } = isoDate);
       if (roundTripCalendarDate.monthCode === monthCode && roundTripCalendarDate.day === day) {
         return { month: isoMonth, day: isoDay, year: isoYear };
       } else if (overflow === 'constrain') {
-        const constrained = this.regulateDate(testCalendarDate, 'constrain', cache);
         // non-ISO constrain algorithm tries to find the closest date in a matching month
         if (
-          closest === undefined ||
-          constrained.month > closest.month ||
-          (constrained.month === closest.month && constrained.day > closest.day)
+          closestCalendar === undefined ||
+          (roundTripCalendarDate.monthCode === closestCalendar.monthCode &&
+            roundTripCalendarDate.day > closestCalendar.day)
         ) {
-          closest = constrained;
+          closestCalendar = roundTripCalendarDate;
+          closestIso = isoDate;
         }
       }
     }
-    if (overflow === 'constrain' && closest !== undefined) return closest;
-    throw new RangeError(`No recent ${this.id} year with month ${monthCode} and day ${day}`);
+    if (overflow === 'constrain' && closestIso !== undefined) return closestIso;
+    throw new RangeError(`No recent ${this.id} year with monthCode ${monthCode} and day ${day}`);
   }
 };
 
@@ -969,7 +976,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
     const { month, year } = calendarDate;
     const monthCode = this.getMonthCode(year, month);
     const monthInfo = Object.entries(this.months).find((m) => m[1].monthCode === monthCode);
-    if (monthInfo === undefined) throw new TypeError(`unmatched Hebrew month: ${month}`);
+    if (monthInfo === undefined) throw new RangeError(`unmatched Hebrew month: ${month}`);
     const daysInMonth = monthInfo[1].days;
     return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
   },
@@ -1043,13 +1050,24 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
           month = monthCodeNumberPart(monthCode);
           // if leap month is before this one, the month index is one more than the month code
           if (this.inLeapYear({ year }) && month > 6) month++;
+          const largestMonth = this.monthsInYear({ year });
+          if (month < 1 || month > largestMonth) throw new RangeError(`Invalid monthCode: ${monthCode}`);
         }
-      } else if (monthCode === undefined) {
-        monthCode = this.getMonthCode(year, month);
       } else {
-        const calculatedMonthCode = this.getMonthCode(year, month);
-        if (calculatedMonthCode !== monthCode) {
-          throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Hebrew year ${year}`);
+        if (overflow === 'reject') {
+          ES.RejectToRange(month, 1, this.monthsInYear({ year }));
+          ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
+        } else {
+          month = ES.ConstrainToRange(month, 1, this.monthsInYear({ year }));
+          day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ ...calendarDate, month }));
+        }
+        if (monthCode === undefined) {
+          monthCode = this.getMonthCode(year, month);
+        } else {
+          const calculatedMonthCode = this.getMonthCode(year, month);
+          if (calculatedMonthCode !== monthCode) {
+            throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Hebrew year ${year}`);
+          }
         }
       }
       return { ...calendarDate, day, month, monthCode, year, eraYear };
@@ -1390,13 +1408,13 @@ const makeHelperGregorian = (id, originalEras) => {
       }
       return { ...calendarDate, year, eraYear, era };
     },
-    adjustCalendarDate(calendarDate /*, cache, overflow, fromLegacyDate = false */) {
+    adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
       // Because this is not a lunisolar calendar, it's safe to convert monthCode to a number
       const { month, monthCode } = calendarDate;
       if (month === undefined) calendarDate = { ...calendarDate, month: monthCodeNumberPart(monthCode) };
       this.validateCalendarDate(calendarDate);
       calendarDate = this.completeEraYear(calendarDate);
-      calendarDate = nonIsoHelperBase.adjustCalendarDate(calendarDate);
+      calendarDate = ES.Call(nonIsoHelperBase.adjustCalendarDate, this, [calendarDate, cache, overflow]);
       return calendarDate;
     },
     estimateIsoDate(calendarDate) {
@@ -1705,8 +1723,19 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
-        const matchingMonthEntry = Object.entries(months).find(([, v]) => v.monthIndex === month);
-        if (matchingMonthEntry === undefined) throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
+        const monthEntries = Object.entries(months);
+        const largestMonth = monthEntries.length;
+        if (overflow === 'reject') {
+          ES.RejectToRange(month, 1, largestMonth);
+          ES.RejectToRange(day, 1, this.maximumMonthLength());
+        } else {
+          month = ES.ConstrainToRange(month, 1, largestMonth);
+          day = ES.ConstrainToRange(day, 1, this.maximumMonthLength());
+        }
+        const matchingMonthEntry = monthEntries.find(([, v]) => v.monthIndex === month);
+        if (matchingMonthEntry === undefined) {
+          throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
+        }
         monthCode = `M${matchingMonthEntry[0].replace('bis', 'L')}`;
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.

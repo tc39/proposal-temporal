@@ -843,6 +843,69 @@ describe('Intl', () => {
         if (logPerf) console.log(`${id} months check ${id}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
       });
     }
+    const monthDayCases = [
+      { calendar: 'iso8601', isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
+      // Buddhist calendar suffers pre-node15 https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
+      { calendar: 'buddhist', nodeBefore15: RangeError, isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
+      { calendar: 'chinese', isoReferenceYear: 1963, year: 2001, month: 5, monthCode: 'M4L', day: 15 },
+      { calendar: 'chinese', isoReferenceYear: 1971, year: 2000, month: 6, day: 30 },
+      { calendar: 'coptic', isoReferenceYear: 1971, year: 2006, month: 13, day: 6 },
+      { calendar: 'dangi', isoReferenceYear: 1963, year: 2001, month: 5, monthCode: 'M4L', day: 15 },
+      { calendar: 'dangi', isoReferenceYear: 1971, year: 2000, month: 6, day: 30 },
+      { calendar: 'ethiopic', isoReferenceYear: 1971, year: 2006, month: 13, day: 6 },
+      { calendar: 'ethioaa', isoReferenceYear: 1971, year: 2006, month: 13, day: 6 },
+      { calendar: 'gregory', isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
+      { calendar: 'hebrew', isoReferenceYear: 1970, year: 5779, month: 6, monthCode: 'M5L', day: 15 },
+      { calendar: 'hebrew', isoReferenceYear: 1971, year: 5776, month: 2, day: 30 },
+      { calendar: 'hebrew', isoReferenceYear: 1971, year: 5772, month: 3, day: 30 },
+      { calendar: 'indian', isoReferenceYear: 1968, year: 2002, month: 1, day: 31 },
+      { calendar: 'islamic', isoReferenceYear: 1970, year: 2001, month: 1, day: 30 },
+      { calendar: 'islamic-umalqura', isoReferenceYear: 1969, year: 2001, month: 1, day: 30 },
+      { calendar: 'islamic-tbla', isoReferenceYear: 1971, year: 2001, month: 1, day: 30 },
+      { calendar: 'islamic-civil', isoReferenceYear: 1971, year: 2001, month: 1, day: 30 },
+      { calendar: 'islamic-rgsa', isoReferenceYear: 1970, year: 2001, month: 1, day: 30 },
+      { calendar: 'islamicc', isoReferenceYear: 1971, year: 2001, month: 1, day: 30 },
+      { calendar: 'japanese', isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
+      { calendar: 'persian', isoReferenceYear: 1972, year: 2004, month: 12, day: 30 },
+      { calendar: 'roc', isoReferenceYear: 1972, year: 93, month: 2, day: 29 }
+    ];
+    let i = 0;
+    for (let test of monthDayCases) {
+      const id = test.calendar;
+      itOrSkip(`monthDay works for ${id} - ${++i}: ${test.monthCode || test.month}/${test.day}`, () => {
+        const errorExpected =
+          test === RangeError || ((nodeVersion === '14' || nodeVersion === '12') && test.nodeBefore15 === RangeError);
+        if (errorExpected) {
+          throws(() => Temporal.PlainMonthDay.from({ year, month, day, calendar }));
+          return;
+        }
+        if (test.monthCode === undefined) test.monthCode = `M${test.month}`;
+        const { calendar, monthCode, month, day, year, isoReferenceYear } = test;
+        const md = Temporal.PlainMonthDay.from({ year, month, day, calendar });
+        const isoFields = md.getISOFields();
+        equal(md.monthCode, monthCode);
+        equal(md.day, day);
+        equal(isoFields.isoYear, isoReferenceYear);
+        const md2 = Temporal.PlainMonthDay.from({ monthCode, day, calendar });
+        const isoFields2 = md2.getISOFields();
+        equal(md2.monthCode, monthCode);
+        equal(md2.day, day);
+        equal(isoFields2.isoYear, isoReferenceYear);
+        equal(md.equals(md2), true);
+        throws(() => {
+          Temporal.PlainMonthDay.from({ monthCode: 'M15', day: 1, calendar }, { overflow: 'reject' });
+        }, RangeError);
+        throws(() => {
+          Temporal.PlainMonthDay.from({ monthCode: 'M15', day: 1, calendar });
+        }, RangeError);
+        throws(() => {
+          Temporal.PlainMonthDay.from({ year, month: 15, day: 1, calendar }, { overflow: 'reject' });
+        }, RangeError);
+        const constrained = Temporal.PlainMonthDay.from({ year, month: 15, day: 1, calendar });
+        const { monthCode: monthCodeConstrained } = constrained;
+        assert(monthCodeConstrained === 'M12' || monthCodeConstrained === 'M13');
+      });
+    }
   });
 
   describe('Indian calendar', () => {
