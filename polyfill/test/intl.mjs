@@ -882,6 +882,9 @@ describe('Intl', () => {
         if (test.monthCode === undefined) test.monthCode = `M${test.month}`;
         const { calendar, monthCode, month, day, year, isoReferenceYear } = test;
         const md = Temporal.PlainMonthDay.from({ year, month, day, calendar });
+        const isoString = md.toString();
+        const mdFromIso = Temporal.PlainMonthDay.from(isoString);
+        equal(mdFromIso, md);
         const isoFields = md.getISOFields();
         equal(md.monthCode, monthCode);
         equal(md.day, day);
