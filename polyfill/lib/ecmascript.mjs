@@ -1279,8 +1279,11 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
-      if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined) {
-        fields.monthCode = `M${ES.ToString(fields.month)}`;
+      // Callers who omit the calendar are not writing calendar-independent
+      // code. In that case, `monthCode`/`year` can be omitted; `month` and
+      // `day` are sufficient. Add a `year` to satisfy calendar validation.
+      if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined && fields.year === undefined) {
+        fields.year = 1972;
       }
       return ES.MonthDayFromFields(calendar, fields, constructor, options);
     }
