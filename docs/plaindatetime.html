@@ -261,11 +261,27 @@
 A <code>Temporal.PlainDateTime</code> can be converted to a <code>Temporal.ZonedDateTime</code> using a <code>Temporal.TimeZone</code>.</p>
 <p><code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.PlainMonthDay</code> all carry less information and should be used when complete information is not required.</p>
 <p>A <code>Temporal.PlainDateTime</code> can be converted into any of the types mentioned above using conversion methods like <code>toZonedDateTime</code> or <code>toPlainDate</code>.</p>
-<p>&quot;Calendar date&quot; and &quot;wall-clock time&quot; refer to the concept of time as expressed in everyday usage.
-<code>Temporal.PlainDateTime</code> does not represent an exact point in time; that is what exact-time types like <code>Temporal.ZonedDateTime</code> and <code>Temporal.Instant</code> are for.</p>
-<p>One example of when it may be appropriate to use <code>Temporal.PlainDateTime</code> and not <code>Temporal.ZonedDateTime</code> nor <code>Temporal.Instant</code> is when integrating with wearable devices.
-FitBit, for example, always records sleep data in the user&#39;s wall-clock time, wherever they are in the world.
-Storing the time zone is not needed, and the plain (not exact) time is needed, because otherwise they would be recorded as sleeping at strange hours when travelling.</p>
+<p>Because <code>Temporal.PlainDateTime</code> does not represent an exact point in time, most date/time use cases are better handled using exact time types like <code>Temporal.ZonedDateTime</code> and <code>Temporal.Instant</code>.
+But there are cases where <code>Temporal.PlainDateTime</code> is the correct type to use:</p>
+<ul>
+<li>Representing timezone-specific events where the time zone is not stored together with the date/time data.
+In this case, <code>Temporal.PlainDateTime</code> is an intermediate step before converting to/from <code>Temporal.ZonedDateTime</code> or <code>Temporal.Instant</code> using the separate time zone.
+Examples:<ul>
+<li>When the time zone is stored separately in a separate database column or a per-user setting.</li>
+<li>Implicit time zones, e.g. stock exchange data that is always <code>America/New_York</code></li>
+<li>Interacting with poorly-designed legacy systems that record data in the server&#39;s non-UTC time zone.</li>
+</ul>
+</li>
+<li>Passing data to/from a component that is unaware of time zones, e.g. a UI date/time picker.</li>
+<li>Modeling events that happen at the same local time in every time zone.
+For example, the British Commonwealth observes a <a href="https://en.wikipedia.org/wiki/Two-minute_silence">two minute silence</a> every November 11th at 11:00AM in local time.</li>
+<li>When time zone is irrelevant, e.g. a sleep tracking device that only cares about the local time you went to sleep and woke up, regardless of where in the world you are.</li>
+<li>Parsing local time from ISO 8601 strings like <code>2020-04-09T16:08-08:00</code> that have a numeric offset without an IANA time zone like <code>America/Los_Angeles</code>.
+These strings can also be parsed by <code>Temporal.Absolute</code>, but to parse the local date and time then <code>Temporal.PlainDateTime.from</code> is required.</li>
+<li>Performing arithmetic that deliberately ignores DST.
+Example: in a day-planner UI, the visual height of a meeting may be the same even if DST skips or repeats an hour.</li>
+</ul>
+<p>To learn more about time zones and DST best practices, visit <a href="./ambiguity.html">Time Zones and Resolving Ambiguity</a>.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-PlainDateTime"><a class="heading-link" href="#new-Temporal-PlainDateTime"></a><strong>new Temporal.PlainDateTime</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0, <em>calendar</em>?: object) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
