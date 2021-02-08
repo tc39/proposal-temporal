@@ -28,7 +28,7 @@ But there are cases where `Temporal.PlainDateTime` is the correct type to use:
   For example, the British Commonwealth observes a [two minute silence](https://en.wikipedia.org/wiki/Two-minute_silence) every November 11th at 11:00AM in local time.
 - When time zone is irrelevant, e.g. a sleep tracking device that only cares about the local time you went to sleep and woke up, regardless of where in the world you are.
 - Parsing local time from ISO 8601 strings like `2020-04-09T16:08-08:00` that have a numeric offset without an IANA time zone like `America/Los_Angeles`.
-  These strings can also be parsed by `Temporal.Absolute`, but to parse the local date and time then `Temporal.PlainDateTime.from` is required.
+  These strings can also be parsed by `Temporal.Instant`, but to parse the local date and time then `Temporal.PlainDateTime.from` is required.
 - Performing arithmetic that deliberately ignores DST.
   Example: in a day-planner UI, the visual height of a meeting may be the same even if DST skips or repeats an hour.
 
