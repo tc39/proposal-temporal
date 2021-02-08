@@ -5103,7 +5103,7 @@
         }
       } else {
         if (precision === 0) return secs;
-        fraction = "".concat(fraction).slice(0, precision).padStart(precision, '0');
+        fraction = "".concat(fraction).padStart(9, '0').slice(0, precision);
       }
 
       return "".concat(secs, ".").concat(fraction);
