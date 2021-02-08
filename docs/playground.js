@@ -3870,7 +3870,7 @@
           var property = _step.value;
 
           if (record[property] !== 0) {
-            throw new RangeError("invalid duration field ".concat(property));
+            throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
           }
         }
       } catch (err) {
