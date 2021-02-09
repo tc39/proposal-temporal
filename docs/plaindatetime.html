@@ -434,7 +434,7 @@ The first month in every year has <code>month</code> equal to <code>1</code>.
 The last month of every year has <code>month</code> equal to the <code>monthsInYear</code> property.
 <code>month</code> values start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</li>
 <li><code>monthCode</code> is a calendar-specific string that identifies the month in a year-independent way.
-For common (non-leap) months, <code>monthCode</code> should be <code>M${month}</code>.
+For common (non-leap) months, <code>monthCode</code> should be <code>`M${month}`</code>.
 For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month&#39;s code with with an &quot;L&quot; suffix appended.
 Examples: <code>&#39;M2&#39;</code> =&gt; February; <code>&#39;M8L&#39;</code> =&gt; repeated 8th month in the Chinese calendar; <code>&#39;M5L&#39;</code> =&gt; Adar I in the Hebrew calendar.</li>
 <li><code>day</code> is a positive integer representing the day of the month.</li>
@@ -456,7 +456,7 @@ If 60 (for a leap second) was provided to <code>from</code> or <code>with</code>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>        <span class="token comment">// => 1995</span>
 dt<span class="token punctuation">.</span>month<span class="token punctuation">;</span>       <span class="token comment">// => 12</span>
-dt<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span>   <span class="token comment">// => "12"</span>
+dt<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span>   <span class="token comment">// => "M12"</span>
 dt<span class="token punctuation">.</span>day<span class="token punctuation">;</span>         <span class="token comment">// => 7</span>
 dt<span class="token punctuation">.</span>hour<span class="token punctuation">;</span>        <span class="token comment">// => 3</span>
 dt<span class="token punctuation">.</span>minute<span class="token punctuation">;</span>      <span class="token comment">// => 24</span>
@@ -468,7 +468,7 @@ dt<span class="token punctuation">.</span>nanosecond<span class="token punctuati
 dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23T03:24:30.000003500[u-ca-hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span>year<span class="token punctuation">;</span>        <span class="token comment">// => 5779</span>
 dt<span class="token punctuation">.</span>month<span class="token punctuation">;</span>       <span class="token comment">// => 6</span>
-dt<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span>   <span class="token comment">// => "5L"</span>
+dt<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span>   <span class="token comment">// => "M5L"</span>
 dt<span class="token punctuation">.</span>day<span class="token punctuation">;</span>         <span class="token comment">// => 18</span>
 dt<span class="token punctuation">.</span>hour<span class="token punctuation">;</span>        <span class="token comment">// => 3</span>
 dt<span class="token punctuation">.</span>minute<span class="token punctuation">;</span>      <span class="token comment">// => 24</span>

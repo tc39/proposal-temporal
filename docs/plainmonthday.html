@@ -295,7 +295,7 @@ md<span class="token punctuation">.</span>month<span class="token punctuation">;
 <h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>monthDay.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <ul>
 <li><code>monthCode</code> is a calendar-specific string that identifies the month in a year-independent way.
-For common (non-leap) months, <code>monthCode</code> should be <code>M${month}</code>.
+For common (non-leap) months, <code>monthCode</code> should be <code> </code> <code>M${month}</code> <code> </code>.
 For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month&#39;s code with with an &quot;L&quot; suffix appended.
 Examples: <code>&#39;M2&#39;</code> =&gt; February; <code>&#39;M8L&#39;</code> =&gt; repeated 8th month in the Chinese calendar; <code>&#39;M5L&#39;</code> =&gt; Adar I in the Hebrew calendar.</li>
 <li><code>day</code> is a positive integer representing the day of the month.</li>
@@ -304,14 +304,14 @@ Examples: <code>&#39;M2&#39;</code> =&gt; February; <code>&#39;M8L&#39;</code> =
 Instead, the <code>monthCode</code> property is used which is year-independent in all calendars.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript">md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "8"</span>
+md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "M8"</span>
 md<span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 24</span>
-md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// undefined (month property is not present in this type; use monthCode instead)</span>
+md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// undefined (no `month` property; use `monthCode` instead)</span>
 
 md <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-20[u-ca-hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "5L"</span>
+md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "M5L"</span>
 md<span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 15</span>
-md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// undefined (month property is not present in this type; use monthCode instead)</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>monthDay.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>monthCode</code> and <code>day</code> properties are interpreted in.</p>
+md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// undefined (no `month` property; use `monthCode` instead)</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>monthDay.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>monthCode</code> and <code>day</code> properties are interpreted in.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
