@@ -133,7 +133,7 @@ md.month; // undefined (month property is not present in this type; use monthCod
 The above read-only properties allow accessing each component of the date individually.
 
 - `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
-  For common (non-leap) months, `monthCode` should be `M${month}`.
+  For common (non-leap) months, `monthCode` should be ` ` `M${month}` ` `.
   For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
   Examples: `'M2'` => February; `'M8L'` => repeated 8th month in the Chinese calendar; `'M5L'` => Adar I in the Hebrew calendar.
 - `day` is a positive integer representing the day of the month.
@@ -145,14 +145,14 @@ Usage examples:
 
 ```javascript
 md = Temporal.PlainMonthDay.from('08-24');
-md.monthCode; // => "8"
+md.monthCode; // => "M8"
 md.day; // => 24
-md.month; // undefined (month property is not present in this type; use monthCode instead)
+md.month; // undefined (no `month` property; use `monthCode` instead)
 
 md = Temporal.PlainMonthDay.from('2019-02-20[u-ca-hebrew]');
-md.monthCode; // => "5L"
+md.monthCode; // => "M5L"
 md.day; // => 15
-md.month; // undefined (month property is not present in this type; use monthCode instead)
+md.month; // undefined (no `month` property; use `monthCode` instead)
 ```
 
 ### monthDay.**calendar** : object
