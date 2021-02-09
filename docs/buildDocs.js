@@ -117,6 +117,7 @@ async function render(markdownFile, head, tail) {
 
 async function go() {
   try {
+    await mkdirp('../out/docs');
     const head = await fs.readFile('head.html.part', { encoding });
     const tail = await fs.readFile('tail.html.part', { encoding });
     // copy or render /docs/* to /out/docs/
