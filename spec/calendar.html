@@ -41,7 +41,7 @@
         The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object, falling back to a default operation if not present.
       </p>
       <emu-alg>
-        1. Let _fields_ be ? Get(_calendar_, *"fields"*).
+        1. Let _fields_ be ? GetMethod(_calendar_, *"fields"*).
         1. Let _fieldsArray_ be ? CreateArrayFromList(_fieldNames_).
         1. If _fields_ is not *undefined*, then
           1. Set _fieldsArray_ to ? Call(_fields_, _calendar_, « _fieldsArray_ »).
@@ -55,8 +55,8 @@
         The CalendarMergeFields abstract operation merges the properties of two Objects _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_ Object, falling back to a default operation if not present.
       </p>
       <emu-alg>
-        1. Let _mergeFields_ be ? Get(_calendar_, *"mergeFields"*).
-        1. If _fields_ is *undefined*, then
+        1. Let _mergeFields_ be ? GetMethod(_calendar_, *"mergeFields"*).
+        1. If _mergeFields_ is *undefined*, then
           1. Return ? ISOMergeFields(_fields_, _additionalFields_).
         1. Return ? Call(_mergeFields_, _calendar_, « _fields_, _additionalFields_ »).
       </emu-alg>
@@ -122,7 +122,7 @@
     <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
       <h1>CalendarFrom ( _identifier_ )</h1>
       <emu-alg>
-        1. Let _from_ be ? Get(%Temporal.Calendar%, *"from"*).
+        1. Let _from_ be ? GetMethod(%Temporal.Calendar%, *"from"*).
         1. If _from_ is *undefined*, set _from_ to %Temporal.Calendar.from%.
         1. Let _calendar_ be ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
         1. If Type(_calendar_) is not Object, then

@@ -621,7 +621,7 @@
     <emu-clause id="sec-temporal-timezonefrom" aoid="TimeZoneFrom">
       <h1>TimeZoneFrom ( _identifier_ )</h1>
       <emu-alg>
-        1. Let _from_ be ? Get(%Temporal.TimeZone%, *"from"*).
+        1. Let _from_ be ? GetMethod(%Temporal.TimeZone%, *"from"*).
         1. If _from_ is *undefined*, set _from_ to %Temporal.TimeZone.from%.
         1. Return ? Call(_from_, %Temporal.TimeZone%, « _identifier_ »).
       </emu-alg>
@@ -630,7 +630,7 @@
     <emu-clause id="sec-temporal-getoffsetnanosecondsfor" aoid="GetOffsetNanosecondsFor">
       <h1>GetOffsetNanosecondsFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
-        1. Let _getOffsetNanosecondsFor_ be ? Get(_timeZone_, *"getOffsetNanosecondsFor"*).
+        1. Let _getOffsetNanosecondsFor_ be ? GetMethod(_timeZone_, *"getOffsetNanosecondsFor"*).
         1. If _getOffsetNanosecondsFor_ is *undefined*, set _getOffsetNanosecondsFor_ to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _instant_ »).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
@@ -642,7 +642,7 @@
     <emu-clause id="sec-temporal-getoffsetstringfor" aoid="GetOffsetStringFor">
       <h1>GetOffsetStringFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
-        1. Let _getOffsetStringFor_ be ? Get(_timeZone_, *"getOffsetStringFor"*).
+        1. Let _getOffsetStringFor_ be ? GetMethod(_timeZone_, *"getOffsetStringFor"*).
         1. If _getOffsetStringFor_ is *undefined*, set _getOffsetStringFor_ to %Temporal.TimeZone.prototype.getOffsetStringFor%.
         1. Return ? ToString(? Call(_getOffsetStringFor_, _timeZone_, « _instant_ »)).
       </emu-alg>
@@ -651,7 +651,7 @@
     <emu-clause id="sec-temporal-gettemporaldatetimefor" aoid="GetTemporalDateTimeFor">
       <h1>GetTemporalDateTimeFor ( _timeZone_, _instant_, _calendar_ )</h1>
       <emu-alg>
-        1. Let _getPlainDateTimeFor_ be ? Get(_timeZone_, *"getPlainDateTimeFor"*).
+        1. Let _getPlainDateTimeFor_ be ? GetMethod(_timeZone_, *"getPlainDateTimeFor"*).
         1. If _getPlainDateTimeFor_ is *undefined*, set _getPlainDateTimeFor_ to %Temporal.TimeZone.prototype.getPlainDateTimeFor%.
         1. Let _dateTime_ be ? Call(_getPlainDateTimeFor_, _timeZone_, « _instant_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -664,7 +664,7 @@
       <emu-alg>
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"disambiguation"*, _disambiguation_).
-        1. Let _getInstantFor_ be ? Get(_timeZone_, *"getInstantFor"*).
+        1. Let _getInstantFor_ be ? GetMethod(_timeZone_, *"getInstantFor"*).
         1. If _getInstantFor_ is *undefined*, set _getInstantFor_ to %Temporal.TimeZone.prototype.getInstantFor%.
         1. Let _instant_ be ? Call(_getInstantFor_, _timeZone_, « _dateTime_ »).
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
