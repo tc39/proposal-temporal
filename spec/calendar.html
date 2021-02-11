@@ -66,8 +66,7 @@
       <h1>CalendarDateAdd ( _calendar_, _date_, _duration_, _constructor_ [ , _options_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
-        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_, _constructor_ »).
+        1. Let _addedDate_ be ? Invoke( _calendar_, *"dateAdd"*, « _date_, _duration_, _options_, _constructor_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
       </emu-alg>
@@ -77,8 +76,7 @@
       <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Let _dateUntil_ be ? Get(_calendar_, *"dateUntil"*).
-        1. Let _duration_ be ? Call(_dateUntil_ , _calendar_, « _one_, _two_, _options_ »).
+        1. Let _duration_ be ? Invoke(_calendar_, *"dateUntil"*, « _one_, _two_, _options_ »).
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return _duration_.
       </emu-alg>
@@ -136,8 +134,7 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _dateFromFields_ be ? Get(_calendar_, *"dateFromFields"*).
-        1. Let _date_ be ? Call(_dateFromFields_, _calendar_, « _fields_, _options_, _constructor_ »).
+        1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_, _constructor_ »).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
       </emu-alg>
@@ -148,8 +145,7 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _yearMonthFromFields_ be ? Get(_calendar_, *"yearMonthFromFields"*).
-        1. Let _yearMonth_ be ? Call(_yearMonthFromFields_, _calendar_, « _fields_, _options_, _constructor_ »).
+        1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_, _constructor_ »).
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
       </emu-alg>
@@ -160,8 +156,7 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _monthDayFromFields_ be ? Get(_calendar_, *"monthDayFromFields"*).
-        1. Let _monthDay_ be ? Call(_monthDayFromFields_, _calendar_, « _fields_, _options_, _constructor_ »).
+        1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_, _constructor_ »).
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.
       </emu-alg>

@@ -139,8 +139,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"year"*).
-        1. Let _result_ be ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _temporalDate_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToIntegerOrInfinity(_result_).
@@ -157,8 +156,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"month"*).
-        1. Let _result_ be ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _temporalDate_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToPositiveIntegerOrInfinity(_result_).
@@ -175,8 +173,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"monthCode"*).
-        1. Let _result_ be ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _temporalDate_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToString(_result_).
@@ -193,8 +190,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"day"*).
-        1. Let _result_ be ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _temporalDate_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToPositiveIntegerOrInfinity(_result_).
@@ -211,8 +207,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"dayOfWeek"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"dayOfWeek"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -226,8 +221,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"dayOfYear"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"dayOfYear"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -241,8 +235,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"weekOfYear"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"weekOfYear"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -256,8 +249,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"daysInWeek"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"daysInWeek"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -271,8 +263,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"daysInMonth"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"daysInMonth"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -286,8 +277,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"daysInYear"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"daysInYear"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -301,8 +291,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"monthsInYear"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"monthsInYear"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -316,8 +305,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _method_ be ? Get(_calendar_, *"inLeapYear"*).
-        1. Return ? Call(_method_, _calendar_, « _temporalDate_ »).
+        1. Return ? Invoke(_calendar_, *"inLeapYear"*, « _temporalDate_ »).
       </emu-alg>
     </emu-clause>
 
@@ -382,8 +370,7 @@
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
-        1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
-        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _duration_, _options_, _constructor_ »).
+        1. Return ? Invoke(_calendar_, *"dateAdd"*, « _temporalDate_, _duration_, _options_, _constructor_ »).
       </emu-alg>
     </emu-clause>
 
@@ -402,8 +389,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _negatedDuration_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
-        1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
-        1. Return ? Call(_dateAdd_, _calendar_, « _temporalDate_, _negatedDuration_, _options_, _constructor_ »).
+        1. Return ? Invoke(_calendar_, *"dateAdd"*, « _temporalDate_, _negatedDuration_, _options_, _constructor_ »).
       </emu-alg>
     </emu-clause>
 
