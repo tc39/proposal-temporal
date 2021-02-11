@@ -377,9 +377,8 @@
           1. Let _fields_ be ? ToTemporalMonthDayFields(_item_, _fieldNames_).
           1. Let _month_ be ? Get(_fields_, *"month"*).
           1. Let _monthCode_ be ? Get(_fields_, *"monthCode"*).
-          1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined*, then
-            1. Set _monthCode_ to ! ToString(_month_).
-            1. Perform ! CreateDataPropertyOrThrow(_fields_, *"monthCode"*, _monthCode_).
+          1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
+            1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, *1972*<sub>𝔽</sub>).
           1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
