@@ -454,3 +454,14 @@ The following example calculates this.
 ```javascript
 {{cookbook/bridgePublicHolidays.mjs}}
 ```
+
+## Advanced use cases
+
+These are not expected to be part of the normal usage of Temporal, but show some unusual things that can be done with Temporal.
+Since they are generally larger than these cookbook recipes, they're on their own pages.
+
+### Extra-expanded years
+
+Extend Temporal to support arbitrarily-large years (e.g., **+635427810-02-02**) for astronomical purposes.
+
+→ [Extra-expanded years](cookbook-expandedyears.md)

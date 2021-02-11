@@ -25,6 +25,7 @@ import './getUtcOffsetStringAtInstant.mjs';
 import './getWeeklyDaysInMonth.mjs';
 import './legacyDateFromDateTime.mjs';
 import './localTimeForFutureEvents.mjs';
+import './makeExpandedTemporal.mjs';
 import './nextWeeklyOccurrence.mjs';
 import './noonOnDate.mjs';
 import './plusAndRoundToMonthStart.mjs';
