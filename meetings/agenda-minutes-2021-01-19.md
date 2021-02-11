@@ -93,7 +93,7 @@
 - JGT: Which is weirder? All Temporal types having a string month, or MonthDay not having a month?
 - SFC: Inconsistency is weirder.
 - DE: Why couldn't we have a month index? We have a reference year? Are you saying it would be fatally bad to calculate the month index from the reference year? I don't buy that.
-- JGT: What would that month index mean, though? The same number would mean two different years depending on the reference year.
+- JGT: What would that month index mean, though? The same number would mean two different months depending on the reference year.
 - MG: I think month codes are better for internationalization, but I do understand the doubt about ergonomics. I especially think the month field being a code will work well for PlainMonthDay. People will expect the month field to be a number, and use it like a number, and that might mess it up.
 - DE: When you say about ergonomics, one example we talked about before was `=== 1`. What do you think about that?
 - MG: One of the ways you can make that work is if the code is never a number, e.g. M1, M2, M3. That solves the problem of users thinking they're numbers but suddenly not. I do feel that people wouldn't like that.
