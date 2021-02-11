@@ -164,9 +164,9 @@ The above read-only properties allow accessing the year or month individually.
   The last month of every year has `month` equal to the `monthsInYear` property.
   `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 - `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
-  For common (non-leap) months, `monthCode` should be `` `M${month}` ``.
+  For common (non-leap) months, `monthCode` should be `` `M${month}` ``, where `month` is zero padded up to two digits.
   For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
-  Examples: `'M2'` => February; `'M8L'` => repeated 8th month in the Chinese calendar; `'M5L'` => Adar I in the Hebrew calendar.
+  Examples: `'M02'` => February; `'M08L'` => repeated 8th month in the Chinese calendar; `'M05L'` => Adar I in the Hebrew calendar.
 
 Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
 Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
@@ -177,12 +177,12 @@ Usage examples:
 ym = Temporal.PlainYearMonth.from('2019-06');
 ym.year; // => 2019
 ym.month; // => 6
-ym.monthCode; // => "M6"
+ym.monthCode; // => "M06"
 
 ym = Temporal.PlainYearMonth.from('2019-02-23[u-ca-hebrew]');
 ym.year; // => 5779
 ym.month; // => 6
-ym.monthCode; // => "M5L"
+ym.monthCode; // => "M05L"
 ym.day; // => 18
 ```
 

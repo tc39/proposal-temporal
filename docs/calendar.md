@@ -234,7 +234,7 @@ For example:
 const date = Temporal.PlainDate.from('2019-02-06').withCalendar('hebrew');
 date.year; // => 5779
 date.calendar.year(date); // same result, but calling the method directly
-date.monthCode; // => "M5L"
+date.monthCode; // => "M05L"
 date.calendar.monthCode(date); // same result, but calling the method directly
 date.daysInYear; // => 385
 date.calendar.daysInYear(date); // same result, but calling the method directly
@@ -271,10 +271,10 @@ A custom implementation of these methods would convert the calendar-space argume
 For example:
 
 ```javascript
-date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M5L', day: 18, calendar: 'hebrew' });
+date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M05L', day: 18, calendar: 'hebrew' });
 date.year; // => 5779
 date.month; // => 6
-date.monthCode; // => "M5L"
+date.monthCode; // => "M05L"
 date.day; // => 18
 date.toString(); // => 2019-02-23[u-ca-hebrew]
 date.toLocaleString('en-US', { calendar: 'hebrew' }); // => "18 Adar I 5779"
@@ -433,9 +433,9 @@ Usage example:
 // and `monthCode` into account
 Temporal.Calendar.from('iso8601').mergeFields(
   { year: 2006, month: 7, day: 31 },
-  { monthCode: 'M8' }
+  { monthCode: 'M08' }
 );
-// => { year: 2006, monthCode: 'M8', day: 31 }
+// => { year: 2006, monthCode: 'M08', day: 31 }
 ```
 <!-- prettier-ignore-end -->
 
