@@ -1333,8 +1333,7 @@
             1. Let _plainDate_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
             1. Let _calendar_ be _plainDate_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"era"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainDate_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _plainDate_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToString(_result_).
             1. Return _result_.
@@ -1351,8 +1350,7 @@
             1. Let _plainDate_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
             1. Let _calendar_ be _plainDate_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainDate_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _plainDate_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToIntegerOrInfinity(_result_).
             1. Return _result_.
@@ -1387,8 +1385,7 @@
             1. Let _plainDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
             1. Let _calendar_ be _plainDateTime_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"era"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainDateTime_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _plainDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToString(_result_).
             1. Return _result_.
@@ -1405,8 +1402,7 @@
             1. Let _plainDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
             1. Let _calendar_ be _plainDateTime_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainDateTime_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _plainDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToIntegerOrInfinity(_result_).
             1. Return _result_.
@@ -1477,8 +1473,7 @@
             1. Let _plainYearMonth_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
             1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"era"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainYearMonth_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _plainYearMonth_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToString(_result_).
             1. Return _result_.
@@ -1495,8 +1490,7 @@
             1. Let _plainYearMonth_ be the *this* value.
             1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
             1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _plainYearMonth_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _plainYearMonth_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToIntegerOrInfinity(_result_).
             1. Return _result_.
@@ -1531,8 +1525,7 @@
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"era"*).
-            1. Let _result_ be ? Call(_method_, _calendar_, « _zonedDateTime_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _zonedDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToString(_result_).
             1. Return _result_.
@@ -1549,8 +1542,7 @@
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _method_ be ? Get(_calendar_, *"eraYear"*).
-            1. Let _result_ ? Call(_method_, _calendar_, « _zonedDateTime_ »).
+            1. Let _result_ ? Invoke(_calendar_, *"eraYear"*, « _zonedDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToIntegerOrInfinity(_result_).
             1. Return _result_.

@@ -163,8 +163,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _year_ be ? Get(_calendar_, *"year"*).
-        1. Let _result_ be ? Call(_year_, _calendar_, « _temporalDateTime_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _temporalDateTime_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToIntegerOrInfinity(_result_).
@@ -184,8 +183,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _month_ be ? Get(_calendar_, *"month"*).
-        1. Let _result_ be ? Call(_month_, _calendar_, « _temporalDateTime_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _temporalDateTime_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToPositiveIntegerOrInfinity(_result_).
@@ -205,8 +203,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _monthCode_ be ? Get(_calendar_, *"monthCode"*).
-        1. Let _result_ be ? Call(_monthCode_, _calendar_, « _temporalDateTime_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _temporalDateTime_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToString(_result_).
@@ -226,8 +223,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _day_ be ? Get(_calendar_, *"day"*).
-        1. Let _result_ be ? Call(_day_, _calendar_, « _temporalDateTime_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _temporalDateTime_ »).
         1. If _result_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Return ? ToPositiveIntegerOrInfinity(_result_).
@@ -401,8 +397,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _dayOfWeek_ be ? Get(_calendar_, *"dayOfWeek"*).
-        1. Return ? Call(_dayOfWeek_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"dayOfWeek"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -419,8 +414,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _dayOfYear_ be ? Get(_calendar_, *"dayOfYear"*).
-        1. Return ? Call(_dayOfYear_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"dayOfYear"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -437,8 +431,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _weekOfYear_ be ? Get(_calendar_, *"weekOfYear"*).
-        1. Return ? Call(_weekOfYear_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"weekOfYear"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -481,8 +474,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _daysInWeek_ be ? Get(_calendar_, *"daysInWeek"*).
-        1. Return ? Call(_daysInWeek_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"daysInWeek"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -499,8 +491,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _daysInMonth_ be ? Get(_calendar_, *"daysInMonth"*).
-        1. Return ? Call(_daysInMonth_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"daysInMonth"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -517,8 +508,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _daysInYear_ be ? Get(_calendar_, *"daysInYear"*).
-        1. Return ? Call(_daysInYear_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"daysInYear"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -535,8 +525,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _monthsInYear_ be ? Get(_calendar_, *"monthsInYear"*).
-        1. Return ? Call(_monthsInYear_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"monthsInYear"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -553,8 +542,7 @@
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _inLeapYear_ be ? Get(_calendar_, *"inLeapYear"*).
-        1. Return ? Call(_inLeapYear_, _calendar_, « _temporalDateTime_ »).
+        1. Return ? Invoke(_calendar_, *"inLeapYear"*, « _temporalDateTime_ »).
       </emu-alg>
     </emu-clause>
 
@@ -993,9 +981,8 @@
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDateTime_, _fieldNames_).
-        1. Let _yearMonthFromFields_ be ? Get(_calendar_, *"yearMonthFromFields"*).
         1. Let _options_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. Return ? Call(_yearMonthFromFields_, _calendar_, « _fields_, _options_, %Temporal.PlainMonthDay% »).
+        1. Return ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_, %Temporal.PlainMonthDay% »).
       </emu-alg>
     </emu-clause>
 
@@ -1013,9 +1000,8 @@
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDateTime_, _fieldNames_).
-        1. Let _monthDayFromFields_ be ? Get(_calendar_, *"monthDayFromFields"*).
         1. Let _options_ be ? OrdinaryObjectCreate(%Object.prototype%).
-        1. Return ? Call(_monthDayFromFields_, _calendar_, « _fields_, _options_, %Temporal.PlainMonthDay% »).
+        1. Return ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_, %Temporal.PlainMonthDay% »).
       </emu-alg>
     </emu-clause>
 
@@ -1298,9 +1284,8 @@
         1. Let _instant_ be ? CreateTemporalInstant(_epochNanoseconds_).
         1. Let _temporalDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _datePart_ be ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
-        1. Let _dateAdd_ be ? Get(_calendar_, *"dateAdd"*).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
-        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _dateDuration_, _options_, %Temporal.PlainDate% »).
+        1. Let _addedDate_ be ? Invoke(_calendar_, *"dateAdd"*, « _dateDuration_, _options_, %Temporal.PlainDate% »).
         1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
         1. Let _intermediateInstant_ be ? GetTemporalInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
         1. Return ! AddInstant(_intermediateInstant_.[[Nanoseconds]], _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
