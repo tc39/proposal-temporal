@@ -15,9 +15,6 @@ In general it is extended backwards ("proleptically") to cover the period of his
 However, the ISO 8601 calendar is not the only calendar in common use in the world.
 Some places use another calendar system as the main calendar, or have a separate calendar system as a commonly-used civil or religious calendar.
 
-> **NOTE:** The Temporal polyfill currently only includes the ISO 8601 calendar, but the Temporal proposal will eventually provide all the calendars supported by Intl.
-> See [issue #541](https://github.com/tc39/proposal-temporal/issues/541).
-
 ### When to use `Temporal.Calendar`
 
 It is best practice to specify a calendar system when performing calendar-sensitive operations, which are those involving arithmetic or other calculation in months or years.
