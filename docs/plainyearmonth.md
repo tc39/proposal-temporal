@@ -58,7 +58,7 @@ ym = new Temporal.PlainYearMonth(2019, 6);
 - `thing`: The value representing the desired month.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -76,10 +76,12 @@ Any non-object value is converted to a string, which is expected to be in ISO 86
 Any parts of the string other than the year and the month are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `overflow` option works as follows:
+The `overflow` option works as follows, if `thing` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+The `overflow` option is ignored if `thing` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 

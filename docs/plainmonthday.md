@@ -55,7 +55,7 @@ md = new Temporal.PlainMonthDay(2, 29); // => 02-29
 - `thing`: The value representing the desired date.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -76,11 +76,13 @@ For other calendars, the year and calendar are also parsed in addition to month 
 Any other parts of the string are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `overflow` option works as follows:
+The `overflow` option works as follows, if `thing` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, with "nearest" defined by the calendar.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
   If `day`, `month` and `year` are provided, that calendar date must exist in the provided calendar or a `RangeError` will be thrown.
+
+The `overflow` option is ignored if `thing` is a string.
 
 > **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
