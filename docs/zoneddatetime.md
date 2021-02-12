@@ -60,7 +60,7 @@ new Temporal.ZonedDateTime(0n, 'America/Los_Angeles'); // same, but shorter
 
 - `thing`: The value representing the desired date, time, time zone, and calendar.
 - `options` (optional object): An object which may have some or all of the following properties:
-  - `overflow` (string): How to deal with out-of-range values in `thing`.
+  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
     Allowed values are `'constrain'` and `'reject'`.
     The default is `'constrain'`.
   - `disambiguation` (string): How to disambiguate if the date and time given by `zonedDateTime` does not exist in the time zone, or exists more than once.
@@ -120,10 +120,12 @@ Note that using `Temporal.ZonedDateTime` with a single-offset time zone will not
 Therefore, using offset time zones with `Temporal.ZonedDateTime` is relatively unusual.
 Instead of using `Temporal.ZonedDateTime` with an offset time zone, it may be easier for most use cases to use `Temporal.PlainDateTime` and/or `Temporal.Instant` instead.
 
-The `overflow` option works as follows:
+The `overflow` option works as follows, if `thing` is an object:
 
 - In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `'reject'` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+
+The `overflow` option is ignored if `thing` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
