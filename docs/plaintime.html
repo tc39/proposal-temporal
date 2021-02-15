@@ -240,7 +240,7 @@ time <span class="token operator">=</span> <span class="token keyword">new</span
 <li><code>thing</code>: The value representing the desired time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
 The following options are recognized:<ul>
-<li><code>overflow</code> (optional string): How to deal with out-of-range values of the other parameters.
+<li><code>overflow</code> (optional string): How to deal with out-of-range values if <code>thing</code> is an object.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -254,11 +254,12 @@ Any missing ones will be assumed to be 0.</p>
 <p>If the <code>calendar</code> property is present, it must be the string <code>&#39;iso8601&#39;</code> or the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>, for future compatibility.</p>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 If the string designates a date or a time zone, they will be ignored.</p>
-<p>The <code>overflow</code> option works as follows:</p>
+<p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
+<p>The <code>overflow</code> option is ignored if <code>thing</code> is a string.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
 In the default <code>constrain</code> mode, this will be converted to 59.

@@ -311,7 +311,7 @@ This range covers approximately half a million years. If <code>epochNanoseconds<
 <ul>
 <li><code>thing</code>: The value representing the desired date, time, time zone, and calendar.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values in <code>thing</code>.
+<li><code>overflow</code> (string): How to deal with out-of-range values if <code>thing</code> is an object.
 Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
 The default is <code>&#39;constrain&#39;</code>.</li>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>zonedDateTime</code> does not exist in the time zone, or exists more than once.
@@ -351,11 +351,12 @@ If a non-whole-hour single-offset time zone is needed, the offset can be used as
 Temporal<span class="token punctuation">.</span><span class="token function">Instant</span><span class="token punctuation">(</span><span class="token string">'2020-08-05T20:06:13+05:45'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'+05:45'</span><span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Note that using <code>Temporal.ZonedDateTime</code> with a single-offset time zone will not adjust for Daylight Saving Time or other time zone changes.
 Therefore, using offset time zones with <code>Temporal.ZonedDateTime</code> is relatively unusual.
 Instead of using <code>Temporal.ZonedDateTime</code> with an offset time zone, it may be easier for most use cases to use <code>Temporal.PlainDateTime</code> and/or <code>Temporal.Instant</code> instead.</p>
-<p>The <code>overflow</code> option works as follows:</p>
+<p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
+<p>The <code>overflow</code> option is ignored if <code>thing</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
