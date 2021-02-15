@@ -389,7 +389,7 @@
             1. Else if _f_ is *"2-digit"*, then
               1. Let _fv_ be FormatNumeric(_nf2_, _v_).
               1. If the *"length"* property of _fv_ is greater than 2, let _fv_ be the substring of _fv_ containing the last two characters.
-            1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Day]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"month"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[day]] is *undefined*.  If _p_ is *"timeZoneName"*, then the String value may also depend on the value of the [[InDST]] field of _tm_. If _p_ is *"era"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Era]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"era"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[era]] is *undefined*. If the implementation does not have a localized representation of _f_, then use _f_ itself.
+            1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Day]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"month"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[day]] is *undefined*. If _p_ is *"timeZoneName"*, then the String value may also depend on the value of the [[InDST]] field of _tm_. If _p_ is *"era"* and _rangeFormatOptions_ is *undefined*, then the String value may also depend on whether <del>_dateTimeFormat_.[[Era]]</del><ins>_pattern_.[[day]]</ins> is *undefined*. If _p_ is *"era"* and _rangeFormatOptions_ is not *undefined*, then the String value may also depend on whether _rangeFormatOptions_.[[era]] is *undefined*. If the implementation does not have a localized representation of _f_, then use _f_ itself.
             1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else if _p_ is equal to *"ampm"*, then
             1. Let _v_ be _tm_.[[Hour]].
@@ -500,7 +500,7 @@
         1. Let _rangePattern_ be *undefined*.
         1. Let _dateFieldsPracticallyEqual_ be *true*.
         1. Let _patternContainsLargerDateField_ be *false*.
-        1. While _dateFieldsPracticallyEqual_ is *true* and _patternContainsLargerDateField_ is *false*, repeat for each row of <emu-xref href="#table-datetimeformat-rangepatternfields"></emu-xref> in order, except the header row
+        1. While _dateFieldsPracticallyEqual_ is *true* and _patternContainsLargerDateField_ is *false*, repeat for each row of <emu-xref href="#table-datetimeformat-rangepatternfields"></emu-xref> in order, except the header row:
           1. Let _fieldName_ be the name given in the Range Pattern Field column of the row.
           1. If _fieldName_ is equal to [[AmPm]], then
             1. Let _rp_ be _rangePatterns_.[[AmPm]].
@@ -541,13 +541,13 @@
           1. <del>Let _pattern_ be _dateTimeFormat_.[[Pattern]].</del>
           1. Let _patternParts_ be PartitionPattern(<del>_pattern_</del><ins>_x_.[[pattern]]</ins>).
           1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_x_.[[pattern]] ,</ins> _patternParts_, _x_<ins>.[[epochNanoseconds]]</ins>, *undefined*).
-          1. For each _r_ in _result_ do
+          1. For each element _r_ in _result_, do
             1. Set _r_.[[Source]] to *"shared"*.
           1. Return _result_.
         1. Let _result_ be a new empty List.
         1. If _rangePattern_ is *undefined*, then
           1. Let _rangePattern_ be _rangePatterns_.[[Default]].
-        1. For each _rangePatternPart_ in _rangePattern_.[[PatternParts]], do
+        1. For each element _rangePatternPart_ in _rangePattern_.[[PatternParts]], do
           1. <mark>TODO: perhaps try to make the patterns play better with _rangePatternPart_.[[Pattern]].</mark>
           1. <del>Let _pattern_ be _rangePatternPart_.[[Pattern]].</del>
           1. Let _source_ be _rangePatternPart_.[[Source]].
@@ -559,7 +559,7 @@
             1. <ins>Let _pattern_ be _y_.[[pattern]].</ins>
           1. Let _patternParts_ be PartitionPattern(_pattern_).
           1. Let _partResult_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_ ,</ins> _patternParts_, _z_, _rangePattern_).
-          1. For each _r_ in _partResult_, do
+          1. For each element _r_ in _partResult_, do
             1. Set _r_.[[Source]] to _source_.
           1. Add all elements in _partResult_ to _result_ in order.
         1. Return _result_.
