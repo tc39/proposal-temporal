@@ -528,12 +528,12 @@
                 1. Set _dateFieldsPracticallyEqual_ to *false*.
               1. Let _rangePattern_ be _rp_.
           1. Else,
-            1. Let _rp_ be _rangePatterns_.[[<_fieldName_>]].
+            1. Let _rp_ be _rangePatterns_.[[&lt;_fieldName&gt;>]].
             1. If _rangePattern_ is not *undefined* and _rp_ is *undefined*, then
               1. Set _patternContainsLargerDateField_ to *true*.
             1. Else,
-              1. Let _v1_ be _tm1_.[[<_fieldName_>]].
-              1. Let _v2_ be _tm2_.[[<_fieldName_>]].
+              1. Let _v1_ be _tm1_.[[&lt;_fieldName&gt;>]].
+              1. Let _v2_ be _tm2_.[[&lt;_fieldName_&gt;]].
               1. If _v1_ is not equal to _v2_, then
                 1. Set _dateFieldsPracticallyEqual_ to *false*.
               1. Let _rangePattern_ be _rp_.
