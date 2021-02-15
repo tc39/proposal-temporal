@@ -567,3 +567,9 @@ Extend `Temporal` to support arbitrarily-large years (e.g., **+635427810-02-02**
 Extend `Temporal` to support adjustment days for the Hijri calendars, which are sometimes required when the start of the month is based on astronomical observations.
 
 → [Adjustable Hijri calendar](hijri-days-adjustments.md)
+
+### Locked-down Temporal
+
+"Lock down" the Temporal object so that it doesn't leak any information about the host system, and the system clock is controllable, for use in security applications or for mocking in tests.
+
+→ [Locked-down Temporal](cookbook-mock.md)
