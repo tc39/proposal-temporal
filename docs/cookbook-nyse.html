@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temporal documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Instant,
+            Temporal.Calendar,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
+            Temporal.Duration,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
+            Temporal.TimeZone,
+            Temporal.PlainYearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
+      }
+      pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
+      pre code { line-height: 1.4; }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      This proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
+      It is being reviewed by TC39.
+      <strong>Do</strong> try it out and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
+    </div>
+<h2 id="new-york-stock-exchange-time-zone">New York Stock Exchange time zone</h2>
+<p>This is an example of using <code>Temporal.TimeZone</code> for a custom purpose that is not a standard time zone in use somewhere in the world.</p>
+<p><code>NYSETimeZone</code> is a time zone where there are no valid <code>Temporal.PlainDateTime</code> values except when the market is open.
+When the market is closed, instants are disambiguated to the opening bell of the next market day.</p>
+<blockquote>
+<p><strong>NOTE</strong>: This is a very specialized use of Temporal and is not something you would normally need to do.</p>
+</blockquote>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
+ * This sample implements a custom time zone that only allows PlainDateTime
+ * values that are during the times that the New York Stock Exchange is open,
+ * which is usually Monday through Friday 9:30 a.m. to 4:00 p.m. in
+ * America/New_York. A more complete implementation would include market
+ * holidays.
+ *
+ * `Temporal.Instants` when the market is closed will be disambiguated to the
+ * start of the next day that the market is open. This makes it easy to
+ * determine, for any instant, what market day that instant corresponds to, by
+ * simply converting the instant to a ZonedDateTime in the 'NYSE' time zone.
+ *
+ * All `Temporal.Instant` values after market close on a particular market
+ * display should be considered to be executed as of the market open on the next
+ * market day.
+ * */</span>
+
+<span class="token keyword">const</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> openTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'09:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> closeTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'16:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span><span class="token parameter">date</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> date<span class="token punctuation">.</span>dayOfWeek <span class="token operator">&lt;</span> <span class="token number">6</span><span class="token punctuation">;</span> <span class="token comment">// not a weekend</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">isDuringMarketHours</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isBeforeMarketOpen</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isAfterMarketClose</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">isBeforeMarketOpen</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> openTime<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">isAfterMarketClose</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>dt<span class="token punctuation">,</span> closeTime<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// keep adding days until we get to a market day, unless today is a market day</span>
+  <span class="token comment">// before the market opens.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isBeforeMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      zdt <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> tz<span class="token punctuation">,</span> plainTime<span class="token operator">:</span> openTime <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getNextMarketClose</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// keep adding days until we get to a market day, unless today is a market day</span>
+  <span class="token comment">// before the market closes.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isAfterMarketClose</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      zdt <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> tz<span class="token punctuation">,</span> plainTime<span class="token operator">:</span> closeTime <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPreviousMarketOpen</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// keep subtracting days until we get to a market day, unless today is a market day</span>
+  <span class="token comment">// after the market opened.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isBeforeMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      zdt <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> tz<span class="token punctuation">,</span> plainTime<span class="token operator">:</span> openTime <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPreviousMarketClose</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// keep adding days until we get to a market day, unless today is a market day</span>
+  <span class="token comment">// after the market closed.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isAfterMarketClose</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">do</span> <span class="token punctuation">{</span>
+      zdt <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">subtract</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isMarketOpenDate</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token punctuation">{</span> timeZone<span class="token operator">:</span> tz<span class="token punctuation">,</span> plainTime<span class="token operator">:</span> closeTime <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">NYSETimeZone</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getPossibleInstantsFor</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdt <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtWhenMarketIsOpen <span class="token operator">=</span> <span class="token function">isDuringMarketHours</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span> <span class="token operator">?</span> zdt <span class="token operator">:</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span>zdtWhenMarketIsOpen<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getInstantFor</span><span class="token punctuation">(</span><span class="token parameter">dt</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// `disambiguation` option is ignored. If the market is closed, then return the</span>
+    <span class="token comment">// opening time of the next market day.</span>
+    <span class="token keyword">const</span> zdt <span class="token operator">=</span> dt<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtWhenMarketIsOpen <span class="token operator">=</span> <span class="token function">isDuringMarketHours</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span> <span class="token operator">?</span> zdt <span class="token operator">:</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> zdtWhenMarketIsOpen<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtWhenMarketIsOpen <span class="token operator">=</span> <span class="token function">isDuringMarketHours</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span> <span class="token operator">?</span> zdt <span class="token operator">:</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> zdtWhenMarketIsOpen<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getNextTransition</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> nextOpen <span class="token operator">=</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> nextClose <span class="token operator">=</span> <span class="token function">getNextMarketClose</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtTransition <span class="token operator">=</span> <span class="token punctuation">[</span>nextOpen<span class="token punctuation">,</span> nextClose<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> zdtTransition<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getPreviousTransition</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> prevOpen <span class="token operator">=</span> <span class="token function">getPreviousMarketOpen</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> prevClose <span class="token operator">=</span> <span class="token function">getPreviousMarketClose</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtTransition <span class="token operator">=</span> <span class="token punctuation">[</span>prevOpen<span class="token punctuation">,</span> prevClose<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> zdtTransition<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">getOffsetNanosecondsFor</span><span class="token punctuation">(</span><span class="token parameter">instant</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>instant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdt <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tz<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> zdtWhenMarketIsOpen <span class="token operator">=</span> <span class="token function">isDuringMarketHours</span><span class="token punctuation">(</span>zdt<span class="token punctuation">)</span> <span class="token operator">?</span> zdt <span class="token operator">:</span> <span class="token function">getNextMarketOpen</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> ns <span class="token operator">=</span> zdt<span class="token punctuation">.</span>offsetNanoseconds <span class="token operator">+</span> zdt<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>zdtWhenMarketIsOpen<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanoseconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>nanoseconds<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ns<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">'NYSE'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> tzNYSE <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">freeze</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">NYSETimeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Monkeypatch Temporal.TimeZone.from to handle our custom time zone</span>
+<span class="token keyword">let</span> oldTzFrom<span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">replacement</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">item</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token operator">===</span> <span class="token string">'NYSE'</span><span class="token punctuation">)</span> <span class="token keyword">return</span> tzNYSE<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token function">oldTzFrom</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>from <span class="token operator">!==</span> replacement<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  oldTzFrom <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>from<span class="token punctuation">;</span>
+  Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span>from <span class="token operator">=</span> replacement<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> zdt<span class="token punctuation">;</span>
+<span class="token keyword">let</span> isOpen<span class="token punctuation">;</span>
+<span class="token keyword">let</span> date<span class="token punctuation">;</span>
+<span class="token keyword">let</span> inNYSE<span class="token punctuation">;</span>
+<span class="token keyword">let</span> nextOpen<span class="token punctuation">;</span>
+<span class="token keyword">let</span> todayClose<span class="token punctuation">;</span>
+<span class="token keyword">let</span> newDate<span class="token punctuation">;</span>
+<span class="token keyword">let</span> openInstant<span class="token punctuation">;</span>
+<span class="token keyword">let</span> closeInstant<span class="token punctuation">;</span>
+
+<span class="token comment">// 1. What is the market day associated with the Instant of a financial transaction?</span>
+zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12T18:50-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> tzNYSE<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-13'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12T06:50-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> tzNYSE<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-12'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12T01:50-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> tzNYSE<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-12'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 2. Is the stock market open on a particular date?</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+isOpen <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>isOpen<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+isOpen <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>isOpen<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 3. For a particular date, when is the next market day?</span>
+<span class="token keyword">const</span> <span class="token function-variable function">getNextMarketDay</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">date</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> zdt <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// It's a market day, so find the next one</span>
+    <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// the original date wasn't a market day, so we're already on the next one!</span>
+    <span class="token keyword">return</span> zdt<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-09'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+newDate <span class="token operator">=</span> <span class="token function">getNextMarketDay</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>newDate<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">'2020-11-10'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+newDate <span class="token operator">=</span> <span class="token function">getNextMarketDay</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>newDate<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">'2020-11-16'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 4. For a particular date and time somewhere in the world, is the market open?</span>
+<span class="token comment">// If it's open, then when will it close?</span>
+<span class="token comment">// If it's closed, then when will it open next?</span>
+<span class="token comment">// Return a result in the local time zone, not NYC's time zone.</span>
+zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12T18:50-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inNYSE <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+isOpen <span class="token operator">=</span> inNYSE<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>inNYSE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>isOpen<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+nextOpen <span class="token operator">=</span> inNYSE<span class="token punctuation">.</span>timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>nextOpen<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-13T06:30:00-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-12T12:50-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inNYSE <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+isOpen <span class="token operator">=</span> inNYSE<span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>inNYSE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>isOpen<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+todayClose <span class="token operator">=</span> inNYSE<span class="token punctuation">.</span>timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>timeZone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>todayClose<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-11-12T13:00:00-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 5. For any particular market date, what were the opening and closing clock times in NYC?</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-11-09'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+openInstant <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+closeInstant <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">toZonedDateTime</span><span class="token punctuation">(</span><span class="token string">'NYSE'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>openInstant<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>openInstant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'09:30:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>closeInstant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'America/New_York'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'16:00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
