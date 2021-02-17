@@ -231,10 +231,6 @@ On the modern Internet, the most often used calendar system is the calendar stan
 In general it is extended backwards (&quot;proleptically&quot;) to cover the period of history before its invention, which is an optional modification allowed by the ISO 8601 standard.</p>
 <p>However, the ISO 8601 calendar is not the only calendar in common use in the world.
 Some places use another calendar system as the main calendar, or have a separate calendar system as a commonly-used civil or religious calendar.</p>
-<blockquote>
-<p><strong>NOTE:</strong> The Temporal polyfill currently only includes the ISO 8601 calendar, but the Temporal proposal will eventually provide all the calendars supported by Intl.
-See <a href="https://github.com/tc39/proposal-temporal/issues/541">issue #541</a>.</p>
-</blockquote>
 <h3 id="when-to-use-temporalcalendar"><a class="heading-link" href="#when-to-use-temporalcalendar"></a>When to use <code>Temporal.Calendar</code></h3><p>It is best practice to specify a calendar system when performing calendar-sensitive operations, which are those involving arithmetic or other calculation in months or years.</p>
 <p>For example, to add a month to a date in the Hebrew calendar:</p>
 <pre class="language-javascript"><code class="language-javascript">date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Temporal types&#39; <code>toLocaleString()</code> methods use the user&#39;s preferred calendar, without needing to call <code>withCalendar()</code>.

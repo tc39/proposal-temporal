@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temporal documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Instant,
+            Temporal.Calendar,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
+            Temporal.Duration,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
+            Temporal.TimeZone,
+            Temporal.PlainYearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
+      }
+      pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
+      pre code { line-height: 1.4; }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      This proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
+      It is being reviewed by TC39.
+      <strong>Do</strong> try it out and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
+    </div>
+<h2 id="expanded-years-example">Expanded years example</h2>
+<p>This is an example of an approach to extend Temporal to support arbitrarily-large years (e.g., <strong>+635427810-02-02</strong>) for astronomical purposes.</p>
+<p>The code below is just an example to show how this could be approached.
+To do this completely would require adding support to Temporal.Instant and Temporal.ZonedDateTime, and overriding more methods.</p>
+<p>For example, arithmetic will not work correctly in this example.</p>
+<blockquote>
+<p><strong>NOTE</strong>: This is a very specialized use of Temporal and is not something you would normally need to do.
+A dedicated third-party library might be a better solution to this problem.</p>
+</blockquote>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">bigIntAbs</span><span class="token punctuation">(</span><span class="token parameter">n</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>n <span class="token operator">&lt;</span> <span class="token number">0n</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span>n<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> n<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// The years are unlimited, but for output purposes we assume 10 digits,</span>
+<span class="token comment">// because ISO 8601 requires the expanded year format to pick a consistent</span>
+<span class="token comment">// number of digits.</span>
+<span class="token keyword">function</span> <span class="token function">formatExpandedYear</span><span class="token punctuation">(</span><span class="token parameter">year</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> yearString<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>year <span class="token operator">&lt;</span> <span class="token number">1000</span> <span class="token operator">||</span> year <span class="token operator">></span> <span class="token number">9999</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> sign <span class="token operator">=</span> year <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'-'</span> <span class="token operator">:</span> <span class="token string">'+'</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> yearNumber <span class="token operator">=</span> <span class="token function">bigIntAbs</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    yearString <span class="token operator">=</span> sign <span class="token operator">+</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>yearNumber<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    yearString <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>year<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> yearString<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">isLeapYear</span><span class="token punctuation">(</span><span class="token parameter">year</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> isDiv4 <span class="token operator">=</span> year <span class="token operator">%</span> <span class="token number">4n</span> <span class="token operator">===</span> <span class="token number">0n</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> isDiv100 <span class="token operator">=</span> year <span class="token operator">%</span> <span class="token number">100n</span> <span class="token operator">===</span> <span class="token number">0n</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> isDiv400 <span class="token operator">=</span> year <span class="token operator">%</span> <span class="token number">400n</span> <span class="token operator">===</span> <span class="token number">0n</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> isDiv4 <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token operator">!</span>isDiv100 <span class="token operator">||</span> isDiv400<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// This checks to see if the ISO string matches our 10-digit expanded year</span>
+<span class="token comment">// format, and if so, returns both the expanded year as a BigInt, and a new</span>
+<span class="token comment">// ISO string with an in-range year that can be passed to the original</span>
+<span class="token comment">// Temporal string parsing functions.</span>
+<span class="token comment">// The in-range year is 1972 if the expanded year is a leap year, and</span>
+<span class="token comment">// otherwise 1970, so that the rules for February 29 remain correct.</span>
+<span class="token comment">// See the note about the number of digits in formatExpandedYear().</span>
+<span class="token keyword">function</span> <span class="token function">parseExpandedYear</span><span class="token punctuation">(</span><span class="token parameter">isoString</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> matchExpandedYear <span class="token operator">=</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^[-+\u2212]\d{10}</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> result <span class="token operator">=</span> matchExpandedYear<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>isoString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>result<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token punctuation">{</span> isoString <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> expandedYear <span class="token operator">=</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>result<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> isoYear <span class="token operator">=</span> <span class="token function">isLeapYear</span><span class="token punctuation">(</span>expandedYear<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1972</span> <span class="token operator">:</span> <span class="token number">1970</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    expandedYear<span class="token punctuation">,</span>
+    isoString<span class="token operator">:</span> isoString<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>matchExpandedYear<span class="token punctuation">,</span> isoYear<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// This is a map of Temporal objects to their expanded year (as BigInt).</span>
+<span class="token comment">// The data model consists of the Temporal object (with the ISO year set</span>
+<span class="token comment">// internally to 1970 or 1972) and the expanded year. This map is used to</span>
+<span class="token comment">// associate Temporal objects with their expanded years, instead of defining</span>
+<span class="token comment">// extra properties on the Temporal object.</span>
+<span class="token keyword">const</span> expandedYears <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ExpandedPlainDate</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span> <span class="token punctuation">{</span>
+  <span class="token comment">// The expanded-year versions of the Temporal types are limited to using the</span>
+  <span class="token comment">// ISO calendar.</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">year<span class="token punctuation">,</span> isoMonth<span class="token punctuation">,</span> isoDay</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    year <span class="token operator">=</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> isoYear <span class="token operator">=</span> <span class="token function">isLeapYear</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1972</span> <span class="token operator">:</span> <span class="token number">1970</span><span class="token punctuation">;</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>isoYear<span class="token punctuation">,</span> isoMonth<span class="token punctuation">,</span> isoDay<span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    expandedYears<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">static</span> <span class="token function">_convert</span><span class="token punctuation">(</span><span class="token parameter">plainDate<span class="token punctuation">,</span> expandedYear</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>plainDate <span class="token keyword">instanceof</span> <span class="token class-name">ExpandedPlainDate</span><span class="token punctuation">)</span> <span class="token keyword">return</span> plainDate<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> f <span class="token operator">=</span> plainDate<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">this</span><span class="token punctuation">(</span>expandedYear<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMonth<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoDay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> item <span class="token operator">===</span> <span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> <span class="token punctuation">{</span> expandedYear<span class="token punctuation">,</span> isoString <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">parseExpandedYear</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      item <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>isoString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>expandedYear<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> expandedYear<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>item<span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">const</span> calendar <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// This overrides the .year property to return the expanded year instead. If</span>
+  <span class="token comment">// you were doing this with a calendar, you would instead need to make a</span>
+  <span class="token comment">// separate field. (But Instant doesn't have a calendar, so that solution</span>
+  <span class="token comment">// wouldn't be able to completely expand Temporal.)</span>
+  <span class="token keyword">get</span> <span class="token function">year</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> expandedYears<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> year <span class="token operator">=</span> <span class="token function">formatExpandedYear</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> isoMonth<span class="token punctuation">,</span> isoDay <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> month <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>isoMonth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> day <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>isoDay<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>year<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>month<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>day<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ExpandedPlainDateTime</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDateTime</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">year<span class="token punctuation">,</span> isoMonth<span class="token punctuation">,</span> isoDay<span class="token punctuation">,</span> hour<span class="token punctuation">,</span> minute<span class="token punctuation">,</span> second<span class="token punctuation">,</span> millisecond<span class="token punctuation">,</span> microsecond<span class="token punctuation">,</span> nanosecond</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    year <span class="token operator">=</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> isoYear <span class="token operator">=</span> <span class="token function">isLeapYear</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1972</span> <span class="token operator">:</span> <span class="token number">1970</span><span class="token punctuation">;</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>isoYear<span class="token punctuation">,</span> isoMonth<span class="token punctuation">,</span> isoDay<span class="token punctuation">,</span> hour<span class="token punctuation">,</span> minute<span class="token punctuation">,</span> second<span class="token punctuation">,</span> millisecond<span class="token punctuation">,</span> microsecond<span class="token punctuation">,</span> nanosecond<span class="token punctuation">,</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    expandedYears<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">static</span> <span class="token function">_convert</span><span class="token punctuation">(</span><span class="token parameter">plainDateTime<span class="token punctuation">,</span> expandedYear</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>plainDateTime <span class="token keyword">instanceof</span> <span class="token class-name">ExpandedPlainDateTime</span><span class="token punctuation">)</span> <span class="token keyword">return</span> plainDateTime<span class="token punctuation">;</span>
+    <span class="token keyword">const</span> f <span class="token operator">=</span> plainDateTime<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">this</span><span class="token punctuation">(</span>
+      expandedYear<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoMonth<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoDay<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoHour<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoMinute<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoSecond<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoMillisecond<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoMicrosecond<span class="token punctuation">,</span>
+      f<span class="token punctuation">.</span>isoNanosecond
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">static</span> <span class="token keyword">from</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> item <span class="token operator">===</span> <span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> <span class="token punctuation">{</span> expandedYear<span class="token punctuation">,</span> isoString <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">parseExpandedYear</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      item <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>isoString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>expandedYear<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> expandedYear<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token keyword">instanceof</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDateTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>item<span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">const</span> calendar <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> calendar<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>item<span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">get</span> <span class="token function">year</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> expandedYears<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">toString</span><span class="token punctuation">(</span><span class="token parameter">options <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> dateString <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      <span class="token operator">...</span>options<span class="token punctuation">,</span>
+      showCalendar<span class="token operator">:</span> <span class="token string">'never'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> timeString <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">toPlainTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dateString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">T</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>timeString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> ExpandedPlainDate<span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ExpandedPlainTime</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainTime</span> <span class="token punctuation">{</span>
+  <span class="token function">toPlainDateTime</span><span class="token punctuation">(</span><span class="token parameter">date</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> ExpandedPlainDateTime<span class="token punctuation">.</span><span class="token function">_convert</span><span class="token punctuation">(</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">,</span> date<span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">makeExpandedTemporal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>Temporal<span class="token punctuation">,</span>
+    PlainDate<span class="token operator">:</span> ExpandedPlainDate<span class="token punctuation">,</span>
+    PlainDateTime<span class="token operator">:</span> ExpandedPlainDateTime<span class="token punctuation">,</span>
+    PlainTime<span class="token operator">:</span> ExpandedPlainTime
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> ExpandedTemporal <span class="token operator">=</span> <span class="token function">makeExpandedTemporal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> date <span class="token operator">=</span> ExpandedTemporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">635427810</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'+0635427810-02-02'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> dateTime <span class="token operator">=</span> ExpandedTemporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'10:23'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDateTime</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>dateTime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'+0635427810-02-02T10:23:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> dateFromString <span class="token operator">=</span> ExpandedTemporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-0075529144-02-29T12:53:27.55'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>dateFromString<span class="token punctuation">.</span>year<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">75529144n</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>

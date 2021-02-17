@@ -248,6 +248,12 @@
 </li>
 </ul>
 </li>
+<li><a href="#advanced-use-cases">Advanced use cases</a>
+<ul>
+<li><a href="#extra-expanded-years">Extra-expanded years</a>
+</li>
+</ul>
+</li>
 </ul>
 
 <h2 id="running-the-cookbook-files">Running the cookbook files</h2>
@@ -1437,7 +1443,12 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
   <span class="token function">bridgePublicHolidays</span><span class="token punctuation">(</span>labourDay<span class="token punctuation">,</span> <span class="token number">2021</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">[</span><span class="token punctuation">]</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre>    <footer>
+</code></pre><h2 id="advanced-use-cases">Advanced use cases</h2>
+<p>These are not expected to be part of the normal usage of Temporal, but show some unusual things that can be done with Temporal.
+Since they are generally larger than these cookbook recipes, they&#39;re on their own pages.</p>
+<h3 id="extra-expanded-years"><a class="heading-link" href="#extra-expanded-years"></a>Extra-expanded years</h3><p>Extend Temporal to support arbitrarily-large years (e.g., <strong>+635427810-02-02</strong>) for astronomical purposes.</p>
+<p>→ <a href="cookbook-expandedyears.html">Extra-expanded years</a></p>
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!
