@@ -209,12 +209,14 @@ describe('TimeZone', () => {
       for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getNextTransition(txn);
         assert(transition);
+        txn = transition;
       }
     });
     it(`(${zone}).getPreviousTransition() x 4 transitions`, () => {
       for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getPreviousTransition(txn);
         assert(transition);
+        txn = transition;
       }
     });
   });
