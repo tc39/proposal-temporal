@@ -177,8 +177,8 @@ describe('TimeZone', () => {
     it(`(${zone}).getPlainDateTimeFor(${inst})`, () =>
       assert(zone.getPlainDateTimeFor(inst) instanceof Temporal.PlainDateTime));
     it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
-    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
-    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
+    it(`(${zone}).getNextTransition(${inst})`, () => equal(zone.getNextTransition(inst), null));
+    it(`(${zone}).getPreviousTransition(${inst})`, () => equal(zone.getPreviousTransition(inst), null));
     it('wraps around to the next day', () =>
       equal(`${zone.getPlainDateTimeFor(Temporal.Instant.from('2020-02-06T23:59Z'))}`, '2020-02-07T00:59:00'));
   });
@@ -192,8 +192,8 @@ describe('TimeZone', () => {
     it(`(${zone}).getPlainDateTimeFor(${inst})`, () =>
       assert(zone.getPlainDateTimeFor(inst) instanceof Temporal.PlainDateTime));
     it(`(${zone}).getInstantFor(${dtm})`, () => assert(zone.getInstantFor(dtm) instanceof Temporal.Instant));
-    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
-    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
+    it(`(${zone}).getNextTransition(${inst})`, () => equal(zone.getNextTransition(inst), null));
+    it(`(${zone}).getPreviousTransition(${inst})`, () => equal(zone.getPreviousTransition(inst), null));
   });
   describe('America/Los_Angeles', () => {
     const zone = new Temporal.TimeZone('America/Los_Angeles');
@@ -228,8 +228,8 @@ describe('TimeZone', () => {
     it(`(${zone}).getPlainDateTimeFor(${inst})`, () =>
       equal(`${zone.getPlainDateTimeFor(inst)}`, '1900-01-01T12:19:32'));
     it(`(${zone}).getInstantFor(${dtm})`, () => equal(`${zone.getInstantFor(dtm)}`, '1900-01-01T11:40:28Z'));
-    it(`(${zone}).getNextTransition(${inst})`, () => zone.getNextTransition(inst), null);
-    it(`(${zone}).getPreviousTransition(${inst})`, () => zone.getPreviousTransition(inst), null);
+    it(`(${zone}).getNextTransition(${inst})`, () => equal(`${zone.getNextTransition(inst)}`, '1916-04-30T23:40:28Z'));
+    it(`(${zone}).getPreviousTransition(${inst})`, () => equal(zone.getPreviousTransition(inst), null));
   });
   describe('with DST change', () => {
     it('clock moving forward', () => {
