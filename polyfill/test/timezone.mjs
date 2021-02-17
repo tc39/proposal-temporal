@@ -209,6 +209,7 @@ describe('TimeZone', () => {
       for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getNextTransition(txn);
         assert(transition);
+        assert(!transition.equals(txn));
         txn = transition;
       }
     });
@@ -216,6 +217,7 @@ describe('TimeZone', () => {
       for (let i = 0, txn = inst; i < 4; i++) {
         const transition = zone.getPreviousTransition(txn);
         assert(transition);
+        assert(!transition.equals(txn));
         txn = transition;
       }
     });
@@ -423,6 +425,11 @@ describe('TimeZone', () => {
       equal(nyc.getNextTransition(a1).toString(), '2019-11-03T06:00:00Z');
       equal(nyc.getNextTransition(a2).toString(), '1883-11-18T17:00:00Z');
     });
+    it('should not return the same as its input if the input is a transition point', () => {
+      const inst = Temporal.Instant.from('2019-01-01T00:00Z');
+      equal(`${nyc.getNextTransition(inst)}`, '2019-03-10T07:00:00Z');
+      equal(`${nyc.getNextTransition(nyc.getNextTransition(inst))}`, '2019-11-03T06:00:00Z');
+    });
     it('casts argument', () => {
       equal(`${nyc.getNextTransition('2019-04-16T21:01Z')}`, '2019-11-03T06:00:00Z');
     });
@@ -440,6 +447,11 @@ describe('TimeZone', () => {
 
       equal(london.getPreviousTransition(a1).toString(), '2020-03-29T01:00:00Z');
       equal(london.getPreviousTransition(a2).toString(), '1847-12-01T00:01:15Z');
+    });
+    it('should not return the same as its input if the input is a transition point', () => {
+      const inst = Temporal.Instant.from('2020-06-01T00:00Z');
+      equal(`${london.getPreviousTransition(inst)}`, '2020-03-29T01:00:00Z');
+      equal(`${london.getPreviousTransition(london.getPreviousTransition(inst))}`, '2019-10-27T01:00:00Z');
     });
     it('casts argument', () => {
       equal(`${london.getPreviousTransition('2020-06-11T21:01Z')}`, '2020-03-29T01:00:00Z');
