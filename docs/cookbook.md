@@ -567,3 +567,9 @@ Extend `Temporal` to support arbitrarily-large years (e.g., **+635427810-02-02**
 Extend `Temporal` to support adjustment days for the Hijri calendars, which are sometimes required when the start of the month is based on astronomical observations.
 
 → [Adjustable Hijri calendar](hijri-days-adjustments.md)
+
+### Time zone directly from tzdata rules
+
+An example of building your own `Temporal.TimeZone` object from [tzdata-compatible rules](https://data.iana.org/time-zones/tz-how-to.html).
+
+→ [Time zone from tzdata](cookbook-tzdata.md)

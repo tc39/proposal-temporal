@@ -17,6 +17,7 @@ import './getNextOffsetTransitionFromExactTime.mjs';
 import './getParseableZonedStringAtInstant.mjs';
 import './getSortedLocalDateTimes.mjs';
 import './getTimeStamp.mjs';
+import './getTimeZoneObjectFromRules.mjs';
 import './getTripDurationInHrMinSec.mjs';
 import './getUtcOffsetDifferenceSecondsAtInstant.mjs';
 import './getUtcOffsetSecondsAtInstant.mjs';
