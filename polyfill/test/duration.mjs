@@ -327,6 +327,12 @@ describe('Duration', () => {
       [{}, () => {}, undefined].forEach((options) => equal(d1.toString(options), 'PT15H23M'));
     });
   });
+  describe('toJSON()', () => {
+    it('is like toString but always with auto precision', () => {
+      const d = Duration.from({ hours: 1 });
+      equal(d.toJSON(), d.toString({ fractionalSecondDigits: 'auto' }));
+    });
+  });
   describe('toLocaleString()', () => {
     it('produces an implementation-defined string', () => {
       const duration = Duration.from({ hours: 12, minutes: 30 });
