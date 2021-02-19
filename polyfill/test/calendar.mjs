@@ -261,6 +261,10 @@ describe('Calendar', () => {
       throws(() => iso.weekOfYear({ year: 2000 }), TypeError);
     });
   });
+  describe('edge cases for Calendar.weekOfYear()', () => {
+    it('week 1 from next year', () => equal(iso.weekOfYear(Temporal.PlainDate.from('2019-12-31')), 1));
+    it('week 53 from previous year', () => equal(iso.weekOfYear(Temporal.PlainDate.from('2021-01-01')), 53));
+  });
   describe('Calendar.daysInWeek()', () => {
     const res = 7;
     it('accepts Date', () => equal(iso.daysInWeek(Temporal.PlainDate.from('1994-11-05')), res));
