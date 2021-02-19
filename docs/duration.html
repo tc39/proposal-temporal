@@ -316,7 +316,7 @@ Otherwise, the function will throw a <code>RangeError</code>.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
 <blockquote>
 <p><strong>NOTE:</strong> This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
-(For example, <code>P3W1D</code> is understood to mean three weeks and one day, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.)
+For example, <code>P3W1D</code> is understood to mean three weeks and one day, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.
 If no sign character is present, then the sign is assumed to be positive.</p>
 </blockquote>
 <p>Usage examples:</p>
@@ -534,8 +534,8 @@ These durations are equally long, so no rounding takes place, but they are expre
 This operation is called &quot;balancing.&quot;</p>
 <p>For usage examples and a more complete explanation of how balancing works, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>A <code>largestUnit</code> value of <code>&#39;auto&#39;</code>, which is the default if only <code>smallestUnit</code> is given, means that <code>largestUnit</code> should be the largest nonzero unit in the duration that is larger than <code>smallestUnit</code>.
-(For example, in a duration of 3 days and 12 hours, <code>largestUnit: &#39;auto&#39;</code> would mean the same as <code>largestUnit: &#39;days&#39;</code>.)
-This means that the default is for the balancing behaviour of this method to not &#39;grow&#39; the duration beyond its current largest unit unless needed for rounding.</p>
+For example, in a duration of 3 days and 12 hours, <code>largestUnit: &#39;auto&#39;</code> would mean the same as <code>largestUnit: &#39;days&#39;</code>.
+This behavior implies that the default balancing behaviour of this method to not &#39;grow&#39; the duration beyond its current largest unit unless needed for rounding.</p>
 <p>The <code>smallestUnit</code> option determines the unit to round to.
 For example, to round to the nearest minute, use <code>smallestUnit: &#39;minutes&#39;</code>.
 The default, if only <code>largestUnit</code> is given, is to do no rounding.</p>
@@ -545,9 +545,9 @@ If <code>largestUnit</code> or <code>smallestUnit</code> is years, months, or we
 <p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
 For example, to round to increments of a half hour, use <code>smallestUnit: &#39;minutes&#39;, roundingIncrement: 30</code>.</p>
 <p>Unless <code>smallestUnit</code> is years, months, weeks, or days, the value given as <code>roundingIncrement</code> must divide evenly into the next highest unit after <code>smallestUnit</code>, and must not be equal to it.
-(For example, if <code>smallestUnit</code> is <code>&#39;minutes&#39;</code>, then the number of minutes given by <code>roundingIncrement</code> must divide evenly into 60 minutes, which is one hour.
+For example, if <code>smallestUnit</code> is <code>&#39;minutes&#39;</code>, then the number of minutes given by <code>roundingIncrement</code> must divide evenly into 60 minutes, which is one hour.
 The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
-Instead of 60 minutes, use 1 hour.)</p>
+Instead of 60 minutes, use 1 hour.</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
 <li><code>nearest</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
@@ -579,16 +579,15 @@ d <span class="token operator">=</span> Temporal<span class="token punctuation">
 d<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>seconds<span class="token punctuation">;</span> <span class="token comment">// => 9258</span>
 
 <span class="token comment">// Normalize, with and without taking DST into account</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1756</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// FIXME: write this example after ZonedDateTime is added</span>
-<span class="token comment">// d.round({</span>
-<span class="token comment">//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',</span>
-<span class="token comment">//   largestUnit: 'years'</span>
-<span class="token comment">// }); // => ???</span>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">2756</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+   relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01T00:00+01:00[Europe/Rome]'</span><span class="token punctuation">,</span>
+   largestUnit<span class="token operator">:</span> <span class="token string">'years'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P114DT21H (one hour longer because DST skipped an hour)</span>
 d<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01'</span><span class="token punctuation">,</span>
   largestUnit<span class="token operator">:</span> <span class="token string">'years'</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P73DT4H</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P114DT20H (one hour shorter if ignoring DST)</span>
 
 <span class="token comment">// Normalize days into months or years</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> days<span class="token operator">:</span> <span class="token number">190</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -599,7 +598,7 @@ d<span class="token punctuation">.</span><span class="token function">round</spa
 d<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   relativeTo<span class="token operator">:</span> refDate<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   largestUnit<span class="token operator">:</span> <span class="token string">'years'</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => ???</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P6M13D</span>
 
 <span class="token comment">// Round a duration up to the next 5-minute billing period</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">6</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -643,24 +642,22 @@ A <code>Temporal.PlainDate</code> or a date string like <code>2020-01-01</code> 
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How many seconds in 18 hours and 20 minutes?</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">130</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">20</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'minutes'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span>
+d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span>
 
 <span class="token comment">// How many 24-hour days is 123456789 seconds?</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'PT123456789S'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1428.8980208333332</span>
 
 <span class="token comment">// Find totals in months, with and without taking DST into account</span>
-d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">1756</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// FIXME: write this example after ZonedDateTime is added</span>
-<span class="token comment">// d.round({</span>
-<span class="token comment">//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',</span>
-<span class="token comment">//   largestUnit: 'months'</span>
-<span class="token comment">// }); // => ???</span>
+d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">2756</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+   relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01T00:00+01:00[Europe/Rome]'</span><span class="token punctuation">,</span>
+   unit<span class="token operator">:</span> <span class="token string">'months'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 3.7958333333333334</span>
 d<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   unit<span class="token operator">:</span> <span class="token string">'months'</span><span class="token punctuation">,</span>
   relativeTo<span class="token operator">:</span> <span class="token string">'2020-01-01'</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2.39247311827957</span>
-<span class="token comment">// FIXME: update the result above after duration rounding is fixed</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>duration.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 3.7944444444444443</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>duration.<strong>toString</strong>(<em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
