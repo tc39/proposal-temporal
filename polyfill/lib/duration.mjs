@@ -73,8 +73,10 @@ export class Duration {
     SetSlot(this, NANOSECONDS, nanoseconds);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
+      const { precision, unit, increment } = ES.ToDurationSecondsStringPrecision({});
+      const s = ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode: 'trunc' });
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${ES.TemporalDurationToString(this)}>`,
+        value: `${this[Symbol.toStringTag]} <${s}>`,
         writable: false,
         enumerable: false,
         configurable: false
