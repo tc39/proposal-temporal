@@ -90,7 +90,7 @@ Otherwise, the function will throw a `RangeError`.
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 
 > **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
-> (For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.)
+> For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.
 > If no sign character is present, then the sign is assumed to be positive.
 
 Usage examples:
@@ -421,8 +421,8 @@ This operation is called "balancing."
 For usage examples and a more complete explanation of how balancing works, see [Duration balancing](./balancing.md).
 
 A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given, means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
-(For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'days'`.)
-This means that the default is for the balancing behaviour of this method to not 'grow' the duration beyond its current largest unit unless needed for rounding.
+For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'days'`.
+This behavior implies that the default balancing behaviour of this method to not 'grow' the duration beyond its current largest unit unless needed for rounding.
 
 The `smallestUnit` option determines the unit to round to.
 For example, to round to the nearest minute, use `smallestUnit: 'minutes'`.
@@ -437,9 +437,9 @@ The `roundingIncrement` option allows rounding to an integer number of units.
 For example, to round to increments of a half hour, use `smallestUnit: 'minutes', roundingIncrement: 30`.
 
 Unless `smallestUnit` is years, months, weeks, or days, the value given as `roundingIncrement` must divide evenly into the next highest unit after `smallestUnit`, and must not be equal to it.
-(For example, if `smallestUnit` is `'minutes'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
+For example, if `smallestUnit` is `'minutes'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
 The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
-Instead of 60 minutes, use 1 hour.)
+Instead of 60 minutes, use 1 hour.
 
 The `roundingMode` option controls how the rounding is performed.
 
@@ -475,16 +475,15 @@ d = Temporal.Duration.from('PT2H34M18S');
 d.round({ largestUnit: 'seconds' }).seconds; // => 9258
 
 // Normalize, with and without taking DST into account
-d = Temporal.Duration.from({ hours: 1756 });
-// FIXME: write this example after ZonedDateTime is added
-// d.round({
-//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
-//   largestUnit: 'years'
-// }); // => ???
+d = Temporal.Duration.from({ hours: 2756 });
+d.round({
+   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
+   largestUnit: 'years'
+}); // => P114DT21H (one hour longer because DST skipped an hour)
 d.round({
   relativeTo: '2020-01-01',
   largestUnit: 'years'
-}); // => P73DT4H
+}); // => P114DT20H (one hour shorter if ignoring DST)
 
 // Normalize days into months or years
 d = Temporal.Duration.from({ days: 190 });
@@ -495,7 +494,7 @@ d.round({ relativeTo: refDate, largestUnit: 'years' }); // => P6M6D
 d.round({
   relativeTo: refDate.withCalendar('hebrew'),
   largestUnit: 'years'
-}); // => ???
+}); // => P6M13D
 
 // Round a duration up to the next 5-minute billing period
 d = Temporal.Duration.from({ minutes: 6 });
@@ -548,24 +547,22 @@ Example usage:
 ```javascript
 // How many seconds in 18 hours and 20 minutes?
 d = Temporal.Duration.from({ hours: 130, minutes: 20 });
-d.total({ largestUnit: 'minutes' }); // => 469200
+d.total({ unit: 'seconds' }); // => 469200
 
 // How many 24-hour days is 123456789 seconds?
 d = Temporal.Duration.from('PT123456789S');
 d.total({ unit: 'days' }); // 1428.8980208333332
 
 // Find totals in months, with and without taking DST into account
-d = Temporal.Duration.from({ hours: 1756 });
-// FIXME: write this example after ZonedDateTime is added
-// d.round({
-//   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
-//   largestUnit: 'months'
-// }); // => ???
+d = Temporal.Duration.from({ hours: 2756 });
+d.total({
+   relativeTo: '2020-01-01T00:00+01:00[Europe/Rome]',
+   unit: 'months'
+}); // => 3.7958333333333334
 d.total({
   unit: 'months',
   relativeTo: '2020-01-01'
-}); // => 2.39247311827957
-// FIXME: update the result above after duration rounding is fixed
+}); // => 3.7944444444444443
 ```
 
 ### duration.**toString**(_options_?: object) : string
