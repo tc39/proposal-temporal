@@ -5499,7 +5499,7 @@
       var week = MathFloor((doy - dow + 10) / 7);
 
       if (week < 1) {
-        if (doj === (ES.LeapYear(year) ? 5 : 6)) {
+        if (doj === 5 || doj === 6 && ES.LeapYear(year - 1)) {
           return 53;
         } else {
           return 52;
