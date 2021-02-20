@@ -5126,7 +5126,8 @@
       var timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
-    TemporalDurationToString: function TemporalDurationToString(duration, precision) {
+    TemporalDurationToString: function TemporalDurationToString(duration) {
+      var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
       function formatNumber(num) {
