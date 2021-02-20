@@ -22,7 +22,7 @@ const expected = [
 const actual = [];
 const fields = {
   month: 1.7,
-  monthCode: "M1",
+  monthCode: "M01",
   day: 1.7,
   year: 1.7,
 };
@@ -50,6 +50,6 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.with(argument);
-assert.sameValue(result.monthCode, "M1", "monthCode result");
+assert.sameValue(result.monthCode, "M01", "monthCode result");
 assert.sameValue(result.day, 1, "day result");
 assert.compareArray(actual, expected, "order of operations");

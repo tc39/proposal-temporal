@@ -142,11 +142,11 @@ describe('Date', () => {
       const date = original.with({ month: 5 });
       equal(`${date}`, '1976-05-18');
     });
-    it('date.with({ monthCode: "M5" }) works', () => {
-      equal(`${original.with({ monthCode: 'M5' })}`, '1976-05-18');
+    it('date.with({ monthCode: "M05" }) works', () => {
+      equal(`${original.with({ monthCode: 'M05' })}`, '1976-05-18');
     });
     it('month and monthCode must agree', () => {
-      throws(() => original.with({ month: 5, monthCode: 'M6' }), RangeError);
+      throws(() => original.with({ month: 5, monthCode: 'M06' }), RangeError);
     });
     it('date.with({ day: 17 } works', () => {
       const date = original.with({ day: 17 });
