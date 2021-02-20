@@ -1702,7 +1702,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
-  TemporalDurationToString: (duration, precision, options = undefined) => {
+  TemporalDurationToString: (duration, precision = 'auto', options = undefined) => {
     function formatNumber(num) {
       if (num <= NumberMaxSafeInteger) return num.toString(10);
       return bigInt(num).toString();
