@@ -378,12 +378,13 @@ export class Duration {
       smallestUnit = 'nanoseconds';
     }
     defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-    let largestUnit = ES.ToLargestTemporalUnit(options, undefined);
+    let largestUnit = ES.ToLargestTemporalDurationUnit(options);
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;
       largestUnit = defaultLargestUnit;
     }
+    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     if (!smallestUnitPresent && !largestUnitPresent) {
       throw new RangeError('at least one of smallestUnit or largestUnit is required');
     }

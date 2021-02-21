@@ -764,6 +764,34 @@ export const ES = ObjectAssign({}, ES2020, {
     if (plural.has(retval)) return plural.get(retval);
     return retval;
   },
+  ToLargestTemporalDurationUnit: (options) => {
+    const plural = new Map([
+      ['year', 'years'],
+      ['month', 'months'],
+      ['day', 'days'],
+      ['hour', 'hours'],
+      ['minute', 'minutes'],
+      ['second', 'seconds'],
+      ['millisecond', 'milliseconds'],
+      ['microsecond', 'microseconds'],
+      ['nanosecond', 'nanoseconds']
+    ]);
+    const allowed = new Set([
+      'years',
+      'months',
+      'weeks',
+      'days',
+      'hours',
+      'minutes',
+      'seconds',
+      'milliseconds',
+      'microseconds',
+      'nanoseconds'
+    ]);
+    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...plural.keys()]);
+    if (plural.has(retval)) return plural.get(retval);
+    return retval;
+  },
   ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
     const singular = new Map(
       [
