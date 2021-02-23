@@ -9002,7 +9002,7 @@
     },
     monthCode: function monthCode(date) {
       if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
-      return "M".concat(ES.ToString(GetSlot(date, ISO_MONTH)));
+      return buildMonthCode(GetSlot(date, ISO_MONTH));
     },
     day: function day(date) {
       if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic$1('%Temporal.PlainDate%'));
@@ -9056,6 +9056,11 @@
     if (isNaN(month)) throw new RangeError("Invalid month code: ".concat(monthCode));
     return month;
   }
+
+  function buildMonthCode(month) {
+    var leap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    return "M".concat(month.toString().padStart(2, '0')).concat(leap ? 'L' : '');
+  }
   /**
    * Safely merge a month, monthCode pair into an integer month.
    * If both are present, make sure they match.
@@ -9076,7 +9081,7 @@
 
       if (overflow === 'reject') ES.RejectToRange(month, 1, monthsPerYear);
       if (overflow === 'constrain') month = ES.ConstrainToRange(month, 1, monthsPerYear);
-      monthCode = "M".concat(month);
+      monthCode = buildMonthCode(month);
     } else {
       var numberPart = monthCodeNumberPart(monthCode);
 
@@ -9084,7 +9089,7 @@
         throw new RangeError("monthCode ".concat(monthCode, " and month ").concat(month, " must match if both are present"));
       }
 
-      if (monthCode !== "M".concat(numberPart)) {
+      if (monthCode !== buildMonthCode(numberPart)) {
         throw new RangeError("Invalid month code: ".concat(monthCode));
       }
 
@@ -9378,7 +9383,7 @@
           throw new RangeError("monthCode must be a string, not ".concat(ES.Type(monthCode).toLowerCase()));
         }
 
-        if (!/^M(1?\d)(L?)$/.test(monthCode)) throw new RangeError("Invalid monthCode: ".concat(monthCode));
+        if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError("Invalid monthCode: ".concat(monthCode));
       }
 
       if (this.constantEra) {
@@ -9971,13 +9976,13 @@
       Tishri: {
         leap: 1,
         regular: 1,
-        monthCode: 'M1',
+        monthCode: 'M01',
         days: 30
       },
       Heshvan: {
         leap: 2,
         regular: 2,
-        monthCode: 'M2',
+        monthCode: 'M02',
         days: {
           min: 29,
           max: 30
@@ -9986,7 +9991,7 @@
       Kislev: {
         leap: 3,
         regular: 3,
-        monthCode: 'M3',
+        monthCode: 'M03',
         days: {
           min: 29,
           max: 30
@@ -9995,49 +10000,49 @@
       Tevet: {
         leap: 4,
         regular: 4,
-        monthCode: 'M4',
+        monthCode: 'M04',
         days: 29
       },
       Shevat: {
         leap: 5,
         regular: 5,
-        monthCode: 'M5',
+        monthCode: 'M05',
         days: 30
       },
       Adar: {
         leap: undefined,
         regular: 6,
-        monthCode: 'M6',
+        monthCode: 'M06',
         days: 29
       },
       'Adar I': {
         leap: 6,
         regular: undefined,
-        monthCode: 'M5L',
+        monthCode: 'M05L',
         days: 30
       },
       'Adar II': {
         leap: 7,
         regular: undefined,
-        monthCode: 'M6',
+        monthCode: 'M06',
         days: 29
       },
       Nisan: {
         leap: 8,
         regular: 7,
-        monthCode: 'M7',
+        monthCode: 'M07',
         days: 30
       },
       Iyar: {
         leap: 9,
         regular: 8,
-        monthCode: 'M8',
+        monthCode: 'M08',
         days: 29
       },
       Sivan: {
         leap: 10,
         regular: 9,
-        monthCode: 'M9',
+        monthCode: 'M09',
         days: 30
       },
       Tamuz: {
@@ -10063,9 +10068,9 @@
       if (this.inLeapYear({
         year: year
       })) {
-        return month === 6 ? 'M5L' : "M".concat(month < 6 ? month : month - 1);
+        return month === 6 ? buildMonthCode(5, true) : buildMonthCode(month < 6 ? month : month - 1);
       } else {
-        return "M".concat(month);
+        return buildMonthCode(month);
       }
     },
     adjustCalendarDate: function adjustCalendarDate(calendarDate, cache) {
@@ -10113,19 +10118,22 @@
 
         if (month === undefined) {
           if (monthCode.endsWith('L')) {
-            if (monthCode !== 'M5L') throw new RangeError("Hebrew leap month must have monthCode M5L, not ".concat(monthCode));
+            if (monthCode !== 'M05L') {
+              throw new RangeError("Hebrew leap month must have monthCode M05L, not ".concat(monthCode));
+            }
+
             month = 6;
 
             if (!this.inLeapYear({
               year: year
             })) {
               if (overflow === 'reject') {
-                throw new RangeError("Hebrew monthCode M5L is invalid in year ".concat(year, " which is not a leap year"));
+                throw new RangeError("Hebrew monthCode M05L is invalid in year ".concat(year, " which is not a leap year"));
               } else {
                 // constrain to last day of previous month (Av)
                 month = 5;
                 day = 30;
-                monthCode = 'M5';
+                monthCode = 'M05';
               }
             }
           } else {
@@ -11113,7 +11121,7 @@
         year = eraYear;
         if (monthExtra && monthExtra !== 'bis') throw new RangeError("Unexpected leap month suffix: ".concat(monthExtra));
 
-        var _monthCode = monthExtra === undefined ? "M".concat(month) : "M".concat(month, "L");
+        var _monthCode = buildMonthCode(month, monthExtra !== undefined);
 
         var monthString = "".concat(month).concat(monthExtra || '');
         var months = this.getMonthList(year, cache);
@@ -11138,19 +11146,21 @@
         if (month === undefined) {
           var _months = this.getMonthList(year, cache);
 
-          var _monthInfo = _months[monthCode.replace('L', 'bis').slice(1)];
-
+          var numberPart = monthCode.replace('L', 'bis').slice(1);
+          if (numberPart[0] === '0') numberPart = numberPart.slice(1);
+          var _monthInfo = _months[numberPart];
           month = _monthInfo && _monthInfo.monthIndex; // If this leap month isn't present in this year, constrain down to the last day of the previous month.
 
-          if (month === undefined && monthCode.endsWith('L') && !['M1L', 'M12L', 'M13L'].includes(monthCode) && overflow === 'constrain') {
+          if (month === undefined && monthCode.endsWith('L') && !['M01L', 'M12L', 'M13L'].includes(monthCode) && overflow === 'constrain') {
             var withoutML = monthCode.slice(1, -1);
+            if (withoutML[0] === '0') withoutML = withoutML.slice(1);
             _monthInfo = _months[withoutML];
 
             if (_monthInfo) {
               var _monthInfo2 = _monthInfo;
               day = _monthInfo2.daysInMonth;
               month = _monthInfo2.monthIndex;
-              monthCode = "M".concat(withoutML);
+              monthCode = buildMonthCode(withoutML);
             }
           }
 
@@ -11182,13 +11192,15 @@
             throw new RangeError("Invalid month ".concat(month, " in Chinese year ").concat(year));
           }
 
-          monthCode = "M".concat(matchingMonthEntry[0].replace('bis', 'L'));
+          monthCode = buildMonthCode(matchingMonthEntry[0].replace('bis', ''), matchingMonthEntry[0].indexOf('bis') !== -1);
         } else {
           // Both month and monthCode are present. Make sure they don't conflict.
           var _months3 = this.getMonthList(year, cache);
 
-          var _monthInfo3 = _months3[monthCode.replace('L', 'bis').slice(1)];
+          var _numberPart = monthCode.replace('L', 'bis').slice(1);
 
+          if (_numberPart[0] === '0') _numberPart = _numberPart.slice(1);
+          var _monthInfo3 = _months3[_numberPart];
           if (!_monthInfo3) throw new RangeError("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
 
           if (month !== _monthInfo3.monthIndex) {
