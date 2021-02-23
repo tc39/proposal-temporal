@@ -776,19 +776,7 @@ export const ES = ObjectAssign({}, ES2020, {
       ['microsecond', 'microseconds'],
       ['nanosecond', 'nanoseconds']
     ]);
-    const allowed = new Set([
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ]);
-    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...plural.keys()]);
+    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...plural.keys(), ...plural.values(), 'weeks']);
     if (plural.has(retval)) return plural.get(retval);
     return retval;
   },
