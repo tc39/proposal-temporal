@@ -23,7 +23,7 @@ const actual = [];
 const fields = {
   year: 1.7,
   month: 1.7,
-  monthCode: "M1",
+  monthCode: "M01",
   day: 1.7,
 };
 const argument = new Proxy(fields, {
@@ -53,7 +53,7 @@ const result = instance.with(argument);
 assert.sameValue(result.era, undefined, "era result");
 assert.sameValue(result.year, 1, "year result");
 assert.sameValue(result.month, 1, "month result");
-assert.sameValue(result.monthCode, "M1", "monthCode result");
+assert.sameValue(result.monthCode, "M01", "monthCode result");
 assert.sameValue(result.day, 1, "day result");
 assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

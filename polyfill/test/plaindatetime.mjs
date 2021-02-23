@@ -270,11 +270,11 @@ describe('DateTime', () => {
     it('datetime.with({ month: 5 } works', () => {
       equal(`${datetime.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789');
     });
-    it('datetime.with({ monthCode: "M5" } works', () => {
-      equal(`${datetime.with({ monthCode: 'M5' })}`, '1976-05-18T15:23:30.123456789');
+    it('datetime.with({ monthCode: "M05" } works', () => {
+      equal(`${datetime.with({ monthCode: 'M05' })}`, '1976-05-18T15:23:30.123456789');
     });
     it('month and monthCode must agree', () => {
-      throws(() => datetime.with({ month: 5, monthCode: 'M6' }), RangeError);
+      throws(() => datetime.with({ month: 5, monthCode: 'M06' }), RangeError);
     });
     it('datetime.with({ day: 5 } works', () => {
       equal(`${datetime.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789');

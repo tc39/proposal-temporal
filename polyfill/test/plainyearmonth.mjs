@@ -111,8 +111,8 @@ describe('YearMonth', () => {
       });
       it('YearMonth.from({ year: 2019 }) throws', () => throws(() => PlainYearMonth.from({ year: 2019 }), TypeError));
       it('YearMonth.from({ month: 6 }) throws', () => throws(() => PlainYearMonth.from({ month: 6 }), TypeError));
-      it('YearMonth.from({ monthCode: "M6" }) throws', () =>
-        throws(() => PlainYearMonth.from({ monthCode: 'M6' }), TypeError));
+      it('YearMonth.from({ monthCode: "M06" }) throws', () =>
+        throws(() => PlainYearMonth.from({ monthCode: 'M06' }), TypeError));
       it('YearMonth.from({}) throws', () => throws(() => PlainYearMonth.from({}), TypeError));
       it('YearMonth.from(required prop undefined) throws', () =>
         throws(() => PlainYearMonth.from({ year: undefined, month: 6 }), TypeError));
@@ -191,7 +191,7 @@ describe('YearMonth', () => {
       const ym = PlainYearMonth.from('2019-10');
       it('with(2020)', () => equal(`${ym.with({ year: 2020 })}`, '2020-10'));
       it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
-      it('with(monthCode)', () => equal(`${ym.with({ monthCode: 'M9' })}`, '2019-09'));
+      it('with(monthCode)', () => equal(`${ym.with({ monthCode: 'M09' })}`, '2019-09'));
       it('month and monthCode must agree', () => throws(() => ym.with({ month: 9, monthCode: 'M10' }), RangeError));
     });
   });

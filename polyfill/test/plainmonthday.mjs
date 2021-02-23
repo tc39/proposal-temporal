@@ -178,7 +178,7 @@ describe('MonthDay', () => {
     describe('getters', () => {
       let md = new PlainMonthDay(1, 15);
       it("(1-15).monthCode === '1'", () => {
-        equal(md.monthCode, 'M1');
+        equal(md.monthCode, 'M01');
       });
       it("(1-15).day === '15'", () => {
         equal(`${md.day}`, '15');

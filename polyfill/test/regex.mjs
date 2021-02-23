@@ -352,7 +352,7 @@ describe('fromString regex', () => {
       it(isoString, () => {
         const [m, d, cid = 'iso8601'] = components;
         const monthDay = Temporal.PlainMonthDay.from(isoString);
-        equal(monthDay.monthCode, `M${m}`);
+        equal(monthDay.monthCode, `M${m.toString().padStart(2, '0')}`);
         equal(monthDay.day, d);
         equal(monthDay.calendar.id, cid);
       });

@@ -735,11 +735,11 @@ describe('ZonedDateTime', () => {
     it('zdt.with({ month: 5 } works', () => {
       equal(`${zdt.with({ month: 5 })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
     });
-    it('zdt.with({ monthCode: "M5" }) works', () => {
-      equal(`${zdt.with({ monthCode: 'M5' })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
+    it('zdt.with({ monthCode: "M05" }) works', () => {
+      equal(`${zdt.with({ monthCode: 'M05' })}`, '1976-05-18T15:23:30.123456789+00:00[UTC]');
     });
     it('month and monthCode must agree', () => {
-      throws(() => zdt.with({ month: 5, monthCode: 'M6' }), RangeError);
+      throws(() => zdt.with({ month: 5, monthCode: 'M06' }), RangeError);
     });
     it('zdt.with({ day: 5 } works', () => {
       equal(`${zdt.with({ day: 5 })}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
