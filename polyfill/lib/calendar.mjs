@@ -1038,7 +1038,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
       this.validateCalendarDate(calendarDate);
       if (month === undefined) {
         if (monthCode.endsWith('L')) {
-          if (monthCode !== 'M05L') throw new RangeError(`Hebrew leap month must have monthCode M5L, not ${monthCode}`);
+          if (monthCode !== 'M05L') throw new RangeError(`Hebrew leap month must have monthCode M05L, not ${monthCode}`);
           month = 6;
           if (!this.inLeapYear({ year })) {
             if (overflow === 'reject') {
