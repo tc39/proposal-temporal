@@ -1625,8 +1625,7 @@ export const ES = ObjectAssign({}, ES2020, {
       GetSlot(dateTime, ISO_SECOND),
       GetSlot(dateTime, ISO_MILLISECOND),
       GetSlot(dateTime, ISO_MICROSECOND),
-      GetSlot(dateTime, ISO_NANOSECOND),
-      GetSlot(dateTime, CALENDAR)
+      GetSlot(dateTime, ISO_NANOSECOND)
     );
   },
   GetOffsetNanosecondsFor: (timeZone, instant) => {
