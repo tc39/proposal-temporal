@@ -43,6 +43,24 @@ const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789].map(function (val
 });
 
 const calendar = {
+  dateFromFields() { throw new Error('not called'); },
+  yearMonthFromFields() { throw new Error('not called'); },
+  monthDayFromFields() { throw new Error('not called'); },
+  dateAdd() { throw new Error('not called'); },
+  dateUntil() { throw new Error('not called'); },
+  monthCode() { throw new Error('not called'); },
+  toString() { throw new Error('not called'); },
+  era() { return undefined; },
+  eraYear() { return undefined; },
+  dayOfWeek() { return undefined; },
+  dayOfYear() { return undefined; },
+  weekOfYear() { return undefined; },
+  daysInWeek() { return undefined; },
+  daysInMonth() { return undefined; },
+  daysInYear() { return undefined; },
+  monthsInYear() { return undefined; },
+  inLeapYear() { return undefined; },
+
   year(d) { return d.getISOFields().isoYear; },
   month(d) { return d.getISOFields().isoMonth; },
   day(d) { return d.getISOFields().isoDay; },

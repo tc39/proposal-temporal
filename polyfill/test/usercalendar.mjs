@@ -274,6 +274,12 @@ describe('Userland calendar', () => {
         const isoDate = decimalToISO(0, month, fields.day, 0, 0, 0, overflow);
         return new constructor(isoDate.month, isoDate.day, this, isoDate.year);
       },
+      dateAdd() {
+        throw new Error('arithmetic not implemented!');
+      },
+      dateUntil() {
+        throw new Error('arithmetic not implemented!');
+      },
       year(date) {
         return isoToDecimal(date).year;
       },
@@ -287,6 +293,37 @@ describe('Userland calendar', () => {
       day(date) {
         const { days } = isoToDecimal(date);
         return (days % 10) + 1;
+      },
+      era() {
+        return undefined;
+      },
+      eraYear() {
+        return undefined;
+      },
+      dayOfWeek() {
+        return undefined;
+      },
+      dayOfYear() {
+        const { days } = isoToDecimal(date);
+        return days;
+      },
+      weekOfYear() {
+        return undefined;
+      },
+      daysInWeek() {
+        return undefined;
+      },
+      daysInMonth() {
+        return 10;
+      },
+      daysInYear() {
+        return 100;
+      },
+      monthsInYear() {
+        return 10;
+      },
+      inLeapYear() {
+        return undefined;
       }
     };
 

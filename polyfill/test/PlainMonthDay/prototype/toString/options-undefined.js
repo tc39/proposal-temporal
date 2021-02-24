@@ -3,11 +3,12 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.tostring
+includes: [temporalHelpers.js]
 ---*/
 
-const calendar = {
+const calendar = Object.assign({}, MINIMAL_CALENDAR_OBJECT, {
   toString() { return "custom"; }
-};
+});
 const monthday = new Temporal.PlainMonthDay(5, 2, calendar);
 
 const explicit = monthday.toString(undefined);

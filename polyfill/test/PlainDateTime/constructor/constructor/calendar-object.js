@@ -3,10 +3,11 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+includes: [temporalHelpers.js]
 ---*/
 
 const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789];
-const calendar = {};
+const calendar = MINIMAL_CALENDAR_OBJECT;
 
 Object.defineProperty(Temporal.Calendar, "from", {
   get() {

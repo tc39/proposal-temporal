@@ -3,11 +3,12 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
+includes: [temporalHelpers.js]
 ---*/
 
-const calendar = {
+const calendar = Object.assign({}, MINIMAL_CALENDAR_OBJECT, {
   toString() { return "custom"; }
-};
+});
 const datetime = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC", calendar);
 
 const explicit = datetime.toString(undefined);

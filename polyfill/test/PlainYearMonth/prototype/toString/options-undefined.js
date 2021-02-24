@@ -3,11 +3,12 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.tostring
+includes: [temporalHelpers.js]
 ---*/
 
-const calendar = {
+const calendar = Object.assign({}, MINIMAL_CALENDAR_OBJECT, {
   toString() { return "custom"; }
-};
+});
 const yearmonth = new Temporal.PlainYearMonth(2000, 5, calendar);
 
 const explicit = yearmonth.toString(undefined);

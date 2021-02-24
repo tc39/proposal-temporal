@@ -60,7 +60,8 @@ export class TimeZone {
   getPlainDateTimeFor(instant, calendar = ES.GetISO8601Calendar()) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
     calendar = ES.ToTemporalCalendar(calendar);
-    return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
+    const calendarRecord = ES.NewCalendarRecord(calendar);
+    return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendarRecord);
   }
   getInstantFor(dateTime, options = undefined) {
     dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));

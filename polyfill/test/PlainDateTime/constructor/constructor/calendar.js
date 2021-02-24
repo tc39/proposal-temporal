@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -13,7 +13,7 @@ const expected = [
 ];
 
 const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789];
-const calendar = {};
+const calendar = MINIMAL_CALENDAR_OBJECT;
 
 Object.defineProperty(Temporal.Calendar, "from", {
   get() {

@@ -3,11 +3,12 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tostring
+includes: [temporalHelpers.js]
 ---*/
 
-const calendar = {
+const calendar = Object.assign({}, MINIMAL_CALENDAR_OBJECT, {
   toString() { return "custom"; }
-};
+});
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0, calendar);
 
 const explicit = datetime.toString(undefined);

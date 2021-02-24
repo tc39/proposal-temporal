@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetime
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -11,7 +11,7 @@ const expected = [];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
-const calendar = function() {};
+const calendar = Object.assign(function () {}, MINIMAL_CALENDAR_OBJECT);
 const timeZone = new Proxy({
   getPlainDateTimeFor() {
     actual.push("call timeZone.getPlainDateTimeFor");

@@ -14,7 +14,7 @@ import {
   ISO_MILLISECOND,
   ISO_MICROSECOND,
   ISO_NANOSECOND,
-  CALENDAR,
+  CALENDAR_RECORD,
   EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
@@ -62,6 +62,8 @@ export class PlainTime {
     isoNanosecond = ES.ToInteger(isoNanosecond);
 
     ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
+    const calendarRecord = ES.NewCalendarRecord(ES.GetISO8601Calendar());
+
     CreateSlots(this);
     SetSlot(this, ISO_HOUR, isoHour);
     SetSlot(this, ISO_MINUTE, isoMinute);
@@ -69,7 +71,7 @@ export class PlainTime {
     SetSlot(this, ISO_MILLISECOND, isoMillisecond);
     SetSlot(this, ISO_MICROSECOND, isoMicrosecond);
     SetSlot(this, ISO_NANOSECOND, isoNanosecond);
-    SetSlot(this, CALENDAR, ES.GetISO8601Calendar());
+    SetSlot(this, CALENDAR_RECORD, calendarRecord);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
@@ -83,7 +85,7 @@ export class PlainTime {
 
   get calendar() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
+    return GetSlot(this, CALENDAR_RECORD).object;
   }
   get hour() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -430,7 +432,7 @@ export class PlainTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
-    const calendar = GetSlot(temporalDate, CALENDAR);
+    const calendarRecord = GetSlot(temporalDate, CALENDAR_RECORD);
 
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);
@@ -440,7 +442,7 @@ export class PlainTime {
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendarRecord);
   }
   toZonedDateTime(item) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -464,7 +466,7 @@ export class PlainTime {
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
-    const calendar = GetSlot(temporalDate, CALENDAR);
+    const calendarRecord = GetSlot(temporalDate, CALENDAR_RECORD);
     const hour = GetSlot(this, ISO_HOUR);
     const minute = GetSlot(this, ISO_MINUTE);
     const second = GetSlot(this, ISO_SECOND);
@@ -483,16 +485,16 @@ export class PlainTime {
       millisecond,
       microsecond,
       nanosecond,
-      calendar
+      calendarRecord
     );
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendarRecord);
   }
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return {
-      calendar: GetSlot(this, CALENDAR),
+      calendar: GetSlot(this, CALENDAR_RECORD).object,
       isoHour: GetSlot(this, ISO_HOUR),
       isoMicrosecond: GetSlot(this, ISO_MICROSECOND),
       isoMillisecond: GetSlot(this, ISO_MILLISECOND),

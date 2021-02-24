@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -13,7 +13,7 @@ const expected = [
 ];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
-const calendar = {};
+const calendar = MINIMAL_CALENDAR_OBJECT;
 const timeZone = new Proxy({
   getOffsetNanosecondsFor(instantArg) {
     actual.push("call timeZone.getOffsetNanosecondsFor");
