@@ -1141,11 +1141,6 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalDate: (item, constructor, options = {}) => {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDate(item)) return item;
-      if (ES.IsTemporalDateTime(item)) return ES.TemporalDateTimeToDate(item);
-      if (ES.IsTemporalZonedDateTime(item)) {
-        const dt = ES.GetTemporalDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
-        return ES.TemporalDateTimeToDate(dt);
-      }
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
