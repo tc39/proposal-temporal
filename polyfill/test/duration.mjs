@@ -941,6 +941,12 @@ describe('Duration', () => {
     it('throws without parameter', () => {
       throws(() => d.round(), TypeError);
     });
+    it('throws with empty object', () => {
+      throws(() => d.round({}), RangeError);
+    });
+    it("succeeds with largestUnit: 'auto'", () => {
+      equal(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
+    });
     it('throws on disallowed or invalid smallestUnit', () => {
       ['era', 'nonsense'].forEach((smallestUnit) => {
         throws(() => d.round({ smallestUnit }), RangeError);
