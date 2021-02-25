@@ -337,7 +337,7 @@
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
@@ -373,7 +373,7 @@
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *"months"*, _disallowedUnits_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).

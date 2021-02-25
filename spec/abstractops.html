@@ -476,7 +476,7 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-tosmallesttemporaldurationunit" aoid="ToSmallestTemporalDurationUnit">
-    <h1>ToSmallestTemporalDurationUnit ( _normalizedOptions_, _fallback_, _disallowedUnits_ )</h1>
+    <h1>ToSmallestTemporalDurationUnit ( _normalizedOptions_, _disallowedUnits_, _fallback_ )</h1>
     <emu-alg>
       1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If the value of _smallestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then

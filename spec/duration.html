@@ -431,7 +431,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, *undefined*, « »).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « », *undefined*).
         1. If _smallestUnit_ is *undefined*, then
           1. Set _smallestUnitPresent_ to *false*.
           1. Set _smallestUnit_ to *"nanoseconds"*.
