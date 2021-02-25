@@ -872,7 +872,9 @@ export class ZonedDateTime {
       ES.ToTemporalOverflow(options); // validate and ignore
       ES.ToTemporalDisambiguation(options);
       ES.ToTemporalOffset(options, 'reject');
-      return new ZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
+      const result = new this(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
+      if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
+      return result;
     }
     return ES.ToTemporalZonedDateTime(item, this, options);
   }
