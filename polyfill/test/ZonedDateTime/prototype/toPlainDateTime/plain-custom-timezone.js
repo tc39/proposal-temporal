@@ -3,21 +3,23 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
 const expected = [
   "get timeZone.getOffsetNanosecondsFor",
+  "get timeZone.getPossibleInstantsFor",
+  "get timeZone.toString",
   "call timeZone.getOffsetNanosecondsFor",
 ];
 
-const timeZone = new Proxy({
+const timeZone = new Proxy(Object.assign({}, MINIMAL_TIME_ZONE_OBJECT, {
   getOffsetNanosecondsFor() {
     actual.push("call timeZone.getOffsetNanosecondsFor");
     return -8735135802468;
   },
-}, {
+}), {
   has(target, property) {
     actual.push(`has timeZone.${property}`);
     return property in target;

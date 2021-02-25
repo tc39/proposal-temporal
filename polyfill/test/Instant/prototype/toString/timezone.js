@@ -3,19 +3,20 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tostring
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
 const expected = [
   "get timeZone.getOffsetNanosecondsFor",
+  "get timeZone.getPossibleInstantsFor",
+  "get timeZone.toString",
   "call timeZone.getOffsetNanosecondsFor",
-  "get timeZone.getOffsetNanosecondsFor",
   "call timeZone.getOffsetNanosecondsFor",
 ];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456Z");
-const timeZone = new Proxy({
+const timeZone = new Proxy(Object.assign({}, MINIMAL_TIME_ZONE_OBJECT, {
   name: "Custom/TimeZone",
 
   toString() {
@@ -36,7 +37,7 @@ const timeZone = new Proxy({
     assert.sameValue(instantArg.epochNanoseconds, instant.epochNanoseconds);
     return -8735135801679;
   },
-}, {
+}), {
   has(target, property) {
     actual.push(`has timeZone.${property}`);
     return property in target;

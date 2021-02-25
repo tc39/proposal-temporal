@@ -10,21 +10,23 @@ const actual = [];
 const expected = [
   "get Temporal.TimeZone.from",
   "call Temporal.TimeZone.from",
+  "get timeZone.getOffsetNanosecondsFor",
+  "get timeZone.getPossibleInstantsFor",
+  "get timeZone.toString",
   "get Temporal.Calendar.from",
   "call Temporal.Calendar.from",
-  "get timeZone.getOffsetNanosecondsFor",
   "call timeZone.getOffsetNanosecondsFor",
 ];
 
 const calendar = MINIMAL_CALENDAR_OBJECT;
 
-const timeZone = new Proxy({
+const timeZone = new Proxy(Object.assign({}, MINIMAL_TIME_ZONE_OBJECT, {
   getOffsetNanosecondsFor(instant) {
     actual.push("call timeZone.getOffsetNanosecondsFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     return 86399_999_999_999;
   },
-}, {
+}), {
   has(target, property) {
     actual.push(`has timeZone.${property}`);
     return property in target;

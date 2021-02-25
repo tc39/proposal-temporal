@@ -42,3 +42,13 @@ export class CalendarRecord {
     this.toString = requireCallable(calendar, 'toString');
   }
 }
+
+export class TimeZoneRecord {
+  constructor(timeZone) {
+    if (Type(timeZone) !== 'Object') throw new TypeError('time zone must be an object');
+    this.object = timeZone;
+    this.getOffsetNanosecondsFor = requireCallable(timeZone, 'getOffsetNanosecondsFor');
+    this.getPossibleInstantsFor = requireCallableOrUndefined(timeZone, 'getPossibleInstantsFor');
+    this.toString = requireCallable(timeZone, 'toString');
+  }
+}

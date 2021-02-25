@@ -3,7 +3,7 @@
 /*---
 description: |
     This defines helper objects and functions for testing Temporal.
-defines: [MINIMAL_CALENDAR_OBJECT]
+defines: [MINIMAL_CALENDAR_OBJECT, MINIMAL_TIME_ZONE_OBJECT]
 ---*/
 
 /* eslint no-unused-vars: "off", @typescript-eslint/no-unused-vars: "off" */
@@ -28,5 +28,11 @@ var MINIMAL_CALENDAR_OBJECT = {
   daysInYear() { return undefined; },
   monthsInYear() { return undefined; },
   inLeapYear() { return undefined; },
+  toString() { throw new Error('not implemented'); },
+};
+
+var MINIMAL_TIME_ZONE_OBJECT = {
+  getOffsetNanosecondsFor() { throw new Error('not implemented'); },
+  getPossibleInstantsFor() { throw new Error('not implemented'); },
   toString() { throw new Error('not implemented'); },
 };

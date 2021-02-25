@@ -19,17 +19,19 @@ function instant() {
 }
 function plainDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const timeZoneRecord = ES.NewTimeZoneRecord(timeZone);
   const calendar = ES.ToTemporalCalendar(calendarLike);
   const calendarRecord = ES.NewCalendarRecord(calendar);
   const inst = instant();
-  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, inst, calendarRecord);
+  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZoneRecord, inst, calendarRecord);
 }
 function plainDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const timeZoneRecord = ES.NewTimeZoneRecord(timeZone);
   const calendar = ES.GetISO8601Calendar();
   const calendarRecord = ES.NewCalendarRecord(calendar);
   const inst = instant();
-  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, inst, calendarRecord);
+  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZoneRecord, inst, calendarRecord);
 }
 function zonedDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);

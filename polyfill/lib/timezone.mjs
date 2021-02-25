@@ -55,19 +55,22 @@ export class TimeZone {
   }
   getOffsetStringFor(instant) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
-    return ES.BuiltinTimeZoneGetOffsetStringFor(this, instant);
+    const timeZoneRecord = ES.NewTimeZoneRecord(this);
+    return ES.BuiltinTimeZoneGetOffsetStringFor(timeZoneRecord, instant);
   }
   getPlainDateTimeFor(instant, calendar = ES.GetISO8601Calendar()) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
     calendar = ES.ToTemporalCalendar(calendar);
+    const timeZoneRecord = ES.NewTimeZoneRecord(this);
     const calendarRecord = ES.NewCalendarRecord(calendar);
-    return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendarRecord);
+    return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZoneRecord, instant, calendarRecord);
   }
   getInstantFor(dateTime, options = undefined) {
     dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    return ES.BuiltinTimeZoneGetInstantFor(this, dateTime, disambiguation);
+    const timeZoneRecord = ES.NewTimeZoneRecord(this);
+    return ES.BuiltinTimeZoneGetInstantFor(timeZoneRecord, dateTime, disambiguation);
   }
   getPossibleInstantsFor(dateTime) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
+includes: [temporalHelpers.js]
 ---*/
 
 const calendar = Temporal.Calendar.from("iso8601");
@@ -13,22 +14,19 @@ const invalidValues = [
   true,
   "2020-01-01T12:45:36",
   Symbol(),
-  2020,
   2n,
   {},
   Temporal.PlainDateTime,
   Temporal.PlainDateTime.prototype,
 ];
 
-for (const dateTime of invalidValues) {
-  const timeZone = {
-    getPlainDateTimeFor(instantArg, calendarArg) {
+for (const offset of invalidValues) {
+  const timeZone = Object.assign({}, MINIMAL_TIME_ZONE_OBJECT, {
+    getOffsetNanosecondsFor(instantArg) {
       assert.sameValue(instantArg instanceof Temporal.Instant, true, "Instant");
-      assert.sameValue(calendarArg instanceof Temporal.Calendar, true, "Calendar");
-      assert.sameValue(calendarArg, calendar);
-      return dateTime;
+      return offset;
     },
-  };
+  });
 
   const zdt = new Temporal.ZonedDateTime(160583136123456789n, timeZone, calendar);
   assert.throws(TypeError, () => zdt.toPlainDateTime(timeZone, calendar));

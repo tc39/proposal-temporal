@@ -355,18 +355,12 @@ export class PlainDate {
   toZonedDateTime(item) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
-    let timeZone, temporalTime;
+    let timeZoneRecord, temporalTime;
     if (ES.Type(item) === 'Object') {
-      let timeZoneLike = item.timeZone;
-      if (timeZoneLike === undefined) {
-        timeZone = ES.ToTemporalTimeZone(item);
-      } else {
-        timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-        temporalTime = item.plainTime;
-      }
-    } else {
-      timeZone = ES.ToTemporalTimeZone(item);
+      timeZoneRecord = ES.GetOrCreateTimeZoneRecord(item);
+      if (timeZoneRecord) temporalTime = item.plainTime;
     }
+    if (!timeZoneRecord) timeZoneRecord = ES.NewTimeZoneRecord(ES.ToTemporalTimeZone(item));
 
     const year = GetSlot(this, ISO_YEAR);
     const month = GetSlot(this, ISO_MONTH);
@@ -402,9 +396,9 @@ export class PlainDate {
       nanosecond,
       calendarRecord
     );
-    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZoneRecord, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendarRecord);
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRecord, calendarRecord);
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

@@ -13,7 +13,7 @@ import {
   ISO_MICROSECOND,
   ISO_NANOSECOND,
   CALENDAR_RECORD,
-  TIME_ZONE
+  TIME_ZONE_RECORD
 } from './slots.mjs';
 import { TimeZone } from './timezone.mjs';
 
@@ -47,7 +47,7 @@ export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().l
   this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
 
   this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
-  this[TZ_RESOLVED] = new TimeZone(this.resolvedOptions().timeZone);
+  this[TZ_RESOLVED] = ES.NewTimeZoneRecord(new TimeZone(this.resolvedOptions().timeZone));
   this[CAL_ID] = this.resolvedOptions().calendar;
   this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options));
   this[YM] = new IntlDateTimeFormat(locale, yearMonthAmend(options));
@@ -368,8 +368,8 @@ function extractOverrides(temporalObj, main) {
       );
     }
 
-    let timeZone = GetSlot(temporalObj, TIME_ZONE);
-    const objTimeZone = ES.ToString(timeZone);
+    let timeZoneRecord = GetSlot(temporalObj, TIME_ZONE_RECORD);
+    const objTimeZone = ES.TimeZoneToString(timeZoneRecord);
     if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
       throw new RangeError(`timeZone option ${main[TZ_GIVEN]} doesn't match actual time zone ${objTimeZone}`);
     }

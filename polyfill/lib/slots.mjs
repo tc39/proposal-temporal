@@ -22,7 +22,7 @@ export const MONTH_DAY_BRAND = 'slot-month-day-brand';
 
 // ZonedDateTime
 export const INSTANT = 'slot-cached-instant';
-export const TIME_ZONE = 'slot-time-zone';
+export const TIME_ZONE_RECORD = 'slot-time-zone-record';
 
 // Duration
 export const YEARS = 'slot-years';

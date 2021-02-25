@@ -9,16 +9,18 @@ includes: [compareArray.js, temporalHelpers.js]
 const actual = [];
 const expected = [
   "get timeZone.getOffsetNanosecondsFor",
+  "get timeZone.getPossibleInstantsFor",
+  "get timeZone.toString",
   "call timeZone.getOffsetNanosecondsFor",
 ];
 const calendar = Object.assign(function() {}, MINIMAL_CALENDAR_OBJECT);
-const timeZone = new Proxy({
+const timeZone = new Proxy(Object.assign({}, MINIMAL_TIME_ZONE_OBJECT, {
   getOffsetNanosecondsFor(instant) {
     actual.push("call timeZone.getOffsetNanosecondsFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
     return -Number(instant.epochNanoseconds % 86400_000_000_000n);
   },
-}, {
+}), {
   has(target, property) {
     actual.push(`has timeZone.${property}`);
     return property in target;

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 features: [BigInt]
 ---*/
 
@@ -13,7 +13,7 @@ const expected = [
 ];
 let actual;
 const argument = 957270896987654321n;
-const timeZone = {};
+const timeZone = MINIMAL_TIME_ZONE_OBJECT;
 
 Object.defineProperty(Temporal.TimeZone, "from", {
   get() {

@@ -728,11 +728,12 @@ export class PlainDateTime {
   toZonedDateTime(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const timeZoneRecord = ES.NewTimeZoneRecord(timeZone);
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, this, disambiguation);
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZoneRecord, this, disambiguation);
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR_RECORD));
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRecord, GetSlot(this, CALENDAR_RECORD));
   }
   toPlainDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

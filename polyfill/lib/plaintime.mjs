@@ -461,7 +461,7 @@ export class PlainTime {
     if (timeZoneLike === undefined) {
       throw new TypeError('missing timeZone property');
     }
-    const timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+    const timeZoneRecord = ES.NewTimeZoneRecord(ES.ToTemporalTimeZone(timeZoneLike));
 
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
@@ -487,9 +487,9 @@ export class PlainTime {
       nanosecond,
       calendarRecord
     );
-    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZoneRecord, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendarRecord);
+    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRecord, calendarRecord);
   }
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

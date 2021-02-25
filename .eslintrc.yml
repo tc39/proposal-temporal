@@ -101,6 +101,7 @@ overrides:
       assert: readonly
       verifyProperty: readonly
       MINIMAL_CALENDAR_OBJECT: readonly
+      MINIMAL_TIME_ZONE_OBJECT: readonly
     # test262 code complies to a different coding style
     extends: 'eslint:recommended'
     rules:
