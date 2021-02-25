@@ -1667,6 +1667,18 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return result;
   },
+  GetPossibleInstantsFor: (timeZone, dateTime) => {
+    let getPossibleInstantsFor = timeZone.getPossibleInstantsFor;
+    const possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
+    const result = ES.CreateListFromArrayLike(possibleInstants, ['Object']);
+    const numInstants = result.length;
+    for (let ix = 0; ix < numInstants; ix++) {
+      if (!ES.IsTemporalInstant(result[ix])) {
+        throw new TypeError('bad return from getPossibleInstantsFor');
+      }
+    }
+    return result;
+  },
   ISOYearString: (year) => {
     let yearString;
     if (year < 1000 || year > 9999) {
