@@ -1660,7 +1660,11 @@ export const ES = ObjectAssign({}, ES2020, {
     if (getInstantFor === undefined) {
       getInstantFor = GetIntrinsic('%Temporal.TimeZone.prototype.getInstantFor%');
     }
-    return ES.Call(getInstantFor, timeZone, [dateTime, { disambiguation }]);
+    const result = ES.Call(getInstantFor, timeZone, [dateTime, { disambiguation }]);
+    if (!ES.IsTemporalInstant(result)) {
+      throw new TypeError('Unexpected result from getInstantFor');
+    }
+    return result;
   },
   ISOYearString: (year) => {
     let yearString;
