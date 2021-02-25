@@ -676,7 +676,7 @@
       <h1>GetPossibleInstantsFor ( _timeZone_, _dateTime_ )</h1>
       <emu-alg>
         1. Let _possibleInstants_ be ? Invoke(_timeZone_, *"getPossibleInstantsFor"*, « _dateTime_ »).
-        1. Let _list_ be ? CreateListFromArrayLike(_possibleInstants_).
+        1. Let _list_ be ? CreateListFromArrayLike(_possibleInstants_, « Object »).
         1. For each element _instant_ in _list_ in List order, do
           1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Return _list_.

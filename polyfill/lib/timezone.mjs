@@ -85,28 +85,18 @@ export class TimeZone {
     const disambiguation = ES.ToTemporalDisambiguation(options);
 
     const Instant = GetIntrinsic('%Temporal.Instant%');
-    const possibleInstants = this.getPossibleInstantsFor(dateTime);
-    if (!Array.isArray(possibleInstants)) {
-      throw new TypeError('bad return from getPossibleInstantsFor');
-    }
+    const possibleInstants = ES.GetPossibleInstantsFor(this, dateTime);
     const numInstants = possibleInstants.length;
 
-    function validateInstant(instant) {
-      if (!ES.IsTemporalInstant(instant)) {
-        throw new TypeError('bad return from getPossibleInstantsFor');
-      }
-      return instant;
-    }
-
-    if (numInstants === 1) return validateInstant(possibleInstants[0]);
+    if (numInstants === 1) return possibleInstants[0];
     if (numInstants) {
       switch (disambiguation) {
         case 'compatible':
         // fall through because 'compatible' means 'earlier' for "fall back" transitions
         case 'earlier':
-          return validateInstant(possibleInstants[0]);
+          return possibleInstants[0];
         case 'later':
-          return validateInstant(possibleInstants[numInstants - 1]);
+          return possibleInstants[numInstants - 1];
         case 'reject': {
           throw new RangeError('multiple instants found');
         }
