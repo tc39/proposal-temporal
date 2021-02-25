@@ -3715,20 +3715,16 @@ export const ES = ObjectAssign({}, ES2020, {
         relativeTo = yearsLater;
         days += monthsWeeksInDays;
 
-        // Years may be different lengths of days depending on the calendar, so
-        // we need to convert days to years in a loop. We get the number of days
-        // in the one-year period after (or preceding, depending on the sign of
-        // the duration) the relativeTo date, and convert that number of days to
-        // one year, repeating until the number of days is less than a year.
-        const sign = MathSign(days);
+        const daysLater = ES.CalendarDateAdd(calendar, relativeTo, { days }, {}, TemporalDate);
+        const yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, daysLater, { largestUnit: 'years' }).years;
+        years += yearsPassed;
+        const oldRelativeTo = relativeTo;
+        relativeTo = ES.CalendarDateAdd(calendar, relativeTo, { years: yearsPassed }, {}, TemporalDate);
+        const daysPassed = ES.DaysUntil(oldRelativeTo, relativeTo);
+        days -= daysPassed;
         const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
-        let oneYearDays;
-        ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
-        while (MathAbs(days) >= MathAbs(oneYearDays)) {
-          years += sign;
-          days -= oneYearDays;
-          ({ relativeTo, days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear));
-        }
+        let { days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+
         // Note that `nanoseconds` below (here and in similar code for months,
         // weeks, and days further below) isn't actually nanoseconds for the
         // full date range.  Instead, it's a BigInt representation of total
