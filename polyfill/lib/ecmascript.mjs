@@ -1432,7 +1432,8 @@ export const ES = ObjectAssign({}, ES2020, {
     // zone and date/time.
     if (offsetOpt === 'reject') {
       const offsetStr = ES.FormatTimeZoneOffsetString(offsetNs);
-      throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZone}`);
+      const timeZoneString = ES.IsTemporalTimeZone(timeZone) ? GetSlot(timeZone, TIMEZONE_ID) : 'time zone';
+      throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZoneString}`);
     }
     // fall through: offsetOpt === 'prefer', but the offset doesn't match
     // so fall back to use the time zone instead.
