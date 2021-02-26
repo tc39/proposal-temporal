@@ -1733,8 +1733,11 @@
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+            1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+            1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+            1. Let _plainDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _zonedDateTime_ »).
+            1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _plainDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToString(_result_).
             1. Return _result_.
@@ -1750,8 +1753,11 @@
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+            1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+            1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+            1. Let _plainDateTime_ be ? GetTemporalDateTimeFor(_timeZone_, _instant_).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _result_ ? Invoke(_calendar_, *"eraYear"*, « _zonedDateTime_ »).
+            1. Let _result_ ? Invoke(_calendar_, *"eraYear"*, « _plainDateTime_ »).
             1. If _result_ is not *undefined*, then
               1. Set _result_ to ? ToIntegerOrInfinity(_result_).
             1. Return _result_.
