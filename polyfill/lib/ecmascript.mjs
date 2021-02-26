@@ -425,18 +425,6 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return { year, month };
   },
-  RegulateMonthDay: (month, day, overflow) => {
-    const referenceISOYear = 1972;
-    switch (overflow) {
-      case 'reject':
-        ES.RejectDate(referenceISOYear, month, day);
-        break;
-      case 'constrain':
-        ({ month, day } = ES.ConstrainDate(referenceISOYear, month, day));
-        break;
-    }
-    return { month, day };
-  },
   DurationHandleFractions: (
     fHours,
     minutes,
