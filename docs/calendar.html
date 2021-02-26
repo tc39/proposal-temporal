@@ -281,10 +281,10 @@ The class must override <code>toString()</code> to return its own identifier.
 Overriding all the other members is optional.
 If you don&#39;t override the optional members, then they will behave as in the base calendar.</p>
 <p>The other, more difficult, way to create a custom calendar is to create a plain object implementing the <code>Temporal.Calendar</code> protocol, without subclassing.
-The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>id</code>, <code>fields()</code>, and <code>toJSON()</code>.
+The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>id</code>, <code>fields()</code>, <code>mergeFields()</code>, and <code>toJSON()</code>.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in <code>Temporal.Calendar</code> objects.
-To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code> and <code>toJSON()</code> methods as well.
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>id</code> property and the <code>fields()</code>, <code>mergeFields()</code>, and <code>toJSON()</code> methods as well.
 Your object must not have a <code>calendar</code> property, so that it can be distinguished in <code>Temporal.Calendar.from()</code> from other Temporal objects that have a calendar.</p>
 <p>The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in <a href="https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier">Unicode Technical Standard 35</a>.</p>
 <p>Custom calendars are responsible for interpreting and validating all inputs, including options.
