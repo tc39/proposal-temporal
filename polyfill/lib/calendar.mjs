@@ -199,10 +199,12 @@ impl['iso8601'] = {
     if (fields.month !== undefined && fields.year === undefined && fields.monthCode === undefined) {
       throw new TypeError('either year or monthCode required with month');
     }
+    const useYear = fields.monthCode === undefined;
+    const referenceISOYear = 1972;
     fields = resolveNonLunisolarMonth(fields);
-    let { month, day } = fields;
-    ({ month, day } = ES.RegulateMonthDay(month, day, overflow));
-    return new constructor(month, day, calendar, /* referenceISOYear */ 1972);
+    let { month, day, year } = fields;
+    ({ month, day } = ES.RegulateDate(useYear ? year : referenceISOYear, month, day, overflow));
+    return new constructor(month, day, calendar, referenceISOYear);
   },
   fields(fields) {
     return fields;
