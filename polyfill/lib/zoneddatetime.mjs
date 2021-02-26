@@ -69,35 +69,19 @@ export class ZonedDateTime {
   }
   get year() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).year(dateTime(this));
-    if (result === undefined) {
-      throw new RangeError('calendar year result must be an integer');
-    }
-    return ES.ToInteger(result);
+    return ES.CalendarYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get month() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).month(dateTime(this));
-    if (result === undefined) {
-      throw new RangeError('calendar month result must be a positive integer');
-    }
-    return ES.ToPositiveInteger(result);
+    return ES.CalendarMonth(GetSlot(this, CALENDAR), dateTime(this));
   }
   get monthCode() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).monthCode(dateTime(this));
-    if (result === undefined) {
-      throw new RangeError('calendar monthCode result must be a string');
-    }
-    return ES.ToString(result);
+    return ES.CalendarMonthCode(GetSlot(this, CALENDAR), dateTime(this));
   }
   get day() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).day(dateTime(this));
-    if (result === undefined) {
-      throw new RangeError('calendar day result must be a positive integer');
-    }
-    return ES.ToPositiveInteger(result);
+    return ES.CalendarDay(GetSlot(this, CALENDAR), dateTime(this));
   }
   get hour() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -125,19 +109,11 @@ export class ZonedDateTime {
   }
   get era() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    let result = GetSlot(this, CALENDAR).era(dateTime(this));
-    if (result !== undefined) {
-      result = ES.ToString(result);
-    }
-    return result;
+    return ES.CalendarEra(GetSlot(this, CALENDAR), dateTime(this));
   }
   get eraYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    let result = GetSlot(this, CALENDAR).eraYear(dateTime(this));
-    if (result !== undefined) {
-      result = ES.ToInteger(result);
-    }
-    return result;
+    return ES.CalendarEraYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get epochSeconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -160,15 +136,15 @@ export class ZonedDateTime {
   }
   get dayOfWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).dayOfWeek(dateTime(this));
+    return ES.CalendarDayOfWeek(GetSlot(this, CALENDAR), dateTime(this));
   }
   get dayOfYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).dayOfYear(dateTime(this));
+    return ES.CalendarDayOfYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get weekOfYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).weekOfYear(dateTime(this));
+    return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get hoursInDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -187,23 +163,23 @@ export class ZonedDateTime {
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInWeek(dateTime(this));
+    return ES.CalendarDaysInWeek(GetSlot(this, CALENDAR), dateTime(this));
   }
   get daysInMonth() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInMonth(dateTime(this));
+    return ES.CalendarDaysInMonth(GetSlot(this, CALENDAR), dateTime(this));
   }
   get daysInYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInYear(dateTime(this));
+    return ES.CalendarDaysInYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get monthsInYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).monthsInYear(dateTime(this));
+    return ES.CalendarMonthsInYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get inLeapYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).inLeapYear(dateTime(this));
+    return ES.CalendarInLeapYear(GetSlot(this, CALENDAR), dateTime(this));
   }
   get offset() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

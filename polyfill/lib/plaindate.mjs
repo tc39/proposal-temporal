@@ -67,83 +67,59 @@ export class PlainDate {
   }
   get era() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    let result = GetSlot(this, CALENDAR).era(this);
-    if (result !== undefined) {
-      result = ES.ToString(result);
-    }
-    return result;
+    return ES.CalendarEra(GetSlot(this, CALENDAR), this);
   }
   get eraYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    let result = GetSlot(this, CALENDAR).eraYear(this);
-    if (result !== undefined) {
-      result = ES.ToInteger(result);
-    }
-    return result;
+    return ES.CalendarEraYear(GetSlot(this, CALENDAR), this);
   }
   get year() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).year(this);
-    if (result === undefined) {
-      throw new RangeError('calendar year result must be an integer');
-    }
-    return ES.ToInteger(result);
+    return ES.CalendarYear(GetSlot(this, CALENDAR), this);
   }
   get month() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).month(this);
-    if (result === undefined) {
-      throw new RangeError('calendar month result must be a positive integer');
-    }
-    return ES.ToPositiveInteger(result);
+    return ES.CalendarMonth(GetSlot(this, CALENDAR), this);
   }
   get monthCode() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    let result = GetSlot(this, CALENDAR).monthCode(this);
-    if (result === undefined) {
-      throw new RangeError('calendar monthCode result must be a string');
-    }
-    return ES.ToString(result);
+    return ES.CalendarMonthCode(GetSlot(this, CALENDAR), this);
   }
   get day() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).day(this);
-    if (result === undefined) {
-      throw new RangeError('calendar day result must be a positive integer');
-    }
-    return ES.ToPositiveInteger(result);
+    return ES.CalendarDay(GetSlot(this, CALENDAR), this);
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).dayOfWeek(this);
+    return ES.CalendarDayOfWeek(GetSlot(this, CALENDAR), this);
   }
   get dayOfYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).dayOfYear(this);
+    return ES.CalendarDayOfYear(GetSlot(this, CALENDAR), this);
   }
   get weekOfYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).weekOfYear(this);
+    return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), this);
   }
   get daysInWeek() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInWeek(this);
+    return ES.CalendarDaysInWeek(GetSlot(this, CALENDAR), this);
   }
   get daysInMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInMonth(this);
+    return ES.CalendarDaysInMonth(GetSlot(this, CALENDAR), this);
   }
   get daysInYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).daysInYear(this);
+    return ES.CalendarDaysInYear(GetSlot(this, CALENDAR), this);
   }
   get monthsInYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).monthsInYear(this);
+    return ES.CalendarMonthsInYear(GetSlot(this, CALENDAR), this);
   }
   get inLeapYear() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR).inLeapYear(this);
+    return ES.CalendarInLeapYear(GetSlot(this, CALENDAR), this);
   }
   with(temporalDateLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -190,9 +166,7 @@ export class PlainDate {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     const Construct = ES.SpeciesConstructor(this, PlainDate);
-    const result = GetSlot(this, CALENDAR).dateAdd(this, duration, options, Construct);
-    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, Construct);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -205,9 +179,7 @@ export class PlainDate {
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years: -years, months: -months, weeks: -weeks, days: -days };
     const Construct = ES.SpeciesConstructor(this, PlainDate);
-    const result = GetSlot(this, CALENDAR).dateAdd(this, duration, options, Construct);
-    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, Construct);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -229,7 +201,7 @@ export class PlainDate {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const result = calendar.dateUntil(this, other, options);
+    const result = ES.CalendarDateUntil(calendar, this, other, options);
     if (smallestUnit === 'days' && roundingIncrement === 1) return result;
 
     let { years, months, weeks, days } = result;
@@ -286,7 +258,7 @@ export class PlainDate {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    let { years, months, weeks, days } = calendar.dateUntil(this, other, options);
+    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, this, other, options);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     if (smallestUnit === 'days' && roundingIncrement === 1) {
       return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
