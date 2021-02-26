@@ -4154,6 +4154,12 @@
       if (plural.has(retval)) return plural.get(retval);
       return retval;
     },
+    ToLargestTemporalDurationUnit: function ToLargestTemporalDurationUnit(options) {
+      var plural = new Map([['year', 'years'], ['month', 'months'], ['day', 'days'], ['hour', 'hours'], ['minute', 'minutes'], ['second', 'seconds'], ['millisecond', 'milliseconds'], ['microsecond', 'microseconds'], ['nanosecond', 'nanoseconds']]);
+      var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(plural.keys()), _toConsumableArray(plural.values()), ['weeks']));
+      if (plural.has(retval)) return plural.get(retval);
+      return retval;
+    },
     ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options) {
       var disallowedStrings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
       var singular = new Map([['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']].filter(function (_ref4) {
@@ -13080,13 +13086,15 @@
         }
 
         defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-        var largestUnit = ES.ToLargestTemporalUnit(options, undefined);
+        var largestUnit = ES.ToLargestTemporalDurationUnit(options);
         var largestUnitPresent = true;
 
         if (!largestUnit) {
           largestUnitPresent = false;
           largestUnit = defaultLargestUnit;
         }
+
+        if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
 
         if (!smallestUnitPresent && !largestUnitPresent) {
           throw new RangeError('at least one of smallestUnit or largestUnit is required');
