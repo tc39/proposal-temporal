@@ -3795,27 +3795,6 @@
         month: month
       };
     },
-    RegulateMonthDay: function RegulateMonthDay(month, day, overflow) {
-      var referenceISOYear = 1972;
-
-      switch (overflow) {
-        case 'reject':
-          ES.RejectDate(referenceISOYear, month, day);
-          break;
-
-        case 'constrain':
-          var _ES$ConstrainDate3 = ES.ConstrainDate(referenceISOYear, month, day);
-
-          month = _ES$ConstrainDate3.month;
-          day = _ES$ConstrainDate3.day;
-          break;
-      }
-
-      return {
-        month: month,
-        day: day
-      };
-    },
     DurationHandleFractions: function DurationHandleFractions(fHours, minutes, fMinutes, seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds) {
       if (fHours !== 0) {
         [minutes, fMinutes, seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(function (val) {
@@ -6387,11 +6366,11 @@
       };
     },
     ConstrainDateTime: function ConstrainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-      var _ES$ConstrainDate4 = ES.ConstrainDate(year, month, day);
+      var _ES$ConstrainDate3 = ES.ConstrainDate(year, month, day);
 
-      year = _ES$ConstrainDate4.year;
-      month = _ES$ConstrainDate4.month;
-      day = _ES$ConstrainDate4.day;
+      year = _ES$ConstrainDate3.year;
+      month = _ES$ConstrainDate3.month;
+      day = _ES$ConstrainDate3.day;
 
       var _ES$ConstrainTime2 = ES.ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 
@@ -9136,18 +9115,19 @@
         throw new TypeError('either year or monthCode required with month');
       }
 
+      var useYear = fields.monthCode === undefined;
+      var referenceISOYear = 1972;
       fields = resolveNonLunisolarMonth(fields);
       var _fields4 = fields,
           month = _fields4.month,
-          day = _fields4.day;
+          day = _fields4.day,
+          year = _fields4.year;
 
-      var _ES$RegulateMonthDay = ES.RegulateMonthDay(month, day, overflow);
+      var _ES$RegulateDate2 = ES.RegulateDate(useYear ? year : referenceISOYear, month, day, overflow);
 
-      month = _ES$RegulateMonthDay.month;
-      day = _ES$RegulateMonthDay.day;
-      return new constructor(month, day, calendar,
-      /* referenceISOYear */
-      1972);
+      month = _ES$RegulateDate2.month;
+      day = _ES$RegulateDate2.day;
+      return new constructor(month, day, calendar, referenceISOYear);
     },
     fields: function fields(_fields5) {
       return _fields5;
