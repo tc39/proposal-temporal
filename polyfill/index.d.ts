@@ -190,7 +190,7 @@ export namespace Temporal {
      * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
      * `'nanoseconds'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
-     * `hours` is not accepted by `Date.prototype.since()`.
+     * `hours` is not accepted by `Temporal.PlainDate.prototype.since()`.
      *
      * The default is always `'auto'`, though the meaning of this depends on the
      * type being used.
@@ -695,7 +695,7 @@ export namespace Temporal {
   /**
    * A `Temporal.Calendar` is a representation of a calendar system. It includes
    * information about how many days are in each year, how many months are in
-   * each year, how many days are in each month, and how to do arithmetic in\
+   * each year, how many days are in each month, and how to do arithmetic in
    * that calendar system.
    *
    * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
