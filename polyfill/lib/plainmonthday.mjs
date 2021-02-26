@@ -57,19 +57,11 @@ export class PlainMonthDay {
 
   get monthCode() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).monthCode(this);
-    if (result === undefined) {
-      throw new RangeError('calendar monthCode result must be a string');
-    }
-    return ES.ToString(result);
+    return ES.CalendarMonthCode(GetSlot(this, CALENDAR), this);
   }
   get day() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    const result = GetSlot(this, CALENDAR).day(this);
-    if (result === undefined) {
-      throw new RangeError('calendar day result must be a positive integer');
-    }
-    return ES.ToPositiveInteger(result);
+    return ES.CalendarDay(GetSlot(this, CALENDAR), this);
   }
   get calendar() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
