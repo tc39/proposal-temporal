@@ -55,88 +55,18 @@ export class TimeZone {
   }
   getOffsetStringFor(instant) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
-    const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
-    return ES.FormatTimeZoneOffsetString(offsetNs);
+    return ES.BuiltinTimeZoneGetOffsetStringFor(this, instant);
   }
   getPlainDateTimeFor(instant, calendar = ES.GetISO8601Calendar()) {
     instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
     calendar = ES.ToTemporalCalendar(calendar);
-
-    const ns = GetSlot(instant, EPOCHNANOSECONDS);
-    const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
-    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(ns);
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceISODateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond + offsetNs
-    ));
-    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
   }
   getInstantFor(dateTime, options = undefined) {
     dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-
-    const Instant = GetIntrinsic('%Temporal.Instant%');
-    const possibleInstants = ES.GetPossibleInstantsFor(this, dateTime);
-    const numInstants = possibleInstants.length;
-
-    if (numInstants === 1) return possibleInstants[0];
-    if (numInstants) {
-      switch (disambiguation) {
-        case 'compatible':
-        // fall through because 'compatible' means 'earlier' for "fall back" transitions
-        case 'earlier':
-          return possibleInstants[0];
-        case 'later':
-          return possibleInstants[numInstants - 1];
-        case 'reject': {
-          throw new RangeError('multiple instants found');
-        }
-      }
-    }
-
-    const utcns = ES.GetEpochFromISOParts(
-      GetSlot(dateTime, ISO_YEAR),
-      GetSlot(dateTime, ISO_MONTH),
-      GetSlot(dateTime, ISO_DAY),
-      GetSlot(dateTime, ISO_HOUR),
-      GetSlot(dateTime, ISO_MINUTE),
-      GetSlot(dateTime, ISO_SECOND),
-      GetSlot(dateTime, ISO_MILLISECOND),
-      GetSlot(dateTime, ISO_MICROSECOND),
-      GetSlot(dateTime, ISO_NANOSECOND)
-    );
-    if (utcns === null) throw new RangeError('DateTime outside of supported range');
-    const dayBefore = new Instant(utcns.minus(86400e9));
-    const dayAfter = new Instant(utcns.plus(86400e9));
-    const offsetBefore = this.getOffsetNanosecondsFor(dayBefore);
-    const offsetAfter = this.getOffsetNanosecondsFor(dayAfter);
-    const nanoseconds = offsetAfter - offsetBefore;
-    const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
-    switch (disambiguation) {
-      case 'earlier': {
-        const earlier = dateTime.subtract(diff);
-        return this.getPossibleInstantsFor(earlier)[0];
-      }
-      case 'compatible':
-      // fall through because 'compatible' means 'later' for "spring forward" transitions
-      case 'later': {
-        const later = dateTime.add(diff);
-        const possible = this.getPossibleInstantsFor(later);
-        return possible[possible.length - 1];
-      }
-      case 'reject': {
-        throw new RangeError('no such instant found');
-      }
-    }
+    return ES.BuiltinTimeZoneGetInstantFor(this, dateTime, disambiguation);
   }
   getPossibleInstantsFor(dateTime) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -227,7 +157,4 @@ export class TimeZone {
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
 DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
-DefineIntrinsic('Temporal.TimeZone.prototype.getPlainDateTimeFor', TimeZone.prototype.getPlainDateTimeFor);
-DefineIntrinsic('Temporal.TimeZone.prototype.getInstantFor', TimeZone.prototype.getInstantFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
-DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetStringFor', TimeZone.prototype.getOffsetStringFor);

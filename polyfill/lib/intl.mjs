@@ -269,7 +269,7 @@ function extractOverrides(temporalObj, main) {
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
     return {
-      instant: main[TZ_RESOLVED].getInstantFor(datetime),
+      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: main[TIME]
     };
   }
@@ -286,7 +286,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: main[TZ_RESOLVED].getInstantFor(datetime),
+      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: main[YM]
     };
   }
@@ -303,7 +303,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: main[TZ_RESOLVED].getInstantFor(datetime),
+      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: main[MD]
     };
   }
@@ -318,7 +318,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
-      instant: main[TZ_RESOLVED].getInstantFor(datetime),
+      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: main[DATE]
     };
   }
@@ -355,7 +355,7 @@ function extractOverrides(temporalObj, main) {
       );
     }
     return {
-      instant: main[TZ_RESOLVED].getInstantFor(datetime),
+      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: main[DATETIME]
     };
   }

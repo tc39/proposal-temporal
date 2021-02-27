@@ -1397,7 +1397,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (offsetNs === null || offsetOpt === 'ignore') {
       // Simple case: ISO string without a TZ offset (or caller wants to ignore
       // the offset), so just convert DateTime to Instant in the given time zone
-      const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+      const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, disambiguation);
       return GetSlot(instant, EPOCHNANOSECONDS);
     }
 
@@ -1437,7 +1437,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     // fall through: offsetOpt === 'prefer', but the offset doesn't match
     // so fall back to use the time zone instead.
-    const instant = ES.GetTemporalInstantFor(timeZone, dt, disambiguation);
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, disambiguation);
     return GetSlot(instant, EPOCHNANOSECONDS);
   },
   ToTemporalZonedDateTime: (item, constructor, options = {}) => {
@@ -1733,34 +1733,82 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return offsetNs;
   },
-  GetOffsetStringFor: (timeZone, instant) => {
-    let getOffsetStringFor = ES.GetMethod(timeZone, 'getOffsetStringFor');
-    if (getOffsetStringFor === undefined) {
-      getOffsetStringFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetStringFor%');
-    }
-    return ES.ToString(ES.Call(getOffsetStringFor, timeZone, [instant]));
+  BuiltinTimeZoneGetOffsetStringFor: (timeZone, instant) => {
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, instant);
+    return ES.FormatTimeZoneOffsetString(offsetNs);
   },
-  GetTemporalDateTimeFor: (timeZone, instant, calendar) => {
-    let getPlainDateTimeFor = ES.GetMethod(timeZone, 'getPlainDateTimeFor');
-    if (getPlainDateTimeFor === undefined) {
-      getPlainDateTimeFor = GetIntrinsic('%Temporal.TimeZone.prototype.getPlainDateTimeFor%');
-    }
-    const dateTime = ES.Call(getPlainDateTimeFor, timeZone, [instant, calendar]);
-    if (!ES.IsTemporalDateTime(dateTime)) {
-      throw new TypeError('Unexpected result from getPlainDateTimeFor');
-    }
-    return dateTime;
+  BuiltinTimeZoneGetPlainDateTimeFor: (timeZone, instant, calendar) => {
+    const ns = GetSlot(instant, EPOCHNANOSECONDS);
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, instant);
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(ns);
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceISODateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond + offsetNs
+    ));
+    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
   },
-  GetTemporalInstantFor: (timeZone, dateTime, disambiguation) => {
-    let getInstantFor = ES.GetMethod(timeZone, 'getInstantFor');
-    if (getInstantFor === undefined) {
-      getInstantFor = GetIntrinsic('%Temporal.TimeZone.prototype.getInstantFor%');
+  BuiltinTimeZoneGetInstantFor: (timeZone, dateTime, disambiguation) => {
+    const Instant = GetIntrinsic('%Temporal.Instant%');
+    const possibleInstants = ES.GetPossibleInstantsFor(timeZone, dateTime);
+    const numInstants = possibleInstants.length;
+
+    if (numInstants === 1) return possibleInstants[0];
+    if (numInstants) {
+      switch (disambiguation) {
+        case 'compatible':
+        // fall through because 'compatible' means 'earlier' for "fall back" transitions
+        case 'earlier':
+          return possibleInstants[0];
+        case 'later':
+          return possibleInstants[numInstants - 1];
+        case 'reject': {
+          throw new RangeError('multiple instants found');
+        }
+      }
     }
-    const result = ES.Call(getInstantFor, timeZone, [dateTime, { disambiguation }]);
-    if (!ES.IsTemporalInstant(result)) {
-      throw new TypeError('Unexpected result from getInstantFor');
+
+    const utcns = ES.GetEpochFromISOParts(
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, ISO_HOUR),
+      GetSlot(dateTime, ISO_MINUTE),
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND)
+    );
+    if (utcns === null) throw new RangeError('DateTime outside of supported range');
+    const dayBefore = new Instant(utcns.minus(86400e9));
+    const dayAfter = new Instant(utcns.plus(86400e9));
+    const offsetBefore = ES.GetOffsetNanosecondsFor(timeZone, dayBefore);
+    const offsetAfter = ES.GetOffsetNanosecondsFor(timeZone, dayAfter);
+    const nanoseconds = offsetAfter - offsetBefore;
+    const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
+    switch (disambiguation) {
+      case 'earlier': {
+        const earlier = dateTime.subtract(diff);
+        return ES.GetPossibleInstantsFor(timeZone, earlier)[0];
+      }
+      case 'compatible':
+      // fall through because 'compatible' means 'later' for "spring forward" transitions
+      case 'later': {
+        const later = dateTime.add(diff);
+        const possible = ES.GetPossibleInstantsFor(timeZone, later);
+        return possible[possible.length - 1];
+      }
+      case 'reject': {
+        throw new RangeError('no such instant found');
+      }
     }
-    return result;
   },
   GetPossibleInstantsFor: (timeZone, dateTime) => {
     let getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
@@ -1808,7 +1856,8 @@ export const ES = ObjectAssign({}, ES2020, {
       const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       outputTimeZone = new TemporalTimeZone('UTC');
     }
-    const dateTime = ES.GetTemporalDateTimeFor(outputTimeZone, instant, 'iso8601');
+    const iso = ES.GetISO8601Calendar();
+    const dateTime = ES.BuiltinTimeZoneGetPlainDateTimeFor(outputTimeZone, instant, iso);
     const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
     const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
@@ -1821,7 +1870,8 @@ export const ES = ObjectAssign({}, ES2020, {
       GetSlot(dateTime, ISO_NANOSECOND),
       precision
     );
-    const timeZoneString = timeZone === undefined ? 'Z' : ES.GetOffsetStringFor(outputTimeZone, instant);
+    let timeZoneString = 'Z';
+    if (timeZone !== undefined) timeZoneString = ES.BuiltinTimeZoneGetOffsetStringFor(outputTimeZone, instant);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
   TemporalDurationToString: (duration, precision = 'auto', options = undefined) => {
@@ -2283,8 +2333,8 @@ export const ES = ObjectAssign({}, ES2020, {
     const calendar = GetSlot(relativeTo, CALENDAR);
 
     // Find the difference in days only.
-    const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
-    const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
+    const dtStart = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, end, calendar);
     let { days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
@@ -2956,8 +3006,8 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     const start = new TemporalInstant(ns1);
     const end = new TemporalInstant(ns2);
-    const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
-    const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
+    const dtStart = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, end, calendar);
     let { years, months, weeks, days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
@@ -3293,7 +3343,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     // RFC 5545 requires the date portion to be added in calendar days and the
     // time portion to be added in exact time.
-    let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
+    let dt = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, instant, calendar);
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
     const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -3314,7 +3364,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     // Note that 'compatible' is used below because this disambiguation behavior
     // is required by RFC 5545.
-    const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+    const instantIntermediate = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   },
   RoundNumberToIncrement: (quantity, increment, mode) => {
@@ -3624,7 +3674,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (relativeTo) {
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
         zdtRelative = relativeTo;
-        relativeTo = ES.GetTemporalDateTimeFor(
+        relativeTo = ES.BuiltinTimeZoneGetPlainDateTimeFor(
           GetSlot(relativeTo, TIME_ZONE),
           GetSlot(relativeTo, INSTANT),
           GetSlot(relativeTo, CALENDAR)

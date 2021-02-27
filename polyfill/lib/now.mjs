@@ -21,13 +21,13 @@ function plainDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendar(calendarLike);
   const inst = instant();
-  return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
+  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, inst, calendar);
 }
 function plainDateTimeISO(temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = ES.GetISO8601Calendar();
   const inst = instant();
-  return ES.GetTemporalDateTimeFor(timeZone, inst, calendar);
+  return ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, inst, calendar);
 }
 function zonedDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
