@@ -179,14 +179,14 @@ impl['iso8601'] = {
     fields = ES.PrepareTemporalFields(fields, [['day'], ['month', undefined], ['monthCode', undefined], ['year']]);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month, day } = fields;
-    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
+    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
     return new constructor(year, month, day, calendar);
   },
   yearMonthFromFields(fields, overflow, constructor, calendar) {
     fields = ES.PrepareTemporalFields(fields, [['month', undefined], ['monthCode', undefined], ['year']]);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month } = fields;
-    ({ year, month } = ES.RegulateYearMonth(year, month, overflow));
+    ({ year, month } = ES.RegulateISOYearMonth(year, month, overflow));
     return new constructor(year, month, calendar, /* referenceISODay */ 1);
   },
   monthDayFromFields(fields, overflow, constructor, calendar) {
@@ -203,7 +203,7 @@ impl['iso8601'] = {
     const referenceISOYear = 1972;
     fields = resolveNonLunisolarMonth(fields);
     let { month, day, year } = fields;
-    ({ month, day } = ES.RegulateDate(useYear ? year : referenceISOYear, month, day, overflow));
+    ({ month, day } = ES.RegulateISODate(useYear ? year : referenceISOYear, month, day, overflow));
     return new constructor(month, day, calendar, referenceISOYear);
   },
   fields(fields) {
@@ -223,11 +223,11 @@ impl['iso8601'] = {
     let year = GetSlot(date, ISO_YEAR);
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
-    ({ year, month, day } = ES.AddDate(year, month, day, years, months, weeks, days, overflow));
+    ({ year, month, day } = ES.AddISODate(year, month, day, years, months, weeks, days, overflow));
     return new constructor(year, month, day, calendar);
   },
   dateUntil(one, two, largestUnit) {
-    return ES.DifferenceDate(
+    return ES.DifferenceISODate(
       GetSlot(one, ISO_YEAR),
       GetSlot(one, ISO_MONTH),
       GetSlot(one, ISO_DAY),
@@ -282,7 +282,7 @@ impl['iso8601'] = {
     if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH)) {
       date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     }
-    return ES.DaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
+    return ES.ISODaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
   },
   daysInYear(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
@@ -763,7 +763,7 @@ const nonIsoHelperBase = {
     return this.isoToCalendarDate(isoDate, cache);
   },
   addDaysIso(isoDate, days) {
-    const added = ES.AddDate(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, days, 'constrain');
+    const added = ES.AddISODate(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, days, 'constrain');
     return added;
   },
   addDaysCalendar(calendarDate, days, cache) {
@@ -900,7 +900,7 @@ const nonIsoHelperBase = {
     return this.isoDaysUntil(oneIso, twoIso);
   },
   isoDaysUntil(oneIso, twoIso) {
-    const duration = ES.DifferenceDate(
+    const duration = ES.DifferenceISODate(
       oneIso.year,
       oneIso.month,
       oneIso.day,
@@ -1192,7 +1192,7 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
     const isoYear = calendarDate.year + 78 + (monthInfo.nextYear ? 1 : 0);
     const isoMonth = monthInfo.month;
     const isoDay = monthInfo.day;
-    const isoDate = ES.AddDate(isoYear, isoMonth, isoDay, 0, 0, 0, calendarDate.day - 1, 'constrain');
+    const isoDate = ES.AddISODate(isoYear, isoMonth, isoDay, 0, 0, 0, calendarDate.day - 1, 'constrain');
     return isoDate;
   },
   // https://bugs.chromium.org/p/v8/issues/detail?id=10529 causes Intl's Indian
@@ -1430,7 +1430,7 @@ const makeHelperGregorian = (id, originalEras) => {
       const { year, month, day } = calendarDate;
       const { anchorEra } = this;
       const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
-      return ES.RegulateDate(isoYearEstimate, month, day, 'constrain');
+      return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain');
     },
     // Several calendars based on the Gregorian calendar use Julian dates (not
     // proleptic Gregorian dates) before the Julian switchover in Oct 1582. See
@@ -1441,7 +1441,7 @@ const makeHelperGregorian = (id, originalEras) => {
     calendarIsVulnerableToJulianBug: false,
     checkIcuBugs(calendarDate, isoDate) {
       if (this.calendarIsVulnerableToJulianBug && this.v8IsVulnerableToJulianBug) {
-        const beforeJulianSwitch = ES.CompareTemporalDate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
+        const beforeJulianSwitch = ES.CompareISODate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
         if (beforeJulianSwitch) {
           throw new RangeError(
             `calendar '${this.id}' is broken for ISO dates before 1582-10-15` +

@@ -1223,7 +1223,7 @@
       </p>
       <emu-alg>
         1. Assert: _earlier_ and _later_ both have [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots.
-        1. Let _difference_ be ? DifferenceDate(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]], _earlier_.[[ISODay]], _later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], *"days"*).
+        1. Let _difference_ be ? DifferenceISODate(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]], _earlier_.[[ISODay]], _later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], *"days"*).
         1. Return _difference_.[[Days]].
       </emu-alg>
     </emu-clause>

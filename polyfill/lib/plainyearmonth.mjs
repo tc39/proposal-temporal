@@ -35,7 +35,7 @@ export class PlainYearMonth {
       throw new RangeError('missing argument: isoYear and isoMonth are required');
     }
 
-    ES.RejectDate(isoYear, isoMonth, referenceISODay);
+    ES.RejectISODate(isoYear, isoMonth, referenceISODay);
     ES.RejectYearMonthRange(isoYear, isoMonth);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);

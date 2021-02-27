@@ -354,8 +354,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isleapyear" aoid="IsLeapYear">
-      <h1>IsLeapYear ( _year_ )</h1>
+    <emu-clause id="sec-temporal-isisoleapyear" aoid="IsISOLeapYear">
+      <h1>IsISOLeapYear ( _year_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
         1. If _year_ modulo 4 ≠ 0, return *false*.
@@ -365,30 +365,30 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-daysinyear" aoid="DaysInYear">
-      <h1>DaysInYear ( _year_ )</h1>
+    <emu-clause id="sec-temporal-isodaysinyear" aoid="ISODaysInYear">
+      <h1>ISODaysInYear ( _year_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
-        1. If ! IsLeapYear(_year_) is *true*, then
+        1. If ! IsISOLeapYear(_year_) is *true*, then
           1. Return 366.
         1. Return 365.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-daysinmonth" aoid="DaysInMonth">
-      <h1>DaysInMonth ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-isodaysinmonth" aoid="ISODaysInMonth">
+      <h1>ISODaysInMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
         1. Assert: _month_ is an integer, _month_ ≥ 1, and _month_ ≤ 12.
         1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
         1. If _month_ is 4, 6, 9, or 11, return 30.
-        1. If ! IsLeapYear(_year_) is *true*, return 29.
+        1. If ! IsISOLeapYear(_year_) is *true*, return 29.
         1. Return 28.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-todayofweek" aoid="ToDayOfWeek">
-      <h1>ToDayOfWeek ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-toisodayofweek" aoid="ToISODayOfWeek">
+      <h1>ToISODayOfWeek ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
         1. Assert: _month_ is an integer.
@@ -399,8 +399,8 @@
       <emu-note>Monday is 1 and Sunday is 7.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-todayofyear" aoid="ToDayOfYear">
-      <h1>ToDayOfYear ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-toisodayofyear" aoid="ToISODayOfYear">
+      <h1>ToISODayOfYear ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
         1. Assert: _month_ is an integer.
@@ -410,8 +410,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toweekofyear" aoid="ToWeekOfYear">
-      <h1>ToWeekOfYear ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-toisoweekofyear" aoid="ToISOWeekOfYear">
+      <h1>ToISOWeekOfYear ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_ is an integer.
         1. Assert: _month_ is an integer.
@@ -462,7 +462,7 @@
         1. Let _month_ be ? ResolveISOMonth(_fields_).
         1. Let _day_ be ? Get(_fields_, *"day"*).
         1. If _day_ is *undefined*, throw a *TypeError* exception.
-        1. Return ? RegulateDate(_year_, _month_, _day_, _overflow_).
+        1. Return ? RegulateISODate(_year_, _month_, _day_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -478,7 +478,7 @@
         1. Let _year_ be ? Get(_fields_, *"year"*).
         1. If _year_ is *undefined*, throw a *TypeError* exception.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
-        1. Let _result_ be ? RegulateYearMonth(_year_, _month_, _overflow_).
+        1. Let _result_ be ? RegulateISOYearMonth(_year_, _month_, _overflow_).
         1. Return the new Record {
             [[Year]]: _result_.[[Year]],
             [[Month]]: _result_.[[Month]],
@@ -507,9 +507,9 @@
         1. Let _referenceISOYear_ be the first leap year after the Unix epoch (1972).
         1. Let _result_ be *undefined*.
         1. If _monthCode_ is *undefined*, then
-          1. Set _result_ to ? RegulateDate(_year_, _month_, _day_, _overflow_).
+          1. Set _result_ to ? RegulateISODate(_year_, _month_, _day_, _overflow_).
         1. Else,
-          1. Set _result_ to ? RegulateDate(_referenceISOYear_, _month_, _day_, _overflow_).
+          1. Set _result_ to ? RegulateISODate(_referenceISOYear_, _month_, _day_, _overflow_).
         1. Return the new Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]],
@@ -795,7 +795,7 @@
         1. Set _duration_ to ? ToTemporalDuration(_duration_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Let _result_ be ? AddDate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
+        1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
         1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -818,7 +818,7 @@
         1. Set _two_ to ? ToTemporalDate(_two_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *"days"*).
-        1. Let _result_ be ? DifferenceDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+        1. Let _result_ be ? DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
         1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -910,7 +910,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToDayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Return 𝔽(! ToISODayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -929,7 +929,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToDayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Return 𝔽(! ToISODayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -948,7 +948,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Return 𝔽(! ToISOWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -987,7 +987,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If _dateOrDateTime_ does not have [[ISOYear]] and [[ISOMonth]] internal slots, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]])).
+        1. Return 𝔽(! ISODaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]])).
       </emu-alg>
     </emu-clause>
 
@@ -1006,7 +1006,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-        1. Return 𝔽(! DaysInYear(_year_)).
+        1. Return 𝔽(! ISODaysInYear(_year_)).
       </emu-alg>
     </emu-clause>
 
@@ -1044,7 +1044,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-        1. Return ! IsLeapYear(_year_).
+        1. Return ! IsISOLeapYear(_year_).
       </emu-alg>
     </emu-clause>
 

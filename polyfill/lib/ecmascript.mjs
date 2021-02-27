@@ -357,19 +357,29 @@ export const ES = ObjectAssign({}, ES2020, {
       offset
     } = ES.ParseTemporalInstantString(isoString);
 
-    const epochNs = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const epochNs = ES.GetEpochFromISOParts(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
     if (epochNs === null) throw new RangeError('DateTime outside of supported range');
     if (!offset) throw new RangeError('Temporal.Instant requires a time zone offset');
     const offsetNs = ES.ParseOffsetString(offset);
     return epochNs.subtract(offsetNs);
   },
-  RegulateDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
+  RegulateISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
     switch (overflow) {
       case 'reject':
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         break;
       case 'constrain':
-        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainDateTime(
+        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainISODateTime(
           year,
           month,
           day,
@@ -384,13 +394,13 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  RegulateDate: (year, month, day, overflow) => {
+  RegulateISODate: (year, month, day, overflow) => {
     switch (overflow) {
       case 'reject':
-        ES.RejectDate(year, month, day);
+        ES.RejectISODate(year, month, day);
         break;
       case 'constrain':
-        ({ year, month, day } = ES.ConstrainDate(year, month, day));
+        ({ year, month, day } = ES.ConstrainISODate(year, month, day));
         break;
     }
     return { year, month, day };
@@ -413,14 +423,14 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  RegulateYearMonth: (year, month, overflow) => {
+  RegulateISOYearMonth: (year, month, overflow) => {
     const referenceISODay = 1;
     switch (overflow) {
       case 'reject':
-        ES.RejectDate(year, month, referenceISODay);
+        ES.RejectISODate(year, month, referenceISODay);
         break;
       case 'constrain':
-        ({ year, month } = ES.ConstrainDate(year, month));
+        ({ year, month } = ES.ConstrainISODate(year, month));
         break;
     }
     return { year, month };
@@ -894,7 +904,7 @@ export const ES = ObjectAssign({}, ES2020, {
       timeZone = ES.ToTemporalTimeZone(timeZone);
       let offsetNs = null;
       if (offset) offsetNs = ES.ParseOffsetString(ES.ToString(offset));
-      const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+      const epochNanoseconds = ES.InterpretISODateTimeOffset(
         year,
         month,
         day,
@@ -1140,7 +1150,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     ES.ToTemporalOverflow(options); // validate and ignore
     let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-    ES.RejectDate(year, month, day);
+    ES.RejectISODate(year, month, day);
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
     let result = new constructor(year, month, day, calendar);
@@ -1297,7 +1307,7 @@ export const ES = ObjectAssign({}, ES2020, {
     calendar = ES.ToTemporalCalendar(calendar);
 
     if (referenceISOYear === undefined) {
-      ES.RejectDate(1972, month, day);
+      ES.RejectISODate(1972, month, day);
       const result = new constructor(month, day, calendar);
       if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
       return result;
@@ -1357,7 +1367,7 @@ export const ES = ObjectAssign({}, ES2020, {
     calendar = ES.ToTemporalCalendar(calendar);
 
     if (referenceISODay === undefined) {
-      ES.RejectDate(year, month, 1);
+      ES.RejectISODate(year, month, 1);
       const result = new constructor(year, month, calendar);
       if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
       return result;
@@ -1366,7 +1376,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const result = new PlainYearMonth(year, month, calendar, referenceISODay);
     return ES.YearMonthFromFields(calendar, result, constructor, {});
   },
-  InterpretTemporalZonedDateTimeOffset: (
+  InterpretISODateTimeOffset: (
     year,
     month,
     day,
@@ -1396,7 +1406,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // for this timezone and date/time.
     if (offsetOpt === 'use') {
       // Calculate the instant for the input's date/time and offset
-      const epochNs = ES.GetEpochFromParts(
+      const epochNs = ES.GetEpochFromISOParts(
         year,
         month,
         day,
@@ -1479,7 +1489,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (offset) offsetNs = ES.ParseOffsetString(offset);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const offsetOpt = ES.ToTemporalOffset(options, 'reject');
-    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+    const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
       day,
@@ -1923,7 +1933,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microsecond,
       nanosecond
     } = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
-    const utc = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const utc = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
   },
@@ -1948,7 +1958,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return `${sign}${hourString}:${minuteString}${post}`;
   },
-  GetEpochFromParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+  GetEpochFromISOParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     // Note: Date.UTC() interprets one and two-digit years as being in the
     // 20th century, so don't use it
     const legacyDate = new Date();
@@ -1962,7 +1972,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) return null;
     return ns;
   },
-  GetPartsFromEpoch: (epochNanoseconds) => {
+  GetISOPartsFromEpoch: (epochNanoseconds) => {
     const { quotient, remainder } = bigInt(epochNanoseconds).divmod(1e6);
     let epochMilliseconds = +quotient;
     let nanos = +remainder;
@@ -1985,9 +1995,9 @@ export const ES = ObjectAssign({}, ES2020, {
     return { epochMilliseconds, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   GetIANATimeZoneDateTimeParts: (epochNanoseconds, id) => {
-    const { epochMilliseconds, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(epochNanoseconds);
+    const { epochMilliseconds, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(epochNanoseconds);
     const { year, month, day, hour, minute, second } = ES.GetFormatterParts(id, epochMilliseconds);
-    return ES.BalanceDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   GetIANATimeZoneNextTransition: (epochNanoseconds, id) => {
     const uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
@@ -2063,7 +2073,7 @@ export const ES = ObjectAssign({}, ES2020, {
     };
   },
   GetIANATimeZoneEpochValue: (id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    let ns = ES.GetEpochFromParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    let ns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (ns === null) throw new RangeError('DateTime outside of supported range');
     const dayNanos = bigInt(DAYMILLIS).multiply(1e6);
     let nsEarlier = ns.minus(dayNanos);
@@ -2101,7 +2111,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const isDiv400 = year % 400 === 0;
     return isDiv4 && (!isDiv100 || isDiv400);
   },
-  DaysInMonth: (year, month) => {
+  ISODaysInMonth: (year, month) => {
     const DoM = {
       standard: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
       leapyear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -2128,7 +2138,7 @@ export const ES = ObjectAssign({}, ES2020, {
   DayOfYear: (year, month, day) => {
     let days = day;
     for (let m = month - 1; m > 0; m--) {
-      days += ES.DaysInMonth(year, m);
+      days += ES.ISODaysInMonth(year, m);
     }
     return days;
   },
@@ -2161,7 +2171,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return 0;
   },
 
-  BalanceYearMonth: (year, month) => {
+  BalanceISOYearMonth: (year, month) => {
     if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError('infinity is out of range');
     month -= 1;
     year += MathFloor(month / 12);
@@ -2170,9 +2180,9 @@ export const ES = ObjectAssign({}, ES2020, {
     month += 1;
     return { year, month };
   },
-  BalanceDate: (year, month, day) => {
+  BalanceISODate: (year, month, day) => {
     if (!NumberIsFinite(day)) throw new RangeError('infinity is out of range');
-    ({ year, month } = ES.BalanceYearMonth(year, month));
+    ({ year, month } = ES.BalanceISOYearMonth(year, month));
     let daysInYear = 0;
     let testYear = month > 2 ? year : year - 1;
     while (((daysInYear = ES.LeapYear(testYear) ? 366 : 365), day < -daysInYear)) {
@@ -2188,17 +2198,17 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     while (day < 1) {
-      ({ year, month } = ES.BalanceYearMonth(year, month - 1));
-      day += ES.DaysInMonth(year, month);
+      ({ year, month } = ES.BalanceISOYearMonth(year, month - 1));
+      day += ES.ISODaysInMonth(year, month);
     }
-    while (day > ES.DaysInMonth(year, month)) {
-      day -= ES.DaysInMonth(year, month);
-      ({ year, month } = ES.BalanceYearMonth(year, month + 1));
+    while (day > ES.ISODaysInMonth(year, month)) {
+      day -= ES.ISODaysInMonth(year, month);
+      ({ year, month } = ES.BalanceISOYearMonth(year, month + 1));
     }
 
     return { year, month, day };
   },
-  BalanceDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+  BalanceISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     let deltaDays;
     ({ deltaDays, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceTime(
       hour,
@@ -2208,7 +2218,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microsecond,
       nanosecond
     ));
-    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+    ({ year, month, day } = ES.BalanceISODate(year, month, day + deltaDays));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -2275,7 +2285,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // Find the difference in days only.
     const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
     const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
-    let { days } = ES.DifferenceDateTime(
+    let { days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
       GetSlot(dtStart, ISO_DAY),
@@ -2614,9 +2624,9 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   ConstrainToRange: (value, min, max) => MathMin(max, MathMax(min, value)),
-  ConstrainDate: (year, month, day) => {
+  ConstrainISODate: (year, month, day) => {
     month = ES.ConstrainToRange(month, 1, 12);
-    day = ES.ConstrainToRange(day, 1, ES.DaysInMonth(year, month));
+    day = ES.ConstrainToRange(day, 1, ES.ISODaysInMonth(year, month));
     return { year, month, day };
   },
   ConstrainTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -2628,8 +2638,8 @@ export const ES = ObjectAssign({}, ES2020, {
     nanosecond = ES.ConstrainToRange(nanosecond, 0, 999);
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ConstrainDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    ({ year, month, day } = ES.ConstrainDate(year, month, day));
+  ConstrainISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+    ({ year, month, day } = ES.ConstrainISODate(year, month, day));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
       hour,
       minute,
@@ -2644,9 +2654,9 @@ export const ES = ObjectAssign({}, ES2020, {
   RejectToRange: (value, min, max) => {
     if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
   },
-  RejectDate: (year, month, day) => {
+  RejectISODate: (year, month, day) => {
     ES.RejectToRange(month, 1, 12);
-    ES.RejectToRange(day, 1, ES.DaysInMonth(year, month));
+    ES.RejectToRange(day, 1, ES.ISODaysInMonth(year, month));
   },
   RejectDateRange: (year, month, day) => {
     // Noon avoids trouble at edges of DateTime range (excludes midnight)
@@ -2661,7 +2671,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectToRange(nanosecond, 0, 999);
   },
   RejectDateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    ES.RejectDate(year, month, day);
+    ES.RejectISODate(year, month, day);
     ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   },
   RejectDateTimeRange: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
@@ -2670,10 +2680,20 @@ export const ES = ObjectAssign({}, ES2020, {
     if (
       (year === YEAR_MIN &&
         null ==
-          ES.GetEpochFromParts(year, month, day + 1, hour, minute, second, millisecond, microsecond, nanosecond - 1)) ||
+          ES.GetEpochFromISOParts(
+            year,
+            month,
+            day + 1,
+            hour,
+            minute,
+            second,
+            millisecond,
+            microsecond,
+            nanosecond - 1
+          )) ||
       (year === YEAR_MAX &&
         null ==
-          ES.GetEpochFromParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))
+          ES.GetEpochFromISOParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))
     ) {
       throw new RangeError('DateTime outside of supported range');
     }
@@ -2707,19 +2727,19 @@ export const ES = ObjectAssign({}, ES2020, {
     }
   },
 
-  DifferenceDate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
+  DifferenceISODate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
     switch (largestUnit) {
       case 'years':
       case 'months': {
-        const sign = -ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2);
+        const sign = -ES.CompareISODate(y1, m1, d1, y2, m2, d2);
         if (sign === 0) return { years: 0, months: 0, weeks: 0, days: 0 };
 
         const start = { year: y1, month: m1, day: d1 };
         const end = { year: y2, month: m2, day: d2 };
 
         let years = end.year - start.year;
-        let mid = ES.AddDate(y1, m1, d1, years, 0, 0, 0, 'constrain');
-        let midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+        let mid = ES.AddISODate(y1, m1, d1, years, 0, 0, 0, 'constrain');
+        let midSign = -ES.CompareISODate(mid.year, mid.month, mid.day, y2, m2, d2);
         if (midSign === 0) {
           return largestUnit === 'years'
             ? { years, months: 0, weeks: 0, days: 0 }
@@ -2730,8 +2750,8 @@ export const ES = ObjectAssign({}, ES2020, {
           years -= sign;
           months += sign * 12;
         }
-        mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
-        midSign = -ES.CompareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+        mid = ES.AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
+        midSign = -ES.CompareISODate(mid.year, mid.month, mid.day, y2, m2, d2);
         if (midSign === 0) {
           return largestUnit === 'years'
             ? { years, months, weeks: 0, days: 0 }
@@ -2745,8 +2765,8 @@ export const ES = ObjectAssign({}, ES2020, {
             years -= sign;
             months = 11 * sign;
           }
-          mid = ES.AddDate(y1, m1, d1, years, months, 0, 0, 'constrain');
-          midSign = -ES.CompareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
+          mid = ES.AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
+          midSign = -ES.CompareISODate(y1, m1, d1, mid.year, mid.month, mid.day);
         }
 
         let days = 0;
@@ -2762,11 +2782,11 @@ export const ES = ObjectAssign({}, ES2020, {
         } else if (sign < 0) {
           // 2) end is previous month from intermediate (negative duration)
           // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
-          days = -mid.day - (ES.DaysInMonth(end.year, end.month) - end.day);
+          days = -mid.day - (ES.ISODaysInMonth(end.year, end.month) - end.day);
         } else {
           // 3) end is next month from intermediate (positive duration)
           // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
-          days = end.day + (ES.DaysInMonth(mid.year, mid.month) - mid.day);
+          days = end.day + (ES.ISODaysInMonth(mid.year, mid.month) - mid.day);
         }
 
         if (largestUnit === 'months') {
@@ -2778,7 +2798,7 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'weeks':
       case 'days': {
         let larger, smaller, sign;
-        if (ES.CompareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
+        if (ES.CompareISODate(y1, m1, d1, y2, m2, d2) < 0) {
           smaller = { year: y1, month: m1, day: d1 };
           larger = { year: y2, month: m2, day: d2 };
           sign = 1;
@@ -2858,7 +2878,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const seconds = +roundedDiff.divide(1e9);
     return { seconds, milliseconds, microseconds, nanoseconds };
   },
-  DifferenceDateTime: (
+  DifferenceISODateTime: (
     y1,
     mon1,
     d1,
@@ -2896,7 +2916,7 @@ export const ES = ObjectAssign({}, ES2020, {
       µs2,
       ns2
     );
-    ({ year: y1, month: mon1, day: d1 } = ES.BalanceDate(y1, mon1, d1 + deltaDays));
+    ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 + deltaDays));
     const date1 = new TemporalDate(y1, mon1, d1, calendar);
     const date2 = new TemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
@@ -2938,7 +2958,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const end = new TemporalInstant(ns2);
     const dtStart = ES.GetTemporalDateTimeFor(timeZone, start, calendar);
     const dtEnd = ES.GetTemporalDateTimeFor(timeZone, end, calendar);
-    let { years, months, weeks, days } = ES.DifferenceDateTime(
+    let { years, months, weeks, days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
       GetSlot(dtStart, ISO_DAY),
@@ -2981,14 +3001,14 @@ export const ES = ObjectAssign({}, ES2020, {
     );
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  AddDate: (year, month, day, years, months, weeks, days, overflow) => {
+  AddISODate: (year, month, day, years, months, weeks, days, overflow) => {
     year += years;
     month += months;
-    ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
+    ({ year, month } = ES.BalanceISOYearMonth(year, month));
+    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
     days += 7 * weeks;
     day += days;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    ({ year, month, day } = ES.BalanceISODate(year, month, day));
     return { year, month, day };
   },
   AddTime: (
@@ -3025,11 +3045,11 @@ export const ES = ObjectAssign({}, ES2020, {
   SubtractDate: (year, month, day, years, months, weeks, days, overflow) => {
     days += 7 * weeks;
     day -= days;
-    ({ year, month, day } = ES.BalanceDate(year, month, day));
+    ({ year, month, day } = ES.BalanceISODate(year, month, day));
     month -= months;
     year -= years;
-    ({ year, month } = ES.BalanceYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateDate(year, month, day, overflow));
+    ({ year, month } = ES.BalanceISOYearMonth(year, month));
+    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
     return { year, month, day };
   },
   AddDuration: (
@@ -3327,7 +3347,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     return wholeDays.plus(roundedRemainder);
   },
-  RoundDateTime: (
+  RoundISODateTime: (
     year,
     month,
     day,
@@ -3355,7 +3375,7 @@ export const ES = ObjectAssign({}, ES2020, {
       roundingMode,
       dayLengthNs
     ));
-    ({ year, month, day } = ES.BalanceDate(year, month, day + deltaDays));
+    ({ year, month, day } = ES.BalanceISODate(year, month, day + deltaDays));
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   RoundTime: (
@@ -3412,7 +3432,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
   },
   DaysUntil: (earlier, later) => {
-    return ES.DifferenceDate(
+    return ES.DifferenceISODate(
       GetSlot(earlier, ISO_YEAR),
       GetSlot(earlier, ISO_MONTH),
       GetSlot(earlier, ISO_DAY),
@@ -3807,7 +3827,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
   },
 
-  CompareTemporalDate: (y1, m1, d1, y2, m2, d2) => {
+  CompareISODate: (y1, m1, d1, y2, m2, d2) => {
     for (const [x, y] of [
       [y1, y2],
       [m1, m2],
