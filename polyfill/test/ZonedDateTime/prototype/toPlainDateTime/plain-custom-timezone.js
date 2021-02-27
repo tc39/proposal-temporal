@@ -8,15 +8,14 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get timeZone.getPlainDateTimeFor",
-  "call timeZone.getPlainDateTimeFor",
+  "get timeZone.getOffsetNanosecondsFor",
+  "call timeZone.getOffsetNanosecondsFor",
 ];
 
-const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:00:00.987654321");
 const timeZone = new Proxy({
-  getPlainDateTimeFor() {
-    actual.push("call timeZone.getPlainDateTimeFor");
-    return dateTime;
+  getOffsetNanosecondsFor() {
+    actual.push("call timeZone.getOffsetNanosecondsFor");
+    return -8735135802468;
   },
 }, {
   has(target, property) {
@@ -30,7 +29,10 @@ const timeZone = new Proxy({
 });
 
 const zdt = new Temporal.ZonedDateTime(160583136123456789n, timeZone);
+const dateTime = Temporal.PlainDateTime.from("1975-02-02T12:00:00.987654321");
 const result = zdt.toPlainDateTime();
-assert.sameValue(result, dateTime);
+for (const property of ["year", "month", "day", "hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
+  assert.sameValue(result[property], dateTime[property], property);
+}
 
 assert.compareArray(actual, expected);

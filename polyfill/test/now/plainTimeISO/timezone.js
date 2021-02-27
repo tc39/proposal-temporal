@@ -10,18 +10,15 @@ const actual = [];
 const expected = [
   "get Temporal.TimeZone.from",
   "call Temporal.TimeZone.from",
-  "get timeZone.getPlainDateTimeFor",
-  "call timeZone.getPlainDateTimeFor",
+  "get timeZone.getOffsetNanosecondsFor",
+  "call timeZone.getOffsetNanosecondsFor",
 ];
-const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
 
 const timeZone = new Proxy({
-  getPlainDateTimeFor(instant, calendar) {
-    actual.push("call timeZone.getPlainDateTimeFor");
+  getOffsetNanosecondsFor(instant) {
+    actual.push("call timeZone.getOffsetNanosecondsFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
-    assert.sameValue(calendar instanceof Temporal.Calendar, true, "Calendar");
-    assert.sameValue(calendar.id, "iso8601");
-    return dateTime;
+    return -Number(instant.epochNanoseconds % 86400_000_000_000n);
   },
 }, {
   has(target, property) {
@@ -55,7 +52,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
 const result = Temporal.now.plainTimeISO("UTC");
 assert.sameValue(result instanceof Temporal.PlainTime, true);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
-  assert.sameValue(result[property], dateTime[property], property);
+  assert.sameValue(result[property], 0, property);
 }
 
 assert.compareArray(actual, expected);

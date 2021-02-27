@@ -11,8 +11,8 @@ const expected = [
   "get options.disambiguation",
   "get disambiguation.toString",
   "call disambiguation.toString",
-  "get timeZone.getInstantFor",
-  "call timeZone.getInstantFor",
+  "get timeZone.getPossibleInstantsFor",
+  "call timeZone.getPossibleInstantsFor",
 ];
 
 Object.defineProperty(Temporal.TimeZone, "from", {
@@ -47,14 +47,10 @@ const options = new Proxy({
 });
 
 const timeZone = new Proxy({
-  getInstantFor(dateTimeArg, optionsArg) {
-    actual.push("call timeZone.getInstantFor");
+  getPossibleInstantsFor(dateTimeArg) {
+    actual.push("call timeZone.getPossibleInstantsFor");
     assert.sameValue(dateTimeArg, dateTime);
-    assert.sameValue(typeof optionsArg, "object");
-    assert.notSameValue(optionsArg, null);
-    assert.notSameValue(optionsArg, options);
-    assert.sameValue(optionsArg.disambiguation, "reject");
-    return instant;
+    return [instant];
   },
 }, {
   has(target, property) {

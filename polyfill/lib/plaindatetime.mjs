@@ -712,7 +712,7 @@ export class PlainDateTime {
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const instant = ES.GetTemporalInstantFor(timeZone, this, disambiguation);
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, this, disambiguation);
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }

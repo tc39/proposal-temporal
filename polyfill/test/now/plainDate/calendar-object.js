@@ -8,17 +8,16 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get timeZone.getPlainDateTimeFor",
-  "call timeZone.getPlainDateTimeFor",
+  "get timeZone.getOffsetNanosecondsFor",
+  "call timeZone.getOffsetNanosecondsFor",
 ];
-const dateTime = Temporal.PlainDateTime.from("1963-07-02T12:34:56.987654321");
+
 const calendar = {};
 const timeZone = new Proxy({
-  getPlainDateTimeFor(instant, calendarArg) {
-    actual.push("call timeZone.getPlainDateTimeFor");
+  getOffsetNanosecondsFor(instant) {
+    actual.push("call timeZone.getOffsetNanosecondsFor");
     assert.sameValue(instant instanceof Temporal.Instant, true, "Instant");
-    assert.sameValue(calendarArg, calendar);
-    return dateTime;
+    return 86399_999_999_999;
   },
 }, {
   has(target, property) {
@@ -40,8 +39,5 @@ Object.defineProperty(Temporal.Calendar, "from", {
 
 const result = Temporal.now.plainDate(calendar, timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
-for (const property of ["year", "month", "day"]) {
-  assert.sameValue(result[property], dateTime[property], property);
-}
 
 assert.compareArray(actual, expected);

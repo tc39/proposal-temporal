@@ -1268,7 +1268,7 @@
           1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
             1. Set _zonedRelativeTo_ to _relativeTo_.
-            1. Set _relativeTo_ to ? GetTemporalDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
+            1. Set _relativeTo_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
           1. Else,
             1. Perform ? RequireInternalSlot(_relativeTo_, [[InitializedTemporalDateTime]]).
           1. Let _calendar_ be _relativeTo_.[[Calendar]].

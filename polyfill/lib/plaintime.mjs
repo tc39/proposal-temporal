@@ -485,7 +485,7 @@ export class PlainTime {
       nanosecond,
       calendar
     );
-    const instant = ES.GetTemporalInstantFor(timeZone, dt, 'compatible');
+    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
     const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
