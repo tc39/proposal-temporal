@@ -192,7 +192,7 @@ The value of the `calendar` read-only property is always the ISO 8601 calendar, 
 
 This method creates a new `Temporal.PlainTime` which is a copy of `time`, but any properties present on `timeLike` override the ones already present on `time`.
 
-Since `Temporal.PlainTime` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainTime` objects each represent a fixed time, use this method instead of modifying one.
 
 > **NOTE**: `calendar` and `timeZone` properties are not allowed on `timeLike`.
 > See the `toPlainDateTime` and `toZonedDateTime` methods instead.

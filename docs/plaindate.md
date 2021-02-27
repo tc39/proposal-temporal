@@ -351,7 +351,7 @@ date.with({ year: 2100 }).inLeapYear; // => false
 
 This method creates a new `Temporal.PlainDate` which is a copy of `date`, but any properties present on `dateLike` override the ones already present on `date`.
 
-Since `Temporal.PlainDate` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainDate` objects each represent a fixed date, use this method instead of modifying one.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 

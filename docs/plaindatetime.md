@@ -449,7 +449,7 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 
 This method creates a new `Temporal.PlainDateTime` which is a copy of `datetime`, but any properties present on `dateTimeLike` override the ones already present on `datetime`.
 
-Since `Temporal.PlainDateTime` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainDateTime` objects each represent a fixed date and time, use this method instead of modifying one.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 

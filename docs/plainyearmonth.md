@@ -295,7 +295,7 @@ ym.with({ year: 2100 }).inLeapYear; // => false
 
 This method creates a new `Temporal.PlainYearMonth` which is a copy of `yearMonth`, but any properties present on `yearMonthLike` override the ones already present on `yearMonth`.
 
-Since `Temporal.PlainYearMonth` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainYearMonth` objects each represent a fixed year and month, use this method instead of modifying one.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
