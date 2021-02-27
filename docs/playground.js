@@ -256,8 +256,6 @@
     };
   }
 
-  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
   function createCommonjsModule(fn, basedir, module) {
   	return module = {
   		path: basedir,
@@ -1743,7 +1741,7 @@
 
   	var symVal = 42;
   	obj[sym] = symVal;
-  	for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax
+  	for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
   	if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
   	if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
@@ -1761,7 +1759,7 @@
   	return true;
   };
 
-  var origSymbol = commonjsGlobal.Symbol;
+  var origSymbol = typeof Symbol !== 'undefined' && Symbol;
 
 
   var hasSymbols$2 = function hasNativeSymbols() {

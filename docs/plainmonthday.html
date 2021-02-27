@@ -341,7 +341,7 @@ If <code>monthCode</code> is provided in addition to <code>month</code> and/or <
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>monthDayLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
-<p>Since <code>Temporal.PlainMonthDay</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Since <code>Temporal.PlainMonthDay</code> objects each represent a fixed month and day, use this method instead of modifying one.</p>
 <blockquote>
 <p><strong>NOTE</strong>: <code>calendar</code> and <code>timeZone</code> properties are not allowed on <code>monthDayLike</code>.
 It is not possible to convert a <code>Temporal.PlainMonthDay</code> to another calendar system without knowing the year.

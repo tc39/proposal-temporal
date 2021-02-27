@@ -216,7 +216,7 @@
 </ul>
 </details>
 
-<p>A <code>Temporal.Duration</code> represents an immutable duration of time which can be used in date/time arithmetic.</p>
+<p>A <code>Temporal.Duration</code> represents a duration of time which can be used in date/time arithmetic.</p>
 <p><code>Temporal.Duration</code> can be constructed directly or returned from <code>Temporal.Duration.from()</code>.
 It can also be obtained from the <code>since()</code> method of any other <code>Temporal</code> type that supports arithmetic, and is used in those types&#39; <code>add()</code> and <code>subtract()</code> methods.</p>
 <p>When printed, a <code>Temporal.Duration</code> produces a string according to the ISO 8601 notation for durations.
@@ -398,7 +398,7 @@ d<span class="token punctuation">.</span>blank<span class="token punctuation">;<
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
 <p>This method creates a new <code>Temporal.Duration</code> which is a copy of <code>duration</code>, but any properties present on <code>durationLike</code> override the ones already present on <code>duration</code>.</p>
-<p>Since <code>Temporal.Duration</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Since <code>Temporal.Duration</code> objects each represent a fixed duration, use this method instead of modifying one.</p>
 <p>All non-zero properties of <code>durationLike</code> must have the same sign, and they must additionally have the same sign as the non-zero properties of <code>duration</code>, unless they override all of these non-zero properties.
 If a property of <code>durationLike</code> is infinity, then this function will throw a <code>RangeError</code>.</p>
 <p>Usage example:</p>

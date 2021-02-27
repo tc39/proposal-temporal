@@ -751,7 +751,7 @@ The default is <code>&#39;prefer&#39;</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.ZonedDateTime</code> object.</p>
 <p>This method creates a new <code>Temporal.ZonedDateTime</code> which is a copy of <code>zonedDateTime</code>, but any properties present on <code>zonedDateTimeLike</code> override the ones already present on <code>zonedDateTime</code>.</p>
-<p>Since <code>Temporal.ZonedDateTime</code> objects are immutable, this method will create a new instance instead of modifying the existing instance.</p>
+<p>Since <code>Temporal.ZonedDateTime</code> objects each represent a fixed date and time, this method will create a new instance instead of modifying the existing instance.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>zonedDateTimeLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>

@@ -454,7 +454,7 @@ The default is <code>constrain</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code> object.</p>
 <p>This method creates a new <code>Temporal.PlainDate</code> which is a copy of <code>date</code>, but any properties present on <code>dateLike</code> override the ones already present on <code>date</code>.</p>
-<p>Since <code>Temporal.PlainDate</code> objects are immutable, use this method instead of modifying one.</p>
+<p>Since <code>Temporal.PlainDate</code> objects each represent a fixed date, use this method instead of modifying one.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>dateLike.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
