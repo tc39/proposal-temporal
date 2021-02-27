@@ -63,7 +63,7 @@ tz = new Temporal.TimeZone('america/VANCOUVER');
 tz = new Temporal.TimeZone('Asia/Katmandu'); // alias of Asia/Kathmandu
 tz = new Temporal.TimeZone('-04:00');
 tz = new Temporal.TimeZone('+0645');
-/* WRONG */ tz = new Temporal.TimeZone('local'); // not a time zone, throws
+/* WRONG */ tz = new Temporal.TimeZone('local'); // => throws, not a time zone
 ```
 
 #### Difference between IANA time zones and UTC offsets
@@ -76,8 +76,8 @@ For example:
 tz1 = new Temporal.TimeZone('-08:00');
 tz2 = new Temporal.TimeZone('America/Vancouver');
 inst = Temporal.ZonedDateTime.from({ year: 2020, month: 1, day: 1, timeZone: tz2 }).toInstant();
+tz2.getPreviousTransition(inst); // => 2019-11-03T09:00:00Z
 tz1.getNextTransition(inst); // => null
-tz2.getPreviousTransition(inst); // => 2020-03-08T10:00Z
 ```
 
 ## Static methods
@@ -122,9 +122,9 @@ tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouv
 // Existing TimeZone object
 tz2 = Temporal.TimeZone.from(tz);
 
-/* WRONG */ tz = Temporal.TimeZone.from('local'); // not a time zone, throws
-/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00'); // ISO 8601 string without time zone offset part, throws
-/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]'); // ISO 8601 string without date-time part, throws
+/* WRONG */ tz = Temporal.TimeZone.from('local'); // => throws, not a time zone
+/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00'); // => throws, ISO 8601 string without time zone offset part
+/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]'); // => throws, ISO 8601 string without date-time part
 ```
 
 ## Properties
@@ -196,11 +196,11 @@ Example usage:
 // Getting the UTC offset for a time zone at a particular time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getOffsetStringFor(timestamp); // => +01:00
+tz.getOffsetStringFor(timestamp); // => '+01:00'
 
 // TimeZone with a fixed UTC offset
 tz = Temporal.TimeZone.from('-08:00');
-tz.getOffsetStringFor(timestamp); // => -08:00
+tz.getOffsetStringFor(timestamp); // => '-08:00'
 ```
 
 ### timeZone.**getPlainDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
@@ -225,12 +225,12 @@ Example usage:
 // Converting an exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
 tz = Temporal.TimeZone.from('Europe/Berlin');
-tz.getPlainDateTimeFor(timestamp); // => 2019-03-31T01:45
+tz.getPlainDateTimeFor(timestamp); // => 2019-03-31T01:45:00
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
 epoch = Temporal.Instant.fromEpochSeconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
-tz.getPlainDateTimeFor(epoch); // => 1969-12-31T19:00
+tz.getPlainDateTimeFor(epoch); // => 1969-12-31T19:00:00
 ```
 
 ### timeZone.**getInstantFor**(_dateTime_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Instant

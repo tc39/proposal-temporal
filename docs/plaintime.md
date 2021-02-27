@@ -37,7 +37,7 @@ Usage examples:
 
 ```javascript
 // Leet hour
-time = new Temporal.PlainTime(13, 37); // => 13:37
+time = new Temporal.PlainTime(13, 37); // => 13:37:00
 ```
 
 ## Static methods
@@ -85,8 +85,9 @@ time = Temporal.PlainTime.from('03:24:30'); // => 03:24:30
 time = Temporal.PlainTime.from('1995-12-07T03:24:30'); // => 03:24:30
 time = Temporal.PlainTime.from('1995-12-07T03:24:30Z'); // => 03:24:30
 time = Temporal.PlainTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
-  // => same as above; time zone is ignored
-time === Temporal.PlainTime.from(time); // => true
+  // => 03:24:30
+  // (same as above; time zone is ignored)
+time === Temporal.PlainTime.from(time); // => false
 
 time = Temporal.PlainTime.from({
   hour: 19,
@@ -98,17 +99,18 @@ time = Temporal.PlainTime.from({
 }); // => 19:39:09.068346205
 time = Temporal.PlainTime.from({ hour: 19, minute: 39, second: 9 }); // => 19:39:09
 time = Temporal.PlainTime.from(Temporal.PlainDateTime.from('2020-02-15T19:39:09'));
-  // => same as above; Temporal.PlainDateTime has hour, minute, etc. properties
+  // => 19:39:09
+  // (same as above; Temporal.PlainDateTime has hour, minute, etc. properties)
 
 // Different overflow modes
 time = Temporal.PlainTime.from({ hour: 15, minute: 60 }, { overflow: 'constrain' });
-  // => 15:59
+  // => 15:59:00
 time = Temporal.PlainTime.from({ hour: 15, minute: -1 }, { overflow: 'constrain' });
-  // => 15:00
+  // => 15:00:00
 time = Temporal.PlainTime.from({ hour: 15, minute: 60 }, { overflow: 'reject' });
-  // throws
+  // => throws
 time = Temporal.PlainTime.from({ hour: 15, minute: -1 }, { overflow: 'reject' });
-  // throws
+  // => throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -138,7 +140,7 @@ one = Temporal.PlainTime.from('03:24');
 two = Temporal.PlainTime.from('01:24');
 three = Temporal.PlainTime.from('01:24:05');
 sorted = [one, two, three].sort(Temporal.PlainTime.compare);
-sorted.join(' '); // => 01:24 01:24:05 03:24
+sorted.join(' '); // => '01:24:00 01:24:05 03:24:00'
 ```
 
 ## Properties
@@ -208,7 +210,7 @@ time.add({ hours: 1 }).with({
   millisecond: 0,
   microsecond: 0,
   nanosecond: 0
-}); // => 20:00
+}); // => 20:00:00
 ```
 
 ### time.**add**(_duration_: Temporal.Duration | object | string) : Temporal.PlainTime
@@ -392,13 +394,13 @@ Example usage:
 time = Temporal.PlainTime.from('19:39:09.068346205');
 
 // Round to a particular unit
-time.round({ smallestUnit: 'hour' }); // => 20:00
+time.round({ smallestUnit: 'hour' }); // => 20:00:00
 // Round to an increment of a unit, e.g. half an hour:
 time.round({ roundingIncrement: 30, smallestUnit: 'minute' });
-  // => 19:30
+  // => 19:30:00
 // Round to the same increment but round up instead:
 time.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'ceil' });
-  // => 20:00
+  // => 20:00:00
 ```
 <!-- prettier-ignore-end -->
 
@@ -459,13 +461,13 @@ Example usage:
 <!-- prettier-ignore-start -->
 ```js
 time = Temporal.PlainTime.from('19:39:09.068346205');
-time.toString(); // => 19:39:09.068346205
+time.toString(); // => '19:39:09.068346205'
 
-time.toString({ smallestUnit: 'minute' }); // => 19:39
-time.toString({ fractionalSecondDigits: 0 }); // => 19:39:09
-time.toString({ fractionalSecondDigits: 4 }); // => 19:39:09.0683
+time.toString({ smallestUnit: 'minute' }); // => '19:39'
+time.toString({ fractionalSecondDigits: 0 }); // => '19:39:09'
+time.toString({ fractionalSecondDigits: 4 }); // => '19:39:09.0683'
 time.toString({ fractionalSecondDigits: 5, roundingMode: 'halfExpand' });
-  // => 19:39:09.06835
+  // => '19:39:09.06835'
 ```
 <!-- prettier-ignore-end -->
 
@@ -488,10 +490,10 @@ Example usage:
 
 ```js
 time = Temporal.PlainTime.from('19:39:09.068346205');
-time.toLocaleString(); // => example output: 7:39:09 p.m.
-time.toLocaleString('de-DE'); // => example output: 19:39:09
-time.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }); // => 19:39:09
-time.toLocaleString('en-US-u-nu-fullwide-hc-h24'); // => １９:３９:０９
+time.toLocaleString(); // example output: '7:39:09 PM'
+time.toLocaleString('de-DE'); // example output: '19:39:09'
+time.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }); // => '19:39:09'
+time.toLocaleString('en-US-u-nu-fullwide-hc-h24'); // => '１９:３９:０９'
 ```
 
 ### time.**toJSON**() : string

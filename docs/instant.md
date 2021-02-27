@@ -43,9 +43,9 @@ Example usage:
 ```js
 instant = new Temporal.Instant(1553906700000000000n);
 // When was the Unix epoch?
-epoch = new Temporal.Instant(0n); // => 1970-01-01T00:00Z
+epoch = new Temporal.Instant(0n); // => 1970-01-01T00:00:00Z
 // Dates before the Unix epoch are negative
-turnOfTheCentury = new Temporal.Instant(-2208988800000000000n); // => 1900-01-01T00:00Z
+turnOfTheCentury = new Temporal.Instant(-2208988800000000000n); // => 1900-01-01T00:00:00Z
 ```
 
 ## Static methods
@@ -71,11 +71,11 @@ Example usage:
 instant = Temporal.Instant.from('2019-03-30T01:45:00+01:00[Europe/Berlin]');
 instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
 instant = Temporal.Instant.from('2019-03-30T00:45Z');
-instant === Temporal.Instant.from(instant); // => true
+instant === Temporal.Instant.from(instant); // => false
 
 // Not enough information to denote an exact time:
-/* WRONG */ instant = Temporal.Instant.from('2019-03-30'); // no time; throws
-/* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // no time zone; throws
+/* WRONG */ instant = Temporal.Instant.from('2019-03-30'); // => throws, no time
+/* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // => throws, no time zone
 ```
 <!-- prettier-ignore-end -->
 
@@ -98,8 +98,8 @@ Example usage:
 ```js
 // Same examples as in new Temporal.Instant(), but with seconds precision
 instant = Temporal.Instant.fromEpochSeconds(1553906700);
-epoch = Temporal.Instant.fromEpochSeconds(0); // => 1970-01-01T00:00Z
-turnOfTheCentury = Temporal.Instant.fromEpochSeconds(-2208988800); // => 1900-01-01T00:00Z
+epoch = Temporal.Instant.fromEpochSeconds(0); // => 1970-01-01T00:00:00Z
+turnOfTheCentury = Temporal.Instant.fromEpochSeconds(-2208988800); // => 1900-01-01T00:00:00Z
 ```
 
 ### Temporal.Instant.**fromEpochMilliseconds**(_epochMilliseconds_: number) : Temporal.Instant
@@ -117,7 +117,7 @@ However, for conversion from legacy `Date` to `Temporal.Instant`, use `Date.prot
 
 ```js
 legacyDate = new Date('December 17, 1995 03:24:00 GMT');
-instant = Temporal.Instant.fromEpochMilliseconds(legacyDate.getTime()); // => 1995-12-17T03:24Z
+instant = Temporal.Instant.fromEpochMilliseconds(legacyDate.getTime()); // => 1995-12-17T03:24:00Z
 instant = Temporal.Instant.fromEpochMilliseconds(+legacyDate); // valueOf() called implicitly
 instant = legacyDate.toTemporalInstant(); // recommended
 
@@ -174,7 +174,7 @@ two = Temporal.Instant.fromEpochSeconds(1.1e9);
 three = Temporal.Instant.fromEpochSeconds(1.2e9);
 sorted = [three, one, two].sort(Temporal.Instant.compare);
 sorted.join(' ');
-// => 2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20Z
+// => '2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20:00Z'
 ```
 
 ## Properties
@@ -191,7 +191,7 @@ Example usage:
 
 ```js
 instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
-instant.epochSeconds; // => 1554000300
+instant.epochSeconds; // => 1553906700
 ```
 
 ### instant.**epochMilliseconds** : number
@@ -244,9 +244,9 @@ Example usage:
 ```js
 // Converting a specific exact time to a calendar date / wall-clock time
 timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
-timestamp.toZonedDateTimeISO('Europe/Berlin'); // => 2019-03-31T01:45+02:00[Europe/Berlin]
-timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45+00:00[UTC]
-timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45-08:00[-08:00]
+timestamp.toZonedDateTimeISO('Europe/Berlin'); // => 2019-03-31T01:45:00+01:00[Europe/Berlin]
+timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45:00+00:00[UTC]
+timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45:00-08:00[-08:00]
 ```
 
 ### instant.**toZonedDateTime**(_item_: object) : Temporal.ZonedDateTime
@@ -274,15 +274,15 @@ Example usage:
 epoch = Temporal.Instant.fromEpochSeconds(0);
 timeZone = Temporal.TimeZone.from('America/New_York');
 epoch.toZonedDateTime({ timeZone, calendar: 'gregory' });
-  // => 1969-12-31T19:00-05:00[America/New_York][u-ca=gregory]
+  // => 1969-12-31T19:00:00-05:00[America/New_York][u-ca=gregory]
 
 // What time was the Unix epoch in Tokyo in the Japanese calendar?
 timeZone = Temporal.TimeZone.from('Asia/Tokyo');
 calendar = Temporal.Calendar.from('japanese');
 zdt = epoch.toZonedDateTime({ timeZone, calendar });
-  // => 1970-01-01T09:00+09:00[Asia/Tokyo][u-ca=japanese]
-console.log(zdt.year, zdt.era);
-  // => 45 showa
+  // => 1970-01-01T09:00:00+09:00[Asia/Tokyo][u-ca=japanese]
+console.log(zdt.eraYear, zdt.era);
+  // => '45 showa'
 ```
 <!-- prettier-ignore-end -->
 
@@ -403,7 +403,7 @@ Example usage:
 ```js
 startOfMoonMission = Temporal.Instant.from('1969-07-16T13:32:00Z');
 endOfMoonMission = Temporal.Instant.from('1969-07-24T16:50:35Z');
-missionLength = startOfMoonMission.until(endOfMoonMission, { largestUnit: 'days' });
+missionLength = startOfMoonMission.until(endOfMoonMission, { largestUnit: 'hours' });
   // => PT195H18M35S
 missionLength.toLocaleString();
   // example output: '195 hours 18 minutes 35 seconds'
@@ -413,24 +413,25 @@ approxMissionLength = startOfMoonMission.until(endOfMoonMission, {
   largestUnit: 'hours',
   smallestUnit: 'hours'
 });
-  // => P195H
+  // => PT195H
 
 // A billion (10^9) seconds since the epoch in different units
 epoch = Temporal.Instant.fromEpochSeconds(0);
 billion = Temporal.Instant.fromEpochSeconds(1e9);
 epoch.until(billion);
-  // =>    PT1000000000S
+  // => PT1000000000S
 epoch.until(billion, { largestUnit: 'hours' });
-  // =>  PT277777H46M40S
+  // => PT277777H46M40S
 ns = epoch.until(billion, { largestUnit: 'nanoseconds' });
-  // =>    PT1000000000S
+  // => PT1000000000S
 ns.add({ nanoseconds: 1 });
-  // =>    PT1000000000S (lost precision)
+  // => PT1000000000S
+  // (lost precision)
 
 // Calculate the difference in years, eliminating the ambiguity by
 // explicitly using the corresponding calendar date in UTC:
 epoch.toZonedDateTimeISO('UTC').until(
-  billion.toZonedDateTimeISO('UTC'), 
+  billion.toZonedDateTimeISO('UTC'),
   { largestUnit: 'years' }
 );
   // => P31Y8M8DT1H46M40S
@@ -517,13 +518,13 @@ Example usage:
 instant = Temporal.Instant.from('2019-03-30T02:45:59.999999999Z');
 
 // Round to a particular unit
-instant.round({ smallestUnit: 'second' }); // => 2019-03-30T02:46Z
+instant.round({ smallestUnit: 'second' }); // => 2019-03-30T02:46:00Z
 // Round to an increment of a unit, e.g. an hour:
 instant.round({ roundingIncrement: 60, smallestUnit: 'minute' });
-  // => 2019-03-30T03:00Z
+  // => 2019-03-30T03:00:00Z
 // Round to the same increment but round down instead:
 instant.round({ roundingIncrement: 60, smallestUnit: 'minute', roundingMode: 'floor' });
-  // => 2019-03-30T02:00Z
+  // => 2019-03-30T02:00:00Z
 ```
 <!-- prettier-ignore-end -->
 
@@ -587,20 +588,20 @@ Example usage:
 
 ```js
 instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
-instant.toString(); // => 2019-11-18T10:52:01.816Z
+instant.toString(); // => '2019-11-18T10:52:01.816Z'
 instant.toString({ timeZone: Temporal.TimeZone.from('UTC') });
-// => 2019-11-18T10:52:01.816+00:00
+// => '2019-11-18T10:52:01.816+00:00'
 instant.toString({ timeZone: 'Asia/Seoul' });
-// => 2019-11-18T19:52:01.816+09:00
+// => '2019-11-18T19:52:01.816+09:00'
 
 instant.toString({ smallestUnit: 'minute' });
-// => 2019-11-18T10:52Z
+// => '2019-11-18T10:52Z'
 instant.toString({ fractionalSecondDigits: 0 });
-// => 2019-11-18T10:52:01Z
+// => '2019-11-18T10:52:01Z'
 instant.toString({ fractionalSecondDigits: 4 });
-// => 2019-11-18T10:52:01.8160Z
+// => '2019-11-18T10:52:01.8160Z'
 instant.toString({ smallestUnit: 'second', roundingMode: 'halfExpand' });
-// => 2019-11-18T10:52:02Z
+// => '2019-11-18T10:52:02Z'
 ```
 
 ### instant.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
@@ -626,8 +627,8 @@ Example usage:
 
 ```js
 instant = Temporal.Instant.from('2019-11-18T11:00:00.000Z');
-instant.toLocaleString(); // => example output: 2019-11-18, 3:00:00 a.m.
-instant.toLocaleString('de-DE'); // => example output: 18.11.2019, 03:00:00
+instant.toLocaleString(); // example output: '2019-11-18, 3:00:00 a.m.'
+instant.toLocaleString('de-DE'); // example output: '18.11.2019, 03:00:00'
 instant.toLocaleString('de-DE', {
   timeZone: 'Europe/Berlin',
   year: 'numeric',
@@ -636,10 +637,10 @@ instant.toLocaleString('de-DE', {
   hour: 'numeric',
   minute: 'numeric',
   timeZoneName: 'long'
-}); // => 18.11.2019, 12:00 Mitteleuropäische Normalzeit
+}); // => '18.11.2019, 12:00 Mitteleuropäische Normalzeit'
 instant.toLocaleString('en-US-u-nu-fullwide-hc-h12', {
   timeZone: 'Asia/Kolkata'
-}); // => １１/１８/２０１９, ４:３０:００ PM
+}); // => '１１/１８/２０１９, ４:３０:００ PM'
 ```
 
 ### instant.**toJSON**() : string

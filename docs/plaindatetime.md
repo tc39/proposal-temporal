@@ -71,7 +71,7 @@ Usage examples:
 
 ```javascript
 // Leet hour on pi day in 2020
-datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37
+datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:37:00
 ```
 
 ## Static methods
@@ -125,8 +125,9 @@ Example usage:
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30Z'); // => 1995-12-07T03:24:30
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
-  // => same as above; time zone is ignored
-dt === Temporal.PlainDateTime.from(dt); // => true
+  // => 1995-12-07T03:24:30
+  // same as above; time zone is ignored
+dt === Temporal.PlainDateTime.from(dt); // => false
 
 dt = Temporal.PlainDateTime.from({
   year: 1995,
@@ -138,34 +139,34 @@ dt = Temporal.PlainDateTime.from({
   millisecond: 0,
   microsecond: 3,
   nanosecond: 500
-}); // => 1995-12-07T03:24:30.000003500
-dt = Temporal.PlainDateTime.from({ year: 1995, month: 12, day: 7 }); // => 1995-12-07T00:00
+}); // => 1995-12-07T03:24:30.0000035
+dt = Temporal.PlainDateTime.from({ year: 1995, month: 12, day: 7 }); // => 1995-12-07T00:00:00
 dt = Temporal.PlainDateTime.from(Temporal.PlainDate.from('1995-12-07T03:24:30'));
-  // => same as above; Temporal.PlainDate has year, month, and day properties
+  // => 1995-12-07T00:00:00
+  // same as above; Temporal.PlainDate has year, month, and day properties
 
 calendar = Temporal.Calendar.from('hebrew');
 dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
   // => 1995-12-07T03:24:30[u-ca=hebrew]
 dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
-  // => same as above
+  // => 1995-12-07T03:24:30[u-ca=hebrew]
+  // same as above
 
 // Different overflow modes
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
-  // => 2001-12-01T00:00
-dt = Temporal.PlainDateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'constrain' });
-  // => 2001-01-01T00:00
+  // => 2001-12-01T00:00:00
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 32 }, { overflow: 'constrain' });
+  // => 2001-01-31T00:00:00
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'constrain' });
-  // => 2001-01-01T23:00
+  // => 2001-01-01T23:00:00
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
-  // => 2001-01-01T00:59
-dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'constrain' });
-  // => 2001-01-01T01:00
+  // => 2001-01-01T00:59:00
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' });
-  // throws
-dt = Temporal.PlainDateTime.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject' });
-  // throws
+  // => throws
+dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 32 }, { overflow: 'reject' });
+  // => throws
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, hour: 25 }, { overflow: 'reject' });
-  // throws
+  // => throws
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, { overflow: 'reject' });
   // => throws
 ```
@@ -201,7 +202,7 @@ two = Temporal.PlainDateTime.from('1995-12-07T01:24');
 three = Temporal.PlainDateTime.from('2015-12-07T01:24');
 sorted = [one, two, three].sort(Temporal.PlainDateTime.compare);
 sorted.join(' ');
-// => 1995-12-07T01:24 1995-12-07T03:24 2015-12-07T01:24
+// => '1995-12-07T01:24:00 1995-12-07T03:24:00 2015-12-07T01:24:00'
 ```
 
 ## Properties
@@ -268,7 +269,7 @@ Usage examples:
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.year;        // => 1995
 dt.month;       // => 12
-dt.monthCode;   // => "M12"
+dt.monthCode;   // => 'M12'
 dt.day;         // => 7
 dt.hour;        // => 3
 dt.minute;      // => 24
@@ -277,10 +278,10 @@ dt.millisecond; // => 0
 dt.microsecond; // => 3
 dt.nanosecond;  // => 500
 
-dt = Temporal.PlainDate.from('2019-02-23T03:24:30.000003500[u-ca=hebrew]');
+dt = Temporal.PlainDateTime.from('2019-02-23T03:24:30.000003500[u-ca=hebrew]');
 dt.year;        // => 5779
 dt.month;       // => 6
-dt.monthCode;   // => "M05L"
+dt.monthCode;   // => 'M05L'
 dt.day;         // => 18
 dt.hour;        // => 3
 dt.minute;      // => 24
@@ -307,7 +308,7 @@ Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like t
 ```javascript
 date = Temporal.PlainDateTime.from('-000015-01-01T12:30[u-ca=gregory]');
 date.era;
-// => "bce"
+// => 'bce'
 date.eraYear;
 // => 16
 date.year;
@@ -324,7 +325,7 @@ Usage example:
 
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][dt.dayOfWeek - 1]; // => THU
+['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][dt.dayOfWeek - 1]; // => 'THU'
 ```
 
 ### datetime.**dayOfYear** : number
@@ -337,7 +338,7 @@ Usage example:
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 // ISO ordinal date
-console.log(dt.year, dt.dayOfYear); // => 1995 341
+console.log(dt.year, dt.dayOfYear); // => '1995 341'
 ```
 
 ### datetime.**weekOfYear** : number
@@ -352,7 +353,7 @@ Usage example:
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 // ISO week date
-console.log(dt.year, dt.weekOfYear, dt.dayOfWeek); // => 1995 49 4
+console.log(dt.year, dt.weekOfYear, dt.dayOfWeek); // => '1995 49 4'
 ```
 
 ### datetime.**daysInWeek** : number
@@ -378,7 +379,7 @@ Usage example:
 // Attempt to write some mnemonic poetry
 const monthsByDays = {};
 for (let month = 1; month <= 12; month++) {
-  const dt = Temporal.now.plainDateTime().with({ month });
+  const dt = Temporal.now.plainDateTimeISO().with({ month });
   monthsByDays[dt.daysInMonth] = (monthsByDays[dt.daysInMonth] || []).concat(dt);
 }
 
@@ -399,7 +400,7 @@ For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is 
 Usage example:
 
 ```javascript
-dt = Temporal.now.plainDateTime();
+dt = Temporal.now.plainDateTimeISO();
 percent = dt.dayOfYear / dt.daysInYear;
 `The year is ${percent.toLocaleString('en', { style: 'percent' })} over!`;
 // example output: "The year is 10% over!"
@@ -426,7 +427,7 @@ Usage example:
 
 ```javascript
 // Is this year a leap year?
-dt = Temporal.now.plainDateTime();
+dt = Temporal.now.plainDateTime('iso8601');
 dt.inLeapYear; // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
 dt.with({ year: 2100 }).inLeapYear; // => false
@@ -462,7 +463,7 @@ Usage example:
 
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.000003500
+dt.with({ year: 2015, second: 31 }); // => 2015-12-07T03:24:31.0000035
 ```
 
 ### datetime.**withPlainTime**(_plainTime_?: object | string) : Temporal.PlainDateTime
@@ -538,7 +539,7 @@ dt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30
 // result contains a non-ISO calendar if present in the input
 dt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30[u-ca=japanese]
 dt.withPlainDate('2017-09-06[u-ca=japanese]'); // => 2017-09-06T03:24:30[u-ca=japanese]
-dt.withCalendar('japanese').withPlainDate('2017-09-06[u-ca=hebrew]'); // => RangeError (calendar conflict)
+/* WRONG */ dt.withCalendar('japanese').withPlainDate('2017-09-06[u-ca=hebrew]'); // => RangeError (calendar conflict)
 ```
 
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime
@@ -555,7 +556,7 @@ Usage example:
 
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500[u-ca=japanese]');
-dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.000003500
+dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.0000035
 ```
 
 ### datetime.**add**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainDateTime
@@ -594,7 +595,7 @@ dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.add({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.000004
 
 dt = Temporal.PlainDateTime.from('2019-01-31T15:30');
-dt.add({ months: 1 }); // => 2019-02-28T15:30
+dt.add({ months: 1 }); // => 2019-02-28T15:30:00
 dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
@@ -634,8 +635,8 @@ dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.subtract({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
 
 dt = Temporal.PlainDateTime.from('2019-03-31T15:30');
-dt.subtract({ months: 1 }, { overflow: 'constrain' }); // => 2019-02-28T15:30
-dt.subtract({ months: 1 }); // => throws
+dt.subtract({ months: 1 }); // => 2019-02-28T15:30:00
+dt.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 ```
 
 ### datetime.**until**(_other_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Duration
@@ -693,20 +694,21 @@ Usage example:
 dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt1.until(dt2);
-  // =>    P8456DT12H5M29.999996500S
+  // => P8456DT12H5M29.9999965S
 dt1.until(dt2, { largestUnit: 'years' });
-  // => P23Y1M24DT12H5M29.999996500S
+  // => P23Y1M24DT12H5M29.9999965S
 dt2.until(dt1, { largestUnit: 'years' });
-  // => -P23Y1M24DT12H5M29.999996500S
+  // => -P23Y1M24DT12H5M29.9999965S
 dt1.until(dt2, { largestUnit: 'nanoseconds' });
-  // =>       PT730641929.999996544S (precision lost)
+  // => PT730641929.999996544S
+  // (precision lost)
 
 // Rounding, for example if you don't care about sub-seconds
 dt1.until(dt2, { smallestUnit: 'seconds' });
   // => P8456DT12H5M29S
 
 // Months and years can be different lengths
-[jan1, feb1, mar1] = [1, 2, 3].map((month) =>
+let [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
   Temporal.PlainDateTime.from({ year: 2020, month, day: 1 }));
 jan1.until(feb1);                            // => P31D
 jan1.until(feb1, { largestUnit: 'months' }); // => P1M
@@ -749,7 +751,7 @@ Usage example:
 ```javascript
 dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
-dt2.since(dt1); // => P8456DT12H5M29.999996500S
+dt2.since(dt1); // => P8456DT12H5M29.9999965S
 ```
 
 ### datetime.**round**(_options_: object) : Temporal.PlainDateTime
@@ -799,13 +801,13 @@ Example usage:
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 
 // Round to a particular unit
-dt.round({ smallestUnit: 'hour' }); // => 1995-12-07T03:00
+dt.round({ smallestUnit: 'hour' }); // => 1995-12-07T03:00:00
 // Round to an increment of a unit, e.g. half an hour:
 dt.round({ roundingIncrement: 30, smallestUnit: 'minute' });
-  // => 1995-12-07T03:30
+  // => 1995-12-07T03:30:00
 // Round to the same increment but round down instead:
 dt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' });
-  // => 1995-12-07T03:00
+  // => 1995-12-07T03:00:00
 ```
 <!-- prettier-ignore-end -->
 
@@ -885,13 +887,13 @@ dt = Temporal.PlainDateTime.from({
   microsecond: 999,
   nanosecond: 999
 });
-dt.toString(); // => 1999-12-31T23:59:59.999999999
+dt.toString(); // => '1999-12-31T23:59:59.999999999'
 
-dt.toString({ smallestUnit: 'minute' });    // => 1999-12-31T23:59
-dt.toString({ fractionalSecondDigits: 0 }); // => 1999-12-31T23:59:59
-dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
+dt.toString({ smallestUnit: 'minute' });    // => '1999-12-31T23:59'
+dt.toString({ fractionalSecondDigits: 0 }); // => '1999-12-31T23:59:59'
+dt.toString({ fractionalSecondDigits: 4 }); // => '1999-12-31T23:59:59.9999'
 dt.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
-// => 2000-01-01T00:00:00.00000000
+// => '2000-01-01T00:00:00.00000000'
 ```
 <!-- prettier-ignore-end -->
 
@@ -916,10 +918,10 @@ Example usage:
 
 ```js
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-dt.toLocaleString(); // => example output: 1995-12-07, 3:24:30 a.m.
-dt.toLocaleString('de-DE'); // => example output: 7.12.1995, 03:24:30
-dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => Donnerstag
-dt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => １２/７/１９９５, ３:２４:３０ AM
+dt.toLocaleString(); // example output: 1995-12-07, 3:24:30 a.m.
+dt.toLocaleString('de-DE'); // example output: 7.12.1995, 03:24:30
+dt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'long' }); // => 'Donnerstag'
+dt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => '１２/７/１９９５, ３:２４:３０ AM'
 ```
 
 ### datetime.**toJSON**() : string
@@ -1027,7 +1029,7 @@ dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.toPlainDate(); // => 1995-12-07
 dt.toPlainYearMonth(); // => 1995-12
 dt.toPlainMonthDay(); // => 12-07
-dt.toPlainTime(); // => 03:24:30.000003500
+dt.toPlainTime(); // => 03:24:30.0000035
 ```
 
 ### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }

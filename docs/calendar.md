@@ -124,7 +124,7 @@ Example usage:
 ```javascript
 cal = new Temporal.Calendar('iso8601');
 cal = new Temporal.Calendar('gregory');
-/*⚠️*/ cal = new Temporal.Calendar('discordian'); // not a built-in calendar, throws
+/* WRONG */ cal = new Temporal.Calendar('discordian'); // => throws, not a built-in calendar
 ```
 
 ## Static methods
@@ -166,10 +166,8 @@ cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancou
 cal2 = Temporal.Calendar.from(cal);
 
 // Custom calendar that is a plain object (this calendar does not do much)
-cal = Temporal.Calendar.from({ id: 'mycalendar' });
-
-/*⚠️*/ cal = Temporal.Calendar.from('discordian'); // not a built-in calendar, throws
-/*⚠️*/ cal = Temporal.Calendar.from('[u-ca=iso8601]'); // lone annotation not a valid ISO 8601 string
+/* WRONG */ cal = Temporal.Calendar.from('discordian'); // => throws, not a built-in calendar
+/* WRONG */ cal = Temporal.Calendar.from('[u-ca-iso8601]'); // => throws, lone annotation not a valid ISO 8601 string
 ```
 
 ## Properties
@@ -231,7 +229,7 @@ For example:
 const date = Temporal.PlainDate.from('2019-02-06').withCalendar('hebrew');
 date.year; // => 5779
 date.calendar.year(date); // same result, but calling the method directly
-date.monthCode; // => "M05L"
+date.monthCode; // => 'M05L'
 date.calendar.monthCode(date); // same result, but calling the method directly
 date.daysInYear; // => 385
 date.calendar.daysInYear(date); // same result, but calling the method directly
@@ -268,10 +266,10 @@ For example:
 date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M05L', day: 18, calendar: 'hebrew' });
 date.year; // => 5779
 date.month; // => 6
-date.monthCode; // => "M05L"
+date.monthCode; // => 'M05L'
 date.day; // => 18
-date.toString(); // => 2019-02-23[u-ca=hebrew]
-date.toLocaleString('en-US', { calendar: 'hebrew' }); // => "18 Adar I 5779"
+date.toString(); // => '2019-02-23[u-ca=hebrew]'
+date.toLocaleString('en-US', { calendar: 'hebrew' }); // => '18 Adar I 5779'
 
 // same result, but calling the method directly and using month index instead of month code:
 date = Temporal.Calendar.from('hebrew').dateFromFields(
@@ -313,7 +311,7 @@ date = Temporal.PlainDate.from('2020-05-29')
 date.year; // => 1441
 date.month; // => 11
 date.day; // => 7
-date.toString(); // => 2020-06-28[u-ca=islamic]
+date.toString(); // => '2020-06-28[u-ca=islamic]'
 
 // same result, but calling the method directly:
 date = Temporal.Calendar.from('islamic').dateAdd(
@@ -324,7 +322,7 @@ date = Temporal.Calendar.from('islamic').dateAdd(
 date.year; // => 1441
 date.month; // => 11
 date.day; // => 7
-date.toString(); // => 2020-06-28[u-ca=islamic]
+date.toString(); // => '2020-06-28[u-ca=islamic]'
 ```
 
 ### calendar.**dateUntil**(_one_: Temporal.PlainDate | object | string, _two_: Temporal.PlainDate | object | string, _options_: object) : Temporal.Duration
@@ -391,7 +389,7 @@ Usage example:
 ```js
 // In the ISO calendar, this method just makes a copy of the input array
 Temporal.Calendar.from('iso8601').fields(['monthCode', 'day']);
-// => ['monthCode', 'day']
+// => [ 'monthCode', 'day' ]
 ```
 <!-- prettier-ignore-end -->
 
@@ -437,7 +435,7 @@ This method overrides `Object.prototype.toString()` and provides the calendar's 
 Example usage:
 
 ```javascript
-Temporal.PlainDate.from('2020-05-29[u-ca=gregory]').calendar.toString(); // => gregory
+Temporal.PlainDate.from('2020-05-29[u-ca=gregory]').calendar.toString(); // => 'gregory'
 ```
 
 ### calendar.**toJSON**() : string

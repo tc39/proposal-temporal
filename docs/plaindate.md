@@ -92,26 +92,28 @@ date = Temporal.PlainDate.from('2006-08-24T15:43:27'); // => 2006-08-24
 date = Temporal.PlainDate.from('2006-08-24T15:43:27Z'); // => 2006-08-24
 date = Temporal.PlainDate.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');
   // => 2006-08-24
-date === Temporal.PlainDate.from(date) // => true
+date === Temporal.PlainDate.from(date); // => false
 
 date = Temporal.PlainDate.from({year: 2006, month: 8, day: 24}); // => 2006-08-24
 date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'));
-  // => same as above; Temporal.PlainDateTime has year, month, and day properties
+  // => 2006-08-24
+  // same as above; Temporal.PlainDateTime has year, month, and day properties
 
 calendar = Temporal.Calendar.from('islamic');
-date = Temporal.PlainDate.from({ year: 1427, month; 8, day: 1, calendar }); // => 2006-08-24[u-ca=islamic]
+date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar }); // => 2006-08-24[u-ca=islamic]
 date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
-  // => same as above
+  // => 2006-08-24[u-ca=islamic]
+  // same as above
 
 // Different overflow modes
 date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' })
   // => 2001-12-01
-date = Temporal.PlainDate.from({ year: 2001, month: -1, day: 1 }, { overflow: 'constrain' })
-  // => 2001-01-01
+date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'constrain' })
+  // => 2001-01-31
 date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' })
-  // throws
-date = Temporal.PlainDate.from({ year: 2001, month: -1, day: 1 }, { overflow: 'reject' })
-  // throws
+  // => throws
+date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'reject' })
+  // => throws
 ```
 
 ### Temporal.PlainDate.**compare**(_one_: Temporal.PlainDate | object | string, _two_: Temporal.PlainDate | object | string) : number
@@ -143,7 +145,7 @@ one = Temporal.PlainDate.from('2006-08-24');
 two = Temporal.PlainDate.from('2015-07-14');
 three = Temporal.PlainDate.from('1930-02-18');
 sorted = [one, two, three].sort(Temporal.PlainDate.compare);
-sorted.join(' '); // => 1930-02-18 2006-08-24 2015-07-14
+sorted.join(' '); // => '1930-02-18 2006-08-24 2015-07-14'
 ```
 
 ## Properties
@@ -182,13 +184,13 @@ Usage examples:
 date = Temporal.PlainDate.from('2006-08-24');
 date.year;      // => 2006
 date.month;     // => 8
-date.monthCode; // => "M08"
+date.monthCode; // => 'M08'
 date.day;       // => 24
 
 date = Temporal.PlainDate.from('2019-02-23[u-ca=hebrew]');
 date.year;      // => 5779
 date.month;     // => 6
-date.monthCode; // => "M05L"
+date.monthCode; // => 'M05L'
 date.day;       // => 18
 ```
 <!-- prettier-ignore-end -->
@@ -209,7 +211,7 @@ Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like t
 ```javascript
 date = Temporal.PlainDate.from('-000015-01-01[u-ca=gregory]');
 date.era;
-// => "bce"
+// => 'bce'
 date.eraYear;
 // => 16
 date.year;
@@ -226,7 +228,7 @@ Usage example:
 
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24');
-['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][date.dayOfWeek - 1]; // => THU
+['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][date.dayOfWeek - 1]; // => 'THU'
 ```
 
 ### date.**dayOfYear** : number
@@ -239,7 +241,7 @@ Usage example:
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24');
 // ISO ordinal date
-console.log(date.year, date.dayOfYear); // => 2006 236
+console.log(date.year, date.dayOfYear); // => '2006 236'
 ```
 
 ### date.**weekOfYear** : number
@@ -254,7 +256,7 @@ Usage example:
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24');
 // ISO week date
-console.log(date.year, date.weekOfYear, date.dayOfWeek); // => 2006 34 4
+console.log(date.year, date.weekOfYear, date.dayOfWeek); // => '2006 34 4'
 ```
 
 ### date.**daysInWeek** : number
@@ -280,7 +282,7 @@ Usage example:
 // Attempt to write some mnemonic poetry
 const monthsByDays = {};
 for (let month = 1; month <= 12; month++) {
-  const date = Temporal.now.plainDate().with({ month });
+  const date = Temporal.now.plainDateISO().with({ month });
   monthsByDays[date.daysInMonth] = (monthsByDays[date.daysInMonth] || []).concat(date);
 }
 
@@ -301,7 +303,7 @@ For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is 
 Usage example:
 
 ```javascript
-date = Temporal.now.plainDate();
+date = Temporal.now.plainDateISO();
 percent = date.dayOfYear / date.daysInYear;
 `The year is ${percent.toLocaleString('en', { style: 'percent' })} over!`;
 // example output: "The year is 10% over!"
@@ -328,7 +330,7 @@ Usage example:
 
 ```javascript
 // Is this year a leap year?
-date = Temporal.now.plainDate();
+date = Temporal.now.plainDateISO();
 date.inLeapYear; // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
 date.with({ year: 2100 }).inLeapYear; // => false
@@ -620,7 +622,7 @@ Example usage:
 
 ```js
 date = Temporal.PlainDate.from('2006-08-24');
-date.toString(); // => 2006-08-24
+date.toString(); // => '2006-08-24'
 ```
 
 ### date.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
@@ -640,10 +642,10 @@ Example usage:
 
 ```js
 date = Temporal.PlainDate.from('2006-08-24');
-date.toLocaleString(); // => example output: 8/24/2006
-date.toLocaleString('de-DE'); // => example output: 24.8.2006
-date.toLocaleString('de-DE', { weekday: 'long' }); // => Donnerstag
-date.toLocaleString('en-US-u-nu-fullwide'); // => ８/２４/２００６
+date.toLocaleString(); // example output: 8/24/2006
+date.toLocaleString('de-DE'); // example output: '24.8.2006'
+date.toLocaleString('de-DE', { weekday: 'long' }); // => 'Donnerstag'
+date.toLocaleString('en-US-u-nu-fullwide'); // => '８/２４/２００６'
 ```
 
 ### date.**toJSON**() : string
@@ -729,7 +731,7 @@ plainTime = Temporal.PlainTime.from('15:23:30.003');
 plainDate.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainTime });
 // => 2006-08-24T15:23:30.003-07:00[America/Los_Angeles]
 plainDate.toZonedDateTime({ timeZone: 'America/Los_Angeles' });
-// => 2006-08-24T00:00-07:00[America/Los_Angeles]
+// => 2006-08-24T00:00:00-07:00[America/Los_Angeles]
 ```
 
 ### date.**toPlainDateTime**(_time_?: Temporal.PlainTime | object | string) : Temporal.PlainDateTime
@@ -754,7 +756,7 @@ Usage example:
 date = Temporal.PlainDate.from('2006-08-24');
 time = Temporal.PlainTime.from('15:23:30.003');
 date.toPlainDateTime(time); // => 2006-08-24T15:23:30.003
-date.toPlainDateTime(); // => 2006-08-24T00:00
+date.toPlainDateTime(); // => 2006-08-24T00:00:00
 ```
 
 ### date.**toPlainYearMonth**() : Temporal.PlainYearMonth
