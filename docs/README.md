@@ -16,7 +16,7 @@ Temporal fixes these problems by:
 
 - Providing easy-to-use APIs for date and time computations
 - First-class support for all time zones, including DST-safe arithmetic
-- Dealing only with immutable objects
+- Dealing only with objects representing fixed dates and times
 - Parsing a strictly specified string format
 - Supporting non-Gregorian calendars
 

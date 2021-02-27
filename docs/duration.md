@@ -5,7 +5,7 @@
 <!-- toc -->
 </details>
 
-A `Temporal.Duration` represents an immutable duration of time which can be used in date/time arithmetic.
+A `Temporal.Duration` represents a duration of time which can be used in date/time arithmetic.
 
 `Temporal.Duration` can be constructed directly or returned from `Temporal.Duration.from()`.
 It can also be obtained from the `since()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` and `subtract()` methods.
@@ -230,7 +230,7 @@ d.blank; // => true
 
 This method creates a new `Temporal.Duration` which is a copy of `duration`, but any properties present on `durationLike` override the ones already present on `duration`.
 
-Since `Temporal.Duration` objects are immutable, use this method instead of modifying one.
+Since `Temporal.Duration` objects each represent a fixed duration, use this method instead of modifying one.
 
 All non-zero properties of `durationLike` must have the same sign, and they must additionally have the same sign as the non-zero properties of `duration`, unless they override all of these non-zero properties.
 If a property of `durationLike` is infinity, then this function will throw a `RangeError`.

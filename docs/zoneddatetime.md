@@ -714,7 +714,7 @@ repeated0130 = daylightTime0130.with({ offset: minus8Hours });
 
 This method creates a new `Temporal.ZonedDateTime` which is a copy of `zonedDateTime`, but any properties present on `zonedDateTimeLike` override the ones already present on `zonedDateTime`.
 
-Since `Temporal.ZonedDateTime` objects are immutable, this method will create a new instance instead of modifying the existing instance.
+Since `Temporal.ZonedDateTime` objects each represent a fixed date and time, this method will create a new instance instead of modifying the existing instance.
 
 If the result is earlier or later than the range of dates that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 

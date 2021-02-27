@@ -191,7 +191,7 @@ The `overflow` option tells what should happen when out-of-range values are give
 
 > **NOTE**: The allowed values for the `monthDayLike.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-Since `Temporal.PlainMonthDay` objects are immutable, use this method instead of modifying one.
+Since `Temporal.PlainMonthDay` objects each represent a fixed month and day, use this method instead of modifying one.
 
 > **NOTE**: `calendar` and `timeZone` properties are not allowed on `monthDayLike`.
 > It is not possible to convert a `Temporal.PlainMonthDay` to another calendar system without knowing the year.
