@@ -1314,7 +1314,7 @@
       1. Set _hours_ to ? ToIntegerOrInfinity(_hours_) × _factor_.
       1. Set _minutes_ to ? ToIntegerOrInfinity(_minutes_) × _factor_.
       1. Set _seconds_ to ? ToIntegerOrInfinity(_seconds_) × _factor_.
-      1. If _fraction_ is not undefined, then
+      1. If _fraction_ is not *undefined*, then
         1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _milliseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
