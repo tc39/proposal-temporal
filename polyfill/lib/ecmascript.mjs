@@ -3266,6 +3266,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // not expected and so is avoided below via a fast path for time-only
     // arithmetic.
     // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
       return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
     }
@@ -3275,7 +3276,8 @@ export const ES = ObjectAssign({}, ES2020, {
     let dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
     const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
-    const addedDate = ES.CalendarDateAdd(calendar, datePart, { years, months, weeks, days }, options, TemporalDate);
+    const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const addedDate = ES.CalendarDateAdd(calendar, datePart, dateDuration, options, TemporalDate);
     const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const dtIntermediate = new TemporalDateTime(
       GetSlot(addedDate, ISO_YEAR),

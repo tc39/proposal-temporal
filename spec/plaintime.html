@@ -238,7 +238,6 @@
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _result_ be ? AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
         1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], *"reject"*).
         1. Return ? CreateTemporalTimeFromInstance(_temporalTime_, _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
@@ -262,7 +261,6 @@
         1. Let _timeZoneProperty_ be ? Get(_temporalTimeLike_, *"timeZone"*).
         1. If _timeZoneProperty_ is not *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _calendar_ be _temporalTime_.[[Calendar]].
         1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
@@ -419,7 +417,7 @@
         1. Let _temporalDateLike_ be ? Get(_item_, *"plainDate"*).
         1. If _temporalDateLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _temporalDate_ to ? ToTemporalTime(_temporalDateLike_).
+        1. Let _temporalDate_ be ? ToTemporalTime(_temporalDateLike_).
         1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -462,7 +460,7 @@
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundResult_ be ? RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return ? TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _temporalTime_.[[Calendar]], _precision_.[[Precision]]).
+        1. Return ? TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -478,7 +476,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _temporalTime_.[[Calendar]], *"auto"*, *"auto"*).
+        1. Return ? TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -875,7 +873,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporaltimetostring" aoid="TemporalTimeToString">
-      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_ )</h1>
+      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
       <emu-alg>
         1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _hour_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
