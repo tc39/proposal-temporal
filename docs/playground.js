@@ -7056,6 +7056,8 @@
       // not expected and so is avoided below via a fast path for time-only
       // arithmetic.
       // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+      var TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+
       if (ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
         return ES.AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
       } // RFC 5545 requires the date portion to be added in calendar days and the
@@ -7065,12 +7067,8 @@
       var dt = ES.GetTemporalDateTimeFor(timeZone, instant, calendar);
       var TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
       var datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
-      var addedDate = ES.CalendarDateAdd(calendar, datePart, {
-        years: years,
-        months: months,
-        weeks: weeks,
-        days: days
-      }, options, TemporalDate);
+      var dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      var addedDate = ES.CalendarDateAdd(calendar, datePart, dateDuration, options, TemporalDate);
       var TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
       var dtIntermediate = new TemporalDateTime(GetSlot(addedDate, ISO_YEAR), GetSlot(addedDate, ISO_MONTH), GetSlot(addedDate, ISO_DAY), GetSlot(dt, ISO_HOUR), GetSlot(dt, ISO_MINUTE), GetSlot(dt, ISO_SECOND), GetSlot(dt, ISO_MILLISECOND), GetSlot(dt, ISO_MICROSECOND), GetSlot(dt, ISO_NANOSECOND), calendar); // Note that 'compatible' is used below because this disambiguation behavior
       // is required by RFC 5545.
