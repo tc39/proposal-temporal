@@ -154,7 +154,7 @@ export class ZonedDateTime {
     const month = GetSlot(dt, ISO_MONTH);
     const day = GetSlot(dt, ISO_DAY);
     const today = new DateTime(year, month, day, 0, 0, 0, 0, 0, 0);
-    const tomorrowFields = ES.AddDate(year, month, day, 0, 0, 0, 1, 'reject');
+    const tomorrowFields = ES.AddISODate(year, month, day, 0, 0, 0, 1, 'reject');
     const tomorrow = new DateTime(tomorrowFields.year, tomorrowFields.month, tomorrowFields.day, 0, 0, 0, 0, 0, 0);
     const timeZone = GetSlot(this, TIME_ZONE);
     const todayNs = GetSlot(ES.GetTemporalInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
@@ -238,7 +238,7 @@ export class ZonedDateTime {
       nanosecond
     } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
     const offsetNs = ES.ParseOffsetString(fields.offset);
-    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+    const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
       day,
@@ -701,7 +701,7 @@ export class ZonedDateTime {
     const instantStart = ES.GetTemporalInstantFor(timeZone, dtStart, 'compatible');
     const endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
     const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
       year,
       month,
       day,
@@ -723,7 +723,7 @@ export class ZonedDateTime {
     // new date/time values. If DST disambiguation is required, the `compatible`
     // disambiguation algorithm will be used.
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
-    const epochNanoseconds = ES.InterpretTemporalZonedDateTimeOffset(
+    const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
       day,

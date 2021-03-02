@@ -64,8 +64,8 @@ export class TimeZone {
 
     const ns = GetSlot(instant, EPOCHNANOSECONDS);
     const offsetNs = ES.GetOffsetNanosecondsFor(this, instant);
-    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetPartsFromEpoch(ns);
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceDateTime(
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(ns);
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceISODateTime(
       year,
       month,
       day,
@@ -103,7 +103,7 @@ export class TimeZone {
       }
     }
 
-    const utcns = ES.GetEpochFromParts(
+    const utcns = ES.GetEpochFromISOParts(
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
       GetSlot(dateTime, ISO_DAY),
@@ -146,7 +146,7 @@ export class TimeZone {
 
     const offsetNs = ES.ParseOffsetString(id);
     if (offsetNs !== null) {
-      const epochNs = ES.GetEpochFromParts(
+      const epochNs = ES.GetEpochFromISOParts(
         GetSlot(dateTime, ISO_YEAR),
         GetSlot(dateTime, ISO_MONTH),
         GetSlot(dateTime, ISO_DAY),

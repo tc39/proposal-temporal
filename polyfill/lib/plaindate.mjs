@@ -43,7 +43,7 @@ export class PlainDate {
       throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
     }
 
-    ES.RejectDate(isoYear, isoMonth, isoDay);
+    ES.RejectISODate(isoYear, isoMonth, isoDay);
     ES.RejectDateRange(isoYear, isoMonth, isoDay);
     CreateSlots(this);
     SetSlot(this, ISO_YEAR, isoYear);
@@ -438,7 +438,7 @@ export class PlainDate {
   static compare(one, two) {
     one = ES.ToTemporalDate(one, PlainDate);
     two = ES.ToTemporalDate(two, PlainDate);
-    const result = ES.CompareTemporalDate(
+    const result = ES.CompareISODate(
       GetSlot(one, ISO_YEAR),
       GetSlot(one, ISO_MONTH),
       GetSlot(one, ISO_DAY),

@@ -34,7 +34,7 @@ function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = 
 
   if (options) {
     const { unit, increment, roundingMode } = options;
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
       year,
       month,
       day,
@@ -440,7 +440,7 @@ export class PlainDateTime {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.DifferenceDateTime(
+    } = ES.DifferenceISODateTime(
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
       GetSlot(this, ISO_DAY),
@@ -534,7 +534,7 @@ export class PlainDateTime {
       milliseconds,
       microseconds,
       nanoseconds
-    } = ES.DifferenceDateTime(
+    } = ES.DifferenceISODateTime(
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
       GetSlot(this, ISO_DAY),
@@ -636,7 +636,7 @@ export class PlainDateTime {
     let millisecond = GetSlot(this, ISO_MILLISECOND);
     let microsecond = GetSlot(this, ISO_MICROSECOND);
     let nanosecond = GetSlot(this, ISO_NANOSECOND);
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundDateTime(
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
       year,
       month,
       day,

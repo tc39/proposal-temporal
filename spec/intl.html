@@ -1203,7 +1203,7 @@
             1. Set _options_ to ? NormalizeOptionsObject(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-              1. Let _result_ be ? AddDate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
+              1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
             1. Else,
               1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _date_, _duration_, _options_, and the value of _calendar_.[[Identifier]].
             1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
@@ -1225,7 +1225,7 @@
             1. Set _options_ to ? NormalizeOptionsObject(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *"days"*).
-              1. Let _result_ be ? DifferenceDate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+              1. Let _result_ be ? DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
               1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _options_, and the value of _calendar_.[[Identifier]].
             1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -1348,7 +1348,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _dayOfWeek_ be ! ToDayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+              1. Let _dayOfWeek_ be ! ToISODayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
             1. Else,
               1. Let _dayOfWeek_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
             1. Return 𝔽(_dayOfWeek_).
@@ -1367,7 +1367,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _dayOfYear_ be ! ToDayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+              1. Let _dayOfYear_ be ! ToISODayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
             1. Else,
               1. Let _dayOfYear_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
             1. Return 𝔽(_dayOfYear_).
@@ -1386,7 +1386,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _weekOfYear_ be ! ToWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
+              1. Let _weekOfYear_ be ! ToISOWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]]).
             1. Else,
               1. Let _weekOfYear_ be the result of implementation-defined processing of _date_ and the value of _calendar_.[[Identifier]].
             1. Return 𝔽(_weekOfYear_).
@@ -1425,7 +1425,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. If _dateOrDateTime_ does not have [[ISOYear]] and [[ISOMonth]] internal slots, then
                 1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-              1. Let _daysInMonth_ be ! DaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]]).
+              1. Let _daysInMonth_ be ! ISODaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]]).
             1. Else,
               1. Let _daysInMonth_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
             1. Return 𝔽(_daysInMonth_).
@@ -1444,7 +1444,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-              1. Let _daysInYear_ be ! DaysInYear(_year_).
+              1. Let _daysInYear_ be ! ISODaysInYear(_year_).
             1. Else,
               1. Let _daysInYear_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
             1. Return 𝔽(_daysInYear_).
@@ -1482,7 +1482,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-              1. Let _inLeapYear_ be ! IsLeapYear(_year_).
+              1. Let _inLeapYear_ be ! IsISOLeapYear(_year_).
             1. Else,
               1. Let _inLeapYear_ be the result of implementation-defined processing of _dateOrDateTime_ and the value of _calendar_.[[Identifier]].
             1. Return _inLeapYear_.

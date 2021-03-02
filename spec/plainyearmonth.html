@@ -545,7 +545,7 @@
               [[ISODay]]
             </td>
             <td>
-              An integer Number value between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
+              An integer Number value between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
               This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOYear]] and [[ISOMonth]] slots are not enough to uniquely identify a year and month in that calendar.
             </td>
           </tr>
@@ -585,7 +585,7 @@
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_result_.[[Calendar]]).
         1. If _result_.[[Day]] is *undefined*, then
-          1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], 1) is *false*, then
+          1. If ! ValidateISODate(_result_.[[Year]], _result_.[[Month]], 1) is *false*, then
             1. Throw a *RangeError* exception.
           1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _calendar_, *undefined*).
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
@@ -594,15 +594,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulateyearmonth" aoid="RegulateYearMonth">
-      <h1>RegulateYearMonth ( _year_, _month_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-regulateisoyearmonth" aoid="RegulateISOYearMonth">
+      <h1>RegulateISOYearMonth ( _year_, _month_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainYearMonth(_year_, _month_).
+          1. Return ! ConstrainISOYearMonth(_year_, _month_).
         1. If _overflow_ is *"reject"*, then
-          1. If ! ValidateYearMonth(_year_, _month_) is *false*, then
+          1. If ! ValidateISOYearMonth(_year_, _month_) is *false*, then
             1. Throw a *RangeError* exception.
           1. Return the new Record {
               [[Year]]: _year_,
@@ -611,8 +611,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-validateyearmonth" aoid="ValidateYearMonth">
-      <h1>ValidateYearMonth ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-validateisoyearmonth" aoid="ValidateISOYearMonth">
+      <h1>ValidateISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
@@ -621,8 +621,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-validateyearmonthrange" aoid="ValidateYearMonthRange">
-      <h1>ValidateYearMonthRange ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-validateisoyearmonthrange" aoid="ValidateISOYearMonthRange">
+      <h1>ValidateISOYearMonthRange ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. If _year_ &lt; −271821 or _year_ &gt; 275760, then
@@ -635,8 +635,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceyearmonth" aoid="BalanceYearMonth">
-      <h1>BalanceYearMonth ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-balanceisoyearmonth" aoid="BalanceISOYearMonth">
+      <h1>BalanceISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. If _year_ is *+∞* or *−∞*, or _month_ is *+∞* or *−∞*, then
@@ -650,8 +650,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-constrainyearmonth" aoid="ConstrainYearMonth">
-      <h1>ConstrainYearMonth ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-constrainisoyearmonth" aoid="ConstrainISOYearMonth">
+      <h1>ConstrainISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
@@ -665,9 +665,9 @@
     <emu-clause id="sec-temporal-createtemporalyearmonth" aoid="CreateTemporalYearMonth">
       <h1>CreateTemporalYearMonth ( _isoYear_, _isoMonth_, _calendar_, _referenceISODay_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. If ! ValidateDate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, then
+        1. If ! ValidateISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, then
           1. Throw a *RangeError* exception.
-        1. If ! ValidateYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
+        1. If ! ValidateISOYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
@@ -682,7 +682,7 @@
     <emu-clause id="sec-temporal-createtemporalyearmonthfromstatic" aoid="CreateTemporalYearMonthFromStatic">
       <h1>CreateTemporalYearMonthFromStatic ( _constructor_, _year_, _month_, _calendar_, _referenceISODay_ )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDate(_year_, _month_, _referenceISODay_) is *true*.
+        1. Assert: ! ValidateISODate(_year_, _month_, _referenceISODay_) is *true*.
         1. If ! IsConstructor(_constructor_) is *false*, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be ? Construct(_constructor_, « _year_, _month_, _calendar_, _referenceISODay_ »).
@@ -703,7 +703,7 @@
       <emu-alg>
         1. Assert: Type(_yearMonth_) is Object.
         1. Assert: _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
-        1. Let _year_ be ! PadYear(_yearMonth_.[[ISOYear]]).
+        1. Let _year_ be ! PadISOYear(_yearMonth_.[[ISOYear]]).
         1. Let _month_ be _yearMonth_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _result_ be the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.
         1. Let _calendarID_ be ? ToString(_yearMonth_.[[Calendar]]).

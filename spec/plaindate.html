@@ -644,7 +644,7 @@
               [[ISODay]]
             </td>
             <td>
-              An integer between 1 and DaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -669,8 +669,8 @@
         1. Assert: _isoYear_ is an integer.
         1. Assert: _isoMonth_ is an integer.
         1. Assert: _isoDay_ is an integer.
-        1. Perform ? RejectDate(_isoYear_, _isoMonth_, _isoDay_).
-        1. If ! DateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, 12, 0, 0, 0, 0, 0) is not ~in range~, throw a *RangeError* exception.
+        1. Perform ? RejectISODate(_isoYear_, _isoMonth_, _isoDay_).
+        1. If ! ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, 12, 0, 0, 0, 0, 0) is not ~in range~, throw a *RangeError* exception.
         1. If Type(_calendar_) is not Object, throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainDate%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainDate.prototype%"*, « [[InitializedTemporalDate]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
@@ -681,7 +681,7 @@
         1. Return _object_.
       </emu-alg>
       <emu-note>
-        <p>Deferring to DateTimeWithinLimits with an hour of 12 avoids trouble at the extremes of the representable range of dates, which stop just before midnight on each end.</p>
+        <p>Deferring to ISODateTimeWithinLimits with an hour of 12 avoids trouble at the extremes of the representable range of dates, which stop just before midnight on each end.</p>
       </emu-note>
     </emu-clause>
 
@@ -689,7 +689,7 @@
       <h1>CreateTemporalDateFromInstance ( _temporalDate_, _isoYear_, _isoMonth_, _isoDay_, _calendar_ )</h1>
       <emu-alg>
         1. Assert: Type(_temporalDate_) is Object and _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
-        1. Assert: ! ValidateDate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
+        1. Assert: ! ValidateISODate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
         1. Let _constructor_ be ? SpeciesConstructor(_temporalDate_, %Temporal.PlainDate%).
         1. Let _result_ be ? Construct(_constructor_, « _isoYear_, _isoMonth_, _isoDay_, _calendar_ »).
         1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalDate]]).
@@ -700,7 +700,7 @@
     <emu-clause id="sec-temporal-createtemporaldatefromstatic" aoid="CreateTemporalDateFromStatic">
       <h1>CreateTemporalDateFromStatic ( _constructor_, _isoYear_, _isoMonth_, _isoDay_, _calendar_ )</h1>
       <emu-alg>
-        1. Assert: ! ValidateDate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
+        1. Assert: ! ValidateISODate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
         1. If ! IsConstructor(_constructor_) is *false*, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be ? Construct(_constructor_, « _isoYear_, _isoMonth_, _isoDay_, _calendar_ »).
@@ -727,16 +727,16 @@
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalDateString(_string_).
-        1. If ! ValidateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
+        1. If ! ValidateISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, then
           1. Throw a *RangeError* exception.
         1. Let _calendar_ be ? ToOptionalTemporalCalendar(_result_.[[Calendar]]).
-        1. Set _result_ to ? RegulateDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _overflow_).
+        1. Set _result_ to ? RegulateISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _overflow_).
         1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-differencedate" aoid="DifferenceDate">
-      <h1>DifferenceDate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _largestUnit_ )</h1>
+    <emu-clause id="sec-temporal-differenceisodate" aoid="DifferenceISODate">
+      <h1>DifferenceISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _largestUnit_ )</h1>
       <emu-alg>
         1. Assert: _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, *"days"*, *"hours"*, *"minutes"*, or *"seconds"*.
         1. If _largestUnit_ is not *"years"*, *"months"*, or *"weeks"*, then
@@ -747,7 +747,7 @@
           1. Let _start_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
           1. Let _end_ be the new Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
           1. Let _years_ be _end_.[[Year]] − _start_.[[Year]].
-          1. Let _mid_ be ? AddDate(_y1_, _m1_, _d1_, _years_, 0, 0, *"constrain"*).
+          1. Let _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, *"constrain"*).
           1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
             1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
@@ -756,7 +756,7 @@
           1. If _midSign_ is not equal to _sign_, then
             1. Set _years_ to _years_ - _sign_.
             1. Set _months_ to _months_ + _sign_ × 12.
-          1. Set _mid_ be ? AddDate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
+          1. Set _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
           1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
             1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: 0 }.
@@ -766,18 +766,18 @@
             1. If _months_ is equal to -_sign_, then
               1. Set _years_ to _years_ - _sign_.
               1. Set _months_ to 11 × _sign_.
-            1. Set _mid_ be ? AddDate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
+            1. Set _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
             1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. Let _days_ be 0.
           1. If _mid_.[[Month]] is equal to _end_.[[Month]] and _mid_.[[Year]] is equal to _mid_.[[Year]], set _days_ to _end_.[[Day]] - _mid_.[[Day]].
-          1. Else if _sign_ &lt; 0, set _days_ to -_mid_.[[Day]] - (! DaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
-          1. Else, set _days_ to _end_.[[Day]] + (! DaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
+          1. Else if _sign_ &lt; 0, set _days_ to -_mid_.[[Day]] - (! ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
+          1. Else, set _days_ to _end_.[[Day]] + (! ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
           1. If _largestUnit_ is *"months"*, then
             1. Set _months_ to _months_ + _years_ × 12.
             1. Set _years_ to 0.
           1. Return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: _days_ }.
         1. If _largestUnit_ is *"days"* or *"weeks"*, then
-          1. If ! CompareTemporalDate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_) &lt; 0, then
+          1. If ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_) &lt; 0, then
             1. Let _smaller_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
             1. Let _greater_ be the new Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
             1. Let _sign_ be 1.
@@ -786,10 +786,10 @@
             1. Let _greater_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
             1. Let _sign_ be −1.
           1. Let _years_ be _greater_.[[Year]] − _smaller_.[[Year]].
-          1. Let _days_ be ! ToDayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) − ! ToDayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
+          1. Let _days_ be ! ToISODayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) − ! ToISODayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
           1. Assert: _years_ ≥ 0.
           1. Repeat, while _years_ &gt; 0,
-            1. Set _days_ to _days_ + ! DaysInYear(_smaller_.[[Year]] + _years_ − 1).
+            1. Set _days_ to _days_ + ! ISODaysInYear(_smaller_.[[Year]] + _years_ − 1).
             1. Set _years_ to _years_ − 1.
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is *"weeks"*, then
@@ -811,50 +811,50 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulatedate" aoid="RegulateDate">
-      <h1>RegulateDate ( _year_, _month_, _day_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-regulateisodate" aoid="RegulateISODate">
+      <h1>RegulateISODate ( _year_, _month_, _day_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"reject"*, then
-          1. Perform ? RejectDate(_year_, _month_, _day_).
+          1. Perform ? RejectISODate(_year_, _month_, _day_).
           1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_,
             [[Day]]: _day_
             }.
         1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainDate(_year_, _month_, _day_).
+          1. Return ! ConstrainISODate(_year_, _month_, _day_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-validatedate" aoid="ValidateDate">
-      <h1>ValidateDate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-validateisodate" aoid="ValidateISODate">
+      <h1>ValidateISODate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integers.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
-        1. Let _daysInMonth_ be ! DaysInMonth(_year_, _month_).
+        1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
         1. If _day_ &lt; 1 or _day_ &gt; _daysInMonth_, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-rejectdate" aoid="RejectDate">
-      <h1>RejectDate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-rejectisodate" aoid="RejectISODate">
+      <h1>RejectISODate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integers.
-        1. If ! ValidateDate(_year_, _month_, _day_) is *false*, then
+        1. If ! ValidateISODate(_year_, _month_, _day_) is *false*, then
           1. Throw a *RangeError* exception.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-constraindate" aoid="ConstrainDate">
-      <h1>ConstrainDate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-constrainisodate" aoid="ConstrainISODate">
+      <h1>ConstrainISODate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integers.
         1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
-        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! DaysInMonth(_year_, _month_)).
+        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! ISODaysInMonth(_year_, _month_)).
         1. Return the Record {
           [[Year]]: _year_,
           [[Month]]: _month_,
@@ -863,12 +863,12 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balancedate" aoid="BalanceDate">
-      <h1>BalanceDate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-balanceisodate" aoid="BalanceISODate">
+      <h1>BalanceISODate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
         1. If _day_ is *+∞* or *−∞*, then
           1. Throw a *RangeError* exception.
-        1. Let _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_).
+        1. Let _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_).
         1. Let _month_ be _balancedYearMonth_.[[Month]].
         1. Let _year_ be _balancedYearMonth_.[[Year]].
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than −366 or −365.
@@ -876,26 +876,26 @@
           1. Let _testYear_ be _year_.
         1. Else,
           1. Let _testYear_ be _year_ − 1.
-        1. Repeat, while _day_ &lt; −1 × ! DaysInYear(_testYear_),
-          1. Set _day_ to _day_ + ! DaysInYear(_testYear_).
+        1. Repeat, while _day_ &lt; −1 × ! ISODaysInYear(_testYear_),
+          1. Set _day_ to _day_ + ! ISODaysInYear(_testYear_).
           1. Set _year_ to _year_ − 1.
           1. Set _testYear_ to _testYear_ − 1.
         1. NOTE: To deal with numbers of days greater than the number of days in a year, the following section adds years and subtracts days until the number of days is less than 366 or 365.
         1. Let _testYear_ be _year_ + 1.
-        1. Repeat, while _day_ &gt; ! DaysInYear(_testYear_),
-          1. Set _day_ to _day_ − ! DaysInYear(_testYear_).
+        1. Repeat, while _day_ &gt; ! ISODaysInYear(_testYear_),
+          1. Set _day_ to _day_ − ! ISODaysInYear(_testYear_).
           1. Set _year_ to _year_ + 1.
           1. Set _testYear_ to _testYear_ + 1.
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in the current month, the following section subtracts months and adds days until the number of days is greater than 0.
         1. Repeat, while _day_ &lt; 1,
-          1. Set _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_ − 1).
+          1. Set _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_ − 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
-          1. Set _day_ to _day_ + ! DaysInMonth(_year_, _month_).
+          1. Set _day_ to _day_ + ! ISODaysInMonth(_year_, _month_).
         1. NOTE: To deal with numbers of days greater than the number of days in the current month, the following section adds months and subtracts days until the number of days is less than the number of days in the month.
-        1. Repeat, while _day_ &gt; ! DaysInMonth(_year_, _month_),
-          1. Set _day_ to _day_ − ! DaysInMonth(_year_, _month_).
-          1. Set _balancedYearMonth_ be ? BalanceYearMonth(_year_, _month_ + 1).
+        1. Repeat, while _day_ &gt; ! ISODaysInMonth(_year_, _month_),
+          1. Set _day_ to _day_ − ! ISODaysInMonth(_year_, _month_).
+          1. Set _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_ + 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
         1. Return the new Record {
@@ -906,8 +906,8 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-padyear" aoid="PadYear">
-      <h1>PadYear ( _y_ )</h1>
+    <emu-clause id="sec-temporal-padisoyear" aoid="PadISOYear">
+      <h1>PadISOYear ( _y_ )</h1>
       <emu-alg>
         1. Assert: _y_ is an integer.
         1. If _y_ &gt; 999 and _y_ ≤ 9999, then
@@ -923,7 +923,7 @@
       <emu-alg>
         1. Assert: Type(_temporalDate_) is Object.
         1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
-        1. Let _year_ be ! PadYear(_temporalDate_.[[ISOYear]]).
+        1. Let _year_ be ! PadISOYear(_temporalDate_.[[ISOYear]]).
         1. Let _month_ be _temporalDate_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _temporalDate_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _calendarID_ be ? ToString(_temporalDate_.[[Calendar]]).
@@ -932,24 +932,24 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddate" aoid="AddDate">
-      <h1>AddDate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-addisodate" aoid="AddISODate">
+      <h1>AddISODate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _overflow_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integer Number values.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _y_ be _year_ + _years_.
         1. Let _m_ be _month_ + _months_.
-        1. Let _intermediate_ be ? BalanceYearMonth(_y_, _m_).
-        1. Let _intermediate_ be ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
+        1. Let _intermediate_ be ? BalanceISOYearMonth(_y_, _m_).
+        1. Let _intermediate_ be ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 × _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Let _intermediate_ be ? BalanceDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
-        1. Return ? RegulateDate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _overflow_).
+        1. Let _intermediate_ be ? BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Return ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _overflow_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparetemporaldate" aoid="CompareTemporalDate">
-      <h1>CompareTemporalDate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_ )</h1>
+    <emu-clause id="sec-temporal-compareisodate" aoid="CompareISODate">
+      <h1>CompareISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_ )</h1>
       <emu-alg>
         1. If _y1_ &gt; _y2_, return 1.
         1. If _y1_ &lt; _y2_, return -1.
@@ -964,7 +964,7 @@
     <emu-clause id="sec-temporal-comparetemporaldatecalendar" aoid="CompareTemporalDateCalendar">
       <h1>CompareTemporalDateCalendar ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _c1_, _c2_ )</h1>
       <emu-alg>
-        1. Let _result_ be ! CompareTemporalDate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
+        1. Let _result_ be ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
         1. If _result_ ≠ 0, then
           1. Return _result_.
         1. Return ? CompareCalendar(_c1_, _c2_).
