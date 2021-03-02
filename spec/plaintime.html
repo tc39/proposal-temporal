@@ -98,10 +98,10 @@
 
     <p>The Temporal.PlainTime prototype object</p>
     <ul>
-      <li>is the intrinsic object <dfn>%Temporal.PlainTime.prototype%</dfn>.
-      <li>is itself an ordinary object.
-      <li>is not a Temporal.PlainTime instance and does not have a [[InitializedTemporalTime]] internal slot.
-      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.
+      <li>is the intrinsic object <dfn>%Temporal.PlainTime.prototype%</dfn>.</li>
+      <li>is itself an ordinary object.</li>
+      <li>is not a Temporal.PlainTime instance and does not have a [[InitializedTemporalTime]] internal slot.</li>
+      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>
     </ul>
 
     <emu-clause id="sec-temporal.plaintime.prototype.constructor">
@@ -919,6 +919,7 @@
       <h1>RoundTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ [ , _dayLengthNs_ ] )</h1>
       <p>
         The abstract operation RoundTime rounds a time to the given increment, optionally adjusting for a non-24-hour day.
+      </p>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
         1. Let _fractionalSecond_ be _nanosecond_ × 10<sup>−9</sup> + _microsecond_ × 10<sup>−6</sup> + _millisecond_ × 10<sup>−3</sup> + _second_.
