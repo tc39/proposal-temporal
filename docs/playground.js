@@ -1775,12 +1775,12 @@
 
   var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
   var slice = Array.prototype.slice;
-  var toStr$2 = Object.prototype.toString;
+  var toStr$4 = Object.prototype.toString;
   var funcType = '[object Function]';
 
   var implementation = function bind(that) {
       var target = this;
-      if (typeof target !== 'function' || toStr$2.call(target) !== funcType) {
+      if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
           throw new TypeError(ERROR_MESSAGE + target);
       }
       var args = slice.call(arguments, 1);
@@ -1830,7 +1830,7 @@
 
   var $SyntaxError$1 = SyntaxError;
   var $Function = Function;
-  var $TypeError$a = TypeError;
+  var $TypeError$b = TypeError;
 
   // eslint-disable-next-line consistent-return
   var getEvalledConstructor = function (expressionSyntax) {
@@ -1849,7 +1849,7 @@
   }
 
   var throwTypeError = function () {
-  	throw new $TypeError$a();
+  	throw new $TypeError$b();
   };
   var ThrowTypeError = $gOPD
   	? (function () {
@@ -1932,7 +1932,7 @@
   	'%SyntaxError%': $SyntaxError$1,
   	'%ThrowTypeError%': ThrowTypeError,
   	'%TypedArray%': TypedArray,
-  	'%TypeError%': $TypeError$a,
+  	'%TypeError%': $TypeError$b,
   	'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
   	'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
   	'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -2062,7 +2062,7 @@
   			value = doEval(intrinsicName);
   		}
   		if (typeof value === 'undefined' && !allowMissing) {
-  			throw new $TypeError$a('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+  			throw new $TypeError$b('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
   		}
 
   		return {
@@ -2077,10 +2077,10 @@
 
   var getIntrinsic = function GetIntrinsic(name, allowMissing) {
   	if (typeof name !== 'string' || name.length === 0) {
-  		throw new $TypeError$a('intrinsic name must be a non-empty string');
+  		throw new $TypeError$b('intrinsic name must be a non-empty string');
   	}
   	if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-  		throw new $TypeError$a('"allowMissing" argument must be a boolean');
+  		throw new $TypeError$b('"allowMissing" argument must be a boolean');
   	}
 
   	var parts = stringToPath(name);
@@ -2122,7 +2122,7 @@
   		} else if (value != null) {
   			if (!(part in value)) {
   				if (!allowMissing) {
-  					throw new $TypeError$a('base intrinsic for ' + name + ' exists, but the property is not available.');
+  					throw new $TypeError$b('base intrinsic for ' + name + ' exists, but the property is not available.');
   				}
   				return void undefined$1;
   			}
@@ -2214,13 +2214,31 @@
   	return intrinsic;
   };
 
+  var $Array = getIntrinsic('%Array%');
+
+  // eslint-disable-next-line global-require
+  var toStr$3 = !$Array.isArray && callBound('Object.prototype.toString');
+
+  // https://ecma-international.org/ecma-262/6.0/#sec-isarray
+
+  var IsArray = $Array.isArray || function IsArray(argument) {
+  	return toStr$3(argument) === '[object Array]';
+  };
+
+  var $TypeError$a = getIntrinsic('%TypeError%');
+
+
+
   var $apply = getIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-call
 
   var Call = function Call(F, V) {
-  	var args = arguments.length > 2 ? arguments[2] : [];
-  	return $apply(F, V, args);
+  	var argumentsList = arguments.length > 2 ? arguments[2] : [];
+  	if (!IsArray(argumentsList)) {
+  		throw new $TypeError$a('Assertion failed: optional `argumentsList`, if provided, must be a List');
+  	}
+  	return $apply(F, V, argumentsList);
   };
 
   // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
@@ -2231,7 +2249,7 @@
 
   var $TypeError$9 = getIntrinsic('%TypeError%');
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.10
+  // http://262.ecma-international.org/5.1/#sec-9.10
 
   var CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
   	if (value == null) {
@@ -2321,7 +2339,7 @@
   		return false;
   	}
   };
-  var toStr$1 = Object.prototype.toString;
+  var toStr$2 = Object.prototype.toString;
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
   var hasToStringTag$1 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
@@ -2348,11 +2366,11 @@
   		if (typeof value === 'function' && !value.prototype) { return true; }
   		if (hasToStringTag$1) { return tryFunctionObject(value); }
   		if (isES6ClassFn(value)) { return false; }
-  		var strClass = toStr$1.call(value);
+  		var strClass = toStr$2.call(value);
   		return strClass === fnClass || strClass === genClass;
   	};
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.11
+  // http://262.ecma-international.org/5.1/#sec-9.11
 
   var IsCallable = isCallable;
 
@@ -2474,7 +2492,7 @@
 
 
   var predicates = {
-  	// https://ecma-international.org/ecma-262/6.0/#sec-property-descriptor-specification-type
+  	// https://262.ecma-international.org/6.0/#sec-property-descriptor-specification-type
   	'Property Descriptor': function isPropertyDescriptor(Type, Desc) {
   		if (Type(Desc) !== 'Object') {
   			return false;
@@ -2513,7 +2531,7 @@
   	}
   };
 
-  // https://ecma-international.org/ecma-262/5.1/#sec-8
+  // https://262.ecma-international.org/5.1/#sec-8
 
   var Type$1 = function Type(x) {
   	if (x === null) {
@@ -2536,7 +2554,7 @@
   	}
   };
 
-  // https://ecma-international.org/ecma-262/11.0/#sec-ecmascript-data-types-and-values
+  // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
 
   var Type = function Type(x) {
   	if (typeof x === 'symbol') {
@@ -2615,7 +2633,7 @@
   	return a !== a;
   };
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.12
+  // http://262.ecma-international.org/5.1/#sec-9.12
 
   var SameValue = function SameValue(x, y) {
   	if (x === y) { // 0 === -0, but they are not identical.
@@ -2625,7 +2643,7 @@
   	return _isNaN(x) && _isNaN(y);
   };
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.2
+  // http://262.ecma-international.org/5.1/#sec-9.2
 
   var ToBoolean = function ToBoolean(value) { return !!value; };
 
@@ -2635,7 +2653,7 @@
 
 
 
-  // https://ecma-international.org/ecma-262/5.1/#sec-8.10.5
+  // https://262.ecma-international.org/5.1/#sec-8.10.5
 
   var ToPropertyDescriptor = function ToPropertyDescriptor(Obj) {
   	if (Type(Obj) !== 'Object') {
@@ -2796,7 +2814,7 @@
 
   var $abs$1 = getIntrinsic('%Math.abs%');
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://262.ecma-international.org/5.1/#sec-5.2
 
   var abs$1 = function abs(x) {
   	return $abs$1(x);
@@ -2805,7 +2823,7 @@
   // var modulo = require('./modulo');
   var $floor$1 = Math.floor;
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://262.ecma-international.org/5.1/#sec-5.2
 
   var floor$1 = function floor(x) {
   	// return x - modulo(x, 1);
@@ -2828,7 +2846,7 @@
 
   var $abs = getIntrinsic('%Math.abs%');
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://262.ecma-international.org/5.1/#sec-5.2
 
   var abs = function abs(x) {
   	return $abs(x);
@@ -2837,24 +2855,87 @@
   // var modulo = require('./modulo');
   var $floor = Math.floor;
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-5.2
+  // http://262.ecma-international.org/5.1/#sec-5.2
 
   var floor = function floor(x) {
   	// return x - modulo(x, 1);
   	return $floor(x);
   };
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.3
+  var isPrimitive$1 = function isPrimitive(value) {
+  	return value === null || (typeof value !== 'function' && typeof value !== 'object');
+  };
+
+  var toStr$1 = Object.prototype.toString;
+
+
+
+
+
+  // http://ecma-international.org/ecma-262/5.1/#sec-8.12.8
+  var ES5internalSlots = {
+  	'[[DefaultValue]]': function (O) {
+  		var actualHint;
+  		if (arguments.length > 1) {
+  			actualHint = arguments[1];
+  		} else {
+  			actualHint = toStr$1.call(O) === '[object Date]' ? String : Number;
+  		}
+
+  		if (actualHint === String || actualHint === Number) {
+  			var methods = actualHint === String ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
+  			var value, i;
+  			for (i = 0; i < methods.length; ++i) {
+  				if (isCallable(O[methods[i]])) {
+  					value = O[methods[i]]();
+  					if (isPrimitive$1(value)) {
+  						return value;
+  					}
+  				}
+  			}
+  			throw new TypeError('No default value');
+  		}
+  		throw new TypeError('invalid [[DefaultValue]] hint supplied');
+  	}
+  };
+
+  // http://ecma-international.org/ecma-262/5.1/#sec-9.1
+  var es5 = function ToPrimitive(input) {
+  	if (isPrimitive$1(input)) {
+  		return input;
+  	}
+  	if (arguments.length > 1) {
+  		return ES5internalSlots['[[DefaultValue]]'](input, arguments[1]);
+  	}
+  	return ES5internalSlots['[[DefaultValue]]'](input);
+  };
+
+  // http://262.ecma-international.org/5.1/#sec-9.1
+
+  var ToPrimitive$1 = es5;
+
+  // http://262.ecma-international.org/5.1/#sec-9.3
 
   var ToNumber$1 = function ToNumber(value) {
-  	return +value; // eslint-disable-line no-implicit-coercion
+  	var prim = ToPrimitive$1(value, Number);
+  	if (typeof prim !== 'string') {
+  		return +prim; // eslint-disable-line no-implicit-coercion
+  	}
+
+  	// eslint-disable-next-line no-control-regex
+  	var trimmed = prim.replace(/^[ \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u0085]+|[ \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u0085]+$/g, '');
+  	if ((/^0[ob]|^[+-]0x/).test(trimmed)) {
+  		return NaN;
+  	}
+
+  	return +trimmed; // eslint-disable-line no-implicit-coercion
   };
 
   var sign = function sign(number) {
   	return number >= 0 ? 1 : -1;
   };
 
-  // http://ecma-international.org/ecma-262/5.1/#sec-9.4
+  // http://262.ecma-international.org/5.1/#sec-9.4
 
   var ToInteger$1 = function ToInteger(value) {
   	var number = ToNumber$1(value);
@@ -2869,10 +2950,6 @@
 
   var regexTester = function regexTester(regex) {
   	return callBind($test, regex);
-  };
-
-  var isPrimitive$1 = function isPrimitive(value) {
-  	return value === null || (typeof value !== 'function' && typeof value !== 'object');
   };
 
   var isPrimitive = function isPrimitive(value) {
@@ -2957,7 +3034,7 @@
   		method = O[methodNames[i]];
   		if (isCallable(method)) {
   			result = method.call(O);
-  			if (isPrimitive(result)) {
+  			if (isPrimitive$1(result)) {
   				return result;
   			}
   		}
@@ -2978,7 +3055,7 @@
 
   // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
   var es2015 = function ToPrimitive(input) {
-  	if (isPrimitive(input)) {
+  	if (isPrimitive$1(input)) {
   		return input;
   	}
   	var hint = 'default';
@@ -3000,7 +3077,7 @@
   	}
   	if (typeof exoticToPrim !== 'undefined') {
   		var result = exoticToPrim.call(input, hint);
-  		if (isPrimitive(result)) {
+  		if (isPrimitive$1(result)) {
   			return result;
   		}
   		throw new TypeError('unable to convert exotic object to primitive');
@@ -3055,7 +3132,7 @@
   // https://ecma-international.org/ecma-262/6.0/#sec-tonumber
 
   var ToNumber = function ToNumber(argument) {
-  	var value = isPrimitive$1(argument) ? argument : ToPrimitive(argument, $Number$1);
+  	var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number$1);
   	if (typeof value === 'symbol') {
   		throw new $TypeError$1('Cannot convert a Symbol value to a number');
   	}
@@ -3076,7 +3153,7 @@
   	return $Number$1(value);
   };
 
-  // https://ecma-international.org/ecma-262/11.0/#sec-tointeger
+  // https://262.ecma-international.org/11.0/#sec-tointeger
 
   var ToInteger = function ToInteger(value) {
   	var number = ToNumber(value);
@@ -7401,30 +7478,24 @@
             var yearsMonthsWeeksLater = ES.CalendarDateAdd(calendar, relativeTo, yearsMonthsWeeks, {}, TemporalDate);
             var monthsWeeksInDays = ES.DaysUntil(yearsLater, yearsMonthsWeeksLater);
             relativeTo = yearsLater;
-            days += monthsWeeksInDays; // Years may be different lengths of days depending on the calendar, so
-            // we need to convert days to years in a loop. We get the number of days
-            // in the one-year period after (or preceding, depending on the sign of
-            // the duration) the relativeTo date, and convert that number of days to
-            // one year, repeating until the number of days is less than a year.
-
-            var sign = MathSign(days);
+            days += monthsWeeksInDays;
+            var daysLater = ES.CalendarDateAdd(calendar, relativeTo, {
+              days: days
+            }, {}, TemporalDate);
+            var yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, daysLater, {
+              largestUnit: 'years'
+            }).years;
+            years += yearsPassed;
+            var oldRelativeTo = relativeTo;
+            relativeTo = ES.CalendarDateAdd(calendar, relativeTo, {
+              years: yearsPassed
+            }, {}, TemporalDate);
+            var daysPassed = ES.DaysUntil(oldRelativeTo, relativeTo);
+            days -= daysPassed;
             var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
-            var oneYearDays;
 
-            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
-
-            relativeTo = _ES$MoveRelativeDate14.relativeTo;
-            oneYearDays = _ES$MoveRelativeDate14.days;
-
-            while (MathAbs(days) >= MathAbs(oneYearDays)) {
-              years += sign;
-              days -= oneYearDays;
-
-              var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
-
-              relativeTo = _ES$MoveRelativeDate15.relativeTo;
-              oneYearDays = _ES$MoveRelativeDate15.days;
-            } // Note that `nanoseconds` below (here and in similar code for months,
+            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear),
+                oneYearDays = _ES$MoveRelativeDate14.days; // Note that `nanoseconds` below (here and in similar code for months,
             // weeks, and days further below) isn't actually nanoseconds for the
             // full date range.  Instead, it's a BigInt representation of total
             // days multiplied by the number of nanoseconds in the last day of
@@ -7459,24 +7530,23 @@
             days += weeksInDays; // Months may be different lengths of days depending on the calendar,
             // convert days to months in a loop as described above under 'years'.
 
-            var _sign2 = MathSign(days);
-
+            var sign = MathSign(days);
             var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
             var oneMonthDays;
 
-            var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-            relativeTo = _ES$MoveRelativeDate16.relativeTo;
-            oneMonthDays = _ES$MoveRelativeDate16.days;
+            relativeTo = _ES$MoveRelativeDate15.relativeTo;
+            oneMonthDays = _ES$MoveRelativeDate15.days;
 
             while (MathAbs(days) >= MathAbs(oneMonthDays)) {
-              months += _sign2;
+              months += sign;
               days -= oneMonthDays;
 
-              var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
 
-              relativeTo = _ES$MoveRelativeDate17.relativeTo;
-              oneMonthDays = _ES$MoveRelativeDate17.days;
+              relativeTo = _ES$MoveRelativeDate16.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate16.days;
             }
 
             oneMonthDays = MathAbs(oneMonthDays);
@@ -7498,24 +7568,24 @@
             if (!calendar) throw new RangeError('A starting point is required for weeks rounding'); // Weeks may be different lengths of days depending on the calendar,
             // convert days to weeks in a loop as described above under 'years'.
 
-            var _sign3 = MathSign(days);
+            var _sign2 = MathSign(days);
 
             var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
             var oneWeekDays;
 
-            var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+            var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-            relativeTo = _ES$MoveRelativeDate18.relativeTo;
-            oneWeekDays = _ES$MoveRelativeDate18.days;
+            relativeTo = _ES$MoveRelativeDate17.relativeTo;
+            oneWeekDays = _ES$MoveRelativeDate17.days;
 
             while (MathAbs(days) >= MathAbs(oneWeekDays)) {
-              weeks += _sign3;
+              weeks += _sign2;
               days -= oneWeekDays;
 
-              var _ES$MoveRelativeDate19 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
 
-              relativeTo = _ES$MoveRelativeDate19.relativeTo;
-              oneWeekDays = _ES$MoveRelativeDate19.days;
+              relativeTo = _ES$MoveRelativeDate18.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate18.days;
             }
 
             oneWeekDays = MathAbs(oneWeekDays);
