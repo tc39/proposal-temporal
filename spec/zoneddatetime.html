@@ -1328,7 +1328,7 @@
             [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_,
             [[DayLength]]: _sign_ × _dayLengthNs_
             }.
-        1. Let _startNs_ be ? _relativeTo_.[[Nanoseconds]].
+        1. Let _startNs_ be _relativeTo_.[[Nanoseconds]].
         1. Let _startInstant_ be ? CreateTemporalInstant(_startNs_).
         1. Let _startDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _startInstant_, _relativeTo_.[[Calendar]]).
         1. Let _endNs_ be _startNs_ + _nanoseconds_.
