@@ -1886,7 +1886,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
       }
     } else if (precision !== 0) {
-      decimalPart = `${fraction}`.slice(0, precision).padStart(precision, '0');
+      decimalPart = `${fraction}`.padStart(9, '0').slice(0, precision);
     }
     if (decimalPart) secondParts.unshift('.', decimalPart);
     if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());

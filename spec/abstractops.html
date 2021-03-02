@@ -690,11 +690,8 @@
         1. Set _fraction_ to the longest possible substring of _fraction_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
       1. Else,
         1. If _precision_ is 0, return _secondsString_.
-        1. Set _fraction_ to _fraction_ formatted as a decimal number.
-        1. Let _len_ be the length of _fraction_.
-        1. If _len_ &gt; _precision_, then
-          1. Set _fraction_ to the substring of _fraction_ from 0 to min(_len_, _precision_).
-        1. Pad _fraction_ to the left with zeroes up to the length _precision_, if necessary.
+        1. Set _fraction_ to _fraction_ formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
+        1. Set _fraction_ to the substring of _fraction_ from 0 to _precision_.
       1. Return the string-concatenation of _secondsString_, the code unit 0x002E (FULL STOP), and _fraction_.
     </emu-alg>
   </emu-clause>
