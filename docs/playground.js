@@ -5391,7 +5391,7 @@
           }
         }
       } else if (precision !== 0) {
-        decimalPart = "".concat(fraction).slice(0, precision).padStart(precision, '0');
+        decimalPart = "".concat(fraction).padStart(9, '0').slice(0, precision);
       }
 
       if (decimalPart) secondParts.unshift('.', decimalPart);
