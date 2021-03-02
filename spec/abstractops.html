@@ -789,7 +789,8 @@
       <li>Two-digit years are disallowed.</li>
       <li><a href="https://tc39.es/ecma262/#sec-expanded-years">Expanded Years</a> of 6 digits are allowed.</li>
       <li>Fractional parts may have 1 through 9 decimal places.</li>
-      <li>Only seconds are allowed to have a fractional part.</li>
+      <li>In time representations, only seconds are allowed to have a fractional part.</li>
+      <li>In duration representations, only hours, minutes, and seconds are allowed to have a fractional part.</li>
       <li>The time zone may be given by a suffixed <a href="https://www.iana.org/time-zones">IANA time zone name</a> in square brackets, instead of or in addition to a UTC offset.</li>
       <li>The calendar may be given by a suffixed <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 key</a> in square brackets.</li>
       <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration.</li>
@@ -1044,37 +1045,67 @@
       CalendarDateTime:
           DateTime Calendar?
 
-      DurationSeconds :
-          Digits TimeFraction? SecondsDesignator
+      DurationWholeSeconds :
+          Digits
 
-      DurationMinutes :
-          Digits TimeFraction? MinutesDesignator DurationSeconds?
+      DurationSecondsFraction :
+          TimeFraction
 
-      DurationHours :
-          Digits TimeFraction? HoursDesignator DurationMinutes?
+      DurationSecondsPart :
+          DurationWholeSeconds DurationSecondsFraction? SecondsDesignator
+
+      DurationWholeMinutes :
+          Digits
+
+      DurationMinutesFraction :
+          TimeFraction
+
+      DurationMinutesPart :
+          DurationWholeMinutes DurationMinutesFraction? MinutesDesignator DurationSecondsPart?
+
+      DurationWholeHours :
+          Digits
+
+      DurationHoursFraction :
+          TimeFraction
+
+      DurationHoursPart :
+          DurationWholeHours DurationHoursFraction? HoursDesignator DurationMinutesPart?
 
       DurationTime :
-          DurationTimeDesignator DurationHours
-          DurationTimeDesignator DurationMinutes
-          DurationTimeDesignator DurationSeconds
+          DurationTimeDesignator DurationHoursPart
+          DurationTimeDesignator DurationMinutesPart
+          DurationTimeDesignator DurationSecondsPart
 
       DurationDays :
-          Digits DaysDesignator
+          Digits
+
+      DurationDaysPart :
+          DurationDays DaysDesignator
 
       DurationWeeks :
-          Digits WeeksDesignator DurationDays?
+          Digits
+
+      DurationWeeksPart :
+          DurationWeeks WeeksDesignator DurationDaysPart?
 
       DurationMonths :
-          Digits MonthsDesignator DurationWeeks?
+          Digits
+
+      DurationMonthsPart :
+          DurationMonths MonthsDesignator DurationWeeksPart?
 
       DurationYears :
-          Digits YearsDesignator DurationMonths?
+          Digits
+
+      DurationYearsPart :
+          DurationYears YearsDesignator DurationMonthsPart?
 
       DurationDate :
-          DurationYears DurationTime?
-          DurationMonths DurationTime?
-          DurationWeeks DurationTime?
-          DurationDays DurationTime?
+          DurationYearsPart DurationTime?
+          DurationMonthsPart DurationTime?
+          DurationWeeksPart DurationTime?
+          DurationDaysPart DurationTime?
 
       Duration :
           Sign? DurationDesignator DurationDate
@@ -1299,7 +1330,7 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDurationString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. Let _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fraction_ be the parts of _isoString_ produced respectively by the |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationHours|, |DurationHoursFraction|, |DurationMinutes|, |DurationMinutesFraction|, |DurationSeconds|, and |TimeFractionalPart| productions, or *undefined* if not present.
+      1. Let _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the parts of _isoString_ produced respectively by the |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| productions, or *undefined* if not present.
       1. If _sign_ is the code unit 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
         1. Let _factor_ be −1.
       1. Else,
@@ -1311,7 +1342,7 @@
       1. Set _hours_ to ? ToIntegerOrInfinity(_hours_) × _factor_.
       1. Set _minutes_ to ? ToIntegerOrInfinity(_minutes_) × _factor_.
       1. Set _seconds_ to ? ToIntegerOrInfinity(_seconds_) × _factor_.
-      1. If _fraction_ is not *undefined*, then
+      1. If _fSeconds_ is not *undefined*, then
         1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
         1. Let _milliseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
@@ -1325,11 +1356,13 @@
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
       1. If _fHours_ is not *undefined*, then
-        1. Set _fHours_ to ! ToIntegerOrInfinity(_fHours_) × _factor_ / 10 raised to the power of the length of _fHours_.
+        1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
+        1. Set _fHours_ to ! ToIntegerOrInfinity(_fraction_) × _factor_ / 10 raised to the power of the length of _fHours_.
       1. Else,
         1. Set _fHours_ to 0.
       1. If _fMinutes_ is not *undefined*, then
-        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fMinutes_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
+        1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
+        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fraction_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
       1. Else,
         1. Set _fMinutes_ to 0.
       1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, 0, milliseconds, 0, microseconds, 0, nanoseconds).
