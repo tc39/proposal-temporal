@@ -260,12 +260,14 @@
     <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
       <h1>CalendarFrom ( _identifier_ )</h1>
       <emu-alg>
-        1. Let _from_ be ? GetMethod(%Temporal.Calendar%, *"from"*).
-        1. If _from_ is *undefined*, set _from_ to %Temporal.Calendar.from%.
-        1. Let _calendar_ be ? Call(_from_, %Temporal.Calendar%, « _identifier_ »).
-        1. If Type(_calendar_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. Return _calendar_.
+        1. If Type(_item_) is Object, then
+          1. If ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
+          1. Set _item_ to ? Get(_item_, *"calendar"*).
+          1. If Type(_item_) is Object and ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
+        1. Let _string_ be ? ToString(_item_).
+        1. If ! IsBuiltinCalendar(_string_) is *false*, then
+          1. Let _string_ be ? ParseTemporalCalendarString(_string_).
+        1. Return ? GetBuiltinCalendar(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -661,18 +663,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. If Type(_item_) is Object, then
-          1. If ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
-          1. Set _item_ to ? Get(_item_, *"calendar"*).
-          1. If Type(_item_) is Object and ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
-        1. Let _string_ be ? ToString(_item_).
-        1. If ! IsBuiltinCalendar(_string_) is *false*, then
-          1. Let _string_ be ? ParseTemporalCalendarString(_string_).
-        1. Return ? GetBuiltinCalendar(_string_).
+        1. Return ? CalendarFrom(_item_).
       </emu-alg>
-      <p>
-        This function is the <dfn>%Temporal.Calendar.from%</dfn> intrinsic object.
-      </p>
     </emu-clause>
   </emu-clause>
 

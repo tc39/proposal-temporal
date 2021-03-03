@@ -1515,10 +1515,11 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   CalendarFrom: (calendarLike) => {
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    let from = TemporalCalendar.from;
-    if (from === undefined) {
-      from = GetIntrinsic('%Temporal.Calendar.from%');
-    }
+    // let from = TemporalCalendar.from;
+    // if (from === undefined) {
+    //   from = GetIntrinsic('%Temporal.Calendar.from%');
+    // }
+    const from = GetIntrinsic('%Temporal.Calendar.from%');
     const calendar = ES.Call(from, TemporalCalendar, [calendarLike]);
     if (ES.Type(calendar) !== 'Object') {
       throw new TypeError('Temporal.Calendar.from should return an object');
@@ -1676,10 +1677,11 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   TimeZoneFrom: (temporalTimeZoneLike) => {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    let from = TemporalTimeZone.from;
-    if (from === undefined) {
-      from = GetIntrinsic('%Temporal.TimeZone.from%');
-    }
+    // let from = TemporalTimeZone.from;
+    // if (from === undefined) {
+    //   from = GetIntrinsic('%Temporal.TimeZone.from%');
+    // }
+    const from = GetIntrinsic('%Temporal.TimeZone.from%');
     return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
   },
   ToTemporalTimeZone: (temporalTimeZoneLike) => {
