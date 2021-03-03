@@ -8,7 +8,6 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get Temporal.Calendar.from",
   "get timeZone.getOffsetNanosecondsFor",
   "call timeZone.getOffsetNanosecondsFor",
 ];
@@ -27,13 +26,6 @@ const timeZone = new Proxy({
   get(target, property) {
     actual.push(`get timeZone.${property}`);
     return target[property];
-  },
-});
-
-Object.defineProperty(Temporal.Calendar, "from", {
-  get() {
-    actual.push("get Temporal.Calendar.from");
-    return undefined;
   },
 });
 

@@ -8,8 +8,6 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get Temporal.TimeZone.from",
-  "call Temporal.TimeZone.from",
   "get timeZone.getOffsetNanosecondsFor",
   "call timeZone.getOffsetNanosecondsFor",
 ];
@@ -40,18 +38,7 @@ const timeZone = new Proxy({
   },
 });
 
-Object.defineProperty(Temporal.TimeZone, "from", {
-  get() {
-    actual.push("get Temporal.TimeZone.from");
-    return function(argument) {
-      actual.push("call Temporal.TimeZone.from");
-      assert.sameValue(argument, "UTC");
-      return timeZone;
-    };
-  },
-});
-
-const result = Temporal.now.plainTimeISO("UTC");
+const result = Temporal.now.plainTimeISO(timeZone);
 assert.sameValue(result instanceof Temporal.PlainTime, true);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], 0, property);

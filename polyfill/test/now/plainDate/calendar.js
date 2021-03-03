@@ -8,10 +8,6 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
-  "get Temporal.TimeZone.from",
-  "call Temporal.TimeZone.from",
-  "get Temporal.Calendar.from",
-  "call Temporal.Calendar.from",
   "get timeZone.getOffsetNanosecondsFor",
   "call timeZone.getOffsetNanosecondsFor",
 ];
@@ -35,29 +31,7 @@ const timeZone = new Proxy({
   },
 });
 
-Object.defineProperty(Temporal.TimeZone, "from", {
-  get() {
-    actual.push("get Temporal.TimeZone.from");
-    return function(argument) {
-      actual.push("call Temporal.TimeZone.from");
-      assert.sameValue(argument, "UTC");
-      return timeZone;
-    };
-  },
-});
-
-Object.defineProperty(Temporal.Calendar, "from", {
-  get() {
-    actual.push("get Temporal.Calendar.from");
-    return function(argument) {
-      actual.push("call Temporal.Calendar.from");
-      assert.sameValue(argument, "iso8601");
-      return calendar;
-    };
-  },
-});
-
-const result = Temporal.now.plainDate("iso8601", "UTC");
+const result = Temporal.now.plainDate(calendar, timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 
 assert.compareArray(actual, expected);

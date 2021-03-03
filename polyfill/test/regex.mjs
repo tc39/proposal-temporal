@@ -588,7 +588,8 @@ describe('fromString regex', () => {
     }
   });
 
-  describe('time zone ID', () => {
+  // These can be tested again once the resolver options are accepted.
+  describe.skip('time zone ID', () => {
     let oldTemporalTimeZoneFrom = Temporal.TimeZone.from;
     let fromCalledWith;
     before(() => {
@@ -660,7 +661,8 @@ describe('fromString regex', () => {
     });
   });
 
-  describe('calendar ID', () => {
+  // These can be tested again once the resolver options are accepted.
+  describe.skip('calendar ID', () => {
     let oldTemporalCalendarFrom = Temporal.Calendar.from;
     let fromCalledWith;
     before(() => {
