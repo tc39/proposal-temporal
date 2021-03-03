@@ -7,19 +7,10 @@ includes: [compareArray.js]
 ---*/
 
 const actual = [];
-const expected = [
-  "get Temporal.Calendar.from",
-];
+const expected = [];
 
 const instant = Temporal.Instant.from("1975-02-02T14:25:36.123456789Z");
 const timeZone = Temporal.TimeZone.from("UTC");
-
-Object.defineProperty(Temporal.Calendar, "from", {
-  get() {
-    actual.push("get Temporal.Calendar.from");
-    return undefined;
-  },
-});
 
 const result = timeZone.getPlainDateTimeFor(instant, "japanese");
 assert.sameValue(result.calendar.toString(), "japanese");

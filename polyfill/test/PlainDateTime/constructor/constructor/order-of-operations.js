@@ -26,8 +26,6 @@ const expected = [
   "call argument 7 valueOf",
   "get argument 8 valueOf",
   "call argument 8 valueOf",
-  "get Temporal.Calendar.from",
-  "call Temporal.Calendar.from",
 ];
 
 const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789].map(function (value, idx) {
@@ -42,29 +40,6 @@ const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789].map(function (val
   };
 });
 
-const calendar = {
-  year(d) { return d.getISOFields().isoYear; },
-  month(d) { return d.getISOFields().isoMonth; },
-  day(d) { return d.getISOFields().isoDay; },
-  hour(t) { return t.getISOFields().isoHour; },
-  minute(t) { return t.getISOFields().isoMinute; },
-  second(t) { return t.getISOFields().isoSecond; },
-  millisecond(t) { return t.getISOFields().isoMillisecond; },
-  microsecond(t) { return t.getISOFields().isoMicrosecond; },
-  nanosecond(t) { return t.getISOFields().isoNanosecond; },
-};
-
-Object.defineProperty(Temporal.Calendar, "from", {
-  get() {
-    actual.push("get Temporal.Calendar.from");
-    return function(argument) {
-      actual.push("call Temporal.Calendar.from");
-      assert.sameValue(argument, "iso8601");
-      return calendar;
-    };
-  },
-});
-
 const dateTime = new Temporal.PlainDateTime(...dateTimeArgs, "iso8601");
 assert.compareArray(actual, expected);
 
@@ -77,4 +52,4 @@ assert.sameValue(dateTime.second, 56);
 assert.sameValue(dateTime.millisecond, 123);
 assert.sameValue(dateTime.microsecond, 456);
 assert.sameValue(dateTime.nanosecond, 789);
-assert.sameValue(dateTime.calendar, calendar);
+assert.sameValue(dateTime.calendar.id, "iso8601");

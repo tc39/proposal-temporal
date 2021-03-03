@@ -4,7 +4,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 import Demitasse from '@pipobscure/demitasse';
-const { after, before, describe, it, report } = Demitasse;
+const { describe, it, report } = Demitasse;
 
 import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
@@ -75,48 +75,6 @@ describe('Userland time zone', () => {
       assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
       assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
-    describe('Making available globally', () => {
-      const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
-      before(() => {
-        Temporal.TimeZone.from = function (item) {
-          let id;
-          if (item instanceof Temporal.TimeZone) {
-            id = item.id;
-          } else {
-            id = `${item}`;
-            // TODO: Use Temporal.parse here to extract the ID from an ISO string
-          }
-          if (id === 'Etc/Custom/UTC_Subclass') return new CustomUTCSubclass();
-          return originalTemporalTimeZoneFrom.call(this, id);
-        };
-      });
-      it('works for TimeZone.from(id)', () => {
-        const tz = Temporal.TimeZone.from('Etc/Custom/UTC_Subclass');
-        assert(tz instanceof CustomUTCSubclass);
-      });
-      it.skip('works for TimeZone.from(ISO string)', () => {
-        const tz = Temporal.TimeZone.from('1970-01-01T00:00+00:00[Etc/Custom/UTC_Subclass]');
-        assert(tz instanceof CustomUTCSubclass);
-      });
-      it('works for Instant.from', () => {
-        const instant = Temporal.Instant.from('1970-01-01T00:00+00:00[Etc/Custom/UTC_Subclass]');
-        equal(`${instant}`, '1970-01-01T00:00:00Z');
-      });
-      it('works for Instant.toString', () => {
-        const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Subclass' }), '1970-01-01T00:00:00+00:00');
-      });
-      it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Subclass') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Subclass') instanceof Temporal.PlainTime);
-      });
-      after(() => {
-        Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
-      });
-    });
   });
   describe('Trivial protocol implementation', () => {
     const obj = {
@@ -161,48 +119,6 @@ describe('Userland time zone', () => {
       assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
       assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
       assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
-    });
-    describe('Making available globally', () => {
-      const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
-      before(() => {
-        Temporal.TimeZone.from = function (item) {
-          let id;
-          if (item instanceof Temporal.TimeZone) {
-            id = item.id;
-          } else {
-            id = `${item}`;
-            // TODO: Use Temporal.parse here to extract the ID from an ISO string
-          }
-          if (id === 'Etc/Custom/UTC_Protocol') return obj;
-          return originalTemporalTimeZoneFrom.call(this, id);
-        };
-      });
-      it('works for TimeZone.from(id)', () => {
-        const tz = Temporal.TimeZone.from('Etc/Custom/UTC_Protocol');
-        assert(Object.is(tz, obj));
-      });
-      it.skip('works for TimeZone.from(ISO string)', () => {
-        const tz = Temporal.TimeZone.from('1970-01-01T00:00+00:00[Etc/Custom/UTC_Protocol]');
-        assert(Object.is(tz, obj));
-      });
-      it('works for Instant.from', () => {
-        const inst = Temporal.Instant.from('1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
-        equal(`${inst}`, '1970-01-01T00:00:00Z');
-      });
-      it('works for Instant.toString', () => {
-        const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString({ timeZone: 'Etc/Custom/UTC_Protocol' }), '1970-01-01T00:00:00+00:00');
-      });
-      it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainDate('gregory', 'Etc/Custom/UTC_Protocol') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainTimeISO('Etc/Custom/UTC_Protocol') instanceof Temporal.PlainTime);
-      });
-      after(() => {
-        Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
-      });
     });
   });
   describe('sub-minute offset', () => {
@@ -265,48 +181,6 @@ describe('Userland time zone', () => {
       assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
       assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
       assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
-    });
-    describe('Making available globally', () => {
-      const originalTemporalTimeZoneFrom = Temporal.TimeZone.from;
-      before(() => {
-        Temporal.TimeZone.from = function (item) {
-          let id;
-          if (item instanceof Temporal.TimeZone) {
-            id = item.id;
-          } else {
-            id = `${item}`;
-            // TODO: Use Temporal.parse here to extract the ID from an ISO string
-          }
-          if (id === 'Custom/Subminute') return new SubminuteTimeZone();
-          return originalTemporalTimeZoneFrom.call(this, id);
-        };
-      });
-      it('works for TimeZone.from(id)', () => {
-        const tz = Temporal.TimeZone.from('Custom/Subminute');
-        assert(tz instanceof SubminuteTimeZone);
-      });
-      it.skip('works for TimeZone.from(ISO string)', () => {
-        const tz = Temporal.TimeZone.from('1970-01-01T00:00-00:00:01.111111111[Custom/Subminute]');
-        assert(tz instanceof SubminuteTimeZone);
-      });
-      it('works for Instant.from', () => {
-        const instant = Temporal.Instant.from('1970-01-01T11:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
-        equal(`${instant}`, '1970-01-01T12:00:00Z');
-      });
-      it('works for Instant.toString', () => {
-        const inst = Temporal.Instant.fromEpochSeconds(0);
-        equal(inst.toString({ timeZone: 'Custom/Subminute' }), '1969-12-31T23:59:58.888888889-00:00:01.111111111');
-      });
-      it('works for Temporal.now', () => {
-        assert(Temporal.now.plainDateTimeISO('Custom/Subminute') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateTime('gregory', 'Custom/Subminute') instanceof Temporal.PlainDateTime);
-        assert(Temporal.now.plainDateISO('Custom/Subminute') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainDate('gregory', 'Custom/Subminute') instanceof Temporal.PlainDate);
-        assert(Temporal.now.plainTimeISO('Custom/Subminute') instanceof Temporal.PlainTime);
-      });
-      after(() => {
-        Temporal.TimeZone.from = originalTemporalTimeZoneFrom;
-      });
     });
   });
 });
