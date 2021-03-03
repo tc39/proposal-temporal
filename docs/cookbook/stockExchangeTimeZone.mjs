@@ -131,17 +131,6 @@ class NYSETimeZone extends Temporal.TimeZone {
 
 const tzNYSE = Object.freeze(new NYSETimeZone());
 
-// Monkeypatch Temporal.TimeZone.from to handle our custom time zone
-let oldTzFrom;
-const replacement = (item) => {
-  if (item === 'NYSE') return tzNYSE;
-  return oldTzFrom.call(Temporal.TimeZone, item);
-};
-if (Temporal.TimeZone.from !== replacement) {
-  oldTzFrom = Temporal.TimeZone.from;
-  Temporal.TimeZone.from = replacement;
-}
-
 let zdt;
 let isOpen;
 let date;
@@ -165,16 +154,16 @@ assert.equal(date.toString(), '2020-11-12');
 
 // 2. Is the stock market open on a particular date?
 date = Temporal.PlainDate.from('2020-11-12');
-isOpen = date.toZonedDateTime('NYSE').toPlainDate().equals(date);
+isOpen = date.toZonedDateTime(tzNYSE).toPlainDate().equals(date);
 assert.equal(isOpen, true);
 date = Temporal.PlainDate.from('2020-11-14');
-isOpen = date.toZonedDateTime('NYSE').toPlainDate().equals(date);
+isOpen = date.toZonedDateTime(tzNYSE).toPlainDate().equals(date);
 assert.equal(isOpen, false);
 
 // 3. For a particular date, when is the next market day?
 const getNextMarketDay = (date) => {
   date = Temporal.PlainDate.from(date);
-  const zdt = date.toZonedDateTime('NYSE');
+  const zdt = date.toZonedDateTime(tzNYSE);
   if (zdt.toPlainDate().equals(date)) {
     // It's a market day, so find the next one
     return zdt.add({ days: 1 }).toPlainDate();
@@ -195,22 +184,22 @@ assert.equal(newDate.equals('2020-11-16'), true);
 // If it's closed, then when will it open next?
 // Return a result in the local time zone, not NYC's time zone.
 zdt = Temporal.ZonedDateTime.from('2020-11-12T18:50-08:00[America/Los_Angeles]');
-inNYSE = zdt.withTimeZone('NYSE');
-isOpen = inNYSE.toPlainDateTime().toZonedDateTime('NYSE').equals(inNYSE);
+inNYSE = zdt.withTimeZone(tzNYSE);
+isOpen = inNYSE.toPlainDateTime().toZonedDateTime(tzNYSE).equals(inNYSE);
 assert.equal(isOpen, false);
 nextOpen = inNYSE.timeZone.getNextTransition(zdt.toInstant()).toZonedDateTimeISO(zdt.timeZone);
 assert.equal(nextOpen.toString(), '2020-11-13T06:30:00-08:00[America/Los_Angeles]');
 
 zdt = Temporal.ZonedDateTime.from('2020-11-12T12:50-08:00[America/Los_Angeles]');
-inNYSE = zdt.withTimeZone('NYSE');
-isOpen = inNYSE.toPlainDateTime().toZonedDateTime('NYSE').equals(inNYSE);
+inNYSE = zdt.withTimeZone(tzNYSE);
+isOpen = inNYSE.toPlainDateTime().toZonedDateTime(tzNYSE).equals(inNYSE);
 assert.equal(isOpen, true);
 todayClose = inNYSE.timeZone.getNextTransition(zdt.toInstant()).toZonedDateTimeISO(zdt.timeZone);
 assert.equal(todayClose.toString(), '2020-11-12T13:00:00-08:00[America/Los_Angeles]');
 
 // 5. For any particular market date, what were the opening and closing clock times in NYC?
 date = Temporal.PlainDate.from('2020-11-09');
-openInstant = date.toZonedDateTime('NYSE').toInstant();
-closeInstant = date.toZonedDateTime('NYSE').timeZone.getNextTransition(openInstant);
+openInstant = date.toZonedDateTime(tzNYSE).toInstant();
+closeInstant = date.toZonedDateTime(tzNYSE).timeZone.getNextTransition(openInstant);
 assert.equal(openInstant.toZonedDateTimeISO('America/New_York').toPlainTime().toString(), '09:30:00');
 assert.equal(closeInstant.toZonedDateTimeISO('America/New_York').toPlainTime().toString(), '16:00:00');
