@@ -8,6 +8,17 @@
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations for Temporal.Calendar Objects</h1>
 
+    <emu-clause id="sec-temporal-createtemporalcalendarfromstatic" aoid="CreateTemporalCalendarFromStatic">
+      <h1>CreateTemporalCalendarFromStatic ( _constructor_, _identifier_ )</h1>
+      <emu-alg>
+        1. Assert: ! IsBuiltinCalendar(_identifier_) is *true*.
+        1. If ! IsConstructor(_constructor_) is *false*, throw a *TypeError* exception.
+        1. Let _result_ be ? Construct(_constructor_, « _identifier_ »).
+        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalCalendar]]).
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-isbuiltincalendar" aoid="IsBuiltinCalendar">
       <h1>IsBuiltinCalendar ( _id_ )</h1>
       <p>
@@ -228,7 +239,7 @@
         1. If Type(_temporalCalendarLike_) is Object, then
           1. Return _temporalCalendarLike_.
         1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
-        1. Return ? CalendarFrom(_identifier_).
+        1. Return ? CalendarFrom(_identifier_, %Temporal.Calendar%).
       </emu-alg>
     </emu-clause>
 
@@ -258,7 +269,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
-      <h1>CalendarFrom ( _identifier_ )</h1>
+      <h1>CalendarFrom ( _identifier_, _constructor_ )</h1>
       <emu-alg>
         1. If Type(_item_) is Object, then
           1. If ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
@@ -267,7 +278,7 @@
         1. Let _string_ be ? ToString(_item_).
         1. If ! IsBuiltinCalendar(_string_) is *false*, then
           1. Let _string_ be ? ParseTemporalCalendarString(_string_).
-        1. Return ? GetBuiltinCalendar(_string_).
+        1. Return ? CreateTemporalCalendarFromStatic(_constructor_, _string_).
       </emu-alg>
     </emu-clause>
 
@@ -663,7 +674,8 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? CalendarFrom(_item_).
+        1. Let _constructor_ be the *this* value.
+        1. Return ? CalendarFrom(_item_, _constructor_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
