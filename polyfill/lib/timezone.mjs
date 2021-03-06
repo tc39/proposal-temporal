@@ -143,18 +143,9 @@ export class TimeZone {
     return ES.ToString(this);
   }
   static from(item) {
-    if (ES.Type(item) === 'Object') {
-      if (!('timeZone' in item)) return item;
-      item = item.timeZone;
-      if (ES.Type(item) === 'Object' && !('timeZone' in item)) return item;
-    }
-    const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
-    const result = new this(timeZone);
-    if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.TimeZoneFrom(item, this);
   }
 }
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
-DefineIntrinsic('Temporal.TimeZone.from', TimeZone.from);
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);

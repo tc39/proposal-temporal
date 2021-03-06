@@ -62,6 +62,7 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
+import { IsBuiltinCalendar } from './calendar.mjs';
 
 const DAYMILLIS = 86400000;
 const NS_MIN = bigInt(-86400).multiply(1e17);
@@ -1481,7 +1482,7 @@ export const ES = ObjectAssign({}, ES2020, {
         calendar
       } = ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
       if (!ianaName) throw new RangeError('time zone ID required in brackets');
-      timeZone = ES.TimeZoneFrom(ianaName);
+      timeZone = ES.TimeZoneFrom(ianaName, GetIntrinsic('%Temporal.TimeZone%'));
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
@@ -1513,18 +1514,22 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     return new TemporalCalendar('iso8601');
   },
-  CalendarFrom: (calendarLike) => {
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    // let from = TemporalCalendar.from;
-    // if (from === undefined) {
-    //   from = GetIntrinsic('%Temporal.Calendar.from%');
-    // }
-    const from = GetIntrinsic('%Temporal.Calendar.from%');
-    const calendar = ES.Call(from, TemporalCalendar, [calendarLike]);
-    if (ES.Type(calendar) !== 'Object') {
-      throw new TypeError('Temporal.Calendar.from should return an object');
+  CalendarFrom: (item, constructor) => {
+    if (ES.Type(item) === 'Object') {
+      if (!('calendar' in item)) return item;
+      item = item.calendar;
+      if (ES.Type(item) === 'Object' && !('calendar' in item)) return item;
     }
-    return calendar;
+    const stringIdent = ES.ToString(item);
+    if (IsBuiltinCalendar(stringIdent)) return new constructor(stringIdent);
+    let calendar;
+    try {
+      ({ calendar } = ES.ParseISODateTime(stringIdent, { zoneRequired: false }));
+    } catch {
+      throw new RangeError(`Invalid calendar: ${stringIdent}`);
+    }
+    if (!calendar) calendar = 'iso8601';
+    return new constructor(calendar);
   },
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
@@ -1634,7 +1639,7 @@ export const ES = ObjectAssign({}, ES2020, {
       return calendarLike;
     }
     const identifier = ES.ToString(calendarLike);
-    return ES.CalendarFrom(identifier);
+    return ES.CalendarFrom(identifier, GetIntrinsic('%Temporal.Calendar%'));
   },
   CalendarCompare: (one, two) => {
     const cal1 = ES.ToString(one);
@@ -1675,21 +1680,23 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   },
-  TimeZoneFrom: (temporalTimeZoneLike) => {
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    // let from = TemporalTimeZone.from;
-    // if (from === undefined) {
-    //   from = GetIntrinsic('%Temporal.TimeZone.from%');
-    // }
-    const from = GetIntrinsic('%Temporal.TimeZone.from%');
-    return ES.Call(from, TemporalTimeZone, [temporalTimeZoneLike]);
+  TimeZoneFrom: (item, constructor) => {
+    if (ES.Type(item) === 'Object') {
+      if (!('timeZone' in item)) return item;
+      item = item.timeZone;
+      if (ES.Type(item) === 'Object' && !('timeZone' in item)) return item;
+    }
+    const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
+    const result = new constructor(timeZone);
+    if (!ES.IsTemporalTimeZone(result)) throw new TypeError('invalid result');
+    return result;
   },
   ToTemporalTimeZone: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
       return temporalTimeZoneLike;
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
-    return ES.TimeZoneFrom(identifier);
+    return ES.TimeZoneFrom(identifier, GetIntrinsic('%Temporal.TimeZone%'));
   },
   TimeZoneCompare: (one, two) => {
     const tz1 = ES.ToString(one);
