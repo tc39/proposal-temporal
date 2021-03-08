@@ -1542,6 +1542,24 @@
         </emu-clause>
       </emu-clause>
 
+      <emu-clause id="sup-properties-of-the-temporal-instant-prototype-object">
+        <h1>Properties of the Temporal.Instant Prototype Object</h1>
+        <emu-clause id="sup-temporal.instant.prototype.tolocalestring">
+          <h1>Temporal.Instant.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.instant.prototype.tolocalestring"></emu-xref>.</p>
+          <p>
+            The `toLocaleString` method takes two arguments, _locales_ and _options_.
+            The following steps are taken:
+          </p>
+          <emu-alg>
+            1. Let _instant_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
+            1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
+            1. Return ? FormatDateTime(_dateFormat_, _instant_).
+          </emu-alg>
+        </emu-clause>
+      </emu-clause>
+
       <emu-clause id="sup-properties-of-the-temporal-plaindate-prototype-object">
         <h1>Properties of the Temporal.PlainDate Prototype Object</h1>
         <emu-clause id="sup-temporal.plaindate.prototype.tolocalestring">

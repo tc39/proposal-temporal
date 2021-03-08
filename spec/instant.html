@@ -382,16 +382,16 @@
     <emu-clause id="sec-temporal.instant.prototype.tolocalestring">
       <h1>Temporal.Instant.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.PlainDate.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+      </p>
+      <p>
         The `toLocaleString` method takes two arguments, _locales_ and _options_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If the implementation does not include the ECMA-402 Internationalization API, then
-          1. Return ? TemporalInstantToString(_instant_, *undefined*, *"auto"*).
-        1. Let _dateFormat_ be ? Construct(%DateTimeFormat%, « _locales_, _options_ »).
-        1. Return ? FormatDateTime(_dateFormat_, _instant_).
+        1. Return ? TemporalInstantToString(_instant_, *undefined*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -669,7 +669,7 @@
         1. If _outputTimeZone_ is *undefined*, then
           1. Set _outputTimeZone_ to ? CreateTemporalTimeZone(*"UTC"*).
         1. Let _isoCalendar_ be ? GetISO8601Calendar().
-        1. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _isoCalendar_).
+        1. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_outputTimeZone_, _instant_, _isoCalendar_).
         1. Let _dateTimeString_ be ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], *undefined*, _precision_, *"never"*).
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZoneString_ be *"Z"*.
