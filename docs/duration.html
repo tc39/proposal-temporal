@@ -518,8 +518,8 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e. no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+The default is <code>&#39;halfExpand&#39;</code>.</li>
 <li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>): The starting point to use when converting between years, months, weeks, and days.
 It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed to <code>Temporal.PlainDateTime.from()</code>.</li>
 </ul>
@@ -550,7 +550,7 @@ The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, an
 Instead of 60 minutes, use 1 hour.</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>nearest</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+<li><code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
 When there is a tie, round away from zero like <code>ceil</code> for positive durations and like <code>floor</code> for negative durations.</li>
 <li><code>ceil</code>: Always round towards positive infinity.
 For negative durations this option will decrease the absolute value of the duration which may be unexpected.
@@ -668,7 +668,7 @@ The default is <code>&#39;auto&#39;</code>.</li>
 This option overrides <code>fractionalSecondDigits</code> if both are given.
 Valid values are <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;halfExpand&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>.</li>
 </ul>
 </li>
@@ -702,7 +702,7 @@ d <span class="token operator">=</span> Temporal<span class="token punctuation">
 d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// => PT59S</span>
 d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT59S</span>
 d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT59.9999S</span>
-d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+d<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'halfExpand'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => PT60.00000000S</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>duration.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string representation of the duration that can be passed to <code>Temporal.Duration.from()</code>.</p>
 <p>This method is the same as <code>duration.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>

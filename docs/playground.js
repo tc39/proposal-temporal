@@ -6833,7 +6833,7 @@
       return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
     },
     ToTemporalRoundingMode: function ToTemporalRoundingMode(options, fallback) {
-      return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], fallback);
+      return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'halfExpand'], fallback);
     },
     NegateTemporalRoundingMode: function NegateTemporalRoundingMode(roundingMode) {
       switch (roundingMode) {
@@ -9893,7 +9893,7 @@
           weeks = 0;
           days = 0;
 
-          var _ES$DifferenceInstant = ES.DifferenceInstant(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, 1, 'nanoseconds', 'nearest');
+          var _ES$DifferenceInstant = ES.DifferenceInstant(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, 1, 'nanoseconds', 'halfExpand');
 
           seconds = _ES$DifferenceInstant.seconds;
           milliseconds = _ES$DifferenceInstant.milliseconds;
@@ -10034,7 +10034,7 @@
           // no change needed, because divmod is a truncation
           break;
 
-        case 'nearest':
+        case 'halfExpand':
           // "half up away from zero"
           if (remainder.multiply(2).abs() >= increment) quotient = quotient.add(sign);
           break;
@@ -11500,7 +11500,7 @@
         if (options === undefined) throw new TypeError('options parameter is required');
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
           hour: 24,
           minute: 1440,
@@ -12699,7 +12699,7 @@
         if (options === undefined) throw new TypeError('options parameter is required');
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
           day: 1,
           hour: 24,
@@ -13196,7 +13196,7 @@
         }
 
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
           years: undefined,
           months: undefined,
@@ -14083,7 +14083,7 @@
         if (options === undefined) throw new TypeError('options parameter is required');
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
           hour: 24,
           minute: 60,
@@ -15354,7 +15354,7 @@
         if (options === undefined) throw new TypeError('options parameter is required');
         options = ES.NormalizeOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options);
-        var roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+        var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
           day: 1,
           hour: 24,

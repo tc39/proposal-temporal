@@ -435,7 +435,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
@@ -512,7 +512,7 @@ The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
@@ -535,8 +535,8 @@ Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <co
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;nearest&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
-The default is <code>&#39;nearest&#39;</code>.</li>
+Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+The default is <code>&#39;halfExpand&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -555,7 +555,7 @@ For example, to round to increments of a half hour, use <code>smallestUnit: &#39
 <li><code>ceil</code>: Always round up, towards the end of time.</li>
 <li><code>floor</code>, <code>trunc</code>: Always round down, towards the beginning of time.
 (These two modes behave the same, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.)</li>
-<li><code>nearest</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+<li><code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
 When there is a tie, round up, like <code>ceil</code>.</li>
 </ul>
 <p>Example usage:</p>
@@ -597,7 +597,7 @@ The default is <code>&#39;auto&#39;</code>.</li>
 This option overrides <code>fractionalSecondDigits</code> if both are given.
 Valid values are <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;nearest&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;halfExpand&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>.</li>
 </ul>
 </li>
@@ -624,7 +624,7 @@ instant<span class="token punctuation">.</span><span class="token function">toSt
 <span class="token comment">// => 2019-11-18T10:52:01Z</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> fractionalSecondDigits<span class="token operator">:</span> <span class="token number">4</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => 2019-11-18T10:52:01.8160Z</span>
-instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'second'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'nearest'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'second'</span><span class="token punctuation">,</span> roundingMode<span class="token operator">:</span> <span class="token string">'halfExpand'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => 2019-11-18T10:52:02Z</span></code></pre><h3 id="toLocaleString"><a class="heading-link" href="#toLocaleString"></a>instant.<strong>toLocaleString</strong>(<em>locales</em>?: string | array&lt;string&gt;, <em>options</em>?: object) : string</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>locales</code> (optional string or array of strings): A string with a BCP 47 language tag with an optional Unicode extension key, or an array of such strings.</li>
