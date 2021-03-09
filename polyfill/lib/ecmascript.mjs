@@ -166,7 +166,7 @@ export const ES = ObjectAssign({}, ES2020, {
   FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
     if (showCalendar === 'auto' && id === 'iso8601') return '';
-    return `[u-ca-${id}]`;
+    return `[u-ca=${id}]`;
   },
   ParseISODateTime: (isoString, { zoneRequired }) => {
     const regex = zoneRequired ? PARSE.instant : PARSE.datetime;

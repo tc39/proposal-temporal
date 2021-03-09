@@ -55,7 +55,7 @@ _Calendar-specific dates are expressed as their equivalent date in the ISO calen
 For example, when parsed, the following string would represent the date **28 Iyar 5780** in the Hebrew calendar:
 
 ```
-2020-05-22[u-ca-hebrew]
+2020-05-22[u-ca=hebrew]
 ```
 
 The syntax of the calendar suffix is currently being proposed for standardization with the CalConnect and IETF Calsify standards bodies.
@@ -86,7 +86,7 @@ The list of calendar identifiers currently supported by CLDR is:
 Example of a maximal length string containing both an IANA time zone name and a calendar system:
 
 ```
-2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis][u-ca-islamic-umalqura]
+2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis][u-ca=islamic-umalqura]
 ```
 
 ### Calendar-dependent YearMonth and MonthDay
