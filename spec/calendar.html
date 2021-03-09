@@ -537,7 +537,7 @@
         The ISOYear abstract operation implements the calendar-specific logic in the `Temporal.Calendar.year` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
+        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISOYear]]).
       </emu-alg>
@@ -549,9 +549,7 @@
         The ISOMonth abstract operation implements the calendar-specific logic in the `Temporal.Calendar.month` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If _dateOrDateTime_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
-        1. If _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
+        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISOMonth]]).
       </emu-alg>
@@ -563,7 +561,7 @@
         The ISOMonthCode abstract operation implements the calendar-specific logic in the `Temporal.Calendar.monthCode` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
+        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Let _monthCode_ be the String representation of _dateOrDateTime_.[[ISOMonth]], formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
         1. Return the string-concatenation of *"M"* and _monthCode_.
@@ -576,7 +574,7 @@
         The ISODay abstract operation implements the calendar-specific logic in the `Temporal.Calendar.day` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If _dateOrDateTime_ does not have an [[ISODay]] internal slot, then
+        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISODay]] internal slot, then
           1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
         1. Return 𝔽(_dateOrDateTime_.[[ISODay]]).
       </emu-alg>
@@ -858,6 +856,8 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. If Type(_dateOrDateTime_) is Object and _dateOrDateTime_ has an [[InitializedTemporalMonthDay]] internal slot, then
+          1. Throw a *TypeError* exception.
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Return ? ISOMonth(_dateOrDateTime_).
       </emu-alg>
@@ -1028,7 +1028,7 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Perform ? ToTemporalDateTime(_dateOrDateTime_).
+        1. Perform ? ToTemporalDate(_dateOrDateTime_).
         1. Return *12*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>

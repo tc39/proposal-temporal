@@ -38,22 +38,19 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    return impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, overflow, constructor, this);
+    return impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, options, constructor, this);
   }
   yearMonthFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    return impl[GetSlot(this, CALENDAR_ID)].yearMonthFromFields(fields, overflow, constructor, this);
+    return impl[GetSlot(this, CALENDAR_ID)].yearMonthFromFields(fields, options, constructor, this);
   }
   monthDayFromFields(fields, options, constructor) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.NormalizeOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
-    return impl[GetSlot(this, CALENDAR_ID)].monthDayFromFields(fields, overflow, constructor, this);
+    return impl[GetSlot(this, CALENDAR_ID)].monthDayFromFields(fields, options, constructor, this);
   }
   fields(fields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -91,46 +88,58 @@ export class Calendar {
   }
   year(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].year(date);
   }
   month(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (ES.IsTemporalMonthDay(date)) throw new TypeError('use monthCode on PlainMonthDay instead');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].month(date);
   }
   monthCode(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].monthCode(date);
   }
   day(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].day(date);
   }
   era(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].era(date);
   }
   eraYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].eraYear(date);
   }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].dayOfWeek(date);
   }
   dayOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].dayOfYear(date);
   }
   weekOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].weekOfYear(date);
   }
   daysInWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].daysInWeek(date);
   }
   daysInMonth(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].daysInMonth(date);
   }
   daysInYear(date) {
@@ -139,6 +148,7 @@ export class Calendar {
   }
   monthsInYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return impl[GetSlot(this, CALENDAR_ID)].monthsInYear(date);
   }
   inLeapYear(date) {
@@ -161,21 +171,24 @@ MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
 impl['iso8601'] = {
-  dateFromFields(fields, overflow, constructor, calendar) {
+  dateFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     fields = ES.PrepareTemporalFields(fields, [['day'], ['month', undefined], ['monthCode', undefined], ['year']]);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month, day } = fields;
     ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
     return new constructor(year, month, day, calendar);
   },
-  yearMonthFromFields(fields, overflow, constructor, calendar) {
+  yearMonthFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     fields = ES.PrepareTemporalFields(fields, [['month', undefined], ['monthCode', undefined], ['year']]);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month } = fields;
     ({ year, month } = ES.RegulateISOYearMonth(year, month, overflow));
     return new constructor(year, month, calendar, /* referenceISODay */ 1);
   },
-  monthDayFromFields(fields, overflow, constructor, calendar) {
+  monthDayFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     fields = ES.PrepareTemporalFields(fields, [
       ['day'],
       ['month', undefined],
@@ -224,58 +237,43 @@ impl['iso8601'] = {
     );
   },
   year(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_YEAR);
   },
-  era(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+  era() {
     return undefined;
   },
-  eraYear(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+  eraYear() {
     return undefined;
   },
   month(date) {
-    if (ES.IsTemporalMonthDay(date)) throw new TypeError('use monthCode on PlainMonthDay instead');
-    if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_MONTH);
   },
   monthCode(date) {
-    if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return buildMonthCode(GetSlot(date, ISO_MONTH));
   },
   day(date) {
-    if (!HasSlot(date, ISO_DAY)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return GetSlot(date, ISO_DAY);
   },
   dayOfWeek(date) {
-    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return ES.DayOfWeek(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   },
   dayOfYear(date) {
-    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   },
   weekOfYear(date) {
-    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   },
-  daysInWeek(date) {
-    ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+  daysInWeek() {
     return 7;
   },
   daysInMonth(date) {
-    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH)) {
-      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    }
     return ES.ISODaysInMonth(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH));
   },
   daysInYear(date) {
     if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     return ES.LeapYear(GetSlot(date, ISO_YEAR)) ? 366 : 365;
   },
-  monthsInYear(date) {
-    if (!HasSlot(date, ISO_YEAR)) ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
+  monthsInYear() {
     return 12;
   },
   inLeapYear(date) {
@@ -1765,7 +1763,8 @@ const helperDangi = ObjectAssign({}, { ...helperChinese, id: 'dangi' });
  * ISO and non-ISO implementations vs. code that was very different.
  */
 const nonIsoGeneralImpl = {
-  dateFromFields(fields, overflow, constructor, calendar) {
+  dateFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     const cache = new OneObjectCache();
     // Intentionally alphabetical
     fields = ES.PrepareTemporalFields(fields, [
@@ -1781,7 +1780,8 @@ const nonIsoGeneralImpl = {
     cache.setObject(result);
     return result;
   },
-  yearMonthFromFields(fields, overflow, constructor, calendar) {
+  yearMonthFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     const cache = new OneObjectCache();
     // Intentionally alphabetical
     fields = ES.PrepareTemporalFields(fields, [
@@ -1796,7 +1796,8 @@ const nonIsoGeneralImpl = {
     cache.setObject(result);
     return result;
   },
-  monthDayFromFields(fields, overflow, constructor, calendar) {
+  monthDayFromFields(fields, options, constructor, calendar) {
+    const overflow = ES.ToTemporalOverflow(options);
     // All built-in calendars require `day`, but some allow other fields to be
     // substituted for `month`. And for lunisolar calendars, either `monthCode`
     // or `year` must be provided because `month` is ambiguous without a year or
@@ -1804,11 +1805,11 @@ const nonIsoGeneralImpl = {
     const cache = new OneObjectCache();
     fields = ES.PrepareTemporalFields(fields, [
       ['day'],
-      ['month', undefined],
-      ['year', undefined],
-      ['monthCode', undefined],
       ['era', undefined],
-      ['eraYear', undefined]
+      ['eraYear', undefined],
+      ['month', undefined],
+      ['monthCode', undefined],
+      ['year', undefined]
     ]);
     const { year, month, day } = this.helper.monthDayFromFields(fields, overflow, cache);
     // `year` is a reference year where this month/day exists in this calendar
@@ -1862,45 +1863,33 @@ const nonIsoGeneralImpl = {
     return result;
   },
   year(date) {
-    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
-      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    }
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.year;
   },
   month(date) {
-    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
-      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    }
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.month;
   },
   day(date) {
-    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH) || !HasSlot(date, ISO_DAY)) {
-      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    }
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.day;
   },
   era(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     if (!this.helper.hasEra) return undefined;
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.era;
   },
   eraYear(date) {
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     if (!this.helper.hasEra) return undefined;
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.eraYear;
   },
   monthCode(date) {
-    if (!HasSlot(date, ISO_MONTH)) date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     return calendarDate.monthCode;
@@ -1910,7 +1899,6 @@ const nonIsoGeneralImpl = {
   },
   dayOfYear(date) {
     const cache = OneObjectCache.getCacheForObject(date);
-    date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     const calendarDate = this.helper.isoToCalendarDate(date, cache);
     const startOfYear = this.helper.startOfCalendarYear(calendarDate);
     const diffDays = this.helper.calendarDaysUntil(startOfYear, calendarDate, cache);
@@ -1923,9 +1911,6 @@ const nonIsoGeneralImpl = {
     return impl['iso8601'].daysInWeek(date);
   },
   daysInMonth(date) {
-    if (!HasSlot(date, ISO_YEAR) || !HasSlot(date, ISO_MONTH)) {
-      date = ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
-    }
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
 
@@ -1952,7 +1937,6 @@ const nonIsoGeneralImpl = {
     return result;
   },
   monthsInYear(date) {
-    if (!HasSlot(date, ISO_YEAR)) ES.ToTemporalDate(date, GetIntrinsic('%Temporal.PlainDate%'));
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.temporalToCalendarDate(date, cache);
     const result = this.helper.monthsInYear(calendarDate, cache);
