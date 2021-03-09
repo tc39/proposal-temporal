@@ -670,7 +670,7 @@ export class ZonedDateTime {
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
       day: 1,
       hour: 24,

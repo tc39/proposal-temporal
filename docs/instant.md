@@ -364,7 +364,7 @@ Temporal.now.instant().subtract(oneHour);
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
@@ -453,7 +453,7 @@ epoch.toZonedDateTimeISO('UTC').until(
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
@@ -484,8 +484,8 @@ billion.since(epoch); // => PT1000000000S
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.Instant` object which is `instant` rounded to `roundingIncrement` of `smallestUnit`.
 
@@ -507,7 +507,7 @@ The `roundingMode` option controls how the rounding is performed.
 - `ceil`: Always round up, towards the end of time.
 - `floor`, `trunc`: Always round down, towards the beginning of time.
   (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
-- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `ceil`.
 
 Example usage:
@@ -567,7 +567,7 @@ one.equals(one); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
     The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `instant`.
@@ -599,7 +599,7 @@ instant.toString({ fractionalSecondDigits: 0 });
 // => 2019-11-18T10:52:01Z
 instant.toString({ fractionalSecondDigits: 4 });
 // => 2019-11-18T10:52:01.8160Z
-instant.toString({ smallestUnit: 'second', roundingMode: 'nearest' });
+instant.toString({ smallestUnit: 'second', roundingMode: 'halfExpand' });
 // => 2019-11-18T10:52:02Z
 ```
 

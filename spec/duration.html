@@ -446,7 +446,7 @@
         1. If _smallestUnitPresent_ is *false* and _largestUnitPresent_ is *false*, then
           1. Throw a *RangeError* exception.
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"halfExpand"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
@@ -1174,7 +1174,7 @@
           1. Let _intermediateNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_).
           1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
           1. If _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
-            1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanoseconds"*, *"nearest"*).
+            1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanoseconds"*, *"halfExpand"*).
             1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
             1. Let _years_ be 0.
             1. Let _months_ be 0.

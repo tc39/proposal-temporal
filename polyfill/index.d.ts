@@ -1,6 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
-  type RoundingMode = 'nearest' | 'ceil' | 'trunc' | 'floor';
+  type RoundingMode = 'halfExpand' | 'ceil' | 'trunc' | 'floor';
   type ConstructorOf<T> = new (...args: unknown[]) => T;
 
   /**
@@ -144,7 +144,7 @@ export namespace Temporal {
 
     /**
      * Controls how rounding is performed:
-     * - `nearest`: Round to the nearest of the values allowed by
+     * - `halfExpand`: Round to the nearest of the values allowed by
      *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
      *   This mode is the default.
      * - `ceil`: Always round up, towards the end of time.
@@ -213,7 +213,7 @@ export namespace Temporal {
 
     /**
      * Controls how rounding is performed:
-     * - `nearest`: Round to the nearest of the values allowed by
+     * - `halfExpand`: Round to the nearest of the values allowed by
      *   `roundingIncrement` and `smallestUnit`. When there is a tie, round away
      *   from zero like `ceil` for positive durations and like `floor` for
      *   negative durations.
@@ -249,7 +249,7 @@ export namespace Temporal {
 
     /**
      * Controls how rounding is performed:
-     * - `nearest`: Round to the nearest of the values allowed by
+     * - `halfExpand`: Round to the nearest of the values allowed by
      *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
      *   This mode is the default.
      * - `ceil`: Always round up, towards the end of time.
@@ -261,7 +261,7 @@ export namespace Temporal {
      *   negative infinity which is usually unexpected. For this reason, `trunc`
      *   is recommended for most use cases.
      */
-    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
+    roundingMode?: RoundingMode;
   }
 
   export interface DurationRoundOptions {
@@ -335,7 +335,7 @@ export namespace Temporal {
 
     /**
      * Controls how rounding is performed:
-     * - `nearest`: Round to the nearest of the values allowed by
+     * - `halfExpand`: Round to the nearest of the values allowed by
      *   `roundingIncrement` and `smallestUnit`. When there is a tie, round away
      *   from zero like `ceil` for positive durations and like `floor` for
      *   negative durations. This mode is the default.
@@ -350,7 +350,7 @@ export namespace Temporal {
      *   For this reason, `trunc` is recommended for most "round down" use
      *   cases.
      */
-    roundingMode?: 'nearest' | 'ceil' | 'trunc' | 'floor';
+    roundingMode?: RoundingMode;
 
     /**
      * The starting point to use for rounding and conversions when

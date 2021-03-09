@@ -178,7 +178,7 @@
       </p>
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"nearest"* », _fallback_).
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"halfExpand"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -758,7 +758,7 @@
     </emu-note>
     <emu-alg>
       1. Assert: _x_ and _increment_ are mathematical values.
-      1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"nearest"*.
+      1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"halfExpand"*.
       1. Let _quotient_ be _x_ / _increment_.
       1. If _roundingMode_ is *"ceil"*, then
         1. Let _rounded_ be −floor(−_quotient_).

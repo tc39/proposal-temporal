@@ -389,7 +389,7 @@ export class Duration {
       throw new RangeError('at least one of smallestUnit or largestUnit is required');
     }
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
       years: undefined,
       months: undefined,

@@ -589,7 +589,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
   ToTemporalRoundingMode: (options, fallback) => {
-    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'nearest'], fallback);
+    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'halfExpand'], fallback);
   },
   NegateTemporalRoundingMode: (roundingMode) => {
     switch (roundingMode) {
@@ -3232,7 +3232,7 @@ export const ES = ObjectAssign({}, ES2020, {
           endNs,
           1,
           'nanoseconds',
-          'nearest'
+          'halfExpand'
         ));
         ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
           0,
@@ -3391,7 +3391,7 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'trunc':
         // no change needed, because divmod is a truncation
         break;
-      case 'nearest':
+      case 'halfExpand':
         // "half up away from zero"
         if (remainder.multiply(2).abs() >= increment) quotient = quotient.add(sign);
         break;

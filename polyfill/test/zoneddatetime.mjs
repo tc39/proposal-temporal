@@ -1331,10 +1331,10 @@ describe('ZonedDateTime', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than hours', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P3Y');
-      equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'nearest' })}`, 'P32M');
-      equal(`${earlier.until(later, { smallestUnit: 'weeks', roundingMode: 'nearest' })}`, 'P139W');
-      equal(`${earlier.until(later, { smallestUnit: 'days', roundingMode: 'nearest' })}`, 'P973D');
+      equal(`${earlier.until(later, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
+      equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
+      equal(`${earlier.until(later, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
+      equal(`${earlier.until(later, { smallestUnit: 'days', roundingMode: 'halfExpand' })}`, 'P973D');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
@@ -1352,7 +1352,7 @@ describe('ZonedDateTime', () => {
       ['nanoseconds', 'PT23356H17M4.864197532S']
     ];
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
-      const roundingMode = 'nearest';
+      const roundingMode = 'halfExpand';
       it(`rounds to nearest ${smallestUnit}`, () => {
         equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
@@ -1421,37 +1421,37 @@ describe('ZonedDateTime', () => {
     });
     it('rounds to an increment of hours', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'halfExpand' })}`,
         'PT23355H'
       );
     });
     it('rounds to an increment of minutes', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'halfExpand' })}`,
         'PT23356H30M'
       );
     });
     it('rounds to an increment of seconds', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'halfExpand' })}`,
         'PT23356H17M'
       );
     });
     it('rounds to an increment of milliseconds', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.86S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.8642S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.86419753S'
       );
     });
@@ -1549,8 +1549,8 @@ describe('ZonedDateTime', () => {
     it('rounds relative to the receiver', () => {
       const dt1 = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
       const dt2 = ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
-      equal(`${dt1.until(dt2, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P2Y');
-      equal(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'nearest' })}`, '-P1Y');
+      equal(`${dt1.until(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P2Y');
+      equal(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P1Y');
     });
   });
   describe('ZonedDateTime.since()', () => {
@@ -1663,9 +1663,9 @@ describe('ZonedDateTime', () => {
       }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P3Y');
-      equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'nearest' })}`, 'P32M');
-      equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingMode: 'nearest' })}`, 'P139W');
+      equal(`${later.since(earlier, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
+      equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
+      equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
     });
     it('throws on invalid roundingMode', () => {
       throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
@@ -1683,7 +1683,7 @@ describe('ZonedDateTime', () => {
       ['nanoseconds', 'PT23356H17M4.864197532S']
     ];
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
-      const roundingMode = 'nearest';
+      const roundingMode = 'halfExpand';
       it(`rounds to nearest ${smallestUnit}`, () => {
         equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
@@ -1752,37 +1752,37 @@ describe('ZonedDateTime', () => {
     });
     it('rounds to an increment of hours', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'halfExpand' })}`,
         'PT23355H'
       );
     });
     it('rounds to an increment of minutes', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'halfExpand' })}`,
         'PT23356H30M'
       );
     });
     it('rounds to an increment of seconds', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'halfExpand' })}`,
         'PT23356H17M'
       );
     });
     it('rounds to an increment of milliseconds', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.86S'
       );
     });
     it('rounds to an increment of microseconds', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.8642S'
       );
     });
     it('rounds to an increment of nanoseconds', () => {
       equal(
-        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'nearest' })}`,
+        `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
         'PT23356H17M4.86419753S'
       );
     });
@@ -1880,8 +1880,8 @@ describe('ZonedDateTime', () => {
     it('rounds relative to the receiver', () => {
       const dt1 = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
       const dt2 = ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
-      equal(`${dt2.since(dt1, { smallestUnit: 'years', roundingMode: 'nearest' })}`, 'P1Y');
-      equal(`${dt1.since(dt2, { smallestUnit: 'years', roundingMode: 'nearest' })}`, '-P2Y');
+      equal(`${dt2.since(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P1Y');
+      equal(`${dt1.since(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P2Y');
     });
   });
 
@@ -1913,7 +1913,7 @@ describe('ZonedDateTime', () => {
     ];
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
       it(`rounds to nearest ${smallestUnit}`, () =>
-        equal(`${zdt.round({ smallestUnit, roundingMode: 'nearest' })}`, expected));
+        equal(`${zdt.round({ smallestUnit, roundingMode: 'halfExpand' })}`, expected));
     });
     const incrementOneCeil = [
       ['day', '1976-11-19T00:00:00+01:00[Europe/Vienna]'],
@@ -1942,7 +1942,7 @@ describe('ZonedDateTime', () => {
       it(`truncates to ${smallestUnit}`, () =>
         equal(`${zdt.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
     });
-    it('nearest is the default', () => {
+    it('halfExpand is the default', () => {
       equal(`${zdt.round({ smallestUnit: 'minute' })}`, '1976-11-18T15:24:00+01:00[Europe/Vienna]');
       equal(`${zdt.round({ smallestUnit: 'second' })}`, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
     });
@@ -1952,7 +1952,7 @@ describe('ZonedDateTime', () => {
       equal(`${zdt2.round({ smallestUnit, roundingMode: 'ceil' })}`, '1969-12-15T12:00:01+00:00[UTC]');
       equal(`${zdt2.round({ smallestUnit, roundingMode: 'floor' })}`, '1969-12-15T12:00:00+00:00[UTC]');
       equal(`${zdt2.round({ smallestUnit, roundingMode: 'trunc' })}`, '1969-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt2.round({ smallestUnit, roundingMode: 'nearest' })}`, '1969-12-15T12:00:01+00:00[UTC]');
+      equal(`${zdt2.round({ smallestUnit, roundingMode: 'halfExpand' })}`, '1969-12-15T12:00:01+00:00[UTC]');
     });
     it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
       const zdt3 = ZonedDateTime.from('-000099-12-15T12:00:00.5+00:00[UTC]');
@@ -1960,7 +1960,7 @@ describe('ZonedDateTime', () => {
       equal(`${zdt3.round({ smallestUnit, roundingMode: 'ceil' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
       equal(`${zdt3.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
       equal(`${zdt3.round({ smallestUnit, roundingMode: 'trunc' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt3.round({ smallestUnit, roundingMode: 'nearest' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
+      equal(`${zdt3.round({ smallestUnit, roundingMode: 'halfExpand' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
     });
     it('rounds to an increment of hours', () => {
       equal(`${zdt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00+01:00[Europe/Vienna]');
@@ -2065,7 +2065,7 @@ describe('ZonedDateTime', () => {
     });
     it('rounding up to a nonexistent wall-clock time', () => {
       const almostSkipped = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');
-      const rounded = almostSkipped.round({ smallestUnit: 'microsecond', roundingMode: 'nearest' });
+      const rounded = almostSkipped.round({ smallestUnit: 'microsecond', roundingMode: 'halfExpand' });
       equal(`${rounded}`, '2018-11-04T01:00:00-02:00[America/Sao_Paulo]');
       equal(rounded.epochNanoseconds - almostSkipped.epochNanoseconds, 1n);
     });
@@ -2227,11 +2227,11 @@ describe('ZonedDateTime', () => {
     });
     it('rounds to nearest', () => {
       equal(
-        zdt2.toString({ smallestUnit: 'minute', roundingMode: 'nearest' }),
+        zdt2.toString({ smallestUnit: 'minute', roundingMode: 'halfExpand' }),
         '1976-11-18T15:24+01:00[Europe/Vienna]'
       );
       equal(
-        zdt3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }),
+        zdt3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }),
         '1976-11-18T15:23:30.123+01:00[Europe/Vienna]'
       );
     });
@@ -2258,13 +2258,13 @@ describe('ZonedDateTime', () => {
     it('rounding can affect all units', () => {
       const zdt5 = ZonedDateTime.from('1999-12-31T23:59:59.999999999+01:00[Europe/Berlin]');
       equal(
-        zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }),
+        zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }),
         '2000-01-01T00:00:00.00000000+01:00[Europe/Berlin]'
       );
     });
     it('rounding up to a nonexistent wall-clock time', () => {
       const zdt5 = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');
-      const roundedString = zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+      const roundedString = zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
       equal(roundedString, '2018-11-04T01:00:00.00000000-02:00[America/Sao_Paulo]');
       const zdt6 = ZonedDateTime.from(roundedString);
       equal(zdt6.epochNanoseconds - zdt5.epochNanoseconds, 1n);
@@ -2598,7 +2598,7 @@ describe('ZonedDateTime', () => {
     it('Difference rounding (nearest day) is DST-aware', () => {
       const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
       const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
-      const diff = start.until(end, { smallestUnit: 'days', roundingMode: 'nearest' }); // roundingMode: 'nearest'
+      const diff = start.until(end, { smallestUnit: 'days', roundingMode: 'halfExpand' });
       equal(`${diff}`, '-P3D');
     });
 
@@ -2626,7 +2626,7 @@ describe('ZonedDateTime', () => {
     it('Difference rounding (nearest hour) is DST-aware', () => {
       const start = ZonedDateTime.from('2020-03-10T02:30-07:00[America/Los_Angeles]');
       const end = ZonedDateTime.from('2020-03-07T14:15-08:00[America/Los_Angeles]');
-      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours' }); // roundingMode: 'nearest'
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'halfExpand' });
       equal(`${diff}`, '-P2DT12H');
     });
 
@@ -2668,14 +2668,14 @@ describe('ZonedDateTime', () => {
     it('Rounding up to hours causes one more day of overflow (positive)', () => {
       const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
       const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
-      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'nearest' });
+      const diff = start.until(end, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'halfExpand' });
       equal(`${diff}`, 'P3D');
     });
 
     it('Rounding up to hours causes one more day of overflow (negative)', () => {
       const start = ZonedDateTime.from('2020-01-01T00:00-08:00[America/Los_Angeles]');
       const end = ZonedDateTime.from('2020-01-03T23:59-08:00[America/Los_Angeles]');
-      const diff = end.until(start, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'nearest' });
+      const diff = end.until(start, { largestUnit: 'days', smallestUnit: 'hours', roundingMode: 'halfExpand' });
       equal(`${diff}`, '-P3D');
     });
 

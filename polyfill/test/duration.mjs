@@ -301,8 +301,8 @@ describe('Duration', () => {
       throws(() => d1.toString({ roundingMode: 'cile' }), RangeError);
     });
     it('rounds to nearest', () => {
-      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'nearest' }), 'PT15H23M31S');
-      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'nearest' }), 'PT15H23M30.543S');
+      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'halfExpand' }), 'PT15H23M31S');
+      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }), 'PT15H23M30.543S');
     });
     it('rounds up', () => {
       equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'ceil' }), 'PT15H23M31S');
@@ -318,7 +318,7 @@ describe('Duration', () => {
     });
     it('rounding can affect units up to seconds', () => {
       const d4 = Duration.from('P1Y1M1W1DT23H59M59.999999999S');
-      equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' }), 'P1Y1M1W1DT23H59M60.00000000S');
+      equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }), 'P1Y1M1W1DT23H59M60.00000000S');
     });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
@@ -1246,7 +1246,7 @@ describe('Duration', () => {
       }
     }
     const roundingModeResults = {
-      nearest: ['P6Y', '-P6Y'],
+      halfExpand: ['P6Y', '-P6Y'],
       ceil: ['P6Y', '-P5Y'],
       floor: ['P5Y', '-P6Y'],
       trunc: ['P5Y', '-P5Y']
@@ -1257,7 +1257,7 @@ describe('Duration', () => {
         equal(`${d.negated().round({ smallestUnit: 'years', relativeTo, roundingMode })}`, negResult);
       });
     }
-    it('nearest is the default', () => {
+    it('halfExpand is the default', () => {
       equal(`${d.round({ smallestUnit: 'years', relativeTo })}`, 'P6Y');
       equal(`${d.negated().round({ smallestUnit: 'years', relativeTo })}`, '-P6Y');
     });

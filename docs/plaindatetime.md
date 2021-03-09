@@ -654,7 +654,7 @@ dt.subtract({ months: 1 }); // => throws
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `datetime` and until `other`.
@@ -732,7 +732,7 @@ jan1.until(mar1);                            // => P60D
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `datetime` and since `other`.
@@ -763,8 +763,8 @@ dt2.since(dt1); // => P8456DT12H5M29.999996500S
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is `datetime` rounded to `roundingIncrement` of `smallestUnit`.
 
@@ -789,7 +789,7 @@ The `roundingMode` option controls how the rounding is performed.
 - `ceil`: Always round up, towards the end of time.
 - `floor`, `trunc`: Always round down, towards the beginning of time.
   (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
-- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `ceil`.
 
 Example usage:
@@ -852,7 +852,7 @@ dt1.equals(dt1); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
     The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `datetime`.
@@ -890,7 +890,7 @@ dt.toString(); // => 1999-12-31T23:59:59.999999999
 dt.toString({ smallestUnit: 'minute' });    // => 1999-12-31T23:59
 dt.toString({ fractionalSecondDigits: 0 }); // => 1999-12-31T23:59:59
 dt.toString({ fractionalSecondDigits: 4 }); // => 1999-12-31T23:59:59.9999
-dt.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+dt.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
 // => 2000-01-01T00:00:00.00000000
 ```
 <!-- prettier-ignore-end -->

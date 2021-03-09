@@ -351,7 +351,7 @@ describe('YearMonth', () => {
       ['months', 'P2Y8M']
     ];
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
-      const roundingMode = 'nearest';
+      const roundingMode = 'halfExpand';
       it(`rounds to nearest ${smallestUnit}`, () => {
         equal(`${earlier.until(later, { smallestUnit, roundingMode })}`, expected);
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
@@ -395,7 +395,10 @@ describe('YearMonth', () => {
       equal(`${later.until(earlier, { smallestUnit: 'years' })}`, '-P2Y');
     });
     it('rounds to an increment of years', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'nearest' })}`, 'P4Y');
+      equal(
+        `${earlier.until(later, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'halfExpand' })}`,
+        'P4Y'
+      );
     });
     it('rounds to an increment of months', () => {
       equal(`${earlier.until(later, { smallestUnit: 'months', roundingIncrement: 5 })}`, 'P2Y5M');
@@ -490,7 +493,7 @@ describe('YearMonth', () => {
       ['months', 'P2Y8M']
     ];
     incrementOneNearest.forEach(([smallestUnit, expected]) => {
-      const roundingMode = 'nearest';
+      const roundingMode = 'halfExpand';
       it(`rounds to nearest ${smallestUnit}`, () => {
         equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
@@ -534,7 +537,10 @@ describe('YearMonth', () => {
       equal(`${earlier.since(later, { smallestUnit: 'years' })}`, '-P2Y');
     });
     it('rounds to an increment of years', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'nearest' })}`, 'P4Y');
+      equal(
+        `${later.since(earlier, { smallestUnit: 'years', roundingIncrement: 4, roundingMode: 'halfExpand' })}`,
+        'P4Y'
+      );
     });
     it('rounds to an increment of months', () => {
       equal(`${later.since(earlier, { smallestUnit: 'months', roundingIncrement: 5 })}`, 'P2Y5M');
