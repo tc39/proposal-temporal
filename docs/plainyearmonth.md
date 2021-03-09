@@ -181,7 +181,7 @@ ym.year; // => 2019
 ym.month; // => 6
 ym.monthCode; // => "M06"
 
-ym = Temporal.PlainYearMonth.from('2019-02-23[u-ca-hebrew]');
+ym = Temporal.PlainYearMonth.from('2019-02-23[u-ca=hebrew]');
 ym.year; // => 5779
 ym.month; // => 6
 ym.monthCode; // => "M05L"
@@ -202,7 +202,7 @@ As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`
 Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BCE era in the Gregorian calendar) count years backwards.
 
 ```javascript
-ym = Temporal.PlainYearMonth.from('-000015-01-01[u-ca-gregory]');
+ym = Temporal.PlainYearMonth.from('-000015-01-01[u-ca=gregory]');
 ym.era;
 // => "bce"
 ym.eraYear;

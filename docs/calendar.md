@@ -117,7 +117,7 @@ For a list of calendar identifiers, see the documentation for [Intl.DateTimeForm
 If `calendarIdentifier` is not a built-in calendar, then a `RangeError` is thrown.
 
 Use this constructor directly if you have a string that is known to be a correct built-in calendar identifier.
-If you have an ISO 8601 date-time string with a `[u-ca-identifier]` annotation, then `Temporal.Calendar.from()` is more convenient than parsing the identifier out of the string, and also the only way to parse strings annotated with a non-built-in calendar.
+If you have an ISO 8601 date-time string with a `[u-ca=identifier]` annotation, then `Temporal.Calendar.from()` is more convenient than parsing the identifier out of the string, and also the only way to parse strings annotated with a non-built-in calendar.
 
 Example usage:
 
@@ -146,7 +146,7 @@ Any other value is converted to a string, which is expected to be either:
 - a string that is accepted by `new Temporal.Calendar()`; or
 - a string in the ISO 8601 format.
 
-Note that the ISO 8601 string can be extended with a `[u-ca-identifier]` annotation in square brackets appended to it.
+Note that the ISO 8601 string can be extended with a `[u-ca=identifier]` annotation in square brackets appended to it.
 Without such an annotation, the calendar is taken to be `iso8601`.
 
 This function is often more convenient to use than `new Temporal.Calendar()` because it handles a wider range of input.
@@ -160,7 +160,7 @@ cal = Temporal.Calendar.from('gregory');
 
 // ISO 8601 string with or without calendar annotation
 cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086');
-cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver][u-ca-iso8601]');
+cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver][u-ca=iso8601]');
 
 // Existing calendar object
 cal2 = Temporal.Calendar.from(cal);
@@ -169,7 +169,7 @@ cal2 = Temporal.Calendar.from(cal);
 cal = Temporal.Calendar.from({ id: 'mycalendar' });
 
 /*⚠️*/ cal = Temporal.Calendar.from('discordian'); // not a built-in calendar, throws
-/*⚠️*/ cal = Temporal.Calendar.from('[u-ca-iso8601]'); // lone annotation not a valid ISO 8601 string
+/*⚠️*/ cal = Temporal.Calendar.from('[u-ca=iso8601]'); // lone annotation not a valid ISO 8601 string
 ```
 
 ## Properties
@@ -273,7 +273,7 @@ date.year; // => 5779
 date.month; // => 6
 date.monthCode; // => "M05L"
 date.day; // => 18
-date.toString(); // => 2019-02-23[u-ca-hebrew]
+date.toString(); // => 2019-02-23[u-ca=hebrew]
 date.toLocaleString('en-US', { calendar: 'hebrew' }); // => "18 Adar I 5779"
 
 // same result, but calling the method directly and using month index instead of month code:
@@ -320,7 +320,7 @@ date = Temporal.PlainDate.from('2020-05-29')
 date.year; // => 1441
 date.month; // => 11
 date.day; // => 7
-date.toString(); // => 2020-06-28[u-ca-islamic]
+date.toString(); // => 2020-06-28[u-ca=islamic]
 
 // same result, but calling the method directly:
 date = Temporal.Calendar.from('islamic').dateAdd(
@@ -332,7 +332,7 @@ date = Temporal.Calendar.from('islamic').dateAdd(
 date.year; // => 1441
 date.month; // => 11
 date.day; // => 7
-date.toString(); // => 2020-06-28[u-ca-islamic]
+date.toString(); // => 2020-06-28[u-ca=islamic]
 ```
 
 ### calendar.**dateUntil**(_one_: Temporal.PlainDate | object | string, _two_: Temporal.PlainDate | object | string, _options_: object) : Temporal.Duration
@@ -445,7 +445,7 @@ This method overrides `Object.prototype.toString()` and provides the calendar's 
 Example usage:
 
 ```javascript
-Temporal.PlainDate.from('2020-05-29[u-ca-gregory]').calendar.toString(); // => gregory
+Temporal.PlainDate.from('2020-05-29[u-ca=gregory]').calendar.toString(); // => gregory
 ```
 
 ### calendar.**toJSON**() : string

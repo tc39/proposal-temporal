@@ -99,7 +99,7 @@ date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'
   // => same as above; Temporal.PlainDateTime has year, month, and day properties
 
 calendar = Temporal.Calendar.from('islamic');
-date = Temporal.PlainDate.from({ year: 1427, month; 8, day: 1, calendar }); // => 2006-08-24[u-ca-islamic]
+date = Temporal.PlainDate.from({ year: 1427, month; 8, day: 1, calendar }); // => 2006-08-24[u-ca=islamic]
 date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
   // => same as above
 
@@ -185,7 +185,7 @@ date.month;     // => 8
 date.monthCode; // => "M08"
 date.day;       // => 24
 
-date = Temporal.PlainDate.from('2019-02-23[u-ca-hebrew]');
+date = Temporal.PlainDate.from('2019-02-23[u-ca=hebrew]');
 date.year;      // => 5779
 date.month;     // => 6
 date.monthCode; // => "M05L"
@@ -207,7 +207,7 @@ As inputs to `from` or `with`, `era` and `eraYear` can be used instead of `year`
 Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like the BCE era in the Gregorian calendar) count years backwards.
 
 ```javascript
-date = Temporal.PlainDate.from('-000015-01-01[u-ca-gregory]');
+date = Temporal.PlainDate.from('-000015-01-01[u-ca=gregory]');
 date.era;
 // => "bce"
 date.eraYear;
@@ -384,7 +384,7 @@ This method is the same as `date.with({ calendar })`, but may be more efficient.
 Usage example:
 
 ```javascript
-date = Temporal.PlainDate.from('2006-08-24[u-ca-japanese]');
+date = Temporal.PlainDate.from('2006-08-24[u-ca=japanese]');
 date.withCalendar('iso8601'); // => 2006-08-24
 ```
 

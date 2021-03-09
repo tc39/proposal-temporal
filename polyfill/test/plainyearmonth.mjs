@@ -778,10 +778,10 @@ describe('YearMonth', () => {
     const ym2 = PlainYearMonth.from({ year: 1976, month: 11, calendar: 'gregory' });
     it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(ym1.toString({ calendarName: 'auto' }), '1976-11');
-      equal(ym2.toString({ calendarName: 'auto' }), '1976-11-01[u-ca-gregory]');
+      equal(ym2.toString({ calendarName: 'auto' }), '1976-11-01[u-ca=gregory]');
     });
     it('shows ISO calendar if calendarName = always', () => {
-      equal(ym1.toString({ calendarName: 'always' }), '1976-11[u-ca-iso8601]');
+      equal(ym1.toString({ calendarName: 'always' }), '1976-11[u-ca=iso8601]');
     });
     it('omits non-ISO calendar, but not day, if calendarName = never', () => {
       equal(ym1.toString({ calendarName: 'never' }), '1976-11');
@@ -789,7 +789,7 @@ describe('YearMonth', () => {
     });
     it('default is calendar = auto', () => {
       equal(ym1.toString(), '1976-11');
-      equal(ym2.toString(), '1976-11-01[u-ca-gregory]');
+      equal(ym2.toString(), '1976-11-01[u-ca=gregory]');
     });
     it('throws on invalid calendar', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {

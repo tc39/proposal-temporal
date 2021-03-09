@@ -925,7 +925,7 @@ describe('Intl', () => {
       }
     });
     it('handles leap days', () => {
-      const leapYearFirstDay = Temporal.PlainDate.from('2004-03-21[u-ca-indian]');
+      const leapYearFirstDay = Temporal.PlainDate.from('2004-03-21[u-ca=indian]');
       equal(leapYearFirstDay.year, 2004 - 78);
       equal(leapYearFirstDay.month, 1);
       equal(leapYearFirstDay.day, 1);
@@ -936,7 +936,7 @@ describe('Intl', () => {
       equal(leapYearLastDay.day, 31);
     });
     it('handles non-leap years', () => {
-      const nonLeapYearFirstDay = Temporal.PlainDate.from('2005-03-22[u-ca-indian]');
+      const nonLeapYearFirstDay = Temporal.PlainDate.from('2005-03-22[u-ca=indian]');
       equal(nonLeapYearFirstDay.year, 2005 - 78);
       equal(nonLeapYearFirstDay.month, 1);
       equal(nonLeapYearFirstDay.day, 1);
@@ -953,43 +953,43 @@ describe('Intl', () => {
   describe('Japanese eras', () => {
     it('Reiwa (2019-)', () => {
       let date = Temporal.PlainDate.from({ era: 'reiwa', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '2020-01-01[u-ca-japanese]');
+      equal(`${date}`, '2020-01-01[u-ca=japanese]');
     });
     it('Heisei (1989-2019)', () => {
       let date = Temporal.PlainDate.from({ era: 'heisei', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1990-01-01[u-ca-japanese]');
+      equal(`${date}`, '1990-01-01[u-ca=japanese]');
     });
     it('Showa (1926-1989)', () => {
       let date = Temporal.PlainDate.from({ era: 'showa', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1927-01-01[u-ca-japanese]');
+      equal(`${date}`, '1927-01-01[u-ca=japanese]');
     });
     it('Taisho (1912-1926)', () => {
       let date = Temporal.PlainDate.from({ era: 'taisho', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1913-01-01[u-ca-japanese]');
+      equal(`${date}`, '1913-01-01[u-ca=japanese]');
     });
     it('Meiji (1868-1912)', () => {
       let date = Temporal.PlainDate.from({ era: 'meiji', eraYear: 2, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1869-01-01[u-ca-japanese]');
+      equal(`${date}`, '1869-01-01[u-ca=japanese]');
     });
     it('Dates in same year before Japanese era starts will resolve to previous era', () => {
       let date = Temporal.PlainDate.from({ era: 'reiwa', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '2019-01-01[u-ca-japanese]');
+      equal(`${date}`, '2019-01-01[u-ca=japanese]');
       equal(date.era, 'heisei');
       equal(date.eraYear, 31);
       date = Temporal.PlainDate.from({ era: 'heisei', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1989-01-01[u-ca-japanese]');
+      equal(`${date}`, '1989-01-01[u-ca=japanese]');
       equal(date.era, 'showa');
       equal(date.eraYear, 64);
       date = Temporal.PlainDate.from({ era: 'showa', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1926-01-01[u-ca-japanese]');
+      equal(`${date}`, '1926-01-01[u-ca=japanese]');
       equal(date.era, 'taisho');
       equal(date.eraYear, 15);
       date = Temporal.PlainDate.from({ era: 'taisho', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1912-01-01[u-ca-japanese]');
+      equal(`${date}`, '1912-01-01[u-ca=japanese]');
       equal(date.era, 'meiji');
       equal(date.eraYear, 45);
       date = Temporal.PlainDate.from({ era: 'meiji', eraYear: 1, month: 1, day: 1, calendar: 'japanese' });
-      equal(`${date}`, '1868-01-01[u-ca-japanese]');
+      equal(`${date}`, '1868-01-01[u-ca=japanese]');
       equal(date.era, 'ce');
       equal(date.eraYear, 1868);
       throws(
@@ -997,7 +997,7 @@ describe('Intl', () => {
         RangeError
       );
       // uncomment & revise `throws` above if https://bugs.chromium.org/p/chromium/issues/detail?id=1173158 is resolved
-      // equal(`${date}`, '+000000-01-01[u-ca-japanese]');
+      // equal(`${date}`, '+000000-01-01[u-ca=japanese]');
       // equal(date.era, 'bce');
       // equal(date.eraYear, 1);
     });

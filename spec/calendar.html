@@ -322,13 +322,13 @@
         Depending on the given _id_ and value of _showCalendar_, the string may be empty if no calendar annotation need be included.
       </p>
       <emu-note type="editor">
-        The exact form this annotation will take is unknown, and the *"u-ca-"* format is tentative; it is being discussed in <a href="https://ryzokuken.dev/draft-ryzokuken-datetime-extended/documents/rfc-3339.html#name-internet-date-time-format">Date and Time on the Internet: Timestamps with additional information</a>, a draft update to <a href="https://tools.ietf.org/html/rfc3339#appendix-A">RFC 3339</a>.
+        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://ryzokuken.dev/draft-ryzokuken-datetime-extended/documents/rfc-3339.html#name-internet-date-time-format">Date and Time on the Internet: Timestamps with additional information</a>.
       </emu-note>
       <emu-alg>
         1. Assert: _showCalendar_ is *"auto"*, *"always"*, or *"never"*.
         1. If _showCalendar_ is *"never"*, return the empty String.
         1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
-        1. Return the string-concatenation of *"[u-ca-"*, _id_, and *"]"*.
+        1. Return the string-concatenation of *"[u-ca="*, _id_, and *"]"*.
       </emu-alg>
     </emu-clause>
 

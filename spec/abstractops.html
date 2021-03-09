@@ -983,14 +983,11 @@
           `-`
           `_`
 
-      TimeZoneIANANameComponentNotBCP47 :
-          TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? but not one of `.` or `..` or CalChar `-` CalChar CalChar `-` CalendarNameComponent
-
       TimeZoneIANANameComponent :
           TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? but not one of `.` or `..`
 
       TimeZoneIANAName :
-          TimeZoneIANANameComponentNotBCP47
+          TimeZoneIANANameComponent
           TimeZoneIANAName `/` TimeZoneIANANameComponent
 
       TimeZoneBracketedName :
@@ -1021,7 +1018,7 @@
           CalendarNameComponent `-` CalendarName
 
       Calendar :
-          `[u-ca-` CalendarName `]`
+          `[u-ca=` CalendarName `]`
 
       TimeSpec :
           TimeHour
