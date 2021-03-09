@@ -403,8 +403,8 @@ d.abs(); // PT8H30M
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'halfExpand'`.
   - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
     It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
 
@@ -443,7 +443,7 @@ Instead of 60 minutes, use 1 hour.
 
 The `roundingMode` option controls how the rounding is performed.
 
-- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round away from zero like `ceil` for positive durations and like `floor` for negative durations.
 - `ceil`: Always round towards positive infinity.
   For negative durations this option will decrease the absolute value of the duration which may be unexpected.
@@ -578,7 +578,7 @@ d.total({
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
     The default is `'trunc'`.
 
 **Returns:** the duration as an ISO 8601 string.
@@ -615,7 +615,7 @@ d = Temporal.Duration.from('PT59.999999999S');
 d.toString({ smallestUnit: 'seconds' });   // => PT59S
 d.toString({ fractionalSecondDigits: 0 }); // => PT59S
 d.toString({ fractionalSecondDigits: 4 }); // => PT59.9999S
-d.toString({ fractionalSecondDigits: 8, roundingMode: 'nearest' });
+d.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
 // => PT60.00000000S
 ```
 

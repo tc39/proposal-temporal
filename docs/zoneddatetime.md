@@ -1005,7 +1005,7 @@ earlierHours.since(zdt, { largestUnit: 'hours' }).hours; // => -24
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `zonedDateTime` and until `other`.
@@ -1100,7 +1100,7 @@ jan1.until(mar1, { largestUnit: 'days' }); // => P60D
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `zonedDateTime` and since `other`.
@@ -1130,8 +1130,8 @@ zdt2.since(zdt1); // => PT202956H5M29.999996500S
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which is `zonedDateTime` rounded to `roundingIncrement` of `smallestUnit`.
 
@@ -1156,7 +1156,7 @@ The `roundingMode` option controls how the rounding is performed.
 - `'ceil'`: Always round up, towards the end of time.
 - `'floor'`, `'trunc'`: Always round down, towards the beginning of time.
   (These two modes behave the same, but are both included for consistency with `Temporal.Duration.prototype.round()`, where they are not the same.)
-- `'nearest'`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `'halfExpand'`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `'ceil'`.
 
 Example usage:
@@ -1238,7 +1238,7 @@ zdt1.equals(zdt1); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
     The default is `'trunc'`.
 
 **Returns:** a string containing an ISO 8601 date+time+offset format, a bracketed time zone suffix, and (if the calendar is not `iso8601`) a calendar suffix.

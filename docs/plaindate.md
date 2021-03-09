@@ -484,7 +484,7 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the time elapsed after `date` and until `other`.
@@ -550,7 +550,7 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the time elapsed before `date` and since `other`.

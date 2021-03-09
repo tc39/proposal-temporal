@@ -355,7 +355,7 @@
           1. Throw a *TypeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"nearest"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"halfExpand"*).
         1. If _smallestUnit_ is *"hour"*, then
           1. Let _maximum_ be 24.
         1. Else if _smallestUnit_ is *"minute"* or *"second"*, then

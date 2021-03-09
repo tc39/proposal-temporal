@@ -273,7 +273,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `time` and until `other`.
@@ -327,7 +327,7 @@ time.until(Temporal.PlainTime.from('22:39:09.068346205'), { smallestUnit: 'secon
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `time` and since `other`.
@@ -358,8 +358,8 @@ time.since(Temporal.PlainTime.from('22:39:09.068346205')); // => -PT2H25M48.0969
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'nearest'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'nearest'`.
+    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.PlainTime` object which is `time` rounded to `roundingIncrement` of `smallestUnit`.
 
@@ -382,7 +382,7 @@ The `roundingMode` option controls how the rounding is performed.
 - `ceil`: Always round up, towards 23:59:59.999999999.
 - `floor`, `trunc`: Always round down, 00:00.
   (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
-- `nearest`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `ceil`.
 
 Example usage:
@@ -440,7 +440,7 @@ time.equals(time); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'nearest'`.
+    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
     The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 time format representing `time`.
@@ -464,7 +464,7 @@ time.toString(); // => 19:39:09.068346205
 time.toString({ smallestUnit: 'minute' }); // => 19:39
 time.toString({ fractionalSecondDigits: 0 }); // => 19:39:09
 time.toString({ fractionalSecondDigits: 4 }); // => 19:39:09.0683
-time.toString({ fractionalSecondDigits: 5, roundingMode: 'nearest' });
+time.toString({ fractionalSecondDigits: 5, roundingMode: 'halfExpand' });
   // => 19:39:09.06835
 ```
 <!-- prettier-ignore-end -->

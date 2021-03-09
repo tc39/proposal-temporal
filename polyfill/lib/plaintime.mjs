@@ -359,7 +359,7 @@ export class PlainTime {
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'nearest');
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
       hour: 24,
       minute: 60,
