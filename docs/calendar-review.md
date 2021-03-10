@@ -158,7 +158,7 @@ Note that “inputs” are not only external data. Inputs could include values r
 
 ## Alternatives Considered
 
-Integrating calendars into Temporal was one of the most challenging parts of designing the API. Below is a quick discussion about alternative calendar APIs we considered before adopting the current design. Note that none of the options considered (including the current Temporal design) are ideal; they all have known flaws that require workarounds for some cases. We believe that the current design is the best option overall, relative to the alternatives below.has the least-bad flaws and greatest advantages compared to the others, but it's more of a 70/30 outcome rather than a slam dunk in favor of the current design. These are hard problems without perfect solutions.
+Integrating calendars into Temporal was one of the most challenging parts of designing the API. Below is a quick discussion about alternative calendar APIs we considered before adopting the current design. Note that none of the options considered (including the current Temporal design) are ideal; they all have known flaws that require workarounds for some cases. We believe that the current design is the best option overall, relative to the alternatives below.
 
 ### Alternative 1: No Calendar in the Data Model
 
