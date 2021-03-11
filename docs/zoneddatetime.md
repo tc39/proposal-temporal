@@ -539,7 +539,7 @@ Usage example:
 // Attempt to write some mnemonic poetry
 const monthsByDays = {};
 for (let month = 1; month <= 12; month++) {
-  const zdt = Temporal.now.zonedDateTime().with({ month });
+  const zdt = Temporal.now.zonedDateTimeISO().with({ month });
   monthsByDays[zdt.daysInMonth] = (monthsByDays[zdt.daysInMonth] || []).concat(zdt);
 }
 
@@ -560,7 +560,7 @@ For the ISO 8601 calendar, this is 365 or 366, depending on whether the year is 
 Usage example:
 
 ```javascript
-zdt = Temporal.now.zonedDateTime();
+zdt = Temporal.now.zonedDateTimeISO();
 percent = zdt.dayOfYear / zdt.daysInYear;
 `The year is ${percent.toLocaleString('en', { style: 'percent' })} over!`;
 // example output: "The year is 10% over!"
@@ -590,7 +590,7 @@ Usage example:
 
 ```javascript
 // Is this year a leap year?
-zdt = Temporal.now.zonedDateTime();
+zdt = Temporal.now.zonedDateTimeISO();
 zdt.inLeapYear; // example output: true
 // Is 2100 a leap year? (no, because it's divisible by 100 and not 400)
 zdt.with({ year: 2100 }).inLeapYear; // => false
