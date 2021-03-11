@@ -547,8 +547,12 @@ export namespace Temporal {
     readonly epochMicroseconds: bigint;
     readonly epochNanoseconds: bigint;
     equals(other: Temporal.Instant | string): boolean;
-    add(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
-    subtract(durationLike: Temporal.Duration | DurationLike | string): Temporal.Instant;
+    add(
+      durationLike: Omit<Temporal.Duration | DurationLike, 'years' | 'months' | 'weeks' | 'days'> | string
+    ): Temporal.Instant;
+    subtract(
+      durationLike: Omit<Temporal.Duration | DurationLike, 'years' | 'months' | 'weeks' | 'days'> | string
+    ): Temporal.Instant;
     until(
       other: Temporal.Instant | string,
       options?: DifferenceOptions<
