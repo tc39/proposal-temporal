@@ -18,7 +18,7 @@ Provides standard objects and functions for working with dates and times.
 
 ## Status
 
-This proposal is currently [Stage 2](https://github.com/tc39/proposals#stage-2).
+This proposal is currently [Stage 3](https://github.com/tc39/proposals#stage-3).
 
 At the time of writing, all the major design decisions that we are aware of have been made.
 The proposal is under review by the TC39 delegates and the bar for making subsequent changes is high.
