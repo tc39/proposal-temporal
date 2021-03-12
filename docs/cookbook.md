@@ -468,6 +468,6 @@ Extend Temporal to support arbitrarily-large years (e.g., **+635427810-02-02**) 
 
 ### New York Stock Exchange time zone
 
-An example of using `Temporal.TimeZone` for other purposes than a standard time zne.
+An example of using `Temporal.TimeZone` for other purposes than a standard time zone.
 
 → [NYSE time zone](cookbook-nyse.md)
