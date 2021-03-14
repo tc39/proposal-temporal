@@ -2,8 +2,8 @@
 
 **Polyfill for [Proposal: Temporal](https://github.com/tc39/proposal-temporal)**
 
-**NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
-The API may change before the proposal reaches Stage 3, based on feedback from TC39 reviews and implementation in JS engines.
+**NOTE: We encourage you to experiment with the polyfill, but don't use it in production!**
+**The API may change based on feedback from implementers, and the current non-production polyfill is very slow for some operations.**
 Please report bugs in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
 
 Please run the polyfill with Node.js 12 or later.
@@ -23,11 +23,13 @@ $ npm install --save proposal-temporal
 ```
 
 In code:
+
 ```javascript
 const { Temporal } = require('proposal-temporal');
 ```
 
 Or, import the polyfill as an ES6 module:
+
 ```javascript
 import { Temporal } from 'proposal-temporal/lib/index.mjs';
 ```
