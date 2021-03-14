@@ -2,33 +2,28 @@
 
 Provides standard objects and functions for working with dates and times.
 
-**NOTE: The [Polyfill](./polyfill), specification text and documentation are under review and should be understood to be unstable.**
+## Status
+
+This proposal is currently [Stage 3](https://github.com/tc39/proposals#stage-3) and was reviewed for Stage 3 by Richard Gibson, Bradley Farias, and Daniel Ehrenberg.
+
+**NOTE: Although this proposal's API is not expected to change, implementers of this proposal MUST NOT ship unflagged Temporal implementations until IETF standardizes timezone/calendar string serialization formats. See [#1450](https://github.com/tc39/proposal-temporal/issues/1450) for updates.**
+
+This proposal is now in the hands of ECMAScript engine implementers, so the bar for making API changes is extremely high.
+Nonetheless, changes may occur as the result of feedback from implementation in JS engines.
+Editorial changes to the spec and bug fixes to the spec, polyfill, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
+Additional tests and documentation content are also being added during Stage 3.
 
 ## Champions
 
--   Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
--   Maggie Johnson-Pint ([@maggiepint](https://github.com/maggiepint))
--   Matt Johnson-Pint ([@mattjohnsonpint](https://github.com/mattjohnsonpint))
--   Brian Terlson ([@bterlson](https://github.com/bterlson))
--   Shane Carr ([@sffc](https://github.com/sffc))
--   Ujjwal Sharma ([@ryzokuken](https://github.com/ryzokuken))
--   Philip Chimento ([@ptomato](https://github.com/ptomato))
--   Jason Williams ([@jasonwilliams](https://github.com/jasonwilliams))
--   Justin Grant ([@justingrant](https://github.com/justingrant))
-
-## Status
-
-This proposal is currently [Stage 2](https://github.com/tc39/proposals#stage-2).
-
-At the time of writing, all the major design decisions that we are aware of have been made.
-The proposal is under review by the TC39 delegates and the bar for making subsequent changes is high.
-Nonetheless, changes may occur as the result of feedback from TC39 reviews and implementation in JS engines.
-
-Stage 3 Reviewers:
-
--   Richard Gibson
--   Bradley Farias
--   Daniel Ehrenberg
+- Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
+- Maggie Johnson-Pint ([@maggiepint](https://github.com/maggiepint))
+- Matt Johnson-Pint ([@mattjohnsonpint](https://github.com/mattjohnsonpint))
+- Brian Terlson ([@bterlson](https://github.com/bterlson))
+- Shane Carr ([@sffc](https://github.com/sffc))
+- Ujjwal Sharma ([@ryzokuken](https://github.com/ryzokuken))
+- Philip Chimento ([@ptomato](https://github.com/ptomato))
+- Jason Williams ([@jasonwilliams](https://github.com/jasonwilliams))
+- Justin Grant ([@justingrant](https://github.com/justingrant))
 
 ## Overview / Motivation
 
@@ -50,14 +45,17 @@ The specification text can be found [here](https://tc39.es/proposal-temporal/).
 
 ## Polyfill
 
-A complete polyfill can be found [here](./polyfill).
-When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools.
+A [non-production polyfill](./polyfill) was built to validate this proposal.
+The champions of this proposal will soon start work on a production-ready polyfill, and once it's started it will be linked here.
+If you're working on a different production-quality polyfill, let us know and we can link it here too!
 
-**NOTE:** We encourage you to experiment with the polyfill, but don't use it in production!
-The API may change before the proposal reaches Stage 3.
+When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools console.
+
+**NOTE: We encourage you to experiment with the polyfill, but don't use it in production!**
+**The API may change based on feedback from implementers, and the current non-production polyfill is very slow for some operations.**
 
 ## Documentation
 
 Reference documentation and examples can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
 
-A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/index.html)
+A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/cookbook.html)
