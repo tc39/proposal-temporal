@@ -97,7 +97,7 @@ The following Temporal types all carry a calendar: `Temporal.ZonedDateTime`, `Te
 
 Integrating calendar awareness into many Temporal operations is essential for a global audience, but it introduces a new problem: if code is written to assume one calendar system, bugs may result if a different calendar system is introduced instead. Introducing unexpected calendars could also be a vector for malicious activity.
 
-This section describes this problem, which we call the “Unexpected Calendar Problem,” and how to mitigate it in userland Temporal code.
+This section describes this problem, which we call the "Unexpected Calendar Problem," and how to mitigate it in userland Temporal code.
 
 ### Problem Definition
 
@@ -125,20 +125,20 @@ There are two ways to avoid the Unexpected Calendar Problem: the preferred solut
 
 #### Writing Calendar-Safe Code
 
-The best way to mitigate the Unexpected Calendar Problem is to write “calendar-safe” code that works for all built-in calendars. For example, the function above can easily be written to be calendar-safe by using the `monthsInYear` and `daysInMonth` properties instead of hard-coding ISO constants. Developers who follow documented [best practices for writing calendar-safe Temporal code](https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code) will be able to use the same code for all built-in calendars.
+The best way to mitigate the Unexpected Calendar Problem is to write "calendar-safe" code that works for all built-in calendars. For example, the function above can easily be written to be calendar-safe by using the `monthsInYear` and `daysInMonth` properties instead of hard-coding ISO constants. Developers who follow documented [best practices for writing calendar-safe Temporal code](https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code) will be able to use the same code for all built-in calendars.
 
 Beyond documentation, the Temporal API itself has been designed to make it easier to write calendar-safe code. For example:
 
 *   All built-in calendars (including ISO) use the same set of date fields: `year`, `month`, `day`, and `monthCode`. These fields act the same way in all built-in calendars.
 *   The `month` property is a continuous (no gaps), 1-based index of the month in the current year. This aligns with ISO behavior and avoids unexpected behavior from lunisolar calendars where each year may have a different set of months.  A separate `monthCode` string field is used for a year-independent month identifier.
-*   The `year` property is a signed value that’s relative to a specific calendar era. This matches ISO calendar behavior and prevents bugs from, for example, eras like B.C. where years count backwards.  Separate `eraYear` and `era` fields are used for measuring years within the context of a specific calendar era.
+*   The `year` property is a signed value that's relative to a specific "default era" for each calendar. This matches ISO calendar behavior and prevents bugs from, for example, eras like B.C. where years count backwards.  Separate `eraYear` and `era` fields are used for measuring years within the context of other eras.
 *   Differences between calendars are exposed via convenience properties available in every calendar, e.g. `monthsInYear`, `daysInMonth`, `inLeapYear`, etc. Userland code can completely avoid the use of calendar-specific constants (e.g. 12 months per year) by using these properties. 
-*   There is never an implicit default calendar system. Developers must explicitly decide whether they’re using the ISO calendar or another calendar. For example, shortcut methods on the `Temporal.now` object are named with an ISO prefix to avoid ambiguity, such as `Temporal.now.zonedDateTimeISO()`.
-*   Temporal never infers a calendar from the user’s environment.  Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.
+*   There is never an implicit default calendar system. Developers must explicitly decide whether they're using the ISO calendar or another calendar. For example, shortcut methods on the `Temporal.now` object are named with an ISO prefix to avoid ambiguity, such as `Temporal.now.zonedDateTimeISO()`.
+*   Temporal never infers a calendar from the user's environment.  Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.
 
 #### Validating or Coercing Inputs
 
-Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers. Some developers won’t do this work. Sometimes this will be because they don’t know about or don’t understand non-ISO calendars. In other cases, developers won’t bother to follow best practices because they expect to only be dealing with ISO-calendar data. Even if a developer conscientiously follows best practices in their own code, most ECMAScript apps have many library dependencies that may not do so. Or they may have to interoperate with existing code that cannot be changed due to time constraints.
+Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers. Some developers won't do this work. Sometimes this will be because they don't know about or don't understand non-ISO calendars. In other cases, developers won't bother to follow best practices because they expect to only be dealing with ISO-calendar data. Even if a developer conscientiously follows best practices in their own code, most ECMAScript apps have many library dependencies that may not do so. Or they may have to interoperate with existing code that cannot be changed due to time constraints.
 
 In these situations, the developer should ensure that inputs to that code are either (a) validated to ensure the input is in the expected calendar system, or (b) coerced to that system. Whether to validate or coerce depends on the use case.
 
@@ -154,7 +154,7 @@ To validate:
 if (date.calendar.id !== 'iso8601') throw new Error ('invalid calendar');
 ```
 
-Note that “inputs” are not only external data. Inputs could include values returned from library dependencies, e.g. date pickers. Unless the library or input source guarantees a certain calendar system, defensive code should assume Temporal objects (or strings or objects that will be converted into a Temporal object) to be “external” and subject to validation or coercion to the ISO calendar if the code that will use that data is not calendar-safe.
+Note that "inputs" are not only external data. Inputs could include values returned from library dependencies, e.g. date pickers. Unless the library or input source guarantees a certain calendar system, defensive code should assume Temporal objects (or strings or objects that will be converted into a Temporal object) to be "external" and subject to validation or coercion to the ISO calendar if the code that will use that data is not calendar-safe.
 
 ## Alternatives Considered
 
@@ -172,14 +172,16 @@ An alternative approach to the current Temporal design would have been to store 
 <code>  Temporal.PlainMonthDay.from( \
     { monthCode: '05L', day: 12, calendar: 'hebrew' } \
   ); \
-</code>It’s not clear how we’d model holidays if the calendar isn’t stored in the instance.
-*   Code that wants to return a date along with its calendar can no longer return a single Temporal instance. Instead, it must return a compound object or serialized string. For example, a date picker that returned a date in the user’s preferred calendar could no longer return a <code>Temporal.PlainDate</code>. Instead, it’d have to return a tuple or compound object like <code>{date, calendar}</code>.  Passing around compound objects (or extra calendar parameters) would complicate all calendar-using Temporal code.
+</code>
+
+It's not clear how we'd model holidays if the calendar isn't stored in the instance.
+*   Code that wants to return a date along with its calendar can no longer return a single Temporal instance. Instead, it must return a compound object or serialized string. For example, a date picker that returned a date in the user's preferred calendar could no longer return a <code>Temporal.PlainDate</code>. Instead, it'd have to return a tuple or compound object like <code>{date, calendar}</code>.  Passing around compound objects (or extra calendar parameters) would complicate all calendar-using Temporal code.
 
 The Temporal champions believe that the ergonomic challenges of this alternative are worse than the work required to mitigate the Unexpected Calendar Problem. 
 
 ### Alternative 2: Separate ISO and Calendar Properties
 
-It would be possible to retain the calendar in Temporal objects’ data model without being vulnerable to the Unexpected Calendar Problem, but doing so would involve a significant increase in Temporal surface area. Below is one way it could be done. 
+It would be possible to retain the calendar in Temporal objects' data model without being vulnerable to the Unexpected Calendar Problem, but doing so would involve a significant increase in Temporal surface area. Below is one way it could be done. 
 
 *   Offer two sets of fields, e.g. `.isoMonth` vs. `.calendarMonth` (or `month` vs. `calendarMonth` for brevity and to encourage developers who are unfamiliar with calendars to be nudged to use ISO fields?)
     *   The number and types of `calendar*` fields are completely up to the calendar implementation.  Built-in calendars will all offer `calendarDay`, `calendarMonth`, `calendarMonthCode`, `calendarYear`, and sometimes `calendarEra` and `calendarEraYear` too.
@@ -195,9 +197,9 @@ It would be possible to retain the calendar in Temporal objects’ data model wi
         *   Split each method into "iso" and "calendar" variants, e.g. `isoUntil` vs. `calendarUntil` or `untilISO` vs. `untilCalendar`
         *   Always return both flavors, e.g. `foo.until(bar).isoDuration` and `foo.until(bar).calendarDuration`.
         *   Use an option, e.g. `{ resultFields: 'iso' | 'calendar' }`. FWIW, I'm not sure that this option would work well with TS in cases where options are not specified as a literal in the API call.
-    *   There would NOT be a `withCalendar` method on durations, because durations don’t have the ability to convert between calendar and ISO data. Instead, they would either have ISO fields or calendar fields, but not both.
+    *   There would NOT be a `withCalendar` method on durations, because durations don't have the ability to convert between calendar and ISO data. Instead, they would either have ISO fields or calendar fields, but not both.
 
-After considering this and similar options, the champions decided that the additional complexity wasn’t worth it. In particular, we were concerned that the dual-property approach would be more confusing and would result in more bugs than teaching users to validate or coerce inputs. 
+After considering this and similar options, the champions decided that the additional complexity wasn't worth it. In particular, we were concerned that the dual-property approach would be more confusing and would result in more bugs than teaching users to validate or coerce inputs. 
 
 ### Alternative 3: Subclasses
 
