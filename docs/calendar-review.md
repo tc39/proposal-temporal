@@ -1,7 +1,5 @@
 # Supporting Calendar Systems in Temporal
 
-Authors: Temporal champions [justingrant](https://twitter.com/justingrantjg) and [sffc](https://twitter.com/_sffc)
-
 [ECMAScript Temporal](https://github.com/tc39/proposal-temporal/) is the new date and time API for ECMAScript.  Because ECMAScript is designed for global audiences, high-quality internationalization is a design goal.
 
 This document discusses why and how calendar systems are included in the Temporal API, explains problems we expect developers to encounter with calendars, and outlines how to avoid those problems. A final section explains alternative designs for using calendar systems in Temporal, along with an explanation of why the current approach was chosen instead.
@@ -10,7 +8,7 @@ This document discusses why and how calendar systems are included in the Tempora
 
 Calendar systems provide a way to assign human-readable numbers, such as year, month, and day, to a particular period of time.
 
-Much of the world uses the Gregorian calendar system, which uses solar years, months, and days: over time, it is aligned with the position of the Earth relative to the sun.  However, there are other calendar systems used throughout much of the world.  Some popular calendar systems include Hebrew, Islamic, Buddhist, Hindu, Chinese, Japanese, and Ethiopic.
+Much of the world uses the Gregorian calendar system, which uses solar years, months, and days: over time, it remains synchronized with the cycle of the seasons.  However, there are other calendar systems used throughout much of the world.  Some popular calendar systems include Hebrew, Islamic, Buddhist, Hindu, Chinese, Japanese, and Ethiopic.
 
 Today's date is March 4, 2021 in the Gregorian calendar.  Here are several other representations of that date:
 
@@ -27,7 +25,7 @@ Calendar systems play an important role in localization (l10n).  They enable a h
 
 However, calendar systems also play an important role in the business logic of an application.  Applications involving dates intended for human consumption must consider the calendar system when performing arithmetic or any other business-logic operation that uses months and years.  Examples of calendar-sensitive operations include:
 
-*   What is the current day plus one month?
+*   What is the date one month from today?
 *   What is the first day of the month?
 *   On what month and day do I celebrate my birthday or anniversary?
 *   On what day do I celebrate a religious or cultural holiday, like Ramadan, Passover, Easter, or the Chinese Lunar New Year?
@@ -192,7 +190,6 @@ It would be possible to retain the calendar in Temporal objects' data model with
     *   Instances using the ISO calendar would only support ISO fields: `days`, `weeks`, `months`, and `years`. 
     *   Instances using a non-ISO calendar would only support calendar fields: `calendarDays`, `calendarWeeks`, `calendarMonths`, and `calendarYears`. 
     *   String parsing and serialization would use calendar annotations like other Temporal types, e.g. `'P2D[u-ca=chinese]'`. Strings without an annotation would assume the ISO calendar.
-    *   Question: should `date.add({calendarMonths: 1})` use `date.calendar`? Or should `date.add({calendarMonths: 1, calendar: 'chinese'})` be required even if `date.calendar==='chinese'`?
     *   `until` and `since` are now ambiguous, so they’d need a way to indicate whether the output should be an ISO duration or a non-ISO one. Options include:
         *   Split each method into "iso" and "calendar" variants, e.g. `isoUntil` vs. `calendarUntil` or `untilISO` vs. `untilCalendar`
         *   Always return both flavors, e.g. `foo.until(bar).isoDuration` and `foo.until(bar).calendarDuration`.
