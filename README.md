@@ -35,7 +35,7 @@ For a detailed breakdown of motivations, see:
 ### Principles:
 
 - All Temporal objects are immutable.
-- Date values can be represented in local calendar systems, but they should be convertable to and from the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).
+- Date values can be represented in local calendar systems ([why?](./docs/calendar-review.md)), but they should be convertable to and from the [Proleptic Gregorian Calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar).
 - All time-of-day values are based on a standard 24-hour clock.
 - [Leap seconds](https://en.wikipedia.org/wiki/Leap_second) are not represented.
 
