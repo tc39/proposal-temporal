@@ -80,9 +80,9 @@ date.month; // => 6
 date.day; // => 2
 date.inLeapYear; // => true
 date.calendar.id; // => hebrew
-inTwoMonths = date.add({ months: 4 }); // => 23 Sivan 5779
-inTwoMonths.withCalendar('iso8601'); // => 2019-06-26
-date.until(inTwoMonths, { largestUnit: 'months' }); // => P4M
+inFourMonths = date.add({ months: 4 }); // => 23 Sivan 5779
+inFourMonths.withCalendar('iso8601'); // => 2019-06-26
+date.until(inFourMonths, { largestUnit: 'months' }); // => P4M
 ```
 
 By definition, creating a bag of fields with year, month, and day requires choosing a calendar system. We elide the ISO calendar if no other calendar system is specified in this situation, and it is the only place Temporal performs calendar elision:
@@ -170,7 +170,7 @@ An alternative approach to the current Temporal design would have been to store 
 *   Chaining multiple operations (e.g. `.add({months: 2}).with({day: 1})`) gets less ergonomic and more bug-prone because the same calendar value must be used in all chained calls. 
 *   The `Temporal.PlainMonthDay` type would become challenging to reason about without a calendar attached because month/day values like birthdays and holidays are inherently calendar-specific and have no ISO counterpart. This is especially true in lunisolar calendars like Hebrew and Chinese where ordinal month numbers vary from year to year for the same month. (Current Temporal uses a string <code>[monthCode](https://tc39.es/proposal-temporal/docs/plaindate.html#monthCode)</code> field to describe year-independent months.) For example, a birthday on 12 Adar I in the Hebrew calendar is currently modelled as \
 <code>  Temporal.PlainMonthDay.from( \
-    { monthCode: '05L', day: 12, calendar: 'hebrew' } \
+    { monthCode: 'M05L', day: 12, calendar: 'hebrew' } \
   ); \
 </code>
 
@@ -191,7 +191,7 @@ It would be possible to retain the calendar in Temporal objects' data model with
 *   `Temporal.Duration` would gain a `calendar` field.  
     *   Instances using the ISO calendar would only support ISO fields: `days`, `weeks`, `months`, and `years`. 
     *   Instances using a non-ISO calendar would only support calendar fields: `calendarDays`, `calendarWeeks`, `calendarMonths`, and `calendarYears`. 
-    *   String parsing and serialization would use calendar annotations like other Temporal types, e.g. `'P2D[u-ca-chinese]'`. Strings without an annotation would assume the ISO calendar.
+    *   String parsing and serialization would use calendar annotations like other Temporal types, e.g. `'P2D[u-ca=chinese]'`. Strings without an annotation would assume the ISO calendar.
     *   Question: should `date.add({calendarMonths: 1})` use `date.calendar`? Or should `date.add({calendarMonths: 1, calendar: 'chinese'})` be required even if `date.calendar==='chinese'`?
     *   `until` and `since` are now ambiguous, so they’d need a way to indicate whether the output should be an ISO duration or a non-ISO one. Options include:
         *   Split each method into "iso" and "calendar" variants, e.g. `isoUntil` vs. `calendarUntil` or `untilISO` vs. `untilCalendar`
