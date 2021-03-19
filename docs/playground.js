@@ -6148,19 +6148,9 @@
     return ArrayIncludes.call(BUILTIN_CALENDAR_IDS, id);
   }
 
-  // Per specification,
-  //   TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar?
-  //     TZChar? TZChar? TZChar? TZChar? TZChar? TZChar?
-  //   but not one of `.` or `..` or
-  //     CalChar `-` CalChar CalChar `-` CalendarNameComponent
-  // In plain words, 1 to 14 letters, periods, underscores, or dashes, but not
-  // starting with a dash, and not consisting only of one or two periods, and not
-  // of the form (letter)-(2 letters)-(3 or more letters) which conflicts with
-  // calComponent
-  var tzComponentNotBCP47 = new RegExp(['\\.\\.[-A-Za-z._]{1,12}', '\\.[-A-Za-z_][-A-Za-z._]{0,12}', '_[-A-Za-z._]{0,13}', '[a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,12})?', '[a-zA-Z]-(?:[-._][-A-Za-z._]{0,11})?', '[a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,10})?', '[a-zA-Z]-[a-zA-Z][a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,9})?', '[a-zA-Z]-[a-zA-Z][a-zA-Z]-(?:[-._][-A-Za-z._]{0,8})?', '[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,7})?', '[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z](?:[-._][-A-Za-z._]{0,6})?'].join('|'));
   var tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
   var offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
-  var timeZoneID = new RegExp("(?:(?:".concat(tzComponentNotBCP47.source, ")(?:\\/(?:").concat(tzComponent.source, "))*|Etc/GMT[-+]\\d{1,2}|").concat(offsetNoCapture.source, ")"));
+  var timeZoneID = new RegExp("(?:(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*|Etc/GMT[-+]\\d{1,2}|").concat(offsetNoCapture.source, ")"));
   var calComponent = /[A-Za-z0-9]{3,8}/;
   var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
@@ -6168,7 +6158,7 @@
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[(").concat(timeZoneID.source, ")\\])?"));
-  var calendar = new RegExp("\\[u-ca-(".concat(calendarID.source, ")\\]"));
+  var calendar = new RegExp("\\[u-ca=(".concat(calendarID.source, ")\\]"));
   var instant$1 = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i');
   var time = new RegExp("^".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i'); // The short forms of YearMonth and MonthDay are only for the ISO calendar.
@@ -6291,7 +6281,7 @@
     FormatCalendarAnnotation: function FormatCalendarAnnotation(id, showCalendar) {
       if (showCalendar === 'never') return '';
       if (showCalendar === 'auto' && id === 'iso8601') return '';
-      return "[u-ca-".concat(id, "]");
+      return "[u-ca=".concat(id, "]");
     },
     ParseISODateTime: function ParseISODateTime(isoString, _ref) {
       var zoneRequired = _ref.zoneRequired;

@@ -41,7 +41,7 @@
       font-size: 35px;
     }
   ]]></style>
-  <text fill="#000" style="font-size: 55px">2020-08-05T20:06:13+09:00[Asia/Tokyo][u-ca-japanese]</text>
+  <text fill="#000" style="font-size: 55px">2020-08-05T20:06:13+09:00[Asia/Tokyo][u-ca=japanese]</text>
   <rect x="-10" y="-150" stroke="#70AD47" fill="none" width="698" height="170"/>
   <text x="170" y="-100" style="font-size: 35px; stroke: #70AD47; fill: #70AD47">ISO 8601 / RFC 3339</text>
 
@@ -49,7 +49,7 @@
   <text x="770" y="-100" style="font-size: 35px; stroke: #ED7D31; fill: #ED7D31">Time Zone</text>
   <text x="777" y="-60" style="font-size: 35px; stroke: #ED7D31; fill: #ED7D31">Extension</text>
 
-  <rect x="998" y="-150" stroke="#F4B5BC" fill="none" width="366" height="170"/>
+  <rect x="998" y="-150" stroke="#F4B5BC" fill="none" width="380" height="170"/>
   <text x="1120" y="-100" style="font-size: 35px; stroke: #CC0000; fill: #CC0000">Calendar</text>
   <text x="1114" y="-60" style="font-size: 35px; stroke: #CC0000; fill: #CC0000">Extension</text>
 
