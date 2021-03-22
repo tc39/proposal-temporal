@@ -2810,8 +2810,8 @@ describe('ZonedDateTime', () => {
         TypeError
       );
     });
-    it('compares time zone IDs if exact times are equal', () => {
-      equal(ZonedDateTime.compare(zdt1, zdt1.withTimeZone('Asia/Kolkata')), 1);
+    it('disregards time zone IDs if exact times are equal', () => {
+      equal(ZonedDateTime.compare(zdt1, zdt1.withTimeZone('Asia/Kolkata')), 0);
     });
     it('disregards calendar IDs if exact times and time zones are equal', () => {
       equal(ZonedDateTime.compare(zdt1, zdt1.withCalendar('japanese')), 0);
