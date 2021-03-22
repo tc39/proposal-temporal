@@ -861,7 +861,7 @@ export class ZonedDateTime {
     const ns2 = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(ns1).lesser(ns2)) return -1;
     if (bigInt(ns1).greater(ns2)) return 1;
-    return ES.TimeZoneCompare(GetSlot(one, TIME_ZONE), GetSlot(two, TIME_ZONE));
+    return 0;
   }
 }
 

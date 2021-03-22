@@ -86,10 +86,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalZonedDateTime(_one_).
         1. Set _two_ to ? ToTemporalZonedDateTime(_two_).
-        1. Let _result_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
-        1. If _result_ ≠ 0, then
-          1. Return 𝔽(_result_).
-        1. Return 𝔽(? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
+        1. Return 𝔽(! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
