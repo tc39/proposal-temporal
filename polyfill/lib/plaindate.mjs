@@ -438,7 +438,7 @@ export class PlainDate {
   static compare(one, two) {
     one = ES.ToTemporalDate(one, PlainDate);
     two = ES.ToTemporalDate(two, PlainDate);
-    const result = ES.CompareISODate(
+    return ES.CompareISODate(
       GetSlot(one, ISO_YEAR),
       GetSlot(one, ISO_MONTH),
       GetSlot(one, ISO_DAY),
@@ -446,8 +446,6 @@ export class PlainDate {
       GetSlot(two, ISO_MONTH),
       GetSlot(two, ISO_DAY)
     );
-    if (result !== 0) return result;
-    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
   }
 }
 
