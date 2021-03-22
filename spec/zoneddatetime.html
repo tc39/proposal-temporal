@@ -89,9 +89,6 @@
         1. Let _result_ be ! CompareEpochNanoseconds(_one_.[[Nanoseconds]], _two_.[[Nanoseconds]]).
         1. If _result_ ≠ 0, then
           1. Return 𝔽(_result_).
-        1. Set _result_ to ? CompareCalendar(_one_.[[Calendar]], _two_.[[Calendar]]).
-        1. If _result_ ≠ 0, then
-          1. Return 𝔽(_result_).
         1. Return 𝔽(? CompareTimeZone(_one_.[[TimeZone]], _two_.[[TimeZone]]).
       </emu-alg>
     </emu-clause>

@@ -83,8 +83,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalDate(_one_).
         1. Set _two_ to ? ToTemporalDate(_two_).
-        1. Return 𝔽(? CompareTemporalDateCalendar(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[Calendar]],
-            _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[Calendar]])).
+        1. Return 𝔽(! CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -740,13 +739,13 @@
         1. If _largestUnit_ is not *"years"*, *"months"*, or *"weeks"*, then
           1. Set _largestUnit_ to *"days"*.
         1. If _largestUnit_ is *"years"* or *"months"*, then
-          1. Let _sign_ be -(! ES.CompareTemporalDate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
+          1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
           1. If _sign_ is 0, return the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
           1. Let _start_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
           1. Let _end_ be the new Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
           1. Let _years_ be _end_.[[Year]] − _start_.[[Year]].
           1. Let _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, *"constrain"*).
-          1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
+          1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
             1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
             1. Else, return the new Record { [[Years]]: 0, [[Months]]: _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
@@ -755,7 +754,7 @@
             1. Set _years_ to _years_ - _sign_.
             1. Set _months_ to _months_ + _sign_ × 12.
           1. Set _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
-          1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
+          1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
             1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: 0 }.
             1. Else, return the new Record { [[Years]]: 0, [[Months]]: _months_ + _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
@@ -765,7 +764,7 @@
               1. Set _years_ to _years_ - _sign_.
               1. Set _months_ to 11 × _sign_.
             1. Set _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
-            1. Let _midSign_ be -(! ES.CompareTemporalDate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
+            1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. Let _days_ be 0.
           1. If _mid_.[[Month]] is equal to _end_.[[Month]] and _mid_.[[Year]] is equal to _mid_.[[Year]], set _days_ to _end_.[[Day]] - _mid_.[[Day]].
           1. Else if _sign_ &lt; 0, set _days_ to -_mid_.[[Day]] - (! ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
@@ -956,16 +955,6 @@
         1. If _d1_ &gt; _d2_, return 1.
         1. If _d1_ &lt; _d2_, return -1.
         1. Return 0.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-comparetemporaldatecalendar" aoid="CompareTemporalDateCalendar">
-      <h1>CompareTemporalDateCalendar ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _c1_, _c2_ )</h1>
-      <emu-alg>
-        1. Let _result_ be ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
-        1. If _result_ ≠ 0, then
-          1. Return _result_.
-        1. Return ? CompareCalendar(_c1_, _c2_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
