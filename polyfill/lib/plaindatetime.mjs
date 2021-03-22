@@ -794,7 +794,7 @@ export class PlainDateTime {
       const val2 = GetSlot(two, slot);
       if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
     }
-    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+    return 0;
   }
 }
 

@@ -396,12 +396,14 @@ export class PlainYearMonth {
   static compare(one, two) {
     one = ES.ToTemporalYearMonth(one, PlainYearMonth);
     two = ES.ToTemporalYearMonth(two, PlainYearMonth);
-    for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
-      const val1 = GetSlot(one, slot);
-      const val2 = GetSlot(two, slot);
-      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
-    }
-    return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+    return ES.CompareISODate(
+      GetSlot(one, ISO_YEAR),
+      GetSlot(one, ISO_MONTH),
+      GetSlot(one, ISO_DAY),
+      GetSlot(two, ISO_YEAR),
+      GetSlot(two, ISO_MONTH),
+      GetSlot(two, ISO_DAY)
+    );
   }
 }
 

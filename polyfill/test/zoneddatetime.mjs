@@ -2813,8 +2813,8 @@ describe('ZonedDateTime', () => {
     it('compares time zone IDs if exact times are equal', () => {
       equal(ZonedDateTime.compare(zdt1, zdt1.withTimeZone('Asia/Kolkata')), 1);
     });
-    it('compares calendar IDs if exact times and time zones are equal', () => {
-      equal(ZonedDateTime.compare(zdt1, zdt1.withCalendar('japanese')), -1);
+    it('disregards calendar IDs if exact times and time zones are equal', () => {
+      equal(ZonedDateTime.compare(zdt1, zdt1.withCalendar('japanese')), 0);
     });
     it('compares exact time, not clock time', () => {
       const clockBefore = ZonedDateTime.from('1999-12-31T23:30-08:00[America/Vancouver]');
