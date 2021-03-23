@@ -259,7 +259,7 @@ export class ZonedDateTime {
   withPlainDate(temporalDate) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 
-    temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.PlainDate%'));
+    temporalDate = ES.ToTemporalDate(temporalDate);
 
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
@@ -295,7 +295,7 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 
     const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-    temporalTime = temporalTime == undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime, PlainTime);
+    temporalTime = temporalTime == undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
 
     const thisDt = dateTime(this);
     const year = GetSlot(thisDt, ISO_YEAR);
@@ -390,7 +390,7 @@ export class ZonedDateTime {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
+    other = ES.ToTemporalZonedDateTime(other);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarId = ES.ToString(calendar);
@@ -514,7 +514,7 @@ export class ZonedDateTime {
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
+    other = ES.ToTemporalZonedDateTime(other);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarId = ES.ToString(calendar);
@@ -726,7 +726,7 @@ export class ZonedDateTime {
   }
   equals(other) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalZonedDateTime(other, ZonedDateTime);
+    other = ES.ToTemporalZonedDateTime(other);
     const one = GetSlot(this, EPOCHNANOSECONDS);
     const two = GetSlot(other, EPOCHNANOSECONDS);
     if (!bigInt(one).equals(two)) return false;
@@ -825,15 +825,13 @@ export class ZonedDateTime {
       ES.ToTemporalOverflow(options); // validate and ignore
       ES.ToTemporalDisambiguation(options);
       ES.ToTemporalOffset(options, 'reject');
-      const result = new this(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
-      if (!ES.IsTemporalZonedDateTime(result)) throw new TypeError('invalid result');
-      return result;
+      return new ZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
     }
-    return ES.ToTemporalZonedDateTime(item, this, options);
+    return ES.ToTemporalZonedDateTime(item, options);
   }
   static compare(one, two) {
-    one = ES.ToTemporalZonedDateTime(one, ZonedDateTime);
-    two = ES.ToTemporalZonedDateTime(two, ZonedDateTime);
+    one = ES.ToTemporalZonedDateTime(one);
+    two = ES.ToTemporalZonedDateTime(two);
     const ns1 = GetSlot(one, EPOCHNANOSECONDS);
     const ns2 = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(ns1).lesser(ns2)) return -1;

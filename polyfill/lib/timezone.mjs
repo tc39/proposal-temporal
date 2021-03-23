@@ -45,7 +45,7 @@ export class TimeZone {
   }
   getOffsetNanosecondsFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
+    instant = ES.ToTemporalInstant(instant);
     const id = GetSlot(this, TIMEZONE_ID);
 
     const offsetNs = ES.ParseOffsetString(id);
@@ -54,23 +54,23 @@ export class TimeZone {
     return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
   }
   getOffsetStringFor(instant) {
-    instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
+    instant = ES.ToTemporalInstant(instant);
     return ES.BuiltinTimeZoneGetOffsetStringFor(this, instant);
   }
   getPlainDateTimeFor(instant, calendar = ES.GetISO8601Calendar()) {
-    instant = ES.ToTemporalInstant(instant, GetIntrinsic('%Temporal.Instant%'));
+    instant = ES.ToTemporalInstant(instant);
     calendar = ES.ToTemporalCalendar(calendar);
     return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
   }
   getInstantFor(dateTime, options = undefined) {
-    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
+    dateTime = ES.ToTemporalDateTime(dateTime);
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     return ES.BuiltinTimeZoneGetInstantFor(this, dateTime, disambiguation);
   }
   getPossibleInstantsFor(dateTime) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    dateTime = ES.ToTemporalDateTime(dateTime, GetIntrinsic('%Temporal.PlainDateTime%'));
+    dateTime = ES.ToTemporalDateTime(dateTime);
     const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 
@@ -107,7 +107,7 @@ export class TimeZone {
   }
   getNextTransition(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.ToTemporalInstant(startingPoint, GetIntrinsic('%Temporal.Instant%'));
+    startingPoint = ES.ToTemporalInstant(startingPoint);
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
@@ -122,7 +122,7 @@ export class TimeZone {
   }
   getPreviousTransition(startingPoint) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.ToTemporalInstant(startingPoint, GetIntrinsic('%Temporal.Instant%'));
+    startingPoint = ES.ToTemporalInstant(startingPoint);
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
@@ -143,7 +143,7 @@ export class TimeZone {
     return ES.ToString(this);
   }
   static from(item) {
-    return ES.TimeZoneFrom(item, this);
+    return ES.TimeZoneFrom(item);
   }
 }
 

@@ -15,7 +15,7 @@ class MyInstant extends Temporal.Instant {
   }
 }
 
-const instance = MyInstant.fromEpochNanoseconds(-8640000000000000000000n);
+const instance = new MyInstant(-8640000000000000000000n);
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.subtract({ nanoseconds: 1 }));

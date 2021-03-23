@@ -62,10 +62,9 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _constructor_ be the *this* value.
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
-          1. Return ? CreateTemporalInstantFromStatic(_constructor_, _item_.[[Nanoseconds]]).
-        1. Return ? ToTemporalInstant(_item_, _constructor_).
+          1. Return ? CreateTemporalInstant(_item_.[[Nanoseconds]]).
+        1. Return ? ToTemporalInstant(_item_).
       </emu-alg>
     </emu-clause>
 
@@ -80,8 +79,7 @@
         1. Set _epochSeconds_ to ? NumberToBigInt(_epochSeconds_).
         1. Let _epochNanoseconds_ be _epochSeconds_ × 1,000,000,000.
         1. Perform ? RejectInstant(_epochNanoseconds_).
-        1. Let _constructor_ be the *this* value.
-        1. Return ? CreateTemporalInstantFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -96,8 +94,7 @@
         1. Set _epochMilliseconds_ to ? NumberToBigInt(_epochMilliseconds_).
         1. Let _epochNanoseconds_ be _epochMilliseconds_ × 1,000,000.
         1. Perform ? RejectInstant(_epochNanoseconds_).
-        1. Let _constructor_ be the *this* value.
-        1. Return ? CreateTemporalInstantFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -111,8 +108,7 @@
         1. Set _epochMicroseconds_ to ? ToBigInt(_epochMicroseconds_).
         1. Let _epochNanoseconds_ be _epochMicroseconds_ × 1,000.
         1. Perform ? RejectInstant(_epochNanoseconds_).
-        1. Let _constructor_ be the *this* value.
-        1. Return ? CreateTemporalInstantFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -125,8 +121,7 @@
       <emu-alg>
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
         1. Perform ? RejectInstant(_epochNanoseconds_).
-        1. Let _constructor_ be the *this* value.
-        1. Return ? CreateTemporalInstantFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -531,30 +526,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createtemporalinstantfromstatic" aoid="CreateTemporalInstantFromStatic">
-      <h1>CreateTemporalInstantFromStatic ( _constructor_, _ns_ )</h1>
-      <emu-alg>
-        1. Assert: ! ValidateInstant(_ns_) is *true*.
-        1. If ! IsConstructor(_constructor_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Let _result_ be ? Construct(_constructor_, « _ns_ »).
-        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalInstant]]).
-        1. Return _result_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-totemporalinstant" aoid="ToTemporalInstant">
-      <h1>ToTemporalInstant ( _item_ [ , _constructor_ ] )</h1>
+      <h1>ToTemporalInstant ( _item_ )</h1>
       <p>
         The abstract operation ToTemporalInstant returns its argument _item_ if it is already a Temporal.Instant instance, converts _item_ to a new Temporal.Instant instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _constructor_ is not given, set it to %Temporal.Instant%.
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
           1. Return _item_.
         1. Let _string_ be ? ToString(_item_).
         1. Let _epochNanoseconds_ be ? ParseTemporalInstant(_string_).
-        1. Return ? CreateTemporalInstantFromStatic(_constructor_, _epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
 

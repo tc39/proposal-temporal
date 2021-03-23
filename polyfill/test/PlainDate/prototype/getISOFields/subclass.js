@@ -8,19 +8,14 @@ includes: [compareArray.js]
 
 let called = 0;
 
-const constructorArguments = [
-  [2000, 5, 2]
-];
-
 class MyDate extends Temporal.PlainDate {
   constructor(year, month, day) {
-    assert.compareArray([year, month, day], constructorArguments.shift(), "constructor arguments");
     ++called;
     super(year, month, day);
   }
 }
 
-const instance = MyDate.from("2000-05-02");
+const instance = new MyDate(2000, 5, 2);
 assert.sameValue(called, 1);
 
 const result = instance.getISOFields();

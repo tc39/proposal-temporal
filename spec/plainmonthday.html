@@ -67,12 +67,11 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
           1. Perform ? ToTemporalOverflow(_options_).
-          1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOYear]], _item_.[[Calendar]]).
-        1. Return ? ToTemporalMonthDay(_item_, _constructor_, _options_).
+          1. Return ? CreateTemporalMonthDay(_item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOYear]], _item_.[[Calendar]]).
+        1. Return ? ToTemporalMonthDay(_item_, _options_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -348,12 +347,11 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-totemporalmonthday" aoid="ToTemporalMonthDay">
-      <h1>ToTemporalMonthDay ( _item_ [ , _constructor_ [ , _options_ ] ] )</h1>
+      <h1>ToTemporalMonthDay ( _item_ [ , _options_ ] )</h1>
       <p>
         The abstract operation ToTemporalMonthDay returns its argument _item_ if it is already a Temporal.PlainMonthDay instance, converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _constructor_ is not given, set it to %Temporal.PlainMonthDay%.
         1. If _options_ is not given, set it to ! OrdinaryObjectCreate(%Object.prototype%).
         1. Let _referenceISOYear_ be *1972*<sub>𝔽</sub>.
         1. If Type(_item_) is Object, then
@@ -372,7 +370,7 @@
           1. Let _year_ be ? Get(_fields_, *"year"*).
           1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _referenceISOYear_).
-          1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _options_).
+          1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
@@ -381,10 +379,10 @@
           1. Let _validateYear_ be the first leap year after the Unix epoch (1972).
           1. If ! ValidateISODate(_validateYear_, _result_.[[Month]], _result_.[[Day]]) is *false*, then
             1. Throw a *RangeError* exception.
-          1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _calendar_, *undefined*).
+          1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, *undefined*).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _referenceISOYear_, _calendar_).
         1. Let _canonicalMonthDayOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
-        1. Return ? MonthDayFromFields(_calendar_, _result_, _constructor_, _canonicalMonthDayOptions_).
+        1. Return ? MonthDayFromFields(_calendar_, _result_, %Temporal.PlainMonthDay%, _canonicalMonthDayOptions_).
       </emu-alg>
     </emu-clause>
 

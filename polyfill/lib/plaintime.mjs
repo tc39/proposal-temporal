@@ -223,7 +223,7 @@ export class PlainTime {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalTime(other, PlainTime);
+    other = ES.ToTemporalTime(other);
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
@@ -282,7 +282,7 @@ export class PlainTime {
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalTime(other, PlainTime);
+    other = ES.ToTemporalTime(other);
     options = ES.NormalizeOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
@@ -383,7 +383,7 @@ export class PlainTime {
   }
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalTime(other, PlainTime);
+    other = ES.ToTemporalTime(other);
     for (const slot of [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
@@ -414,7 +414,7 @@ export class PlainTime {
   toPlainDateTime(temporalDate) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
 
-    temporalDate = ES.ToTemporalDate(temporalDate, GetIntrinsic('%Temporal.PlainDate%'));
+    temporalDate = ES.ToTemporalDate(temporalDate);
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);
     const day = GetSlot(temporalDate, ISO_DAY);
@@ -441,7 +441,7 @@ export class PlainTime {
     if (dateLike === undefined) {
       throw new TypeError('missing date property');
     }
-    const temporalDate = ES.ToTemporalDate(dateLike, GetIntrinsic('%Temporal.PlainDate%'));
+    const temporalDate = ES.ToTemporalDate(dateLike);
 
     const timeZoneLike = item.timeZone;
     if (timeZoneLike === undefined) {
@@ -494,21 +494,20 @@ export class PlainTime {
     options = ES.NormalizeOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalTime(item)) {
-      const hour = GetSlot(item, ISO_HOUR);
-      const minute = GetSlot(item, ISO_MINUTE);
-      const second = GetSlot(item, ISO_SECOND);
-      const millisecond = GetSlot(item, ISO_MILLISECOND);
-      const microsecond = GetSlot(item, ISO_MICROSECOND);
-      const nanosecond = GetSlot(item, ISO_NANOSECOND);
-      const result = new this(hour, minute, second, millisecond, microsecond, nanosecond);
-      if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-      return result;
+      return new PlainTime(
+        GetSlot(item, ISO_HOUR),
+        GetSlot(item, ISO_MINUTE),
+        GetSlot(item, ISO_SECOND),
+        GetSlot(item, ISO_MILLISECOND),
+        GetSlot(item, ISO_MICROSECOND),
+        GetSlot(item, ISO_NANOSECOND)
+      );
     }
-    return ES.ToTemporalTime(item, this, overflow);
+    return ES.ToTemporalTime(item, overflow);
   }
   static compare(one, two) {
-    one = ES.ToTemporalTime(one, PlainTime);
-    two = ES.ToTemporalTime(two, PlainTime);
+    one = ES.ToTemporalTime(one);
+    two = ES.ToTemporalTime(two);
     for (const slot of [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND]) {
       const val1 = GetSlot(one, slot);
       const val2 = GetSlot(two, slot);

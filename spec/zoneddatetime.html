@@ -66,14 +66,13 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _constructor_ be the *this* value.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Perform ? ToTemporalOverflow(_options_).
           1. Perform ? ToTemporalDisambiguation(_options_).
           1. Perform ? ToTemporalOffset(_options_, *"reject"*).
-          1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, _item_.[[Nanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
-        1. Return ? ToTemporalZonedDateTime(_item_, _constructor_, _options_).
+          1. Return ? CreateTemporalZonedDateTime(_item_.[[Nanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
+        1. Return ? ToTemporalZonedDateTime(_item_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1108,12 +1107,11 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-totemporalzoneddatetime" aoid="ToTemporalZonedDateTime">
-      <h1>ToTemporalZonedDateTime ( _item_ [ , _constructor_ [ , _options_ ] ] )</h1>
+      <h1>ToTemporalZonedDateTime ( _item_ [ , _options_ ] )</h1>
       <p>
         The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _constructor_ is not given, set it to %Temporal.ZonedDateTime%.
         1. If _options_ is not given, set it to ! OrdinaryObjectCreate(%Object.prototype%).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
@@ -1131,14 +1129,14 @@
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
           1. If _result_.[[TimeZoneName]] is *undefined*, throw a *RangeError* exception.
-          1. Let _timeZone_ be ? TimeZoneFrom(_result_.[[TimeZoneName]], %Temporal.TimeZone%).
+          1. Let _timeZone_ be ? TimeZoneFrom(_result_.[[TimeZoneName]]).
           1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
           1. Let _calendar_ be ? ToOptionalTemporalCalendar(_result_.[[Calendar]]).
         1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_, *"reject"*).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
-        1. Return ? CreateTemporalZonedDateTimeFromStatic(_constructor_, _epochNanoseconds_, _timeZone_, _calendar_).
+        1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -1177,23 +1175,6 @@
         1. Set _object_.[[TimeZone]] to _timeZone_.
         1. Set _object_.[[Calendar]] to _calendar_.
         1. Return _object_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-createtemporalzoneddatetimefromstatic" aoid="CreateTemporalZonedDateTimeFromStatic">
-      <h1>CreateTemporalZonedDateTimeFromStatic ( _constructor_, _epochNanoseconds_, _timeZone_, _calendar_ )</h1>
-      <p>
-        The abstract operation CreateTemporalZonedDateTimeFromStatic calls the given _constructor_ with the given arguments to create a `Temporal.ZonedDateTime` instance.
-      </p>
-      <emu-alg>
-        1. Assert: ! ValidateInstant(_epochNanoseconds_) is *true*.
-        1. Assert: Type(_timeZone_) is Object.
-        1. Assert: Type(_calendar_) is Object.
-        1. If ! IsConstructor(_constructor_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Let _result_ be ? Construct(_constructor_, « _epochNanoseconds_, _timeZone_, _calendar_ »).
-        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalZonedDateTime]]).
-        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

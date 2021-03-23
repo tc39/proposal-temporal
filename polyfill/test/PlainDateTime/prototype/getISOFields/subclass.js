@@ -8,19 +8,14 @@ includes: [compareArray.js]
 
 let called = 0;
 
-const constructorArguments = [
-  [2000, 5, 2, 12, 34, 56, 987, 654, 321]
-];
-
 class MyDateTime extends Temporal.PlainDateTime {
-  constructor(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-    assert.compareArray([year, month, day, hour, minute, second, millisecond, microsecond, nanosecond], constructorArguments.shift(), "constructor arguments");
+  constructor(...args) {
     ++called;
-    super(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    super(...args);
   }
 }
 
-const instance = MyDateTime.from("2000-05-02T12:34:56.987654321");
+const instance = new MyDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
 assert.sameValue(called, 1);
 
 const result = instance.getISOFields();

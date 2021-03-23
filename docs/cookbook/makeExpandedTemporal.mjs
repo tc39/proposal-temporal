@@ -64,7 +64,7 @@ class ExpandedPlainDate extends Temporal.PlainDate {
   static _convert(plainDate, expandedYear) {
     if (plainDate instanceof ExpandedPlainDate) return plainDate;
     const f = plainDate.getISOFields();
-    return new this(expandedYear, f.isoMonth, f.isoDay);
+    return new ExpandedPlainDate(expandedYear, f.isoMonth, f.isoDay);
   }
 
   static from(item) {
@@ -77,7 +77,7 @@ class ExpandedPlainDate extends Temporal.PlainDate {
       return this._convert(item, BigInt(item.year));
     }
     const calendar = Temporal.Calendar.from('iso8601');
-    return calendar.dateFromFields(item, undefined, this);
+    return calendar.dateFromFields(item, undefined, ExpandedPlainDate);
   }
 
   // This overrides the .year property to return the expanded year instead. If
@@ -108,7 +108,7 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
   static _convert(plainDateTime, expandedYear) {
     if (plainDateTime instanceof ExpandedPlainDateTime) return plainDateTime;
     const f = plainDateTime.getISOFields();
-    return new this(
+    return new ExpandedPlainDateTime(
       expandedYear,
       f.isoMonth,
       f.isoDay,
@@ -131,7 +131,7 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
       return this._convert(item, BigInt(item.year));
     }
     const calendar = Temporal.Calendar.from('iso8601');
-    return calendar.dateFromFields(item, undefined, this);
+    return calendar.dateFromFields(item, undefined, ExpandedPlainDateTime);
   }
 
   get year() {
@@ -155,6 +155,11 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
 class ExpandedPlainTime extends Temporal.PlainTime {
   toPlainDateTime(date) {
     return ExpandedPlainDateTime._convert(super.toPlainDateTime(date), date.year);
+  }
+
+  static from(item) {
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = super.from(item);
+    return new ExpandedPlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
 }
 

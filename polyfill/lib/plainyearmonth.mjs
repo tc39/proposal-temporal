@@ -174,7 +174,7 @@ export class PlainYearMonth {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalYearMonth(other, PlainYearMonth);
+    other = ES.ToTemporalYearMonth(other);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarID = ES.ToString(calendar);
@@ -248,7 +248,7 @@ export class PlainYearMonth {
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalYearMonth(other, PlainYearMonth);
+    other = ES.ToTemporalYearMonth(other);
     const calendar = GetSlot(this, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
     const calendarID = ES.ToString(calendar);
@@ -322,7 +322,7 @@ export class PlainYearMonth {
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalYearMonth(other, PlainYearMonth);
+    other = ES.ToTemporalYearMonth(other);
     for (const slot of [ISO_YEAR, ISO_MONTH, ISO_DAY]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
@@ -380,19 +380,18 @@ export class PlainYearMonth {
     options = ES.NormalizeOptionsObject(options);
     if (ES.IsTemporalYearMonth(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
-      const year = GetSlot(item, ISO_YEAR);
-      const month = GetSlot(item, ISO_MONTH);
-      const calendar = GetSlot(item, CALENDAR);
-      const referenceISODay = GetSlot(item, ISO_DAY);
-      const result = new this(year, month, calendar, referenceISODay);
-      if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
-      return result;
+      return new PlainYearMonth(
+        GetSlot(item, ISO_YEAR),
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, CALENDAR),
+        GetSlot(item, ISO_DAY)
+      );
     }
-    return ES.ToTemporalYearMonth(item, this, options);
+    return ES.ToTemporalYearMonth(item, options);
   }
   static compare(one, two) {
-    one = ES.ToTemporalYearMonth(one, PlainYearMonth);
-    two = ES.ToTemporalYearMonth(two, PlainYearMonth);
+    one = ES.ToTemporalYearMonth(one);
+    two = ES.ToTemporalYearMonth(two);
     return ES.CompareISODate(
       GetSlot(one, ISO_YEAR),
       GetSlot(one, ISO_MONTH),

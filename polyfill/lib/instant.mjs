@@ -97,7 +97,7 @@ export class Instant {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalInstant(other, Instant);
+    other = ES.ToTemporalInstant(other);
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
@@ -139,7 +139,7 @@ export class Instant {
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalInstant(other, Instant);
+    other = ES.ToTemporalInstant(other);
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.NormalizeOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
@@ -200,7 +200,7 @@ export class Instant {
   }
   equals(other) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalInstant(other, Instant);
+    other = ES.ToTemporalInstant(other);
     const one = GetSlot(this, EPOCHNANOSECONDS);
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);
@@ -264,44 +264,34 @@ export class Instant {
     epochSeconds = ES.ToNumber(epochSeconds);
     const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
     ES.RejectInstantRange(epochNanoseconds);
-    const result = new this(bigIntIfAvailable(epochNanoseconds));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(epochNanoseconds);
   }
   static fromEpochMilliseconds(epochMilliseconds) {
     epochMilliseconds = ES.ToNumber(epochMilliseconds);
     const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
     ES.RejectInstantRange(epochNanoseconds);
-    const result = new this(bigIntIfAvailable(epochNanoseconds));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(epochNanoseconds);
   }
   static fromEpochMicroseconds(epochMicroseconds) {
     epochMicroseconds = ES.ToBigInt(epochMicroseconds);
     const epochNanoseconds = epochMicroseconds.multiply(1e3);
     ES.RejectInstantRange(epochNanoseconds);
-    const result = new this(bigIntIfAvailable(epochNanoseconds));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(epochNanoseconds);
   }
   static fromEpochNanoseconds(epochNanoseconds) {
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
     ES.RejectInstantRange(epochNanoseconds);
-    const result = new this(bigIntIfAvailable(epochNanoseconds));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(epochNanoseconds);
   }
   static from(item) {
     if (ES.IsTemporalInstant(item)) {
-      const result = new this(bigIntIfAvailable(GetSlot(item, EPOCHNANOSECONDS)));
-      if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-      return result;
+      return new Instant(GetSlot(item, EPOCHNANOSECONDS));
     }
-    return ES.ToTemporalInstant(item, this);
+    return ES.ToTemporalInstant(item);
   }
   static compare(one, two) {
-    one = ES.ToTemporalInstant(one, Instant);
-    two = ES.ToTemporalInstant(two, Instant);
+    one = ES.ToTemporalInstant(one);
+    two = ES.ToTemporalInstant(two);
     one = GetSlot(one, EPOCHNANOSECONDS);
     two = GetSlot(two, EPOCHNANOSECONDS);
     if (bigInt(one).lesser(two)) return -1;
