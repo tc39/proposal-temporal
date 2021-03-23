@@ -9,14 +9,13 @@ includes: [compareArray.js]
 let called = 0;
 
 class MyDuration extends Temporal.Duration {
-  constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+  constructor(...args) {
     ++called;
-    assert.compareArray([years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], [0, 0, 0, 0, 0, 0, 0, 0, 0, -Number.MAX_VALUE]);
-    super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    super(...args);
   }
 }
 
-const instance = MyDuration.from({ nanoseconds: -Number.MAX_VALUE });
+const instance = new MyDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, -Number.MAX_VALUE);
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.subtract({ nanoseconds: Number.MAX_VALUE }));

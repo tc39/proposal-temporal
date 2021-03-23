@@ -516,36 +516,24 @@ export class Duration {
   }
   static from(item) {
     if (ES.IsTemporalDuration(item)) {
-      const years = GetSlot(item, YEARS);
-      const months = GetSlot(item, MONTHS);
-      const weeks = GetSlot(item, WEEKS);
-      const days = GetSlot(item, DAYS);
-      const hours = GetSlot(item, HOURS);
-      const minutes = GetSlot(item, MINUTES);
-      const seconds = GetSlot(item, SECONDS);
-      const milliseconds = GetSlot(item, MILLISECONDS);
-      const microseconds = GetSlot(item, MICROSECONDS);
-      const nanoseconds = GetSlot(item, NANOSECONDS);
-      const result = new this(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
+      return new Duration(
+        GetSlot(item, YEARS),
+        GetSlot(item, MONTHS),
+        GetSlot(item, WEEKS),
+        GetSlot(item, DAYS),
+        GetSlot(item, HOURS),
+        GetSlot(item, MINUTES),
+        GetSlot(item, SECONDS),
+        GetSlot(item, MILLISECONDS),
+        GetSlot(item, MICROSECONDS),
+        GetSlot(item, NANOSECONDS)
       );
-      if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-      return result;
     }
-    return ES.ToTemporalDuration(item, this);
+    return ES.ToTemporalDuration(item);
   }
   static compare(one, two, options = undefined) {
-    one = ES.ToTemporalDuration(one, Duration);
-    two = ES.ToTemporalDuration(two, Duration);
+    one = ES.ToTemporalDuration(one);
+    two = ES.ToTemporalDuration(two);
     options = ES.NormalizeOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     const y1 = GetSlot(one, YEARS);

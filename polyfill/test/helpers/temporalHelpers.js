@@ -241,4 +241,87 @@ var TemporalHelpers = {
     const result = instance[method](...methodArgs);
     assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
   },
+
+  /*
+   * checkSubclassingIgnoredStatic(construct, method, methodArgs, resultAssertions):
+   *
+   * Static methods of Temporal classes that return a new instance of the class,
+   * must not use the this-value as a constructor. This helper runs tests to
+   * ensure this.
+   *
+   * construct[method](...methodArgs) is the static method call under test, and
+   * must yield a valid instance of the Temporal class, not a subclass. See
+   * below for the individual tests that this runs.
+   * resultAssertions() is a function that performs additional assertions on the
+   * instance returned by the method under test.
+   */
+  checkSubclassingIgnoredStatic(...args) {
+    this.checkStaticInvalidReceiver(...args);
+    this.checkStaticReceiverNotCalled(...args);
+    this.checkThisValueNotCalled(...args);
+  },
+
+  /*
+   * Check that calling the static method with a receiver that's not callable,
+   * still calls the intrinsic constructor.
+   */
+  checkStaticInvalidReceiver(construct, method, methodArgs, resultAssertions) {
+    function check(value, description) {
+      const result = construct[method].apply(value, methodArgs);
+      assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+      resultAssertions(result);
+    }
+
+    check(undefined, "undefined");
+    check(null, "null");
+    check(true, "true");
+    check("test", "string");
+    check(Symbol(), "symbol");
+    check(7, "number");
+    check(7n, "bigint");
+    check({}, "Non-callable object");
+  },
+
+  /*
+   * Check that calling the static method with a receiver that returns a value
+   * that's not callable, still calls the intrinsic constructor.
+   */
+  checkStaticReceiverNotCalled(construct, method, methodArgs, resultAssertions) {
+    function check(value, description) {
+      const receiver = function () {
+        return value;
+      };
+      const result = construct[method].apply(receiver, methodArgs);
+      assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+      resultAssertions(result);
+    }
+
+    check(undefined, "undefined");
+    check(null, "null");
+    check(true, "true");
+    check("test", "string");
+    check(Symbol(), "symbol");
+    check(7, "number");
+    check(7n, "bigint");
+    check({}, "Non-callable object");
+  },
+
+  /*
+   * Check that the receiver isn't called.
+   */
+  checkThisValueNotCalled(construct, method, methodArgs, resultAssertions) {
+    let called = false;
+
+    class MySubclass extends construct {
+      constructor(...args) {
+        called = true;
+        super(...args);
+      }
+    }
+
+    const result = MySubclass[method](...methodArgs);
+    assert.sameValue(called, false);
+    assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+    resultAssertions(result);
+  },
 };

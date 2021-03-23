@@ -8,19 +8,14 @@ includes: [compareArray.js]
 
 let called = 0;
 
-const constructorArguments = [
-  Array(10).fill(0),
-];
-
 class MyDuration extends Temporal.Duration {
-  constructor(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+  constructor(...args) {
     ++called;
-    assert.compareArray([years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds], constructorArguments.shift(), "constructor arguments");
-    super(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    super(...args);
   }
 }
 
-const instance = MyDuration.from("PT0S");
+const instance = new MyDuration();
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.with({ days: Infinity }));

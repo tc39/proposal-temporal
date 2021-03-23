@@ -9,14 +9,13 @@ includes: [compareArray.js]
 let called = 0;
 
 class MyMonthDay extends Temporal.PlainMonthDay {
-  constructor(month, day) {
+  constructor(...args) {
     ++called;
-    assert.compareArray([month, day], [11, 30], "constructor arguments");
-    super(month, day);
+    super(...args);
   }
 }
 
-const instance = MyMonthDay.from("11-30");
+const instance = new MyMonthDay(11, 30);
 assert.sameValue(called, 1);
 
 const result = instance.with({ day: 31 });

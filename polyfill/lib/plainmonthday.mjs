@@ -97,7 +97,7 @@ export class PlainMonthDay {
   }
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalMonthDay(other, PlainMonthDay);
+    other = ES.ToTemporalMonthDay(other);
     for (const slot of [ISO_MONTH, ISO_DAY, ISO_YEAR]) {
       const val1 = GetSlot(this, slot);
       const val2 = GetSlot(other, slot);
@@ -155,15 +155,14 @@ export class PlainMonthDay {
     options = ES.NormalizeOptionsObject(options);
     if (ES.IsTemporalMonthDay(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
-      const month = GetSlot(item, ISO_MONTH);
-      const day = GetSlot(item, ISO_DAY);
-      const calendar = GetSlot(item, CALENDAR);
-      const referenceISOYear = GetSlot(item, ISO_YEAR);
-      const result = new this(month, day, calendar, referenceISOYear);
-      if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
-      return result;
+      return new PlainMonthDay(
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, ISO_DAY),
+        GetSlot(item, CALENDAR),
+        GetSlot(item, ISO_YEAR)
+      );
     }
-    return ES.ToTemporalMonthDay(item, this, options);
+    return ES.ToTemporalMonthDay(item, options);
   }
 }
 
