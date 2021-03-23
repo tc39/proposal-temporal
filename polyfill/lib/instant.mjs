@@ -71,10 +71,7 @@ export class Instant {
       microseconds,
       nanoseconds
     );
-    const Construct = ES.SpeciesConstructor(this, Instant);
-    const result = new Construct(bigIntIfAvailable(ns));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(ns);
   }
   subtract(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -96,10 +93,7 @@ export class Instant {
       -microseconds,
       -nanoseconds
     );
-    const Construct = ES.SpeciesConstructor(this, Instant);
-    const result = new Construct(bigIntIfAvailable(ns));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(ns);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -202,10 +196,7 @@ export class Instant {
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], true);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
-    const Construct = ES.SpeciesConstructor(this, Instant);
-    const result = new Construct(bigIntIfAvailable(roundedNs));
-    if (!ES.IsTemporalInstant(result)) throw new TypeError('invalid result');
-    return result;
+    return new Instant(roundedNs);
   }
   equals(other) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

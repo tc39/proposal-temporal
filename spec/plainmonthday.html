@@ -166,8 +166,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
-        1. Let _constructor_ be ? SpeciesConstructor(_monthDay_, %Temporal.PlainMonthDay%).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, _constructor_, _options_).
+        1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%, _options_).
       </emu-alg>
     </emu-clause>
 

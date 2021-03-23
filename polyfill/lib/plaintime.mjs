@@ -147,10 +147,7 @@ export class PlainTime {
       nanosecond,
       overflow
     ));
-    const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   add(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -186,10 +183,7 @@ export class PlainTime {
       nanosecond,
       'reject'
     ));
-    const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   subtract(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -225,10 +219,7 @@ export class PlainTime {
       nanosecond,
       'reject'
     ));
-    const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -388,10 +379,7 @@ export class PlainTime {
       roundingMode
     ));
 
-    const Construct = ES.SpeciesConstructor(this, PlainTime);
-    const result = new Construct(hour, minute, second, millisecond, microsecond, nanosecond);
-    if (!ES.IsTemporalTime(result)) throw new TypeError('invalid result');
-    return result;
+    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

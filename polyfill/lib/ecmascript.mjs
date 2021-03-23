@@ -20,7 +20,6 @@ const ObjectEntries = Object.entries;
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
 import GetMethod from 'es-abstract/2020/GetMethod.js';
-import SpeciesConstructor from 'es-abstract/2020/SpeciesConstructor.js';
 import IsInteger from 'es-abstract/2020/IsInteger.js';
 import ToInteger from 'es-abstract/2020/ToInteger.js';
 import ToLength from 'es-abstract/2020/ToLength.js';
@@ -113,7 +112,6 @@ import * as PARSE from './regex.mjs';
 const ES2020 = {
   Call,
   GetMethod,
-  SpeciesConstructor,
   IsInteger,
   ToInteger,
   ToLength,
