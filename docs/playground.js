@@ -12164,9 +12164,7 @@
       value: function compare(one, two) {
         one = ES.ToTemporalDate(one, PlainDate);
         two = ES.ToTemporalDate(two, PlainDate);
-        var result = ES.CompareISODate(GetSlot(one, ISO_YEAR), GetSlot(one, ISO_MONTH), GetSlot(one, ISO_DAY), GetSlot(two, ISO_YEAR), GetSlot(two, ISO_MONTH), GetSlot(two, ISO_DAY));
-        if (result !== 0) return result;
-        return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+        return ES.CompareISODate(GetSlot(one, ISO_YEAR), GetSlot(one, ISO_MONTH), GetSlot(one, ISO_DAY), GetSlot(two, ISO_YEAR), GetSlot(two, ISO_MONTH), GetSlot(two, ISO_DAY));
       }
     }]);
 
@@ -12880,7 +12878,7 @@
           if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
         }
 
-        return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+        return 0;
       }
     }]);
 
@@ -14718,15 +14716,7 @@
       value: function compare(one, two) {
         one = ES.ToTemporalYearMonth(one, PlainYearMonth);
         two = ES.ToTemporalYearMonth(two, PlainYearMonth);
-
-        for (var _i2 = 0, _arr2 = [ISO_YEAR, ISO_MONTH, ISO_DAY]; _i2 < _arr2.length; _i2++) {
-          var slot = _arr2[_i2];
-          var val1 = GetSlot(one, slot);
-          var val2 = GetSlot(two, slot);
-          if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
-        }
-
-        return ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
+        return ES.CompareISODate(GetSlot(one, ISO_YEAR), GetSlot(one, ISO_MONTH), GetSlot(one, ISO_DAY), GetSlot(two, ISO_YEAR), GetSlot(two, ISO_MONTH), GetSlot(two, ISO_DAY));
       }
     }]);
 
@@ -15556,9 +15546,7 @@
         var ns2 = GetSlot(two, EPOCHNANOSECONDS);
         if (BigInteger(ns1).lesser(ns2)) return -1;
         if (BigInteger(ns1).greater(ns2)) return 1;
-        var calendarResult = ES.CalendarCompare(GetSlot(one, CALENDAR), GetSlot(two, CALENDAR));
-        if (calendarResult) return calendarResult;
-        return ES.TimeZoneCompare(GetSlot(one, TIME_ZONE), GetSlot(two, TIME_ZONE));
+        return 0;
       }
     }]);
 
