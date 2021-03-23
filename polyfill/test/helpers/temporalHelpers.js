@@ -25,10 +25,13 @@ var TemporalHelpers = {
    */
   checkSubclassingIgnored(...args) {
     this.checkSubclassConstructorNotObject(...args);
+    this.checkSubclassConstructorUndefined(...args);
     this.checkSubclassConstructorThrows(...args);
     this.checkSubclassConstructorNotCalled(...args);
     this.checkSubclassSpeciesInvalidResult(...args);
     this.checkSubclassSpeciesNotAConstructor(...args);
+    this.checkSubclassSpeciesNull(...args);
+    this.checkSubclassSpeciesUndefined(...args);
     this.checkSubclassSpeciesThrows(...args);
   },
 
@@ -51,6 +54,31 @@ var TemporalHelpers = {
     check(Symbol(), "Symbol");
     check(7, "number");
     check(7n, "bigint");
+  },
+
+  /*
+   * Checks that replacing the 'constructor' property of the subclass with
+   * undefined does not affect the returned new instance.
+   */
+  checkSubclassConstructorUndefined(construct, constructArgs, method, methodArgs, resultAssertions) {
+    let called = 0;
+
+    class MySubclass extends construct {
+      constructor() {
+        ++called;
+        super(...constructArgs);
+      }
+    }
+
+    const instance = new MySubclass();
+    assert.sameValue(called, 1);
+
+    MySubclass.prototype.constructor = undefined;
+
+    const result = instance[method](...methodArgs);
+    assert.sameValue(called, 1);
+    assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+    resultAssertions(result);
   },
 
   /*
@@ -141,6 +169,59 @@ var TemporalHelpers = {
     check(7, "number");
     check(7n, "bigint");
     check({}, "plain object");
+  },
+
+  /*
+   * Check that the constructor's @@species property is ignored when it's null.
+   */
+  checkSubclassSpeciesNull(construct, constructArgs, method, methodArgs, resultAssertions) {
+    let called = 0;
+
+    class MySubclass extends construct {
+      constructor() {
+        ++called;
+        super(...constructArgs);
+      }
+    }
+
+    const instance = new MySubclass();
+    assert.sameValue(called, 1);
+
+    MySubclass.prototype.constructor = {
+      [Symbol.species]: null,
+    };
+
+    const result = instance[method](...methodArgs);
+    assert.sameValue(called, 1);
+    assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+    resultAssertions(result);
+  },
+
+  /*
+   * Check that the constructor's @@species property is ignored when it's
+   * undefined.
+   */
+  checkSubclassSpeciesUndefined(construct, constructArgs, method, methodArgs, resultAssertions) {
+    let called = 0;
+
+    class MySubclass extends construct {
+      constructor() {
+        ++called;
+        super(...constructArgs);
+      }
+    }
+
+    const instance = new MySubclass();
+    assert.sameValue(called, 1);
+
+    MySubclass.prototype.constructor = {
+      [Symbol.species]: undefined,
+    };
+
+    const result = instance[method](...methodArgs);
+    assert.sameValue(called, 1);
+    assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
+    resultAssertions(result);
   },
 
   /*
