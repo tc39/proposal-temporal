@@ -26,7 +26,6 @@ Temporal provides a number of separate types, in order to
 - Avoid buggy pattern of filling in 0 or UTC for missing info
 - Do appropriate calculations based on type
 
-
 ## Cookbook
 
 A cookbook to help you get started and learn the ins and outs of Temporal is available [here](./cookbook.md).
@@ -52,10 +51,7 @@ Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambigu
 - `Temporal.now.plainDateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
 
 ```js
-console.log(
-  "Initialization complete",
-  Temporal.now.instant()
-);
+console.log('Initialization complete', Temporal.now.instant());
 // example output:
 // Initialization complete 2021-01-13T20:57:01.500944804Z
 ```
@@ -68,9 +64,9 @@ A `Temporal.Instant` represents a fixed point in time (called **"exact time"**),
 For a human-readable local calendar date or clock time, use a `Temporal.TimeZone` and `Temporal.Calendar` to obtain a `Temporal.ZonedDateTime` or `Temporal.PlainDateTime`.
 
 ```js
-const instant = Temporal.Instant.from("1969-07-20T20:17Z");
-instant.toString() // => "1969-07-20T20:17:00Z"
-instant.epochMilliseconds // => -14182980000
+const instant = Temporal.Instant.from('1969-07-20T20:17Z');
+instant.toString(); // => "1969-07-20T20:17:00Z"
+instant.epochMilliseconds; // => -14182980000
 ```
 
 See [Temporal.Instant Documentation](./instant.md) for detailed documentation.
@@ -82,16 +78,16 @@ This type is optimized for use cases that require a time zone, including DST-saf
 
 ```js
 const zonedDateTime = Temporal.ZonedDateTime.from({
-    timeZone: 'America/Los_Angeles',
-    year: 1995,
-    month: 12,
-    day: 7,
-    hour: 3,
-    minute: 24,
-    second: 30,
-    millisecond: 0,
-    microsecond: 3,
-    nanosecond: 500
+  timeZone: 'America/Los_Angeles',
+  year: 1995,
+  month: 12,
+  day: 7,
+  hour: 3,
+  minute: 24,
+  second: 30,
+  millisecond: 0,
+  microsecond: 3,
+  nanosecond: 500
 }); // => 1995-12-07T03:24:30.000003500+08:00[America/Los_Angeles]
 ```
 
@@ -104,10 +100,10 @@ See [Temporal.ZonedDateTime Documentation](./zoneddatetime.md) for detailed docu
 A `Temporal.PlainDate` object represents a calendar date that is not associated with a particular time or time zone, e.g. August 24th, 2006.
 
 ```js
-const date = Temporal.PlainDate.from({year: 2006, month: 8, day: 24}); // => 2006-08-24
-date.year // => 2006
-date.inLeapYear // => false
-date.toString() // => "2006-08-24"
+const date = Temporal.PlainDate.from({ year: 2006, month: 8, day: 24 }); // => 2006-08-24
+date.year; // => 2006
+date.inLeapYear; // => false
+date.toString(); // => "2006-08-24"
 ```
 
 This can also be converted to partial dates such as `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`.
@@ -128,8 +124,8 @@ const time = Temporal.PlainTime.from({
   nanosecond: 205
 }); // => 19:39:09.068346205
 
-time.second // => 9
-time.toString() // => "19:39:09.068346205"
+time.second; // => 9
+time.toString(); // => "19:39:09.068346205"
 ```
 
 See [Temporal.PlainTime Documentation](./plaintime.md) for detailed documentation.
@@ -163,8 +159,8 @@ This is useful to express things like "the October 2020 meeting".
 
 ```js
 const yearMonth = Temporal.PlainYearMonth.from({ year: 2020, month: 10 }); // => 2020-10
-yearMonth.daysInMonth // => 31
-yearMonth.daysInYear // => 366
+yearMonth.daysInMonth; // => 31
+yearMonth.daysInYear; // => 366
 ```
 
 See [Temporal.PlainYearMonth Documentation](./plainyearmonth.md) for detailed documentation.
@@ -176,8 +172,8 @@ This is useful to express things like "Bastille Day is on the 14th of July".
 
 ```js
 const monthDay = Temporal.PlainMonthDay.from({ month: 7, day: 14 }); // => 07-14
-const date = monthDay.toPlainDate({ year: 2030 });  // => 2030-07-14
-date.dayOfWeek // => 7
+const date = monthDay.toPlainDate({ year: 2030 }); // => 2030-07-14
+date.dayOfWeek; // => 7
 ```
 
 See [Temporal.PlainMonthDay Documentation](./plainmonthday.md) for detailed documentation.
@@ -214,10 +210,10 @@ It is also possible to implement your own time zones.
 
 ```js
 const timeZone = Temporal.TimeZone.from('Africa/Cairo');
-timeZone.getInstantFor('2000-01-01T00:00') // => 1999-12-31T22:00:00Z
-timeZone.getPlainDateTimeFor('2000-01-01T00:00Z') // => 2000-01-01T02:00:00
-timeZone.getPreviousTransition(Temporal.now.instant()) // => 2014-09-25T21:00:00Z
-timeZone.getNextTransition(Temporal.now.instant()) // => null
+timeZone.getInstantFor('2000-01-01T00:00'); // => 1999-12-31T22:00:00Z
+timeZone.getPlainDateTimeFor('2000-01-01T00:00Z'); // => 2000-01-01T02:00:00
+timeZone.getPreviousTransition(Temporal.now.instant()); // => 2014-09-25T21:00:00Z
+timeZone.getNextTransition(Temporal.now.instant()); // => null
 ```
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
@@ -234,10 +230,10 @@ Under the hood, this math is done by methods on the calendars.
 It is also possible to implement your own calendars.
 
 ```js
-const calendar = Temporal.Calendar.from('iso8601');
-const date = calendar.dateFromFields({ year: 1999, month: 12, day: 31 }, {}, Temporal.PlainDate);
-date.monthsInYear // => 12
-date.daysInYear // => 365
+const cal = Temporal.Calendar.from('iso8601');
+const date = cal.dateFromFields({ year: 1999, month: 12, day: 31 }, {}, Temporal.PlainDate);
+date.monthsInYear; // => 12
+date.daysInYear; // => 365
 ```
 
 See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
@@ -261,5 +257,5 @@ For more information about extensions to the ISO 8601 / RFC 3339 standards that 
 - [Ambiguity](./ambiguity.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
 - [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
 - [ISO String Extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 and/or RFC 3339 standards which are used by `Temporal`.
+- [Why do Temporal instances have a Calendar?](./calendar-review.md) &mdash; Background about why types like `Temporal.PlainDate` or `Temporal.PlainDate` contain a calendar.
   These extensions are being actively worked on with IETF to get them on a standards track.
-
