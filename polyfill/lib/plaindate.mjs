@@ -144,16 +144,12 @@ export class PlainDate {
 
     options = ES.NormalizeOptionsObject(options);
 
-    const Construct = ES.SpeciesConstructor(this, PlainDate);
-    return ES.DateFromFields(calendar, fields, Construct, options);
+    return ES.DateFromFields(calendar, fields, PlainDate, options);
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     calendar = ES.ToTemporalCalendar(calendar);
-    const Construct = ES.SpeciesConstructor(this, PlainDate);
-    const result = new Construct(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
-    if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
-    return result;
+    return new PlainDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -165,8 +161,7 @@ export class PlainDate {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
-    const Construct = ES.SpeciesConstructor(this, PlainDate);
-    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, Construct);
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, PlainDate);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -178,8 +173,7 @@ export class PlainDate {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years: -years, months: -months, weeks: -weeks, days: -days };
-    const Construct = ES.SpeciesConstructor(this, PlainDate);
-    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, Construct);
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, PlainDate);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

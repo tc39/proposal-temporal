@@ -116,8 +116,7 @@ export class PlainYearMonth {
 
     options = ES.NormalizeOptionsObject(options);
 
-    const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, fields, Construct, options);
+    return ES.YearMonthFromFields(calendar, fields, PlainYearMonth, options);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -138,8 +137,7 @@ export class PlainYearMonth {
     const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options, TemporalDate);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
-    const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, options);
+    return ES.YearMonthFromFields(calendar, addedDateFields, PlainYearMonth, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -172,8 +170,7 @@ export class PlainYearMonth {
     const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options, TemporalDate);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
-    const Construct = ES.SpeciesConstructor(this, PlainYearMonth);
-    return ES.YearMonthFromFields(calendar, addedDateFields, Construct, options);
+    return ES.YearMonthFromFields(calendar, addedDateFields, PlainYearMonth, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

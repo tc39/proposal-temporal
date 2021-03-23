@@ -91,8 +91,7 @@ export class PlainMonthDay {
 
     options = ES.NormalizeOptionsObject(options);
 
-    const Construct = ES.SpeciesConstructor(this, PlainMonthDay);
-    const result = ES.MonthDayFromFields(calendar, fields, Construct, options);
+    const result = ES.MonthDayFromFields(calendar, fields, PlainMonthDay, options);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   }

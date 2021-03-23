@@ -182,26 +182,11 @@ export class Duration {
       microseconds = GetSlot(this, MICROSECONDS),
       nanoseconds = GetSlot(this, NANOSECONDS)
     } = props;
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   negated() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
+    return new Duration(
       -GetSlot(this, YEARS),
       -GetSlot(this, MONTHS),
       -GetSlot(this, WEEKS),
@@ -213,13 +198,10 @@ export class Duration {
       -GetSlot(this, MICROSECONDS),
       -GetSlot(this, NANOSECONDS)
     );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
   }
   abs() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
+    return new Duration(
       Math.abs(GetSlot(this, YEARS)),
       Math.abs(GetSlot(this, MONTHS)),
       Math.abs(GetSlot(this, WEEKS)),
@@ -231,8 +213,6 @@ export class Duration {
       Math.abs(GetSlot(this, MICROSECONDS)),
       Math.abs(GetSlot(this, NANOSECONDS))
     );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
   }
   add(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -273,21 +253,7 @@ export class Duration {
       nanoseconds,
       relativeTo
     ));
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   subtract(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -328,21 +294,7 @@ export class Duration {
       -nanoseconds,
       relativeTo
     ));
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   round(options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
@@ -483,21 +435,7 @@ export class Duration {
       relativeTo
     ));
 
-    const Construct = ES.SpeciesConstructor(this, Duration);
-    const result = new Construct(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    if (!ES.IsTemporalDuration(result)) throw new TypeError('invalid result');
-    return result;
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   total(options) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

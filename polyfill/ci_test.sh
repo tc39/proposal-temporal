@@ -29,6 +29,8 @@ else
 fi
 if [ $threads -gt 8 ]; then threads=8; fi
 
+cp ./helpers/* ../test262/harness/
+
 test262-harness \
   -t $threads \
   -r json \

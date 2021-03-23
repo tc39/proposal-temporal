@@ -248,8 +248,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_yearMonth_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
-        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_, _constructor_, _options_).
+        1. Return ? YearMonthFromFields(_calendar_, _fields_, %Temporal.PlainYearMonth%, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -277,8 +276,7 @@
         1. Let _durationToAdd_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _options_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
-        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _options_).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, %Temporal.PlainYearMonth%, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -306,8 +304,7 @@
         1. Let _durationToAdd_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, %Temporal.PlainDate%, _options_).
         1. Let _addedDateFields_ be ToTemporalYearMonthFields(_addedDate_, _fieldNames_).
-        1. Let _constructor_ be ? SpeciesConstructor(_yearMonth_, %Temporal.PlainYearMonth%).
-        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _constructor_, _options_).
+        1. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, %Temporal.PlainYearMonth%, _options_).
       </emu-alg>
     </emu-clause>
 
