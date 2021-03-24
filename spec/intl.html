@@ -1161,10 +1161,9 @@
         <h1>Properties of the Temporal.Calendar Prototype Object</h1>
 
         <emu-clause id="sup-temporal.calendar.prototype.datefromfields">
-          <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_, _options_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.datefromfields"></emu-xref>.</p>
           <p>
-            The `dateFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
             The following steps are taken:
           </p>
           <emu-alg>
@@ -1178,15 +1177,14 @@
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
               1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
-            1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
 
         <emu-clause id="sup-temporal.calendar.prototype.yearmonthfromfields">
-          <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_, _options_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.yearmonthfromfields"></emu-xref>.</p>
           <p>
-            The `yearMonthFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
             The following steps are taken:
           </p>
           <emu-alg>
@@ -1200,15 +1198,14 @@
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « »).
               1. Let _result_ be a Record with [[Year]], [[Month]], and [[ReferenceISODay]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
-            1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
+            1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
           </emu-alg>
         </emu-clause>
 
         <emu-clause id="sup-temporal.calendar.prototype.monthdayfromfields">
-          <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_, _options_, _constructor_ )</h1>
+          <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_, _options_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.monthdayfromfields"></emu-xref>.</p>
           <p>
-            The `monthDayFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
             The following steps are taken:
           </p>
           <emu-alg>
@@ -1222,15 +1219,14 @@
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Let _result_ be a Record with [[Month]], [[Day]], and [[ReferenceISOYear]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
-            1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
+            1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
           </emu-alg>
         </emu-clause>
 
         <emu-clause id="sup-temporal.calendar.prototype.dateadd">
-          <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_, _options_, _constructor_ )</h1>
+          <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_, _options_ )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.dateadd"></emu-xref>.</p>
           <p>
-            The `dateAdd` method takes four arguments, _date_, _duration_, _options_, and _constructor_.
             The following steps are taken:
           </p>
           <emu-alg>
@@ -1244,7 +1240,7 @@
               1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
             1. Else,
               1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _date_, _duration_, _overflow_, and the value of _calendar_.[[Identifier]].
-            1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
 

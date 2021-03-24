@@ -153,21 +153,21 @@ describe('Calendar', () => {
   describe('Calendar.dateFromFields()', () => {
     it('throws on non-object fields', () => {
       ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.dateFromFields(bad, {}, Temporal.PlainDate), TypeError);
+        throws(() => iso.dateFromFields(bad, {}), TypeError);
       });
     });
   });
   describe('Calendar.monthDayFromFields()', () => {
     it('throws on non-object fields', () => {
       ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.monthDayFromFields(bad, {}, Temporal.PlainMonthDay), TypeError);
+        throws(() => iso.monthDayFromFields(bad, {}), TypeError);
       });
     });
   });
   describe('Calendar.yearMonthFromFields()', () => {
     it('throws on non-object fields', () => {
       ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.yearMonthFromFields(bad, {}, Temporal.PlainYearMonth), TypeError);
+        throws(() => iso.yearMonthFromFields(bad, {}), TypeError);
       });
     });
   });
@@ -354,12 +354,9 @@ describe('Calendar', () => {
   describe('Calendar.dateAdd() (negative duration)', () => {
     const duration = Temporal.Duration.from({ months: 1, weeks: 1 }).negated();
     it('casts date argument', () => {
-      equal(
-        `${iso.dateAdd(Temporal.PlainDateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.PlainDate)}`,
-        '1994-09-28'
-      );
-      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.PlainDate)}`, '1994-09-28');
-      equal(`${iso.dateAdd('1994-11-05', duration, {}, Temporal.PlainDate)}`, '1994-09-28');
+      equal(`${iso.dateAdd(Temporal.PlainDateTime.from('1994-11-05T08:15:30'), duration, {})}`, '1994-09-28');
+      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {})}`, '1994-09-28');
+      equal(`${iso.dateAdd('1994-11-05', duration, {})}`, '1994-09-28');
     });
   });
   describe('Calendar.dateUntil()', () => {

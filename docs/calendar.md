@@ -237,11 +237,11 @@ date.daysInYear; // => 385
 date.calendar.daysInYear(date); // same result, but calling the method directly
 ```
 
-### calendar.**dateFromFields**(_fields_: object, _options_: object, _constructor_: function) : Temporal.PlainDate
+### calendar.**dateFromFields**(_fields_: object, _options_: object) : Temporal.PlainDate
 
-### calendar.**yearMonthFromFields**(_fields_: object, _options_: object, _constructor_: function) : Temporal.PlainYearMonth
+### calendar.**yearMonthFromFields**(_fields_: object, _options_: object) : Temporal.PlainYearMonth
 
-### calendar.**monthDayFromFields**(_fields_: object, _options_: object, _constructor_: function) : Temporal.PlainMonthDay
+### calendar.**monthDayFromFields**(_fields_: object, _options_: object) : Temporal.PlainMonthDay
 
 The above three methods are similar.
 They provide a way to construct other Temporal objects from values in the calendar's date or time reckoning.
@@ -254,16 +254,13 @@ They provide a way to construct other Temporal objects from values in the calend
   - `overflow` (string): How to deal with out-of-range values in `fields`.
     Allowed values are `constrain`, and `reject`.
     The default is `constrain`.
-- `constructor` (function): The constructor function of the Temporal type to construct.
-  This is used when subclassing Temporal objects.
 
-**Returns:** a new object of the type of `constructor`.
+**Returns:** a new `Temporal.PlainDate`, `Temporal.PlainYearMonth`, or `Temporal.PlainMonthDay` object, respectively.
 
 None of the above methods need to be called directly except in specialized code.
 They are called indirectly when using `Temporal.PlainDate.from()`, `Temporal.PlainDateTime.from()`, `Temporal.PlainYearMonth.from()`, and `Temporal.PlainMonthDay.from()`.
 
-A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using `new constructor(...isoArgs)`.
-(This allows it to create custom subclasses of the built-in Temporal objects.)
+A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`, with `PlainYearMonth` and `PlainMonthDay` substituted for `PlainDate` as appropriate.
 
 For example:
 
@@ -279,12 +276,11 @@ date.toLocaleString('en-US', { calendar: 'hebrew' }); // => "18 Adar I 5779"
 // same result, but calling the method directly and using month index instead of month code:
 date = Temporal.Calendar.from('hebrew').dateFromFields(
   { year: 5779, month: 6, day: 18 },
-  { overflow: 'constrain' },
-  Temporal.PlainDate
+  { overflow: 'constrain' }
 );
 ```
 
-### calendar.**dateAdd**(_date_: Temporal.PlainDate | object | string, _duration_: Temporal.Duration | object | string, _options_: object, _constructor_: function) : Temporal.PlainDate
+### calendar.**dateAdd**(_date_: Temporal.PlainDate | object | string, _duration_: Temporal.Duration | object | string, _options_: object) : Temporal.PlainDate
 
 This method provides a way to do time arithmetic in the calendar's date reckoning.
 
@@ -298,18 +294,15 @@ This method provides a way to do time arithmetic in the calendar's date reckonin
   - `overflow` (string): How to deal with out-of-range values in the result of the addition or subtraction.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
-- `constructor` (function): The constructor function of the Temporal type to construct.
-  This is used when subclassing Temporal objects.
 
-**Returns:** a new object of the type of `constructor`.
+**Returns:** a new `Temporal.PlainDate` object.
 
 If `date` is not a `Temporal.PlainDate` object, or `duration` not a `Temporal.Duration` object, then they will be converted to one as if they were passed to `Temporal.PlainDate.from()` or `Temporal.Duration.from()`, respectively.
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using `add()` and `subtract()` of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
 
-A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using `new constructor(...isoArgs)`.
-(This allows it to create custom subclasses of the built-in Temporal objects.)
+A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`.
 
 For example:
 
@@ -326,8 +319,7 @@ date.toString(); // => 2020-06-28[u-ca=islamic]
 date = Temporal.Calendar.from('islamic').dateAdd(
   Temporal.PlainDate.from('2020-05-29'),
   Temporal.Duration.from({ months: 1 }),
-  { overflow: 'reject' },
-  Temporal.PlainDate
+  { overflow: 'reject' }
 );
 date.year; // => 1441
 date.month; // => 11

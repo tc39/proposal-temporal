@@ -667,7 +667,7 @@
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? ToTemporalYearMonthFields(_dateTime_, _fieldNames_).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_, %Temporal.PlainYearMonth%).
+        1. Return ? YearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -682,7 +682,7 @@
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_dateTime_, _fieldNames_).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%).
+        1. Return ? MonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -874,7 +874,7 @@
         The abstract operation InterpretTemporalDateTimeFields interprets the date/time fields in the object _fields_ using the given _calendar_, and returns a Record with the fields according to the ISO calendar.
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, %Temporal.PlainDate%, _options_).
+        1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
         1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timeResult_ be ? RegulateTime(_timeResult_.[[Hour]], _timeResult_.[[Minute]], _timeResult_.[[Second]], _timeResult_.[[Millisecond]], _timeResult_.[[Microsecond]], _timeResult_.[[Nanosecond]], _overflow_).
@@ -1074,7 +1074,7 @@
         1. Let _timeResult_ be ? AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]]).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_, %Temporal.PlainDate%).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
         1. Return the new Record {
             [[Year]]: _addedDate_.[[ISOYear]],
             [[Month]]: _addedDate_.[[ISOMonth]],

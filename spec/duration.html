@@ -941,7 +941,7 @@
           1. Let _untilOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"months"*).
           1. Repeat, while abs(_years_) &gt; 0,
-            1. Let _newRelativeTo_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_, %Temporal.PlainDate% »).
+            1. Let _newRelativeTo_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_ »).
             1. Let _untilResult_ be ? Call(_dateUntil_, _calendar_, « _relativeTo_, _newRelativeTo_, _untilOptions_ »).
             1. Let _oneYearMonths_ be ? Get(_untilResult_, *"months"*).
             1. Set _relativeTo_ to _newRelativeTo_.
@@ -1037,14 +1037,14 @@
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo, _oneMonth_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
-          1. Let _newRelativeTo_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_, %Temporal.PlainDate% »).
+          1. Let _newRelativeTo_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_ »).
           1. Let _untilResult_ be ? Call(_dateUntil_, _calendar_, « _relativeTo_, _newRelativeTo_, _untilOptions_ »).
           1. Let _oneYearMonths_ be ? Get(_untilResult_, *"months"*).
           1. Repeat, while abs(_months_) ≥ abs(_oneYearMonths_),
             1. Set _months_ to _months_ − _oneYearMonths_.
             1. Set _years_ to _years_ + _sign_.
             1. Set _relativeTo_ to _newRelativeTo_.
-            1. Set _newRelativeTo_ to ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_, %Temporal.PlainDate% »).
+            1. Set _newRelativeTo_ to ? Call(_dateAdd_, _calendar_, « _relativeTo_, _oneYear_, _addOptions_ »).
             1. Set _untilResult_ to ? Call(_dateUntil_, _calendar_, « _relativeTo_, _newRelativeTo_, _untilOptions_ »).
             1. Set _oneYearMonths_ to ? Get(_untilResult_, *"months"*).
         1. Else if _largestUnit_ is *"months"*, then
@@ -1108,8 +1108,8 @@
           1. Let _dateDuration2_ be ? CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
-          1. Let _intermediate_ be ? Call(_dateAdd_, _calendar_, « _datePart_, _dateDuration1_, _options_, %Temporal.PlainDate% »).
-          1. Let _end_ be ? Call(_dateAdd_, _calendar_, « _intermediate_, _dateDuration2_, _options_, %Temporal.PlainDate% »).
+          1. Let _intermediate_ be ? Call(_dateAdd_, _calendar_, « _datePart_, _dateDuration1_, _options_ »).
+          1. Let _end_ be ? Call(_dateAdd_, _calendar_, « _intermediate_, _dateDuration2_, _options_ »).
           1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"days"*, _largestUnit_).
           1. Let _differenceOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
           1. Perform ! CreateDataPropertyOrThrow(_differenceOptions_, *"largestUnit"*, _dateLargestUnit_).
@@ -1194,7 +1194,7 @@
       </p>
       <emu-alg>
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _later_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, _options_, %Temporal.PlainDate%).
+        1. Let _later_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, _options_).
         1. Let _days_ be ? DaysUntil(_relativeTo_, _later_).
         1. Let _dateTime_ be ? CreateTemporalDateTime(_later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], _relativeTo_.[[ISOHour]], _relativeTo_.[[ISOMinute]], _relativeTo_.[[ISOSecond]], _relativeTo_.[[ISOMillisecond]], _relativeTo_.[[ISOMicrosecond]], _relativeTo_.[[ISONanosecond]], _relativeTo_.[[Calendar]]).
         1. Return the new Record {
@@ -1245,14 +1245,14 @@
         1. Let _remainder_ be *undefined*.
         1. If _unit_ is *"years"*, then
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsDuration_, _options_, %Temporal.PlainDate%).
+          1. Let _yearsLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsDuration_, _options_ »).
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.PlainDate%).
+          1. Let _yearsMonthsWeeksLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_ »).
           1. Let _monthsWeeksInDays_ be ? DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_..
           1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
-          1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, _options_, %Temporal.PlainDate%).
+          1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, _options_).
           1. Let _untilOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"years"*).
           1. Let _timePassed_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _daysLater_, _untilOptions_).
@@ -1260,7 +1260,7 @@
           1. Set _years_ to _years_ + _yearsPassed_.
           1. Let _oldRelativeTo_ be _relativeTo_.
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _options_, %Temporal.PlainDate%).
+          1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _options_).
           1. Let _daysPassed_ be ? DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
           1. Let _sign_ be ! Sign(_days_).
@@ -1274,9 +1274,9 @@
           1. Set _months_, _weeks_, and _days_ to 0.
         1. Else if _unit_ is *"months"*, then
           1. Let _yearsMonths_ be ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonths_, _options_, %Temporal.PlainDate% »).
+          1. Let _yearsMonthsLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonths_, _options_ »).
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_, %Temporal.PlainDate% »).
+          1. Let _yearsMonthsWeeksLater_ be ? Call(_dateAdd_, _calendar_, « _relativeTo_, _yearsMonthsWeeks_, _options_ »).
           1. Let _weeksInDays_ be ? DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.

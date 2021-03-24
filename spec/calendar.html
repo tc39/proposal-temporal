@@ -74,10 +74,10 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateadd" aoid="CalendarDateAdd">
-      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_, _constructor_ [ , _options_ ] )</h1>
+      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_ [ , _options_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Let _addedDate_ be ? Invoke( _calendar_, *"dateAdd"*, « _date_, _duration_, _options_, _constructor_ »).
+        1. Let _addedDate_ be ? Invoke( _calendar_, *"dateAdd"*, « _date_, _duration_, _options_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
       </emu-alg>
@@ -283,33 +283,33 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-datefromfields" aoid="DateFromFields">
-      <h1>DateFromFields ( _calendar_, _fields_, _constructor_, _options_ )</h1>
+      <h1>DateFromFields ( _calendar_, _fields_, _options_ )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_, _constructor_ »).
+        1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthfromfields" aoid="YearMonthFromFields">
-      <h1>YearMonthFromFields ( _calendar_, _fields_, _constructor_, _options_ )</h1>
+      <h1>YearMonthFromFields ( _calendar_, _fields_, _options_ )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_, _constructor_ »).
+        1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-monthdayfromfields" aoid="MonthDayFromFields">
-      <h1>MonthDayFromFields ( _calendar_, _fields_, _constructor_, _options_ )</h1>
+      <h1>MonthDayFromFields ( _calendar_, _fields_, _options_ )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_, _constructor_ »).
+        1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.
       </emu-alg>
@@ -699,13 +699,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.datefromfields">
-      <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_, _options_, _constructor_ )</h1>
+      <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_, _options_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dateFromFields` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dateFromFields` method is used.
       </p>
       <p>
-        The `dateFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -715,18 +714,17 @@
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _result_ be ? ISODateFromFields(_fields_, _options_).
-        1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.yearmonthfromfields">
-      <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_, _options_, _constructor_ )</h1>
+      <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_, _options_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `yearMonthFromFields` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `yearMonthFromFields` method is used.
       </p>
       <p>
-        The `yearMonthFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -736,18 +734,17 @@
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
-        1. Return ? CreateTemporalYearMonthFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
+        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.monthdayfromfields">
-      <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_, _options_, _constructor_ )</h1>
+      <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_, _options_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `monthDayFromFields` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `monthDayFromFields` method is used.
       </p>
       <p>
-        The `monthDayFromFields` method takes three arguments, _fields_, _options_, and _constructor_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -757,18 +754,17 @@
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _options_).
-        1. Return ? CreateTemporalMonthDayFromStatic(_constructor_, _result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
+        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dateadd">
-      <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_, _options_, _constructor_ )</h1>
+      <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_, _options_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dateAdd` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dateAdd` method is used.
       </p>
       <p>
-        The `dateAdd` method takes four arguments, _date_, _duration_, _options_, and _constructor_.
         The following steps are taken:
       </p>
       <emu-alg>
@@ -780,7 +776,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _overflow_).
-        1. Return ? CreateTemporalDateFromStatic(_constructor_, _result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 

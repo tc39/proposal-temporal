@@ -152,7 +152,7 @@
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%, _options_).
+        1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -245,7 +245,7 @@
         1. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).
         1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
-        1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_, %Temporal.PlainDate%).
+        1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -357,7 +357,7 @@
           1. Let _year_ be ? Get(_fields_, *"year"*).
           1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _referenceISOYear_).
-          1. Return ? MonthDayFromFields(_calendar_, _fields_, %Temporal.PlainMonthDay%, _options_).
+          1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
@@ -369,7 +369,7 @@
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, *undefined*).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _referenceISOYear_, _calendar_).
         1. Let _canonicalMonthDayOptions_ be ! OrdinaryObjectCreate(%Object.prototype%).
-        1. Return ? MonthDayFromFields(_calendar_, _result_, %Temporal.PlainMonthDay%, _canonicalMonthDayOptions_).
+        1. Return ? MonthDayFromFields(_calendar_, _result_, _canonicalMonthDayOptions_).
       </emu-alg>
     </emu-clause>
 
@@ -385,18 +385,6 @@
         1. Set _object_.[[Calendar]] to _calendar_.
         1. Set _object_.[[ISOYear]] to _referenceISOYear_.
         1. Return _object_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-createtemporalmonthdayfromstatic" aoid="CreateTemporalMonthDayFromStatic">
-      <h1>CreateTemporalMonthDayFromStatic ( _constructor_, _month_, _day_, _referenceISOYear_ )</h1>
-      <emu-alg>
-        1. Assert: ! ValidateISODate(_referenceISOYear_, _month_, _day_) is *true*.
-        1. If ! IsConstructor(_constructor_) is *false*, then
-          1. Throw a *TypeError* exception.
-        1. Let _result_ be ? Construct(_constructor_, « _month_, _day_, _referenceISOYear_ »).
-        1. Perform ? RequireInternalSlot(_result_, [[InitializedTemporalMonthDay]]).
-        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
