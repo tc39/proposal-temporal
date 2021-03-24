@@ -178,7 +178,22 @@ Examples of calendar-sensitive operations include:</p>
 </ul>
 <p>In other words, units of time greater than a solar day are inherently dependent on the calendar system.
 The only universal solution to date arithmetic would be to omit the concept of months and years, but a date API without months and years would be insufficient for many use cases.</p>
-<h3 id="intl-first-design"><a class="heading-link" href="#intl-first-design"></a>Intl-First Design</h3><p>ECMAScript supports internationalization (i18n) as a primary feature. The i18n subcommittee, TC39-TG2, evangelizes &quot;Intl-first design.&quot;
+<h3 id="why-are-calendars-a-higher-priority-for-ecmascript-vs-other-platforms"><a class="heading-link" href="#why-are-calendars-a-higher-priority-for-ecmascript-vs-other-platforms"></a>Why Are Calendars a Higher Priority for ECMAScript vs. Other Platforms?</h3><p>Problems integrating calendar systems into Temporal are obvious, especially the &quot;Unexpected Calendar Problem&quot; (<a href="#the-unexpected-calendar-problem">see below</a>), where code breaks when presented with a calendar it wasn’t designed to handle.
+What&#39;s less clear are the benefits of integrating calendars in Temporal that can outweigh those problems.
+One way to understand these benefits is to highlight differences between the needs of the ECMAScript ecosystem compared to other platforms like Java and .NET which have taken a different approach to handling calendars.
+Some of these differences include:</p>
+<ul>
+<li>As is well described in the <a href="https://github.com/ThreeTen/threeten/wiki/Multi-calendar-system">notes of Java&#39;s design of its date/time API</a>, most code in enterprise apps uses the ISO calendar.
+But relative to Java/.NET, the ECMAScript ecosystem&#39;s center of gravity includes relatively more consumer and in-browser use cases.
+Those use cases are where non-ISO calendar usage is concentrated.</li>
+<li>Usage of non-ISO calendars is heaviest in emerging markets. Given the rapid growth of smartphone adoption among the Next Billion Users, we expect increased demand for locally-specific tech in these markets, which in turn will drive more usage of non-ISO calendars.</li>
+<li>The ECMAScript standard library is 1-2 orders of magnitude smaller than Java and .NET, which often leads to ECMAScript apps using 100+ OSS libraries (including transitive dependencies).
+Because i18n in ECMAScript requires both platform <em>and</em> library support, ECMAScript API patterns often nudge library developers to write globalized code, even if it requires somewhat more work.</li>
+</ul>
+<p>Choosing the current design was not easy, because it will cause more bugs in ISO-only software than other possible solutions.
+But, given global trends in economic growth, population growth, and tech adoption, the consensus of this proposal&#39;s champions is that the current design is a reasonable tradeoff for long-term success in an increasingly global ECMAScript developer community.</p>
+<h3 id="intl-first-design"><a class="heading-link" href="#intl-first-design"></a>Intl-First Design</h3><p>ECMAScript supports internationalization (i18n) as a primary feature.
+The i18n subcommittee, TC39-TG2, evangelizes &quot;Intl-first design.&quot;
 Two principles of Intl-first design are (1) language- and region-dependent operations should be data-driven, and (2) user preferences should be an explicit input to APIs.
 These principles help ensure that APIs work well for developers targeting a wide range of end-users around the world.</p>
 <p>Temporal applies these design principles by abstracting calendar-specific logic and by making the calendar an explicit choice when constructing objects.
@@ -264,8 +279,10 @@ For example, shortcut methods on the <code>Temporal.now</code> object are named 
 Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.</li>
 </ul>
 <h4 id="validating-or-coercing-inputs">Validating or Coercing Inputs</h4>
-<p>Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers. Some developers won&#39;t do this work.
-Sometimes this will be because they don&#39;t know about or don&#39;t understand non-ISO calendars. In other cases, developers won&#39;t bother to follow best practices because they expect to only be dealing with ISO-calendar data.
+<p>Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers.
+Some developers won&#39;t do this work.
+Sometimes this will be because they don&#39;t know about or don&#39;t understand non-ISO calendars.
+In other cases, developers won&#39;t bother to follow best practices because they expect to only be dealing with ISO-calendar data.
 Even if a developer conscientiously follows best practices in their own code, most ECMAScript apps have many library dependencies that may not do so.
 Or they may have to interoperate with existing code that cannot be changed due to time constraints.</p>
 <p>In these situations, the developer should ensure that inputs to that code are either (a) validated to ensure the input is in the expected calendar system, or (b) coerced to that system. Whether to validate or coerce depends on the use case.</p>
