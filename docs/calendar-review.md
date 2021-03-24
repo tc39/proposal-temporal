@@ -47,9 +47,27 @@ Examples of calendar-sensitive operations include:
 In other words, units of time greater than a solar day are inherently dependent on the calendar system.
 The only universal solution to date arithmetic would be to omit the concept of months and years, but a date API without months and years would be insufficient for many use cases.
 
+### Why Are Calendars a Higher Priority for ECMAScript vs. Other Platforms?
+
+Problems integrating calendar systems into Temporal are obvious, especially the "Unexpected Calendar Problem" ([see below](#the-unexpected-calendar-problem)), where code breaks when presented with a calendar it wasn’t designed to handle.
+What's less clear are the benefits of integrating calendars in Temporal that can outweigh those problems.
+One way to understand these benefits is to highlight differences between the needs of the ECMAScript ecosystem compared to other platforms like Java and .NET which have taken a different approach to handling calendars.
+Some of these differences include:
+
+- As is well described in the [notes of Java's design of its date/time API](https://github.com/ThreeTen/threeten/wiki/Multi-calendar-system), most code in enterprise apps uses the ISO calendar.
+  But relative to Java/.NET, the ECMAScript ecosystem's center of gravity includes relatively more consumer and in-browser use cases.
+  Those use cases are where non-ISO calendar usage is concentrated.
+- Usage of non-ISO calendars is heaviest in emerging markets. Given the rapid growth of smartphone adoption among the Next Billion Users, we expect increased demand for locally-specific tech in these markets, which in turn will drive more usage of non-ISO calendars.
+- The ECMAScript standard library is 1-2 orders of magnitude smaller than Java and .NET, which often leads to ECMAScript apps using 100+ OSS libraries (including transitive dependencies).
+  Because i18n in ECMAScript requires both platform _and_ library support, ECMAScript API patterns often nudge library developers to write globalized code, even if it requires somewhat more work.
+
+Choosing the current design was not easy, because it will cause more bugs in ISO-only software than other possible solutions.
+But, given global trends in economic growth, population growth, and tech adoption, the consensus of this proposal's champions is that the current design is a reasonable tradeoff for long-term success in an increasingly global ECMAScript developer community.
+
 ### Intl-First Design
 
-ECMAScript supports internationalization (i18n) as a primary feature. The i18n subcommittee, TC39-TG2, evangelizes "Intl-first design."
+ECMAScript supports internationalization (i18n) as a primary feature.
+The i18n subcommittee, TC39-TG2, evangelizes "Intl-first design."
 Two principles of Intl-first design are (1) language- and region-dependent operations should be data-driven, and (2) user preferences should be an explicit input to APIs.
 These principles help ensure that APIs work well for developers targeting a wide range of end-users around the world.
 
@@ -177,8 +195,10 @@ For example:
 
 #### Validating or Coercing Inputs
 
-Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers. Some developers won't do this work.
-Sometimes this will be because they don't know about or don't understand non-ISO calendars. In other cases, developers won't bother to follow best practices because they expect to only be dealing with ISO-calendar data.
+Even though Temporal makes it straightforward to write calendar-safe code, doing so still requires work from developers.
+Some developers won't do this work.
+Sometimes this will be because they don't know about or don't understand non-ISO calendars.
+In other cases, developers won't bother to follow best practices because they expect to only be dealing with ISO-calendar data.
 Even if a developer conscientiously follows best practices in their own code, most ECMAScript apps have many library dependencies that may not do so.
 Or they may have to interoperate with existing code that cannot be changed due to time constraints.
 
