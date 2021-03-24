@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 ---*/
 
 verifyProperty(Temporal.Calendar.prototype.dateFromFields, "length", {
-  value: 3,
+  value: 2,
   writable: false,
   enumerable: false,
   configurable: true,

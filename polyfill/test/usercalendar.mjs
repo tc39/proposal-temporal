@@ -25,32 +25,20 @@ describe('Userland calendar', () => {
       toString() {
         return 'two-based';
       }
-      dateFromFields(fields, options, constructor) {
+      dateFromFields(fields, options) {
         let { year, month, monthCode, day } = fields;
         if (month === undefined) month = +monthCode.slice(1);
-        return super.dateFromFields(
-          { year, monthCode: `M${(month - 1).toString().padStart(2, '0')}`, day },
-          options,
-          constructor
-        );
+        return super.dateFromFields({ year, monthCode: `M${(month - 1).toString().padStart(2, '0')}`, day }, options);
       }
-      yearMonthFromFields(fields, options, constructor) {
+      yearMonthFromFields(fields, options) {
         let { year, month, monthCode } = fields;
         if (month === undefined) month = +monthCode.slice(1);
-        return super.yearMonthFromFields(
-          { year, monthCode: `M${(month - 1).toString().padStart(2, '0')}` },
-          options,
-          constructor
-        );
+        return super.yearMonthFromFields({ year, monthCode: `M${(month - 1).toString().padStart(2, '0')}` }, options);
       }
-      monthDayFromFields(fields, options, constructor) {
+      monthDayFromFields(fields, options) {
         let { month, monthCode, day } = fields;
         if (month === undefined) month = +monthCode.slice(1);
-        return super.monthDayFromFields(
-          { monthCode: `M${(month - 1).toString().padStart(2, '0')}`, day },
-          options,
-          constructor
-        );
+        return super.monthDayFromFields({ monthCode: `M${(month - 1).toString().padStart(2, '0')}`, day }, options);
       }
       month(date) {
         return date.getISOFields().isoMonth + 1;
@@ -171,26 +159,26 @@ describe('Userland calendar', () => {
       toString() {
         return 'decimal';
       },
-      dateFromFields(fields, options, constructor) {
+      dateFromFields(fields, options) {
         const { overflow = 'constrain' } = options ? options : {};
         let { month, monthCode } = fields;
         if (month === undefined) month = +monthCode.slice(1);
         const isoDate = decimalToISO(fields.year, month, fields.day, 0, 0, 0, overflow);
-        return new constructor(isoDate.year, isoDate.month, isoDate.day, this);
+        return new Temporal.PlainDate(isoDate.year, isoDate.month, isoDate.day, this);
       },
-      yearMonthFromFields(fields, options, constructor) {
+      yearMonthFromFields(fields, options) {
         const { overflow = 'constrain' } = options ? options : {};
         let { month, monthCode } = fields;
         if (month === undefined) month = +monthCode.slice(1);
         const isoDate = decimalToISO(fields.year, month, 1, 0, 0, 0, overflow);
-        return new constructor(isoDate.year, isoDate.month, this, isoDate.day);
+        return new Temporal.PlainYearMonth(isoDate.year, isoDate.month, this, isoDate.day);
       },
-      monthDayFromFields(fields, options, constructor) {
+      monthDayFromFields(fields, options) {
         const { overflow = 'constrain' } = options ? options : {};
         let { month, monthCode } = fields;
         if (month === undefined) month = +monthCode.slice(1);
         const isoDate = decimalToISO(0, month, fields.day, 0, 0, 0, overflow);
-        return new constructor(isoDate.month, isoDate.day, this, isoDate.year);
+        return new Temporal.PlainMonthDay(isoDate.month, isoDate.day, this, isoDate.year);
       },
       year(date) {
         return isoToDecimal(date).year;
@@ -312,20 +300,20 @@ describe('Userland calendar', () => {
         const month = fields.month || +fields.monthCode.slice(1);
         return `M${((fields.season - 1) * 3 + month).toString().padStart(2, '0')}`;
       }
-      dateFromFields(fields, options, constructor) {
+      dateFromFields(fields, options) {
         const monthCode = this._isoMonthCode(fields);
         delete fields.month;
-        return super.dateFromFields({ ...fields, monthCode }, options, constructor);
+        return super.dateFromFields({ ...fields, monthCode }, options);
       }
-      yearMonthFromFields(fields, options, constructor) {
+      yearMonthFromFields(fields, options) {
         const monthCode = this._isoMonthCode(fields);
         delete fields.month;
-        return super.yearMonthFromFields({ ...fields, monthCode }, options, constructor);
+        return super.yearMonthFromFields({ ...fields, monthCode }, options);
       }
-      monthDayFromFields(fields, options, constructor) {
+      monthDayFromFields(fields, options) {
         const monthCode = this._isoMonthCode(fields);
         delete fields.month;
-        return super.monthDayFromFields({ ...fields, monthCode }, options, constructor);
+        return super.monthDayFromFields({ ...fields, monthCode }, options);
       }
       fields(fields) {
         fields = fields.slice();
@@ -446,17 +434,17 @@ describe('Userland calendar', () => {
         }
         return year;
       }
-      dateFromFields(fields, options, constructor) {
+      dateFromFields(fields, options) {
         const isoYear = this._validateFields(fields);
-        return super.dateFromFields({ ...fields, year: isoYear }, options, constructor);
+        return super.dateFromFields({ ...fields, year: isoYear }, options);
       }
-      yearMonthFromFields(fields, options, constructor) {
+      yearMonthFromFields(fields, options) {
         const isoYear = this._validateFields(fields);
-        return super.yearMonthFromFields({ ...fields, year: isoYear }, options, constructor);
+        return super.yearMonthFromFields({ ...fields, year: isoYear }, options);
       }
-      monthDayFromFields(fields, options, constructor) {
+      monthDayFromFields(fields, options) {
         const isoYear = this._validateFields(fields);
-        return super.monthDayFromFields({ ...fields, year: isoYear }, options, constructor);
+        return super.monthDayFromFields({ ...fields, year: isoYear }, options);
       }
       fields(fields) {
         fields = fields.slice();

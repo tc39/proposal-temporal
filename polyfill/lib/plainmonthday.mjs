@@ -2,7 +2,7 @@
 
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 const ObjectAssign = Object.assign;
@@ -90,10 +90,7 @@ export class PlainMonthDay {
     fields = ES.CalendarMergeFields(calendar, fields, props);
 
     options = ES.NormalizeOptionsObject(options);
-
-    const result = ES.MonthDayFromFields(calendar, fields, PlainMonthDay, options);
-    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
-    return result;
+    return ES.MonthDayFromFields(calendar, fields, options);
   }
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
@@ -138,9 +135,7 @@ export class PlainMonthDay {
       }
     });
     ObjectAssign(fields, ES.PrepareTemporalFields(item, entries));
-
-    const Date = GetIntrinsic('%Temporal.PlainDate%');
-    return ES.DateFromFields(calendar, fields, Date);
+    return ES.DateFromFields(calendar, fields);
   }
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');

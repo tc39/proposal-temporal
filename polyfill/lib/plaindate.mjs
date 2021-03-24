@@ -144,7 +144,7 @@ export class PlainDate {
 
     options = ES.NormalizeOptionsObject(options);
 
-    return ES.DateFromFields(calendar, fields, PlainDate, options);
+    return ES.DateFromFields(calendar, fields, options);
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -161,7 +161,7 @@ export class PlainDate {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
-    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, PlainDate);
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -173,7 +173,7 @@ export class PlainDate {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years: -years, months: -months, weeks: -weeks, days: -days };
-    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options, PlainDate);
+    return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -392,19 +392,17 @@ export class PlainDate {
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    return ES.YearMonthFromFields(calendar, fields, YearMonth);
+    return ES.YearMonthFromFields(calendar, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-    return ES.MonthDayFromFields(calendar, fields, MonthDay);
+    return ES.MonthDayFromFields(calendar, fields);
   }
   getISOFields() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

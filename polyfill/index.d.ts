@@ -1,7 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
   type RoundingMode = 'halfExpand' | 'ceil' | 'trunc' | 'floor';
-  type ConstructorOf<T> = new (...args: unknown[]) => T;
 
   /**
    * Options for assigning fields using `with()` or entire objects with
@@ -659,24 +658,20 @@ export namespace Temporal {
     ): boolean;
     dateFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainDate>
+      options: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainYearMonth>
+      options: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainMonthDay>
+      options: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd?(
       date: Temporal.PlainDate | DateLike | string,
       duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions,
-      constructor: ConstructorOf<Temporal.PlainDate>
+      options: ArithmeticOptions
     ): Temporal.PlainDate;
     dateUntil?(
       one: Temporal.PlainDate | DateLike | string,
@@ -746,24 +741,20 @@ export namespace Temporal {
     ): boolean;
     dateFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainDate>
+      options: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainYearMonth>
+      options: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions,
-      constructor: ConstructorOf<Temporal.PlainMonthDay>
+      options: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd(
       date: Temporal.PlainDate | DateLike | string,
       duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions,
-      constructor: ConstructorOf<Temporal.PlainDate>
+      options: ArithmeticOptions
     ): Temporal.PlainDate;
     dateUntil(
       one: Temporal.PlainDate | DateLike | string,

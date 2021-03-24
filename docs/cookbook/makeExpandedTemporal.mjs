@@ -76,8 +76,10 @@ class ExpandedPlainDate extends Temporal.PlainDate {
     if (item instanceof Temporal.PlainDate) {
       return this._convert(item, BigInt(item.year));
     }
-    const calendar = Temporal.Calendar.from('iso8601');
-    return calendar.dateFromFields(item, undefined, ExpandedPlainDate);
+    const expandedYear = BigInt(item.year);
+    const isoYear = isLeapYear(expandedYear) ? 1972 : 1970;
+    const result = super.from({ ...item, year: isoYear });
+    return this._convert(result, expandedYear);
   }
 
   // This overrides the .year property to return the expanded year instead. If
@@ -130,8 +132,10 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
     if (item instanceof Temporal.PlainDateTime) {
       return this._convert(item, BigInt(item.year));
     }
-    const calendar = Temporal.Calendar.from('iso8601');
-    return calendar.dateFromFields(item, undefined, ExpandedPlainDateTime);
+    const expandedYear = BigInt(item.year);
+    const isoYear = isLeapYear(expandedYear) ? 1972 : 1970;
+    const result = super.from({ ...item, year: isoYear });
+    return this._convert(result, expandedYear);
   }
 
   get year() {
