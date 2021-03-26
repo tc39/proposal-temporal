@@ -251,7 +251,7 @@
 
       <ins class="block">
       <emu-table id="table-temporal-patterns">
-        <emu-caption>Supported fields for temporal patterns</emu-caption>
+        <emu-caption>Supported fields for Temporal patterns</emu-caption>
         <table class="real-table">
           <thead>
             <tr>
@@ -549,7 +549,7 @@
             1. Let _z_ be _y_<ins>.[[epochNanoseconds]]</ins>.
             1. <ins>Let _pattern_ be _y_.[[pattern]].</ins>
           1. Let _patternParts_ be PartitionPattern(_pattern_).
-          1. Let _partResult_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_ ,</ins> _patternParts_, _z_, _rangePattern_).
+          1. Let _partResult_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_,</ins> _patternParts_, _z_, _rangePattern_).
           1. For each element _r_ in _partResult_, do
             1. Set _r_.[[Source]] to _source_.
           1. Add all elements in _partResult_ to _result_ in order.
@@ -618,7 +618,7 @@
       <h1>GetDateTimeFormatPattern ( _matcher_, _opt_, _formats_, _hc_ )</h1>
 
       <p>
-         The abstract operation GetDateTimeFormatPattern accepts the arguments_matcher_ (which must be either *"basic"* or *"best fit"*), _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
+         The abstract operation GetDateTimeFormatPattern accepts the arguments _matcher_ (which must be either *"basic"* or *"best fit"*), _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
@@ -649,7 +649,7 @@
       </p>
 
       <emu-alg>
-      1. If IsTemporalObject(_x_) is *true*, then
+      1. If ! IsTemporalObject(_x_) is *true*, then
         1. If _x_ has an [[InitializedTemporalDate]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].
           1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
@@ -703,14 +703,16 @@
       1. Else,
         1. Let _pattern_ be _dateTimeFormat_.[[Pattern]].
         1. If _x_ is *undefined*, then
-          1. Set _x_ to Call(%Date.now%, *undefined*).
+          1. Set _x_ to ! Call(%Date.now%, *undefined*).
         1. Else,
           1. Set _x_ to ? ToNumber(_x_).
         1. Set _x_ to TimeClip(_x_).
         1. If _x_ is *NaN*, throw a *RangeError* exception.
         1. Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.
-      1. Let _result_ be the Record { [[pattern]]: _pattern_, [[epochNanoseconds]]: _epochNanoseconds_ }.
-      1. Return _result_.
+      1. Return the new Record {
+          [[pattern]]: _pattern_,
+          [[epochNanoseconds]]: _epochNanoseconds_
+        }.
       </emu-alg>
     </emu-clause>
     </ins>
