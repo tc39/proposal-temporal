@@ -107,9 +107,9 @@ function formatToParts(datetime, ...rest) {
 }
 
 function formatRange(a, b) {
-  if (ES.Type(a) === 'Object' && ES.Type(b) === 'Object') {
-    if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
-      throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
+  if (isTemporalObject(a) || isTemporalObject(b)) {
+    if (!sameTemporalType(a, b)) {
+      throw new TypeError('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
     const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
@@ -125,9 +125,9 @@ function formatRange(a, b) {
 }
 
 function formatRangeToParts(a, b) {
-  if (ES.Type(a) === 'Object' && ES.Type(b) === 'Object') {
-    if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) {
-      throw new TypeError('Intl.DateTimeFormat accepts two values of the same type');
+  if (isTemporalObject(a) || isTemporalObject(b)) {
+    if (!sameTemporalType(a, b)) {
+      throw new TypeError('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
     const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
     const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
@@ -255,6 +255,30 @@ function hasDateOptions(options) {
 
 function hasTimeOptions(options) {
   return 'hour' in options || 'minute' in options || 'second' in options;
+}
+
+function isTemporalObject(obj) {
+  return (
+    ES.IsTemporalDate(obj) ||
+    ES.IsTemporalTime(obj) ||
+    ES.IsTemporalDateTime(obj) ||
+    ES.IsTemporalZonedDateTime(obj) ||
+    ES.IsTemporalYearMonth(obj) ||
+    ES.IsTemporalMonthDay(obj) ||
+    ES.IsTemporalInstant(obj)
+  );
+}
+
+function sameTemporalType(x, y) {
+  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
+  if (ES.IsTemporalTime(x) && !ES.IsTemporalTime(y)) return false;
+  if (ES.IsTemporalDate(x) && !ES.IsTemporalDate(y)) return false;
+  if (ES.IsTemporalDateTime(x) && !ES.IsTemporalDateTime(y)) return false;
+  if (ES.IsTemporalZonedDateTime(x) && !ES.IsTemporalZonedDateTime(y)) return false;
+  if (ES.IsTemporalYearMonth(x) && !ES.IsTemporalYearMonth(y)) return false;
+  if (ES.IsTemporalMonthDay(x) && !ES.IsTemporalMonthDay(y)) return false;
+  if (ES.IsTemporalInstant(x) && !ES.IsTemporalInstant(y)) return false;
+  return true;
 }
 
 function extractOverrides(temporalObj, main) {
