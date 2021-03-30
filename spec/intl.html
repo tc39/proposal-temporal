@@ -165,29 +165,19 @@
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
         1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[TimeStyle]] to _timeStyle_.
-        1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
-          1. For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, do
-            1. Let _prop_ be the name given in the Property column of the row.
-            1. Let _p_ be _opt_.[[&lt;_prop_&gt;]].
-            1. If _p_ is not *undefined*, then
-              1. Throw a *TypeError* exception.
-          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).
-          1. <mark>TODO: figure out how to deal with Temporal objects here.</mark>
-        1. Else,
-          1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
+        1. <del>If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then</del>
+          1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, do</del>
+            1. <del>Let _prop_ be the name given in the Property column of the row.</del>
+            1. <del>Let _p_ be _opt_.[[&lt;_prop_&gt;]].</del>
+            1. <del>If _p_ is not *undefined*, then</del>
+              1. <del>Throw a *TypeError* exception.</del>
+          1. <del>Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).</del>
+        1. <del>Else,</del>
+          1. <del>Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].</del>
           1. <del>If _matcher_ is *"basic"*, then</del>
             1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
           1. <del>Else,</del>
             1. <del>Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).</del>
-          1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
-          1. <ins>Let _needDefaults_ be *true*.</ins>
-          1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
-            1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
-              1. <ins>Set _needDefaults_ to *false*.</ins>
-          1. <ins>If _needDefaults_ is *true*, then</ins>
-            1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
-              1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
-          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_matcher_, _expandedOptions_, _formats_, _hc_).</ins>
         1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do</del>
           1. <del>Let _prop_ be the name given in the Property column of the row.</del>
           1. <del>Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].</del>
@@ -221,6 +211,15 @@
           1. <del>Else,</del>
             1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
             1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
+        1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
+        1. <ins>Let _needDefaults_ be *true*.</ins>
+        1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+          1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
+            1. <ins>Set _needDefaults_ to *false*.</ins>
+        1. <ins>If _needDefaults_ is *true*, then</ins>
+          1. <ins>For each element _field_ of « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
+            1. <ins>Set _expandedOptions_.[[&lt;_field_&gt;]] to *"numeric"*.</ins>
+        1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_dateStyle_, _timeStyle_, _matcher_, _expandedOptions_, _dataLocaleData_, _hc_).</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>_bestFormat_.[[pattern]]</ins>.
         1. Set _dateTimeFormat_.[[RangePatterns]] to <del>_rangePatterns_</del><ins>_bestFormat_.[[rangePatterns]]</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
@@ -631,17 +630,28 @@
 
     <ins class="block">
     <emu-clause id="sec-temporal-getdatetimeformatpattern" aoid="GetDateTimeFormatPattern">
-      <h1>GetDateTimeFormatPattern ( _matcher_, _opt_, _formats_, _hc_ )</h1>
+      <h1>GetDateTimeFormatPattern ( _dateStyle_, _timeStyle_, _matcher_, _opt_, _dataLocaleData_, _hc_ )</h1>
 
       <p>
-         The abstract operation GetDateTimeFormatPattern accepts the arguments _matcher_ (which must be either *"basic"* or *"best fit"*), _opt_ (which must be a record), _formats_ (a List of records), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, and *"h24"*). It returns one of the records from _formats_. This abstract operation functions as follows:
+         The abstract operation GetDateTimeFormatPattern accepts the arguments _dateStyle_ (one of *"full"*, *"long"*, *"medium"*, or *"short"*), _timeStyle_ (one of the values allowed for _dateStyle_), _matcher_ (which must be either *"basic"* or *"best fit"*), _opt_ (a Record with fields from the Property column of <emu-xref href="#table-datetimeformat-components"></emu-xref>), _dataLocaleData_ (a Record of the same type as [[LocaleData]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>), and _hc_ (one of *"h11"*, *"h12"*, *"h23"*, or *"h24"*).
+         It returns a Record of the type contained by the List [[LocaleData]].[[&lt;_locale_&gt;]].[[formats]].[[&lt;_calendar_&gt;]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.
+         This abstract operation functions as follows:
       </p>
 
       <emu-alg>
-        1. If _matcher_ is *"basic"*, then
-          1. Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).
+        1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
+          1. For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, do
+            1. Let _prop_ be the name given in the Property column of the row.
+            1. Let _p_ be _opt_.[[&lt;_prop_&gt;]].
+            1. If _p_ is not *undefined*, then
+              1. Throw a *TypeError* exception.
+          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).
         1. Else,
-          1. Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).
+          1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
+          1. If _matcher_ is *"basic"*, then
+            1. Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).
+          1. Else,
+            1. Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).
         1. If _bestFormat_.[[hour]] is not *undefined*, then
           1. If _hc_ is *"h11"* or *"h12"*, then
             1. Set _bestFormat_.[[pattern]] to _bestFormat_.[[pattern12]].
