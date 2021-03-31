@@ -290,7 +290,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDate_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
         1. Return ? YearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
@@ -305,7 +305,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
-        1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDate_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
         1. Return ? MonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
@@ -384,7 +384,7 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Let _partialDate_ be ? PreparePartialTemporalFields(_temporalDateLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _fields_ be ? ToTemporalDateFields(_temporalDate_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialDate_).
         1. Return ? DateFromFields(_calendar_, _fields_, _options_).
       </emu-alg>
@@ -677,7 +677,7 @@
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-          1. Let _fields_ be ? ToTemporalDateFields(_item_, _fieldNames_).
+          1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Return ? DateFromFields(_calendar_, _fields_, _options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
@@ -756,13 +756,6 @@
             [[Weeks]]: _weeks_ × _sign_,
             [[Days]]: _days_ × _sign_
           }.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaldatefields" aoid="ToTemporalDateFields">
-      <h1>ToTemporalDateFields ( _temporalDateLike_, _fieldNames_ )</h1>
-      <emu-alg>
-        1. Return ? PrepareTemporalFields(_temporalDateLike_, _fieldNames_, «»).
       </emu-alg>
     </emu-clause>
 
