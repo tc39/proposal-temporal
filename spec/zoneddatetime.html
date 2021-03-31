@@ -575,6 +575,7 @@
         1. Append *"timeZone"* to _fieldNames_.
         1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"timeZone"* »).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"timeZone"* »).
         1. Let _offsetString_ be ? Get(_partialZonedDateTime_, *"offset"*).
         1. If _offsetString_ is not *undefined*, then
           1. Perform ? Set(_fields_, *"offset"*, _offsetString_).
