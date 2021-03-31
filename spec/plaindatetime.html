@@ -875,8 +875,8 @@
         The abstract operation InterpretTemporalDateTimeFields interprets the date/time fields in the object _fields_ using the given _calendar_, and returns a Record with the fields according to the ISO calendar.
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
         1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
+        1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timeResult_ be ? RegulateTime(_timeResult_.[[Hour]], _timeResult_.[[Minute]], _timeResult_.[[Second]], _timeResult_.[[Millisecond]], _timeResult_.[[Microsecond]], _timeResult_.[[Nanosecond]], _overflow_).
         1. Return the new Record {
