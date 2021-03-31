@@ -150,7 +150,7 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"* »).
         1. Let _partialMonthDay_ be ? PreparePartialTemporalFields(_temporalMonthDayLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
-        1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _fieldNames_, «»).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
         1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
       </emu-alg>
@@ -237,7 +237,7 @@
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _receiverFieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
-        1. Let _fields_ be ? ToTemporalMonthDayFields(_monthDay_, _receiverFieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _receiverFieldNames_, «»).
         1. If Type(_item_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"year"* »).
@@ -351,7 +351,7 @@
             1. Let _calendarAbsent_ be *false*.
           1. Set _calendar_ to ? ToOptionalTemporalCalendar(_calendar_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-          1. Let _fields_ be ? ToTemporalMonthDayFields(_item_, _fieldNames_).
+          1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Let _month_ be ? Get(_fields_, *"month"*).
           1. Let _monthCode_ be ? Get(_fields_, *"monthCode"*).
           1. Let _year_ be ? Get(_fields_, *"year"*).
@@ -385,13 +385,6 @@
         1. Set _object_.[[Calendar]] to _calendar_.
         1. Set _object_.[[ISOYear]] to _referenceISOYear_.
         1. Return _object_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporalmonthdayfields" aoid="ToTemporalMonthDayFields">
-      <h1>ToTemporalMonthDayFields ( _temporalMonthDayLike_, _fieldNames_ )</h1>
-      <emu-alg>
-        1. Return ? PrepareTemporalFields(_temporalMonthDayLike_, _fieldNames_, «»).
       </emu-alg>
     </emu-clause>
 

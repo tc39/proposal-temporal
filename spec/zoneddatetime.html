@@ -566,12 +566,14 @@
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
-        1. Let _partialZonedDateTime_ be ? ToPartialZonedDateTime(_temporalZonedDateTimeLike_, _fieldNames_).
+        1. Append *"offset"* to _fieldNames_.
+        1. Let _partialZonedDateTime_ be ? PreparePartialTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _fields_ be ? ToTemporalZonedDateTimeFields(_zonedDateTime_, _fieldNames_).
+        1. Append *"timeZone"* to _fieldNames_.
+        1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"timeZone"* »).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
         1. Let _offsetString_ be ? Get(_partialZonedDateTime_, *"offset"*).
         1. If _offsetString_ is not *undefined*, then
@@ -955,7 +957,7 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? ToTemporalYearMonthFields(_temporalDateTime_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
         1. Return ? YearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
@@ -973,7 +975,7 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
-        1. Let _fields_ be ? ToTemporalMonthDayFields(_temporalDateTime_, _fieldNames_).
+        1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
         1. Return ? MonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
@@ -1105,7 +1107,8 @@
             1. Return _item_.
           1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
-          1. Let _fields_ be ? ToTemporalZonedDateTimeFields(_item_, _fieldNames_).
+          1. Append *"timeZone"* to _fieldNames_.
+          1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
           1. Let _timeZone_ be ? Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
           1. Let _offsetString_ be ? Get(_fields_, *"offset"*).
@@ -1127,26 +1130,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-topartialzoneddatetime" aoid="ToPartialZonedDateTime">
-      <h1>ToPartialZonedDateTime ( _temporalZonedDateTimeLike_, _fieldNames_ )</h1>
-      <p>
-        The abstract operation ToPartialZonedDateTime checks whether _temporalZonedDateTimeLike_ has any Temporal.ZonedDateTime-related properties, including any calendar-specific properties given in _fieldNames_, and returns a new Object with those properties defined on it.
-      </p>
-      <emu-alg>
-        1. If Type(_temporalZonedDateTimeLike_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. Let _otherCalendar_ be ? Get(_temporalZonedDateTimeLike_, *"calendar"*).
-        1. If _otherCalendar_ is not *undefined*, throw a *TypeError* exception.
-        1. Let _timeZone_ be ? Get(_temporalZonedDateTimeLike_, *"timeZone"*).
-        1. If _timeZone_ is not *undefined*, throw a *TypeError* exception.
-        1. Let _fieldNamesList_ be ? CreateListFromArrayLike(_fieldNames_).
-        1. Append *"offset"* to _fieldNamesList_.
-        1. Set _fieldNames_ to ? CreateArrayFromList(_fieldNamesList_).
-        1. Let _result_ be ? PreparePartialTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_).
-        1. Return _result_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-createtemporalzoneddatetime" aoid="CreateTemporalZonedDateTime">
       <h1>CreateTemporalZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_ [ , _newTarget_ ] )</h1>
       <p>
@@ -1162,21 +1145,6 @@
         1. Set _object_.[[TimeZone]] to _timeZone_.
         1. Set _object_.[[Calendar]] to _calendar_.
         1. Return _object_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporalzoneddatetimefields" aoid="ToTemporalZonedDateTimeFields">
-      <h1>ToTemporalZonedDateTimeFields ( _temporalZonedDateTimeLike_, _fieldNames_ )</h1>
-      <p>
-        The abstract operation ToTemporalZonedDateTimeFields reads the relevant properties of an Object _temporalZonedDateTimeLike_, including the calendar-specific ones; ensures all the required properties are present; and creates a new Object with all the properties converted to the correct type, missing ones filled in with their default values.
-      </p>
-      <emu-alg>
-        1. Assert: Type(_temporalZonedDateTimeLike_) is Object.
-        1. Let _fieldNamesList_ be ? CreateListFromArrayLike(_fieldNames_).
-        1. Append *"timeZone"* to _fieldNamesList_.
-        1. Set _fieldNames_ to ? CreateArrayFromList(_fieldNamesList_).
-        1. Let _result_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_, « *"timeZone"* »).
-        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
