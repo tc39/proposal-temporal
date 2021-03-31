@@ -361,7 +361,7 @@ date<span class="token punctuation">.</span>calendar<span class="token punctuati
 date<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => "M05L"</span>
 date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">monthCode</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// same result, but calling the method directly</span>
 date<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 385</span>
-date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">daysInYear</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// same result, but calling the method directly</span></code></pre><h3 id="dateFromFields"><a class="heading-link" href="#dateFromFields"></a>calendar.<strong>dateFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.PlainDate</h3><h3 id="yearMonthFromFields"><a class="heading-link" href="#yearMonthFromFields"></a>calendar.<strong>yearMonthFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.PlainYearMonth</h3><h3 id="monthDayFromFields"><a class="heading-link" href="#monthDayFromFields"></a>calendar.<strong>monthDayFromFields</strong>(<em>fields</em>: object, <em>options</em>: object, <em>constructor</em>: function) : Temporal.PlainMonthDay</h3><p>The above three methods are similar.
+date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span><span class="token function">daysInYear</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// same result, but calling the method directly</span></code></pre><h3 id="dateFromFields"><a class="heading-link" href="#dateFromFields"></a>calendar.<strong>dateFromFields</strong>(<em>fields</em>: object, <em>options</em>: object) : Temporal.PlainDate</h3><h3 id="yearMonthFromFields"><a class="heading-link" href="#yearMonthFromFields"></a>calendar.<strong>yearMonthFromFields</strong>(<em>fields</em>: object, <em>options</em>: object) : Temporal.PlainYearMonth</h3><h3 id="monthDayFromFields"><a class="heading-link" href="#monthDayFromFields"></a>calendar.<strong>monthDayFromFields</strong>(<em>fields</em>: object, <em>options</em>: object) : Temporal.PlainMonthDay</h3><p>The above three methods are similar.
 They provide a way to construct other Temporal objects from values in the calendar&#39;s date or time reckoning.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
@@ -373,14 +373,11 @@ Allowed values are <code>constrain</code>, and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
-<li><code>constructor</code> (function): The constructor function of the Temporal type to construct.
-This is used when subclassing Temporal objects.</li>
 </ul>
-<p><strong>Returns:</strong> a new object of the type of <code>constructor</code>.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code>, <code>Temporal.PlainYearMonth</code>, or <code>Temporal.PlainMonthDay</code> object, respectively.</p>
 <p>None of the above methods need to be called directly except in specialized code.
 They are called indirectly when using <code>Temporal.PlainDate.from()</code>, <code>Temporal.PlainDateTime.from()</code>, <code>Temporal.PlainYearMonth.from()</code>, and <code>Temporal.PlainMonthDay.from()</code>.</p>
-<p>A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using <code>new constructor(...isoArgs)</code>.
-(This allows it to create custom subclasses of the built-in Temporal objects.)</p>
+<p>A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using <code>new Temporal.PlainDate(...isoArgs)</code>, with <code>PlainYearMonth</code> and <code>PlainMonthDay</code> substituted for <code>PlainDate</code> as appropriate.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5779</span><span class="token punctuation">,</span> monthCode<span class="token operator">:</span> <span class="token string">'M05L'</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">18</span><span class="token punctuation">,</span> calendar<span class="token operator">:</span> <span class="token string">'hebrew'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 5779</span>
@@ -393,9 +390,8 @@ date<span class="token punctuation">.</span><span class="token function">toLocal
 <span class="token comment">// same result, but calling the method directly and using month index instead of month code:</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>
   <span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">5779</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">18</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  Temporal<span class="token punctuation">.</span>PlainDate
-<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="dateAdd"><a class="heading-link" href="#dateAdd"></a>calendar.<strong>dateAdd</strong>(<em>date</em>: Temporal.PlainDate | object | string, <em>duration</em>: Temporal.Duration | object | string, <em>options</em>: object, <em>constructor</em>: function) : Temporal.PlainDate</h3><p>This method provides a way to do time arithmetic in the calendar&#39;s date reckoning.</p>
+  <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'constrain'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="dateAdd"><a class="heading-link" href="#dateAdd"></a>calendar.<strong>dateAdd</strong>(<em>date</em>: Temporal.PlainDate | object | string, <em>duration</em>: Temporal.Duration | object | string, <em>options</em>: object) : Temporal.PlainDate</h3><p>This method provides a way to do time arithmetic in the calendar&#39;s date reckoning.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>date</code> (<code>Temporal.PlainDate</code>, or value convertible to one): A date.</li>
@@ -408,15 +404,12 @@ Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
 </li>
-<li><code>constructor</code> (function): The constructor function of the Temporal type to construct.
-This is used when subclassing Temporal objects.</li>
 </ul>
-<p><strong>Returns:</strong> a new object of the type of <code>constructor</code>.</p>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code> object.</p>
 <p>If <code>date</code> is not a <code>Temporal.PlainDate</code> object, or <code>duration</code> not a <code>Temporal.Duration</code> object, then they will be converted to one as if they were passed to <code>Temporal.PlainDate.from()</code> or <code>Temporal.Duration.from()</code>, respectively.</p>
 <p>This method does not need to be called directly except in specialized code.
 It is called indirectly when using <code>add()</code> and <code>subtract()</code> of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, and <code>Temporal.PlainYearMonth</code>.</p>
-<p>A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using <code>new constructor(...isoArgs)</code>.
-(This allows it to create custom subclasses of the built-in Temporal objects.)</p>
+<p>A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using <code>new Temporal.PlainDate(...isoArgs)</code>.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29'</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'islamic'</span><span class="token punctuation">)</span>
@@ -430,8 +423,7 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'islamic'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">dateAdd</span><span class="token punctuation">(</span>
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  Temporal<span class="token punctuation">.</span>PlainDate
+  <span class="token punctuation">{</span> overflow<span class="token operator">:</span> <span class="token string">'reject'</span> <span class="token punctuation">}</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 1441</span>
 date<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 11</span>
