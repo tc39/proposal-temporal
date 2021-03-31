@@ -141,6 +141,7 @@ export class PlainDate {
     }
     let fields = ES.ToTemporalDateFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
+    fields = ES.ToTemporalDateFields(fields, fieldNames);
 
     options = ES.NormalizeOptionsObject(options);
 

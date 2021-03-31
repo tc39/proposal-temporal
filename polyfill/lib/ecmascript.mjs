@@ -1123,10 +1123,10 @@ export const ES = ObjectAssign({}, ES2020, {
       ['month', undefined],
       ['monthCode', undefined],
       ['nanosecond', 0],
-      ['offset', undefined],
       ['second', 0],
-      ['timeZone'],
-      ['year', undefined]
+      ['year', undefined],
+      ['offset', undefined],
+      ['timeZone']
     ];
     // Add extra fields from the calendar at the end
     fieldNames.forEach((fieldName) => {

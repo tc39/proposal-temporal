@@ -5,8 +5,6 @@ import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, MONTH_DAY_BRAND, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
-const ObjectAssign = Object.assign;
-
 function MonthDayToString(monthDay, showCalendar = 'auto') {
   const month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
   const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
@@ -88,6 +86,7 @@ export class PlainMonthDay {
     }
     let fields = ES.ToTemporalMonthDayFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
+    fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
 
     options = ES.NormalizeOptionsObject(options);
     return ES.MonthDayFromFields(calendar, fields, options);
@@ -124,18 +123,28 @@ export class PlainMonthDay {
     const calendar = GetSlot(this, CALENDAR);
 
     const receiverFieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
-    const fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
+    let fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
 
     const inputFieldNames = ES.CalendarFields(calendar, ['year']);
-    const entries = [['year']];
+    const inputEntries = [['year']];
     // Add extra fields from the calendar at the end
     inputFieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
+      if (!inputEntries.some(([name]) => name === fieldName)) {
+        inputEntries.push([fieldName, undefined]);
       }
     });
-    ObjectAssign(fields, ES.PrepareTemporalFields(item, entries));
-    return ES.DateFromFields(calendar, fields);
+    const inputFields = ES.PrepareTemporalFields(item, inputEntries);
+    let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
+
+    const mergedFieldNames = [...new Set([...receiverFieldNames, ...inputFieldNames])];
+    const mergedEntries = [];
+    mergedFieldNames.forEach((fieldName) => {
+      if (!mergedEntries.some(([name]) => name === fieldName)) {
+        mergedEntries.push([fieldName, undefined]);
+      }
+    });
+    mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
+    return ES.DateFromFields(calendar, mergedFields);
   }
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');

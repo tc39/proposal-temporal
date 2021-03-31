@@ -232,6 +232,7 @@ export class PlainDateTime {
     }
     let fields = ES.ToTemporalDateTimeFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
+    fields = ES.ToTemporalDateTimeFields(fields, fieldNames);
     const {
       year,
       month,

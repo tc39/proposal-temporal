@@ -324,4 +324,67 @@ var TemporalHelpers = {
     assert.sameValue(Object.getPrototypeOf(result), construct.prototype);
     resultAssertions(result);
   },
+
+  /*
+   * A custom calendar whose mergeFields() method returns a proxy object with
+   * all of its Get and HasProperty operations observable, as well as adding a
+   * "shouldNotBeCopied": true property.
+   */
+  calendarMergeFieldsGetters() {
+    class CalendarMergeFieldsGetters extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+        this.mergeFieldsReturnOperations = [];
+      }
+
+      toString() {
+        return "merge-fields-getters";
+      }
+
+      dateFromFields(fields, options) {
+        assert.sameValue(fields.shouldNotBeCopied, undefined, "extra fields should not be copied");
+        return super.dateFromFields(fields, options);
+      }
+
+      yearMonthFromFields(fields, options) {
+        assert.sameValue(fields.shouldNotBeCopied, undefined, "extra fields should not be copied");
+        return super.yearMonthFromFields(fields, options);
+      }
+
+      monthDayFromFields(fields, options) {
+        assert.sameValue(fields.shouldNotBeCopied, undefined, "extra fields should not be copied");
+        return super.monthDayFromFields(fields, options);
+      }
+
+      mergeFields(fields, additionalFields) {
+        const retval = super.mergeFields(fields, additionalFields);
+        retval._calendar = this;
+        retval.shouldNotBeCopied = true;
+        return new Proxy(retval, {
+          get(target, key) {
+            target._calendar.mergeFieldsReturnOperations.push(`get ${key}`);
+            const result = target[key];
+            if (result === undefined) {
+              return undefined;
+            }
+            return {
+              valueOf() {
+                target._calendar.mergeFieldsReturnOperations.push(`valueOf ${key}`);
+                return result;
+              },
+              toString() {
+                target._calendar.mergeFieldsReturnOperations.push(`toString ${key}`);
+                return result;
+              },
+            };
+          },
+          has(target, key) {
+            target._calendar.mergeFieldsReturnOperations.push(`has ${key}`);
+            return key in target;
+          },
+        });
+      }
+    }
+    return new CalendarMergeFieldsGetters();
+  },
 };

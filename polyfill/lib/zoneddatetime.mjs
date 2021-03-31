@@ -226,6 +226,7 @@ export class ZonedDateTime {
     }
     let fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
+    fields = ES.ToTemporalZonedDateTimeFields(fields, fieldNames);
     let {
       year,
       month,
