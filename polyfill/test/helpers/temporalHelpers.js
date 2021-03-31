@@ -326,6 +326,61 @@ var TemporalHelpers = {
   },
 
   /*
+   * A custom calendar that modifies the fields object passed in to
+   * dateFromFields, sabotaging its time properties.
+   */
+  calendarMakeInfinityTime() {
+    class CalendarMakeInfinityTime extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+      }
+
+      dateFromFields(fields, options) {
+        const retval = super.dateFromFields(fields, options);
+        fields.hour = Infinity;
+        fields.minute = Infinity;
+        fields.second = Infinity;
+        fields.millisecond = Infinity;
+        fields.microsecond = Infinity;
+        fields.nanosecond = Infinity;
+        return retval;
+      }
+    }
+    return new CalendarMakeInfinityTime();
+  },
+
+  /*
+   * A custom calendar that defines getters on the fields object passed into
+   * dateFromFields that throw, sabotaging its time properties.
+   */
+  calendarMakeInvalidGettersTime() {
+    class CalendarMakeInvalidGettersTime extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+      }
+
+      dateFromFields(fields, options) {
+        const retval = super.dateFromFields(fields, options);
+        const throwingDescriptor = {
+          get() {
+            throw new Test262Error("reading a sabotaged time field");
+          },
+        };
+        Object.defineProperties(fields, {
+          hour: throwingDescriptor,
+          minute: throwingDescriptor,
+          second: throwingDescriptor,
+          millisecond: throwingDescriptor,
+          microsecond: throwingDescriptor,
+          nanosecond: throwingDescriptor,
+        });
+        return retval;
+      }
+    }
+    return new CalendarMakeInvalidGettersTime();
+  },
+
+  /*
    * A custom calendar whose mergeFields() method returns a proxy object with
    * all of its Get and HasProperty operations observable, as well as adding a
    * "shouldNotBeCopied": true property.
