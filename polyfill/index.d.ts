@@ -686,7 +686,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    fields?(fields: Array<string>): Array<string>;
+    fields?(fields: Array<string>): Iterable<string>;
     mergeFields?(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
   }
@@ -769,7 +769,7 @@ export namespace Temporal {
         | /** @deprecated */ 'day'
       >
     ): Temporal.Duration;
-    fields(fields: Array<string>): Array<string>;
+    fields(fields: Array<string>): Iterable<string>;
     mergeFields(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
   }
