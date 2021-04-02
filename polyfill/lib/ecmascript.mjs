@@ -1236,7 +1236,18 @@ export const ES = ObjectAssign({}, ES2020, {
       }
 
       calendar = ES.GetOptionalTemporalCalendar(item);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, [
+        'day',
+        'hour',
+        'microsecond',
+        'millisecond',
+        'minute',
+        'month',
+        'monthCode',
+        'nanosecond',
+        'second',
+        'year'
+      ]);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       ({
         year,
@@ -1508,7 +1519,18 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalZonedDateTime(item)) return item;
       calendar = ES.GetOptionalTemporalCalendar(item);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, [
+        'day',
+        'hour',
+        'microsecond',
+        'millisecond',
+        'minute',
+        'month',
+        'monthCode',
+        'nanosecond',
+        'second',
+        'year'
+      ]);
       const fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
       ({
         year,
