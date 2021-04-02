@@ -1735,7 +1735,12 @@ export const ES = ObjectAssign({}, ES2020, {
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
     if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
-    return ES.CreateListFromArrayLike(fieldNames, ['String']);
+    const result = [];
+    for (const name of fieldNames) {
+      if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
+      ArrayPrototypePush.call(result, name);
+    }
+    return result;
   },
   CalendarMergeFields: (calendar, fields, additionalFields) => {
     const mergeFields = ES.GetMethod(calendar, 'mergeFields');

@@ -366,7 +366,7 @@ Temporal.Calendar.from('chinese').dateUntil(
 ); // => P1M2D
 ```
 
-### calendar.**fields**(_fields_: array<string>) : array<string>
+### calendar.**fields**(_fields_: array<string>) : Iterable<string>
 
 **Parameters:**
 
