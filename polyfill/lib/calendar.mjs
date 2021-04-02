@@ -5,6 +5,7 @@ import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsiccl
 import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlot, SetSlot } from './slots.mjs';
 
 const ArrayIncludes = Array.prototype.includes;
+const ArrayPrototypePush = Array.prototype.push;
 const ObjectAssign = Object.assign;
 
 const impl = {};
@@ -54,8 +55,12 @@ export class Calendar {
   }
   fields(fields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    fields = ES.CreateListFromArrayLike(fields, ['String']);
-    return impl[GetSlot(this, CALENDAR_ID)].fields(fields);
+    const fieldsArray = [];
+    for (const name of fields) {
+      if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
+      ArrayPrototypePush.call(fieldsArray, name);
+    }
+    return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
   }
   mergeFields(fields, additionalFields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');

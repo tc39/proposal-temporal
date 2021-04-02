@@ -366,11 +366,11 @@ Temporal.Calendar.from('chinese').dateUntil(
 ); // => P1M2D
 ```
 
-### calendar.**fields**(_fields_: array<string>) : Iterable<string>
+### calendar.**fields**(_fields_: Iterable<string>) : Iterable<string>
 
 **Parameters:**
 
-- `fields` (array of strings): A list of field names.
+- `fields` (array of strings, or other iterable yielding strings): A list of field names.
 
 **Returns:** a new list of field names.
 
