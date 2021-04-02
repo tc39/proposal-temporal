@@ -147,7 +147,7 @@
         1. If _timeZoneProperty_ is not *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"* »).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Let _partialMonthDay_ be ? PreparePartialTemporalFields(_temporalMonthDayLike_, _fieldNames_).
         1. Set _options_ to ? NormalizeOptionsObject(_options_).
         1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _fieldNames_, «»).
