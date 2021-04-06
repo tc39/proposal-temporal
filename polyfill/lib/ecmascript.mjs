@@ -999,7 +999,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (value !== undefined) {
         any = any || {};
         if (callerCast === undefined && BUILTIN_CASTS.has(property)) {
-          any[property] = BUILTIN_CASTS.get(property)(value, property);
+          any[property] = BUILTIN_CASTS.get(property)(value);
         } else if (callerCast !== undefined) {
           any[property] = callerCast(value);
         } else {
@@ -1024,7 +1024,7 @@ export const ES = ObjectAssign({}, ES2020, {
       } else {
         any = true;
         if (BUILTIN_CASTS.has(property)) {
-          value = BUILTIN_CASTS.get(property)(value, property);
+          value = BUILTIN_CASTS.get(property)(value);
         }
       }
       result[property] = value;
