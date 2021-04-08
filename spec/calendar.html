@@ -237,9 +237,15 @@
       <h1>ToTemporalCalendar ( _temporalCalendarLike_ )</h1>
       <emu-alg>
         1. If Type(_temporalCalendarLike_) is Object, then
-          1. Return _temporalCalendarLike_.
+          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Return _temporalCalendarLike_.[[Calendar]].
+          1. If ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
+          1. Set _temporalCalendarLike_ to ? Get(_temporalCalendarLike_, *"calendar"*).
+          1. If Type(_temporalCalendarLike_) is Object and ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
         1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
-        1. Return ? CalendarFrom(_identifier_, %Temporal.Calendar%).
+        1. If ! IsBuiltinCalendar(_identifier_) is *false*, then
+          1. Let _identifier_ be ? ParseTemporalCalendarString(_identifier_).
+        1. Return ? CreateTemporalCalendar(_identifier_).
       </emu-alg>
     </emu-clause>
 
@@ -265,20 +271,6 @@
       <emu-alg>
         1. Let _calendar_ be ? Get(_item_, *"calendar"*).
         1. Return ? ToOptionalTemporalCalendar(_calendar_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-calendarfrom" aoid="CalendarFrom">
-      <h1>CalendarFrom ( _identifier_ )</h1>
-      <emu-alg>
-        1. If Type(_item_) is Object, then
-          1. If ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
-          1. Set _item_ to ? Get(_item_, *"calendar"*).
-          1. If Type(_item_) is Object and ? HasProperty(_item_, *"calendar"*) is *false*, return _item_.
-        1. Let _string_ be ? ToString(_item_).
-        1. If ! IsBuiltinCalendar(_string_) is *false*, then
-          1. Let _string_ be ? ParseTemporalCalendarString(_string_).
-        1. Return ? CreateTemporalCalendar(_string_).
       </emu-alg>
     </emu-clause>
 
@@ -656,7 +648,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? CalendarFrom(_item_).
+        1. Return ? ToTemporalCalendar(_item_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
