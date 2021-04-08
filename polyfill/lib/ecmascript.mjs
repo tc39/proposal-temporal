@@ -1501,24 +1501,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     return new TemporalCalendar('iso8601');
   },
-  CalendarFrom: (item) => {
-    if (ES.Type(item) === 'Object') {
-      if (!('calendar' in item)) return item;
-      item = item.calendar;
-      if (ES.Type(item) === 'Object' && !('calendar' in item)) return item;
-    }
-    const stringIdent = ES.ToString(item);
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    if (IsBuiltinCalendar(stringIdent)) return new TemporalCalendar(stringIdent);
-    let calendar;
-    try {
-      ({ calendar } = ES.ParseISODateTime(stringIdent, { zoneRequired: false }));
-    } catch {
-      throw new RangeError(`Invalid calendar: ${stringIdent}`);
-    }
-    if (!calendar) calendar = 'iso8601';
-    return new TemporalCalendar(calendar);
-  },
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
     if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
@@ -1624,10 +1606,22 @@ export const ES = ObjectAssign({}, ES2020, {
 
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
-      return calendarLike;
+      if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
+      if (!('calendar' in calendarLike)) return calendarLike;
+      calendarLike = calendarLike.calendar;
+      if (ES.Type(calendarLike) === 'Object' && !('calendar' in calendarLike)) return calendarLike;
     }
     const identifier = ES.ToString(calendarLike);
-    return ES.CalendarFrom(identifier);
+    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+    if (IsBuiltinCalendar(identifier)) return new TemporalCalendar(identifier);
+    let calendar;
+    try {
+      ({ calendar } = ES.ParseISODateTime(identifier, { zoneRequired: false }));
+    } catch {
+      throw new RangeError(`Invalid calendar: ${identifier}`);
+    }
+    if (!calendar) calendar = 'iso8601';
+    return new TemporalCalendar(calendar);
   },
   CalendarCompare: (one, two) => {
     const cal1 = ES.ToString(one);

@@ -163,7 +163,7 @@ export class Calendar {
     return ES.ToString(this);
   }
   static from(item) {
-    return ES.CalendarFrom(item);
+    return ES.ToTemporalCalendar(item);
   }
 }
 
