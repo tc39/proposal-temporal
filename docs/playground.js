@@ -2979,7 +2979,7 @@
   }
 
   var ArrayIncludes = Array.prototype.includes;
-  var ObjectAssign$5 = Object.assign;
+  var ObjectAssign$3 = Object.assign;
   var impl = {};
   var Calendar = /*#__PURE__*/function () {
     function Calendar(id) {
@@ -4220,7 +4220,7 @@
       throw new RangeError("No recent ".concat(this.id, " year with monthCode ").concat(monthCode, " and day ").concat(day));
     }
   };
-  var helperHebrew = ObjectAssign$5({}, nonIsoHelperBase, {
+  var helperHebrew = ObjectAssign$3({}, nonIsoHelperBase, {
     id: 'hebrew',
     calendarType: 'lunisolar',
     inLeapYear: function inLeapYear(calendarDate
@@ -4482,7 +4482,7 @@
    * same 12 months in the same order.
    */
 
-  var helperIslamic = ObjectAssign$5({}, nonIsoHelperBase, {
+  var helperIslamic = ObjectAssign$3({}, nonIsoHelperBase, {
     id: 'islamic',
     calendarType: 'lunar',
     inLeapYear: function inLeapYear(calendarDate, cache) {
@@ -4525,7 +4525,7 @@
       };
     }
   });
-  var helperPersian = ObjectAssign$5({}, nonIsoHelperBase, {
+  var helperPersian = ObjectAssign$3({}, nonIsoHelperBase, {
     id: 'persian',
     calendarType: 'solar',
     inLeapYear: function inLeapYear(calendarDate, cache) {
@@ -4560,7 +4560,7 @@
       };
     }
   });
-  var helperIndian = ObjectAssign$5({}, nonIsoHelperBase, {
+  var helperIndian = ObjectAssign$3({}, nonIsoHelperBase, {
     id: 'indian',
     calendarType: 'solar',
     inLeapYear: function inLeapYear(calendarDate
@@ -4826,7 +4826,7 @@
         eras = _adjustEras.eras,
         anchorEra = _adjustEras.anchorEra;
 
-    return ObjectAssign$5({}, nonIsoHelperBase, {
+    return ObjectAssign$3({}, nonIsoHelperBase, {
       id: id,
       eras: eras,
       anchorEra: anchorEra,
@@ -4997,7 +4997,7 @@
 
   var makeHelperOrthodox = function makeHelperOrthodox(id, originalEras) {
     var base = makeHelperGregorian(id, originalEras);
-    return ObjectAssign$5(base, {
+    return ObjectAssign$3(base, {
       inLeapYear: function inLeapYear(calendarDate
       /*, cache */
       ) {
@@ -5075,7 +5075,7 @@
       year: 5501
     }
   }]);
-  var helperRoc = ObjectAssign$5({}, makeHelperGregorian('roc', [{
+  var helperRoc = ObjectAssign$3({}, makeHelperGregorian('roc', [{
     name: 'minguo',
     isoEpoch: {
       year: 1912,
@@ -5088,7 +5088,7 @@
   }]), {
     calendarIsVulnerableToJulianBug: true
   });
-  var helperBuddhist = ObjectAssign$5({}, makeHelperGregorian('buddhist', [{
+  var helperBuddhist = ObjectAssign$3({}, makeHelperGregorian('buddhist', [{
     name: 'be',
     hasYearZero: true,
     isoEpoch: {
@@ -5099,7 +5099,7 @@
   }]), {
     calendarIsVulnerableToJulianBug: true
   });
-  var helperGregory = ObjectAssign$5({}, makeHelperGregorian('gregory', [{
+  var helperGregory = ObjectAssign$3({}, makeHelperGregorian('gregory', [{
     name: 'ce',
     isoEpoch: {
       year: 1,
@@ -5123,7 +5123,7 @@
       };
     }
   });
-  var helperJapanese = ObjectAssign$5({}, // NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
+  var helperJapanese = ObjectAssign$3({}, // NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
   // before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
   // eras include:
   // - Start/end dates of older eras are not precisely defined, which is
@@ -5248,7 +5248,7 @@
       };
     }
   });
-  var helperChinese = ObjectAssign$5({}, nonIsoHelperBase, {
+  var helperChinese = ObjectAssign$3({}, nonIsoHelperBase, {
     id: 'chinese',
     calendarType: 'lunisolar',
     inLeapYear: function inLeapYear(calendarDate, cache) {
@@ -5513,7 +5513,7 @@
     hasEra: false
   }); // Dangi (Korean) calendar has same implementation as Chinese
 
-  var helperDangi = ObjectAssign$5({}, _objectSpread2(_objectSpread2({}, helperChinese), {}, {
+  var helperDangi = ObjectAssign$3({}, _objectSpread2(_objectSpread2({}, helperChinese), {}, {
     id: 'dangi'
   }));
   /**
@@ -5733,50 +5733,50 @@
       return result;
     }
   };
-  impl['hebrew'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['hebrew'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperHebrew
   });
-  impl['islamic'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['islamic'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperIslamic
   });
   ['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'].forEach(function (id) {
-    impl[id] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+    impl[id] = ObjectAssign$3({}, nonIsoGeneralImpl, {
       helper: _objectSpread2(_objectSpread2({}, helperIslamic), {}, {
         id: id
       })
     });
   });
-  impl['persian'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['persian'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperPersian
   });
-  impl['ethiopic'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['ethiopic'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperEthiopic
   });
-  impl['ethioaa'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['ethioaa'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperEthioaa
   });
-  impl['coptic'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['coptic'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperCoptic
   });
-  impl['chinese'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['chinese'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperChinese
   });
-  impl['dangi'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['dangi'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperDangi
   });
-  impl['roc'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['roc'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperRoc
   });
-  impl['indian'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['indian'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperIndian
   });
-  impl['buddhist'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['buddhist'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperBuddhist
   });
-  impl['japanese'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['japanese'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperJapanese
   });
-  impl['gregory'] = ObjectAssign$5({}, nonIsoGeneralImpl, {
+  impl['gregory'] = ObjectAssign$3({}, nonIsoGeneralImpl, {
     helper: helperGregory
   });
   var BUILTIN_CALENDAR_IDS = Object.keys(impl);
@@ -5824,7 +5824,7 @@
   var NumberIsFinite = Number.isFinite;
   var NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
   var NumberIsInteger = Number.isInteger;
-  var ObjectAssign$4 = Object.assign;
+  var ObjectAssign$2 = Object.assign;
   var ObjectCreate = Object.create;
   var ObjectIs = Object.is;
   var ObjectEntries = Object.entries;
@@ -5861,7 +5861,7 @@
     ToString: ToString,
     Type: Type
   };
-  var ES = ObjectAssign$4({}, ES2020, {
+  var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
@@ -6925,7 +6925,7 @@
             any = any || {};
 
             if (callerCast === undefined && BUILTIN_CASTS.has(property)) {
-              any[property] = BUILTIN_CASTS.get(property)(value, property);
+              any[property] = BUILTIN_CASTS.get(property)(value);
             } else if (callerCast !== undefined) {
               any[property] = callerCast(value);
             } else {
@@ -6969,7 +6969,7 @@
             any = true;
 
             if (BUILTIN_CASTS.has(property)) {
-              value = BUILTIN_CASTS.get(property)(value, property);
+              value = BUILTIN_CASTS.get(property)(value);
             }
           }
 
@@ -7056,7 +7056,7 @@
       return ES.PrepareTemporalFields(bag, entries);
     },
     ToTemporalZonedDateTimeFields: function ToTemporalZonedDateTimeFields(bag, fieldNames) {
-      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['offset', undefined], ['second', 0], ['timeZone'], ['year', undefined]]; // Add extra fields from the calendar at the end
+      var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset', undefined], ['timeZone']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
         if (!entries.some(function (_ref16) {
@@ -7098,11 +7098,6 @@
       return new TemporalPlainDate(year, month, day, calendar);
     },
     InterpretTemporalDateTimeFields: function InterpretTemporalDateTimeFields(calendar, fields, options) {
-      var date = ES.DateFromFields(calendar, fields, options);
-      var year = GetSlot(date, ISO_YEAR);
-      var month = GetSlot(date, ISO_MONTH);
-      var day = GetSlot(date, ISO_DAY);
-
       var _ES$ToTemporalTimeRec = ES.ToTemporalTimeRecord(fields),
           hour = _ES$ToTemporalTimeRec.hour,
           minute = _ES$ToTemporalTimeRec.minute,
@@ -7111,6 +7106,10 @@
           microsecond = _ES$ToTemporalTimeRec.microsecond,
           nanosecond = _ES$ToTemporalTimeRec.nanosecond;
 
+      var date = ES.DateFromFields(calendar, fields, options);
+      var year = GetSlot(date, ISO_YEAR);
+      var month = GetSlot(date, ISO_MONTH);
+      var day = GetSlot(date, ISO_DAY);
       var overflow = ES.ToTemporalOverflow(options);
 
       var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
@@ -10465,7 +10464,7 @@
   };
 
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-  var ObjectAssign$3 = Object.assign;
+  var ObjectAssign$1 = Object.assign;
   function DateTimeFormat() {
     var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : IntlDateTimeFormat().resolvedOptions().locale;
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -10616,7 +10615,7 @@
   function amend() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    options = ObjectAssign$3({}, options);
+    options = ObjectAssign$1({}, options);
 
     for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'timeZoneName']; _i < _arr.length; _i++) {
       var opt = _arr[_i];
@@ -10637,7 +10636,7 @@
     });
 
     if (!hasTimeOptions(options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric'
@@ -10658,7 +10657,7 @@
     });
 
     if (!('year' in options || 'month' in options)) {
-      options = ObjectAssign$3(options, {
+      options = ObjectAssign$1(options, {
         year: 'numeric',
         month: 'numeric'
       });
@@ -10678,7 +10677,7 @@
     });
 
     if (!('month' in options || 'day' in options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         month: 'numeric',
         day: 'numeric'
       });
@@ -10696,7 +10695,7 @@
     });
 
     if (!hasDateOptions(options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric'
@@ -10712,7 +10711,7 @@
     });
 
     if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -10727,7 +10726,7 @@
 
   function zonedDateTimeAmend(options) {
     if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -10743,7 +10742,7 @@
 
   function instantAmend(options) {
     if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-      options = ObjectAssign$3({}, options, {
+      options = ObjectAssign$1({}, options, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -11442,6 +11441,7 @@
 
         var fields = ES.ToTemporalDateFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.ToTemporalDateFields(fields, fieldNames);
         options = ES.NormalizeOptionsObject(options);
         return ES.DateFromFields(calendar, fields, options);
       }
@@ -12017,6 +12017,7 @@
 
         var fields = ES.ToTemporalDateTimeFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.ToTemporalDateTimeFields(fields, fieldNames);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
             year = _ES$InterpretTemporal.year,
@@ -12956,8 +12957,6 @@
   }();
   MakeIntrinsicClass(Duration, 'Temporal.Duration');
 
-  var ObjectAssign$2 = Object.assign;
-
   function MonthDayToString(monthDay) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
@@ -13058,6 +13057,7 @@
 
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
         options = ES.NormalizeOptionsObject(options);
         return ES.MonthDayFromFields(calendar, fields, options);
       }
@@ -13112,20 +13112,36 @@
         var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
         var inputFieldNames = ES.CalendarFields(calendar, ['year']);
-        var entries = [['year']]; // Add extra fields from the calendar at the end
+        var inputEntries = [['year']]; // Add extra fields from the calendar at the end
 
         inputFieldNames.forEach(function (fieldName) {
-          if (!entries.some(function (_ref) {
+          if (!inputEntries.some(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1),
                 name = _ref2[0];
 
             return name === fieldName;
           })) {
-            entries.push([fieldName, undefined]);
+            inputEntries.push([fieldName, undefined]);
           }
         });
-        ObjectAssign$2(fields, ES.PrepareTemporalFields(item, entries));
-        return ES.DateFromFields(calendar, fields);
+        var inputFields = ES.PrepareTemporalFields(item, inputEntries);
+        var mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
+
+        var mergedFieldNames = _toConsumableArray(new Set([].concat(_toConsumableArray(receiverFieldNames), _toConsumableArray(inputFieldNames))));
+
+        var mergedEntries = [];
+        mergedFieldNames.forEach(function (fieldName) {
+          if (!mergedEntries.some(function (_ref3) {
+            var _ref4 = _slicedToArray(_ref3, 1),
+                name = _ref4[0];
+
+            return name === fieldName;
+          })) {
+            mergedEntries.push([fieldName, undefined]);
+          }
+        });
+        mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
+        return ES.DateFromFields(calendar, mergedFields);
       }
     }, {
       key: "getISOFields",
@@ -13234,7 +13250,7 @@
     return ES.SystemTimeZone();
   }
 
-  var ObjectAssign$1 = Object.assign;
+  var ObjectAssign = Object.assign;
 
   function TemporalTimeToString(time, precision) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
@@ -13373,7 +13389,7 @@
 
         var fields = ES.ToTemporalTimeRecord(this);
 
-        var _ObjectAssign = ObjectAssign$1(fields, props),
+        var _ObjectAssign = ObjectAssign(fields, props),
             hour = _ObjectAssign.hour,
             minute = _ObjectAssign.minute,
             second = _ObjectAssign.second,
@@ -13771,8 +13787,6 @@
   }();
   MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
 
-  var ObjectAssign = Object.assign;
-
   function YearMonthToString(yearMonth) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
     var year = ES.ISOYearString(GetSlot(yearMonth, ISO_YEAR));
@@ -13915,6 +13929,7 @@
 
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.ToTemporalYearMonthFields(fields, fieldNames);
         options = ES.NormalizeOptionsObject(options);
         return ES.YearMonthFromFields(calendar, fields, options);
       }
@@ -14159,20 +14174,36 @@
         var receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
         var inputFieldNames = ES.CalendarFields(calendar, ['day']);
-        var entries = [['day']]; // Add extra fields from the calendar at the end
+        var inputEntries = [['day']]; // Add extra fields from the calendar at the end
 
         inputFieldNames.forEach(function (fieldName) {
-          if (!entries.some(function (_ref) {
+          if (!inputEntries.some(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1),
                 name = _ref2[0];
 
             return name === fieldName;
           })) {
-            entries.push([fieldName, undefined]);
+            inputEntries.push([fieldName, undefined]);
           }
         });
-        ObjectAssign(fields, ES.PrepareTemporalFields(item, entries));
-        return ES.DateFromFields(calendar, fields, {
+        var inputFields = ES.PrepareTemporalFields(item, inputEntries);
+        var mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
+
+        var mergedFieldNames = _toConsumableArray(new Set([].concat(_toConsumableArray(receiverFieldNames), _toConsumableArray(inputFieldNames))));
+
+        var mergedEntries = [];
+        mergedFieldNames.forEach(function (fieldName) {
+          if (!mergedEntries.some(function (_ref3) {
+            var _ref4 = _slicedToArray(_ref3, 1),
+                name = _ref4[0];
+
+            return name === fieldName;
+          })) {
+            mergedEntries.push([fieldName, undefined]);
+          }
+        });
+        mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
+        return ES.DateFromFields(calendar, mergedFields, {
           overflow: 'reject'
         });
       }
@@ -14472,6 +14503,7 @@
 
         var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.ToTemporalZonedDateTimeFields(fields, fieldNames);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
             year = _ES$InterpretTemporal.year,
