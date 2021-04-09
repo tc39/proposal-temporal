@@ -1273,6 +1273,10 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ToTemporalInstant: (item) => {
     if (ES.IsTemporalInstant(item)) return item;
+    if (ES.IsTemporalZonedDateTime(item)) {
+      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+      return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
+    }
     const ns = ES.ParseTemporalInstant(ES.ToString(item));
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     return new TemporalInstant(ns);
