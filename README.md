@@ -1,5 +1,7 @@
 # Temporal
 
+![Stage 3](https://badges.aleen42.com/src/tc39_4.svg)
+
 Provides standard objects and functions for working with dates and times.
 
 ## Status
