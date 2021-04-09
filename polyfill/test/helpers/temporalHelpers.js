@@ -9,6 +9,55 @@ features: [Symbol.species]
 
 var TemporalHelpers = {
   /*
+   * checkPlainDateTimeConversionFastPath(func):
+   *
+   * ToTemporalDate and ToTemporalTime should both, if given a
+   * Temporal.PlainDateTime instance, convert to the desired type by reading the
+   * PlainDateTime's internal slots, rather than calling any getters.
+   *
+   * func(datetime, calendar) is the actual operation to test, that must
+   * internally call the abstract operation ToTemporalDate or ToTemporalTime.
+   * It is passed a Temporal.PlainDateTime instance, as well as the instance's
+   * calendar object (so that it doesn't have to call the calendar getter itself
+   * if it wants to make any assertions about the calendar.)
+   */
+  checkPlainDateTimeConversionFastPath(func) {
+    const actual = [];
+    const expected = [];
+
+    const calendar = new Temporal.Calendar("iso8601");
+    const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321, calendar);
+    const prototypeDescrs = Object.getOwnPropertyDescriptors(Temporal.PlainDateTime.prototype);
+    ["year", "month", "monthCode", "day", "hour", "minute", "second", "millisecond", "microsecond", "nanosecond"].forEach((property) => {
+      Object.defineProperty(datetime, property, {
+        get() {
+          actual.push(`get ${property}`);
+          const value = prototypeDescrs[property].get.call(this);
+          return {
+            toString() {
+              actual.push(`toString ${property}`);
+              return value.toString();
+            },
+            valueOf() {
+              actual.push(`valueOf ${property}`);
+              return value;
+            },
+          };
+        },
+      });
+    });
+    Object.defineProperty(datetime, "calendar", {
+      get() {
+        actual.push("get calendar");
+        return calendar;
+      },
+    });
+
+    func(datetime, calendar);
+    assert.compareArray(actual, expected, "property getters not called");
+  },
+
+  /*
    * checkSubclassingIgnored(construct, constructArgs, method, methodArgs,
    *   resultAssertions):
    *
