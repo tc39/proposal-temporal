@@ -640,23 +640,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparetimezone" aoid="CompareTimeZone">
-      <h1>CompareTimeZone ( _one_, _two_ )</h1>
-      <p>
-        The abstract operation CompareTimeZone lexicographically compares the
-        results of calling `toString()` on its arguments.
-      </p>
-      <emu-alg>
-        1. Let _timeZoneOne_ be ? ToString(_one_).
-        1. Let _timeZoneTwo_ be ? ToString(_two_).
-        1. Let _r_ be the result of performing Abstract Relational Comparison _timeZoneOne_ &lt; _timeZoneTwo_.
-        1. If _r_ is *true*, return −1.
-        1. Let _r_ be the result of performing Abstract Relational Comparison _timeZoneTwo_ &lt; _timeZoneOne_.
-        1. If _r_ is *true*, return 1.
-        1. Return 0.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-timezoneequals" aoid="TimeZoneEquals">
       <h1>TimeZoneEquals ( _one_, _two_ )</h1>
       <p>
