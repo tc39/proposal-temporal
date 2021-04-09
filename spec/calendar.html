@@ -332,19 +332,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparecalendar" aoid="CompareCalendar">
-      <h1>CompareCalendar ( _one_, _two_ )</h1>
-      <emu-alg>
-        1. Let _calendarOne_ be ? ToString(_one_).
-        1. Let _calendarTwo_ be ? ToString(_two_).
-        1. Let _r_ be the result of performing Abstract Relational Comparison _calendarOne_ &lt; _calendarTwo_.
-        1. If _r_ is *true*, return −1.
-        1. Let _r_ be the result of performing Abstract Relational Comparison _calendarTwo_ &lt; _calendarOne_.
-        1. If _r_ is *true*, return 1.
-        1. Return 0.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
       <h1>CalendarEquals ( _one_, _two_ )</h1>
       <emu-alg>
