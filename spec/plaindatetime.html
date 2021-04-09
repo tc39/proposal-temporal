@@ -924,29 +924,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulateisodatetime" aoid="RegulateISODateTime">
-      <h1>RegulateISODateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_ )</h1>
-      <emu-alg>
-        1. Assert: _overflow_ is one of *"constrain"* or *"reject"*.
-        1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainISODateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. If _overflow_ is *"reject"*, then
-          1. If ! ValidateISODateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Return the Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_,
-            [[Day]]: _day_,
-            [[Hour]]: _hour_,
-            [[Minute]]: _minute_,
-            [[Second]]: _second_,
-            [[Millisecond]]: _millisecond_,
-            [[Microsecond]]: _microsecond_,
-            [[Nanosecond]]: _nanosecond_
-            }.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-validateisodatetime" aoid="ValidateISODateTime">
       <h1>ValidateISODateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
@@ -959,27 +936,6 @@
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Return *false*.
         1. Return *true*.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-constrainisodatetime" aoid="ConstrainISODateTime">
-      <h1>ConstrainISODateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
-      <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integer Number values.
-        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
-        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! ISODaysInMonth(_year_, _month_)).
-        1. Let _constrainedTime_ be ! ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Return the Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_,
-            [[Day]]: _day_,
-            [[Hour]]: _constrainedTime_.[[Hour]],
-            [[Minute]]: _constrainedTime_.[[Minute]],
-            [[Second]]: _constrainedTime_.[[Second]],
-            [[Millisecond]]: _constrainedTime_.[[Millisecond]],
-            [[Microsecond]]: _constrainedTime_.[[Microsecond]],
-            [[Nanosecond]]: _constrainedTime_.[[Nanosecond]]
-          }.
       </emu-alg>
     </emu-clause>
 
