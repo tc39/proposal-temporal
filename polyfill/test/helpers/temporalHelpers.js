@@ -368,6 +368,25 @@ var TemporalHelpers = {
     });
   },
 
+  checkToTemporalInstantFastPath(func) {
+    const actual = [];
+    const expected = [];
+
+    const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");
+    Object.defineProperty(datetime, 'toString', {
+      get() {
+        actual.push("get toString");
+        return function (options) {
+          actual.push("call toString");
+          return Temporal.ZonedDateTime.prototype.toString.call(this, options);
+        };
+      },
+    });
+
+    func(datetime);
+    assert.compareArray(actual, expected, "toString not called");
+  },
+
   /*
    * A custom calendar that modifies the fields object passed in to
    * dateFromFields, sabotaging its time properties.
