@@ -1140,6 +1140,15 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalDate: (item, options = {}) => {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDate(item)) return item;
+      if (ES.IsTemporalDateTime(item)) {
+        const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
+        return new TemporalPlainDate(
+          GetSlot(item, ISO_YEAR),
+          GetSlot(item, ISO_MONTH),
+          GetSlot(item, ISO_DAY),
+          GetSlot(item, CALENDAR)
+        );
+      }
       let calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
