@@ -436,6 +436,50 @@ var TemporalHelpers = {
     assert.compareArray(actual, expected, "toString not called");
   },
 
+  checkToTemporalPlainDateTimeFastPath(func) {
+    const actual = [];
+    const expected = [];
+
+    const calendar = new Temporal.Calendar("iso8601");
+    const date = new Temporal.PlainDate(2000, 5, 2, calendar);
+    const prototypeDescrs = Object.getOwnPropertyDescriptors(Temporal.PlainDate.prototype);
+    ["year", "month", "monthCode", "day"].forEach((property) => {
+      Object.defineProperty(date, property, {
+        get() {
+          actual.push(`get ${property}`);
+          const value = prototypeDescrs[property].get.call(this);
+          return {
+            toString() {
+              actual.push(`toString ${property}`);
+              return value.toString();
+            },
+            valueOf() {
+              actual.push(`valueOf ${property}`);
+              return value;
+            },
+          };
+        },
+      });
+    });
+    ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"].forEach((property) => {
+      Object.defineProperty(date, property, {
+        get() {
+          actual.push(`get ${property}`);
+          return undefined;
+        },
+      });
+    });
+    Object.defineProperty(date, "calendar", {
+      get() {
+        actual.push("get calendar");
+        return calendar;
+      },
+    });
+
+    func(date, calendar);
+    assert.compareArray(actual, expected, "property getters not called");
+  },
+
   /*
    * A custom calendar that modifies the fields object passed in to
    * dateFromFields, sabotaging its time properties.
