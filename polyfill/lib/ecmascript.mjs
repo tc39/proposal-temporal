@@ -1186,6 +1186,21 @@ export const ES = ObjectAssign({}, ES2020, {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDateTime(item)) return item;
+      if (ES.IsTemporalDate(item)) {
+        const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+        return new TemporalPlainDateTime(
+          GetSlot(item, ISO_YEAR),
+          GetSlot(item, ISO_MONTH),
+          GetSlot(item, ISO_DAY),
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          GetSlot(item, CALENDAR)
+        );
+      }
 
       calendar = item.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
