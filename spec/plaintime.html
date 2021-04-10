@@ -610,6 +610,8 @@
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _item_.
+          1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
+            1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
           1. Let _calendar_ be ? Get(_item_, *"calendar"*).
           1. If _calendar_ is not *undefined*, then
             1. Set _calendar_ to ? ToTemporalCalendar(_calendar_).
