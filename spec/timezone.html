@@ -150,7 +150,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? TimeZoneFrom(_item_).
+        1. Return ? ToTemporalTimeZone(_item_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -534,21 +534,14 @@
     <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
       <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
       <emu-alg>
-        1. If Type(_temporalTimeZoneLike_) is Object, return _temporalTimeZoneLike_.
+        1. If Type(_temporalTimeZoneLike_) is Object, then
+          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Return _temporalTimeZoneLike_.[[TimeZone]].
+          1. If ? HasProperty(_temporalTimeZoneLike_, *"timeZone"*) is *false*, return _temporalTimeZoneLike_.
+          1. Set _temporalTimeZoneLike_ to ? Get(_temporalTimeZoneLike_, *"timeZone"*).
+          1. If Type(_temporalTimeZoneLike_) is Object and ? HasProperty(_temporalTimeZoneLike_, *"timeZone"*) is *false*, return _temporalTimeZoneLike_.
         1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
-        1. Return ? TimeZoneFrom(_identifier_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-timezonefrom" aoid="TimeZoneFrom">
-      <h1>TimeZoneFrom ( _identifier_ )</h1>
-      <emu-alg>
-        1. If Type(_item_) is Object, then
-          1. If ? HasProperty(_item_, *"timeZone"*) is *false*, return _item_.
-          1. Set _item_ to ? Get(_item_, *"timeZone"*).
-          1. If Type(_item_) is Object and ? HasProperty(_item_, *"timeZone"*) is *false*, return _item_.
-        1. Let _string_ be ? ToString(_item_).
-        1. Let _result_ be ? ParseTemporalTimeZone(_string_).
+        1. Let _result_ be ? ParseTemporalTimeZone(_identifier_).
         1. Return ? CreateTemporalTimeZone(_result_).
       </emu-alg>
     </emu-clause>
