@@ -1509,7 +1509,8 @@ export const ES = ObjectAssign({}, ES2020, {
         calendar
       } = ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
       if (!ianaName) throw new RangeError('time zone ID required in brackets');
-      timeZone = ES.TimeZoneFrom(ianaName);
+      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+      timeZone = new TemporalTimeZone(ianaName);
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
@@ -1701,22 +1702,20 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
     return result;
   },
-  TimeZoneFrom: (item) => {
-    if (ES.Type(item) === 'Object') {
-      if (!('timeZone' in item)) return item;
-      item = item.timeZone;
-      if (ES.Type(item) === 'Object' && !('timeZone' in item)) return item;
-    }
-    const timeZone = ES.TemporalTimeZoneFromString(ES.ToString(item));
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    return new TemporalTimeZone(timeZone);
-  },
+
   ToTemporalTimeZone: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
-      return temporalTimeZoneLike;
+      if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
+      if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
+      temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
+      if (ES.Type(temporalTimeZoneLike) === 'Object' && !('timeZone' in temporalTimeZoneLike)) {
+        return temporalTimeZoneLike;
+      }
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
-    return ES.TimeZoneFrom(identifier);
+    const timeZone = ES.TemporalTimeZoneFromString(identifier);
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    return new TemporalTimeZone(timeZone);
   },
   TimeZoneCompare: (one, two) => {
     const tz1 = ES.ToString(one);

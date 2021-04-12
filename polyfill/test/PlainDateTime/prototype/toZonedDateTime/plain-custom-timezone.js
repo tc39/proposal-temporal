@@ -8,6 +8,7 @@ includes: [compareArray.js]
 
 const actual = [];
 const expected = [
+  "has timeZone.timeZone",
   "get options.disambiguation",
   "get disambiguation.toString",
   "call disambiguation.toString",

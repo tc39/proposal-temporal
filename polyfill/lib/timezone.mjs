@@ -143,7 +143,7 @@ export class TimeZone {
     return ES.ToString(this);
   }
   static from(item) {
-    return ES.TimeZoneFrom(item);
+    return ES.ToTemporalTimeZone(item);
   }
 }
 
