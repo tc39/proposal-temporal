@@ -555,6 +555,8 @@
       1. If Type(_value_) is Object, then
         1. If _value_ has either an [[InitializedTemporalDateTime]] or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _value_.
+        1. If _value_ has an [[InitializedTemporalDate]] internal slot, then
+          1. Return ? CreateTemporalDateTime(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], 0, 0, 0, 0, 0, 0, _value_.[[Calendar]]).
         1. Let _calendar_ be ? GetOptionalTemporalCalendar(_value_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_value_, _fieldNames_, «»).

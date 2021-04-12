@@ -861,6 +861,21 @@ export const ES = ObjectAssign({}, ES2020, {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
     if (ES.Type(relativeTo) === 'Object') {
       if (ES.IsTemporalZonedDateTime(relativeTo) || ES.IsTemporalDateTime(relativeTo)) return relativeTo;
+      if (ES.IsTemporalDate(relativeTo)) {
+        const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+        return new TemporalDateTime(
+          GetSlot(relativeTo, ISO_YEAR),
+          GetSlot(relativeTo, ISO_MONTH),
+          GetSlot(relativeTo, ISO_DAY),
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          GetSlot(relativeTo, CALENDAR)
+        );
+      }
       calendar = relativeTo.calendar;
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
