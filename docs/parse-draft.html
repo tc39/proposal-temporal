@@ -140,9 +140,9 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<p>This is a draft design document for a <code>Temporal.parse</code> API, which is not currently planned to be implemented for several reasons: </p>
+<p>This is a draft design document for a <code>Temporal.parse</code> API, which is not currently planned to be implemented for several reasons:</p>
 <ul>
-<li><code>Temporal</code>&#39;s approach to most operations&mdash;including parsing&mdash;is to encourage strong typing, e.g. <code>Temporal.Instant.from</code> vs. <code>Temporal.PlainDateTime.from</code>. A type-spanning &quot;parse anything&quot; API goes against that strongly-typed model. </li>
+<li><code>Temporal</code>&#39;s approach to most operations&mdash;including parsing&mdash;is to encourage strong typing, e.g. <code>Temporal.Instant.from</code> vs. <code>Temporal.PlainDateTime.from</code>. A type-spanning &quot;parse anything&quot; API goes against that strongly-typed model.</li>
 <li>The main use case beyond type-specific parsing that was identified for a <code>parse</code> API was handling &quot;partially correct&quot; ISO strings, e.g. where only one unit was out of range. Most of these use cases were addressed via the <code>overflow</code> option in the <code>from</code> method of all types which which either clamps out-of-range values (<code>&#39;constrain&#39;</code>) to the nearest in-range value or throws (<code>&#39;reject&#39;</code>) in that case.</li>
 <li>The final remaining case for a <code>parse</code> API was resolving the case where a time zone and a time zone offset can be in conflict, as would happen for future <code>Temporal.ZonedDateTime</code> values stored before a country permanently abolishes DST. This use case is now handled via the <code>offset</code> option of <code>Temporal.ZonedDateTime.from</code>.</li>
 </ul>

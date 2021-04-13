@@ -13112,7 +13112,7 @@
         var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
         var inputFieldNames = ES.CalendarFields(calendar, ['year']);
-        var inputEntries = [['year']]; // Add extra fields from the calendar at the end
+        var inputEntries = [['year', undefined]]; // Add extra fields from the calendar at the end
 
         inputFieldNames.forEach(function (fieldName) {
           if (!inputEntries.some(function (_ref) {
