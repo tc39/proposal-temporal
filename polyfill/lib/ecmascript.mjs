@@ -1153,6 +1153,13 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalDate: (item, options = {}) => {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDate(item)) return item;
+      if (ES.IsTemporalZonedDateTime(item)) {
+        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
+          GetSlot(item, TIME_ZONE),
+          GetSlot(item, INSTANT),
+          GetSlot(item, CALENDAR)
+        );
+      }
       if (ES.IsTemporalDateTime(item)) {
         const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
         return new TemporalPlainDate(
@@ -1197,6 +1204,13 @@ export const ES = ObjectAssign({}, ES2020, {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDateTime(item)) return item;
+      if (ES.IsTemporalZonedDateTime(item)) {
+        return ES.BuiltinTimeZoneGetPlainDateTimeFor(
+          GetSlot(item, TIME_ZONE),
+          GetSlot(item, INSTANT),
+          GetSlot(item, CALENDAR)
+        );
+      }
       if (ES.IsTemporalDate(item)) {
         const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
         return new TemporalPlainDateTime(
@@ -1354,6 +1368,13 @@ export const ES = ObjectAssign({}, ES2020, {
     let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
+      if (ES.IsTemporalZonedDateTime(item)) {
+        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
+          GetSlot(item, TIME_ZONE),
+          GetSlot(item, INSTANT),
+          GetSlot(item, CALENDAR)
+        );
+      }
       if (ES.IsTemporalDateTime(item)) {
         const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
         return new TemporalPlainTime(
