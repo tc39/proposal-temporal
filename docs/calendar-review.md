@@ -111,14 +111,16 @@ For example:
 
 ```javascript
 date = Temporal.PlainDate.from('2019-02-28[u-ca=hebrew]');
-date.with({ day: 1 }); // => 1 Adar I 5779
+date.with({ day: 1 }); // => 2019-02-06[u-ca=hebrew]
+date.with({ day: 1 }).toLocaleString('en-US', { calendar: 'hebrew' }); // => '1 Adar I 5779'
 date.year; // => 5779
-date.monthCode; // => M05L
+date.monthCode; // => 'M05L'
 date.month; // => 6
-date.day; // => 2
+date.day; // => 23
 date.inLeapYear; // => true
-date.calendar.id; // => hebrew
-inFourMonths = date.add({ months: 4 }); // => 23 Sivan 5779
+date.calendar.id; // => 'hebrew'
+inFourMonths = date.add({ months: 4 });
+inFourMonths.toLocaleString('en-US', { calendar: 'hebrew' }); // => '23 Sivan 5779'
 inFourMonths.withCalendar('iso8601'); // => 2019-06-26
 date.until(inFourMonths, { largestUnit: 'months' }); // => P4M
 ```
@@ -161,7 +163,8 @@ hebrewNewYearsEve = Temporal.PlainDate.from({
   day: 29,
   calendar: 'hebrew'
 });
-isLastDayOfYear(hebrewNewYearsEve); // => expected: true, actual: false
+isLastDayOfYear(hebrewNewYearsEve); // => false
+// (desired: true)
 ```
 
 ### Mitigating the Unexpected Calendar Problem

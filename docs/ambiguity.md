@@ -75,18 +75,17 @@ formatOptions = {
 zdt = instant.toZonedDateTimeISO('Asia/Tokyo');
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo]
 zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
-  // => "Sep 3, 2019 AD, 5:34:05 PM"
+  // => 'Sep 3, 2019 AD, 5:34:05 PM'
 zdt.year;
   // => 2019
-zdt = instant.toZonedDateTime('Asia/Tokyo', 'iso8601').toLocaleString('ja-jp', formatOptions);
-  // => 2019-09-03T17:34:05+09:00[Asia/Tokyo]
-  // this is identical to the result of toZonedDateTime() above
+zdt = instant.toZonedDateTime({timeZone: 'Asia/Tokyo', calendar: 'iso8601'}).toLocaleString('ja-jp', formatOptions);
+  // => '西暦2019年9月3日 17:34:05'
 
-zdt = instant.toZonedDateTime('Asia/Tokyo', 'japanese');
+zdt = instant.toZonedDateTime({timeZone: 'Asia/Tokyo', calendar: 'japanese'});
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo][u-ca=japanese]
 zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
-  // => "Sep 3, 1 Reiwa, 5:34:05 PM"
-zdt.year;
+  // => 'Sep 3, 1 Reiwa, 5:34:05 PM'
+zdt.eraYear;
   // => 1
 ```
 <!-- prettier-ignore-end -->
@@ -99,15 +98,15 @@ Conversions from calendar date and/or wall clock time to exact time are also sup
 date = Temporal.PlainDate.from('2019-12-17');
 // If time is omitted, local time defaults to start of day
 zdt = date.toZonedDateTime('Asia/Tokyo');
-  // => 2019-12-17T00:00+09:00[Asia/Tokyo]
-zdt = date.toZonedDateTime({ timeZone: 'Asia/Tokyo', time: '10:00' });
-  // => 2019-12-17T10:00+09:00[Asia/Tokyo]
+  // => 2019-12-17T00:00:00+09:00[Asia/Tokyo]
+zdt = date.toZonedDateTime({ timeZone: 'Asia/Tokyo', plainTime: '10:00' });
+  // => 2019-12-17T10:00:00+09:00[Asia/Tokyo]
 time = Temporal.PlainTime.from('14:35');
-zdt = time.toZonedDateTime({ timeZone: 'Asia/Tokyo', date: Temporal.PlainDate.from('2020-08-27') });
-  // => 020-08-27T14:35+09:00[Asia/Tokyo]
+zdt = time.toZonedDateTime({ timeZone: 'Asia/Tokyo', plainDate: Temporal.PlainDate.from('2020-08-27') });
+  // => 2020-08-27T14:35:00+09:00[Asia/Tokyo]
 dateTime = Temporal.PlainDateTime.from('2019-12-17T07:48');
 zdt = dateTime.toZonedDateTime('Asia/Tokyo');
-  // => 2019-12-17T07:48+09:00[Asia/Tokyo]
+  // => 2019-12-17T07:48:00+09:00[Asia/Tokyo]
 
 // Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.
 inst = zdt.toInstant();
@@ -173,11 +172,11 @@ zdt = dt.toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 
 // the offset is lost when converting from an exact type to a non-exact type
 zdt = Temporal.ZonedDateTime.from('2020-11-01T01:30-08:00[America/Los_Angeles]');
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles]
+  // => 2020-11-01T01:30:00-08:00[America/Los_Angeles]
 dt = zdt.toPlainDateTime(); // offset is lost!
-  // => 2020-11-01T01:30
+  // => 2020-11-01T01:30:00
 zdtAmbiguous = dt.toZonedDateTime('America/Los_Angeles'); // can be ambiguous
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+  // => 2020-11-01T01:30:00-07:00[America/Los_Angeles]
   // note that the offset is now -07:00 (Pacific Daylight Time) which is the "first" 1:30AM
   // not -08:00 (Pacific Standard Time) like the original time which was the "second" 1:30AM
 ```
@@ -228,17 +227,22 @@ In `'compatible'` mode, the same time is returned as `'later'` mode, which match
 // Offset of -07:00 is Daylight Saving Time, while offset of -08:00 indicates Standard Time.
 props = { timeZone: 'America/Los_Angeles', year: 2020, month: 3, day: 8, hour: 2, minute: 30 };
 zdt = Temporal.ZonedDateTime.from(props, { disambiguation: 'compatible' });
-  // => 2020-03-08T03:30-07:00[America/Los_Angeles]
+  // => 2020-03-08T03:30:00-07:00[America/Los_Angeles]
 zdt = Temporal.ZonedDateTime.from(props);
-  // => 2020-03-08T03:30-07:00[America/Los_Angeles] ('compatible' is the default)
+  // => 2020-03-08T03:30:00-07:00[America/Los_Angeles]
+  // ('compatible' is the default)
 earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
-  // => 2020-03-08T01:30-08:00[America/Los_Angeles] (1:30 clock time; still in Standard Time)
+  // => 2020-03-08T01:30:00-08:00[America/Los_Angeles]
+  // (1:30 clock time; still in Standard Time)
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
-  // => 2020-03-08T03:30-07:00[America/Los_Angeles] ('later' is same as 'compatible' for backwards transitions)
+  // => 2020-03-08T03:30:00-07:00[America/Los_Angeles]
+  // ('later' is same as 'compatible' for backwards transitions)
 later.toPlainDateTime().since(earlier.toPlainDateTime());
-  // => PT2H  (2 hour difference in clock time...
+  // => PT2H
+  // (2 hour difference in clock time...
 later.since(earlier);
-  // => PT1H   ... but 1 hour later in real-world time)
+  // => PT1H
+  // ... but 1 hour later in real-world time)
 ```
 <!-- prettier-ignore-end -->
 
@@ -254,22 +258,22 @@ In `'compatible'` mode, the same time is returned as `'earlier'` mode, which mat
 // Offset of -07:00 is Daylight Saving Time, while offset of -08:00 indicates Standard Time.
 props = { timeZone: 'America/Los_Angeles', year: 2020, month: 11, day: 1, hour: 1, minute: 30 };
 zdt = Temporal.ZonedDateTime.from(props, { disambiguation: 'compatible' });
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+  // => 2020-11-01T01:30:00-07:00[America/Los_Angeles]
 zdt = Temporal.ZonedDateTime.from(props);
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles]
+  // => 2020-11-01T01:30:00-07:00[America/Los_Angeles]
   // 'compatible' is the default.
 earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
-  // => 2020-11-01T01:30-07:00[America/Los_Angeles] 
+  // => 2020-11-01T01:30:00-07:00[America/Los_Angeles]
   // 'earlier' is same as 'compatible' for backwards transitions.
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
-  // => 2020-11-01T01:30-08:00[America/Los_Angeles] 
+  // => 2020-11-01T01:30:00-08:00[America/Los_Angeles]
   // Same clock time, but one hour later.
   // -08:00 offset indicates Standard Time.
 later.toPlainDateTime().since(earlier.toPlainDateTime());
-  // => PT0S  
+  // => PT0S
   // (same clock time...
 later.since(earlier);
-  // => PT1H   
+  // => PT1H
   // ... but 1 hour later in real-world time)
 ```
 <!-- prettier-ignore-end -->
@@ -319,7 +323,7 @@ Let's assume the stored future time was noon on January 15, 2020 in São Paulo:
 ```javascript
 zdt = Temporal.ZonedDateTime.from({ year: 2020, month: 1, day: 15, hour: 12, timeZone: 'America/Sao_Paulo' });
 zdt.toString();
-  // => "2020-01-15T12:00-02:00[America/Sao_Paulo]"
+  // => '2020-01-15T12:00:00-02:00[America/Sao_Paulo]'
   // Assume this string is saved in an external database.
   // Note that the offset is `-02:00` which is Daylight Saving Time
 
@@ -338,19 +342,19 @@ The `offset` option helps deal with this case.
 <!-- prettier-ignore-start -->
 ```javascript
 savedUsingOldTzDefinition = '2020-01-01T12:00-02:00[America/Sao_Paulo]'; // string that was saved earlier
-zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition);
+/* WRONG */ zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition);
   // => RangeError: Offset is invalid for '2020-01-01T12:00' in 'America/Sao_Paulo'. Provided: -02:00, expected: -03:00.
   // Default is to throw when the offset and time zone conflict.
-zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'reject' });
+/* WRONG */ zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'reject' });
   // => RangeError: Offset is invalid for '2020-01-01T12:00' in 'America/Sao_Paulo'. Provided: -02:00, expected: -03:00.
 zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'use' });
-  // => 2020-01-15T11:00-03:00[America/Sao_Paulo]
+  // => 2020-01-01T11:00:00-03:00[America/Sao_Paulo]
   // Evaluate DateTime value using old offset, which keeps UTC time constant as local time changes to 11:00
 zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'ignore' });
-  // => 2020-01-15T12:00-03:00[America/Sao_Paulo]
+  // => 2020-01-01T12:00:00-03:00[America/Sao_Paulo]
   // Use current time zone rules to calculate offset, ignoring any saved offset
 zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'prefer' });
-  // => 2020-01-15T12:00-03:00[America/Sao_Paulo]
+  // => 2020-01-01T12:00:00-03:00[America/Sao_Paulo]
   // Saved offset is invalid for current time zone rules, so use time zone to to calculate offset.
 ```
 <!-- prettier-ignore-end -->

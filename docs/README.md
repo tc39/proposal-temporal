@@ -65,7 +65,7 @@ For a human-readable local calendar date or clock time, use a `Temporal.TimeZone
 
 ```js
 const instant = Temporal.Instant.from('1969-07-20T20:17Z');
-instant.toString(); // => "1969-07-20T20:17:00Z"
+instant.toString(); // => '1969-07-20T20:17:00Z'
 instant.epochMilliseconds; // => -14182980000
 ```
 
@@ -88,7 +88,7 @@ const zonedDateTime = Temporal.ZonedDateTime.from({
   millisecond: 0,
   microsecond: 3,
   nanosecond: 500
-}); // => 1995-12-07T03:24:30.000003500+08:00[America/Los_Angeles]
+}); // => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]
 ```
 
 As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.PlainDateTime` (which includes `Temporal.Calendar`).
@@ -103,7 +103,7 @@ A `Temporal.PlainDate` object represents a calendar date that is not associated 
 const date = Temporal.PlainDate.from({ year: 2006, month: 8, day: 24 }); // => 2006-08-24
 date.year; // => 2006
 date.inLeapYear; // => false
-date.toString(); // => "2006-08-24"
+date.toString(); // => '2006-08-24'
 ```
 
 This can also be converted to partial dates such as `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`.
@@ -125,7 +125,7 @@ const time = Temporal.PlainTime.from({
 }); // => 19:39:09.068346205
 
 time.second; // => 9
-time.toString(); // => "19:39:09.068346205"
+time.toString(); // => '19:39:09.068346205'
 ```
 
 See [Temporal.PlainTime Documentation](./plaintime.md) for detailed documentation.

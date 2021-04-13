@@ -97,21 +97,18 @@ ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27'); // => 2019-06
 ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27Z'); // => 2019-06
 ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27+01:00[Europe/Brussels]');
   // => 2019-06
-ym === Temporal.PlainYearMonth.from(ym); // => true
+ym === Temporal.PlainYearMonth.from(ym); // => false
 
 ym = Temporal.PlainYearMonth.from({ year: 2019, month: 6 }); // => 2019-06
 ym = Temporal.PlainYearMonth.from(Temporal.PlainDate.from('2019-06-24'));
-  // => same as above; Temporal.PlainDate has year and month properties
+  // => 2019-06
+  // (same as above; Temporal.PlainDate has year and month properties)
 
 // Different overflow modes
 ym = Temporal.PlainYearMonth.from({ year: 2001, month: 13 }, { overflow: 'constrain' });
   // => 2001-12
-ym = Temporal.PlainYearMonth.from({ year: 2001, month: -1 }, { overflow: 'constrain' });
-  // => 2001-01
 ym = Temporal.PlainYearMonth.from({ year: 2001, month: 13 }, { overflow: 'reject' });
-  // throws
-ym = Temporal.PlainYearMonth.from({ year: 2001, month: -1 }, { overflow: 'reject' });
-  // throws
+  // => throws
 ```
 <!-- prettier-ignore-end -->
 
@@ -144,7 +141,7 @@ one = Temporal.PlainYearMonth.from('2006-08');
 two = Temporal.PlainYearMonth.from('2015-07');
 three = Temporal.PlainYearMonth.from('1930-02');
 sorted = [one, two, three].sort(Temporal.PlainYearMonth.compare);
-sorted.join(' '); // => 1930-02 2006-08 2015-07
+sorted.join(' '); // => '1930-02 2006-08 2015-07'
 ```
 
 ## Properties
@@ -179,13 +176,12 @@ Usage examples:
 ym = Temporal.PlainYearMonth.from('2019-06');
 ym.year; // => 2019
 ym.month; // => 6
-ym.monthCode; // => "M06"
+ym.monthCode; // => 'M06'
 
 ym = Temporal.PlainYearMonth.from('2019-02-23[u-ca=hebrew]');
 ym.year; // => 5779
 ym.month; // => 6
-ym.monthCode; // => "M05L"
-ym.day; // => 18
+ym.monthCode; // => 'M05L'
 ```
 
 ### yearMonth.**calendar** : object
@@ -204,7 +200,7 @@ Unlike `year`, `eraYear` may decrease as time proceeds because some eras (like t
 ```javascript
 ym = Temporal.PlainYearMonth.from('-000015-01-01[u-ca=gregory]');
 ym.era;
-// => "bce"
+// => 'bce'
 ym.eraYear;
 // => 16
 ym.year;
@@ -222,11 +218,11 @@ Usage example:
 // Attempt to write some mnemonic poetry
 const monthsByDays = {};
 for (let month = 1; month <= 12; month++) {
-  const ym = Temporal.PlainYearMonth.from({ year: 2020, month });
+  const ym = Temporal.PlainYearMonth.from({ year: 2020, calendar: 'iso8601', month });
   monthsByDays[ym.daysInMonth] = (monthsByDays[ym.daysInMonth] || []).concat(ym);
 }
 
-const strings = monthsByDays[30].map((ym) => ym.toLocaleString('en', { month: 'long' }));
+const strings = monthsByDays[30].map((ym) => ym.toLocaleString('en', { month: 'long', calendar: 'iso8601' }));
 // Shuffle to improve poem as determined empirically
 strings.unshift(strings.pop());
 const format = new Intl.ListFormat('en');
@@ -244,10 +240,10 @@ Usage example:
 
 <!-- prettier-ignore-start -->
 ```javascript
-ym = Temporal.PlainYearMonth.from('2019-06');
+ym = Temporal.PlainYearMonth.from({ year: 2019, month: 6, calendar: 'iso8601' });
 percent = ym.daysInMonth / ym.daysInYear;
-`${ym.toLocaleString('en', {month: 'long', year: 'numeric'})} was ${percent.toLocaleString('en', {style: 'percent'})} of the year!`
-  // => example output: "June 2019 was 8% of the year!"
+`${ym.toLocaleString('en', {month: 'long', year: 'numeric', calendar: 'iso8601' })} was ${percent.toLocaleString('en', {style: 'percent'})} of the year!`
+  // => 'June 2019 was 8% of the year!'
 ```
 <!-- prettier-ignore-end -->
 
@@ -259,7 +255,7 @@ For the ISO 8601 calendar, this is always 12, but in other calendar systems it m
 Usage example:
 
 ```javascript
-ym = Temporal.PlainDate.from('1900-01');
+ym = Temporal.PlainYearMonth.from('1900-01');
 ym.monthsInYear; // => 12
 ```
 
@@ -526,7 +522,7 @@ Example usage:
 
 ```js
 ym = Temporal.PlainYearMonth.from('2019-06');
-ym.toString(); // => 2019-06
+ym.toString(); // => '2019-06'
 ```
 
 ### yearMonth.**toLocaleString**(_locales_?: string | array&lt;string&gt;, _options_?: object) : string
@@ -560,13 +556,13 @@ Example usage:
 ```js
 ({ calendar } = new Intl.DateTimeFormat().resolvedOptions());
 ym = Temporal.PlainYearMonth.from({ year: 2019, month: 6, calendar });
-ym.toLocaleString(); // => example output: 2019-06
+ym.toLocaleString(); // example output: '6/2019'
 // Same as above, but explicitly specifying the calendar:
 ym.toLocaleString(undefined, { calendar });
 
-ym.toLocaleString('de-DE', { calendar }); // => example output: 6.2019
-ym.toLocaleString('de-DE', { month: 'long', year: 'numeric', calendar }); // => Juni 2019
-ym.toLocaleString(`en-US-u-nu-fullwide-u-ca-${calendar}`); // => ６/２０１９
+ym.toLocaleString('de-DE', { calendar }); // example output: '6.2019'
+ym.toLocaleString('de-DE', { month: 'long', year: 'numeric', calendar }); // => 'Juni 2019'
+ym.toLocaleString(`en-US-u-nu-fullwide-ca-${calendar}`); // => '６/２０１９'
 ```
 
 ### yearMonth.**toJSON**() : string
