@@ -657,6 +657,18 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-rejecttemporalcalendartype" aoid="RejectTemporalCalendarType">
+    <h1>RejectTemporalCalendarType ( _object_ )</h1>
+    <p>
+      The abstract operation RejectTemporalCalendarType throws an exception if its argument _object_ is an instance of one of the Temporal types that carries a calendar.
+    </p>
+    <emu-alg>
+      1. Assert: Type(_object_) is Object.
+      1. If _object_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Throw a *TypeError* exception.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
     <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
     <emu-alg>

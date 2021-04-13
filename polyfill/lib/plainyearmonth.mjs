@@ -3,7 +3,18 @@
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_YEAR, ISO_MONTH, ISO_DAY, YEAR_MONTH_BRAND, CALENDAR, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
+import {
+  ISO_YEAR,
+  ISO_MONTH,
+  ISO_DAY,
+  YEAR_MONTH_BRAND,
+  CALENDAR,
+  TIME_ZONE,
+  CreateSlots,
+  GetSlot,
+  HasSlot,
+  SetSlot
+} from './slots.mjs';
 
 function YearMonthToString(yearMonth, showCalendar = 'auto') {
   const year = ES.ISOYearString(GetSlot(yearMonth, ISO_YEAR));
@@ -95,6 +106,9 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalYearMonthLike) !== 'Object') {
       throw new TypeError('invalid argument');
+    }
+    if (HasSlot(temporalYearMonthLike, CALENDAR) || HasSlot(temporalYearMonthLike, TIME_ZONE)) {
+      throw new TypeError('with() does not support a calendar or timeZone property');
     }
     if (temporalYearMonthLike.calendar !== undefined) {
       throw new TypeError('with() does not support a calendar property');
