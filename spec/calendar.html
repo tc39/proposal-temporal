@@ -513,51 +513,47 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-isoyear" aoid="ISOYear">
-      <h1>ISOYear ( _dateOrDateTime_ )</h1>
+      <h1>ISOYear ( _temporalObject_ )</h1>
       <p>
         The ISOYear abstract operation implements the calendar-specific logic in the `Temporal.Calendar.year` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOYear]] internal slot, then
-          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(_dateOrDateTime_.[[ISOYear]]).
+        1. Assert: _temporalObject_ has an [[ISOYear]] internal slot.
+        1. Return 𝔽(_temporalObject_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-isomonth" aoid="ISOMonth">
-      <h1>ISOMonth ( _dateOrDateTime_ )</h1>
+      <h1>ISOMonth ( _temporalObject_ )</h1>
       <p>
         The ISOMonth abstract operation implements the calendar-specific logic in the `Temporal.Calendar.month` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
-          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(_dateOrDateTime_.[[ISOMonth]]).
+        1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
+        1. Return 𝔽(_temporalObject_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-isomonthcode" aoid="ISOMonthCode">
-      <h1>ISOMonthCode ( _dateOrDateTime_ )</h1>
+      <h1>ISOMonthCode ( _temporalObject_ )</h1>
       <p>
         The ISOMonthCode abstract operation implements the calendar-specific logic in the `Temporal.Calendar.monthCode` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISOMonth]] internal slot, then
-          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Let _monthCode_ be the String representation of _dateOrDateTime_.[[ISOMonth]], formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
+        1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
+        1. Let _monthCode_ be the String representation of _temporalObject_.[[ISOMonth]], formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
         1. Return the string-concatenation of *"M"* and _monthCode_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-isoday" aoid="ISODay">
-      <h1>ISODay ( _dateOrDateTime_ )</h1>
+      <h1>ISODay ( _temporalObject_ )</h1>
       <p>
         The ISODay abstract operation implements the calendar-specific logic in the `Temporal.Calendar.day` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
-        1. If Type(_dateOrDateTime_) is not Object or _dateOrDateTime_ does not have an [[ISODay]] internal slot, then
-          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(_dateOrDateTime_.[[ISODay]]).
+        1. Assert: _temporalObject_ has an [[ISODay]] internal slot.
+        1. Return 𝔽(_temporalObject_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
@@ -785,191 +781,200 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.year">
-      <h1>Temporal.Calendar.prototype.year ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.year ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `year` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `year` method is used.
       </p>
       <p>
-        The `year` method takes one argument _dateOrDateTime_.
+        The `year` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? ISOYear(_dateOrDateTime_).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return ! ISOYear(_temporalDateLike_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.month">
-      <h1>Temporal.Calendar.prototype.month ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.month ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `month` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `month` method is used.
       </p>
       <p>
-        The `month` method takes one argument _dateOrDateTime_.
+        The `month` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_dateOrDateTime_) is Object and _dateOrDateTime_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Throw a *TypeError* exception.
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? ISOMonth(_dateOrDateTime_).
+        1. If Type(_temporalDateLike_) is Object and _temporalDateLike_ has an [[InitializedTemporalMonthDay]] internal slot, then
+          1. Throw a *TypeError* exception.
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return ! ISOMonth(_temporalDateLike_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.monthcode">
-      <h1>Temporal.Calendar.prototype.monthCode ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.monthCode ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `monthCode` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `monthCode` method is used.
       </p>
       <p>
-        The `monthCode` method takes one argument _dateOrDateTime_.
+        The `monthCode` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? ISOMonthCode(_dateOrDateTime_).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return ! ISOMonthCode(_temporalDateLike_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.day">
-      <h1>Temporal.Calendar.prototype.day ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.day ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `day` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `day` method is used.
       </p>
       <p>
-        The `day` method takes one argument _dateOrDateTime_.
+        The `day` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? ISODay(_dateOrDateTime_).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalMonthDay]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return ! ISODay(_temporalDateLike_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dayofweek">
-      <h1>Temporal.Calendar.prototype.dayOfWeek ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.dayOfWeek ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dayOfWeek` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dayOfWeek` method is used.
       </p>
       <p>
-        The `dayOfWeek` method takes one argument _dateOrDateTime_.
+        The `dayOfWeek` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToISODayOfWeek(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+        1. Return 𝔽(! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dayofyear">
-      <h1>Temporal.Calendar.prototype.dayOfYear ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.dayOfYear ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dayOfYear` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dayOfYear` method is used.
       </p>
       <p>
-        The `dayOfYear` method takes one argument _dateOrDateTime_.
+        The `dayOfYear` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToISODayOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+        1. Return 𝔽(! ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.weekofyear">
-      <h1>Temporal.Calendar.prototype.weekOfYear ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.weekOfYear ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `weekOfYear` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `weekOfYear` method is used.
       </p>
       <p>
-        The `weekOfYear` method takes one argument _dateOrDateTime_.
+        The `weekOfYear` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ToISOWeekOfYear(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]])).
+        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+        1. Return 𝔽(! ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinweek">
-      <h1>Temporal.Calendar.prototype.daysInWeek ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.daysInWeek ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInWeek` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInWeek` method is used.
       </p>
       <p>
-        The `daysInWeek` method takes one argument _dateOrDateTime_.
+        The `daysInWeek` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Perform ? ToTemporalDate(_dateOrDateTime_).
+        1. Perform ? ToTemporalDate(_temporalDateLike_).
         1. Return *7*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinmonth">
-      <h1>Temporal.Calendar.prototype.daysInMonth ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.daysInMonth ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInMonth` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInMonth` method is used.
       </p>
       <p>
-        The `daysInMonth` method takes one argument _dateOrDateTime_.
+        The `daysInMonth` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. If _dateOrDateTime_ does not have [[ISOYear]] and [[ISOMonth]] internal slots, then
-          1. Set _dateOrDateTime_ to ? ToTemporalDate(_dateOrDateTime_).
-        1. Return 𝔽(! ISODaysInMonth(_dateOrDateTime_.[[ISOYear]], _dateOrDateTime_.[[ISOMonth]])).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slots, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return 𝔽(! ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]])).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinyear">
-      <h1>Temporal.Calendar.prototype.daysInYear ( _dateOrDateTime_ )</h1>
+      <h1>Temporal.Calendar.prototype.daysInYear ( _temporalDateLike_ )</h1>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInYear` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInYear` method is used.
       </p>
       <p>
-        The `daysInYear` method takes one argument _dateOrDateTime_.
+        The `daysInYear` method takes one argument _temporalDateLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-        1. Return 𝔽(! ISODaysInYear(_year_)).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return 𝔽(! ISODaysInYear(_temporalDateLike_.[[ISOYear]])).
       </emu-alg>
     </emu-clause>
 
@@ -987,7 +992,8 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Perform ? ToTemporalDate(_dateOrDateTime_).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Perform ? ToTemporalDate(_temporalDateLike_).
         1. Return *12*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
@@ -1006,8 +1012,9 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _year_ be ? ISOYear(_dateOrDateTime_).
-        1. Return ! IsISOLeapYear(_year_).
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return ! IsISOLeapYear(_temporalDateLike_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 

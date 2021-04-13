@@ -88,71 +88,73 @@ export class Calendar {
   }
   year(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].year(date);
   }
   month(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.IsTemporalMonthDay(date)) throw new TypeError('use monthCode on PlainMonthDay instead');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].month(date);
   }
   monthCode(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date) && !ES.IsTemporalMonthDay(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].monthCode(date);
   }
   day(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalMonthDay(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].day(date);
   }
   era(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].era(date);
   }
   eraYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].eraYear(date);
   }
   dayOfWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].dayOfWeek(date);
   }
   dayOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].dayOfYear(date);
   }
   weekOfYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].weekOfYear(date);
   }
   daysInWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].daysInWeek(date);
   }
   daysInMonth(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].daysInMonth(date);
   }
   daysInYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].daysInYear(date);
   }
   monthsInYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (!HasSlot(date, ISO_YEAR)) date = ES.ToTemporalDate(date);
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].monthsInYear(date);
   }
   inLeapYear(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalYearMonth(date)) date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].inLeapYear(date);
   }
   toString() {
