@@ -876,9 +876,7 @@ export const ES = ObjectAssign({}, ES2020, {
           GetSlot(relativeTo, CALENDAR)
         );
       }
-      calendar = relativeTo.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
+      calendar = ES.GetOptionalTemporalCalendar(relativeTo);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       ({
@@ -1164,9 +1162,7 @@ export const ES = ObjectAssign({}, ES2020, {
           GetSlot(item, CALENDAR)
         );
       }
-      let calendar = item.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
+      const calendar = ES.GetOptionalTemporalCalendar(item);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateFields(item, fieldNames);
       return ES.DateFromFields(calendar, fields, options);
@@ -1217,10 +1213,7 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
 
-      calendar = item.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
-
+      calendar = ES.GetOptionalTemporalCalendar(item);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
       ({
@@ -1323,10 +1316,16 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalMonthDay: (item, options = {}) => {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalMonthDay(item)) return item;
-      let calendar = item.calendar;
-      let calendarAbsent = calendar === undefined;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
+      let calendar, calendarAbsent;
+      if (HasSlot(item, CALENDAR)) {
+        calendar = GetSlot(item, CALENDAR);
+        calendarAbsent = false;
+      } else {
+        calendar = item.calendar;
+        calendarAbsent = calendar === undefined;
+        if (calendar === undefined) calendar = ES.GetISO8601Calendar();
+        calendar = ES.ToTemporalCalendar(calendar);
+      }
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
       // Callers who omit the calendar are not writing calendar-independent
@@ -1366,12 +1365,9 @@ export const ES = ObjectAssign({}, ES2020, {
           GetSlot(item, ISO_NANOSECOND)
         );
       }
-      calendar = item.calendar;
-      if (calendar) {
-        calendar = ES.ToTemporalCalendar(calendar);
-        if (ES.ToString(calendar) !== 'iso8601') {
-          throw new RangeError('PlainTime can only have iso8601 calendar');
-        }
+      calendar = ES.GetOptionalTemporalCalendar(item);
+      if (ES.ToString(calendar) !== 'iso8601') {
+        throw new RangeError('PlainTime can only have iso8601 calendar');
       }
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(item));
       ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
@@ -1398,9 +1394,7 @@ export const ES = ObjectAssign({}, ES2020, {
   ToTemporalYearMonth: (item, options = {}) => {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalYearMonth(item)) return item;
-      let calendar = item.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
+      const calendar = ES.GetOptionalTemporalCalendar(item);
       const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
       const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
       return ES.YearMonthFromFields(calendar, fields, options);
@@ -1487,9 +1481,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalZonedDateTime(item)) return item;
-      calendar = item.calendar;
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-      calendar = ES.ToTemporalCalendar(calendar);
+      calendar = ES.GetOptionalTemporalCalendar(item);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
       const fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
       ({
@@ -1677,6 +1669,12 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     if (!calendar) calendar = 'iso8601';
     return new TemporalCalendar(calendar);
+  },
+  GetOptionalTemporalCalendar: (item) => {
+    if (HasSlot(item, CALENDAR)) return GetSlot(item, CALENDAR);
+    const { calendar } = item;
+    if (calendar === undefined) return ES.GetISO8601Calendar();
+    return ES.ToTemporalCalendar(calendar);
   },
   CalendarCompare: (one, two) => {
     const cal1 = ES.ToString(one);

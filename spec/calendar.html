@@ -269,6 +269,8 @@
         If no such property is present, the ISO 8601 calendar is returned.
       </p>
       <emu-alg>
+        1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. Return _item_.[[Calendar]].
         1. Let _calendar_ be ? Get(_item_, *"calendar"*).
         1. Return ? ToOptionalTemporalCalendar(_calendar_).
       </emu-alg>
