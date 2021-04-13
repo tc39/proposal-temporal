@@ -15,9 +15,11 @@ import {
   ISO_MICROSECOND,
   ISO_NANOSECOND,
   CALENDAR,
+  TIME_ZONE,
   EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
+  HasSlot,
   SetSlot
 } from './slots.mjs';
 
@@ -204,6 +206,9 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (ES.Type(temporalDateTimeLike) !== 'Object') {
       throw new TypeError('invalid argument');
+    }
+    if (HasSlot(temporalDateTimeLike, CALENDAR) || HasSlot(temporalDateTimeLike, TIME_ZONE)) {
+      throw new TypeError('with() does not support a calendar or timeZone property');
     }
     if (temporalDateTimeLike.calendar !== undefined) {
       throw new TypeError('with() does not support a calendar property');
