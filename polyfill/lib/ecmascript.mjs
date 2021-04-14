@@ -3290,7 +3290,35 @@ export const ES = ObjectAssign({}, ES2020, {
       µs2,
       ns2
     );
+
+    const timeSign = ES.DurationSign(
+      0,
+      0,
+      0,
+      deltaDays,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
     ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 + deltaDays));
+    const dateSign = ES.CompareISODate(y2, mon2, d2, y1, mon1, d1);
+    if (dateSign === -timeSign) {
+      ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 - timeSign));
+      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
+        -timeSign,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        largestUnit
+      ));
+    }
+
     const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
