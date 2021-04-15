@@ -243,8 +243,7 @@ export class Instant {
       throw new TypeError('missing timeZone property in toZonedDateTime');
     }
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toZonedDateTimeISO(item) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -256,8 +255,7 @@ export class Instant {
     }
     const timeZone = ES.ToTemporalTimeZone(item);
     const calendar = ES.GetISO8601Calendar();
-    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
 
   static fromEpochSeconds(epochSeconds) {

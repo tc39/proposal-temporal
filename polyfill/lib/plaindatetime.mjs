@@ -1,5 +1,3 @@
-/* global __debug__ */
-
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -17,51 +15,9 @@ import {
   CALENDAR,
   TIME_ZONE,
   EPOCHNANOSECONDS,
-  CreateSlots,
   GetSlot,
-  HasSlot,
-  SetSlot
+  HasSlot
 } from './slots.mjs';
-
-function DateTimeToString(dateTime, precision, showCalendar = 'auto', options = undefined) {
-  let year = GetSlot(dateTime, ISO_YEAR);
-  let month = GetSlot(dateTime, ISO_MONTH);
-  let day = GetSlot(dateTime, ISO_DAY);
-  let hour = GetSlot(dateTime, ISO_HOUR);
-  let minute = GetSlot(dateTime, ISO_MINUTE);
-  let second = GetSlot(dateTime, ISO_SECOND);
-  let millisecond = GetSlot(dateTime, ISO_MILLISECOND);
-  let microsecond = GetSlot(dateTime, ISO_MICROSECOND);
-  let nanosecond = GetSlot(dateTime, ISO_NANOSECOND);
-
-  if (options) {
-    const { unit, increment, roundingMode } = options;
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      increment,
-      unit,
-      roundingMode
-    ));
-  }
-
-  year = ES.ISOYearString(year);
-  month = ES.ISODateTimePartString(month);
-  day = ES.ISODateTimePartString(day);
-  hour = ES.ISODateTimePartString(hour);
-  minute = ES.ISODateTimePartString(minute);
-  const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  const calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
-  const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
-  return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
-}
 
 export class PlainDateTime {
   constructor(
@@ -88,35 +44,25 @@ export class PlainDateTime {
     calendar = ES.ToTemporalCalendar(calendar);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
-    //       be rejected by RejectDateTime below. This check exists only to improve the error
-    //       message.
+    //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
+    //       check exists only to improve the error message.
     if (arguments.length < 3) {
       throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
     }
 
-    ES.RejectDateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
-    ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond);
-
-    CreateSlots(this);
-    SetSlot(this, ISO_YEAR, isoYear);
-    SetSlot(this, ISO_MONTH, isoMonth);
-    SetSlot(this, ISO_DAY, isoDay);
-    SetSlot(this, ISO_HOUR, hour);
-    SetSlot(this, ISO_MINUTE, minute);
-    SetSlot(this, ISO_SECOND, second);
-    SetSlot(this, ISO_MILLISECOND, millisecond);
-    SetSlot(this, ISO_MICROSECOND, microsecond);
-    SetSlot(this, ISO_NANOSECOND, nanosecond);
-    SetSlot(this, CALENDAR, calendar);
-
-    if (typeof __debug__ !== 'undefined' && __debug__) {
-      Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${DateTimeToString(this, 'auto')}>`,
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
-    }
+    ES.CreateTemporalDateTimeSlots(
+      this,
+      isoYear,
+      isoMonth,
+      isoDay,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   get calendar() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -250,7 +196,18 @@ export class PlainDateTime {
       nanosecond
     } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
 
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -259,7 +216,7 @@ export class PlainDateTime {
     const day = GetSlot(this, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
 
-    if (temporalTime === undefined) return new PlainDateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
+    if (temporalTime === undefined) return ES.CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
 
     temporalTime = ES.ToTemporalTime(temporalTime);
     const hour = GetSlot(temporalTime, ISO_HOUR);
@@ -269,7 +226,18 @@ export class PlainDateTime {
     const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
     const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
 
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   withPlainDate(temporalDate) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -288,11 +256,21 @@ export class PlainDateTime {
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
     calendar = ES.ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    calendar = ES.ToTemporalCalendar(calendar);
     return new PlainDateTime(
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
@@ -336,7 +314,18 @@ export class PlainDateTime {
       nanoseconds,
       options
     );
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -368,7 +357,18 @@ export class PlainDateTime {
       -nanoseconds,
       options
     );
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -610,7 +610,7 @@ export class PlainDateTime {
       roundingMode
     ));
 
-    return new PlainDateTime(
+    return ES.CreateTemporalDateTime(
       year,
       month,
       day,
@@ -649,11 +649,11 @@ export class PlainDateTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const showCalendar = ES.ToShowCalendarOption(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    return DateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
+    return ES.TemporalDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toJSON() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return DateTimeToString(this, 'auto');
+    return ES.TemporalDateTimeToString(this, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -669,8 +669,7 @@ export class PlainDateTime {
     options = ES.NormalizeOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, this, disambiguation);
-    const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   toPlainDate() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -714,7 +713,7 @@ export class PlainDateTime {
     options = ES.NormalizeOptionsObject(options);
     if (ES.IsTemporalDateTime(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
-      return new PlainDateTime(
+      return ES.CreateTemporalDateTime(
         GetSlot(item, ISO_YEAR),
         GetSlot(item, ISO_MONTH),
         GetSlot(item, ISO_DAY),

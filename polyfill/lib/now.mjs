@@ -32,14 +32,10 @@ function plainDateTimeISO(temporalTimeZoneLike = timeZone()) {
 function zonedDateTime(calendarLike, temporalTimeZoneLike = timeZone()) {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendar(calendarLike);
-  const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-  return new ZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
+  return ES.CreateTemporalZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
 }
 function zonedDateTimeISO(temporalTimeZoneLike = timeZone()) {
-  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = ES.GetISO8601Calendar();
-  const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-  return new ZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
+  return zonedDateTime(ES.GetISO8601Calendar(), temporalTimeZoneLike);
 }
 function plainDate(calendarLike, temporalTimeZoneLike = timeZone()) {
   return ES.TemporalDateTimeToDate(plainDateTime(calendarLike, temporalTimeZoneLike));
