@@ -1,5 +1,3 @@
-/* global __debug__ */
-
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -17,10 +15,8 @@ import {
   ISO_NANOSECOND,
   ISO_SECOND,
   TIME_ZONE,
-  CreateSlots,
   GetSlot,
-  HasSlot,
-  SetSlot
+  HasSlot
 } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -40,25 +36,7 @@ export class ZonedDateTime {
     timeZone = ES.ToTemporalTimeZone(timeZone);
     calendar = ES.ToTemporalCalendar(calendar);
 
-    ES.RejectInstantRange(epochNanoseconds);
-
-    CreateSlots(this);
-    SetSlot(this, EPOCHNANOSECONDS, epochNanoseconds);
-    SetSlot(this, TIME_ZONE, timeZone);
-    SetSlot(this, CALENDAR, calendar);
-
-    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-    const instant = new TemporalInstant(GetSlot(this, EPOCHNANOSECONDS));
-    SetSlot(this, INSTANT, instant);
-
-    if (typeof __debug__ !== 'undefined' && __debug__) {
-      Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${zonedDateTimeToString(this, 'auto')}>`,
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
-    }
+    ES.CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
   }
   get calendar() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -259,7 +237,7 @@ export class ZonedDateTime {
       offset
     );
 
-    return new ZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
   }
   withPlainDate(temporalDate) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -281,20 +259,9 @@ export class ZonedDateTime {
     calendar = ES.ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
     const timeZone = GetSlot(this, TIME_ZONE);
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -316,30 +283,19 @@ export class ZonedDateTime {
 
     const timeZone = GetSlot(this, TIME_ZONE);
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   withTimeZone(timeZone) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     timeZone = ES.ToTemporalTimeZone(timeZone);
-    return new ZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     calendar = ES.ToTemporalCalendar(calendar);
-    return new ZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), GetSlot(this, TIME_ZONE), calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), GetSlot(this, TIME_ZONE), calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -365,7 +321,7 @@ export class ZonedDateTime {
       nanoseconds,
       options
     );
-    return new ZonedDateTime(epochNanoseconds, timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -391,7 +347,7 @@ export class ZonedDateTime {
       -nanoseconds,
       options
     );
-    return new ZonedDateTime(epochNanoseconds, timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -727,7 +683,7 @@ export class ZonedDateTime {
       'prefer'
     );
 
-    return new ZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
   }
   equals(other) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -746,7 +702,7 @@ export class ZonedDateTime {
     const showCalendar = ES.ToShowCalendarOption(options);
     const showTimeZone = ES.ToShowTimeZoneNameOption(options);
     const showOffset = ES.ToShowOffsetOption(options);
-    return zonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
+    return ES.TemporalZonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
       unit,
       increment,
       roundingMode
@@ -758,7 +714,7 @@ export class ZonedDateTime {
   }
   toJSON() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return zonedDateTimeToString(this, 'auto');
+    return ES.TemporalZonedDateTimeToString(this, 'auto');
   }
   valueOf() {
     throw new TypeError('use compare() or equals() to compare Temporal.ZonedDateTime');
@@ -770,7 +726,7 @@ export class ZonedDateTime {
     const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
     const timeZone = GetSlot(this, TIME_ZONE);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtStart, 'compatible');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   toInstant() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -791,19 +747,17 @@ export class ZonedDateTime {
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const YearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    return calendar.yearMonthFromFields(fields, {}, YearMonth);
+    return calendar.yearMonthFromFields(fields, {});
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const MonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-    return calendar.monthDayFromFields(fields, {}, MonthDay);
+    return calendar.monthDayFromFields(fields, {});
   }
   getISOFields() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -830,7 +784,11 @@ export class ZonedDateTime {
       ES.ToTemporalOverflow(options); // validate and ignore
       ES.ToTemporalDisambiguation(options);
       ES.ToTemporalOffset(options, 'reject');
-      return new ZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
+      return ES.CreateTemporalZonedDateTime(
+        GetSlot(item, EPOCHNANOSECONDS),
+        GetSlot(item, TIME_ZONE),
+        GetSlot(item, CALENDAR)
+      );
     }
     return ES.ToTemporalZonedDateTime(item, options);
   }
@@ -853,45 +811,4 @@ function bigIntIfAvailable(wrapper) {
 
 function dateTime(zdt) {
   return ES.BuiltinTimeZoneGetPlainDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
-}
-
-function zonedDateTimeToString(
-  zdt,
-  precision,
-  showCalendar = 'auto',
-  showTimeZone = 'auto',
-  showOffset = 'auto',
-  options = undefined
-) {
-  let instant = GetSlot(zdt, INSTANT);
-
-  if (options) {
-    const { unit, increment, roundingMode } = options;
-    const ns = ES.RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
-    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-    instant = new TemporalInstant(ns);
-  }
-
-  const tz = GetSlot(zdt, TIME_ZONE);
-  const iso = ES.GetISO8601Calendar();
-  const dateTime = ES.BuiltinTimeZoneGetPlainDateTimeFor(tz, instant, iso);
-
-  const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
-  const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-  const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-  const hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
-  const minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
-  const seconds = ES.FormatSecondsStringPart(
-    GetSlot(dateTime, ISO_SECOND),
-    GetSlot(dateTime, ISO_MILLISECOND),
-    GetSlot(dateTime, ISO_MICROSECOND),
-    GetSlot(dateTime, ISO_NANOSECOND),
-    precision
-  );
-  let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
-  if (showOffset !== 'never') result += ES.BuiltinTimeZoneGetOffsetStringFor(tz, instant);
-  if (showTimeZone !== 'never') result += `[${tz}]`;
-  const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
-  result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
-  return result;
 }

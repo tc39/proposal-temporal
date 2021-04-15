@@ -432,8 +432,18 @@ export class PlainTime {
     const microsecond = GetSlot(this, ISO_MICROSECOND);
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
-    const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   }
   toZonedDateTime(item) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -466,21 +476,9 @@ export class PlainTime {
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
-    const ZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new ZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

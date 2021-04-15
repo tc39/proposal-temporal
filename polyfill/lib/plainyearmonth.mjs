@@ -1,35 +1,7 @@
-/* global __debug__ */
-
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import {
-  ISO_YEAR,
-  ISO_MONTH,
-  ISO_DAY,
-  YEAR_MONTH_BRAND,
-  CALENDAR,
-  TIME_ZONE,
-  CreateSlots,
-  GetSlot,
-  HasSlot,
-  SetSlot
-} from './slots.mjs';
-
-function YearMonthToString(yearMonth, showCalendar = 'auto') {
-  const year = ES.ISOYearString(GetSlot(yearMonth, ISO_YEAR));
-  const month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
-  let resultString = `${year}-${month}`;
-  const calendar = GetSlot(yearMonth, CALENDAR);
-  const calendarID = ES.ToString(calendar);
-  if (calendarID !== 'iso8601') {
-    const day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
-    resultString += `-${day}`;
-  }
-  const calendarString = ES.FormatCalendarAnnotation(calendarID, showCalendar);
-  if (calendarString) resultString += calendarString;
-  return resultString;
-}
+import { ISO_YEAR, ISO_MONTH, ISO_DAY, CALENDAR, TIME_ZONE, GetSlot, HasSlot } from './slots.mjs';
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) {
@@ -39,28 +11,13 @@ export class PlainYearMonth {
     referenceISODay = ES.ToInteger(referenceISODay);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
-    //       be rejected by RejectDate below. This check exists only to improve the error message.
+    //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
+    //       check exists only to improve the error message.
     if (arguments.length < 2) {
       throw new RangeError('missing argument: isoYear and isoMonth are required');
     }
 
-    ES.RejectISODate(isoYear, isoMonth, referenceISODay);
-    ES.RejectYearMonthRange(isoYear, isoMonth);
-    CreateSlots(this);
-    SetSlot(this, ISO_YEAR, isoYear);
-    SetSlot(this, ISO_MONTH, isoMonth);
-    SetSlot(this, ISO_DAY, referenceISODay);
-    SetSlot(this, CALENDAR, calendar);
-    SetSlot(this, YEAR_MONTH_BRAND, true);
-
-    if (typeof __debug__ !== 'undefined' && __debug__) {
-      Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${YearMonthToString(this)}>`,
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
-    }
+    ES.CreateTemporalYearMonthSlots(this, isoYear, isoMonth, calendar, referenceISODay);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -223,8 +180,7 @@ export class PlainYearMonth {
     if (smallestUnit === 'months' && roundingIncrement === 1) return result;
 
     let { years, months } = result;
-    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const relativeTo = new TemporalDateTime(
+    const relativeTo = ES.CreateTemporalDateTime(
       GetSlot(thisDate, ISO_YEAR),
       GetSlot(thisDate, ISO_MONTH),
       GetSlot(thisDate, ISO_DAY),
@@ -297,8 +253,7 @@ export class PlainYearMonth {
     if (smallestUnit === 'months' && roundingIncrement === 1) {
       return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
     }
-    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const relativeTo = new TemporalDateTime(
+    const relativeTo = ES.CreateTemporalDateTime(
       GetSlot(thisDate, ISO_YEAR),
       GetSlot(thisDate, ISO_MONTH),
       GetSlot(thisDate, ISO_DAY),
@@ -343,11 +298,11 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     options = ES.NormalizeOptionsObject(options);
     const showCalendar = ES.ToShowCalendarOption(options);
-    return YearMonthToString(this, showCalendar);
+    return ES.TemporalYearMonthToString(this, showCalendar);
   }
   toJSON() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return YearMonthToString(this);
+    return ES.TemporalYearMonthToString(this);
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -397,7 +352,7 @@ export class PlainYearMonth {
     options = ES.NormalizeOptionsObject(options);
     if (ES.IsTemporalYearMonth(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
-      return new PlainYearMonth(
+      return ES.CreateTemporalYearMonth(
         GetSlot(item, ISO_YEAR),
         GetSlot(item, ISO_MONTH),
         GetSlot(item, CALENDAR),

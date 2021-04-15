@@ -1,3 +1,5 @@
+/* global __debug__ */
+
 const ArrayIsArray = Array.isArray;
 const ArrayPrototypeIndexOf = Array.prototype.indexOf;
 const ArrayPrototypePush = Array.prototype.push;
@@ -14,6 +16,7 @@ const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
 const NumberIsInteger = Number.isInteger;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
+const ObjectDefineProperty = Object.defineProperty;
 const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
 
@@ -30,8 +33,10 @@ import Type from 'es-abstract/2020/Type.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
+  CreateSlots,
   GetSlot,
   HasSlot,
+  SetSlot,
   EPOCHNANOSECONDS,
   TIMEZONE_ID,
   CALENDAR_ID,
@@ -862,8 +867,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(relativeTo) === 'Object') {
       if (ES.IsTemporalZonedDateTime(relativeTo) || ES.IsTemporalDateTime(relativeTo)) return relativeTo;
       if (ES.IsTemporalDate(relativeTo)) {
-        const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-        return new TemporalDateTime(
+        return ES.CreateTemporalDateTime(
           GetSlot(relativeTo, ISO_YEAR),
           GetSlot(relativeTo, ISO_MONTH),
           GetSlot(relativeTo, ISO_DAY),
@@ -931,11 +935,20 @@ export const ES = ObjectAssign({}, ES2020, {
         'compatible',
         'reject'
       );
-      const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-      return new TemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+      return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
     }
-    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new TemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
     const validUnits = [
@@ -1161,8 +1174,7 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
       if (ES.IsTemporalDateTime(item)) {
-        const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-        return new TemporalPlainDate(
+        return ES.CreateTemporalDate(
           GetSlot(item, ISO_YEAR),
           GetSlot(item, ISO_MONTH),
           GetSlot(item, ISO_DAY),
@@ -1176,11 +1188,8 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     ES.ToTemporalOverflow(options); // validate and ignore
     let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
-    ES.RejectISODate(year, month, day);
-    if (calendar === undefined) calendar = ES.GetISO8601Calendar();
-    calendar = ES.ToTemporalCalendar(calendar);
     const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-    return new TemporalPlainDate(year, month, day, calendar);
+    return new TemporalPlainDate(year, month, day, calendar); // include validation
   },
   InterpretTemporalDateTimeFields: (calendar, fields, options) => {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
@@ -1212,8 +1221,7 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
       if (ES.IsTemporalDate(item)) {
-        const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-        return new TemporalPlainDateTime(
+        return ES.CreateTemporalDateTime(
           GetSlot(item, ISO_YEAR),
           GetSlot(item, ISO_MONTH),
           GetSlot(item, ISO_DAY),
@@ -1259,8 +1267,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
     }
-    const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new TemporalPlainDateTime(
+    return ES.CreateTemporalDateTime(
       year,
       month,
       day,
@@ -1356,12 +1363,11 @@ export const ES = ObjectAssign({}, ES2020, {
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
 
-    const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     if (referenceISOYear === undefined) {
       ES.RejectISODate(1972, month, day);
-      return new TemporalPlainMonthDay(month, day, calendar);
+      return ES.CreateTemporalMonthDay(month, day, calendar);
     }
-    const result = new TemporalPlainMonthDay(month, day, calendar, referenceISOYear);
+    const result = ES.CreateTemporalMonthDay(month, day, calendar, referenceISOYear);
     return ES.MonthDayFromFields(calendar, result, {});
   },
   ToTemporalTime: (item, overflow = 'constrain') => {
@@ -1426,12 +1432,11 @@ export const ES = ObjectAssign({}, ES2020, {
     if (calendar === undefined) calendar = ES.GetISO8601Calendar();
     calendar = ES.ToTemporalCalendar(calendar);
 
-    const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     if (referenceISODay === undefined) {
       ES.RejectISODate(year, month, 1);
-      return new TemporalPlainYearMonth(year, month, calendar);
+      return ES.CreateTemporalYearMonth(year, month, calendar);
     }
-    const result = new TemporalPlainYearMonth(year, month, calendar, referenceISODay);
+    const result = ES.CreateTemporalYearMonth(year, month, calendar, referenceISODay);
     return ES.YearMonthFromFields(calendar, result, {});
   },
   InterpretISODateTimeOffset: (
@@ -1561,8 +1566,144 @@ export const ES = ObjectAssign({}, ES2020, {
       disambiguation,
       offsetOpt
     );
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+  },
+
+  CreateTemporalDateSlots: (result, isoYear, isoMonth, isoDay, calendar) => {
+    ES.RejectISODate(isoYear, isoMonth, isoDay);
+    ES.RejectDateRange(isoYear, isoMonth, isoDay);
+
+    CreateSlots(result);
+    SetSlot(result, ISO_YEAR, isoYear);
+    SetSlot(result, ISO_MONTH, isoMonth);
+    SetSlot(result, ISO_DAY, isoDay);
+    SetSlot(result, CALENDAR, calendar);
+    SetSlot(result, DATE_BRAND, true);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      ObjectDefineProperty(result, '_repr_', {
+        value: `${result[Symbol.toStringTag]} <${ES.TemporalDateToString(result)}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
+  },
+  CreateTemporalDate: (isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) => {
+    const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
+    const result = ObjectCreate(TemporalPlainDate.prototype);
+    ES.CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar);
+    return result;
+  },
+  CreateTemporalDateTimeSlots: (result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar) => {
+    ES.RejectDateTime(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns);
+    ES.RejectDateTimeRange(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns);
+
+    CreateSlots(result);
+    SetSlot(result, ISO_YEAR, isoYear);
+    SetSlot(result, ISO_MONTH, isoMonth);
+    SetSlot(result, ISO_DAY, isoDay);
+    SetSlot(result, ISO_HOUR, h);
+    SetSlot(result, ISO_MINUTE, min);
+    SetSlot(result, ISO_SECOND, s);
+    SetSlot(result, ISO_MILLISECOND, ms);
+    SetSlot(result, ISO_MICROSECOND, µs);
+    SetSlot(result, ISO_NANOSECOND, ns);
+    SetSlot(result, CALENDAR, calendar);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(result, '_repr_', {
+        value: `${result[Symbol.toStringTag]} <${ES.TemporalDateTimeToString(result, 'auto')}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
+  },
+  CreateTemporalDateTime: (isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar = ES.GetISO8601Calendar()) => {
+    const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    const result = ObjectCreate(TemporalPlainDateTime.prototype);
+    ES.CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar);
+    return result;
+  },
+  CreateTemporalMonthDaySlots: (result, isoMonth, isoDay, calendar, referenceISOYear) => {
+    ES.RejectISODate(referenceISOYear, isoMonth, isoDay);
+    ES.RejectDateRange(referenceISOYear, isoMonth, isoDay);
+
+    CreateSlots(result);
+    SetSlot(result, ISO_MONTH, isoMonth);
+    SetSlot(result, ISO_DAY, isoDay);
+    SetSlot(result, ISO_YEAR, referenceISOYear);
+    SetSlot(result, CALENDAR, calendar);
+    SetSlot(result, MONTH_DAY_BRAND, true);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(result, '_repr_', {
+        value: `${result[Symbol.toStringTag]} <${ES.TemporalMonthDayToString(result)}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
+  },
+  CreateTemporalMonthDay: (isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) => {
+    const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
+    const result = ObjectCreate(TemporalPlainMonthDay.prototype);
+    ES.CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
+    return result;
+  },
+  CreateTemporalYearMonthSlots: (result, isoYear, isoMonth, calendar, referenceISODay) => {
+    ES.RejectISODate(isoYear, isoMonth, referenceISODay);
+    ES.RejectYearMonthRange(isoYear, isoMonth);
+
+    CreateSlots(result);
+    SetSlot(result, ISO_YEAR, isoYear);
+    SetSlot(result, ISO_MONTH, isoMonth);
+    SetSlot(result, ISO_DAY, referenceISODay);
+    SetSlot(result, CALENDAR, calendar);
+    SetSlot(result, YEAR_MONTH_BRAND, true);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(result, '_repr_', {
+        value: `${result[Symbol.toStringTag]} <${ES.TemporalYearMonthToString(result)}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
+  },
+  CreateTemporalYearMonth: (isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) => {
+    const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
+    const result = ObjectCreate(TemporalPlainYearMonth.prototype);
+    ES.CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
+    return result;
+  },
+  CreateTemporalZonedDateTimeSlots: (result, epochNanoseconds, timeZone, calendar) => {
+    ES.RejectInstantRange(epochNanoseconds);
+
+    CreateSlots(result);
+    SetSlot(result, EPOCHNANOSECONDS, epochNanoseconds);
+    SetSlot(result, TIME_ZONE, timeZone);
+    SetSlot(result, CALENDAR, calendar);
+
+    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    const instant = new TemporalInstant(GetSlot(result, EPOCHNANOSECONDS));
+    SetSlot(result, INSTANT, instant);
+
+    if (typeof __debug__ !== 'undefined' && __debug__) {
+      Object.defineProperty(result, '_repr_', {
+        value: `${result[Symbol.toStringTag]} <${ES.TemporalZonedDateTimeToString(result, 'auto')}>`,
+        writable: false,
+        enumerable: false,
+        configurable: false
+      });
+    }
+  },
+  CreateTemporalZonedDateTime: (epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) => {
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+    const result = ObjectCreate(TemporalZonedDateTime.prototype);
+    ES.CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
+    return result;
   },
 
   GetISO8601Calendar: () => {
@@ -1762,8 +1903,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {
-    const Date = GetIntrinsic('%Temporal.PlainDate%');
-    return new Date(
+    return ES.CreateTemporalDate(
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
       GetSlot(dateTime, ISO_DAY),
@@ -1814,8 +1954,18 @@ export const ES = ObjectAssign({}, ES2020, {
       microsecond,
       nanosecond + offsetNs
     ));
-    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    return new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
   },
   BuiltinTimeZoneGetInstantFor: (timeZone, dateTime, disambiguation) => {
     const Instant = GetIntrinsic('%Temporal.Instant%');
@@ -2006,6 +2156,121 @@ export const ES = ObjectAssign({}, ES2020, {
     if (timeParts.length) timeParts.unshift('T');
     if (!dateParts.length && !timeParts.length) return 'PT0S';
     return `${sign < 0 ? '-' : ''}P${dateParts.join('')}${timeParts.join('')}`;
+  },
+  TemporalDateToString: (date, showCalendar = 'auto') => {
+    const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
+    const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
+    const day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
+    const calendarID = ES.ToString(GetSlot(date, CALENDAR));
+    const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    return `${year}-${month}-${day}${calendar}`;
+  },
+  TemporalDateTimeToString: (dateTime, precision, showCalendar = 'auto', options = undefined) => {
+    let year = GetSlot(dateTime, ISO_YEAR);
+    let month = GetSlot(dateTime, ISO_MONTH);
+    let day = GetSlot(dateTime, ISO_DAY);
+    let hour = GetSlot(dateTime, ISO_HOUR);
+    let minute = GetSlot(dateTime, ISO_MINUTE);
+    let second = GetSlot(dateTime, ISO_SECOND);
+    let millisecond = GetSlot(dateTime, ISO_MILLISECOND);
+    let microsecond = GetSlot(dateTime, ISO_MICROSECOND);
+    let nanosecond = GetSlot(dateTime, ISO_NANOSECOND);
+
+    if (options) {
+      const { unit, increment, roundingMode } = options;
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        increment,
+        unit,
+        roundingMode
+      ));
+    }
+
+    year = ES.ISOYearString(year);
+    month = ES.ISODateTimePartString(month);
+    day = ES.ISODateTimePartString(day);
+    hour = ES.ISODateTimePartString(hour);
+    minute = ES.ISODateTimePartString(minute);
+    const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
+    const calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
+    const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
+  },
+  TemporalMonthDayToString: (monthDay, showCalendar = 'auto') => {
+    const month = ES.ISODateTimePartString(GetSlot(monthDay, ISO_MONTH));
+    const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
+    let resultString = `${month}-${day}`;
+    const calendar = GetSlot(monthDay, CALENDAR);
+    const calendarID = ES.ToString(calendar);
+    if (calendarID !== 'iso8601') {
+      const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
+      resultString = `${year}-${resultString}`;
+    }
+    const calendarString = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    if (calendarString) resultString += calendarString;
+    return resultString;
+  },
+  TemporalYearMonthToString: (yearMonth, showCalendar = 'auto') => {
+    const year = ES.ISOYearString(GetSlot(yearMonth, ISO_YEAR));
+    const month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
+    let resultString = `${year}-${month}`;
+    const calendar = GetSlot(yearMonth, CALENDAR);
+    const calendarID = ES.ToString(calendar);
+    if (calendarID !== 'iso8601') {
+      const day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
+      resultString += `-${day}`;
+    }
+    const calendarString = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    if (calendarString) resultString += calendarString;
+    return resultString;
+  },
+  TemporalZonedDateTimeToString: (
+    zdt,
+    precision,
+    showCalendar = 'auto',
+    showTimeZone = 'auto',
+    showOffset = 'auto',
+    options = undefined
+  ) => {
+    let instant = GetSlot(zdt, INSTANT);
+
+    if (options) {
+      const { unit, increment, roundingMode } = options;
+      const ns = ES.RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
+      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+      instant = new TemporalInstant(ns);
+    }
+
+    const tz = GetSlot(zdt, TIME_ZONE);
+    const iso = ES.GetISO8601Calendar();
+    const dateTime = ES.BuiltinTimeZoneGetPlainDateTimeFor(tz, instant, iso);
+
+    const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
+    const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
+    const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
+    const hour = ES.ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
+    const minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
+    const seconds = ES.FormatSecondsStringPart(
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND),
+      precision
+    );
+    let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
+    if (showOffset !== 'never') result += ES.BuiltinTimeZoneGetOffsetStringFor(tz, instant);
+    if (showTimeZone !== 'never') result += `[${tz}]`;
+    const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
+    result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    return result;
   },
 
   ParseOffsetString: (string) => {
@@ -3011,7 +3276,6 @@ export const ES = ObjectAssign({}, ES2020, {
     largestUnit,
     options = {}
   ) => {
-    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       h1,
       min1,
@@ -3027,8 +3291,8 @@ export const ES = ObjectAssign({}, ES2020, {
       ns2
     );
     ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 + deltaDays));
-    const date1 = new TemporalDate(y1, mon1, d1, calendar);
-    const date2 = new TemporalDate(y2, mon2, d2, calendar);
+    const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
+    const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
     const untilOptions = { ...options, largestUnit: dateLargestUnit };
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
@@ -3094,8 +3358,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, years, months, weeks, 0, 0, 0, 0, 0, 0, 0);
     // may disambiguate
     let timeRemainderNs = ns2.subtract(intermediateNs);
-    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    const intermediate = new TemporalZonedDateTime(intermediateNs, timeZone, calendar);
+    const intermediate = ES.CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
     ({ nanoseconds: timeRemainderNs, days } = ES.NanosecondsToDays(timeRemainderNs, intermediate));
 
     // Finally, merge the date and time durations and return the merged result.
@@ -3206,11 +3469,10 @@ export const ES = ObjectAssign({}, ES2020, {
         largestUnit
       ));
     } else if (ES.IsTemporalDateTime(relativeTo)) {
-      const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
       const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
       const calendar = GetSlot(relativeTo, CALENDAR);
 
-      const datePart = new TemporalPlainDate(
+      const datePart = ES.CreateTemporalDate(
         GetSlot(relativeTo, ISO_YEAR),
         GetSlot(relativeTo, ISO_MONTH),
         GetSlot(relativeTo, ISO_DAY),
@@ -3219,8 +3481,8 @@ export const ES = ObjectAssign({}, ES2020, {
       const dateDuration1 = new TemporalDuration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
       const dateDuration2 = new TemporalDuration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
       const dateAdd = calendar.dateAdd;
-      const intermediate = ES.Call(dateAdd, calendar, [datePart, dateDuration1, {}, TemporalPlainDate]);
-      const end = ES.Call(dateAdd, calendar, [intermediate, dateDuration2, {}, TemporalPlainDate]);
+      const intermediate = ES.Call(dateAdd, calendar, [datePart, dateDuration1, {}]);
+      const end = ES.Call(dateAdd, calendar, [intermediate, dateDuration2, {}]);
 
       const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
       ({ years, months, weeks, days } = ES.CalendarDateUntil(calendar, datePart, end, {
@@ -3369,9 +3631,8 @@ export const ES = ObjectAssign({}, ES2020, {
     days += deltaDays;
 
     // Delegate the date part addition to the calendar
-    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-    const datePart = new TemporalDate(year, month, day, calendar);
+    const datePart = ES.CreateTemporalDate(year, month, day, calendar);
     const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const addedDate = ES.CalendarDateAdd(calendar, datePart, dateDuration, options);
 
@@ -3404,12 +3665,15 @@ export const ES = ObjectAssign({}, ES2020, {
     // RFC 5545 requires the date portion to be added in calendar days and the
     // time portion to be added in exact time.
     let dt = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, instant, calendar);
-    const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
-    const datePart = new TemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
+    const datePart = ES.CreateTemporalDate(
+      GetSlot(dt, ISO_YEAR),
+      GetSlot(dt, ISO_MONTH),
+      GetSlot(dt, ISO_DAY),
+      calendar
+    );
     const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const addedDate = ES.CalendarDateAdd(calendar, datePart, dateDuration, options);
-    const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dtIntermediate = new TemporalDateTime(
+    const dtIntermediate = ES.CreateTemporalDateTime(
       GetSlot(addedDate, ISO_YEAR),
       GetSlot(addedDate, ISO_MONTH),
       GetSlot(addedDate, ISO_DAY),
@@ -3553,10 +3817,9 @@ export const ES = ObjectAssign({}, ES2020, {
     ).days;
   },
   MoveRelativeDate: (calendar, relativeTo, duration) => {
-    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const later = ES.CalendarDateAdd(calendar, relativeTo, duration, {});
     const days = ES.DaysUntil(relativeTo, later);
-    relativeTo = new PlainDateTime(
+    relativeTo = ES.CreateTemporalDateTime(
       GetSlot(later, ISO_YEAR),
       GetSlot(later, ISO_MONTH),
       GetSlot(later, ISO_DAY),
@@ -3588,8 +3851,7 @@ export const ES = ObjectAssign({}, ES2020, {
       0,
       0
     );
-    const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-    return new TemporalZonedDateTime(intermediateNs, timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
   },
   AdjustRoundedDurationDays: (
     years,

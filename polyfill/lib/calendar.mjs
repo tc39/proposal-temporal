@@ -179,8 +179,7 @@ impl['iso8601'] = {
     fields = resolveNonLunisolarMonth(fields);
     let { year, month, day } = fields;
     ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
-    const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-    return new TemporalPlainDate(year, month, day, calendar);
+    return ES.CreateTemporalDate(year, month, day, calendar);
   },
   yearMonthFromFields(fields, options, calendar) {
     const overflow = ES.ToTemporalOverflow(options);
@@ -188,8 +187,7 @@ impl['iso8601'] = {
     fields = resolveNonLunisolarMonth(fields);
     let { year, month } = fields;
     ({ year, month } = ES.RegulateISOYearMonth(year, month, overflow));
-    const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-    return new TemporalPlainYearMonth(year, month, calendar, /* referenceISODay */ 1);
+    return ES.CreateTemporalYearMonth(year, month, calendar, /* referenceISODay = */ 1);
   },
   monthDayFromFields(fields, options, calendar) {
     const overflow = ES.ToTemporalOverflow(options);
@@ -207,8 +205,7 @@ impl['iso8601'] = {
     fields = resolveNonLunisolarMonth(fields);
     let { month, day, year } = fields;
     ({ month, day } = ES.RegulateISODate(useYear ? year : referenceISOYear, month, day, overflow));
-    const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-    return new TemporalPlainMonthDay(month, day, calendar, referenceISOYear);
+    return ES.CreateTemporalMonthDay(month, day, calendar, referenceISOYear);
   },
   fields(fields) {
     return fields;
@@ -228,8 +225,7 @@ impl['iso8601'] = {
     let month = GetSlot(date, ISO_MONTH);
     let day = GetSlot(date, ISO_DAY);
     ({ year, month, day } = ES.AddISODate(year, month, day, years, months, weeks, days, overflow));
-    const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-    return new TemporalPlainDate(year, month, day, calendar);
+    return ES.CreateTemporalDate(year, month, day, calendar);
   },
   dateUntil(one, two, largestUnit) {
     return ES.DifferenceISODate(
@@ -1782,8 +1778,7 @@ const nonIsoGeneralImpl = {
       ['year', undefined]
     ]);
     const { year, month, day } = this.helper.calendarToIsoDate(fields, overflow, cache);
-    const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-    const result = new TemporalPlainDate(year, month, day, calendar);
+    const result = ES.CreateTemporalDate(year, month, day, calendar);
     cache.setObject(result);
     return result;
   },
@@ -1799,8 +1794,7 @@ const nonIsoGeneralImpl = {
       ['year', undefined]
     ]);
     const { year, month, day } = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
-    const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-    const result = new TemporalPlainYearMonth(year, month, calendar, /* referenceISODay = */ day);
+    const result = ES.CreateTemporalYearMonth(year, month, calendar, /* referenceISODay = */ day);
     cache.setObject(result);
     return result;
   },
@@ -1821,8 +1815,7 @@ const nonIsoGeneralImpl = {
     ]);
     const { year, month, day } = this.helper.monthDayFromFields(fields, overflow, cache);
     // `year` is a reference year where this month/day exists in this calendar
-    const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-    const result = new TemporalPlainMonthDay(month, day, calendar, /* referenceISOYear */ year);
+    const result = ES.CreateTemporalMonthDay(month, day, calendar, /* referenceISOYear = */ year);
     cache.setObject(result);
     return result;
   },
@@ -1857,8 +1850,7 @@ const nonIsoGeneralImpl = {
     const added = this.helper.addCalendar(calendarDate, { years, months, weeks, days }, overflow, cache);
     const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', cache);
     const { year, month, day } = isoAdded;
-    const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-    const newTemporalObject = new TemporalPlainDate(year, month, day, calendar);
+    const newTemporalObject = ES.CreateTemporalDate(year, month, day, calendar);
     // The new object's cache starts with the cache of the old object
     const newCache = new OneObjectCache(cache);
     newCache.setObject(newTemporalObject);
