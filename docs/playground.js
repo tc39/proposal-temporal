@@ -9514,11 +9514,32 @@
           microseconds = _ES$DifferenceTime.microseconds,
           nanoseconds = _ES$DifferenceTime.nanoseconds;
 
+      var timeSign = ES.DurationSign(0, 0, 0, deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
       var _ES$BalanceISODate2 = ES.BalanceISODate(y1, mon1, d1 + deltaDays);
 
       y1 = _ES$BalanceISODate2.year;
       mon1 = _ES$BalanceISODate2.month;
       d1 = _ES$BalanceISODate2.day;
+      var dateSign = ES.CompareISODate(y2, mon2, d2, y1, mon1, d1);
+
+      if (dateSign === -timeSign) {
+        var _ES$BalanceISODate3 = ES.BalanceISODate(y1, mon1, d1 - timeSign);
+
+        y1 = _ES$BalanceISODate3.year;
+        mon1 = _ES$BalanceISODate3.month;
+        d1 = _ES$BalanceISODate3.day;
+
+        var _ES$BalanceDuration = ES.BalanceDuration(-timeSign, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+
+        hours = _ES$BalanceDuration.hours;
+        minutes = _ES$BalanceDuration.minutes;
+        seconds = _ES$BalanceDuration.seconds;
+        milliseconds = _ES$BalanceDuration.milliseconds;
+        microseconds = _ES$BalanceDuration.microseconds;
+        nanoseconds = _ES$BalanceDuration.nanoseconds;
+      }
+
       var date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
       var date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
       var dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
@@ -9534,15 +9555,15 @@
           days = _ES$CalendarDateUntil.days; // Signs of date part and time part may not agree; balance them together
 
 
-      var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+      var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
-      days = _ES$BalanceDuration.days;
-      hours = _ES$BalanceDuration.hours;
-      minutes = _ES$BalanceDuration.minutes;
-      seconds = _ES$BalanceDuration.seconds;
-      milliseconds = _ES$BalanceDuration.milliseconds;
-      microseconds = _ES$BalanceDuration.microseconds;
-      nanoseconds = _ES$BalanceDuration.nanoseconds;
+      days = _ES$BalanceDuration2.days;
+      hours = _ES$BalanceDuration2.hours;
+      minutes = _ES$BalanceDuration2.minutes;
+      seconds = _ES$BalanceDuration2.seconds;
+      milliseconds = _ES$BalanceDuration2.milliseconds;
+      microseconds = _ES$BalanceDuration2.microseconds;
+      nanoseconds = _ES$BalanceDuration2.nanoseconds;
       return {
         years: years,
         months: months,
@@ -9598,13 +9619,13 @@
       days = _ES$NanosecondsToDays2.days;
 
       // Finally, merge the date and time durations and return the merged result.
-      var _ES$BalanceDuration2 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs, 'hours'),
-          hours = _ES$BalanceDuration2.hours,
-          minutes = _ES$BalanceDuration2.minutes,
-          seconds = _ES$BalanceDuration2.seconds,
-          milliseconds = _ES$BalanceDuration2.milliseconds,
-          microseconds = _ES$BalanceDuration2.microseconds,
-          nanoseconds = _ES$BalanceDuration2.nanoseconds;
+      var _ES$BalanceDuration3 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs, 'hours'),
+          hours = _ES$BalanceDuration3.hours,
+          minutes = _ES$BalanceDuration3.minutes,
+          seconds = _ES$BalanceDuration3.seconds,
+          milliseconds = _ES$BalanceDuration3.milliseconds,
+          microseconds = _ES$BalanceDuration3.microseconds,
+          nanoseconds = _ES$BalanceDuration3.nanoseconds;
 
       return {
         years: years,
@@ -9636,11 +9657,11 @@
       days += 7 * weeks;
       day += days;
 
-      var _ES$BalanceISODate3 = ES.BalanceISODate(year, month, day);
+      var _ES$BalanceISODate4 = ES.BalanceISODate(year, month, day);
 
-      year = _ES$BalanceISODate3.year;
-      month = _ES$BalanceISODate3.month;
-      day = _ES$BalanceISODate3.day;
+      year = _ES$BalanceISODate4.year;
+      month = _ES$BalanceISODate4.month;
+      day = _ES$BalanceISODate4.day;
       return {
         year: year,
         month: month,
@@ -9679,11 +9700,11 @@
       days += 7 * weeks;
       day -= days;
 
-      var _ES$BalanceISODate4 = ES.BalanceISODate(year, month, day);
+      var _ES$BalanceISODate5 = ES.BalanceISODate(year, month, day);
 
-      year = _ES$BalanceISODate4.year;
-      month = _ES$BalanceISODate4.month;
-      day = _ES$BalanceISODate4.day;
+      year = _ES$BalanceISODate5.year;
+      month = _ES$BalanceISODate5.month;
+      day = _ES$BalanceISODate5.day;
       month -= months;
       year -= years;
 
@@ -9716,15 +9737,15 @@
 
         years = months = weeks = 0;
 
-        var _ES$BalanceDuration3 = ES.BalanceDuration(d1 + d2, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+        var _ES$BalanceDuration4 = ES.BalanceDuration(d1 + d2, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
 
-        days = _ES$BalanceDuration3.days;
-        hours = _ES$BalanceDuration3.hours;
-        minutes = _ES$BalanceDuration3.minutes;
-        seconds = _ES$BalanceDuration3.seconds;
-        milliseconds = _ES$BalanceDuration3.milliseconds;
-        microseconds = _ES$BalanceDuration3.microseconds;
-        nanoseconds = _ES$BalanceDuration3.nanoseconds;
+        days = _ES$BalanceDuration4.days;
+        hours = _ES$BalanceDuration4.hours;
+        minutes = _ES$BalanceDuration4.minutes;
+        seconds = _ES$BalanceDuration4.seconds;
+        milliseconds = _ES$BalanceDuration4.milliseconds;
+        microseconds = _ES$BalanceDuration4.microseconds;
+        nanoseconds = _ES$BalanceDuration4.nanoseconds;
       } else if (ES.IsTemporalDateTime(relativeTo)) {
         var TemporalDuration = GetIntrinsic('%Temporal.Duration%');
         var calendar = GetSlot(relativeTo, CALENDAR);
@@ -9745,15 +9766,15 @@
         weeks = _ES$CalendarDateUntil2.weeks;
         days = _ES$CalendarDateUntil2.days;
 
-        var _ES$BalanceDuration4 = ES.BalanceDuration(days, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+        var _ES$BalanceDuration5 = ES.BalanceDuration(days, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
 
-        days = _ES$BalanceDuration4.days;
-        hours = _ES$BalanceDuration4.hours;
-        minutes = _ES$BalanceDuration4.minutes;
-        seconds = _ES$BalanceDuration4.seconds;
-        milliseconds = _ES$BalanceDuration4.milliseconds;
-        microseconds = _ES$BalanceDuration4.microseconds;
-        nanoseconds = _ES$BalanceDuration4.nanoseconds;
+        days = _ES$BalanceDuration5.days;
+        hours = _ES$BalanceDuration5.hours;
+        minutes = _ES$BalanceDuration5.minutes;
+        seconds = _ES$BalanceDuration5.seconds;
+        milliseconds = _ES$BalanceDuration5.milliseconds;
+        microseconds = _ES$BalanceDuration5.microseconds;
+        nanoseconds = _ES$BalanceDuration5.nanoseconds;
       } else {
         // relativeTo is a ZonedDateTime
         var TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -9778,14 +9799,14 @@
           microseconds = _ES$DifferenceInstant.microseconds;
           nanoseconds = _ES$DifferenceInstant.nanoseconds;
 
-          var _ES$BalanceDuration5 = ES.BalanceDuration(0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+          var _ES$BalanceDuration6 = ES.BalanceDuration(0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
-          hours = _ES$BalanceDuration5.hours;
-          minutes = _ES$BalanceDuration5.minutes;
-          seconds = _ES$BalanceDuration5.seconds;
-          milliseconds = _ES$BalanceDuration5.milliseconds;
-          microseconds = _ES$BalanceDuration5.microseconds;
-          nanoseconds = _ES$BalanceDuration5.nanoseconds;
+          hours = _ES$BalanceDuration6.hours;
+          minutes = _ES$BalanceDuration6.minutes;
+          seconds = _ES$BalanceDuration6.seconds;
+          milliseconds = _ES$BalanceDuration6.milliseconds;
+          microseconds = _ES$BalanceDuration6.microseconds;
+          nanoseconds = _ES$BalanceDuration6.nanoseconds;
         } else {
           var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, _calendar4, largestUnit);
 
@@ -9939,11 +9960,11 @@
       microsecond = _ES$RoundTime.microsecond;
       nanosecond = _ES$RoundTime.nanosecond;
 
-      var _ES$BalanceISODate5 = ES.BalanceISODate(year, month, day + deltaDays);
+      var _ES$BalanceISODate6 = ES.BalanceISODate(year, month, day + deltaDays);
 
-      year = _ES$BalanceISODate5.year;
-      month = _ES$BalanceISODate5.month;
-      day = _ES$BalanceISODate5.day;
+      year = _ES$BalanceISODate6.year;
+      month = _ES$BalanceISODate6.month;
+      day = _ES$BalanceISODate6.day;
       return {
         year: year,
         month: month,
@@ -10081,14 +10102,14 @@
         days = _ES$AddDuration.days;
         timeRemainderNs = ES.RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
 
-        var _ES$BalanceDuration6 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs.toJSNumber(), 'hours');
+        var _ES$BalanceDuration7 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs.toJSNumber(), 'hours');
 
-        hours = _ES$BalanceDuration6.hours;
-        minutes = _ES$BalanceDuration6.minutes;
-        seconds = _ES$BalanceDuration6.seconds;
-        milliseconds = _ES$BalanceDuration6.milliseconds;
-        microseconds = _ES$BalanceDuration6.microseconds;
-        nanoseconds = _ES$BalanceDuration6.nanoseconds;
+        hours = _ES$BalanceDuration7.hours;
+        minutes = _ES$BalanceDuration7.minutes;
+        seconds = _ES$BalanceDuration7.seconds;
+        milliseconds = _ES$BalanceDuration7.milliseconds;
+        microseconds = _ES$BalanceDuration7.microseconds;
+        nanoseconds = _ES$BalanceDuration7.nanoseconds;
       }
 
       return {
