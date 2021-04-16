@@ -1934,7 +1934,7 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-preparetemporalfields"></emu-xref>.</p>
         <emu-alg>
           1. Assert: Type(_fields_) is Object.
-          1. Let _result_ be ? OrdinaryObjectCreate(%Object.prototype%).
+          1. Let _result_ be ! OrdinaryObjectCreate(%Object.prototype%).
           1. For each value _property_ of _fieldNames_, do
             1. Let _value_ be ? Get(_fields_, _property_).
             1. If _value_ is *undefined*, then

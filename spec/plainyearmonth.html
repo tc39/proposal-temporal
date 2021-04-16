@@ -473,7 +473,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _yearMonth_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_yearMonth_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_yearMonth_.[[ISOMonth]])).

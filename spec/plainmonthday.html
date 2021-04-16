@@ -261,7 +261,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _fields_ be ? ObjectCreate(%ObjectPrototype%).
+        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _monthDay_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_monthDay_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_monthDay_.[[ISOMonth]])).
