@@ -636,10 +636,12 @@
     <emu-clause id="sec-temporal-timezoneequals" aoid="TimeZoneEquals">
       <h1>TimeZoneEquals ( _one_, _two_ )</h1>
       <p>
-        The abstract operation TimeZoneEquals returns *true* if the results of
-        calling `toString()` on its arguments are equal.
+        The abstract operation TimeZoneEquals takes two arguments _one_ and _two_, which must be Objects.
+        It returns *true* if its arguments represent the same time zone.
+        It performs the following steps:
       </p>
       <emu-alg>
+        1. If _one_ and _two_ are the same Object value, return *true*.
         1. Let _timeZoneOne_ be ? ToString(_one_).
         1. Let _timeZoneTwo_ be ? ToString(_two_).
         1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
