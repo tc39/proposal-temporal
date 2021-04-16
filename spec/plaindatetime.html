@@ -1005,6 +1005,7 @@
     <emu-clause id="sec-temporal-createtemporaldatetime" aoid="CreateTemporalDateTime">
       <h1>CreateTemporalDateTime ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_ [ , _newTarget_ ] )</h1>
       <emu-alg>
+        1. Assert: Type(_calendar_) is Object.
         1. If ! ValidateISODateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If ! ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is not ~in range~, then
