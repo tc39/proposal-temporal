@@ -430,6 +430,17 @@
       <emu-note>Beware that dates at the beginning of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
     </emu-clause>
 
+    <emu-clause id="sec-buildisomonthcode" aoid="BuildISOMonthCode">
+      <h1>BuildISOMonthCode ( _month_ )</h1>
+      <p>
+        The abstract operation BuildISOMonthCode returns the corresponding string month code, given the numeric ISO calendar month _month_, which must be a Number value between 1 and 12, inclusive.
+      </p>
+      <emu-alg>
+        1. Let _numberPart_ be the String representation of _month_, formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
+        1. Return the string-concatenation of *"M"* and _numberPart_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-resolveisomonth" aoid="ResolveISOMonth">
       <h1>ResolveISOMonth ( _fields_ )</h1>
       <p>
@@ -447,10 +458,10 @@
         1. If _monthLength_ is not 3, throw a *RangeError* exception.
         1. Let _numberPart_ be the substring of _monthCode_ from 2.
         1. Set _numberPart_ to ! ToIntegerOrInfinity(_numberPart_).
-        1. If _numberPart_ is *NaN*, throw a *RangeError* exception.
+        1. If _numberPart_ &lt; 1 or _numberPart_ &gt; 12, throw a *RangeError* exception.
         1. If _month_ is not *undefined*, and _month_ ≠ _numberPart_, then
           1. Throw a *RangeError* exception.
-        1. If ! SameValueNonNumeric(_monthCode_, ! ToString(_numberPart_)) is *false*, then
+        1. If ! SameValueNonNumeric(_monthCode_, ! BuildISOMonthCode(_numberPart_)) is *false*, then
           1. Throw a *RangeError* exception.
         1. Return _numberPart_.
       </emu-alg>
@@ -555,8 +566,7 @@
       </p>
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
-        1. Let _monthCode_ be the String representation of _temporalObject_.[[ISOMonth]], formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
-        1. Return the string-concatenation of *"M"* and _monthCode_.
+        1. Return ! BuildISOMonthCode(_temporalObject_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
