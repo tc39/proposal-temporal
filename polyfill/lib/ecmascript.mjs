@@ -1917,11 +1917,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     return new TemporalTimeZone(timeZone);
   },
-  TimeZoneCompare: (one, two) => {
-    const tz1 = ES.ToString(one);
-    const tz2 = ES.ToString(two);
-    return tz1 < tz2 ? -1 : tz1 > tz2 ? 1 : 0;
-  },
   TimeZoneEquals: (one, two) => {
     const tz1 = ES.ToString(one);
     const tz2 = ES.ToString(two);
