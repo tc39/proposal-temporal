@@ -4352,7 +4352,7 @@ export const ES = ObjectAssign({}, ES2020, {
       const ms = Date.now();
       const result = bigInt(ms).multiply(1e6).plus(ns);
       ns = ms % 1e6;
-      return result;
+      return bigInt.min(NS_MAX, bigInt.max(NS_MIN, result));
     };
   })(),
   SystemTimeZone: () => {
