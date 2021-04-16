@@ -1496,7 +1496,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     // "prefer" or "reject"
-    const possibleInstants = timeZone.getPossibleInstantsFor(dt);
+    const possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
     for (const candidate of possibleInstants) {
       const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
       if (candidateOffset === offsetNs) return GetSlot(candidate, EPOCHNANOSECONDS);
@@ -2052,12 +2052,12 @@ export const ES = ObjectAssign({}, ES2020, {
   GetPossibleInstantsFor: (timeZone, dateTime) => {
     let getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
     const possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
-    const result = ES.CreateListFromArrayLike(possibleInstants, ['Object']);
-    const numInstants = result.length;
-    for (let ix = 0; ix < numInstants; ix++) {
-      if (!ES.IsTemporalInstant(result[ix])) {
+    const result = [];
+    for (const instant of possibleInstants) {
+      if (!ES.IsTemporalInstant(instant)) {
         throw new TypeError('bad return from getPossibleInstantsFor');
       }
+      ArrayPrototypePush.call(result, instant);
     }
     return result;
   },

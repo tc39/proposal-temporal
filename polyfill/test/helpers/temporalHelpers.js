@@ -375,6 +375,79 @@ var TemporalHelpers = {
   },
 
   /*
+   * Check that any iterable returned from a custom time zone's
+   * getPossibleInstantsFor() method is exhausted.
+   * The custom time zone object is passed in to func().
+   * expected is an array of strings representing the expected calls to the
+   * getPossibleInstantsFor() method. The PlainDateTimes that it is called with,
+   * are compared (using their toString() results) with the array.
+   */
+  checkTimeZonePossibleInstantsIterable(func, expected) {
+    // A custom time zone that returns an iterable instead of an array from its
+    // getPossibleInstantsFor() method, and for testing purposes skips
+    // 00:00-01:00 UTC on January 1, 2030, and repeats 00:00-01:00 UTC+1 on
+    // January 3, 2030. Otherwise identical to the UTC time zone.
+    class TimeZonePossibleInstantsIterable extends Temporal.TimeZone {
+      constructor() {
+        super("UTC");
+        this.getPossibleInstantsForCallCount = 0;
+        this.getPossibleInstantsForCalledWith = [];
+        this.getPossibleInstantsForReturns = [];
+        this.iteratorExhausted = [];
+      }
+
+      toString() {
+        return "Custom/Iterable";
+      }
+
+      getOffsetNanosecondsFor(instant) {
+        if (Temporal.Instant.compare(instant, "2030-01-01T00:00Z") >= 0 &&
+          Temporal.Instant.compare(instant, "2030-01-03T01:00Z") < 0) {
+          return 3600_000_000_000;
+        } else {
+          return 0;
+        }
+      }
+
+      getPossibleInstantsFor(dateTime) {
+        this.getPossibleInstantsForCallCount++;
+        this.getPossibleInstantsForCalledWith.push(dateTime);
+
+        // Fake DST transition
+        let retval = super.getPossibleInstantsFor(dateTime);
+        if (dateTime.toPlainDate().equals("2030-01-01") && dateTime.hour === 0) {
+          retval = [];
+        } else if (dateTime.toPlainDate().equals("2030-01-03") && dateTime.hour === 0) {
+          retval.push(retval[0].subtract({ hours: 1 }));
+        } else if (dateTime.year === 2030 && dateTime.month === 1 && dateTime.day >= 1 && dateTime.day <= 2) {
+          retval[0] = retval[0].subtract({ hours: 1 });
+        }
+
+        this.getPossibleInstantsForReturns.push(retval);
+        this.iteratorExhausted.push(false);
+        return {
+          callIndex: this.getPossibleInstantsForCallCount - 1,
+          timeZone: this,
+          *[Symbol.iterator]() {
+            yield* this.timeZone.getPossibleInstantsForReturns[this.callIndex];
+            this.timeZone.iteratorExhausted[this.callIndex] = true;
+          },
+        };
+      }
+    }
+
+    const timeZone = new TimeZonePossibleInstantsIterable();
+    func(timeZone);
+
+    assert.sameValue(timeZone.getPossibleInstantsForCallCount, expected.length, "getPossibleInstantsFor() method called correct number of times");
+
+    for (let index = 0; index < expected.length; index++) {
+      assert.sameValue(timeZone.getPossibleInstantsForCalledWith[index].toString(), expected[index], "getPossibleInstantsFor() called with expected PlainDateTime");
+      assert(timeZone.iteratorExhausted[index], "iterated through the whole iterable");
+    }
+  },
+
+  /*
    * Check that any calendar-carrying Temporal object has its [[Calendar]]
    * internal slot read by ToTemporalCalendar, and does not fetch the calendar
    * by calling getters.
