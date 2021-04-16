@@ -1,7 +1,5 @@
 /* global __debug__ */
 
-const ArrayIsArray = Array.isArray;
-const ArrayPrototypeIndexOf = Array.prototype.indexOf;
 const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathMin = Math.min;
@@ -4342,36 +4340,6 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
     }
     return MathFloor(value);
-  },
-  // Following two operations are overridden because the es-abstract version of
-  // ES.Get() unconditionally uses util.inspect
-  LengthOfArrayLike: (obj) => {
-    if (ES.Type(obj) !== 'Object') {
-      throw new TypeError('Assertion failed: `obj` must be an Object');
-    }
-    return ES.ToLength(obj.length);
-  },
-  CreateListFromArrayLike: (obj, elementTypes) => {
-    if (ES.Type(obj) !== 'Object') {
-      throw new TypeError('Assertion failed: `obj` must be an Object');
-    }
-    if (!ArrayIsArray(elementTypes)) {
-      throw new TypeError('Assertion failed: `elementTypes`, if provided, must be an array');
-    }
-    var len = ES.LengthOfArrayLike(obj);
-    var list = [];
-    var index = 0;
-    while (index < len) {
-      var indexName = ES.ToString(index);
-      var next = obj[indexName];
-      var nextType = ES.Type(next);
-      if (ArrayPrototypeIndexOf.call(elementTypes, nextType) < 0) {
-        throw new TypeError(`item type ${nextType} is not a valid elementType`);
-      }
-      ArrayPrototypePush.call(list, next);
-      index += 1;
-    }
-    return list;
   }
 });
 
