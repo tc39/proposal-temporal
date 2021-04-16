@@ -3,6 +3,8 @@ import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, TIME_ZONE, GetSlot, HasSlot } from './slots.mjs';
 
+const ObjectCreate = Object.create;
+
 export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) {
     isoMonth = ES.ToInteger(isoMonth);
@@ -114,7 +116,8 @@ export class PlainMonthDay {
       }
     });
     mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
-    return ES.DateFromFields(calendar, mergedFields);
+    const options = ObjectCreate(null);
+    return ES.DateFromFields(calendar, mergedFields, options);
   }
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
