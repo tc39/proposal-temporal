@@ -74,20 +74,22 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateadd" aoid="CalendarDateAdd">
-      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_ [ , _options_ ] )</h1>
+      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_, _options_ [ , _dateAdd_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Let _addedDate_ be ? Invoke( _calendar_, *"dateAdd"*, « _date_, _duration_, _options_ »).
+        1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
+        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateuntil" aoid="CalendarDateUntil">
-      <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ )</h1>
+      <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ [ , _dateUntil_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Let _duration_ be ? Invoke(_calendar_, *"dateUntil"*, « _one_, _two_, _options_ »).
+        1. If _dateUntil_ is not present, set _dateUntil_ to ? GetMethod(_calendar_, *"dateUntil"*).
+        1. Let _duration_ be ? Call(_dateUntil_, _calendar_, « _one_, _two_, _options_ »).
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return _duration_.
       </emu-alg>
