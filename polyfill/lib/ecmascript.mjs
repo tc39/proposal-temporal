@@ -1869,11 +1869,13 @@ export const ES = ObjectAssign({}, ES2020, {
     return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
   },
   CalendarEquals: (one, two) => {
+    if (one === two) return true;
     const cal1 = ES.ToString(one);
     const cal2 = ES.ToString(two);
     return cal1 === cal2;
   },
   ConsolidateCalendars: (one, two) => {
+    if (one === two) return two;
     const sOne = ES.ToString(one);
     const sTwo = ES.ToString(two);
     if (sOne === sTwo || sOne === 'iso8601') {
@@ -1918,6 +1920,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return new TemporalTimeZone(timeZone);
   },
   TimeZoneEquals: (one, two) => {
+    if (one === two) return true;
     const tz1 = ES.ToString(one);
     const tz2 = ES.ToString(two);
     return tz1 === tz2;
