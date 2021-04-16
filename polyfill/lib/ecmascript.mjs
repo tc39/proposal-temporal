@@ -2849,9 +2849,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let calendar;
     if (relativeTo) {
-      if (!(ES.IsTemporalDateTime(relativeTo) || ES.IsTemporalZonedDateTime(relativeTo))) {
-        throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
-      }
+      relativeTo = ES.ToTemporalDateTime(relativeTo);
       calendar = GetSlot(relativeTo, CALENDAR);
     }
 
@@ -2932,9 +2930,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let calendar;
     if (relativeTo) {
-      if (!(ES.IsTemporalDateTime(relativeTo) || ES.IsTemporalZonedDateTime(relativeTo))) {
-        throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
-      }
+      relativeTo = ES.ToTemporalDateTime(relativeTo);
       calendar = GetSlot(relativeTo, CALENDAR);
     }
 
