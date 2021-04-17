@@ -29,22 +29,23 @@
     </emu-alg>
   </emu-clause>
 
-  <!-- Based on ECMA-402 9.2.10 NormalizeOptionsObject and GetOption -->
-  <emu-clause id="sec-normalizeoptionsobject" aoid="NormalizeOptionsObject">
-    <h1>NormalizeOptionsObject ( _options_ )</h1>
+  <!-- Copied from ECMA-402 GetOptionsObject -->
+  <emu-clause id="sec-getoptionsobject" aoid="GetOptionsObject">
+    <h1>GetOptionsObject ( _options_ )</h1>
     <p>
-      The abstract operation NormalizeOptionsObject massages _options_ into an Object to be subsequently passed to GetOption.
+      The abstract operation GetOptionsObject returns an Object suitable for use with GetOption, either _options_ itself or a default empty Object.
       It throws a TypeError if _options_ is not undefined and not an Object.
     </p>
     <emu-alg>
       1. If _options_ is *undefined*, then
-        1. Return ! ObjectCreate(*null*).
+        1. Return ! OrdinaryObjectCreate(*null*).
       1. If Type(_options_) is Object, then
         1. Return _options_.
       1. Throw a *TypeError* exception.
     </emu-alg>
   </emu-clause>
 
+  <!-- Copied from ECMA-402 GetOption -->
   <emu-clause id="sec-getoption" aoid="GetOption">
     <h1>GetOption ( _options_, _property_, _type_, _values_, _fallback_ )</h1>
 
@@ -66,7 +67,7 @@
     </emu-alg>
   </emu-clause>
 
-  <!-- Copied from ECMA-402 9.2.12 -->
+  <!-- Copied from ECMA-402 DefaultNumberOption -->
   <emu-clause id="sec-defaultnumberoption" aoid="DefaultNumberOption">
     <h1>DefaultNumberOption ( _value_, _minimum_, _maximum_, _fallback_ )</h1>
 
@@ -82,13 +83,14 @@
     </emu-alg>
   </emu-clause>
 
-  <!-- Copied from ECMA-402 9.2.13 -->
+  <!-- Copied from ECMA-402 GetNumberOption -->
   <emu-clause id="sec-getnumberoption" aoid="GetNumberOption">
     <h1>GetNumberOption ( _options_, _property_, _minimum_, _maximum_, _fallback_ )</h1>
 
     <p>
       The abstract operation GetNumberOption extracts the value of the property named _property_ from the provided _options_ object, converts it to a Number value, checks whether it is in the allowed range, and fills in a _fallback_ value if necessary.
     </p>
+
     <emu-alg>
       1. Assert: Type(_options_) is Object.
       1. Let _value_ be ? Get(_options_, _property_).

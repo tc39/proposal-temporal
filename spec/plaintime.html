@@ -56,7 +56,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
           1. Return ? CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
@@ -247,7 +247,7 @@
         1. If _timeZoneProperty_ is not *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _partialTime_ be ? ToPartialTime(_temporalTimeLike_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If _partialTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialTime_.[[Hour]].
@@ -288,7 +288,7 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Set _other_ to ? ToTemporalTime(_other_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"hours"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
@@ -312,7 +312,7 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Set _other_ to ? ToTemporalTime(_other_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"hours"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
@@ -338,7 +338,7 @@
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If _options_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"halfExpand"*).
         1. If _smallestUnit_ is *"hour"*, then
@@ -441,7 +441,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundResult_ be ? RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).

@@ -163,7 +163,7 @@ export class PlainDateTime {
       throw new TypeError('with() does not support a timeZone property');
     }
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, [
       'day',
@@ -289,7 +289,7 @@ export class PlainDateTime {
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
       GetSlot(this, ISO_YEAR),
@@ -332,7 +332,7 @@ export class PlainDateTime {
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
       GetSlot(this, ISO_YEAR),
@@ -380,7 +380,7 @@ export class PlainDateTime {
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -474,7 +474,7 @@ export class PlainDateTime {
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -572,7 +572,7 @@ export class PlainDateTime {
   round(options) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
@@ -645,7 +645,7 @@ export class PlainDateTime {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const showCalendar = ES.ToShowCalendarOption(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
@@ -666,7 +666,7 @@ export class PlainDateTime {
   toZonedDateTime(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, this, disambiguation);
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
@@ -710,7 +710,7 @@ export class PlainDateTime {
   }
 
   static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     if (ES.IsTemporalDateTime(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
       return ES.CreateTemporalDateTime(

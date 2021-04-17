@@ -53,7 +53,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Perform ? ToTemporalOverflow(_options_).
           1. Return ? CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
@@ -232,7 +232,7 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"monthCode"*, *"year"* »).
         1. Let _partialYearMonth_ be ? PreparePartialTemporalFields(_temporalYearMonthLike_, _fieldNames_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
@@ -252,7 +252,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -280,7 +280,7 @@
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -308,7 +308,7 @@
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
@@ -344,7 +344,7 @@
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
@@ -396,7 +396,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
         1. Return ? TemporalYearMonthToString(_yearMonth_, _showCalendar_).
       </emu-alg>

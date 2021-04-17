@@ -399,10 +399,10 @@ describe('ECMAScript', () => {
     }
   });
 
-  describe('NormalizeOptionsObject', () => {
+  describe('GetOptionsObject', () => {
     it('Options parameter can only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('1'), 1n].forEach((options) =>
-        throws(() => ES.NormalizeOptionsObject(options), TypeError)
+        throws(() => ES.GetOptionsObject(options), TypeError)
       );
     });
   });

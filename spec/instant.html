@@ -252,7 +252,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _other_ to ? ToTemporalInstant(_other_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"seconds"*, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », _defaultLargestUnit_).
@@ -276,7 +276,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _other_ to ? ToTemporalInstant(_other_).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », *"nanoseconds"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"seconds"*, _smallestUnit_).
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"years"*, *"months"*, *"weeks"*, *"days"* », _defaultLargestUnit_).
@@ -299,7 +299,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"day"* »).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"halfExpand"*).
         1. If _smallestUnit_ is *"hour"*, then
@@ -346,7 +346,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Set _options_ to ? NormalizeOptionsObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
