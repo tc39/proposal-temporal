@@ -3017,7 +3017,7 @@
       value: function dateFromFields(fields, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, options, this);
       }
     }, {
@@ -3025,7 +3025,7 @@
       value: function yearMonthFromFields(fields, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return impl[GetSlot(this, CALENDAR_ID)].yearMonthFromFields(fields, options, this);
       }
     }, {
@@ -3033,7 +3033,7 @@
       value: function monthDayFromFields(fields, options) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return impl[GetSlot(this, CALENDAR_ID)].monthDayFromFields(fields, options, this);
       }
     }, {
@@ -3071,7 +3071,7 @@
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         date = ES.ToTemporalDate(date);
         duration = ES.ToTemporalDuration(duration);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow, this);
       }
@@ -3081,7 +3081,7 @@
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         one = ES.ToTemporalDate(one);
         two = ES.ToTemporalDate(two);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'days', ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
 
         var _impl$GetSlot$dateUnt = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit),
@@ -10518,7 +10518,7 @@
     ComparisonResult: function ComparisonResult(value) {
       return value < 0 ? -1 : value > 0 ? 1 : value;
     },
-    NormalizeOptionsObject: function NormalizeOptionsObject(options) {
+    GetOptionsObject: function GetOptionsObject(options) {
       if (options === undefined) return ObjectCreate(null);
       if (ES.Type(options) === 'Object') return options;
       throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(_typeof(options))));
@@ -10649,7 +10649,7 @@
       value: function getInstantFor(dateTime) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         dateTime = ES.ToTemporalDateTime(dateTime);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         return ES.BuiltinTimeZoneGetInstantFor(this, dateTime, disambiguation);
       }
@@ -11309,7 +11309,7 @@
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalInstant(other);
         var disallowedUnits = ['years', 'months', 'weeks', 'days'];
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
@@ -11353,7 +11353,7 @@
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalInstant(other);
         var disallowedUnits = ['years', 'months', 'weeks', 'days'];
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
@@ -11395,7 +11395,7 @@
       value: function round(options) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
@@ -11425,7 +11425,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var timeZone = options.timeZone;
         if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
 
@@ -11705,7 +11705,7 @@
         var fields = ES.ToTemporalDateFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalDateFields(fields, fieldNames);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return ES.DateFromFields(calendar, fields, options);
       }
     }, {
@@ -11720,7 +11720,7 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var _duration = duration,
             years = _duration.years,
             months = _duration.months,
@@ -11751,7 +11751,7 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var _duration2 = duration,
             years = _duration2.years,
             months = _duration2.months,
@@ -11791,7 +11791,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
@@ -11831,7 +11831,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
@@ -11882,7 +11882,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var showCalendar = ES.ToShowCalendarOption(options);
         return ES.TemporalDateToString(this, showCalendar);
       }
@@ -12001,7 +12001,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         if (ES.IsTemporalDate(item)) {
           ES.ToTemporalOverflow(options); // validate and ignore
@@ -12204,7 +12204,7 @@
           throw new TypeError('with() does not support a timeZone property');
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         var props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
@@ -12290,7 +12290,7 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
 
         var _ES$AddDateTime = ES.AddDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, options),
@@ -12323,7 +12323,7 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
 
         var _ES$AddDateTime2 = ES.AddDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar, -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, options),
@@ -12354,7 +12354,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -12414,7 +12414,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -12464,7 +12464,7 @@
       value: function round(options) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
@@ -12520,7 +12520,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         var _ES$ToSecondsStringPr = ES.ToSecondsStringPrecision(options),
             precision = _ES$ToSecondsStringPr.precision,
@@ -12560,7 +12560,7 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
         var timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, this, disambiguation);
         return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
@@ -12616,7 +12616,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         if (ES.IsTemporalDateTime(item)) {
           ES.ToTemporalOverflow(options); // validate and ignore
@@ -12837,7 +12837,7 @@
             microseconds = _ES$ToLimitedTemporal.microseconds,
             nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var relativeTo = ES.ToRelativeTemporalObject(options);
 
         var _ES$AddDuration = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, relativeTo);
@@ -12872,7 +12872,7 @@
             microseconds = _ES$ToLimitedTemporal2.microseconds,
             nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var relativeTo = ES.ToRelativeTemporalObject(options);
 
         var _ES$AddDuration2 = ES.AddDuration(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, relativeTo);
@@ -12905,7 +12905,7 @@
         var microseconds = GetSlot(this, MICROSECONDS);
         var nanoseconds = GetSlot(this, NANOSECONDS);
         var defaultLargestUnit = ES.DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, undefined);
         var smallestUnitPresent = true;
 
@@ -13015,7 +13015,7 @@
         var milliseconds = GetSlot(this, MILLISECONDS);
         var microseconds = GetSlot(this, MICROSECONDS);
         var nanoseconds = GetSlot(this, NANOSECONDS);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var unit = ES.ToTemporalDurationTotalUnit(options, undefined);
         if (unit === undefined) throw new RangeError('unit option is required');
         var relativeTo = ES.ToRelativeTemporalObject(options); // Convert larger units down to days
@@ -13054,7 +13054,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         var _ES$ToDurationSeconds = ES.ToDurationSecondsStringPrecision(options),
             precision = _ES$ToDurationSeconds.precision,
@@ -13108,7 +13108,7 @@
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
         one = ES.ToTemporalDuration(one);
         two = ES.ToTemporalDuration(two);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var relativeTo = ES.ToRelativeTemporalObject(options);
         var y1 = GetSlot(one, YEARS);
         var mon1 = GetSlot(one, MONTHS);
@@ -13225,7 +13225,7 @@
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return ES.MonthDayFromFields(calendar, fields, options);
       }
     }, {
@@ -13248,7 +13248,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var showCalendar = ES.ToShowCalendarOption(options);
         return ES.TemporalMonthDayToString(this, showCalendar);
       }
@@ -13325,7 +13325,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         if (ES.IsTemporalMonthDay(item)) {
           ES.ToTemporalOverflow(options); // validate and ignore
@@ -13544,7 +13544,7 @@
           throw new TypeError('with() does not support a timeZone property');
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 
@@ -13662,7 +13662,7 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalTime(other);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
@@ -13711,7 +13711,7 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         other = ES.ToTemporalTime(other);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
@@ -13765,7 +13765,7 @@
       value: function round(options) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
@@ -13814,7 +13814,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         var _ES$ToSecondsStringPr = ES.ToSecondsStringPrecision(options),
             precision = _ES$ToSecondsStringPr.precision,
@@ -13920,7 +13920,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
 
         if (ES.IsTemporalTime(item)) {
@@ -14064,7 +14064,7 @@
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalYearMonthFields(fields, fieldNames);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         return ES.YearMonthFromFields(calendar, fields, options);
       }
     }, {
@@ -14088,7 +14088,7 @@
         var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
         days = _ES$BalanceDuration.days;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
@@ -14137,7 +14137,7 @@
         var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days');
 
         days = _ES$BalanceDuration2.days;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
@@ -14167,7 +14167,7 @@
           throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disallowedUnits = ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
@@ -14216,7 +14216,7 @@
           throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disallowedUnits = ['weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
         var largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
@@ -14275,7 +14275,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var showCalendar = ES.ToShowCalendarOption(options);
         return ES.TemporalYearMonthToString(this, showCalendar);
       }
@@ -14354,7 +14354,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         if (ES.IsTemporalYearMonth(item)) {
           ES.ToTemporalOverflow(options); // validate and ignore
@@ -14608,7 +14608,7 @@
           throw new TypeError('timeZone invalid for with(). use withTimeZone()');
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var offset = ES.ToTemporalOffset(options, 'prefer');
         var timeZone = GetSlot(this, TIME_ZONE);
@@ -14718,7 +14718,7 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var timeZone = GetSlot(this, TIME_ZONE);
         var calendar = GetSlot(this, CALENDAR);
         var epochNanoseconds = ES.AddZonedDateTime(GetSlot(this, INSTANT), timeZone, calendar, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, options);
@@ -14741,7 +14741,7 @@
             microseconds = duration.microseconds,
             nanoseconds = duration.nanoseconds;
         ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var timeZone = GetSlot(this, TIME_ZONE);
         var calendar = GetSlot(this, CALENDAR);
         var epochNanoseconds = ES.AddZonedDateTime(GetSlot(this, INSTANT), timeZone, calendar, -years, -months, -weeks, -days, -hours, -minutes, -seconds, -milliseconds, -microseconds, -nanoseconds, options);
@@ -14762,7 +14762,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -14864,7 +14864,7 @@
           throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
         }
 
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
         var defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('hours', smallestUnit);
         var largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
@@ -14957,7 +14957,7 @@
       value: function round(options) {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         if (options === undefined) throw new TypeError('options parameter is required');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
         var smallestUnit = ES.ToSmallestTemporalUnit(options);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
         var maximumIncrements = {
@@ -15025,7 +15025,7 @@
       value: function toString() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         var _ES$ToSecondsStringPr = ES.ToSecondsStringPrecision(options),
             precision = _ES$ToSecondsStringPr.precision,
@@ -15140,7 +15140,7 @@
       key: "from",
       value: function from(item) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-        options = ES.NormalizeOptionsObject(options);
+        options = ES.GetOptionsObject(options);
 
         if (ES.IsTemporalZonedDateTime(item)) {
           ES.ToTemporalOverflow(options); // validate and ignore
