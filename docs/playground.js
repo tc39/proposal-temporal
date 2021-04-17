@@ -7811,11 +7811,13 @@
       return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
     },
     CalendarEquals: function CalendarEquals(one, two) {
+      if (one === two) return true;
       var cal1 = ES.ToString(one);
       var cal2 = ES.ToString(two);
       return cal1 === cal2;
     },
     ConsolidateCalendars: function ConsolidateCalendars(one, two) {
+      if (one === two) return two;
       var sOne = ES.ToString(one);
       var sTwo = ES.ToString(two);
 
@@ -7861,12 +7863,8 @@
       var TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       return new TemporalTimeZone(timeZone);
     },
-    TimeZoneCompare: function TimeZoneCompare(one, two) {
-      var tz1 = ES.ToString(one);
-      var tz2 = ES.ToString(two);
-      return tz1 < tz2 ? -1 : tz1 > tz2 ? 1 : 0;
-    },
     TimeZoneEquals: function TimeZoneEquals(one, two) {
+      if (one === two) return true;
       var tz1 = ES.ToString(one);
       var tz2 = ES.ToString(two);
       return tz1 === tz2;

@@ -6940,10 +6940,11 @@ li.menu-search-result-term:before {
     <emu-clause id="sec-temporal-timezoneequals" aoid="TimeZoneEquals">
       <h1><span class="secnum">11.6.16</span> TimeZoneEquals ( <var>one</var>, <var>two</var> )</h1>
       <p>
-        The abstract operation TimeZoneEquals returns <emu-val>true</emu-val> if the results of
-        calling <code>toString()</code> on its arguments are equal.
+        The abstract operation TimeZoneEquals takes two arguments <var>one</var> and <var>two</var>, which must be Objects.
+        It returns <emu-val>true</emu-val> if its arguments represent the same time zone.
+        It performs the following steps:
       </p>
-      <emu-alg><ol><li>Let <var>timeZoneOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1493"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>timeZoneTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1494"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>timeZoneOne</var> is <var>timeZoneTwo</var>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.</li></ol></emu-alg>
+      <emu-alg><ol><li>If <var>one</var> and <var>two</var> are the same Object value, return <emu-val>true</emu-val>.</li><li>Let <var>timeZoneOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1493"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>timeZoneTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1494"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>timeZoneOne</var> is <var>timeZoneTwo</var>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.</li></ol></emu-alg>
     </emu-clause>
   </emu-clause>
 </emu-clause></emu-import>
@@ -7152,12 +7153,22 @@ li.menu-search-result-term:before {
 
     <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
       <h1><span class="secnum">12.1.28</span> CalendarEquals ( <var>one</var>, <var>two</var> )</h1>
-      <emu-alg><ol><li>Let <var>calendarOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1560"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>calendarTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1561"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>calendarOne</var> is <var>calendarTwo</var>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.</li></ol></emu-alg>
+      <p>
+        The abstract operation CalendarEquals takes two arguments <var>one</var> and <var>two</var>, which must be Objects.
+        It returns <emu-val>true</emu-val> if its arguments represent the same calendar.
+        It performs the following steps:
+      </p>
+      <emu-alg><ol><li>If <var>one</var> and <var>two</var> are the same Object value, return <emu-val>true</emu-val>.</li><li>Let <var>calendarOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1560"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>calendarTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1561"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>calendarOne</var> is <var>calendarTwo</var>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-consolidatecalendars" aoid="ConsolidateCalendars">
       <h1><span class="secnum">12.1.29</span> ConsolidateCalendars ( <var>one</var>, <var>two</var> )</h1>
-      <emu-alg><ol><li>Let <var>calendarOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1562"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>calendarTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1563"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>calendarOne</var> is <var>calendarTwo</var>, return <var>two</var>.</li><li>If <var>calendarOne</var> is <emu-val>"iso8601"</emu-val>, return <var>two</var>.</li><li>If <var>calendarTwo</var> is <emu-val>"iso8601"</emu-val>, return <var>one</var>.</li><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></emu-alg>
+      <p>
+        The abstract operation ConsolidateCalendars takes two arguments <var>one</var> and <var>two</var>, which must be Objects.
+        It returns the calendar that should take priority when combining two Temporal objects with different calendars, or throws an exception if the calendars cannot be combined.
+        It performs the following steps:
+      </p>
+      <emu-alg><ol><li>If <var>one</var> and <var>two</var> are the same Object value, return <var>two</var>.</li><li>Let <var>calendarOne</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1562"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>one</var>).</li><li>Let <var>calendarTwo</var> be ?&nbsp;<emu-xref aoid="ToString" id="_ref_1563"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>two</var>).</li><li>If <var>calendarOne</var> is <var>calendarTwo</var>, return <var>two</var>.</li><li>If <var>calendarOne</var> is <emu-val>"iso8601"</emu-val>, return <var>two</var>.</li><li>If <var>calendarTwo</var> is <emu-val>"iso8601"</emu-val>, return <var>one</var>.</li><li>Throw a <emu-val>RangeError</emu-val> exception.</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-isisoleapyear" aoid="IsISOLeapYear">
