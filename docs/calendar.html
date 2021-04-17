@@ -458,9 +458,9 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(<em>fields</em>: array<string>) : array<string></h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(<em>fields</em>: Iterable<string>) : Iterable<string></h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>fields</code> (array of strings): A list of field names.</li>
+<li><code>fields</code> (array of strings, or other iterable yielding strings): A list of field names.</li>
 </ul>
 <p><strong>Returns:</strong> a new list of field names.</p>
 <p>This method does not need to be called directly except in specialized code.

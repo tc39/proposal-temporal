@@ -2979,6 +2979,7 @@
   }
 
   var ArrayIncludes = Array.prototype.includes;
+  var ArrayPrototypePush$2 = Array.prototype.push;
   var ObjectAssign$3 = Object.assign;
   var impl = {};
   var Calendar = /*#__PURE__*/function () {
@@ -3039,8 +3040,24 @@
       key: "fields",
       value: function fields(_fields) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        _fields = ES.CreateListFromArrayLike(_fields, ['String']);
-        return impl[GetSlot(this, CALENDAR_ID)].fields(_fields);
+        var fieldsArray = [];
+
+        var _iterator = _createForOfIteratorHelper(_fields),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var name = _step.value;
+            if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
+            ArrayPrototypePush$2.call(fieldsArray, name);
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
       }
     }, {
       key: "mergeFields",
@@ -3422,22 +3439,22 @@
       if (cacheToClone !== undefined) {
         var i = cacheToClone.length;
 
-        var _iterator = _createForOfIteratorHelper(cacheToClone.map.entries()),
-            _step;
+        var _iterator2 = _createForOfIteratorHelper(cacheToClone.map.entries()),
+            _step2;
 
         try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
             var _this$map;
 
-            var entry = _step.value;
+            var entry = _step2.value;
             if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
 
             (_this$map = this.map).set.apply(_this$map, _toConsumableArray(entry));
           }
         } catch (err) {
-          _iterator.e(err);
+          _iterator2.e(err);
         } finally {
-          _iterator.f();
+          _iterator2.f();
         }
       }
     }
@@ -3569,14 +3586,14 @@
 
       var result = {};
 
-      var _iterator2 = _createForOfIteratorHelper(parts),
-          _step2;
+      var _iterator3 = _createForOfIteratorHelper(parts),
+          _step3;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _step2$value = _step2.value,
-              type = _step2$value.type,
-              value = _step2$value.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var _step3$value = _step3.value,
+              type = _step3$value.type,
+              value = _step3$value.value;
           if (type === 'year') result.eraYear = +value;
           if (type === 'relatedYear') result.eraYear = +value;
 
@@ -3611,9 +3628,9 @@
           }
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator2.f();
+        _iterator3.f();
       }
 
       if (result.eraYear === undefined) {
@@ -5805,8 +5822,6 @@
   var duration = new RegExp("^([+\u2212-])?P".concat(durationDate.source, "(?:T(?!$)").concat(durationTime.source, ")?$"), 'i');
 
   /* global true */
-  var ArrayIsArray = Array.isArray;
-  var ArrayPrototypeIndexOf = Array.prototype.indexOf;
   var ArrayPrototypePush$1 = Array.prototype.push;
   var IntlDateTimeFormat$1 = globalThis.Intl.DateTimeFormat;
   var MathMin = Math.min;
@@ -7150,7 +7165,7 @@
         }
 
         calendar = ES.GetOptionalTemporalCalendar(item);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         var fields = ES.ToTemporalDateTimeFields(item, fieldNames);
 
         var _ES$InterpretTemporal2 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
@@ -7399,7 +7414,7 @@
       } // "prefer" or "reject"
 
 
-      var possibleInstants = timeZone.getPossibleInstantsFor(dt);
+      var possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
 
       var _iterator8 = _createForOfIteratorHelper(possibleInstants),
           _step8;
@@ -7436,7 +7451,7 @@
       if (ES.Type(item) === 'Object') {
         if (ES.IsTemporalZonedDateTime(item)) return item;
         calendar = ES.GetOptionalTemporalCalendar(item);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         var fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
 
         var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
@@ -7630,7 +7645,24 @@
     CalendarFields: function CalendarFields(calendar, fieldNames) {
       var fields = ES.GetMethod(calendar, 'fields');
       if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
-      return ES.CreateListFromArrayLike(fieldNames, ['String']);
+      var result = [];
+
+      var _iterator9 = _createForOfIteratorHelper(fieldNames),
+          _step9;
+
+      try {
+        for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
+          var name = _step9.value;
+          if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
+          ArrayPrototypePush$1.call(result, name);
+        }
+      } catch (err) {
+        _iterator9.e(err);
+      } finally {
+        _iterator9.f();
+      }
+
+      return result;
     },
     CalendarMergeFields: function CalendarMergeFields(calendar, fields, additionalFields) {
       var mergeFields = ES.GetMethod(calendar, 'mergeFields');
@@ -7956,13 +7988,25 @@
     GetPossibleInstantsFor: function GetPossibleInstantsFor(timeZone, dateTime) {
       var getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
       var possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
-      var result = ES.CreateListFromArrayLike(possibleInstants, ['Object']);
-      var numInstants = result.length;
+      var result = [];
 
-      for (var ix = 0; ix < numInstants; ix++) {
-        if (!ES.IsTemporalInstant(result[ix])) {
-          throw new TypeError('bad return from getPossibleInstantsFor');
+      var _iterator10 = _createForOfIteratorHelper(possibleInstants),
+          _step10;
+
+      try {
+        for (_iterator10.s(); !(_step10 = _iterator10.n()).done;) {
+          var instant = _step10.value;
+
+          if (!ES.IsTemporalInstant(instant)) {
+            throw new TypeError('bad return from getPossibleInstantsFor');
+          }
+
+          ArrayPrototypePush$1.call(result, instant);
         }
+      } catch (err) {
+        _iterator10.e(err);
+      } finally {
+        _iterator10.f();
       }
 
       return result;
@@ -8883,10 +8927,7 @@
       var calendar;
 
       if (relativeTo) {
-        if (!(ES.IsTemporalDateTime(relativeTo) || ES.IsTemporalZonedDateTime(relativeTo))) {
-          throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
-        }
-
+        relativeTo = ES.ToTemporalDateTime(relativeTo);
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
@@ -9006,10 +9047,7 @@
       var calendar;
 
       if (relativeTo) {
-        if (!(ES.IsTemporalDateTime(relativeTo) || ES.IsTemporalZonedDateTime(relativeTo))) {
-          throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
-        }
-
+        relativeTo = ES.ToTemporalDateTime(relativeTo);
         calendar = GetSlot(relativeTo, CALENDAR);
       }
 
@@ -10512,43 +10550,6 @@
       }
 
       return MathFloor(value);
-    },
-    // Following two operations are overridden because the es-abstract version of
-    // ES.Get() unconditionally uses util.inspect
-    LengthOfArrayLike: function LengthOfArrayLike(obj) {
-      if (ES.Type(obj) !== 'Object') {
-        throw new TypeError('Assertion failed: `obj` must be an Object');
-      }
-
-      return ES.ToLength(obj.length);
-    },
-    CreateListFromArrayLike: function CreateListFromArrayLike(obj, elementTypes) {
-      if (ES.Type(obj) !== 'Object') {
-        throw new TypeError('Assertion failed: `obj` must be an Object');
-      }
-
-      if (!ArrayIsArray(elementTypes)) {
-        throw new TypeError('Assertion failed: `elementTypes`, if provided, must be an array');
-      }
-
-      var len = ES.LengthOfArrayLike(obj);
-      var list = [];
-      var index = 0;
-
-      while (index < len) {
-        var indexName = ES.ToString(index);
-        var next = obj[indexName];
-        var nextType = ES.Type(next);
-
-        if (ArrayPrototypeIndexOf.call(elementTypes, nextType) < 0) {
-          throw new TypeError("item type ".concat(nextType, " is not a valid elementType"));
-        }
-
-        ArrayPrototypePush$1.call(list, next);
-        index += 1;
-      }
-
-      return list;
     }
   });
   var OFFSET = new RegExp("^".concat(offset.source, "$"));
