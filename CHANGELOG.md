@@ -1,3 +1,21 @@
+## 0.8.0
+
+This version is being released in order to correspond with the state of the proposal that reached Stage 3.
+Expect this polyfill to be replaced by other, more production-ready polyfills.
+
+- All supported calendars are now included in the polyfill. Implementations of some calendars may be slow.
+- The previous behaviour of monkeypatching Temporal.Calendar.from() and Temporal.TimeZone.from() to make custom calendars and time zones globally available is no longer supported.
+- Month codes are now formatted as `"M03"` instead of `"3"`
+- Calendar annotations in ISO strings are now formatted as `[u-ca=name]` instead of `[u-ca-name]`
+- Renamed `nearest` rounding mode to `halfExpand`
+- Removed Symbol.species from all types
+- Methods that return an instance of the class that they belong to, will now always return an instance of the Temporal class, even if the method is invoked on a subclass of it
+- Removed constructor parameters from Temporal.Calendar.dateFromFields(), Temporal.Calendar.monthDayFromFields(), Temporal.Calendar.yearMonthFromFields(), Temporal.Calendar.dateAdd(), and Temporal.Calendar.dateUntil()
+- compare() methods no longer take the calendar or time zone into account
+- Temporal.Calendar.fields() may accept an iterable instead of an array as its argument
+- Custom calendar implementations may return an iterable instead of an array from Temporal.Calendar.fields()
+- Custom time zone implementations may return an iterable instead of an array from Temporal.TimeZone.getPossibleInstantsFor()
+
 ## 0.7.0
 
 - New APIs:
