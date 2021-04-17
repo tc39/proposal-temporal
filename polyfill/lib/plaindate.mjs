@@ -119,7 +119,7 @@ export class PlainDate {
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.ToTemporalDateFields(fields, fieldNames);
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     return ES.DateFromFields(calendar, fields, options);
   }
@@ -131,7 +131,7 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -143,7 +143,7 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -162,7 +162,7 @@ export class PlainDate {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
@@ -218,7 +218,7 @@ export class PlainDate {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disallowedUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'days', disallowedUnits);
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
@@ -275,7 +275,7 @@ export class PlainDate {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const showCalendar = ES.ToShowCalendarOption(options);
     return ES.TemporalDateToString(this, showCalendar);
   }
@@ -396,7 +396,7 @@ export class PlainDate {
     };
   }
   static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     if (ES.IsTemporalDate(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
       return ES.CreateTemporalDate(

@@ -99,7 +99,7 @@ export class Instant {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalInstant(other);
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
@@ -141,7 +141,7 @@ export class Instant {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalInstant(other);
     const disallowedUnits = ['years', 'months', 'weeks', 'days'];
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
     const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
     const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
@@ -182,7 +182,7 @@ export class Instant {
   round(options) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
@@ -207,7 +207,7 @@ export class Instant {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     let timeZone = options.timeZone;
     if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);

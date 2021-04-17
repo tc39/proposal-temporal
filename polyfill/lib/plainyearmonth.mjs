@@ -84,7 +84,7 @@ export class PlainYearMonth {
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.ToTemporalYearMonthFields(fields, fieldNames);
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     return ES.YearMonthFromFields(calendar, fields, options);
   }
@@ -95,7 +95,7 @@ export class PlainYearMonth {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
@@ -127,7 +127,7 @@ export class PlainYearMonth {
     ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
@@ -152,7 +152,7 @@ export class PlainYearMonth {
         `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
       );
     }
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disallowedUnits = [
       'weeks',
       'days',
@@ -224,7 +224,7 @@ export class PlainYearMonth {
         `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
       );
     }
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disallowedUnits = [
       'weeks',
       'days',
@@ -296,7 +296,7 @@ export class PlainYearMonth {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const showCalendar = ES.ToShowCalendarOption(options);
     return ES.TemporalYearMonthToString(this, showCalendar);
   }
@@ -349,7 +349,7 @@ export class PlainYearMonth {
     };
   }
   static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     if (ES.IsTemporalYearMonth(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
       return ES.CreateTemporalYearMonth(

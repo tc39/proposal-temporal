@@ -64,7 +64,7 @@ export class TimeZone {
   }
   getInstantFor(dateTime, options = undefined) {
     dateTime = ES.ToTemporalDateTime(dateTime);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     return ES.BuiltinTimeZoneGetInstantFor(this, dateTime, disambiguation);
   }

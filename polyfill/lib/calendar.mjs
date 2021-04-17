@@ -38,19 +38,19 @@ export class Calendar {
   dateFromFields(fields, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     return impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, options, this);
   }
   yearMonthFromFields(fields, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     return impl[GetSlot(this, CALENDAR_ID)].yearMonthFromFields(fields, options, this);
   }
   monthDayFromFields(fields, options) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     return impl[GetSlot(this, CALENDAR_ID)].monthDayFromFields(fields, options, this);
   }
   fields(fields) {
@@ -70,7 +70,7 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     date = ES.ToTemporalDate(date);
     duration = ES.ToTemporalDuration(duration);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow, this);
   }
@@ -78,7 +78,7 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
       'hours',
       'minutes',

@@ -58,7 +58,7 @@ export class PlainMonthDay {
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     return ES.MonthDayFromFields(calendar, fields, options);
   }
   equals(other) {
@@ -73,7 +73,7 @@ export class PlainMonthDay {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const showCalendar = ES.ToShowCalendarOption(options);
     return ES.TemporalMonthDayToString(this, showCalendar);
   }
@@ -126,7 +126,7 @@ export class PlainMonthDay {
     };
   }
   static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     if (ES.IsTemporalMonthDay(item)) {
       ES.ToTemporalOverflow(options); // validate and ignore
       return ES.CreateTemporalMonthDay(

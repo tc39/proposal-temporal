@@ -127,7 +127,7 @@ export class PlainTime {
       throw new TypeError('with() does not support a timeZone property');
     }
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
 
     const props = ES.ToPartialRecord(temporalTimeLike, [
@@ -229,7 +229,7 @@ export class PlainTime {
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
@@ -288,7 +288,7 @@ export class PlainTime {
   since(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
     const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
@@ -353,7 +353,7 @@ export class PlainTime {
   round(options) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
@@ -399,7 +399,7 @@ export class PlainTime {
 
   toString(options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
@@ -494,7 +494,7 @@ export class PlainTime {
   }
 
   static from(item, options = undefined) {
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
     if (ES.IsTemporalTime(item)) {
       return new PlainTime(

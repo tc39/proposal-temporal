@@ -4312,7 +4312,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
-  NormalizeOptionsObject: (options) => {
+  GetOptionsObject: (options) => {
     if (options === undefined) return ObjectCreate(null);
     if (ES.Type(options) === 'Object') return options;
     throw new TypeError(

@@ -228,7 +228,7 @@ export class Duration {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
@@ -269,7 +269,7 @@ export class Duration {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(other);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
       GetSlot(this, YEARS),
@@ -322,7 +322,7 @@ export class Duration {
       microseconds,
       nanoseconds
     );
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     let smallestUnit = ES.ToSmallestTemporalDurationUnit(options, undefined);
     let smallestUnitPresent = true;
     if (!smallestUnit) {
@@ -450,7 +450,7 @@ export class Duration {
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const unit = ES.ToTemporalDurationTotalUnit(options, undefined);
     if (unit === undefined) throw new RangeError('unit option is required');
     const relativeTo = ES.ToRelativeTemporalObject(options);
@@ -494,7 +494,7 @@ export class Duration {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const { precision, unit, increment } = ES.ToDurationSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
@@ -534,7 +534,7 @@ export class Duration {
   static compare(one, two, options = undefined) {
     one = ES.ToTemporalDuration(one);
     two = ES.ToTemporalDuration(two);
-    options = ES.NormalizeOptionsObject(options);
+    options = ES.GetOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     const y1 = GetSlot(one, YEARS);
     const mon1 = GetSlot(one, MONTHS);
