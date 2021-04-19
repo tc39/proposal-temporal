@@ -185,9 +185,9 @@ export namespace Temporal {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
      *
-     * Valid values may include `'years'`, `'months'`, `'days'`, `'hours'`,
-     * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
-     * `'nanoseconds'` and `'auto'`, although some types may throw an exception
+     * Valid values may include `'year'`, `'month'`, `'week'`, `'day'`,
+     * `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`,
+     * `'nanosecond'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
      * `hours` is not accepted by `Temporal.PlainDate.prototype.since()`.
      *
@@ -267,9 +267,9 @@ export namespace Temporal {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
      *
-     * Valid values may include `'years'`, `'months'`, `'days'`, `'hours'`,
-     * `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`,
-     * `'nanoseconds'` and `'auto'`.
+     * Valid values include `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`,
+     * `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, `'nanosecond'`
+     * and `'auto'`.
      *
      * The default is `'auto'`, which means "the largest nonzero unit in the
      * input duration". This default prevents expanding durations to larger
@@ -280,50 +280,52 @@ export namespace Temporal {
      */
     largestUnit:
       | 'auto'
-      | 'years'
-      | 'months'
-      | 'weeks'
-      | 'days'
-      | 'hours'
-      | 'minutes'
-      | 'seconds'
-      | 'milliseconds'
-      | 'microseconds'
-      | 'nanoseconds'
-      | /** @deprecated */ 'year'
-      | /** @deprecated */ 'month'
-      | /** @deprecated */ 'day'
-      | /** @deprecated */ 'hour'
-      | /** @deprecated */ 'minute'
-      | /** @deprecated */ 'second'
-      | /** @deprecated */ 'millisecond'
-      | /** @deprecated */ 'microsecond'
-      | /** @deprecated */ 'nanosecond';
+      | 'year'
+      | 'month'
+      | 'week'
+      | 'day'
+      | 'hour'
+      | 'minute'
+      | 'second'
+      | 'millisecond'
+      | 'microsecond'
+      | 'nanosecond'
+      | /** @deprecated */ 'years'
+      | /** @deprecated */ 'months'
+      | /** @deprecated */ 'weeks'
+      | /** @deprecated */ 'days'
+      | /** @deprecated */ 'hours'
+      | /** @deprecated */ 'minutes'
+      | /** @deprecated */ 'seconds'
+      | /** @deprecated */ 'milliseconds'
+      | /** @deprecated */ 'microseconds'
+      | /** @deprecated */ 'nanoseconds';
 
     /**
      * The unit to round to. For example, to round to the nearest minute, use
      * `smallestUnit: 'minute'`. This option is required.
      */
     smallestUnit:
-      | 'years'
-      | 'months'
-      | 'weeks'
-      | 'days'
-      | 'hours'
-      | 'minutes'
-      | 'seconds'
-      | 'milliseconds'
-      | 'microseconds'
-      | 'nanoseconds'
-      | /** @deprecated */ 'year'
-      | /** @deprecated */ 'month'
-      | /** @deprecated */ 'day'
-      | /** @deprecated */ 'hour'
-      | /** @deprecated */ 'minute'
-      | /** @deprecated */ 'second'
-      | /** @deprecated */ 'millisecond'
-      | /** @deprecated */ 'microsecond'
-      | /** @deprecated */ 'nanosecond';
+      | 'year'
+      | 'month'
+      | 'week'
+      | 'day'
+      | 'hour'
+      | 'minute'
+      | 'second'
+      | 'millisecond'
+      | 'microsecond'
+      | 'nanosecond'
+      | /** @deprecated */ 'years'
+      | /** @deprecated */ 'months'
+      | /** @deprecated */ 'weeks'
+      | /** @deprecated */ 'days'
+      | /** @deprecated */ 'hours'
+      | /** @deprecated */ 'minutes'
+      | /** @deprecated */ 'seconds'
+      | /** @deprecated */ 'milliseconds'
+      | /** @deprecated */ 'microseconds'
+      | /** @deprecated */ 'nanoseconds';
 
     /**
      * Allows rounding to an integer number of units. For example, to round to
@@ -355,7 +357,7 @@ export namespace Temporal {
      * The starting point to use for rounding and conversions when
      * variable-length units (years, months, weeks depending on the calendar)
      * are involved. This option is required if any of the following are true:
-     * - `unit` is `'weeks'` or larger units
+     * - `unit` is `'week'` or larger units
      * - `this` has a nonzero value for `weeks` or larger units
      *
      * This value must be either a `Temporal.PlainDateTime`, a
@@ -384,31 +386,32 @@ export namespace Temporal {
      * The unit to convert the duration to. This option is required.
      */
     unit:
-      | 'years'
-      | 'months'
-      | 'weeks'
-      | 'days'
-      | 'hours'
-      | 'minutes'
-      | 'seconds'
-      | 'milliseconds'
-      | 'microseconds'
-      | 'nanoseconds'
-      | /** @deprecated */ 'year'
-      | /** @deprecated */ 'month'
-      | /** @deprecated */ 'day'
-      | /** @deprecated */ 'hour'
-      | /** @deprecated */ 'minute'
-      | /** @deprecated */ 'second'
-      | /** @deprecated */ 'millisecond'
-      | /** @deprecated */ 'microsecond'
-      | /** @deprecated */ 'nanosecond';
+      | 'year'
+      | 'month'
+      | 'week'
+      | 'day'
+      | 'hour'
+      | 'minute'
+      | 'second'
+      | 'millisecond'
+      | 'microsecond'
+      | 'nanosecond'
+      | /** @deprecated */ 'years'
+      | /** @deprecated */ 'months'
+      | /** @deprecated */ 'weeks'
+      | /** @deprecated */ 'days'
+      | /** @deprecated */ 'hours'
+      | /** @deprecated */ 'minutes'
+      | /** @deprecated */ 'seconds'
+      | /** @deprecated */ 'milliseconds'
+      | /** @deprecated */ 'microseconds'
+      | /** @deprecated */ 'nanoseconds';
 
     /**
      * The starting point to use when variable-length units (years, months,
      * weeks depending on the calendar) are involved. This option is required if
      * any of the following are true:
-     * - `unit` is `'weeks'` or larger units
+     * - `unit` is `'week'` or larger units
      * - `this` has a nonzero value for `weeks` or larger units
      *
      * This value must be either a `Temporal.PlainDateTime`, a
@@ -555,35 +558,35 @@ export namespace Temporal {
     until(
       other: Temporal.Instant | string,
       options?: DifferenceOptions<
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     since(
       other: Temporal.Instant | string,
       options?: DifferenceOptions<
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     round(
@@ -677,13 +680,14 @@ export namespace Temporal {
       one: Temporal.PlainDate | DateLike | string,
       two: Temporal.PlainDate | DateLike | string,
       options: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
       >
     ): Temporal.Duration;
     fields?(fields: Iterable<string>): Iterable<string>;
@@ -760,13 +764,14 @@ export namespace Temporal {
       one: Temporal.PlainDate | DateLike | string,
       two: Temporal.PlainDate | DateLike | string,
       options?: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
       >
     ): Temporal.Duration;
     fields(fields: Iterable<string>): Iterable<string>;
@@ -828,25 +833,27 @@ export namespace Temporal {
     until(
       other: Temporal.PlainDate | DateLike | string,
       options?: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
       >
     ): Temporal.Duration;
     since(
       other: Temporal.PlainDate | DateLike | string,
       options?: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
       >
     ): Temporal.Duration;
     toPlainDateTime(temporalTime?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
@@ -955,49 +962,51 @@ export namespace Temporal {
     until(
       other: Temporal.PlainDateTime | DateTimeLike | string,
       options?: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     since(
       other: Temporal.PlainDateTime | DateTimeLike | string,
       options?: DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     round(
@@ -1133,12 +1142,12 @@ export namespace Temporal {
     until(
       other: Temporal.PlainTime | TimeLike | string,
       options?: DifferenceOptions<
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
         | /** @deprecated */ 'hours'
         | /** @deprecated */ 'minutes'
         | /** @deprecated */ 'seconds'
@@ -1150,12 +1159,12 @@ export namespace Temporal {
     since(
       other: Temporal.PlainTime | TimeLike | string,
       options?: DifferenceOptions<
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
         | /** @deprecated */ 'hours'
         | /** @deprecated */ 'minutes'
         | /** @deprecated */ 'seconds'
@@ -1292,11 +1301,11 @@ export namespace Temporal {
     ): Temporal.PlainYearMonth;
     until(
       other: Temporal.PlainYearMonth | YearMonthLike | string,
-      options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
+      options?: DifferenceOptions<'year' | 'month' | /** @deprecated */ 'years' | /** @deprecated */ 'months'>
     ): Temporal.Duration;
     since(
       other: Temporal.PlainYearMonth | YearMonthLike | string,
-      options?: DifferenceOptions<'years' | 'months' | /** @deprecated */ 'year' | /** @deprecated */ 'month'>
+      options?: DifferenceOptions<'year' | 'month' | /** @deprecated */ 'years' | /** @deprecated */ 'months'>
     ): Temporal.Duration;
     toPlainDate(day: { day: number }): Temporal.PlainDate;
     getISOFields(): DateISOFields;
@@ -1390,49 +1399,51 @@ export namespace Temporal {
     until(
       other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
       options?: Temporal.DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     since(
       other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
       options?: Temporal.DifferenceOptions<
-        | 'years'
-        | 'months'
-        | 'weeks'
-        | 'days'
-        | 'hours'
-        | 'minutes'
-        | 'seconds'
-        | 'milliseconds'
-        | 'microseconds'
-        | 'nanoseconds'
-        | /** @deprecated */ 'year'
-        | /** @deprecated */ 'month'
-        | /** @deprecated */ 'day'
-        | /** @deprecated */ 'hour'
-        | /** @deprecated */ 'minute'
-        | /** @deprecated */ 'second'
-        | /** @deprecated */ 'millisecond'
-        | /** @deprecated */ 'microsecond'
-        | /** @deprecated */ 'nanosecond'
+        | 'year'
+        | 'month'
+        | 'week'
+        | 'day'
+        | 'hour'
+        | 'minute'
+        | 'second'
+        | 'millisecond'
+        | 'microsecond'
+        | 'nanosecond'
+        | /** @deprecated */ 'years'
+        | /** @deprecated */ 'months'
+        | /** @deprecated */ 'weeks'
+        | /** @deprecated */ 'days'
+        | /** @deprecated */ 'hours'
+        | /** @deprecated */ 'minutes'
+        | /** @deprecated */ 'seconds'
+        | /** @deprecated */ 'milliseconds'
+        | /** @deprecated */ 'microseconds'
+        | /** @deprecated */ 'nanoseconds'
       >
     ): Temporal.Duration;
     round(
