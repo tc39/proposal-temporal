@@ -516,7 +516,7 @@ export namespace Temporal {
     total(options: DurationTotalOptions): number;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
-    toString(): string;
+    toString(options?: ToStringPrecisionOptions): string;
   }
 
   /**
