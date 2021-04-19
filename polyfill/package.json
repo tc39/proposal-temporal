@@ -5,6 +5,10 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "browser": "dist/index.umd.js",
+  "exports": {
+    "import": "./lib/index.mjs",
+    "require": "./dist/index.js"
+  },
   "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",

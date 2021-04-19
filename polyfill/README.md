@@ -31,7 +31,7 @@ const { Temporal } = require('proposal-temporal');
 Or, import the polyfill as an ES6 module:
 
 ```javascript
-import { Temporal } from 'proposal-temporal/lib/index.mjs';
+import { Temporal } from 'proposal-temporal';
 ```
 
 ## Node REPL with Temporal
