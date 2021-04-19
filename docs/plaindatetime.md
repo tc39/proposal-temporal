@@ -209,10 +209,6 @@ sorted.join(' ');
 
 ### datetime.**year** : number
 
-### datetime.**era** : string | undefined
-
-### datetime.**eraYear** : number | undefined
-
 ### datetime.**month** : number
 
 ### datetime.**monthCode** : string
