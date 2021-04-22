@@ -121,7 +121,7 @@ class NYSETimeZone extends Temporal.TimeZone {
     instant = Temporal.Instant.from(instant);
     const zdt = instant.toZonedDateTimeISO(tz);
     const zdtWhenMarketIsOpen = isDuringMarketHours(zdt) ? zdt : getNextMarketOpen(zdt.toInstant());
-    const ns = zdt.offsetNanoseconds + zdt.until(zdtWhenMarketIsOpen, { largestUnit: 'nanoseconds' }).nanoseconds;
+    const ns = zdt.offsetNanoseconds + zdt.until(zdtWhenMarketIsOpen, { largestUnit: 'nanosecond' }).nanoseconds;
     return ns;
   }
   toString() {
