@@ -122,7 +122,7 @@ date.calendar.id; // => 'hebrew'
 inFourMonths = date.add({ months: 4 });
 inFourMonths.toLocaleString('en-US', { calendar: 'hebrew' }); // => '23 Sivan 5779'
 inFourMonths.withCalendar('iso8601'); // => 2019-06-26
-date.until(inFourMonths, { largestUnit: 'months' }); // => P4M
+date.until(inFourMonths, { largestUnit: 'month' }); // => P4M
 ```
 
 By definition, creating a bag of fields with year, month, and day requires choosing a calendar system.

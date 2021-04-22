@@ -188,7 +188,7 @@ const duration = Temporal.Duration.from({
   minutes: 20
 });
 
-duration.total({ unit: 'seconds' }); // => 469200
+duration.total({ unit: 'second' }); // => 469200
 ```
 
 See [Temporal.Duration Documentation](./duration.md) for detailed documentation.

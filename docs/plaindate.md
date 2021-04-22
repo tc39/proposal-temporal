@@ -86,6 +86,7 @@ Additionally, if the result is earlier or later than the range of dates that `Te
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24'); // => 2006-08-24
 date = Temporal.PlainDate.from('2006-08-24T15:43:27'); // => 2006-08-24
@@ -94,7 +95,7 @@ date = Temporal.PlainDate.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');
   // => 2006-08-24
 date === Temporal.PlainDate.from(date); // => false
 
-date = Temporal.PlainDate.from({year: 2006, month: 8, day: 24}); // => 2006-08-24
+date = Temporal.PlainDate.from({ year: 2006, month: 8, day: 24 }); // => 2006-08-24
 date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'));
   // => 2006-08-24
   // same as above; Temporal.PlainDateTime has year, month, and day properties
@@ -102,19 +103,19 @@ date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'
 calendar = Temporal.Calendar.from('islamic');
 date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar }); // => 2006-08-24[u-ca=islamic]
 date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
-  // => 2006-08-24[u-ca=islamic]
-  // same as above
+  // => 2006-08-24[u-ca=islamic] (same as above)
 
 // Different overflow modes
-date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' })
+date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
   // => 2001-12-01
-date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'constrain' })
+date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'constrain' });
   // => 2001-01-31
-date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' })
+date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'reject' });
   // => throws
-date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'reject' })
+date = Temporal.PlainDate.from({ year: 2001, month: 1, day: 32 }, { overflow: 'reject' });
   // => throws
 ```
+<!-- prettier-ignore-end -->
 
 ### Temporal.PlainDate.**compare**(_one_: Temporal.PlainDate | object | string, _two_: Temporal.PlainDate | object | string) : number
 
@@ -478,11 +479,11 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, and `'days'`.
+    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, and `'day'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`.
-    The default is `'days'`, i.e., no rounding.
+    Valid values are `'year'`, `'month'`, `'week'`, `'day'`.
+    The default is `'day'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -501,7 +502,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
 However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
-A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months'`, or `'weeks'`, in which case `largestUnit` is equal to `smallestUnit`.
+A value of `'auto'` means `'day'`, unless `smallestUnit` is `'year'`, `'month'`, or `'week'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
@@ -523,15 +524,15 @@ Usage example:
 earlier = Temporal.PlainDate.from('2006-08-24');
 later = Temporal.PlainDate.from('2019-01-31');
 earlier.until(later);                           // => P4543D
-earlier.until(later, { largestUnit: 'years' }); // => P12Y5M7D
-later.until(earlier, { largestUnit: 'years' }); // => -P12Y5M7D
+earlier.until(later, { largestUnit: 'year' }); // => P12Y5M7D
+later.until(earlier, { largestUnit: 'year' }); // => -P12Y5M7D
 
 // If you really need to calculate the difference between two Dates in
 // hours, you can eliminate the ambiguity by explicitly choosing the
 // point in time from which you want to reckon the difference. For
 // example, using noon:
 noon = Temporal.PlainTime.from('12:00');
-earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 'hours' });
+earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 'hour' });
   // => PT109032H
 ```
 <!-- prettier-ignore-end -->
@@ -544,11 +545,11 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, and `'days'`.
+    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, and `'day'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`.
-    The default is `'days'`, i.e., no rounding.
+    Valid values are `'year'`, `'month'`, `'week'`, `'day'`.
+    The default is `'day'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -562,7 +563,7 @@ If `other` is later than `date` then the resulting duration will be negative.
 
 This method is similar to `Temporal.PlainDate.prototype.until()`, but reversed.
 The returned `Temporal.Duration`, when subtracted from `date` using the same `options`, will yield `other`.
-Using default options, `date1.since(date2)` yields the same result as `date1.until(date2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
+Using default options, `date1.since(date2)` yields the same result as `date1.until(date2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
 
 Usage example:
 

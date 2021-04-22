@@ -383,11 +383,11 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'` and `'months'`.
+    Valid values are `'auto'`, `'year'` and `'month'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'` and `'months'`.
-    The default is `'months'`, i.e., no rounding.
+    Valid values are `'year'` and `'month'`.
+    The default is `'month'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -406,7 +406,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of one year and two months will become 14 months when `largestUnit` is `"months"`, for example.
 However, a difference of one month will still be one month even if `largestUnit` is `"years"`.
-A value of `'auto'` means `'years'`.
+A value of `'auto'` means `'year'`.
 
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method, but increments of months and larger are allowed.
@@ -424,15 +424,15 @@ Usage example:
 ym = Temporal.PlainYearMonth.from('2006-08');
 other = Temporal.PlainYearMonth.from('2019-06');
 ym.until(other);                            // => P12Y10M
-ym.until(other, { largestUnit: 'months' }); // => P154M
-other.until(ym, { largestUnit: 'months' }); // => -P154M
+ym.until(other, { largestUnit: 'month' }); // => P154M
+other.until(ym, { largestUnit: 'month' }); // => -P154M
 
 // If you really need to calculate the difference between two YearMonths
 // in days, you can eliminate the ambiguity by explicitly choosing the
 // day of the month (and if applicable, the time of that day) from which
 // you want to reckon the difference. For example, using the first of
 // the month to calculate a number of days:
-ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: 'days' }); // => P4687D
+ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: 'day' }); // => P4687D
 ```
 <!-- prettier-ignore-end -->
 
@@ -444,11 +444,11 @@ ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: '
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'` and `'months'`.
+    Valid values are `'auto'`, `'year'` and `'month'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'` and `'months'`.
-    The default is `'months'`, i.e., no rounding.
+    Valid values are `'year'` and `'month'`.
+    The default is `'month'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -462,7 +462,7 @@ If `other` is later than `yearMonth` then the resulting duration will be negativ
 
 This method is similar to `Temporal.PlainYearMonth.prototype.until()`, but reversed.
 The returned `Temporal.Duration`, when subtracted from `yearMonth` using the same `options`, will yield `other`.
-Using default options, `ym1.since(ym2)` yields the same result as `ym1.until(ym2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
+Using default options, `ym1.since(ym2)` yields the same result as `ym1.until(ym2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
 
 Usage example:
 

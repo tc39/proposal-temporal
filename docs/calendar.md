@@ -262,6 +262,7 @@ A custom implementation of these methods would convert the calendar-space argume
 
 For example:
 
+<!-- prettier-ignore-start -->
 ```javascript
 date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M05L', day: 18, calendar: 'hebrew' });
 date.year; // => 5779
@@ -277,6 +278,7 @@ date = Temporal.Calendar.from('hebrew').dateFromFields(
   { overflow: 'constrain' }
 );
 ```
+<!-- prettier-ignore-end -->
 
 ### calendar.**dateAdd**(_date_: Temporal.PlainDate | object | string, _duration_: Temporal.Duration | object | string, _options_: object) : Temporal.PlainDate
 
@@ -334,7 +336,7 @@ date.toString(); // => '2020-06-28[u-ca=islamic]'
 - `options` (object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'`, `'months'`, and `'days'`.
+    Valid values are `'auto'`, `'year'`, `'month'`, and `'day'`.
     The default is `'auto'`.
 
 **Returns:** a `Temporal.Duration` representing the time elapsed after `one` and until `two`.
@@ -346,7 +348,7 @@ It is called indirectly when using the `until()` and `since()` methods of `Tempo
 
 If `one` is later than `two`, then the resulting duration should be negative.
 
-The default `largestUnit` value of `'auto'` is the same as `'days'`.
+The default `largestUnit` value of `'auto'` is the same as `'day'`.
 
 > **NOTE:** Unlike `Temporal.Calendar.dateAdd()`, the `options` object that this method receives is not always the same object passed to the respective `until()` or `since()` method.
 > Depending on the type, a copy may be made of the object.
@@ -356,13 +358,13 @@ For example:
 ```javascript
 d1 = Temporal.PlainDate.from('2020-07-29').withCalendar('chinese');
 d2 = Temporal.PlainDate.from('2020-08-29').withCalendar('chinese');
-d1.until(d2, { largestUnit: 'months' }); // => P1M2D
+d1.until(d2, { largestUnit: 'month' }); // => P1M2D
 
 // same result, but calling the method directly:
 Temporal.Calendar.from('chinese').dateUntil(
   Temporal.PlainDate.from('2020-07-29'),
   Temporal.PlainDate.from('2020-08-29'),
-  { largestUnit: 'months' }
+  { largestUnit: 'month' }
 ); // => P1M2D
 ```
 

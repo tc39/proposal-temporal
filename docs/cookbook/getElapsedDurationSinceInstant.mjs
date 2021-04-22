@@ -1,10 +1,10 @@
 const result = Temporal.Instant.from('2020-01-09T04:00Z').since(Temporal.Instant.from('2020-01-09T00:00Z'), {
-  largestUnit: 'hours'
+  largestUnit: 'hour'
 });
 assert.equal(`${result}`, 'PT4H');
 
 const result2 = Temporal.Instant.from('2020-01-09T00:00Z').until(Temporal.Instant.from('2020-01-09T04:00Z'), {
-  largestUnit: 'minutes'
+  largestUnit: 'minute'
 });
 assert.equal(`${result2}`, 'PT240M');
 

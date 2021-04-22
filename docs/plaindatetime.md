@@ -643,11 +643,11 @@ dt.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is `'nanoseconds'`, i.e., no rounding.
+    Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    The default is `'nanosecond'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -666,7 +666,7 @@ The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
 A difference of two hours will become 7200 seconds when `largestUnit` is `"seconds"`, for example.
 However, a difference of 30 seconds will still be 30 seconds even if `largestUnit` is `"hours"`.
-A value of `'auto'` means `'days'`, unless `smallestUnit` is `'years'`, `'months'`, or `'weeks'`, in which case `largestUnit` is equal to `smallestUnit`.
+A value of `'auto'` means `'day'`, unless `smallestUnit` is `'year'`, `'month'`, or `'week'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.
@@ -691,25 +691,25 @@ dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt1.until(dt2);
   // => P8456DT12H5M29.9999965S
-dt1.until(dt2, { largestUnit: 'years' });
+dt1.until(dt2, { largestUnit: 'year' });
   // => P23Y1M24DT12H5M29.9999965S
-dt2.until(dt1, { largestUnit: 'years' });
+dt2.until(dt1, { largestUnit: 'year' });
   // => -P23Y1M24DT12H5M29.9999965S
-dt1.until(dt2, { largestUnit: 'nanoseconds' });
+dt1.until(dt2, { largestUnit: 'nanosecond' });
   // => PT730641929.999996544S
   // (precision lost)
 
 // Rounding, for example if you don't care about sub-seconds
-dt1.until(dt2, { smallestUnit: 'seconds' });
+dt1.until(dt2, { smallestUnit: 'second' });
   // => P8456DT12H5M29S
 
 // Months and years can be different lengths
 let [jan1, feb1, mar1] = [1, 2, 3].map((month) =>
   Temporal.PlainDateTime.from({ year: 2020, month, day: 1 }));
 jan1.until(feb1);                            // => P31D
-jan1.until(feb1, { largestUnit: 'months' }); // => P1M
+jan1.until(feb1, { largestUnit: 'month' }); // => P1M
 feb1.until(mar1);                            // => P29D
-feb1.until(mar1, { largestUnit: 'months' }); // => P1M
+feb1.until(mar1, { largestUnit: 'month' }); // => P1M
 jan1.until(mar1);                            // => P60D
 ```
 <!-- prettier-ignore-end -->
@@ -722,11 +722,11 @@ jan1.until(mar1);                            // => P60D
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
+    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
     The default is `'auto'`.
   - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'years'`, `'months'`, `'weeks'`, `'days'`, `'hours'`, `'minutes'`, `'seconds'`, `'milliseconds'`, `'microseconds'`, and `'nanoseconds'`.
-    The default is `'nanoseconds'`, i.e., no rounding.
+    Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    The default is `'nanosecond'`, i.e., no rounding.
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
@@ -740,7 +740,7 @@ If `other` is later than `datetime` then the resulting duration will be negative
 
 This method is similar to `Temporal.PlainDateTime.prototype.until()`, but reversed.
 The returned `Temporal.Duration`, when subtracted from `datetime` using the same `options`, will yield `other`.
-Using default options, `dt1.since(dt2)` yields the same result as `dt1.until(dt2).negated()`, but results may differ with options like `{ largestUnit: 'months' }`.
+Using default options, `dt1.since(dt2)` yields the same result as `dt1.until(dt2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
 
 Usage example:
 
@@ -776,7 +776,7 @@ The `roundingIncrement` option allows rounding to an integer number of units.
 For example, to round to increments of a half hour, use `smallestUnit: 'minute', roundingIncrement: 30`.
 
 The value given as `roundingIncrement` must divide evenly into the next highest unit after `smallestUnit`, and must not be equal to it.
-(For example, if `smallestUnit` is `'minutes'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
+(For example, if `smallestUnit` is `'minute'`, then the number of minutes given by `roundingIncrement` must divide evenly into 60 minutes, which is one hour.
 The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
 Instead of 60 minutes, use 1 hour.)
 
