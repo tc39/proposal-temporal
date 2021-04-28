@@ -8,10 +8,10 @@ info: |
     sec-temporal.plainmonthday.prototype.equals step 3:
       3. Set _other_ to ? ToTemporalMonthDay(_other_).
     sec-temporal-totemporalmonthday step 3.e:
-      c. Set _calendar_ to ? GetOptionalTemporalCalendar(_item_).
-    sec-temporal-getoptionaltemporalcalendar step 2:
-      2. Return ? ToOptionalTemporalCalendar(_calendar_).
-    sec-temporal-tooptionaltemporalcalendar step 2:
+      e. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
+    sec-temporal-gettemporalcalendarwithisodefault step 2:
+      2. Return ? ToTemporalCalendarWithISODefault(_calendar_).
+    sec-temporal-totemporalcalendarwithisodefault step 2:
       3. Return ? ToTemporalCalendar(_temporalCalendarLike_).
     sec-temporal-totemporalcalendar step 1.a:
       a. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then

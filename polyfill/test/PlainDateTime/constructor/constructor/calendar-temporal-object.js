@@ -6,8 +6,8 @@ esid: sec-temporal.plaindatetime
 description: Fast path for converting other Temporal objects to Temporal.Calendar by reading internal slots
 info: |
     sec-temporal.plaindatetime step 11:
-      11. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
-    sec-temporal-tooptionaltemporalcalendar step 2:
+      11. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
+    sec-temporal-totemporalcalendarwithisodefault step 2:
       2. Return ? ToTemporalCalendar(_temporalCalendarLike_).
     sec-temporal-totemporalcalendar step 1.a:
       a. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then

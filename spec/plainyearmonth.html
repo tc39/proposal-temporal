@@ -28,7 +28,7 @@
           1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
         1. Let _y_ be ? ToIntegerOrInfinity(_isoYear_).
         1. Let _m_ be ? ToIntegerOrInfinity(_isoMonth_).
-        1. Let _calendar_ be ? ToOptionalTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
         1. Let _ref_ be ? ToIntegerOrInfinity(_referenceISODay_).
         1. Return ? CreateTemporalYearMonth(_y_, _m_, _calendar_, _ref_, NewTarget).
       </emu-alg>
@@ -560,14 +560,14 @@
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _item_.
-          1. Let _calendar_ be ? GetOptionalTemporalCalendar(_item_).
+          1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Return ? YearMonthFromFields(_calendar_, _fields_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
-        1. Let _calendar_ be ? ToOptionalTemporalCalendar(_result_.[[Calendar]]).
+        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. If _result_.[[Day]] is *undefined*, then
           1. If ! ValidateISODate(_result_.[[Year]], _result_.[[Month]], 1) is *false*, then
             1. Throw a *RangeError* exception.

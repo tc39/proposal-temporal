@@ -251,10 +251,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-tooptionaltemporalcalendar" aoid="ToOptionalTemporalCalendar">
-      <h1>ToOptionalTemporalCalendar ( _temporalCalendarLike_ )</h1>
+    <emu-clause id="sec-temporal-totemporalcalendarwithisodefault" aoid="ToTemporalCalendarWithISODefault">
+      <h1>ToTemporalCalendarWithISODefault ( _temporalCalendarLike_ )</h1>
       <p>
-        The abstract operation ToOptionalTemporalCalendar converts a value into an Object suitable for use as a calendar.
+        The abstract operation ToTemporalCalendarWithISODefault converts a value into an Object suitable for use as a calendar.
         If the value is *undefined*, the ISO 8601 calendar is returned.
       </p>
       <emu-alg>
@@ -264,17 +264,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getoptionaltemporalcalendar" aoid="GetOptionalTemporalCalendar">
-      <h1>GetOptionalTemporalCalendar ( _item_ )</h1>
+    <emu-clause id="sec-temporal-gettemporalcalendarwithisodefault" aoid="GetTemporalCalendarWithISODefault">
+      <h1>GetTemporalCalendarWithISODefault ( _item_ )</h1>
       <p>
-        The abstract operation GetOptionalTemporalCalendar looks for a `calendar` property on the given _item_ and converts its value to an Object suitable for use as a calendar.
+        The abstract operation GetTemporalCalendarWithISODefault looks for a `calendar` property on the given _item_ and converts its value to an Object suitable for use as a calendar.
         If no such property is present, the ISO 8601 calendar is returned.
       </p>
       <emu-alg>
         1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
         1. Let _calendar_ be ? Get(_item_, *"calendar"*).
-        1. Return ? ToOptionalTemporalCalendar(_calendar_).
+        1. Return ? ToTemporalCalendarWithISODefault(_calendar_).
       </emu-alg>
     </emu-clause>
 
