@@ -3128,13 +3128,6 @@ export const ES = ObjectAssign({}, ES2020, {
       ES.RejectToRange(month, 1, 9);
     }
   },
-  RejectDurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
-    const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
-    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
-      const propSign = MathSign(prop);
-      if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
-    }
-  },
   RejectDuration: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
     for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {

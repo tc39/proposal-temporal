@@ -134,7 +134,6 @@ export class PlainDate {
     options = ES.GetOptionsObject(options);
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years, months, weeks, days };
     return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
@@ -146,7 +145,6 @@ export class PlainDate {
     options = ES.GetOptionsObject(options);
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
     duration = { years: -years, months: -months, weeks: -weeks, days: -days };
     return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);

@@ -61,7 +61,6 @@ export class Instant {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
-    ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const ns = ES.AddInstant(
       GetSlot(this, EPOCHNANOSECONDS),
       hours,
@@ -83,7 +82,6 @@ export class Instant {
       microseconds,
       nanoseconds
     } = ES.ToLimitedTemporalDuration(temporalDurationLike, ['years', 'months', 'weeks', 'days']);
-    ES.RejectDurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const ns = ES.AddInstant(
       GetSlot(this, EPOCHNANOSECONDS),
       -hours,

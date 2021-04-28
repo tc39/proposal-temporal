@@ -288,7 +288,6 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
@@ -331,7 +330,6 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
