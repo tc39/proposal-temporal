@@ -157,8 +157,7 @@ export class PlainTime {
   add(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);
     let second = GetSlot(this, ISO_SECOND);
@@ -193,8 +192,7 @@ export class PlainTime {
   subtract(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ES.RejectDurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);
     let second = GetSlot(this, ISO_SECOND);
