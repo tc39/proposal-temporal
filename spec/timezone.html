@@ -426,7 +426,7 @@
         The abstract operation GetISOPartsFromEpoch returns the components of a date corresponding to the given number of nanoseconds since the Unix epoch in UTC.
       </p>
       <emu-alg>
-        1. Let _remainderNs_ be ! NonNegativeModulo(_epochNanoseconds_, 1,000,000<sub>ℝ</sub>).
+        1. Let _remainderNs_ be _epochNanoseconds_ modulo 1,000,000.
         1. Let _epochMilliseconds_ be (_epochNanoseconds_ − _remainderNs_) / 1,000,000<sub>ℝ</sub>.
         1. Let _year_ be ! YearFromTime(_epochMilliseconds_).
         1. Let _month_ be ! MonthFromTime(_epochMilliseconds_) + 1.

@@ -750,17 +750,17 @@
         1. If _hour_ is *+∞* or *−∞*, or _minute_ is *+∞* or *−∞*, or _second_ is *+∞* or *−∞*, or _millisecond_ is *+∞* or *−∞*, or _microsecond_ is *+∞* or *−∞*, or _nanosecond_ is *+∞* or *−∞*, then
           1. Throw a *RangeError* exception.
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
-        1. Set _nanosecond_ to ! NonNegativeModulo(_nanosecond_, 1000).
+        1. Set _nanosecond_ to _nanosecond_ modulo 1000.
         1. Set _millisecond_ to _millisecond_ + floor(_microsecond_ / 1000).
-        1. Set _microsecond_ to ! NonNegativeModulo(_microsecond_, 1000).
+        1. Set _microsecond_ to _microsecond_ modulo 1000.
         1. Set _second_ to _second_ + floor(_millisecond_ / 1000).
-        1. Set _millisecond_ to ! NonNegativeModulo(_millisecond_, 1000).
+        1. Set _millisecond_ to _millisecond_ modulo 1000.
         1. Set _minute_ to _minute_ + floor(_second_ / 60).
-        1. Set _second_ to ! NonNegativeModulo(_second_, 60).
+        1. Set _second_ to _second_ modulo 60.
         1. Set _hour_ to _hour_ + floor(_minute_ / 60).
-        1. Set _minute_ to ! NonNegativeModulo(_minute_, 60).
+        1. Set _minute_ to _minute_ modulo 60.
         1. Let _days_ be floor(_hour_ / 24).
-        1. Set _hour_ to ! NonNegativeModulo(_hour_, 24).
+        1. Set _hour_ to _hour_ modulo 24.
         1. Return the new Record {
           [[Days]]: _days_,
           [[Hour]]: _hour_,
