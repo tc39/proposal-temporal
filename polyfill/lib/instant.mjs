@@ -16,7 +16,7 @@ export class Instant {
     }
 
     const ns = ES.ToBigInt(epochNanoseconds);
-    ES.RejectInstantRange(ns);
+    ES.ValidateEpochNanoseconds(ns);
     CreateSlots(this);
     SetSlot(this, EPOCHNANOSECONDS, ns);
 
@@ -261,24 +261,24 @@ export class Instant {
   static fromEpochSeconds(epochSeconds) {
     epochSeconds = ES.ToNumber(epochSeconds);
     const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
-    ES.RejectInstantRange(epochNanoseconds);
+    ES.ValidateEpochNanoseconds(epochNanoseconds);
     return new Instant(epochNanoseconds);
   }
   static fromEpochMilliseconds(epochMilliseconds) {
     epochMilliseconds = ES.ToNumber(epochMilliseconds);
     const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
-    ES.RejectInstantRange(epochNanoseconds);
+    ES.ValidateEpochNanoseconds(epochNanoseconds);
     return new Instant(epochNanoseconds);
   }
   static fromEpochMicroseconds(epochMicroseconds) {
     epochMicroseconds = ES.ToBigInt(epochMicroseconds);
     const epochNanoseconds = epochMicroseconds.multiply(1e3);
-    ES.RejectInstantRange(epochNanoseconds);
+    ES.ValidateEpochNanoseconds(epochNanoseconds);
     return new Instant(epochNanoseconds);
   }
   static fromEpochNanoseconds(epochNanoseconds) {
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
-    ES.RejectInstantRange(epochNanoseconds);
+    ES.ValidateEpochNanoseconds(epochNanoseconds);
     return new Instant(epochNanoseconds);
   }
   static from(item) {
