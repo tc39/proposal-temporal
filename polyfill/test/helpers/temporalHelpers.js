@@ -791,6 +791,72 @@ var TemporalHelpers = {
   },
 
   /*
+   * oneShiftTimeZone(shiftInstant, shiftNanoseconds):
+   *
+   * In the case of a spring-forward time zone offset transition (skipped time),
+   * and disambiguation === 'earlier', BuiltinTimeZoneGetInstantFor subtracts a
+   * negative number of nanoseconds from a PlainDateTime, which should balance
+   * with the microseconds field.
+   *
+   * This returns an instance of a custom time zone class which skips a length
+   * of time equal to shiftNanoseconds (a number), at the Temporal.Instant
+   * shiftInstant. Before shiftInstant, it's identical to UTC, and after
+   * shiftInstant it's a constant-offset time zone.
+   *
+   * It provides a getPossibleInstantsForCalledWith member which is an array
+   * with the result of calling toString() on any PlainDateTimes passed to
+   * getPossibleInstantsFor().
+   */
+  oneShiftTimeZone(shiftInstant, shiftNanoseconds) {
+    class OneShiftTimeZone extends Temporal.TimeZone {
+      constructor(shiftInstant, shiftNanoseconds) {
+        super("+00:00");
+        this._shiftInstant = shiftInstant;
+        this._epoch1 = shiftInstant.epochNanoseconds;
+        this._epoch2 = this._epoch1 + BigInt(shiftNanoseconds);
+        this._shiftNanoseconds = shiftNanoseconds;
+        this._shift = new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, this._shiftNanoseconds);
+        this.getPossibleInstantsForCalledWith = [];
+      }
+
+      _isBeforeShift(instant) {
+        return instant.epochNanoseconds < this._epoch1;
+      }
+
+      getOffsetNanosecondsFor(instant) {
+        return this._isBeforeShift(instant) ? 0 : this._shiftNanoseconds;
+      }
+
+      getPossibleInstantsFor(plainDateTime) {
+        this.getPossibleInstantsForCalledWith.push(plainDateTime.toString());
+        const [instant] = super.getPossibleInstantsFor(plainDateTime);
+        if (this._shiftNanoseconds > 0) {
+          if (this._isBeforeShift(instant)) return [instant];
+          if (instant.epochNanoseconds < this._epoch2) return [];
+          return [instant.add(this._shift)];
+        }
+        if (instant.epochNanoseconds < this._epoch2) return [instant];
+        const shifted = instant.add(this._shift);
+        if (this._isBeforeShift(instant)) return [instant, shifted];
+        return [shifted];
+      }
+
+      getNextTransition(instant) {
+        return this._isBeforeShift(instant) ? this._shiftInstant : null;
+      }
+
+      getPreviousTransition(instant) {
+        return this._isBeforeShift(instant) ? null : this._shiftInstant;
+      }
+
+      toString() {
+        return "Custom/One_Shift";
+      }
+    }
+    return new OneShiftTimeZone(shiftInstant, shiftNanoseconds);
+  },
+
+  /*
    * Returns an object that will append logs of any Gets or Calls of its valueOf
    * or toString properties to the array calls. Both valueOf and toString will
    * return the actual primitiveValue. propertyName is used in the log.
