@@ -302,3 +302,14 @@ We decided against the calendar subclassing approach because:
 - Each individual subclass would need to define its own data model, increasing the surface of the specification.
 
 In the end, the champions decided that the subclassing approach brought a high cost with no clear benefit over the other approaches, and that keeping all calendar-sensitive operations neatly organized into the Temporal.Calendar object resulted in a cleaner model.
+
+### Alternative 4: Separate Types for Calendared Dates
+
+This approach would mean introducing a new type that carries a date without a calendar system, to supplement the type with the calendar system.  Most documentation would recommend the calendar-agnostic type except when calendar-aware logic is necessary.  We discuss this approach in more detail as [Option 5 in calendar-draft.md](https://github.com/tc39/proposal-temporal/blob/main/docs/calendar-draft.md#new-non-calendar-types-option-5).
+
+We decided against the dual classes approach because:
+
+1. If the new type were truly calendar-agnostic, it could not support month and year arithmetic, because doing so would introduce an ISO bias.
+2. If the new type had ISO-like behavior for months and years, then it is no different from PlainDate with an ISO calendar.
+
+Note that (2) is true for ECMAScript because it is weakly typed.  Strongly typed languages could enforce compile-time type checking for (2) that is not possible in ECMAScript.  Note also that clients such as TypeScript can treat PlainDate as having a type parameter corresponding to the calendar system in order to enforce more compile-time type checking of calendar systems.  Separate data types are not necessary for that validation.
