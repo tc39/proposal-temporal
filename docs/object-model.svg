@@ -53,7 +53,7 @@
   <text style="fill: #000; white-space: pre;" x="2815" y="1615">PlainTime</text>
   <rect x="250" y="835" fill="#F0EDF7" width="2250" height="180" stroke="#B4A7D6" rx="35"/>
   <text style="fill: #000; white-space: pre;" x="1072" y="950">ZonedDateTime</text>
-  <text x="1970" y="1840" style="font-size: 80px; fill: #737373; white-space: pre;" >These types have a calendar &amp; know wall-clock time</text>
+  <text x="1800" y="1840" style="font-size: 72px; fill: #737373; white-space: pre;" >These have a calendar (except PlainTime) &amp; know wall-clock time</text>
   <path d="M 156 1648 L 861 1648 861 1800 156 1800 Z"/>
   <text x="200" y="1740" style="font-size: 80px; fill: #737373; white-space: pre;" >These types know</text>
   <text x="215" y="1840" style="font-size: 80px; fill: #737373; white-space: pre;" >time since Epoch</text>
