@@ -1703,7 +1703,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   CreateTemporalZonedDateTimeSlots: (result, epochNanoseconds, timeZone, calendar) => {
-    ES.RejectInstantRange(epochNanoseconds);
+    ES.ValidateEpochNanoseconds(epochNanoseconds);
 
     CreateSlots(result);
     SetSlot(result, EPOCHNANOSECONDS, epochNanoseconds);
@@ -3115,7 +3115,7 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError('DateTime outside of supported range');
     }
   },
-  RejectInstantRange: (epochNanoseconds) => {
+  ValidateEpochNanoseconds: (epochNanoseconds) => {
     if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
       throw new RangeError('Instant outside of supported range');
     }
@@ -3658,7 +3658,7 @@ export const ES = ObjectAssign({}, ES2020, {
     sum = sum.plus(bigInt(h).multiply(60 * 60 * 1e9));
 
     const result = bigInt(epochNanoseconds).plus(sum);
-    ES.RejectInstantRange(result);
+    ES.ValidateEpochNanoseconds(result);
     return result;
   },
   AddDateTime: (
