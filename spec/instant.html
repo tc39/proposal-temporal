@@ -25,7 +25,7 @@
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _epochNanoseconds_ be ? ToBigInt(_epochNanoseconds_).
-        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -65,7 +65,7 @@
         1. Set _epochSeconds_ to ? ToNumber(_epochSeconds_).
         1. Set _epochSeconds_ to ? NumberToBigInt(_epochSeconds_).
         1. Let _epochNanoseconds_ be _epochSeconds_ × 1,000,000,000.
-        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
@@ -80,7 +80,7 @@
         1. Set _epochMilliseconds_ to ? ToNumber(_epochMilliseconds_).
         1. Set _epochMilliseconds_ to ? NumberToBigInt(_epochMilliseconds_).
         1. Let _epochNanoseconds_ be _epochMilliseconds_ × 1,000,000.
-        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
@@ -94,7 +94,7 @@
       <emu-alg>
         1. Set _epochMicroseconds_ to ? ToBigInt(_epochMicroseconds_).
         1. Let _epochNanoseconds_ be _epochMicroseconds_ × 1,000.
-        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
@@ -107,7 +107,7 @@
       </p>
       <emu-alg>
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
-        1. Perform ? RejectInstant(_epochNanoseconds_).
+        1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>
@@ -483,30 +483,24 @@
   <emu-clause id="sec-temporal-instant-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-validateinstant" aoid="ValidateInstant">
-      <h1>ValidateInstant ( _ns_ )</h1>
+    <emu-clause id="sec-temporal-isvalidepochnanoseconds" aoid="IsValidEpochNanoseconds">
+      <h1>IsValidEpochNanoseconds ( _epochNanoseconds_ )</h1>
+      <p>
+        The abstract operation IsValidEpochNanoseconds returns *true* if its argument _epochNanoseconds_ is within the allowed range of nanoseconds since the Unix epoch for a Temporal.Instant and Temporal.ZonedDateTime, and *false* otherwise.
+      </p>
       <emu-alg>
-        1. Assert: Type(_ns_) is BigInt.
-        1. If _ns_ &lt; −8.64 × 10<sup>21</sup><sub>ℝ</sub> or _ns_ &gt; 8.64 × 10<sup>21</sup><sub>ℝ</sub>, then
+        1. Assert: Type(_epochNanoseconds_) is BigInt.
+        1. If _epochNanoseconds_ &lt; −8.64 × 10<sup>21</sup><sub>ℝ</sub> or _epochNanoseconds_ &gt; 8.64 × 10<sup>21</sup><sub>ℝ</sub>, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-rejectinstant" aoid="RejectInstant">
-      <h1>RejectInstant ( _ns_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_ns_) is BigInt.
-        1. If ! ValidateInstant(_ns_) is *false*, then
-          1. Throw a *RangeError* exception.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-createtemporalinstant" aoid="CreateTemporalInstant">
-      <h1>CreateTemporalInstant ( _ns_ [ , _newTarget_ ] )</h1>
+      <h1>CreateTemporalInstant ( _epochNanoseconds_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. Assert: Type(_ns_) is BigInt.
-        1. Assert: ! ValidateInstant(_ns_) is *true*.
+        1. Assert: Type(_epochNanoseconds_) is BigInt.
+        1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. If _newTarget_ is not given, set it to %Temporal.Instant%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Instant.prototype%"*, « [[InitializedTemporalInstant]], [[Nanoseconds]] »).
         1. Set _object_.[[Nanoseconds]] to _ns_.
@@ -568,7 +562,7 @@
             _seconds_ × 1,000,000,000 +
             _minutes_ × 60,000,000,000 +
             _hours_ × 3,600,000,000,000.
-        1. Perform ? RejectInstant(_result_).
+        1. If ! IsValidEpochNanoseconds(_result_) is *false*, throw a *RangeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
