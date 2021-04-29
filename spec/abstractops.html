@@ -45,56 +45,33 @@
     </emu-alg>
   </emu-clause>
 
-  <!-- Copied from ECMA-402 GetOption -->
+  <!-- Based on ECMA-402 GetOption -->
   <emu-clause id="sec-getoption" aoid="GetOption">
-    <h1>GetOption ( _options_, _property_, _type_, _values_, _fallback_ )</h1>
+    <h1>GetOption ( _options_, _property_, _types_, _values_, _fallback_ )</h1>
 
     <p>
-      The abstract operation GetOption extracts the value of the property named _property_ from the provided _options_ object, converts it to the required _type_, checks whether it is one of a List of allowed _values_, and fills in a _fallback_ value if necessary. If _values_ is *undefined*, there is no fixed set of values and any is permitted.
+      The abstract operation GetOption extracts the value of the property named _property_ from the provided _options_ object, checks whether its type is one of a List of allowed _types_ and converts it to the last one if not, checks whether it is one of a List of allowed _values_, and fills in a _fallback_ value if necessary. If _values_ is ~empty~, there is no fixed set of values and any is permitted.
     </p>
 
     <emu-alg>
       1. Assert: Type(_options_) is Object.
+      1. Assert: Each element of _types_ is Boolean, String, or Number.
       1. Let _value_ be ? Get(_options_, _property_).
       1. If _value_ is *undefined*, return _fallback_.
-      1. Assert: _type_ is *"boolean"* or *"string"*.
-      1. If _type_ is *"boolean"*, then
-        1. Let _value_ be ! ToBoolean(_value_).
-      1. If _type_ is *"string"*, then
-        1. Let _value_ be ? ToString(_value_).
-      1. If _values_ is not *undefined* and _values_ does not contain an element equal to _value_, throw a *RangeError* exception.
+      1. If _types_ contains Type(_value_), then
+        1. Let _type_ be Type(_value_).
+      1. Else,
+        1. Let _type_ be the last element of _types_.
+      1. If _type_ is Boolean, then
+        1. Set _value_ to ! ToBoolean(_value_).
+      1. Else if _type_ is Number, then
+        1. Set _value_ to ? ToNumber(_value_).
+        1. If _value_ is *NaN*, throw a *RangeError* exception.
+      1. Else,
+        1. Set _value_ to ? ToString(_value_).
+      1. If _values_ is not ~empty~, then
+        1. If _values_ does not contain _value_, throw a *RangeError* exception.
       1. Return _value_.
-    </emu-alg>
-  </emu-clause>
-
-  <!-- Copied from ECMA-402 DefaultNumberOption -->
-  <emu-clause id="sec-defaultnumberoption" aoid="DefaultNumberOption">
-    <h1>DefaultNumberOption ( _value_, _minimum_, _maximum_, _fallback_ )</h1>
-
-    <p>
-      The abstract operation DefaultNumberOption converts _value_ to a Number value, checks whether it is in the allowed range, and fills in a _fallback_ value if necessary.
-    </p>
-
-    <emu-alg>
-      1. If _value_ is *undefined*, return _fallback_.
-      1. Let _value_ be ? ToNumber(_value_).
-      1. If _value_ is *NaN* or less than _minimum_ or greater than _maximum_, throw a *RangeError* exception.
-      1. Return floor(_value_).
-    </emu-alg>
-  </emu-clause>
-
-  <!-- Copied from ECMA-402 GetNumberOption -->
-  <emu-clause id="sec-getnumberoption" aoid="GetNumberOption">
-    <h1>GetNumberOption ( _options_, _property_, _minimum_, _maximum_, _fallback_ )</h1>
-
-    <p>
-      The abstract operation GetNumberOption extracts the value of the property named _property_ from the provided _options_ object, converts it to a Number value, checks whether it is in the allowed range, and fills in a _fallback_ value if necessary.
-    </p>
-
-    <emu-alg>
-      1. Assert: Type(_options_) is Object.
-      1. Let _value_ be ? Get(_options_, _property_).
-      1. Return ? DefaultNumberOption(_value_, _minimum_, _maximum_, _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -104,17 +81,15 @@
       The abstract operation GetStringOrNumberOption extracts the value of the property named _property_ from the provided _options_ object.
       If the value is a Number value, the operation checks whether it is in the allowed range.
       Otherwise, the operation converts it to a string and checks whether it is one of a List of allowed _stringValues_, and fills in a _fallback_ value if necessary.
-      If _stringValues_ is *undefined*, there is no fixed set of values and any is permitted.
     </p>
     <emu-alg>
       1. Assert: Type(_options_) is Object.
-      1. Let _value_ be ? Get(_options_, _property_).
-      1. If _value_ is *undefined*, return _fallback_.
+      1. Let _value_ be ? GetOption(_options_, _property_, « Number, String », ~empty~, _fallback_).
       1. If Type(_value_) is Number, then
-        1. If _value_ is *NaN*, or _value_ &lt; _minimum_, or _value_ &gt; _maximum_, throw a *RangeError* exception.
+        1. If _value_ &lt; _minimum_ or _value_ &gt; _maximum_, throw a *RangeError* exception.
         1. Return floor(ℝ(_value_)).
-      1. Set _value_ to ? ToString(_value_).
-      1. If _stringValues_ is not *undefined* and _stringValues_ does not contain an element equal to _value_, throw a *RangeError* exception.
+      1. Assert: Type(_value_) is String.
+      1. If _stringValues_ does not contain _value_, throw a *RangeError* exception.
       1. Return _value_.
     </emu-alg>
   </emu-clause>
@@ -159,14 +134,14 @@
   <emu-clause id="sec-temporal-totemporaloverflow" aoid="ToTemporalOverflow">
     <h1>ToTemporalOverflow ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"overflow"*, *"string"*, « *"constrain"*, *"reject"* », *"constrain"*).
+      1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « String », « *"constrain"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaldisambiguation" aoid="ToTemporalDisambiguation">
     <h1>ToTemporalDisambiguation ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"disambiguation"*, *"string"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. Return ? GetOption(_normalizedOptions_, *"disambiguation"*, « String », « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
 
@@ -182,7 +157,7 @@
       </p>
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"halfExpand"* », _fallback_).
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, « String », « *"ceil"*, *"floor"*, *"trunc"*, *"halfExpand"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -210,7 +185,7 @@
       The value _fallback_ is returned if the property is not present.
     </p>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"offset"*, *"string"*, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
+      1. Return ? GetOption(_normalizedOptions_, *"offset"*, « String », « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -223,7 +198,7 @@
       This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, *"string"*, « *"auto"*, *"always"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, « String », « *"auto"*, *"always"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -237,7 +212,7 @@
       It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()` and from the `timeZone` property in the options passed to `Temporal.Instant.prototype.toString()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, *"string"*, « *"auto"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, « String », « *"auto"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -251,7 +226,7 @@
       It is different from the `offset` property passed to `Temporal.ZonedDateTime.from()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"offset"*, *"string"*, « *"auto"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"offset"*, « String », « *"auto"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -266,7 +241,9 @@
         1. Let _maximum_ be _dividend_ − 1.
       1. Else,
         1. Let _maximum_ be 1.
-      1. Let _increment_ be ? GetNumberOption(_normalizedOptions_, *"roundingIncrement"*, 1, _maximum_, 1).
+      1. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », ~empty~, 1).
+      1. If _increment_ &lt; 1 or _increment_ &gt; _maximum_, throw a *RangeError* exception.
+      1. Set _increment_ to floor(ℝ(_increment_)).
       1. If _dividend_ is not *undefined* and _dividend_ modulo _increment_ is not zero, then
         1. Throw a *RangeError* exception.
       1. Return _increment_.
@@ -378,7 +355,7 @@
     <emu-alg>
       1. Assert: _disallowedUnits_ does not contain _fallback_ or *"auto"*.
       1. Assert: If _autoValue_ is present, _fallback_ is *"auto"*, and _disallowedUnits_ does not contain _autoValue_.
-      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, *"string"*, « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
+      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, « String », « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If _largestUnit_ is *"auto"* and _autoValue_ is present, then
         1. Return _autoValue_.
       1. If the value of _largestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
@@ -400,7 +377,7 @@
     </p>
     <emu-alg>
       1. Assert: _disallowedUnits_ does not contain _fallback_.
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, « String », « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If the value of _smallestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
         1. Set _smallestUnit_ to the corresponding Singular value of the same row.
       1. If _disallowedUnits_ contains _smallestUnit_, then
@@ -419,7 +396,7 @@
       Both singular and plural unit names are accepted, but only the singular form is returned.
     </p>
     <emu-alg>
-      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
+      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, « String », « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
       1. If the value of _unit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
         1. Set _unit_ to the corresponding Singular value of the same row.
       1. Return _unit_.
