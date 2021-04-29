@@ -9,6 +9,25 @@ features: [Symbol.species, Symbol.iterator]
 
 var TemporalHelpers = {
   /*
+   * assertDuration(duration, years, ...,  nanoseconds[, description]):
+   *
+   * Shorthand for asserting that each field of a Temporal.Duration is equal to
+   * an expected value.
+   */
+  assertDuration(duration, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, description = "") {
+    assert.sameValue(duration.years, years, `${description} years result`);
+    assert.sameValue(duration.months, months, `${description} months result`);
+    assert.sameValue(duration.weeks, weeks, `${description} weeks result`);
+    assert.sameValue(duration.days, days, `${description} days result`);
+    assert.sameValue(duration.hours, hours, `${description} hours result`);
+    assert.sameValue(duration.minutes, minutes, `${description} minutes result`);
+    assert.sameValue(duration.seconds, seconds, `${description} seconds result`);
+    assert.sameValue(duration.milliseconds, milliseconds, `${description} milliseconds result`);
+    assert.sameValue(duration.microseconds, microseconds, `${description} microseconds result`);
+    assert.sameValue(duration.nanoseconds, nanoseconds, `${description} nanoseconds result`);
+  },
+
+  /*
    * checkPlainDateTimeConversionFastPath(func):
    *
    * ToTemporalDate and ToTemporalTime should both, if given a

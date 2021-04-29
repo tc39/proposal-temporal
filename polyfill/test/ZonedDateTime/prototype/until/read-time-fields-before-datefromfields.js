@@ -19,13 +19,4 @@ const calendar = TemporalHelpers.calendarMakeInfinityTime();
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC", calendar);
 const duration = datetime.until({ year: 2001, month: 9, day: 9, timeZone: "UTC", calendar });
 
-assert.sameValue(duration.years, 0, "years value");
-assert.sameValue(duration.months, 0, "months value");
-assert.sameValue(duration.weeks, 0, "weeks value");
-assert.sameValue(duration.days, 0, "days value");
-assert.sameValue(duration.hours, -1, "hours value");
-assert.sameValue(duration.minutes, -46, "minutes value");
-assert.sameValue(duration.seconds, -40, "seconds value");
-assert.sameValue(duration.milliseconds, -987, "milliseconds value");
-assert.sameValue(duration.microseconds, -654, "microseconds value");
-assert.sameValue(duration.nanoseconds, -321, "nanoseconds value");
+TemporalHelpers.assertDuration(duration, 0, 0, 0, 0, -1, -46, -40, -987, -654, -321);
