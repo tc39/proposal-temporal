@@ -68,7 +68,7 @@
       <emu-alg>
         1. Let _mergeFields_ be ? GetMethod(_calendar_, *"mergeFields"*).
         1. If _mergeFields_ is *undefined*, then
-          1. Return ? ISOMergeFields(_fields_, _additionalFields_).
+          1. Return ? DefaultMergeFields(_fields_, _additionalFields_).
         1. Return ? Call(_mergeFields_, _calendar_, « _fields_, _additionalFields_ »).
       </emu-alg>
     </emu-clause>
@@ -581,10 +581,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isomergefields" aoid="ISOMergeFields">
-      <h1>ISOMergeFields ( _fields_, _additionalFields_ )</h1>
+    <emu-clause id="sec-temporal-defaultmergefields" aoid="DefaultMergeFields">
+      <h1>DefaultMergeFields ( _fields_, _additionalFields_ )</h1>
       <p>
-        The abstract operation ISOMergeFields implements the calendar-specific logic in the `Temporal.Calendar.mergeFields` method for the ISO 8601 calendar.
+        The abstract operation DefaultMergeFields implements the default logic for the `Temporal.Calendar.mergeFields` method, which is used as a fallback if the method is not present on a calendar, and also for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Let _merged_ be ! OrdinaryObjectCreate(%Object.prototype%).
@@ -1077,7 +1077,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Set _fields_ to ? ToObject(_fields_).
         1. Set _additionalFields_ to ? ToObject(_additionalFields_).
-        1. Return ? ISOMergeFields(_fields_, _additionalFields_).
+        1. Return ? DefaultMergeFields(_fields_, _additionalFields_).
       </emu-alg>
     </emu-clause>
 
