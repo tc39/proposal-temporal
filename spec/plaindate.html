@@ -654,7 +654,7 @@
         1. Assert: _isoMonth_ is an integer.
         1. Assert: _isoDay_ is an integer.
         1. Assert: Type(_calendar_) is Object.
-        1. Perform ? RejectISODate(_isoYear_, _isoMonth_, _isoDay_).
+        1. If ! IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
         1. If ! ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, 12, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainDate%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainDate.prototype%"*, « [[InitializedTemporalDate]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
@@ -692,7 +692,7 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalDateString(_string_).
-        1. Assert: ! ValidateISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
+        1. Assert: ! IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
@@ -770,7 +770,7 @@
       <emu-alg>
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"reject"*, then
-          1. Perform ? RejectISODate(_year_, _month_, _day_).
+          1. If ! IsValidISODate(_year_, _month_, _day_) is *false*, throw a *RangeError* exception.
           1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_,
@@ -781,8 +781,12 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-validateisodate" aoid="ValidateISODate">
-      <h1>ValidateISODate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-isvalidisodate" aoid="IsValidISODate">
+      <h1>IsValidISODate ( _year_, _month_, _day_ )</h1>
+      <p>
+        The abstract operation IsValidISODate returns *true* if its arguments form a valid date in the ISO 8601 calendar, and *false* otherwise.
+        This includes dates that may fall outside of the allowed range for Temporal.
+      </p>
       <emu-alg>
         1. Assert: _year_, _month_, and _day_ are integers.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
@@ -791,15 +795,6 @@
         1. If _day_ &lt; 1 or _day_ &gt; _daysInMonth_, then
           1. Return *false*.
         1. Return *true*.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-rejectisodate" aoid="RejectISODate">
-      <h1>RejectISODate ( _year_, _month_, _day_ )</h1>
-      <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integers.
-        1. If ! ValidateISODate(_year_, _month_, _day_) is *false*, then
-          1. Throw a *RangeError* exception.
       </emu-alg>
     </emu-clause>
 
