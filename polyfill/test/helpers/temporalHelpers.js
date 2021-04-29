@@ -154,6 +154,39 @@ var TemporalHelpers = {
   },
 
   /*
+   * checkFractionalSecondDigitsOptionWrongType(temporalObject):
+   *
+   * Checks the string-or-number type handling of the fractionalSecondDigits
+   * option to the various types' toString() methods. temporalObject is an
+   * instance of the Temporal type under test.
+   */
+  checkFractionalSecondDigitsOptionWrongType(temporalObject) {
+    // null is not a number, and converts to the string "null", which is an invalid string value
+    assert.throws(RangeError, () => temporalObject.toString({ fractionalSecondDigits: null }), "null");
+    // Booleans are not numbers, and convert to the strings "true" or "false", which are invalid
+    assert.throws(RangeError, () => temporalObject.toString({ fractionalSecondDigits: true }), "true");
+    assert.throws(RangeError, () => temporalObject.toString({ fractionalSecondDigits: false }), "false");
+    // Symbols are not numbers and cannot convert to strings
+    assert.throws(TypeError, () => temporalObject.toString({ fractionalSecondDigits: Symbol() }), "symbol");
+    // BigInts are not numbers and convert to strings which are invalid
+    assert.throws(RangeError, () => temporalObject.toString({ fractionalSecondDigits: 2n }), "bigint");
+
+    // Objects are not numbers and prefer their toString() methods when converting to a string
+    assert.throws(RangeError, () => temporalObject.toString({ fractionalSecondDigits: {} }), "plain object");
+
+    const toStringExpected = temporalObject.toString({ fractionalSecondDigits: 'auto' });
+    const expected = [
+      "get fractionalSecondDigits.toString",
+      "call fractionalSecondDigits.toString",
+    ];
+    const actual = [];
+    const observer = TemporalHelpers.toPrimitiveObserver(actual, "auto", "fractionalSecondDigits");
+    const result = temporalObject.toString({ fractionalSecondDigits: observer });
+    assert.sameValue(result, toStringExpected, "object with toString");
+    assert.compareArray(actual, expected, "order of operations");
+  },
+
+  /*
    * checkPlainDateTimeConversionFastPath(func):
    *
    * ToTemporalDate and ToTemporalTime should both, if given a
@@ -250,6 +283,81 @@ var TemporalHelpers = {
         assert.sameValue(pluralValue, singularValue);
       }
     });
+  },
+
+  /*
+   * checkRoundingIncrementOptionWrongType(checkFunc, assertTrueResultFunc, assertObjectResultFunc):
+   *
+   * Checks the type handling of the roundingIncrement option.
+   * checkFunc(roundingIncrement) is a function which takes the value of
+   * roundingIncrement to test, and calls the method under test with it,
+   * returning the result. assertTrueResultFunc(result, description) should
+   * assert that result is the expected result with roundingIncrement: true, and
+   * assertObjectResultFunc(result, description) should assert that result is
+   * the expected result with roundingIncrement being an object with a valueOf()
+   * method.
+   */
+  checkRoundingIncrementOptionWrongType(checkFunc, assertTrueResultFunc, assertObjectResultFunc) {
+    // null converts to 0, which is out of range
+    assert.throws(RangeError, () => checkFunc(null), "null");
+    // Booleans convert to either 0 or 1, and 1 is allowed
+    const trueResult = checkFunc(true);
+    assertTrueResultFunc(trueResult, "true");
+    assert.throws(RangeError, () => checkFunc(false), "false");
+    // Symbols and BigInts cannot convert to numbers
+    assert.throws(TypeError, () => checkFunc(Symbol()), "symbol");
+    assert.throws(TypeError, () => checkFunc(2n), "bigint");
+
+    // Objects prefer their valueOf() methods when converting to a number
+    assert.throws(RangeError, () => checkFunc({}), "plain object");
+
+    const expected = [
+      "get roundingIncrement.valueOf",
+      "call roundingIncrement.valueOf",
+    ];
+    const actual = [];
+    const observer = TemporalHelpers.toPrimitiveObserver(actual, 2, "roundingIncrement");
+    const objectResult = checkFunc(observer);
+    assertObjectResultFunc(objectResult, "object with valueOf");
+    assert.compareArray(actual, expected, "order of operations");
+  },
+
+  /*
+   * checkStringOptionWrongType(propertyName, value, checkFunc, assertFunc):
+   *
+   * Checks the type handling of a string option, of which there are several in
+   * Temporal.
+   * propertyName is the name of the option, and value is the value that
+   * assertFunc should expect it to have.
+   * checkFunc(value) is a function which takes the value of the option to test,
+   * and calls the method under test with it, returning the result.
+   * assertFunc(result, description) should assert that result is the expected
+   * result with the option value being an object with a toString() method
+   * which returns the given value.
+   */
+  checkStringOptionWrongType(propertyName, value, checkFunc, assertFunc) {
+    // null converts to the string "null", which is an invalid string value
+    assert.throws(RangeError, () => checkFunc(null), "null");
+    // Booleans convert to the strings "true" or "false", which are invalid
+    assert.throws(RangeError, () => checkFunc(true), "true");
+    assert.throws(RangeError, () => checkFunc(false), "false");
+    // Symbols cannot convert to strings
+    assert.throws(TypeError, () => checkFunc(Symbol()), "symbol");
+    // BigInts convert to strings which are invalid
+    assert.throws(RangeError, () => checkFunc(2n), "bigint");
+
+    // Objects prefer their toString() methods when converting to a string
+    assert.throws(RangeError, () => checkFunc({}), "plain object");
+
+    const expected = [
+      `get ${propertyName}.toString`,
+      `call ${propertyName}.toString`,
+    ];
+    const actual = [];
+    const observer = TemporalHelpers.toPrimitiveObserver(actual, value, propertyName);
+    const result = checkFunc(observer);
+    assertFunc(result, "object with toString");
+    assert.compareArray(actual, expected, "order of operations");
   },
 
   /*
