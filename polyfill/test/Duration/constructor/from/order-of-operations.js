@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const expected = [
@@ -58,14 +58,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = Temporal.Duration.from(argument);
-assert.sameValue(result.years, 1, "years result");
-assert.sameValue(result.months, 1, "months result");
-assert.sameValue(result.weeks, 1, "weeks result");
-assert.sameValue(result.days, 1, "days result");
-assert.sameValue(result.hours, 1, "hours result");
-assert.sameValue(result.minutes, 1, "minutes result");
-assert.sameValue(result.seconds, 1, "seconds result");
-assert.sameValue(result.milliseconds, 1, "milliseconds result");
-assert.sameValue(result.microseconds, 1, "microseconds result");
-assert.sameValue(result.nanoseconds, 1, "nanoseconds result");
+TemporalHelpers.assertDuration(result, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 assert.compareArray(actual, expected, "order of operations");

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.with
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);
@@ -62,14 +62,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.with(argument);
-assert.sameValue(result.years, 1, "years result");
-assert.sameValue(result.months, 1, "months result");
-assert.sameValue(result.weeks, 1, "weeks result");
-assert.sameValue(result.days, 1, "days result");
-assert.sameValue(result.hours, 1, "hours result");
-assert.sameValue(result.minutes, 1, "minutes result");
-assert.sameValue(result.seconds, 1, "seconds result");
-assert.sameValue(result.milliseconds, 1, "milliseconds result");
-assert.sameValue(result.microseconds, 1, "microseconds result");
-assert.sameValue(result.nanoseconds, 1, "nanoseconds result");
+TemporalHelpers.assertDuration(result, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 assert.compareArray(actual, expected, "order of operations");

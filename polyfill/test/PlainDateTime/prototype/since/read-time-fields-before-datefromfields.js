@@ -19,13 +19,4 @@ const calendar = TemporalHelpers.calendarMakeInfinityTime();
 const datetime = new Temporal.PlainDateTime(2021, 3, 31, 12, 34, 56, 987, 654, 321);
 const duration = datetime.since({ year: 2021, month: 3, day: 31, calendar });
 
-assert.sameValue(duration.years, 0, "years value");
-assert.sameValue(duration.months, 0, "months value");
-assert.sameValue(duration.weeks, 0, "weeks value");
-assert.sameValue(duration.days, 0, "days value");
-assert.sameValue(duration.hours, 12, "hours value");
-assert.sameValue(duration.minutes, 34, "minutes value");
-assert.sameValue(duration.seconds, 56, "seconds value");
-assert.sameValue(duration.milliseconds, 987, "milliseconds value");
-assert.sameValue(duration.microseconds, 654, "microseconds value");
-assert.sameValue(duration.nanoseconds, 321, "nanoseconds value");
+TemporalHelpers.assertDuration(duration, 0, 0, 0, 0, 12, 34, 56, 987, 654, 321);
