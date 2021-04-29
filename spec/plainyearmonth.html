@@ -605,8 +605,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-validateisoyearmonthrange" aoid="ValidateISOYearMonthRange">
-      <h1>ValidateISOYearMonthRange ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-isoyearmonthwithinlimits" aoid="ISOYearMonthWithinLimits">
+      <h1>ISOYearMonthWithinLimits ( _year_, _month_ )</h1>
+      <p>
+        The abstract operation ISOYearMonthWithinLimits returns *true* if its arguments represent a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.
+      </p>
+      <emu-note>
+        <p>
+          Temporal.PlainYearMonth objects can represent any month that contains a day that a Temporal.PlainDate can represent.
+          This ensures that a Temporal.PlainDate object can always be converted into a Temporal.PlainYearMonth object.
+        </p>
+      </emu-note>
       <emu-alg>
         1. Assert: _year_ and _month_ are integer Number values.
         1. If _year_ &lt; −271821 or _year_ &gt; 275760, then
@@ -651,8 +660,7 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. If ! IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
-        1. If ! ValidateISOYearMonthRange(_isoYear_, _isoMonth_) is *false*, then
-          1. Throw a *RangeError* exception.
+        1. If ! ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
