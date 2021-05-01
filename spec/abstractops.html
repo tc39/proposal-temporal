@@ -482,9 +482,7 @@
   <emu-clause id="sec-temporal-tosmallesttemporaldurationunit" aoid="ToSmallestTemporalDurationUnit">
     <h1>ToSmallestTemporalDurationUnit ( _normalizedOptions_, _disallowedUnits_, _fallback_ )</h1>
     <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
-      1. If the value of _smallestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _smallestUnit_ to the corresponding Plural value of the same row.
+      1. Let _smallestUnit_ be ? ToTemporalDurationUnit(_normalizedOptions_, *"smallestUnit"*, _fallback_).
       1. If _disallowedUnits_ contains _smallestUnit_, then
         1. Throw a *RangeError* exception.
       1. Return _smallestUnit_.
@@ -494,7 +492,14 @@
   <emu-clause id="sec-temporal-totemporaldurationtotalunit" aoid="ToTemporalDurationTotalUnit">
     <h1>ToTemporalDurationTotalUnit ( _normalizedOptions_ )</h1>
     <emu-alg>
-      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
+      1. Return ? ToTemporalDurationUnit(_normalizedOptions_, *"unit"*, *undefined*).
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-totemporaldurationunit" aoid="ToTemporalDurationUnit">
+    <h1>ToTemporalDurationUnit ( _normalizedOptions_, _key_, _fallback_ )</h1>
+    <emu-alg>
+      1. Let _unit_ be ? GetOption(_normalizedOptions_, _key_, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If the value of _unit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref> ("weeks" has no singular equivalent), then
         1. Set _unit_ to the corresponding Plural value of the same row.
       1. Return _unit_.
