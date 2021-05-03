@@ -16,13 +16,5 @@ includes: [compareArray.js, temporalHelpers.js]
 TemporalHelpers.checkPlainDateTimeConversionFastPath((datetime) => {
   const receiver = new Temporal.PlainDateTime(2001, 9, 9, 6, 54, 32, 123, 456, 789);
   const result = receiver.withPlainDate(datetime);
-  assert.sameValue(result.year, 2000, "year result");
-  assert.sameValue(result.month, 5, "month result");
-  assert.sameValue(result.day, 2, "day result");
-  assert.sameValue(result.hour, 6, "hour result");
-  assert.sameValue(result.minute, 54, "minute result");
-  assert.sameValue(result.second, 32, "second result");
-  assert.sameValue(result.millisecond, 123, "millisecond result");
-  assert.sameValue(result.microsecond, 456, "microsecond result");
-  assert.sameValue(result.nanosecond, 789, "nanosecond result");
+  TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 6, 54, 32, 123, 456, 789);
 });

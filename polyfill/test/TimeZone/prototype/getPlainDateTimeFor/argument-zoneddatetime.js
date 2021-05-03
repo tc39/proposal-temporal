@@ -16,13 +16,5 @@ includes: [compareArray.js, temporalHelpers.js]
 TemporalHelpers.checkToTemporalInstantFastPath((datetime) => {
   const timeZone = Temporal.TimeZone.from("UTC");
   const result = timeZone.getPlainDateTimeFor(datetime);
-  assert.sameValue(result.year, 2001, "year result");
-  assert.sameValue(result.month, 9, "month result");
-  assert.sameValue(result.day, 9, "day result");
-  assert.sameValue(result.hour, 1, "hour result");
-  assert.sameValue(result.minute, 46, "minute result");
-  assert.sameValue(result.second, 40, "second result");
-  assert.sameValue(result.millisecond, 987, "millisecond result");
-  assert.sameValue(result.microsecond, 654, "microsecond result");
-  assert.sameValue(result.nanosecond, 321, "nanosecond result");
+  TemporalHelpers.assertPlainDateTime(result, 2001, 9, "M09", 9, 1, 46, 40, 987, 654, 321);
 });

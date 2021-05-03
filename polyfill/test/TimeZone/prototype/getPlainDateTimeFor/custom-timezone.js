@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -31,14 +31,5 @@ const timeZone = new Proxy({
 });
 
 const result = Temporal.TimeZone.prototype.getPlainDateTimeFor.call(timeZone, instant);
-assert.sameValue(result.year, 1975);
-assert.sameValue(result.month, 2);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 17);
-assert.sameValue(result.minute, 10);
-assert.sameValue(result.second, 12);
-assert.sameValue(result.millisecond, 666);
-assert.sameValue(result.microsecond, 666);
-assert.sameValue(result.nanosecond, 912);
-assert.sameValue(result.toString(), "1975-02-02T17:10:12.666666912");
+TemporalHelpers.assertPlainDateTime(result, 1975, 2, "M02", 2, 17, 10, 12, 666, 666, 912);
 assert.compareArray(actual, expected);

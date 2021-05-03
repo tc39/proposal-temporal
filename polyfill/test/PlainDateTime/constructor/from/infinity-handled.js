@@ -4,91 +4,28 @@
 /*---
 description: Temporal.PlainDateTime.from handles a property bag if any value is Infinity
 esid: sec-temporal.plaindatetime.from
+includes: [temporalHelpers.js]
 ---*/
 
 // constrain
 
 assert.throws(RangeError, () => Temporal.PlainDateTime.from({ year: Infinity, month: 1, day: 1 }, { overflow: 'constrain' }));
 let result = Temporal.PlainDateTime.from({ year: 1970, month: Infinity, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 12);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 12, "M12", 1, 0, 0, 0, 0, 0, 0, "month infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 31);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 31, 0, 0, 0, 0, 0, 0, "day infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, hour: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 23);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 23, 0, 0, 0, 0, 0, "hour infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, minute: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 59);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 0, 59, 0, 0, 0, 0, "minute infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, second: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 59);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 0, 0, 59, 0, 0, 0, "second infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, millisecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 999);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 0, 0, 0, 999, 0, 0, "millisecond infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, microsecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 999);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 0, 0, 0, 0, 999, 0, "microsecond infinity");
 result = Temporal.PlainDateTime.from({ year: 1970, month: 1, day: 1, nanosecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 1);
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 999);
+TemporalHelpers.assertPlainDateTime(result, 1970, 1, "M01", 1, 0, 0, 0, 0, 0, 999, "nanosecond infinity");
 
 // reject
 

@@ -3,16 +3,9 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.subtract
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = Temporal.PlainDateTime.from({ year: 2000, month: 5, day: 2, minute: 34, second: 56, millisecond: 987, microsecond: 654, nanosecond: 321 });
 const result = instance.subtract("P3D");
-assert.sameValue(result.year, 2000, "year result");
-assert.sameValue(result.month, 4, "month result");
-assert.sameValue(result.day, 29, "day result");
-assert.sameValue(result.hour, 0, "hour result");
-assert.sameValue(result.minute, 34, "minute result");
-assert.sameValue(result.second, 56, "second result");
-assert.sameValue(result.millisecond, 987, "year result");
-assert.sameValue(result.microsecond, 654, "year result");
-assert.sameValue(result.nanosecond, 321, "year result");
+TemporalHelpers.assertPlainDateTime(result, 2000, 4, "M04", 29, 0, 34, 56, 987, 654, 321);
