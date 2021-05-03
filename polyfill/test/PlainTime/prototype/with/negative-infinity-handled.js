@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainTime.prototype.with handles a property bag if any value is -Infinity
 esid: sec-temporal.plaintime.prototype.with
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
@@ -11,47 +12,17 @@ const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
 // constrain
 
 let result = instance.with({ hour: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainTime(result, 0, 34, 56, 987, 654, 321, 'hour -infinity');
 result = instance.with({ minute: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainTime(result, 12, 0, 56, 987, 654, 321, 'minute -infinity');
 result = instance.with({ second: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainTime(result, 12, 34, 0, 987, 654, 321, 'second -infinity');
 result = instance.with({ millisecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainTime(result, 12, 34, 56, 0, 654, 321, 'millisecond -infinity');
 result = instance.with({ microsecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainTime(result, 12, 34, 56, 987, 0, 321, 'microsecond -infinity');
 result = instance.with({ nanosecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 12, 34, 56, 987, 654, 0, 'nanosecond -infinity');
 
 // reject
 

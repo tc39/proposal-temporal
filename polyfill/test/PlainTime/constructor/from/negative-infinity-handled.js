@@ -4,52 +4,23 @@
 /*---
 description: Temporal.PlainTime.from handles a property bag if any value is -Infinity
 esid: sec-temporal.plaintime.from
+includes: [temporalHelpers.js]
 ---*/
 
 // constrain
 
 let result = Temporal.PlainTime.from({ hour: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'hour -infinity');
 result = Temporal.PlainTime.from({ minute: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'minute -infinity');
 result = Temporal.PlainTime.from({ second: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'second -infinity');
 result = Temporal.PlainTime.from({ millisecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'millisecond -infinity');
 result = Temporal.PlainTime.from({ microsecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'microsecond -infinity');
 result = Temporal.PlainTime.from({ nanosecond: -Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.hour, 0);
-assert.sameValue(result.minute, 0);
-assert.sameValue(result.second, 0);
-assert.sameValue(result.millisecond, 0);
-assert.sameValue(result.microsecond, 0);
-assert.sameValue(result.nanosecond, 0);
+TemporalHelpers.assertPlainTime(result, 0, 0, 0, 0, 0, 0, 'nanosecond -infinity');
 
 // reject
 

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.add
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
@@ -62,10 +62,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.add(argument);
-assert.sameValue(result.hour, 13, "hour result");
-assert.sameValue(result.minute, 35, "minute result");
-assert.sameValue(result.second, 57, "second result");
-assert.sameValue(result.millisecond, 988, "millisecond result");
-assert.sameValue(result.microsecond, 655, "microsecond result");
-assert.sameValue(result.nanosecond, 322, "nanosecond result");
+TemporalHelpers.assertPlainTime(result, 13, 35, 57, 988, 655, 322);
 assert.compareArray(actual, expected, "order of operations");

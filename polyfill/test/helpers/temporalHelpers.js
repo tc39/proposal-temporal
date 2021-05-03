@@ -28,6 +28,21 @@ var TemporalHelpers = {
   },
 
   /*
+   * assertPlainTime(time, hour, ..., nanosecond[, description]):
+   *
+   * Shorthand for asserting that each field of a Temporal.PlainTime is equal to
+   * an expected value.
+   */
+  assertPlainTime(time, hour, minute, second, millisecond, microsecond, nanosecond, description = "") {
+    assert.sameValue(time.hour, hour, `${description} hour result`);
+    assert.sameValue(time.minute, minute, `${description} minute result`);
+    assert.sameValue(time.second, second, `${description} second result`);
+    assert.sameValue(time.millisecond, millisecond, `${description} millisecond result`);
+    assert.sameValue(time.microsecond, microsecond, `${description} microsecond result`);
+    assert.sameValue(time.nanosecond, nanosecond, `${description} nanosecond result`);
+  },
+
+  /*
    * checkPlainDateTimeConversionFastPath(func):
    *
    * ToTemporalDate and ToTemporalTime should both, if given a
