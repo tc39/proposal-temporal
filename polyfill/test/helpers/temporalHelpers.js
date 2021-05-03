@@ -28,6 +28,29 @@ var TemporalHelpers = {
   },
 
   /*
+   * assertPlainDateTime(datetime, year, ..., nanosecond[, description[, era, eraYear]]):
+   *
+   * Shorthand for asserting that each field of a Temporal.PlainDateTime is
+   * equal to an expected value. (Except the `calendar` property, since callers
+   * may want to assert either object equality with an object they put in there,
+   * or the result of datetime.calendar.toString().)
+   */
+  assertPlainDateTime(datetime, year, month, monthCode, day, hour, minute, second, millisecond, microsecond, nanosecond, description = "", era = undefined, eraYear = undefined) {
+    assert.sameValue(datetime.era, era, `${description} era result`);
+    assert.sameValue(datetime.eraYear, eraYear, `${description} eraYear result`);
+    assert.sameValue(datetime.year, year, `${description} year result`);
+    assert.sameValue(datetime.month, month, `${description} month result`);
+    assert.sameValue(datetime.monthCode, monthCode, `${description} monthCode result`);
+    assert.sameValue(datetime.day, day, `${description} day result`);
+    assert.sameValue(datetime.hour, hour, `${description} hour result`);
+    assert.sameValue(datetime.minute, minute, `${description} minute result`);
+    assert.sameValue(datetime.second, second, `${description} second result`);
+    assert.sameValue(datetime.millisecond, millisecond, `${description} millisecond result`);
+    assert.sameValue(datetime.microsecond, microsecond, `${description} microsecond result`);
+    assert.sameValue(datetime.nanosecond, nanosecond, `${description} nanosecond result`);
+  },
+
+  /*
    * assertPlainTime(time, hour, ..., nanosecond[, description]):
    *
    * Shorthand for asserting that each field of a Temporal.PlainTime is equal to

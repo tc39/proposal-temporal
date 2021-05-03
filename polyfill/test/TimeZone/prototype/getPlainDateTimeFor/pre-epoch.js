@@ -3,10 +3,11 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
+includes: [temporalHelpers.js]
 ---*/
 
 const instant = Temporal.Instant.from("1969-07-16T13:32:01.234567891Z");
 assert.sameValue(instant.toString(), "1969-07-16T13:32:01.234567891Z");
 const timeZone = Temporal.TimeZone.from("-04:00");
 const dateTime = timeZone.getPlainDateTimeFor(instant);
-assert.sameValue(dateTime.toString(), "1969-07-16T09:32:01.234567891");
+TemporalHelpers.assertPlainDateTime(dateTime, 1969, 7, "M07", 16, 9, 32, 1, 234, 567, 891);

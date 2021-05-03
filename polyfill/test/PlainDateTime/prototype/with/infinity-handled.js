@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainDateTime.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plaindatetime.prototype.with
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);
@@ -12,85 +13,21 @@ const instance = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 32
 
 assert.throws(RangeError, () => instance.with({ year: Infinity }, { overflow: 'constrain' }));
 let result = instance.with({ month: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 12);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 12, "M12", 2, 12, 34, 56, 987, 654, 321, "month infinity");
 result = instance.with({ day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 31);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 31, 12, 34, 56, 987, 654, 321, "day infinity");
 result = instance.with({ hour: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 23);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 23, 34, 56, 987, 654, 321, "hour infinity");
 result = instance.with({ minute: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 59);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 12, 59, 56, 987, 654, 321, "minute infinity");
 result = instance.with({ second: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 59);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 12, 34, 59, 987, 654, 321, "second infinity");
 result = instance.with({ millisecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 999);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 12, 34, 56, 999, 654, 321, "millisecond infinity");
 result = instance.with({ microsecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 999);
-assert.sameValue(result.nanosecond, 321);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 12, 34, 56, 987, 999, 321, "microsecond infinity");
 result = instance.with({ nanosecond: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 2);
-assert.sameValue(result.hour, 12);
-assert.sameValue(result.minute, 34);
-assert.sameValue(result.second, 56);
-assert.sameValue(result.millisecond, 987);
-assert.sameValue(result.microsecond, 654);
-assert.sameValue(result.nanosecond, 999);
+TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 12, 34, 56, 987, 654, 999, "nanosecond infinity");
 
 // reject
 

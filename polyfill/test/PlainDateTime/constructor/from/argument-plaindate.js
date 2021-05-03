@@ -15,14 +15,6 @@ includes: [compareArray.js, temporalHelpers.js]
 
 TemporalHelpers.checkToTemporalPlainDateTimeFastPath((date, calendar) => {
   const result = Temporal.PlainDateTime.from(date);
-  assert.sameValue(result.year, 2000, "year result");
-  assert.sameValue(result.month, 5, "month result");
-  assert.sameValue(result.day, 2, "day result");
-  assert.sameValue(result.hour, 0, "midnight is assumed");
-  assert.sameValue(result.minute, 0, "midnight is assumed");
-  assert.sameValue(result.second, 0, "midnight is assumed");
-  assert.sameValue(result.millisecond, 0, "midnight is assumed");
-  assert.sameValue(result.microsecond, 0, "midnight is assumed");
-  assert.sameValue(result.nanosecond, 0, "midnight is assumed");
+  TemporalHelpers.assertPlainDateTime(result, 2000, 5, "M05", 2, 0, 0, 0, 0, 0, 0, "midnight is assumed");
   assert.sameValue(result.calendar, calendar, "calendar result");
 });

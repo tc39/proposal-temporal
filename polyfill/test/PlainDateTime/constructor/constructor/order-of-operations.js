@@ -34,13 +34,4 @@ const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789].map((value, idx) 
 const dateTime = new Temporal.PlainDateTime(...dateTimeArgs, "iso8601");
 assert.compareArray(actual, expected);
 
-assert.sameValue(dateTime.year, 2020);
-assert.sameValue(dateTime.month, 12);
-assert.sameValue(dateTime.day, 24);
-assert.sameValue(dateTime.hour, 12);
-assert.sameValue(dateTime.minute, 34);
-assert.sameValue(dateTime.second, 56);
-assert.sameValue(dateTime.millisecond, 123);
-assert.sameValue(dateTime.microsecond, 456);
-assert.sameValue(dateTime.nanosecond, 789);
-assert.sameValue(dateTime.calendar.id, "iso8601");
+TemporalHelpers.assertPlainDateTime(dateTime, 2020, 12, "M12", 24, 12, 34, 56, 123, 456, 789);
