@@ -251,7 +251,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
+        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
@@ -279,7 +279,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
+        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
@@ -309,9 +309,9 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
+        1. Let _disallowedUnits_ be « *"week"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"month"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, *"year"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
@@ -324,7 +324,7 @@
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_).
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
-        1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
+        1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
         1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -345,9 +345,9 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"weeks"*, *"days"*, *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"months"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"years"*).
+        1. Let _disallowedUnits_ be « *"week"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"month"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, *"year"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
@@ -361,7 +361,7 @@
         1. Let _thisDate_ be ? DateFromFields(_calendar_, _thisFields_).
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
-        1. If _smallestUnit_ is *"months"* and _roundingIncrement_ = 1, then
+        1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ? CreateTemporalDateTime(_thisDate_.[[ISOYear]], _thisDate_.[[ISOMonth]], _thisDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).

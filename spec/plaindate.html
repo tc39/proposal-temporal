@@ -338,7 +338,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
+        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Let _balancedDuration_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _balancedDuration_, _options_).
@@ -356,7 +356,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
         1. Perform ? RejectDurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"days"*).
+        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _negatedDuration_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _negatedDuration_, _options_).
@@ -418,14 +418,15 @@
         1. Set _other_ to ? ToTemporalDate(_other_).
         1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"days"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"days"*).
+        1. Let _disallowedUnits_ be « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"day"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, *"day"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _options_).
-        1. If _smallestUnit_ is not *"days"* or _roundingIncrement_ ≠ 1, then
+        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
+        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ ≠ 1, then
           1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
           1. Set _result_ to ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -444,15 +445,16 @@
         1. Set _other_ to ? ToTemporalDate(_other_).
         1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"hours"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, _disallowedUnits_, *"days"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"days"*).
+        1. Let _disallowedUnits_ be « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"day"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, *"day"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _other_, _temporalDate_, _options_).
-        1. If _smallestUnit_ is *"days"* and _roundingIncrement_ = 1, then
+        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _other_, _temporalDate_, _untilOptions_).
+        1. If _smallestUnit_ is *"day"* and _roundingIncrement_ = 1, then
           1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _relativeTo_ be ! CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 0, 0, 0, 0, 0, 0, _temporalDate_.[[Calendar]]).
         1. Set _result_ to ? RoundDuration(−_result_.[[Years]], −_result_.[[Months]], −_result_.[[Weeks]], −_result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
@@ -699,8 +701,8 @@
     <emu-clause id="sec-temporal-differenceisodate" aoid="DifferenceISODate">
       <h1>DifferenceISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _largestUnit_ )</h1>
       <emu-alg>
-        1. Assert: _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*.
-        1. If _largestUnit_ is *"years"* or *"months"*, then
+        1. Assert: _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*.
+        1. If _largestUnit_ is *"year"* or *"month"*, then
           1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
           1. If _sign_ is 0, return the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
           1. Let _start_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
@@ -709,7 +711,7 @@
           1. Let _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, *"constrain"*).
           1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
+            1. If _largestUnit_ is *"year"*, return the new Record { [[Years]]: _years_, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
             1. Else, return the new Record { [[Years]]: 0, [[Months]]: _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
           1. Let _months_ be _end_.[[Month]] − _start_.[[Month]].
           1. If _midSign_ is not equal to _sign_, then
@@ -718,7 +720,7 @@
           1. Set _mid_ be ? AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, *"constrain"*).
           1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"years"*, return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: 0 }.
+            1. If _largestUnit_ is *"year"*, return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: 0 }.
             1. Else, return the new Record { [[Years]]: 0, [[Months]]: _months_ + _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
           1. If _midSign_ is not equal to _sign_, then
             1. Set _months_ to _months_ - _sign_.
@@ -731,11 +733,11 @@
           1. If _mid_.[[Month]] is equal to _end_.[[Month]] and _mid_.[[Year]] is equal to _mid_.[[Year]], set _days_ to _end_.[[Day]] - _mid_.[[Day]].
           1. Else if _sign_ &lt; 0, set _days_ to -_mid_.[[Day]] - (! ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
           1. Else, set _days_ to _end_.[[Day]] + (! ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
-          1. If _largestUnit_ is *"months"*, then
+          1. If _largestUnit_ is *"month"*, then
             1. Set _months_ to _months_ + _years_ × 12.
             1. Set _years_ to 0.
           1. Return the new Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: _days_ }.
-        1. If _largestUnit_ is *"days"* or *"weeks"*, then
+        1. If _largestUnit_ is *"day"* or *"week"*, then
           1. If ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_) &lt; 0, then
             1. Let _smaller_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
             1. Let _greater_ be the new Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
@@ -751,7 +753,7 @@
             1. Set _days_ to _days_ + ! ISODaysInYear(_smaller_.[[Year]] + _years_ − 1).
             1. Set _years_ to _years_ − 1.
           1. Let _weeks_ be 0.
-          1. If _largestUnit_ is *"weeks"*, then
+          1. If _largestUnit_ is *"week"*, then
             1. Set _weeks_ to floor(_days_ / 7).
             1. Set _days_ to _days_ mod 7.
           1. Return the Record {
