@@ -94,8 +94,8 @@
         1. Let _shift1_ be ! CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
         1. Let _shift2_ be ! CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
         1. If any of _one_.[[Years]], _two_.[[Years]], _one_.[[Months]], _two_.[[Months]], _one_.[[Weeks]], or _two_.[[Weeks]] are not 0, then
-          1. Let _balanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"days"*, _relativeTo_).
-          1. Let _balanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"days"*, _relativeTo_).
+          1. Let _balanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"day"*, _relativeTo_).
+          1. Let _balanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"day"*, _relativeTo_).
           1. Let _days1_ be _balanceResult1_.[[Days]].
           1. Let _days2_ be _balanceResult2_.[[Days]].
         1. Else,
@@ -415,13 +415,13 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
-        1. Let _smallestUnit_ be ? ToSmallestTemporalDurationUnit(_options_, « », *undefined*).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « », *undefined*).
         1. If _smallestUnit_ is *undefined*, then
           1. Set _smallestUnitPresent_ to *false*.
-          1. Set _smallestUnit_ to *"nanoseconds"*.
+          1. Set _smallestUnit_ to *"nanosecond"*.
         1. Let _defaultLargestUnit_ be ! DefaultTemporalLargestUnit(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]]).
-        1. Set _defaultLargestUnit_ to ! LargerOfTwoTemporalDurationUnits(_defaultLargestUnit_, _smallestUnit_).
-        1. Let _largestUnit_ be ? ToLargestTemporalDurationUnit(_options_).
+        1. Set _defaultLargestUnit_ to ! LargerOfTwoTemporalUnits(_defaultLargestUnit_, _smallestUnit_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *undefined*).
         1. If _largestUnit_ is *undefined*, then
           1. Set _largestUnitPresent_ to *false*.
           1. Set _largestUnit_ to _defaultLargestUnit_.
@@ -465,23 +465,23 @@
           1. Set _intermediate_ to ? MoveRelativeZonedDateTime(_relativeTo_, _unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], 0).
         1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _unbalanceResult_.[[Hours]], _unbalanceResult_.[[Minutes]], _unbalanceResult_.[[Seconds]], _unbalanceResult_.[[Milliseconds]], _unbalanceResult_.[[Microseconds]], _unbalanceResult_.[[Nanoseconds]], _unit_, _intermediate_).
         1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
-        1. If _unit_ is *"years"*, then
+        1. If _unit_ is *"year"*, then
           1. Let _whole_ be _roundResult_.[[Years]].
-        1. If _unit_ is *"months"*, then
+        1. If _unit_ is *"month"*, then
           1. Let _whole_ be _roundResult_.[[Months]].
-        1. If _unit_ is *"weeks"*, then
+        1. If _unit_ is *"week"*, then
           1. Let _whole_ be _roundResult_.[[Weeks]].
-        1. If _unit_ is *"days"*, then
+        1. If _unit_ is *"day"*, then
           1. Let _whole_ be _roundResult_.[[Days]].
-        1. If _unit_ is *"hours"*, then
+        1. If _unit_ is *"hour"*, then
           1. Let _whole_ be _roundResult_.[[Hours]].
-        1. If _unit_ is *"minutes"*, then
+        1. If _unit_ is *"minute"*, then
           1. Let _whole_ be _roundResult_.[[Minutes]].
-        1. If _unit_ is *"seconds"*, then
+        1. If _unit_ is *"second"*, then
           1. Let _whole_ be _roundResult_.[[Seconds]].
-        1. If _unit_ is *"milliseconds"*, then
+        1. If _unit_ is *"millisecond"*, then
           1. Let _whole_ be _roundResult_.[[Milliseconds]].
-        1. If _unit_ is *"microseconds"*, then
+        1. If _unit_ is *"microsecond"*, then
           1. Let _whole_ be _roundResult_.[[Microseconds]].
         1. Return _whole_ + _roundResult_.[[Remainder]].
       </emu-alg>
@@ -497,7 +497,8 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _precision_ be ? ToDurationSecondsStringPrecision(_options_).
+        1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
+        1. If _precision_.[[Unit]] is *"minute"*, throw a *RangeError* exception.
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _result_ be ? RoundDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return ! TemporalDurationToString(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _precision_.[[Precision]]).
@@ -746,16 +747,16 @@
         The abstract operation DefaultTemporalLargestUnit implements the logic used in the `Temporal.Duration.prototype.round()` method and elsewhere, where the `largestUnit` option, if not given explicitly, is set to the largest non-zero unit in the input Temporal.Duration.
       </p>
       <emu-alg>
-        1. If _years_ is not zero, return *"years"*.
-        1. If _months_ is not zero, return *"months"*.
-        1. If _weeks_ is not zero, return *"weeks"*.
-        1. If _days_ is not zero, return *"days"*.
-        1. If _hours_ is not zero, return *"hours"*.
-        1. If _minutes_ is not zero, return *"minutes"*.
-        1. If _seconds_ is not zero, return *"seconds"*.
-        1. If _milliseconds_ is not zero, return *"milliseconds"*.
-        1. If _microseconds_ is not zero, return *"microseconds"*.
-        1. Return *"nanoseconds"*.
+        1. If _years_ is not zero, return *"year"*.
+        1. If _months_ is not zero, return *"month"*.
+        1. If _weeks_ is not zero, return *"week"*.
+        1. If _days_ is not zero, return *"day"*.
+        1. If _hours_ is not zero, return *"hour"*.
+        1. If _minutes_ is not zero, return *"minute"*.
+        1. If _seconds_ is not zero, return *"second"*.
+        1. If _milliseconds_ is not zero, return *"millisecond"*.
+        1. If _microseconds_ is not zero, return *"microsecond"*.
+        1. Return *"nanosecond"*.
       </emu-alg>
     </emu-clause>
 
@@ -853,7 +854,7 @@
           1. Set _nanoseconds_ to _endNs_ − _relativeTo_.[[Nanoseconds]].
         1. Else,
           1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
-        1. If _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+        1. If _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _result_ be ? NanosecondsToDays(_nanoseconds_, _relativeTo_).
           1. Set _days_ to _result_.[[Days]].
           1. Set _nanoseconds_ to _result_.[[Nanoseconds]].
@@ -862,7 +863,7 @@
         1. Set _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ to 0.
         1. If _nanoseconds_ &lt; 0, let _sign_ be −1; else, let _sign_ be 1.
         1. Set _nanoseconds_ to abs(_nanoseconds_).
-        1. If _largestUnit_ is *"years"*, *"months"*, *"weeks"*, *"days"*, or *"hours"*, then
+        1. If _largestUnit_ is *"year"*, *"month"*, *"week"*, *"day"*, or *"hour"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
           1. Set _milliseconds_ to floor(_microseconds_ / 1000).
@@ -873,7 +874,7 @@
           1. Set _seconds_ to _seconds_ modulo 60.
           1. Set _hours_ to floor(_minutes_ / 60).
           1. Set _minutes_ to _minutes_ modulo 60.
-        1. Else if _largestUnit_ is *"minutes"*, then
+        1. Else if _largestUnit_ is *"minute"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
           1. Set _milliseconds_ to floor(_microseconds_ / 1000).
@@ -882,23 +883,23 @@
           1. Set _milliseconds_ to _milliseconds_ modulo 1000.
           1. Set _minutes_ to floor(_seconds_ / 60).
           1. Set _seconds_ to _seconds_ modulo 60.
-        1. Else if _largestUnit_ is *"seconds"*, then
+        1. Else if _largestUnit_ is *"second"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
           1. Set _milliseconds_ to floor(_microseconds_ / 1000).
           1. Set _microseconds_ to _microseconds_ modulo 1000.
           1. Set _seconds_ to floor(_milliseconds_ / 1000).
           1. Set _milliseconds_ to _milliseconds_ modulo 1000.
-        1. Else if _largestUnit_ is *"milliseconds"*, then
+        1. Else if _largestUnit_ is *"millisecond"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
           1. Set _milliseconds_ to floor(_microseconds_ / 1000).
           1. Set _microseconds_ to _microseconds_ modulo 1000.
-        1. Else if _largestUnit_ is *"microseconds"*, then
+        1. Else if _largestUnit_ is *"microsecond"*, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
         1. Else,
-          1. Assert: _largestUnit_ is *"nanoseconds"*.
+          1. Assert: _largestUnit_ is *"nanosecond"*.
         1. Return the new Record {
           [[Days]]: 𝔽(_days_),
           [[Hours]]: 𝔽(_hours_) × _sign_,
@@ -915,7 +916,7 @@
       <h1>UnbalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <p>The abstract operation UnbalanceDurationRelative converts the calendar units of a Temporal.Duration into a form where no unit is larger than _largestUnit_.</p>
       <emu-alg>
-        1. If _largestUnit_ is *"years"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
+        1. If _largestUnit_ is *"year"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. Return the new Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
@@ -932,7 +933,7 @@
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
         1. Else,
           1. Let _calendar_ be *undefined*.
-        1. If _largestUnit_ is *"months"*, then
+        1. If _largestUnit_ is *"month"*, then
           1. If _calendar_is *undefined*, then
             1. Throw a *RangeError* exception.
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
@@ -941,13 +942,13 @@
             1. Let _addOptions_ be ! OrdinaryObjectCreate(*null*).
             1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
             1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
-            1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"months"*).
+            1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Let _untilResult_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
             1. Let _oneYearMonths_ be ? Get(_untilResult_, *"months"*).
             1. Set _relativeTo_ to _newRelativeTo_.
             1. Set _years_ to _years_ − _sign_.
             1. Set _months_ to _months_ + _oneYearMonths_.
-        1. Else if _largestUnit_ is *"weeks"*, then
+        1. Else if _largestUnit_ is *"week"*, then
           1. If _calendar_ is *undefined*, then
             1. Throw a *RangeError* exception.
           1. Repeat, while abs(_years_) &gt; 0,
@@ -997,7 +998,7 @@
       <h1>BalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_, _relativeTo_ )</h1>
       <p>The abstract operation BalanceDurationRelative converts the calendar units of a duration into a form where lower units are converted into higher units as much as possible, up to _largestUnit_.</p>
       <emu-alg>
-        1. If _largestUnit_ is not one of *"years"*, *"months"*, or *"weeks"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
+        1. If _largestUnit_ is not one of *"year"*, *"month"*, or *"week"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. Return the new Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
@@ -1011,7 +1012,7 @@
         1. Let _oneWeek_ be ! CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
         1. Set _relativeTo_ to ? ToTemporalDateTime(_relativeTo_).
         1. Let _calendar_ be _relativeTo_.[[Calendar]].
-        1. If _largestUnit_ is *"years"*, then
+        1. If _largestUnit_ is *"year"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo, _oneYear_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
@@ -1035,7 +1036,7 @@
           1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
           1. Let _dateUntil_ be ? GetMethod(_calendar_, *"dateUntil"*).
           1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
-          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"months"*).
+          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
           1. Let _untilResult_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
           1. Let _oneYearMonths_ be ? Get(_untilResult_, *"months"*).
           1. Repeat, while abs(_months_) ≥ abs(_oneYearMonths_),
@@ -1045,10 +1046,10 @@
             1. Let _addOptions_ be ! OrdinaryObjectCreate(*null*).
             1. Set _newRelativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
             1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
-            1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"months"*).
+            1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Set _untilResult_ to ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
             1. Set _oneYearMonths_ to ? Get(_untilResult_, *"months"*).
-        1. Else if _largestUnit_ is *"months"*, then
+        1. Else if _largestUnit_ is *"month"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo, _oneMonth_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
@@ -1059,7 +1060,7 @@
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
         1. Else,
-          1. Assert: _largestUnit_ is *"weeks"*.
+          1. Assert: _largestUnit_ is *"week"*.
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo, _oneWeek_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneWeekDays_ be _moveResult_.[[Days]].
@@ -1087,9 +1088,9 @@
         1. Assert: _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ are integer Number values.
         1. Let _largestUnit1_ be ! DefaultTemporalLargestUnit(_y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_).
         1. Let _largestUnit2_ be ! DefaultTemporalLargestUnit(_y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_).
-        1. Let _largestUnit_ be ! LargerOfTwoTemporalDurationUnits(_largestUnit1_, _largestUnit2_).
+        1. Let _largestUnit_ be ! LargerOfTwoTemporalUnits(_largestUnit1_, _largestUnit2_).
         1. If _relativeTo_ is *undefined*, then
-          1. If _largestUnit_ is one of *"years"*, *"months"*, or *"weeks"*, then
+          1. If _largestUnit_ is one of *"year"*, *"month"*, or *"week"*, then
             1. Throw a *RangeError* exception.
           1. Let _result_ be ! BalanceDuration(_d1_ + _d2_, _h1_ + _h2_, _min1_ + _min2_, _s1_ + _s2_, _ms1_ + _ms2_, _mus1_ + _mus2_, _ns1_ + _ns2_, _largestUnit_).
           1. Let _years_ be 0.
@@ -1112,7 +1113,7 @@
           1. Let _intermediate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration1_, _firstAddOptions_, _dateAdd_).
           1. Let _secondAddOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Let _end_ be ? CalendarDateAdd(_calendar_, _intermediate_, _dateDuration2_, _secondAddOptions_, _dateAdd_).
-          1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalDurationUnits(*"days"*, _largestUnit_).
+          1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
           1. Let _differenceOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_differenceOptions_, *"largestUnit"*, _dateLargestUnit_).
           1. Let _dateDifference_ be ? CalendarDateUntil(_calendar_, _datePart_, _end_, _differenceOptions_).
@@ -1133,8 +1134,8 @@
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
           1. Let _intermediateNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_).
           1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
-          1. If _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
-            1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanoseconds"*, *"halfExpand"*).
+          1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
+            1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, *"halfExpand"*).
             1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
             1. Let _years_ be 0.
             1. Let _months_ be 0.
@@ -1183,7 +1184,7 @@
       </p>
       <emu-alg>
         1. Assert: _earlier_ and _later_ both have [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots.
-        1. Let _difference_ be ? DifferenceISODate(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]], _earlier_.[[ISODay]], _later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], *"days"*).
+        1. Let _difference_ be ? DifferenceISODate(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]], _earlier_.[[ISODay]], _later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], *"day"*).
         1. Return _difference_.[[Days]].
       </emu-alg>
     </emu-clause>
@@ -1221,7 +1222,7 @@
       <h1>RoundDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _increment_, _unit_, _roundingMode_ [ , _relativeTo_ ] )</h1>
       <emu-alg>
         1. Let _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, and _increment_ each be the mathematical values of themselves.
-        1. If _unit_ is *"years"*, *"months"*, or *"weeks"*, and _relativeTo_ is *undefined*, then
+        1. If _unit_ is *"year"*, *"month"*, or *"week"*, and _relativeTo_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Let _zonedRelativeTo_ be *undefined*.
         1. If _relativeTo_ is not *undefined*, then
@@ -1232,7 +1233,7 @@
           1. Else,
             1. Perform ? RequireInternalSlot(_relativeTo_, [[InitializedTemporalDateTime]]).
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
-        1. If _unit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+        1. If _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _nanoseconds_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
           1. Let _intermediate_ be *undefined*.
           1. If _zonedRelativeTo_ is not *undefined*, then
@@ -1243,7 +1244,7 @@
         1. Else,
           1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>−9</sup> + _microseconds_ × 10<sup>−6</sup> + _milliseconds_ × 10<sup>−3</sup> + _seconds_.
         1. Let _remainder_ be *undefined*.
-        1. If _unit_ is *"years"*, then
+        1. If _unit_ is *"year"*, then
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _firstAddOptions_ be ! OrdinaryObjectCreate(*null*).
@@ -1258,7 +1259,7 @@
           1. Let _thirdAddOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, _thirdAddOptions_, _dateAdd_).
           1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
-          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"years"*).
+          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"year"*).
           1. Let _timePassed_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _daysLater_, _untilOptions_).
           1. Let _yearsPassed_ be _timePassed_.[[Years]].
           1. Set _years_ to _years_ + _yearsPassed_.
@@ -1277,7 +1278,7 @@
           1. Set _years_ to ? RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalYears_ - _years_.
           1. Set _months_, _weeks_, and _days_ to 0.
-        1. Else if _unit_ is *"months"*, then
+        1. Else if _unit_ is *"month"*, then
           1. Let _yearsMonths_ be ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _firstAddOptions_ be ! OrdinaryObjectCreate(*null*).
@@ -1304,7 +1305,7 @@
           1. Set _months_ to ? RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMonths_ - _months_.
           1. Set _weeks_ and _days_ to 0.
-        1. Else if _unit_ is *"weeks"*, then
+        1. Else if _unit_ is *"week"*, then
           1. Let _sign_ be ! Sign(_days_).
           1. If _sign_ is 0, set _sign_ to 1.
           1. Let _oneWeek_ be ? CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
@@ -1321,36 +1322,36 @@
           1. Set _weeks_ to ? RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalWeeks_ - _weeks_.
           1. Set _days_ to 0.
-        1. Else if _unit_ is *"days"*, then
+        1. Else if _unit_ is *"day"*, then
           1. Let _fractionalDays_ be _days_.
           1. Set _days_ to ? RoundNumberToIncrement(_days_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalDays_ - _days_.
-        1. Else if _unit_ is *"hours"*, then
+        1. Else if _unit_ is *"hour"*, then
           1. Let _fractionalHours_ be (_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_.
           1. Set _hours_ to ? RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalHours_ - _hours_.
           1. Set _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
-        1. Else if _unit_ is *"minutes"*, then
+        1. Else if _unit_ is *"minute"*, then
           1. Let _fractionalMinutes_ be _fractionalSeconds_ / 60 + _minutes_.
           1. Set _minutes_ to ? RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMinutes_ - _minutes_.
           1. Set _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
-        1. Else if _unit_ is *"seconds"*, then
+        1. Else if _unit_ is *"second"*, then
           1. Set _seconds_ to ? RoundNumberToIncrement(_fractionalSeconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalSeconds_ - _seconds_.
           1. Set _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
-        1. Else if _unit_ is *"milliseconds"*, then
+        1. Else if _unit_ is *"millisecond"*, then
           1. Let _fractionalMilliseconds_ be _nanoseconds_ × 10<sup>−6</sup> + _microseconds_ × 10<sup>−3</sup> + _milliseconds_.
           1. Set _milliseconds_ to ? RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMilliseconds_ - _milliseconds_.
           1. Set _microseconds_ and _nanoseconds_ to 0.
-        1. Else if _unit_ is *"microseconds"*, then
+        1. Else if _unit_ is *"microsecond"*, then
           1. Let _fractionalMicroseconds_ be _nanoseconds_ × 10<sup>−3</sup> + _microseconds_.
           1. Set _microseconds_ to ? RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMicroseconds_ - _microseconds_.
           1. Set _nanoseconds_ to 0.
         1. Else,
-          1. Assert: _unit_ is *"nanoseconds"*.
+          1. Assert: _unit_ is *"nanosecond"*.
           1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to ? RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ − _nanoseconds_.
@@ -1378,7 +1379,7 @@
         In this case, the days part of the duration is adjusted by one, and the time part is re-rounded.
       </p>
       <emu-alg>
-        1. If _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*; or _unit_ is *"nanoseconds"* and _increment_ is 1, then
+        1. If _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
           1. Return the new Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
@@ -1411,7 +1412,7 @@
             }.
         1. Set _timeRemainderNs_ to ? RoundTemporalInstant(_timeRemainderNs_ − _dayLengthNs_, _increment_, _unit_, _roundingMode_).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
-        1. Let _adjustedTimeDuration_ be ? BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hours"*).
+        1. Let _adjustedTimeDuration_ be ? BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
         1. Return the new Record {
           [[Years]]: _adjustedDateDuration_.[[Years]],
           [[Months]]: _adjustedDateDuration_.[[Months]],

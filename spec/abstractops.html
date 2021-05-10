@@ -299,9 +299,7 @@
       The precision may be an integer 0 through 9 signifying a number of digits after the decimal point in the seconds, the string *"minute"* signifying not to print seconds at all, or the string *"auto"* signifying to drop trailing zeroes after the decimal point.
     </p>
     <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"*, *"minutes"*, *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"* », *undefined*).
-      1. If the value of _smallestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _smallestUnit_ to the corresponding Singular value of the same row.
+      1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_normalizedOptions_, « *"year"*, *"month"*, *"week"*, *"day"*, *"hour"* », *undefined*).
       1. If _smallestUnit_ is *"minute"*, then
         1. Return the new Record {
             [[Precision]]: *"minute"*,
@@ -367,110 +365,42 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-todurationsecondsstringprecision" aoid="ToDurationSecondsStringPrecision">
-    <h1>ToDurationSecondsStringPrecision ( _normalizedOptions_ )</h1>
-    <p>
-      The abstract operation ToDurationSecondsStringPrecision combines the values of the options `smallestUnit` and `fractionalSecondDigits` to yield a precision for printing seconds to a string, and a rounding unit and increment.
-      The precision may be an integer 0 through 9 signifying a number of digits after the decimal point in the seconds, or the string *"auto"* signifying to drop trailing zeroes after the decimal point.
-    </p>
-    <p>
-      This operation differs from ToSecondsStringPrecision in that it is intended to be used with `Temporal.Duration`.
-      It returns plural unit strings and does not support minutes.
-    </p>
-    <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"seconds"*, *"milliseconds"*, *"microseconds"*, *"nanoseconds"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* », *undefined*).
-      1. If the value of _smallestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _smallestUnit_ to the corresponding Plural value of the same row.
-      1. If _smallestUnit_ is *"seconds"*, then
-        1. Return the new Record {
-            [[Precision]]: 0,
-            [[Unit]]: *"seconds"*,
-            [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is *"milliseconds"*, then
-        1. Return the new Record {
-            [[Precision]]: 3,
-            [[Unit]]: *"milliseconds"*,
-            [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is *"microseconds"*, then
-        1. Return the new Record {
-            [[Precision]]: 6,
-            [[Unit]]: *"microseconds"*,
-            [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is *"nanoseconds"*, then
-        1. Return the new Record {
-            [[Precision]]: 9,
-            [[Unit]]: *"nanoseconds"*,
-            [[Increment]]: 1
-          }.
-      1. Assert: _smallestUnit_ is *undefined*.
-      1. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
-      1. If _digits_ is *"auto"*, then
-        1. Return the new Record {
-            [[Precision]]: *"auto"*,
-            [[Unit]]: *"nanoseconds"*,
-            [[Increment]]: 1
-          }.
-      1. If _digits_ is 0, then
-        1. Return the new Record {
-            [[Precision]]: 0,
-            [[Unit]]: *"seconds"*,
-            [[Increment]]: 1
-          }.
-      1. If _digits_ is 1, 2, or 3, then
-        1. Return the new Record {
-            [[Precision]]: _digits_,
-            [[Unit]]: *"milliseconds"*,
-            [[Increment]]: 10<sup>3 − _digits_</sup>
-          }.
-      1. If _digits_ is 4, 5, or 6, then
-        1. Return the new Record {
-            [[Precision]]: _digits_,
-            [[Unit]]: *"microseconds"*,
-            [[Increment]]: 10<sup>6 − _digits_</sup>
-          }.
-      1. Assert: _digits_ is 7, 8, or 9.
-      1. Return the new Record {
-          [[Precision]]: _digits_,
-          [[Unit]]: *"nanoseconds"*,
-          [[Increment]]: 10<sup>9 − _digits_</sup>
-        }.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tolargesttemporalunit" aoid="ToLargestTemporalUnit">
-    <h1>ToLargestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _defaultUnit_ )</h1>
+    <h1>ToLargestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _fallback_ [ , _autoValue_ ] )</h1>
+    <p>
+      The abstract operation ToLargestTemporalUnit consults the `largestUnit` property of the Object _normalizedOptions_, and checks that it is a valid unit and not one of a List of _disallowedUnits_.
+      It returns a _fallback_ value if the property is not present.
+      Optionally, if an _autoValue_ is provided, then a value of *"auto"* is replaced with this value.
+    </p>
+    <p>
+      Both singular and plural unit names are accepted, but only the singular form is returned.
+    </p>
     <emu-alg>
-      1. Assert: _disallowedUnits_ does not contain _defaultUnit_ or *"auto"*.
-      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, *"string"*, « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *"auto"*).
-      1. If _largestUnit_ is *"auto"*, then
-        1. Return _defaultUnit_.
-      1. If the value of _largestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _largestUnit_ to the corresponding Plural value of the same row.
+      1. Assert: _disallowedUnits_ does not contain _fallback_ or *"auto"*.
+      1. Assert: If _autoValue_ is present, _fallback_ is *"auto"*, and _disallowedUnits_ does not contain _autoValue_.
+      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, *"string"*, « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
+      1. If _largestUnit_ is *"auto"* and _autoValue_ is present, then
+        1. Return _autoValue_.
+      1. If the value of _largestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
+        1. Set _largestUnit_ to the corresponding Singular value of the same row.
       1. If _disallowedUnits_ contains _largestUnit_, then
         1. Throw a *RangeError* exception.
       1. Return _largestUnit_.
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tolargesttemporaldurationunit" aoid="ToLargestTemporalDurationUnit">
-    <h1>ToLargestTemporalDurationUnit ( _normalizedOptions_ )</h1>
-    <emu-alg>
-      1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, *"string"*, « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
-      1. If the value of _largestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _largestUnit_ to the corresponding Plural value of the same row.
-      1. Return _largestUnit_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tosmallesttemporalunit" aoid="ToSmallestTemporalUnit">
-    <h1>ToSmallestTemporalUnit ( _normalizedOptions_, _disallowedUnits_ )</h1>
+    <h1>ToSmallestTemporalUnit ( _normalizedOptions_, _disallowedUnits_, _fallback_ )</h1>
+    <p>
+      The abstract operation ToSmallestTemporalUnit consults the `smallestUnit` property of the Object _normalizedOptions_, and checks that it is a valid unit and not one of a List of _disallowedUnits_.
+      It returns a _fallback_ value if the property is not present.
+    </p>
+    <p>
+      Both singular and plural unit names are accepted, but only the singular form is returned.
+    </p>
     <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
-      1. If _smallestUnit_ is *undefined*, then
-        1. Throw a *RangeError* exception.
+      1. Assert: _disallowedUnits_ does not contain _fallback_.
+      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If the value of _smallestUnit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
         1. Set _smallestUnit_ to the corresponding Singular value of the same row.
       1. If _disallowedUnits_ contains _smallestUnit_, then
@@ -479,24 +409,19 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tosmallesttemporaldurationunit" aoid="ToSmallestTemporalDurationUnit">
-    <h1>ToSmallestTemporalDurationUnit ( _normalizedOptions_, _disallowedUnits_, _fallback_ )</h1>
-    <emu-alg>
-      1. Let _smallestUnit_ be ? GetOption(_normalizedOptions_, *"smallestUnit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
-      1. If the value of _smallestUnit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _smallestUnit_ to the corresponding Plural value of the same row.
-      1. If _disallowedUnits_ contains _smallestUnit_, then
-        1. Throw a *RangeError* exception.
-      1. Return _smallestUnit_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-totemporaldurationtotalunit" aoid="ToTemporalDurationTotalUnit">
     <h1>ToTemporalDurationTotalUnit ( _normalizedOptions_ )</h1>
+    <p>
+      The abstract operation ToTemporalDurationTotalUnit consults the `unit` property of the Object _normalizedOptions_, and checks that it is a valid unit.
+      It returns *undefined* if the property is not present.
+    </p>
+    <p>
+      Both singular and plural unit names are accepted, but only the singular form is returned.
+    </p>
     <emu-alg>
-      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
-      1. If the value of _unit_ is in the Singular column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref> ("weeks" has no singular equivalent), then
-        1. Set _unit_ to the corresponding Plural value of the same row.
+      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, *"string"*, « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
+      1. If the value of _unit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
+        1. Set _unit_ to the corresponding Singular value of the same row.
       1. Return _unit_.
     </emu-alg>
   </emu-clause>
@@ -504,8 +429,8 @@
   <emu-clause id="sec-temporal-singular-and-plural-units">
     <h1>Singular and plural units</h1>
     <p>
-      Where possible, the `smallestUnit` and `largestUnit` options accept both singular and plural forms.
-      As an exception, *"week"* is not accepted, because there is no property named that on any Temporal object.
+      Where possible, the `smallestUnit`, `largestUnit`, and `unit` options accept both singular and plural forms.
+      Only the singular form is used internally.
     </p>
     <emu-table id="table-temporal-singular-and-plural-units">
       <emu-caption>Singular and plural units</emu-caption>
@@ -525,6 +450,11 @@
           <tr>
             <td>*"month"*</td>
             <td>*"months"*</td>
+          </tr>
+
+          <tr>
+            <td>*"week"*</td>
+            <td>*"weeks"*</td>
           </tr>
 
           <tr>
@@ -614,43 +544,43 @@
   <emu-clause id="sec-temporal-validatetemporalunitrange" aoid="ValidateTemporalUnitRange">
     <h1>ValidateTemporalUnitRange ( _largestUnit_, _smallestUnit_ )</h1>
     <emu-alg>
-      1. If _smallestUnit_ is *"years"* and _largestUnit_ is not *"years"*, then
+      1. If _smallestUnit_ is *"year"* and _largestUnit_ is not *"year"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"months"* and _largestUnit_ is not *"years"* or *"months"*, then
+      1. If _smallestUnit_ is *"month"* and _largestUnit_ is not *"year"* or *"month"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"weeks"* and _largestUnit_ is not one of *"years"*, *"months"*, or *"weeks"*, then
+      1. If _smallestUnit_ is *"week"* and _largestUnit_ is not one of *"year"*, *"month"*, or *"week"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"days"* and _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+      1. If _smallestUnit_ is *"day"* and _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"hours"* and _largestUnit_ is not one of *"years"*, *"months"*, *"weeks"*, *"days"*, or *"hours"*, then
+      1. If _smallestUnit_ is *"hour"* and _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, *"day"*, or *"hour"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"minutes"* and _largestUnit_ is *"seconds"*, *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
+      1. If _smallestUnit_ is *"minute"* and _largestUnit_ is *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"seconds"* and _largestUnit_ is *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*, then
+      1. If _smallestUnit_ is *"second"* and _largestUnit_ is *"millisecond"*, *"microsecond"*, or *"nanosecond"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"milliseconds"* and _largestUnit_ is *"microseconds"* or *"nanoseconds"*, then
+      1. If _smallestUnit_ is *"millisecond"* and _largestUnit_ is *"microsecond"* or *"nanosecond"*, then
         1. Throw a *RangeError* exception.
-      1. If _smallestUnit_ is *"microseconds"* and _largestUnit_ is *"nanoseconds"*, then
+      1. If _smallestUnit_ is *"microsecond"* and _largestUnit_ is *"nanosecond"*, then
         1. Throw a *RangeError* exception.
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-largeroftwotemporaldurationunits" aoid="LargerOfTwoTemporalDurationUnits">
-    <h1>LargerOfTwoTemporalDurationUnits ( _u1_, _u2_ )</h1>
+  <emu-clause id="sec-temporal-largeroftwotemporalunits" aoid="LargerOfTwoTemporalUnits">
+    <h1>LargerOfTwoTemporalUnits ( _u1_, _u2_ )</h1>
     <p>
-      The abstract operation LargerOfTwoTemporalDurationUnits, given two strings representing the units of a Temporal.Duration, returns the string representing the larger of the two units.
+      The abstract operation LargerOfTwoTemporalUnits, given two strings representing units of time, returns the string representing the larger of the two units.
     </p>
     <emu-alg>
-      1. If either _u1_ or _u2_ is *"years"*, return *"years"*.
-      1. If either _u1_ or _u2_ is *"months"*, return *"months"*.
-      1. If either _u1_ or _u2_ is *"weeks"*, return *"weeks"*.
-      1. If either _u1_ or _u2_ is *"days"*, return *"days"*.
-      1. If either _u1_ or _u2_ is *"hours"*, return *"hours"*.
-      1. If either _u1_ or _u2_ is *"minutes"*, return *"minutes"*.
-      1. If either _u1_ or _u2_ is *"seconds"*, return *"seconds"*.
-      1. If either _u1_ or _u2_ is *"milliseconds"*, return *"milliseconds"*.
-      1. If either _u1_ or _u2_ is *"microseconds"*, return *"microseconds"*.
-      1. Return *"nanoseconds"*.
+      1. If either _u1_ or _u2_ is *"year"*, return *"year"*.
+      1. If either _u1_ or _u2_ is *"month"*, return *"month"*.
+      1. If either _u1_ or _u2_ is *"week"*, return *"week"*.
+      1. If either _u1_ or _u2_ is *"day"*, return *"day"*.
+      1. If either _u1_ or _u2_ is *"hour"*, return *"hour"*.
+      1. If either _u1_ or _u2_ is *"minute"*, return *"minute"*.
+      1. If either _u1_ or _u2_ is *"second"*, return *"second"*.
+      1. If either _u1_ or _u2_ is *"millisecond"*, return *"millisecond"*.
+      1. If either _u1_ or _u2_ is *"microsecond"*, return *"microsecond"*.
+      1. Return *"nanosecond"*.
     </emu-alg>
   </emu-clause>
 
@@ -673,13 +603,13 @@
   <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" aoid="MaximumTemporalDurationRoundingIncrement">
     <h1>MaximumTemporalDurationRoundingIncrement ( _unit_ )</h1>
     <emu-alg>
-      1. If _unit_ is *"years"*, *"months"*, *"weeks"*, or *"days"*, then
+      1. If _unit_ is *"year"*, *"month"*, *"week"*, or *"day"*, then
         1. Return *undefined*.
-      1. If _unit_ is *"hours"*, then
+      1. If _unit_ is *"hour"*, then
         1. Return 24.
-      1. Else if _unit_ is *"minutes"* or *"seconds"*, then
+      1. Else if _unit_ is *"minute"* or *"second"*, then
         1. Return 60.
-      1. Assert: _unit_ is one of *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*.
+      1. Assert: _unit_ is one of *"millisecond"*, *"microsecond"*, or *"nanosecond"*.
       1. Return 1000.
     </emu-alg>
   </emu-clause>
