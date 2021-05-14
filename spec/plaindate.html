@@ -699,9 +699,7 @@
     <emu-clause id="sec-temporal-differenceisodate" aoid="DifferenceISODate">
       <h1>DifferenceISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _largestUnit_ )</h1>
       <emu-alg>
-        1. Assert: _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, *"days"*, *"hours"*, *"minutes"*, or *"seconds"*.
-        1. If _largestUnit_ is not *"years"*, *"months"*, or *"weeks"*, then
-          1. Set _largestUnit_ to *"days"*.
+        1. Assert: _largestUnit_ is one of *"years"*, *"months"*, *"weeks"*, or *"days"*.
         1. If _largestUnit_ is *"years"* or *"months"*, then
           1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
           1. If _sign_ is 0, return the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
