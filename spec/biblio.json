@@ -31,6 +31,11 @@
       "id": "sec-tobigint"
     },
     {
+      "type": "op",
+      "aoid": "ToIntegerOrInfinity",
+      "id": "sec-tointegerorinfinity"
+    },
+    {
       "type": "term",
       "term": "%Date.now%",
       "id": "sec-date.now"
