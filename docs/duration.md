@@ -408,7 +408,7 @@ d.abs(); // PT8H30M
 
 **Returns:** a new `Temporal.Duration` object which is `duration`, rounded and/or balanced.
 
-Rounds and/or balances `duration` to the given largest and smallest units and rounding increment, and returns the result as a new `Temporal.PlainDateTime` object.
+Rounds and/or balances `duration` to the given largest and smallest units and rounding increment, and returns the result as a new `Temporal.Duration` object.
 
 The `largestUnit` determines the largest unit allowed in the result.
 It will cause units larger than `largestUnit` to be converted into smaller units, and units smaller than `largestUnit` to be converted into larger units as much as possible.
