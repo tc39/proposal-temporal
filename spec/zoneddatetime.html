@@ -1210,9 +1210,9 @@
         1. Let _nsDifference_ be _ns2_ − _ns1_.
         1. If _nsDifference_ is 0, then
           1. Return the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0, [[Hours]]: 0, [[Minutes]]: 0, [[Seconds]]: 0, [[Milliseconds]]: 0, [[Microseconds]]: 0, [[Nanoseconds]]: 0 }.
-        1. Let _startInstant_ be ? CreateInstant(_ns1_).
+        1. Let _startInstant_ be ? CreateTemporalInstant(_ns1_).
         1. Let _startDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _startInstant_, _calendar_).
-        1. Let _endInstant_ be ? CreateInstant(_ns2_).
+        1. Let _endInstant_ be ? CreateTemporalInstant(_ns2_).
         1. Let _endDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _endInstant_, _calendar_).
         1. Let _dateDifference_ be ? DifferenceISODateTime(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]], _endDateTime_.[[ISOHour]], _endDateTime_.[[ISOMinute]], _endDateTime_.[[ISOSecond]], _endDateTime_.[[ISOMillisecond]], _endDateTime_.[[ISOMicrosecond]], _endDateTime_.[[ISONanosecond]], _calendar_, _largestUnit_, _options_).
         1. Let _intermediateNs_ be ? AddZonedDateTime(_ns1_, _timeZone_, _calendar_, _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], 0, 0, 0, 0, 0, 0, 0).
