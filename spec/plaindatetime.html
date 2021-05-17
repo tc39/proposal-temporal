@@ -928,10 +928,7 @@
       <h1>ValidateISODateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
-        1. If _month_ &lt; 1 or _month_ &gt; 12, then
-          1. Return *false*.
-        1. Let _maxDay_ be ! ISODaysInMonth(_year_, _month_).
-        1. If _day_ &lt; 1 or _day_ &gt; _maxDay_, then
+        1. If ! ValidateISODate(_year_, _month_, _day_) is *false*, then
           1. Return *false*.
         1. If ! ValidateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Return *false*.
