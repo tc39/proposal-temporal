@@ -856,17 +856,17 @@
       <h1>ISODateTimeWithinLimits ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-note>
         <p>
-          Temporal.PlainDateTime objects can represent points in time within 24 hours (8.64 × 10<sup>16</sup> nanoseconds) of the Temporal.Instant boundaries
+          Temporal.PlainDateTime objects can represent points in time within 24 hours (8.64 × 10<sup>16</sup> nanoseconds) of the Temporal.Instant boundaries.
           This ensures that a Temporal.Instant object can be converted into a Temporal.PlainDateTime object using any time zone.
         </p>
       </emu-note>
       <emu-alg>
         1. Let _ns_ be ! GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. If _ns_ ≤ -8.64 × 10<sup>21</sup><sub>ℝ</sub> - 8.64 × 10<sup>16</sup><sub>ℝ</sub>, then
-          1. Return ~too early~.
+          1. Return *false*.
         1. If _ns_ ≥ 8.64 × 10<sup>21</sup><sub>ℝ</sub> + 8.64 × 10<sup>16</sup><sub>ℝ</sub>, then
-          1. Return ~too late~.
-        1. Return ~in range~.
+          1. Return *false*.
+        1. Return *true*.
       </emu-alg>
     </emu-clause>
 
@@ -964,7 +964,7 @@
         1. Assert: Type(_calendar_) is Object.
         1. If ! ValidateISODateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
-        1. If ! ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is not ~in range~, then
+        1. If ! ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainDateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainDateTime.prototype%"*, « [[InitializedTemporalDateTime]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[ISOHour]], [[ISOMinute]], [[ISOSecond]], [[ISOMillisecond]], [[ISOMicrosecond]], [[ISONanosecond]], [[Calendar]] »).
