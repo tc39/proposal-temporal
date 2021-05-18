@@ -1697,8 +1697,7 @@
     </p>
     <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
-      1. If Type(_fields_) is not Object, then
-        1. Throw a *TypeError* exception.
+      1. Assert: Type(_fields_) is Object.
       1. Let _result_ be ! OrdinaryObjectCreate(%Object.prototype%).
       1. Let _any_ be *false*.
       1. For each value _property_ of _fieldNames_, do
