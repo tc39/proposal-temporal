@@ -1380,7 +1380,7 @@
         1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fraction_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
       1. Else,
         1. Set _fMinutes_ to 0.
-      1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, 0, milliseconds, 0, microseconds, 0, nanoseconds).
+      1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, 0, _milliseconds_, 0, _microseconds_, 0, _nanoseconds_, 0).
       1. Return the new Record {
         [[Years]]: _years_,
         [[Months]]: _months_,
