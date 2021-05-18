@@ -25,6 +25,16 @@ import {
 
 const ObjectAssign = Object.assign;
 
+const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
+const MAX_INCREMENTS = {
+  hour: 24,
+  minute: 60,
+  second: 60,
+  millisecond: 1000,
+  microsecond: 1000,
+  nanosecond: 1000
+};
+
 function TemporalTimeToString(time, precision, options = undefined) {
   let hour = GetSlot(time, ISO_HOUR);
   let minute = GetSlot(time, ISO_MINUTE);
@@ -228,19 +238,11 @@ export class PlainTime {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other);
     options = ES.GetOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'hour');
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const maximumIncrements = {
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(this, ISO_HOUR),
       GetSlot(this, ISO_MINUTE),
@@ -287,19 +289,11 @@ export class PlainTime {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other);
     options = ES.GetOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'hours', ['years', 'months', 'weeks', 'days']);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'hour');
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const maximumIncrements = {
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(other, ISO_HOUR),
       GetSlot(other, ISO_MINUTE),
@@ -352,17 +346,10 @@ export class PlainTime {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, DISALLOWED_UNITS);
+    if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
-    const maximumIncrements = {
-      hour: 24,
-      minute: 60,
-      second: 60,
-      millisecond: 1000,
-      microsecond: 1000,
-      nanosecond: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
 
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);

@@ -79,14 +79,12 @@ export class Calendar {
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
     options = ES.GetOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'days', [
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ]);
+    const largestUnit = ES.ToLargestTemporalUnit(
+      options,
+      'auto',
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'],
+      'day'
+    );
     const { years, months, weeks, days } = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -793,22 +791,22 @@ const nonIsoHelperBase = {
     let months = 0;
     let years = 0;
     switch (largestUnit) {
-      case 'days':
+      case 'day':
         days = this.calendarDaysUntil(calendarOne, calendarTwo, cache);
         break;
-      case 'weeks': {
+      case 'week': {
         const totalDays = this.calendarDaysUntil(calendarOne, calendarTwo, cache);
         days = totalDays % 7;
         weeks = (totalDays - days) / 7;
         break;
       }
-      case 'months':
-      case 'years': {
+      case 'month':
+      case 'year': {
         const diffYears = calendarTwo.year - calendarOne.year;
         const diffMonths = calendarTwo.month - calendarOne.month;
         const diffDays = calendarTwo.day - calendarOne.day;
         const sign = this.compareCalendarDates(calendarTwo, calendarOne);
-        if (largestUnit === 'years' && diffYears) {
+        if (largestUnit === 'year' && diffYears) {
           const isOneFurtherInYear = diffMonths * sign < 0 || (diffMonths === 0 && diffDays * sign < 0);
           years = isOneFurtherInYear ? diffYears - sign : diffYears;
         }
@@ -898,7 +896,7 @@ const nonIsoHelperBase = {
       twoIso.year,
       twoIso.month,
       twoIso.day,
-      'days'
+      'day'
     );
     return duration.days;
   },

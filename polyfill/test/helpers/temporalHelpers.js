@@ -112,6 +112,48 @@ var TemporalHelpers = {
   },
 
   /*
+   * checkCalendarDateUntilLargestUnitSingular(func, expectedLargestUnitCalls):
+   *
+   * When an options object with a largestUnit property is synthesized inside
+   * Temporal and passed to user code such as calendar.dateUntil(), the value of
+   * the largestUnit property should be in the singular form, even if the input
+   * was given in the plural form.
+   * (This doesn't apply when the options object is passed through verbatim.)
+   *
+   * func(calendar, largestUnit, index) is the operation under test. It's called
+   * with an instance of a calendar that keeps track of which largestUnit is
+   * passed to dateUntil(), each key of expectedLargestUnitCalls in turn, and
+   * the key's numerical index in case the function needs to generate test data
+   * based on the index. At the end, the actual values passed to dateUntil() are
+   * compared with the array values of expectedLargestUnitCalls.
+   */
+  checkCalendarDateUntilLargestUnitSingular(func, expectedLargestUnitCalls) {
+    const actual = [];
+
+    class DateUntilOptionsCalendar extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+      }
+
+      dateUntil(earlier, later, options) {
+        actual.push(options.largestUnit);
+        return super.dateUntil(earlier, later, options);
+      }
+
+      toString() {
+        return "date-until-options";
+      }
+    }
+
+    const calendar = new DateUntilOptionsCalendar();
+    Object.entries(expectedLargestUnitCalls).forEach(([largestUnit, expected], index) => {
+      func(calendar, largestUnit, index);
+      assert.compareArray(actual, expected, `largestUnit passed to calendar.dateUntil() for largestUnit ${largestUnit}`);
+      actual.splice(0, actual.length); // empty it for the next check
+    });
+  },
+
+  /*
    * checkPlainDateTimeConversionFastPath(func):
    *
    * ToTemporalDate and ToTemporalTime should both, if given a
@@ -158,6 +200,56 @@ var TemporalHelpers = {
 
     func(datetime, calendar);
     assert.compareArray(actual, expected, "property getters not called");
+  },
+
+  /*
+   * Check that an options bag that accepts units written in the singular form,
+   * also accepts the same units written in the plural form.
+   * func(unit) should call the method with the appropriate options bag
+   * containing unit as a value. This will be called twice for each element of
+   * validSingularUnits, once with singular and once with plural, and the
+   * results of each pair should be the same (whether a Temporal object or a
+   * primitive value.)
+   */
+  checkPluralUnitsAccepted(func, validSingularUnits) {
+    const plurals = {
+      year: 'years',
+      month: 'months',
+      week: 'weeks',
+      day: 'days',
+      hour: 'hours',
+      minute: 'minutes',
+      second: 'seconds',
+      millisecond: 'milliseconds',
+      microsecond: 'microseconds',
+      nanosecond: 'nanoseconds',
+    };
+
+    validSingularUnits.forEach((unit) => {
+      const singularValue = func(unit);
+      const pluralValue = func(plurals[unit]);
+      if (singularValue instanceof Temporal.Duration) {
+        assert.sameValue(pluralValue.years, singularValue.years, "years value");
+        assert.sameValue(pluralValue.months, singularValue.months, "months value");
+        assert.sameValue(pluralValue.weeks, singularValue.weeks, "weeks value");
+        assert.sameValue(pluralValue.days, singularValue.days, "days value");
+        assert.sameValue(pluralValue.hours, singularValue.hours, "hours value");
+        assert.sameValue(pluralValue.minutes, singularValue.minutes, "minutes value");
+        assert.sameValue(pluralValue.seconds, singularValue.seconds, "seconds value");
+        assert.sameValue(pluralValue.milliseconds, singularValue.milliseconds, "milliseconds value");
+        assert.sameValue(pluralValue.microseconds, singularValue.microseconds, "microseconds value");
+        assert.sameValue(pluralValue.nanoseconds, singularValue.nanoseconds, "nanoseconds value");
+      } else if (
+        singularValue instanceof Temporal.Instant ||
+        singularValue instanceof Temporal.PlainDateTime ||
+        singularValue instanceof Temporal.PlainTime ||
+        singularValue instanceof Temporal.ZonedDateTime
+      ) {
+        assert(pluralValue.equals(singularValue), "Temporal objects equal");
+      } else {
+        assert.sameValue(pluralValue, singularValue);
+      }
+    });
   },
 
   /*
