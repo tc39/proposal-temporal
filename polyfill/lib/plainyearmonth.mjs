@@ -5,6 +5,8 @@ import { ISO_YEAR, ISO_MONTH, ISO_DAY, CALENDAR, TIME_ZONE, GetSlot, HasSlot } f
 
 const ObjectCreate = Object.create;
 
+const DISALLOWED_UNITS = ['week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
+
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) {
     isoYear = ES.ToInteger(isoYear);
@@ -94,7 +96,7 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
 
     options = ES.GetOptionsObject(options);
 
@@ -125,7 +127,7 @@ export class PlainYearMonth {
       nanoseconds: -duration.nanoseconds
     };
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'days'));
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
 
     options = ES.GetOptionsObject(options);
 
@@ -153,18 +155,8 @@ export class PlainYearMonth {
       );
     }
     options = ES.GetOptionsObject(options);
-    const disallowedUnits = [
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ];
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -177,7 +169,7 @@ export class PlainYearMonth {
 
     const untilOptions = { ...options, largestUnit };
     const result = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
-    if (smallestUnit === 'months' && roundingIncrement === 1) return result;
+    if (smallestUnit === 'month' && roundingIncrement === 1) return result;
 
     let { years, months } = result;
     const relativeTo = ES.CreateTemporalDateTime(
@@ -225,18 +217,8 @@ export class PlainYearMonth {
       );
     }
     options = ES.GetOptionsObject(options);
-    const disallowedUnits = [
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ];
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'months', disallowedUnits);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'years', disallowedUnits);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -250,7 +232,7 @@ export class PlainYearMonth {
     const untilOptions = { ...options, largestUnit };
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    if (smallestUnit === 'months' && roundingIncrement === 1) {
+    if (smallestUnit === 'month' && roundingIncrement === 1) {
       return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
     }
     const relativeTo = ES.CreateTemporalDateTime(

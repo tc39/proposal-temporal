@@ -110,6 +110,31 @@ const BUILTIN_CASTS = new Map([
   ['offset', ToString]
 ]);
 
+const ALLOWED_UNITS = [
+  'year',
+  'month',
+  'week',
+  'day',
+  'hour',
+  'minute',
+  'second',
+  'millisecond',
+  'microsecond',
+  'nanosecond'
+];
+const SINGULAR_PLURAL_UNITS = [
+  ['years', 'year'],
+  ['months', 'month'],
+  ['weeks', 'week'],
+  ['days', 'day'],
+  ['hours', 'hour'],
+  ['minutes', 'minute'],
+  ['seconds', 'second'],
+  ['milliseconds', 'millisecond'],
+  ['microseconds', 'microsecond'],
+  ['nanoseconds', 'nanosecond']
+];
+
 import * as PARSE from './regex.mjs';
 
 const ES2020 = {
@@ -626,30 +651,21 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ToTemporalDateTimeRoundingIncrement: (options, smallestUnit) => {
     const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
+      year: undefined,
+      month: undefined,
+      week: undefined,
+      day: undefined,
+      hour: 24,
+      minute: 60,
+      second: 60,
+      millisecond: 1000,
+      microsecond: 1000,
+      nanosecond: 1000
     };
     return ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
   },
   ToSecondsStringPrecision: (options) => {
-    const singular = new Map([
-      ['minutes', 'minute'],
-      ['seconds', 'second'],
-      ['milliseconds', 'millisecond'],
-      ['microseconds', 'microsecond'],
-      ['nanoseconds', 'nanosecond']
-    ]);
-    const allowed = new Set(['minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
-    let smallestUnit = ES.GetOption(options, 'smallestUnit', [...allowed, ...singular.keys()], undefined);
-    if (singular.has(smallestUnit)) smallestUnit = singular.get(smallestUnit);
+    let smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, ['year', 'month', 'week', 'day', 'hour']);
     switch (smallestUnit) {
       case 'minute':
         return { precision: 'minute', unit: 'minute', increment: 1 };
@@ -687,174 +703,35 @@ export const ES = ObjectAssign({}, ES2020, {
         return { precision, unit: 'nanosecond', increment: 10 ** (9 - precision) };
     }
   },
-  ToDurationSecondsStringPrecision: (options) => {
-    const plural = new Map([
-      ['second', 'seconds'],
-      ['millisecond', 'milliseconds'],
-      ['microsecond', 'microseconds'],
-      ['nanosecond', 'nanoseconds']
-    ]);
-    const allowed = new Set(['seconds', 'milliseconds', 'microseconds', 'nanoseconds']);
-    let smallestUnit = ES.GetOption(options, 'smallestUnit', [...allowed, ...plural.keys()], undefined);
-    if (plural.has(smallestUnit)) smallestUnit = plural.get(smallestUnit);
-    switch (smallestUnit) {
-      case 'seconds':
-        return { precision: 0, unit: 'seconds', increment: 1 };
-      case 'milliseconds':
-        return { precision: 3, unit: 'milliseconds', increment: 1 };
-      case 'microseconds':
-        return { precision: 6, unit: 'microseconds', increment: 1 };
-      case 'nanoseconds':
-        return { precision: 9, unit: 'nanoseconds', increment: 1 };
-      default: // fall through if option not given
-    }
-    let digits = options.fractionalSecondDigits;
-    if (digits === undefined || digits === 'auto') return { precision: 'auto', unit: 'nanoseconds', increment: 1 };
-    digits = ES.ToNumber(digits);
-    if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
-      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digits}`);
-    }
-    const precision = MathFloor(digits);
-    switch (precision) {
-      case 0:
-        return { precision, unit: 'seconds', increment: 1 };
-      case 1:
-      case 2:
-      case 3:
-        return { precision, unit: 'milliseconds', increment: 10 ** (3 - precision) };
-      case 4:
-      case 5:
-      case 6:
-        return { precision, unit: 'microseconds', increment: 10 ** (6 - precision) };
-      case 7:
-      case 8:
-      case 9:
-        return { precision, unit: 'nanoseconds', increment: 10 ** (9 - precision) };
-    }
-  },
-  ToLargestTemporalUnit: (options, fallback, disallowedStrings = []) => {
-    const plural = new Map(
-      [
-        ['year', 'years'],
-        ['month', 'months'],
-        ['day', 'days'],
-        ['hour', 'hours'],
-        ['minute', 'minutes'],
-        ['second', 'seconds'],
-        ['millisecond', 'milliseconds'],
-        ['microsecond', 'microseconds'],
-        ['nanosecond', 'nanoseconds']
-      ].filter(([, pl]) => !disallowedStrings.includes(pl))
-    );
-    const allowed = new Set([
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ]);
+  ToLargestTemporalUnit: (options, fallback, disallowedStrings = [], autoValue) => {
+    const singular = new Map(SINGULAR_PLURAL_UNITS.filter(([, sing]) => !disallowedStrings.includes(sing)));
+    const allowed = new Set(ALLOWED_UNITS);
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...plural.keys()], 'auto');
-    if (retval === 'auto') return fallback;
-    if (plural.has(retval)) return plural.get(retval);
+    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...singular.keys()], fallback);
+    if (retval === 'auto' && autoValue !== undefined) return autoValue;
+    if (singular.has(retval)) return singular.get(retval);
     return retval;
   },
-  ToLargestTemporalDurationUnit: (options) => {
-    const plural = new Map([
-      ['year', 'years'],
-      ['month', 'months'],
-      ['day', 'days'],
-      ['hour', 'hours'],
-      ['minute', 'minutes'],
-      ['second', 'seconds'],
-      ['millisecond', 'milliseconds'],
-      ['microsecond', 'microseconds'],
-      ['nanosecond', 'nanoseconds']
-    ]);
-    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...plural.keys(), ...plural.values(), 'weeks']);
-    if (plural.has(retval)) return plural.get(retval);
-    return retval;
-  },
-  ToSmallestTemporalUnit: (options, disallowedStrings = []) => {
-    const singular = new Map(
-      [
-        ['days', 'day'],
-        ['hours', 'hour'],
-        ['minutes', 'minute'],
-        ['seconds', 'second'],
-        ['milliseconds', 'millisecond'],
-        ['microseconds', 'microsecond'],
-        ['nanoseconds', 'nanosecond']
-      ].filter(([, sing]) => !disallowedStrings.includes(sing))
-    );
-    const allowed = new Set(['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
+  ToSmallestTemporalUnit: (options, fallback, disallowedStrings = []) => {
+    const singular = new Map(SINGULAR_PLURAL_UNITS.filter(([, sing]) => !disallowedStrings.includes(sing)));
+    const allowed = new Set(ALLOWED_UNITS);
     for (const s of disallowedStrings) {
       allowed.delete(s);
     }
-    const value = ES.GetOption(options, 'smallestUnit', [...allowed, ...singular.keys()], undefined);
-    if (value === undefined) throw new RangeError('smallestUnit option is required');
+    const value = ES.GetOption(options, 'smallestUnit', [...allowed, ...singular.keys()], fallback);
     if (singular.has(value)) return singular.get(value);
     return value;
   },
-  ToSmallestTemporalDurationUnit: (options, fallback, disallowedStrings = []) => {
-    const plural = new Map(
-      [
-        ['year', 'years'],
-        ['month', 'months'],
-        ['day', 'days'],
-        ['hour', 'hours'],
-        ['minute', 'minutes'],
-        ['second', 'seconds'],
-        ['millisecond', 'milliseconds'],
-        ['microsecond', 'microseconds'],
-        ['nanosecond', 'nanoseconds']
-      ].filter(([, pl]) => !disallowedStrings.includes(pl))
-    );
-    const allowed = new Set([
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ]);
-    for (const s of disallowedStrings) {
-      allowed.delete(s);
-    }
-    const value = ES.GetOption(options, 'smallestUnit', [...allowed, ...plural.keys()], fallback);
-    if (plural.has(value)) return plural.get(value);
-    return value;
-  },
   ToTemporalDurationTotalUnit: (options) => {
-    // This AO is identical to ToSmallestTemporalDurationUnit, except:
+    // This AO is identical to ToSmallestTemporalUnit, except:
     // - default is always `undefined` (caller will throw if omitted)
     // - option is named `unit` (not `smallestUnit`)
     // - all units are valid (no `disallowedStrings`)
-    const plural = new Map([
-      ['year', 'years'],
-      ['month', 'months'],
-      ['day', 'days'],
-      ['hour', 'hours'],
-      ['minute', 'minutes'],
-      ['second', 'seconds'],
-      ['millisecond', 'milliseconds'],
-      ['microsecond', 'microseconds'],
-      ['nanosecond', 'nanoseconds']
-    ]);
-    // "week" doesn't exist in Temporal as a non-plural unit, so don't allow it
-    const value = ES.GetOption(options, 'unit', [...plural.values(), ...plural.keys(), 'weeks'], undefined);
-    if (plural.has(value)) return plural.get(value);
+    const singular = new Map(SINGULAR_PLURAL_UNITS);
+    const value = ES.GetOption(options, 'unit', [...singular.values(), ...singular.keys()], undefined);
+    if (singular.has(value)) return singular.get(value);
     return value;
   },
   ToRelativeTemporalObject: (options) => {
@@ -951,19 +828,7 @@ export const ES = ObjectAssign({}, ES2020, {
     );
   },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
-    const validUnits = [
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ];
-    if (validUnits.indexOf(largestUnit) > validUnits.indexOf(smallestUnit)) {
+    if (ALLOWED_UNITS.indexOf(largestUnit) > ALLOWED_UNITS.indexOf(smallestUnit)) {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
   },
@@ -979,6 +844,7 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds,
     nanoseconds
   ) => {
+    const singular = new Map(SINGULAR_PLURAL_UNITS);
     for (const [prop, v] of ObjectEntries({
       years,
       months,
@@ -991,24 +857,12 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds,
       nanoseconds
     })) {
-      if (v !== 0) return prop;
+      if (v !== 0) return singular.get(prop);
     }
-    return 'nanoseconds';
+    return 'nanosecond';
   },
-  LargerOfTwoTemporalDurationUnits: (unit1, unit2) => {
-    const validUnits = [
-      'years',
-      'months',
-      'weeks',
-      'days',
-      'hours',
-      'minutes',
-      'seconds',
-      'milliseconds',
-      'microseconds',
-      'nanoseconds'
-    ];
-    if (validUnits.indexOf(unit1) > validUnits.indexOf(unit2)) return unit2;
+  LargerOfTwoTemporalUnits: (unit1, unit2) => {
+    if (ALLOWED_UNITS.indexOf(unit1) > ALLOWED_UNITS.indexOf(unit2)) return unit2;
     return unit1;
   },
   CastIfDefined: (value, cast) => {
@@ -2713,7 +2567,7 @@ export const ES = ObjectAssign({}, ES2020, {
       GetSlot(dtEnd, ISO_MICROSECOND),
       GetSlot(dtEnd, ISO_NANOSECOND),
       calendar,
-      'days'
+      'day'
     );
     let intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0);
     // may disambiguate
@@ -2792,7 +2646,7 @@ export const ES = ObjectAssign({}, ES2020, {
         0
       );
     }
-    if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks' || largestUnit === 'days') {
+    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
       ({ days, nanoseconds } = ES.NanosecondsToDays(nanoseconds, relativeTo));
     } else {
       days = 0;
@@ -2803,36 +2657,36 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
 
     switch (largestUnit) {
-      case 'years':
-      case 'months':
-      case 'weeks':
-      case 'days':
-      case 'hours':
+      case 'year':
+      case 'month':
+      case 'week':
+      case 'day':
+      case 'hour':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
         ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
         ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
         ({ quotient: hours, remainder: minutes } = minutes.divmod(60));
         break;
-      case 'minutes':
+      case 'minute':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
         ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
         ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
         break;
-      case 'seconds':
+      case 'second':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
         ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
         break;
-      case 'milliseconds':
+      case 'millisecond':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
         break;
-      case 'microseconds':
+      case 'microsecond':
         ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
         break;
-      case 'nanoseconds':
+      case 'nanosecond':
         break;
       default:
         throw new Error('assert not reached');
@@ -2862,10 +2716,10 @@ export const ES = ObjectAssign({}, ES2020, {
     const oneWeek = new TemporalDuration(0, 0, sign);
 
     switch (largestUnit) {
-      case 'years':
+      case 'year':
         // no-op
         break;
-      case 'months':
+      case 'month':
         {
           if (!calendar) throw new RangeError('a starting point is required for months balancing');
           // balance years down to months
@@ -2875,7 +2729,7 @@ export const ES = ObjectAssign({}, ES2020, {
             const addOptions = ObjectCreate(null);
             const newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
             const untilOptions = ObjectCreate(null);
-            untilOptions.largestUnit = 'months';
+            untilOptions.largestUnit = 'month';
             const oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil)
               .months;
             relativeTo = newRelativeTo;
@@ -2884,7 +2738,7 @@ export const ES = ObjectAssign({}, ES2020, {
           }
         }
         break;
-      case 'weeks':
+      case 'week':
         if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
         // balance years down to days
         while (MathAbs(years) > 0) {
@@ -2950,7 +2804,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const oneWeek = new TemporalDuration(0, 0, sign);
 
     switch (largestUnit) {
-      case 'years': {
+      case 'year': {
         if (!calendar) throw new RangeError('a starting point is required for years balancing');
         // balance days up to years
         let newRelativeTo, oneYearDays;
@@ -2978,7 +2832,7 @@ export const ES = ObjectAssign({}, ES2020, {
         newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
         const dateUntil = ES.GetMethod(calendar, 'dateUntil');
         const untilOptions = ObjectCreate(null);
-        untilOptions.largestUnit = 'months';
+        untilOptions.largestUnit = 'month';
         let oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
         while (MathAbs(months) >= MathAbs(oneYearMonths)) {
           months -= oneYearMonths;
@@ -2987,12 +2841,12 @@ export const ES = ObjectAssign({}, ES2020, {
           const addOptions = ObjectCreate(null);
           newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
           const untilOptions = ObjectCreate(null);
-          untilOptions.largestUnit = 'months';
+          untilOptions.largestUnit = 'month';
           oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
         }
         break;
       }
-      case 'months': {
+      case 'month': {
         if (!calendar) throw new RangeError('a starting point is required for months balancing');
         // balance days up to months
         let newRelativeTo, oneMonthDays;
@@ -3005,7 +2859,7 @@ export const ES = ObjectAssign({}, ES2020, {
         }
         break;
       }
-      case 'weeks': {
+      case 'week': {
         if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
         // balance days up to weeks
         let newRelativeTo, oneWeekDays;
@@ -3139,8 +2993,8 @@ export const ES = ObjectAssign({}, ES2020, {
 
   DifferenceISODate: (y1, m1, d1, y2, m2, d2, largestUnit = 'days') => {
     switch (largestUnit) {
-      case 'years':
-      case 'months': {
+      case 'year':
+      case 'month': {
         const sign = -ES.CompareISODate(y1, m1, d1, y2, m2, d2);
         if (sign === 0) return { years: 0, months: 0, weeks: 0, days: 0 };
 
@@ -3151,7 +3005,7 @@ export const ES = ObjectAssign({}, ES2020, {
         let mid = ES.AddISODate(y1, m1, d1, years, 0, 0, 0, 'constrain');
         let midSign = -ES.CompareISODate(mid.year, mid.month, mid.day, y2, m2, d2);
         if (midSign === 0) {
-          return largestUnit === 'years'
+          return largestUnit === 'year'
             ? { years, months: 0, weeks: 0, days: 0 }
             : { years: 0, months: years * 12, weeks: 0, days: 0 };
         }
@@ -3163,7 +3017,7 @@ export const ES = ObjectAssign({}, ES2020, {
         mid = ES.AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
         midSign = -ES.CompareISODate(mid.year, mid.month, mid.day, y2, m2, d2);
         if (midSign === 0) {
-          return largestUnit === 'years'
+          return largestUnit === 'year'
             ? { years, months, weeks: 0, days: 0 }
             : { years: 0, months: months + years * 12, weeks: 0, days: 0 };
         }
@@ -3199,14 +3053,14 @@ export const ES = ObjectAssign({}, ES2020, {
           days = end.day + (ES.ISODaysInMonth(mid.year, mid.month) - mid.day);
         }
 
-        if (largestUnit === 'months') {
+        if (largestUnit === 'month') {
           months += years * 12;
           years = 0;
         }
         return { years, months, weeks: 0, days };
       }
-      case 'weeks':
-      case 'days': {
+      case 'week':
+      case 'day': {
         let larger, smaller, sign;
         if (ES.CompareISODate(y1, m1, d1, y2, m2, d2) < 0) {
           smaller = { year: y1, month: m1, day: d1 };
@@ -3225,7 +3079,7 @@ export const ES = ObjectAssign({}, ES2020, {
           years -= 1;
         }
         let weeks = 0;
-        if (largestUnit === 'weeks') {
+        if (largestUnit === 'week') {
           weeks = MathFloor(days / 7);
           days %= 7;
         }
@@ -3356,7 +3210,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
-    const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+    const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
     const untilOptions = { ...options, largestUnit: dateLargestUnit };
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
     // Signs of date part and time part may not agree; balance them together
@@ -3433,7 +3287,7 @@ export const ES = ObjectAssign({}, ES2020, {
       0,
       0,
       timeRemainderNs,
-      'hours'
+      'hour'
     );
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
@@ -3513,11 +3367,11 @@ export const ES = ObjectAssign({}, ES2020, {
   ) => {
     const largestUnit1 = ES.DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
     const largestUnit2 = ES.DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
-    const largestUnit = ES.LargerOfTwoTemporalDurationUnits(largestUnit1, largestUnit2);
+    const largestUnit = ES.LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (!relativeTo) {
-      if (largestUnit === 'years' || largestUnit === 'months' || largestUnit === 'weeks') {
+      if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week') {
         throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
       }
       years = months = weeks = 0;
@@ -3549,7 +3403,7 @@ export const ES = ObjectAssign({}, ES2020, {
       const secondAddOptions = ObjectCreate(null);
       const end = ES.CalendarDateAdd(calendar, intermediate, dateDuration2, secondAddOptions, dateAdd);
 
-      const dateLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', largestUnit);
+      const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
       const differenceOptions = ObjectCreate(null);
       differenceOptions.largestUnit = dateLargestUnit;
       ({ years, months, weeks, days } = ES.CalendarDateUntil(calendar, datePart, end, differenceOptions));
@@ -3599,7 +3453,7 @@ export const ES = ObjectAssign({}, ES2020, {
         µs2,
         ns2
       );
-      if (largestUnit !== 'years' && largestUnit !== 'months' && largestUnit !== 'weeks' && largestUnit !== 'days') {
+      if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
         // The user is only asking for a time difference, so return difference of instants.
         years = 0;
         months = 0;
@@ -3609,7 +3463,7 @@ export const ES = ObjectAssign({}, ES2020, {
           GetSlot(relativeTo, EPOCHNANOSECONDS),
           endNs,
           1,
-          'nanoseconds',
+          'nanosecond',
           'halfExpand'
         ));
         ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
@@ -3878,7 +3732,7 @@ export const ES = ObjectAssign({}, ES2020, {
       GetSlot(later, ISO_YEAR),
       GetSlot(later, ISO_MONTH),
       GetSlot(later, ISO_DAY),
-      'days'
+      'day'
     ).days;
   },
   MoveRelativeDate: (calendar, relativeTo, duration) => {
@@ -3937,11 +3791,11 @@ export const ES = ObjectAssign({}, ES2020, {
   ) => {
     if (
       !ES.IsTemporalZonedDateTime(relativeTo) ||
-      unit === 'years' ||
-      unit === 'months' ||
-      unit === 'weeks' ||
-      unit === 'days' ||
-      (unit === 'nanoseconds' && increment === 1)
+      unit === 'year' ||
+      unit === 'month' ||
+      unit === 'week' ||
+      unit === 'day' ||
+      (unit === 'nanosecond' && increment === 1)
     ) {
       return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
     }
@@ -4034,7 +3888,7 @@ export const ES = ObjectAssign({}, ES2020, {
         0,
         0,
         timeRemainderNs.toJSNumber(),
-        'hours'
+        'hour'
       ));
     }
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
@@ -4074,7 +3928,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // First convert time units up to days, if rounding to days or higher units.
     // If rounding relative to a ZonedDateTime, then some days may not be 24h.
     let dayLengthNs;
-    if (unit === 'years' || unit === 'months' || unit === 'weeks' || unit === 'days') {
+    if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
       nanoseconds = ES.TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
       let intermediate;
       if (zdtRelative) {
@@ -4089,7 +3943,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let total;
     switch (unit) {
-      case 'years': {
+      case 'year': {
         if (!calendar) throw new RangeError('A starting point is required for years rounding');
 
         // convert months and weeks to days by calculating difference(
@@ -4114,7 +3968,7 @@ export const ES = ObjectAssign({}, ES2020, {
         const thirdAddOptions = ObjectCreate(null);
         const daysLater = ES.CalendarDateAdd(calendar, relativeTo, { days }, thirdAddOptions, dateAdd);
         const untilOptions = ObjectCreate(null);
-        untilOptions.largestUnit = 'years';
+        untilOptions.largestUnit = 'year';
         const yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, daysLater, untilOptions).years;
         years += yearsPassed;
         const oldRelativeTo = relativeTo;
@@ -4140,7 +3994,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = months = weeks = days = 0;
         break;
       }
-      case 'months': {
+      case 'month': {
         if (!calendar) throw new RangeError('A starting point is required for months rounding');
 
         // convert weeks to days by calculating difference(relativeTo +
@@ -4182,7 +4036,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = weeks = days = 0;
         break;
       }
-      case 'weeks': {
+      case 'week': {
         if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
         // Weeks may be different lengths of days depending on the calendar,
         // convert days to weeks in a loop as described above under 'years'.
@@ -4204,7 +4058,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = days = 0;
         break;
       }
-      case 'days': {
+      case 'day': {
         const divisor = bigInt(dayLengthNs);
         nanoseconds = divisor.multiply(days).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
@@ -4213,7 +4067,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = 0;
         break;
       }
-      case 'hours': {
+      case 'hour': {
         const divisor = 3600e9;
         nanoseconds = bigInt(hours)
           .multiply(3600e9)
@@ -4228,7 +4082,7 @@ export const ES = ObjectAssign({}, ES2020, {
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       }
-      case 'minutes': {
+      case 'minute': {
         const divisor = 60e9;
         nanoseconds = bigInt(minutes)
           .multiply(60e9)
@@ -4242,7 +4096,7 @@ export const ES = ObjectAssign({}, ES2020, {
         seconds = milliseconds = microseconds = nanoseconds = 0;
         break;
       }
-      case 'seconds': {
+      case 'second': {
         const divisor = 1e9;
         nanoseconds = bigInt(seconds)
           .multiply(1e9)
@@ -4255,7 +4109,7 @@ export const ES = ObjectAssign({}, ES2020, {
         milliseconds = microseconds = nanoseconds = 0;
         break;
       }
-      case 'milliseconds': {
+      case 'millisecond': {
         const divisor = 1e6;
         nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
@@ -4264,7 +4118,7 @@ export const ES = ObjectAssign({}, ES2020, {
         microseconds = nanoseconds = 0;
         break;
       }
-      case 'microseconds': {
+      case 'microsecond': {
         const divisor = 1e3;
         nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
         total = nanoseconds.toJSNumber() / divisor;
@@ -4273,7 +4127,7 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds = 0;
         break;
       }
-      case 'nanoseconds': {
+      case 'nanosecond': {
         total = nanoseconds;
         nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
         break;
@@ -4406,15 +4260,9 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
 
 const nsPerTimeUnit = {
   hour: 3600e9,
-  hours: 3600e9,
   minute: 60e9,
-  minutes: 60e9,
   second: 1e9,
-  seconds: 1e9,
   millisecond: 1e6,
-  milliseconds: 1e6,
   microsecond: 1e3,
-  microseconds: 1e3,
-  nanosecond: 1,
-  nanoseconds: 1
+  nanosecond: 1
 };

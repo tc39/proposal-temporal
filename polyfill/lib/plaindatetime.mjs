@@ -379,9 +379,9 @@ export class PlainDateTime {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
@@ -473,9 +473,9 @@ export class PlainDateTime {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('days', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
@@ -571,7 +571,8 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, ['year', 'month', 'week']);
+    if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
       day: 1,

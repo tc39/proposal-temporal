@@ -323,14 +323,14 @@ export class Duration {
       nanoseconds
     );
     options = ES.GetOptionsObject(options);
-    let smallestUnit = ES.ToSmallestTemporalDurationUnit(options, undefined);
+    let smallestUnit = ES.ToSmallestTemporalUnit(options, undefined);
     let smallestUnitPresent = true;
     if (!smallestUnit) {
       smallestUnitPresent = false;
-      smallestUnit = 'nanoseconds';
+      smallestUnit = 'nanosecond';
     }
-    defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits(defaultLargestUnit, smallestUnit);
-    let largestUnit = ES.ToLargestTemporalDurationUnit(options);
+    defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
+    let largestUnit = ES.ToLargestTemporalUnit(options, undefined);
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;
@@ -342,19 +342,7 @@ export class Duration {
     }
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
-    const maximumIncrements = {
-      years: undefined,
-      months: undefined,
-      weeks: undefined,
-      days: undefined,
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
     let relativeTo = ES.ToRelativeTemporalObject(options);
 
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(
@@ -495,7 +483,8 @@ export class Duration {
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    const { precision, unit, increment } = ES.ToDurationSecondsStringPrecision(options);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
+    if (precision === 'minute') throw new RangeError('smallestUnit must not be "minute"');
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
   }
@@ -559,8 +548,8 @@ export class Duration {
     const shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
     const shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
     if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
-      ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'days', relativeTo));
-      ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'days', relativeTo));
+      ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'day', relativeTo));
+      ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'day', relativeTo));
     }
     ns1 = ES.TotalDurationNanoseconds(d1, h1, min1, s1, ms1, µs1, ns1, shift1);
     ns2 = ES.TotalDurationNanoseconds(d2, h2, min2, s2, ms2, µs2, ns2, shift2);

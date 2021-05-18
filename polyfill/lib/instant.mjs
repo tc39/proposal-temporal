@@ -7,6 +7,16 @@ import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
 
+const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
+const MAX_DIFFERENCE_INCREMENTS = {
+  hour: 24,
+  minute: 60,
+  second: 60,
+  millisecond: 1000,
+  microsecond: 1000,
+  nanosecond: 1000
+};
+
 export class Instant {
   constructor(epochNanoseconds) {
     // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
@@ -96,22 +106,13 @@ export class Instant {
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalInstant(other);
-    const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const maximumIncrements = {
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_DIFFERENCE_INCREMENTS[smallestUnit], false);
     const onens = GetSlot(this, EPOCHNANOSECONDS);
     const twons = GetSlot(other, EPOCHNANOSECONDS);
     let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
@@ -138,22 +139,13 @@ export class Instant {
   since(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalInstant(other);
-    const disallowedUnits = ['years', 'months', 'weeks', 'days'];
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalDurationUnit(options, 'nanoseconds', disallowedUnits);
-    const defaultLargestUnit = ES.LargerOfTwoTemporalDurationUnits('seconds', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, defaultLargestUnit, disallowedUnits);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
+    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const maximumIncrements = {
-      hours: 24,
-      minutes: 60,
-      seconds: 60,
-      milliseconds: 1000,
-      microseconds: 1000,
-      nanoseconds: 1000
-    };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_DIFFERENCE_INCREMENTS[smallestUnit], false);
     const onens = GetSlot(other, EPOCHNANOSECONDS);
     const twons = GetSlot(this, EPOCHNANOSECONDS);
     let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
@@ -181,7 +173,8 @@ export class Instant {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     if (options === undefined) throw new TypeError('options parameter is required');
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, ['day']);
+    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, DISALLOWED_UNITS);
+    if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
     const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
     const maximumIncrements = {
       hour: 24,
