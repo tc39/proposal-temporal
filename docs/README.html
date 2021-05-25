@@ -298,7 +298,7 @@ This is used for date/time arithmetic and for measuring differences between <cod
   minutes<span class="token operator">:</span> <span class="token number">20</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-duration<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span></code></pre><p>See <a href="./duration.html">Temporal.Duration Documentation</a> for detailed documentation.</p>
+duration<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span></code></pre><p>See <a href="./duration.html">Temporal.Duration Documentation</a> for detailed documentation.</p>
 <h4 id="balancing">Balancing</h4>
 <p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
 <p>See <a href="./balancing.html">Duration balancing</a> for more on this topic.</p>

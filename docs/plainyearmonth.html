@@ -473,11 +473,11 @@ ym<span class="token punctuation">.</span><span class="token function">subtract<
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;year&#39;</code> and <code>&#39;month&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
-The default is <code>&#39;months&#39;</code>, i.e., no rounding.</li>
+Valid values are <code>&#39;year&#39;</code> and <code>&#39;month&#39;</code>.
+The default is <code>&#39;month&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
@@ -495,7 +495,7 @@ The returned <code>Temporal.Duration</code>, when added to <code>yearMonth</code
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of one year and two months will become 14 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
 However, a difference of one month will still be one month even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.
-A value of <code>&#39;auto&#39;</code> means <code>&#39;years&#39;</code>.</p>
+A value of <code>&#39;auto&#39;</code> means <code>&#39;year&#39;</code>.</p>
 <p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
 These behave as in the <code>Temporal.Duration.round()</code> method, but increments of months and larger are allowed.
 Because rounding to calendar units requires a reference point, the first day of <code>yearMonth</code> is used as the starting point.
@@ -507,15 +507,15 @@ The default is to do no rounding.</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token comment">// => P12Y10M</span>
-ym<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P154M</span>
-other<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>ym<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'months'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -P154M</span>
+ym<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'month'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P154M</span>
+other<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>ym<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'month'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -P154M</span>
 
 <span class="token comment">// If you really need to calculate the difference between two YearMonths</span>
 <span class="token comment">// in days, you can eliminate the ambiguity by explicitly choosing the</span>
 <span class="token comment">// day of the month (and if applicable, the time of that day) from which</span>
 <span class="token comment">// you want to reckon the difference. For example, using the first of</span>
 <span class="token comment">// the month to calculate a number of days:</span>
-ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'days'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P4687D</span></code></pre><!-- prettier-ignore-end -->
+ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>other<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> day<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'day'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P4687D</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>yearMonth.<strong>since</strong>(<em>other</em>: Temporal.PlainYearMonth | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
@@ -523,11 +523,11 @@ ym<span class="token punctuation">.</span><span class="token function">toPlainDa
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;year&#39;</code> and <code>&#39;month&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;years&#39;</code> and <code>&#39;months&#39;</code>.
-The default is <code>&#39;months&#39;</code>, i.e., no rounding.</li>
+Valid values are <code>&#39;year&#39;</code> and <code>&#39;month&#39;</code>.
+The default is <code>&#39;month&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
@@ -541,7 +541,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 If <code>other</code> is later than <code>yearMonth</code> then the resulting duration will be negative.</p>
 <p>This method is similar to <code>Temporal.PlainYearMonth.prototype.until()</code>, but reversed.
 The returned <code>Temporal.Duration</code>, when subtracted from <code>yearMonth</code> using the same <code>options</code>, will yield <code>other</code>.
-Using default options, <code>ym1.since(ym2)</code> yields the same result as <code>ym1.until(ym2).negated()</code>, but results may differ with options like <code>{ largestUnit: &#39;months&#39; }</code>.</p>
+Using default options, <code>ym1.since(ym2)</code> yields the same result as <code>ym1.until(ym2).negated()</code>, but results may differ with options like <code>{ largestUnit: &#39;month&#39; }</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

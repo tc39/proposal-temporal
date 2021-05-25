@@ -426,11 +426,11 @@ Temporal<span class="token punctuation">.</span>now<span class="token punctuatio
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
 Valid values are the same as for <code>largestUnit</code>.
-The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
@@ -447,7 +447,7 @@ If <code>other</code> is earlier than <code>instant</code> then the resulting du
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
 A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&quot;seconds&quot;</code>, for example.
 However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&quot;hours&quot;</code>.
-A value of <code>&#39;auto&#39;</code> means <code>&#39;seconds&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;hours&#39;</code> or <code>&#39;minutes&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
+A value of <code>&#39;auto&#39;</code> means <code>&#39;second&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;hour&#39;</code> or <code>&#39;minute&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
 <p>By default, the largest unit in the result is seconds.
 Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.
 This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
@@ -465,15 +465,15 @@ Nanoseconds values will overflow and lose precision after about 104 days. Micros
 <!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js">startOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-16T13:32:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 endOfMoonMission <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-24T16:50:35Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-missionLength <span class="token operator">=</span> startOfMoonMission<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>endOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+missionLength <span class="token operator">=</span> startOfMoonMission<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>endOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hour'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT195H18M35S</span>
 missionLength<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// example output: '195 hours 18 minutes 35 seconds'</span>
 
 <span class="token comment">// Rounding, for example if you don't care about the minutes and seconds</span>
 approxMissionLength <span class="token operator">=</span> startOfMoonMission<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>endOfMoonMission<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-  largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span><span class="token punctuation">,</span>
-  smallestUnit<span class="token operator">:</span> <span class="token string">'hours'</span>
+  largestUnit<span class="token operator">:</span> <span class="token string">'hour'</span><span class="token punctuation">,</span>
+  smallestUnit<span class="token operator">:</span> <span class="token string">'hour'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT195H</span>
 
@@ -482,9 +482,9 @@ epoch <span class="token operator">=</span> Temporal<span class="token punctuati
 billion <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 epoch<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT1000000000S</span>
-epoch<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hours'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+epoch<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'hour'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT277777H46M40S</span>
-ns <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanoseconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ns <span class="token operator">=</span> epoch<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>billion<span class="token punctuation">,</span> <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'nanosecond'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT1000000000S</span>
 ns<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> nanoseconds<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT1000000000S</span>
@@ -494,7 +494,7 @@ ns<span class="token punctuation">.</span><span class="token function">add</span
 <span class="token comment">// explicitly using the corresponding calendar date in UTC:</span>
 epoch<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>
   billion<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-  <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'years'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'year'</span> <span class="token punctuation">}</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => P31Y8M8DT1H46M40S</span></code></pre><!-- prettier-ignore-end -->
 
@@ -504,11 +504,11 @@ epoch<span class="token punctuation">.</span><span class="token function">toZone
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
 Valid values are the same as for <code>largestUnit</code>.
-The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.

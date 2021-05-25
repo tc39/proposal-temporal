@@ -389,11 +389,11 @@ time<span class="token punctuation">.</span><span class="token function">subtrac
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
-The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
+The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
@@ -409,9 +409,9 @@ The returned <code>Temporal.Duration</code>, when added to <code>time</code> wit
 <p>If <code>other</code> is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
-A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&#39;seconds&#39;</code>, for example.
-However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&#39;hours&#39;</code>.
-A value of <code>&#39;auto&#39;</code> means <code>&#39;hours&#39;</code>.</p>
+A difference of two hours will become 7200 seconds when <code>largestUnit</code> is <code>&#39;second&#39;</code>, for example.
+However, a difference of 30 seconds will still be 30 seconds even if <code>largestUnit</code> is <code>&#39;hour&#39;</code>.
+A value of <code>&#39;auto&#39;</code> means <code>&#39;hour&#39;</code>.</p>
 <p>You can round the result using the <code>smallestUnit</code>, <code>roundingIncrement</code>, and <code>roundingMode</code> options.
 These behave as in the <code>Temporal.Duration.round()</code> method.
 The default is to do no rounding.</p>
@@ -424,7 +424,7 @@ time<span class="token punctuation">.</span><span class="token function">until</
 time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT34M11.903051894S</span>
 
 <span class="token comment">// Rounding, for example if you don't care about sub-seconds</span>
-time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'seconds'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+time<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// => PT2H25M48S</span></code></pre><!-- prettier-ignore-end -->
 
 <h3 id="since"><a class="heading-link" href="#since"></a>time.<strong>since</strong>(<em>other</em>: Temporal.PlainTime | object | string, <em>options</em>?: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
@@ -433,11 +433,11 @@ time<span class="token punctuation">.</span><span class="token function">until</
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>smallestUnit</code> (string): The smallest unit of time to round to in the resulting <code>Temporal.Duration</code> object.
-Valid values are <code>&#39;hours&#39;</code>, <code>&#39;minutes&#39;</code>, <code>&#39;seconds&#39;</code>, <code>&#39;milliseconds&#39;</code>, <code>&#39;microseconds&#39;</code>, and <code>&#39;nanoseconds&#39;</code>.
-The default is <code>&#39;nanoseconds&#39;</code>, i.e., no rounding.</li>
+Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
+The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
@@ -477,7 +477,7 @@ This option is required.</p>
 <p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
 For example, to round to increments of a half hour, use <code>smallestUnit: &#39;minute&#39;, roundingIncrement: 30</code>.</p>
 <p>The value given as <code>roundingIncrement</code> must divide evenly into the next highest unit after <code>smallestUnit</code>, and must not be equal to it.
-(For example, if <code>smallestUnit</code> is <code>&#39;minutes&#39;</code>, then the number of minutes given by <code>roundingIncrement</code> must divide evenly into 60 minutes, which is one hour.
+(For example, if <code>smallestUnit</code> is <code>&#39;minute&#39;</code>, then the number of minutes given by <code>roundingIncrement</code> must divide evenly into 60 minutes, which is one hour.
 The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, and 30.
 Instead of 60 minutes, use 1 hour.)</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
