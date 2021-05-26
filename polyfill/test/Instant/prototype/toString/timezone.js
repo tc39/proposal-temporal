@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tostring
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -21,15 +21,7 @@ const timeZone = new Proxy({
 
   toString() {
     actual.push("call timeZone.toString");
-    return {
-      get toString() {
-        actual.push("get name.toString");
-        return function() {
-          actual.push("call name.toString");
-          return "Custom/TimeZone";
-        };
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, "Custom/TimeZone", "name");
   },
 
   getOffsetNanosecondsFor(instantArg) {

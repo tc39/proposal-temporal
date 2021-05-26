@@ -521,16 +521,7 @@ var TemporalHelpers = {
         get() {
           actual.push(`get ${property}`);
           const value = prototypeDescrs[property].get.call(this);
-          return {
-            toString() {
-              actual.push(`toString ${property}`);
-              return value.toString();
-            },
-            valueOf() {
-              actual.push(`valueOf ${property}`);
-              return value;
-            },
-          };
+          return TemporalHelpers.toPrimitiveObserver(actual, value, property);
         },
       });
     });
@@ -684,16 +675,7 @@ var TemporalHelpers = {
             if (result === undefined) {
               return undefined;
             }
-            return {
-              valueOf() {
-                target._calendar.mergeFieldsReturnOperations.push(`valueOf ${key}`);
-                return result;
-              },
-              toString() {
-                target._calendar.mergeFieldsReturnOperations.push(`toString ${key}`);
-                return result;
-              },
-            };
+            return TemporalHelpers.toPrimitiveObserver(target._calendar.mergeFieldsReturnOperations, result, key);
           },
           has(target, key) {
             target._calendar.mergeFieldsReturnOperations.push(`has ${key}`);
@@ -703,5 +685,30 @@ var TemporalHelpers = {
       }
     }
     return new CalendarMergeFieldsGetters();
+  },
+
+  /*
+   * Returns an object that will append logs of any Gets or Calls of its valueOf
+   * or toString properties to the array calls. Both valueOf and toString will
+   * return the actual primitiveValue. propertyName is used in the log.
+   */
+  toPrimitiveObserver(calls, primitiveValue, propertyName) {
+    return {
+      get valueOf() {
+        calls.push(`get ${propertyName}.valueOf`);
+        return function () {
+          calls.push(`call ${propertyName}.valueOf`);
+          return primitiveValue;
+        };
+      },
+      get toString() {
+        calls.push(`get ${propertyName}.toString`);
+        return function () {
+          calls.push(`call ${propertyName}.toString`);
+          if (primitiveValue === undefined) return undefined;
+          return primitiveValue.toString();
+        };
+      },
+    };
   },
 };
