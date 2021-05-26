@@ -9,28 +9,20 @@ info: |
       1. ...
       1. Return ? DateFromFields(_calendar_, _fields_, _options_).
     1. Perform ? ToTemporalOverflow(_options_).
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const expected = [
   "get overflow",
-  "get toString",
-  "call toString",
+  "get overflow.toString",
+  "call overflow.toString",
 ];
 
 let actual = [];
 const object = {
   get overflow() {
     actual.push("get overflow");
-    return {
-      get toString() {
-        actual.push("get toString");
-        return function() {
-          actual.push("call toString");
-          return "reject";
-        };
-      },
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, "reject", "overflow");
   }
 };
 
@@ -38,6 +30,6 @@ const result = Temporal.PlainDate.from("2021-05-17", object);
 assert.compareArray(actual, expected, "Successful call");
 assert.sameValue(result.toString(), "2021-05-17");
 
-actual = [];
+actual.splice(0, actual.length);  // empty it for the next check
 assert.throws(RangeError, () => Temporal.PlainDate.from(7, object));
 assert.compareArray(actual, expected, "Failing call");

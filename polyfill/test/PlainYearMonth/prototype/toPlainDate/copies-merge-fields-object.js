@@ -13,11 +13,14 @@ includes: [compareArray.js, temporalHelpers.js]
 
 const expected = [
   "get monthCode",
-  "toString monthCode",
+  "get monthCode.toString",
+  "call monthCode.toString",
   "get year",
-  "valueOf year",
+  "get year.valueOf",
+  "call year.valueOf",
   "get day",  // first receiver fields, then input fields
-  "valueOf day",
+  "get day.valueOf",
+  "call day.valueOf",
 ];
 
 const calendar = TemporalHelpers.calendarMergeFieldsGetters();

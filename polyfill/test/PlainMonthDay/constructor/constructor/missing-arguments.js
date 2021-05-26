@@ -3,15 +3,16 @@
 
 /*---
 esid: sec-temporal.plainmonthday
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const expected = [
-  "valueOf month",
+  "get month.valueOf",
+  "call month.valueOf",
 ];
 const actual = [];
 const args = [
-  { valueOf() { actual.push("valueOf month"); return 1; } },
+  TemporalHelpers.toPrimitiveObserver(actual, 1, "month"),
 ];
 
 assert.throws(RangeError, () => new Temporal.PlainMonthDay(...args));

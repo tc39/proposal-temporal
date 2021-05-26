@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tozoneddatetime
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const actual = [];
@@ -27,15 +27,7 @@ const dateTime = Temporal.PlainDateTime.from("1975-02-02T14:25:36.123456789");
 const instant = Temporal.Instant.fromEpochNanoseconds(-205156799012345679n);
 
 const options = new Proxy({
-  disambiguation: {
-    get toString() {
-      actual.push("get disambiguation.toString");
-      return function() {
-        actual.push("call disambiguation.toString");
-        return "reject";
-      };
-    },
-  },
+  disambiguation: TemporalHelpers.toPrimitiveObserver(actual, "reject", "disambiguation"),
 }, {
   has(target, property) {
     actual.push(`has options.${property}`);

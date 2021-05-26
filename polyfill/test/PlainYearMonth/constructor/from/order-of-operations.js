@@ -3,17 +3,20 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const expected = [
   "get calendar",
   "get month",
-  "valueOf month",
+  "get month.valueOf",
+  "call month.valueOf",
   "get monthCode",
-  "toString monthCode",
+  "get monthCode.toString",
+  "call monthCode.toString",
   "get year",
-  "valueOf year",
+  "get year.valueOf",
+  "call year.valueOf",
 ];
 const actual = [];
 const fields = {
@@ -26,16 +29,7 @@ const argument = new Proxy(fields, {
     actual.push(`get ${key}`);
     if (key === "calendar") return Temporal.Calendar.from('iso8601');
     const result = target[key];
-    return {
-      valueOf() {
-        actual.push(`valueOf ${key}`);
-        return result;
-      },
-      toString() {
-        actual.push(`toString ${key}`);
-        return result.toString();
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
   has(target, key) {
     actual.push(`has ${key}`);

@@ -14,10 +14,12 @@ includes: [compareArray.js, temporalHelpers.js]
 
 const expected = [
   "get day",
-  "valueOf day",
+  "get day.valueOf",
+  "call day.valueOf",
   "get month", // PlainMonthDay.month property does not exist, no valueOf
   "get monthCode",
-  "toString monthCode",
+  "get monthCode.toString",
+  "call monthCode.toString",
   "get year", // undefined, no valueOf
 ];
 
