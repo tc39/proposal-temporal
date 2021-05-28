@@ -4,14 +4,14 @@
 /*---
 description: Temporal.PlainYearMonth.from handles a property bag if any value is Infinity
 esid: sec-temporal.plainyearmonth.from
+includes: [temporalHelpers.js]
 ---*/
 
 // constrain
 
 assert.throws(RangeError, () => Temporal.PlainYearMonth.from({ year: Infinity, month: 1 }, { overflow: 'constrain' }));
 let result = Temporal.PlainYearMonth.from({ year: 1970, month: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 12);
+TemporalHelpers.assertPlainYearMonth(result, 1970, 12, "M12");
 
 // reject
 

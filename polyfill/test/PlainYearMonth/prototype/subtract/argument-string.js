@@ -3,9 +3,9 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = Temporal.PlainYearMonth.from({ year: 2000, month: 5 });
 const result = instance.subtract("P3M");
-assert.sameValue(result.year, 2000, "year result");
-assert.sameValue(result.month, 2, "month result");
+TemporalHelpers.assertPlainYearMonth(result, 2000, 2, "M02");
