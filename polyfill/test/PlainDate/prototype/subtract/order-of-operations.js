@@ -67,7 +67,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.subtract(argument);
-assert.sameValue(result.year, 1999, "year result");
-assert.sameValue(result.month, 3, "month result");
-assert.sameValue(result.day, 25, "day result");
+TemporalHelpers.assertPlainDate(result, 1999, 3, "M03", 25);
 assert.compareArray(actual, expected, "order of operations");

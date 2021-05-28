@@ -4,19 +4,16 @@
 /*---
 description: Temporal.PlainDate.from handles a property bag if any value is Infinity
 esid: sec-temporal.plaindate.from
+includes: [temporalHelpers.js]
 ---*/
 
 // constrain
 
 assert.throws(RangeError, () => Temporal.PlainDate.from({ year: Infinity, month: 1, day: 1 }, { overflow: 'constrain' }));
 let result = Temporal.PlainDate.from({ year: 1970, month: Infinity, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 12);
-assert.sameValue(result.day, 1);
+TemporalHelpers.assertPlainDate(result, 1970, 12, "M12", 1);
 result = Temporal.PlainDate.from({ year: 1970, month: 1, day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 1970);
-assert.sameValue(result.month, 1);
-assert.sameValue(result.day, 31);
+TemporalHelpers.assertPlainDate(result, 1970, 1, "M01", 31);
 
 // reject
 
