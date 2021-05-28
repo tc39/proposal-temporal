@@ -45,6 +45,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.with(argument);
-assert.sameValue(result.monthCode, "M01", "monthCode result");
-assert.sameValue(result.day, 1, "day result");
+TemporalHelpers.assertPlainMonthDay(result, "M01", 1);
 assert.compareArray(actual, expected, "order of operations");

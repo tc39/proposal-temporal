@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainMonthDay.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plainmonthday.prototype.with
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainMonthDay(5, 2);
@@ -11,8 +12,7 @@ const instance = new Temporal.PlainMonthDay(5, 2);
 // constrain
 
 let result = instance.with({ day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "M05");
-assert.sameValue(result.day, 31);
+TemporalHelpers.assertPlainMonthDay(result, "M05", 31);
 
 // reject
 

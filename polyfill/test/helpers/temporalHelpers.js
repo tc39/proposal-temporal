@@ -68,6 +68,19 @@ var TemporalHelpers = {
   },
 
   /*
+   * assertPlainMonthDay(monthDay, monthCode, day[, description]):
+   *
+   * Shorthand for asserting that each field of a Temporal.PlainMonthDay is
+   * equal to an expected value. (Except the `calendar` property, since callers
+   * may want to assert either object equality with an object they put in there,
+   * or the result of monthDay.calendar.toString().)
+   */
+  assertPlainMonthDay(monthDay, monthCode, day, description = "") {
+    assert.sameValue(monthDay.monthCode, monthCode, `${description} monthCode result`);
+    assert.sameValue(monthDay.day, day, `${description} day result`);
+  },
+
+  /*
    * assertPlainTime(time, hour, ..., nanosecond[, description]):
    *
    * Shorthand for asserting that each field of a Temporal.PlainTime is equal to

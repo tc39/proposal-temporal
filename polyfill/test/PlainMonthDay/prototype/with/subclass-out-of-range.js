@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 let called = 0;
@@ -19,8 +19,7 @@ const instance = new MyMonthDay(11, 30);
 assert.sameValue(called, 1);
 
 const result = instance.with({ day: 31 });
-assert.sameValue(result.monthCode, "M11", "monthCode result");
-assert.sameValue(result.day, 30, "day result");
+TemporalHelpers.assertPlainMonthDay(result, "M11", 30);
 assert.sameValue(called, 1);
 
 assert.throws(RangeError, () => instance.with({ day: 31 }, { overflow: "reject" }));

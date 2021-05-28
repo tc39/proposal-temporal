@@ -3,14 +3,13 @@
 
 /*---
 esid: sec-temporal.plainmonthday.from
+includes: [temporalHelpers.js]
 ---*/
 
 const fields = { month: 2, day: 31 };
 
 const explicit = Temporal.PlainMonthDay.from(fields, undefined);
-assert.sameValue(explicit.monthCode, "M02", "default overflow is constrain");
-assert.sameValue(explicit.day, 29, "default overflow is constrain");
+TemporalHelpers.assertPlainMonthDay(explicit, "M02", 29, "default overflow is constrain");
 
 const implicit = Temporal.PlainMonthDay.from(fields);
-assert.sameValue(implicit.monthCode, "M02", "default overflow is constrain");
-assert.sameValue(implicit.day, 29, "default overflow is constrain");
+TemporalHelpers.assertPlainMonthDay(implicit, "M02", 29, "default overflow is constrain");
