@@ -23,4 +23,4 @@ assert.sameValue(implicit.months, 0, "default largest unit is hours");
 assert.sameValue(implicit.weeks, 0, "default largest unit is hours");
 assert.sameValue(implicit.days, 0, "default largest unit is hours");
 assert.sameValue(implicit.hours, 744, "default largest unit is hours");
-assert.sameValue(explicit.nanoseconds, 1, "default smallest unit is nanoseconds and no rounding");
+assert.sameValue(implicit.nanoseconds, 1, "default smallest unit is nanoseconds and no rounding");
