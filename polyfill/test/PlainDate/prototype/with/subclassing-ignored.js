@@ -11,9 +11,5 @@ TemporalHelpers.checkSubclassingIgnored(
   [2000, 5, 2],
   "with",
   [{ day: 20 }],
-  (result) => {
-    assert.sameValue(result.year, 2000, "year result");
-    assert.sameValue(result.month, 5, "month result");
-    assert.sameValue(result.day, 20, "day result");
-  },
+  (result) => TemporalHelpers.assertPlainDate(result, 2000, 5, "M05", 20),
 );

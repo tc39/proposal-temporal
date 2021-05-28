@@ -7,8 +7,11 @@ includes: [temporalHelpers.js]
 ---*/
 
 const customCalendar = {
+  era() { return undefined; },
+  eraYear() { return undefined; },
   year() { return 1900; },
   month() { return 2; },
+  monthCode() { return "M02"; },
   day() { return 5; },
   toString() { return "custom-calendar"; },
 };
@@ -19,9 +22,7 @@ TemporalHelpers.checkSubclassingIgnored(
   "withCalendar",
   [customCalendar],
   (result) => {
-    assert.sameValue(result.year, 1900, "year result");
-    assert.sameValue(result.month, 2, "month result");
-    assert.sameValue(result.day, 5, "day result");
+    TemporalHelpers.assertPlainDate(result, 1900, 2, "M02", 5);
     assert.sameValue(result.calendar, customCalendar, "calendar result");
   },
 );

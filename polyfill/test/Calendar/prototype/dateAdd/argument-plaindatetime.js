@@ -17,8 +17,6 @@ TemporalHelpers.checkPlainDateTimeConversionFastPath((datetime) => {
   const calendar = new Temporal.Calendar("iso8601");
   const duration = new Temporal.Duration(0, 1);
   const result = calendar.dateAdd(datetime, duration);
-  assert.sameValue(result.year, 2000, "year result");
-  assert.sameValue(result.month, 6, "month result");
-  assert.sameValue(result.day, 2, "day result");
+  TemporalHelpers.assertPlainDate(result, 2000, 6, "M06", 2);
   assert.sameValue(result.hour, undefined, "instance of PlainDate returned, not PlainDateTime");
 });

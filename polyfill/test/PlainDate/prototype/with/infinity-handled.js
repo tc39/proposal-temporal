@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainDate.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plaindate.prototype.with
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainDate(2000, 5, 2);
@@ -12,13 +13,9 @@ const instance = new Temporal.PlainDate(2000, 5, 2);
 
 assert.throws(RangeError, () => instance.with({ year: Infinity }, { overflow: 'constrain' }));
 let result = instance.with({ month: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 12);
-assert.sameValue(result.day, 2);
+TemporalHelpers.assertPlainDate(result, 2000, 12, "M12", 2);
 result = instance.with({ day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 5);
-assert.sameValue(result.day, 31);
+TemporalHelpers.assertPlainDate(result, 2000, 5, "M05", 31);
 
 // reject
 

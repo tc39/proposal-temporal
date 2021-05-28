@@ -28,6 +28,23 @@ var TemporalHelpers = {
   },
 
   /*
+   * assertPlainDate(date, year, ..., nanosecond[, description[, era, eraYear]]):
+   *
+   * Shorthand for asserting that each field of a Temporal.PlainDate is equal to
+   * an expected value. (Except the `calendar` property, since callers may want
+   * to assert either object equality with an object they put in there, or the
+   * result of date.calendar.toString().)
+   */
+  assertPlainDate(date, year, month, monthCode, day, description = "", era = undefined, eraYear = undefined) {
+    assert.sameValue(date.era, era, `${description} era result`);
+    assert.sameValue(date.eraYear, eraYear, `${description} eraYear result`);
+    assert.sameValue(date.year, year, `${description} year result`);
+    assert.sameValue(date.month, month, `${description} month result`);
+    assert.sameValue(date.monthCode, monthCode, `${description} monthCode result`);
+    assert.sameValue(date.day, day, `${description} day result`);
+  },
+
+  /*
    * assertPlainDateTime(datetime, year, ..., nanosecond[, description[, era, eraYear]]):
    *
    * Shorthand for asserting that each field of a Temporal.PlainDateTime is

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.from
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 ---*/
 
 const expected = [
@@ -46,10 +46,6 @@ const argument = new Proxy(fields, {
   },
 });
 const result = Temporal.PlainDate.from(argument);
-assert.sameValue(result.era, undefined, "era result");
-assert.sameValue(result.year, 1, "year result");
-assert.sameValue(result.month, 1, "month result");
-assert.sameValue(result.monthCode, "M01", "monthCode result");
-assert.sameValue(result.day, 1, "day result");
+TemporalHelpers.assertPlainDate(result, 1, 1, "M01", 1);
 assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

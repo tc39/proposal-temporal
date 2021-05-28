@@ -15,8 +15,6 @@ includes: [compareArray.js, temporalHelpers.js]
 
 TemporalHelpers.checkPlainDateTimeConversionFastPath((datetime, calendar) => {
   const result = Temporal.PlainDate.from(datetime);
-  assert.sameValue(result.year, 2000, "year result");
-  assert.sameValue(result.month, 5, "month result");
-  assert.sameValue(result.day, 2, "day result");
+  TemporalHelpers.assertPlainDate(result, 2000, 5, "M05", 2);
   assert.sameValue(result.calendar, calendar, "calendar result");
 });
