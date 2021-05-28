@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainYearMonth.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plainyearmonth.prototype.with
+includes: [temporalHelpers.js]
 ---*/
 
 const instance = new Temporal.PlainYearMonth(2000, 5);
@@ -12,8 +13,7 @@ const instance = new Temporal.PlainYearMonth(2000, 5);
 
 assert.throws(RangeError, () => instance.with({ year: Infinity }, { overflow: 'constrain' }));
 let result = instance.with({ month: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.year, 2000);
-assert.sameValue(result.month, 12);
+TemporalHelpers.assertPlainYearMonth(result, 2000, 12, "M12");
 
 // reject
 
