@@ -14,5 +14,5 @@ class MyInstant extends Temporal.Instant {
   }
 }
 
-assert.throws(RangeError, () => MyInstant.fromEpochMilliseconds(86400_00_000_000_001n));
+assert.throws(RangeError, () => MyInstant.fromEpochMilliseconds(86400_00_000_000_001));
 assert.sameValue(called, false);

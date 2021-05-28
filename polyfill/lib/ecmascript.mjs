@@ -19,15 +19,15 @@ const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
 
 import bigInt from 'big-integer';
-import Call from 'es-abstract/2020/Call.js';
-import GetMethod from 'es-abstract/2020/GetMethod.js';
-import IsInteger from 'es-abstract/2020/IsInteger.js';
-import ToInteger from 'es-abstract/2020/ToInteger.js';
-import ToLength from 'es-abstract/2020/ToLength.js';
-import ToNumber from 'es-abstract/2020/ToNumber.js';
-import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
-import ToString from 'es-abstract/2020/ToString.js';
-import Type from 'es-abstract/2020/Type.js';
+import Call from 'es-abstract/2020/Call';
+import GetMethod from 'es-abstract/2020/GetMethod';
+import IsInteger from 'es-abstract/2020/IsInteger';
+import ToInteger from 'es-abstract/2020/ToInteger';
+import ToLength from 'es-abstract/2020/ToLength';
+import ToNumber from 'es-abstract/2020/ToNumber';
+import ToPrimitive from 'es-abstract/2020/ToPrimitive';
+import ToString from 'es-abstract/2020/ToString';
+import Type from 'es-abstract/2020/Type';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
