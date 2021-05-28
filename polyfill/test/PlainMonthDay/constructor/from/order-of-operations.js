@@ -41,7 +41,6 @@ const argument = new Proxy(fields, {
   },
 });
 const result = Temporal.PlainMonthDay.from(argument);
-assert.sameValue(result.monthCode, "M01", "monthCode result");
-assert.sameValue(result.day, 1, "day result");
+TemporalHelpers.assertPlainMonthDay(result, "M01", 1);
 assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

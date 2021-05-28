@@ -4,16 +4,15 @@
 /*---
 description: Temporal.PlainMonthDay.from handles a property bag if any value is Infinity
 esid: sec-temporal.plainmonthday.from
+includes: [temporalHelpers.js]
 ---*/
 
 // constrain
 
 let result = Temporal.PlainMonthDay.from({ month: Infinity, day: 1 }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "M12");
-assert.sameValue(result.day, 1);
+TemporalHelpers.assertPlainMonthDay(result, "M12", 1);
 result = Temporal.PlainMonthDay.from({ month: 1, day: Infinity }, { overflow: 'constrain' });
-assert.sameValue(result.monthCode, "M01");
-assert.sameValue(result.day, 31);
+TemporalHelpers.assertPlainMonthDay(result, "M01", 31);
 
 // reject
 

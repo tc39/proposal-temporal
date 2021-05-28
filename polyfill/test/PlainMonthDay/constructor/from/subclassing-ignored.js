@@ -10,8 +10,5 @@ TemporalHelpers.checkSubclassingIgnoredStatic(
   Temporal.PlainMonthDay,
   "from",
   ["05-02"],
-  (result) => {
-    assert.sameValue(result.monthCode, "M05", "monthCode result");
-    assert.sameValue(result.day, 2, "day result");
-  },
+  (result) => TemporalHelpers.assertPlainMonthDay(result, "M05", 2),
 );
