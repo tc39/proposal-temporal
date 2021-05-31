@@ -2748,6 +2748,9 @@
   	if (typeof value === 'symbol') {
   		throw new $TypeError$1('Cannot convert a Symbol value to a number');
   	}
+  	if (typeof value === 'bigint') {
+  		throw new $TypeError$1('Conversion from \'BigInt\' to \'number\' is not allowed.');
+  	}
   	if (typeof value === 'string') {
   		if (isBinary(value)) {
   			return ToNumber($parseInteger($strSlice(value, 2), 2));
@@ -2985,6 +2988,8 @@
     GetSlots(container)[id] = value;
   }
 
+  var _excluded = ["month", "monthCode"],
+      _excluded2 = ["month", "monthCode", "year", "era", "eraYear"];
   var ArrayIncludes = Array.prototype.includes;
   var ArrayPrototypePush$2 = Array.prototype.push;
   var ObjectAssign$3 = Object.assign;
@@ -3282,7 +3287,7 @@
     mergeFields: function mergeFields(fields, additionalFields) {
       var month = fields.month,
           monthCode = fields.monthCode,
-          original = _objectWithoutProperties(fields, ["month", "monthCode"]);
+          original = _objectWithoutProperties(fields, _excluded);
 
       var newMonth = additionalFields.month,
           newMonthCode = additionalFields.monthCode;
@@ -5611,7 +5616,7 @@
           year = fields.year,
           era = fields.era,
           eraYear = fields.eraYear,
-          original = _objectWithoutProperties(fields, ["month", "monthCode", "year", "era", "eraYear"]);
+          original = _objectWithoutProperties(fields, _excluded2);
 
       var newMonth = additionalFields.month,
           newMonthCode = additionalFields.monthCode,
