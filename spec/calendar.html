@@ -290,10 +290,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-yearmonthfromfields" aoid="YearMonthFromFields">
-      <h1>YearMonthFromFields ( _calendar_, _fields_, _options_ )</h1>
+      <h1>YearMonthFromFields ( _calendar_, _fields_ [ , _options_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
+        1. If _options_ is not present, then
+          1. Set _options_ to *undefined*.
+        1. Else,
+          1. Assert: Type(_options_) is Object.
         1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
