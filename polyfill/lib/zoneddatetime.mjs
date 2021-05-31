@@ -750,14 +750,14 @@ export class ZonedDateTime {
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    return calendar.yearMonthFromFields(fields, {});
+    return ES.YearMonthFromFields(calendar, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
     const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-    return calendar.monthDayFromFields(fields, {});
+    return ES.MonthDayFromFields(calendar, fields);
   }
   getISOFields() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
