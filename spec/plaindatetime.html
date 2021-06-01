@@ -986,7 +986,7 @@
     <emu-clause id="sec-temporal-compareisodatetime" aoid="CompareISODateTime">
       <h1>CompareISODateTime ( _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ )</h1>
       <emu-alg>
-        1. Let _dateResult_ be ! CompareISODateTime(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
+        1. Let _dateResult_ be ! CompareISODate(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
         1. If _dateResult_ is not 0, then
           1. Return _dateResult_.
         1. Return ! CompareTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
