@@ -8,10 +8,16 @@ esid: sec-temporal.plainmonthday.prototype.tostring
 const calendar = {
   toString() { return "custom"; }
 };
-const monthday = new Temporal.PlainMonthDay(5, 2, calendar);
+const monthday1 = new Temporal.PlainMonthDay(5, 2);
+const monthday2 = new Temporal.PlainMonthDay(5, 2, calendar);
 
-const explicit = monthday.toString(undefined);
-assert.sameValue(explicit, "1972-05-02[u-ca=custom]", "default show-calendar option is auto");
+[
+  [monthday1, "05-02"],
+  [monthday2, "1972-05-02[u-ca=custom]"],
+].forEach(([monthday, expected]) => {
+  const explicit = monthday.toString(undefined);
+  assert.sameValue(explicit, expected, "default calendarName option is auto");
 
-const implicit = monthday.toString();
-assert.sameValue(implicit, "1972-05-02[u-ca=custom]", "default show-calendar option is auto");
+  const implicit = monthday.toString();
+  assert.sameValue(implicit, expected, "default calendarName option is auto");
+});
