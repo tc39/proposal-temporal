@@ -3,18 +3,19 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplaindatetime
+features: [Symbol]
 ---*/
 
-const toDateTime = Temporal.PlainDate.prototype.toPlainDateTime;
+const toPlainDateTime = Temporal.PlainDate.prototype.toPlainDateTime;
 
-assert.sameValue(typeof toDateTime, "function");
+assert.sameValue(typeof toPlainDateTime, "function");
 
-assert.throws(TypeError, () => toDateTime.call(undefined), "undefined");
-assert.throws(TypeError, () => toDateTime.call(null), "null");
-assert.throws(TypeError, () => toDateTime.call(true), "true");
-assert.throws(TypeError, () => toDateTime.call(""), "empty string");
-assert.throws(TypeError, () => toDateTime.call(Symbol()), "symbol");
-assert.throws(TypeError, () => toDateTime.call(1), "1");
-assert.throws(TypeError, () => toDateTime.call({}), "plain object");
-assert.throws(TypeError, () => toDateTime.call(Temporal.PlainDate), "Temporal.PlainDate");
-assert.throws(TypeError, () => toDateTime.call(Temporal.PlainDate.prototype), "Temporal.PlainDate.prototype");
+assert.throws(TypeError, () => toPlainDateTime.call(undefined), "undefined");
+assert.throws(TypeError, () => toPlainDateTime.call(null), "null");
+assert.throws(TypeError, () => toPlainDateTime.call(true), "true");
+assert.throws(TypeError, () => toPlainDateTime.call(""), "empty string");
+assert.throws(TypeError, () => toPlainDateTime.call(Symbol()), "symbol");
+assert.throws(TypeError, () => toPlainDateTime.call(1), "1");
+assert.throws(TypeError, () => toPlainDateTime.call({}), "plain object");
+assert.throws(TypeError, () => toPlainDateTime.call(Temporal.PlainDate), "Temporal.PlainDate");
+assert.throws(TypeError, () => toPlainDateTime.call(Temporal.PlainDate.prototype), "Temporal.PlainDate.prototype");

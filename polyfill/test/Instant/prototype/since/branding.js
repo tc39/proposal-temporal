@@ -1,6 +1,11 @@
 // Copyright (C) 2020 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
+/*---
+esid: sec-temporal.instant.prototype.since
+features: [Symbol]
+---*/
+
 const since = Temporal.Instant.prototype.since;
 
 assert.sameValue(typeof since, "function");

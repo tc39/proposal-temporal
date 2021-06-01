@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+features: [Symbol]
 ---*/
 
 const since = Temporal.PlainDate.prototype.since;
