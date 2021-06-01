@@ -15156,7 +15156,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        return calendar.yearMonthFromFields(fields, {});
+        return ES.YearMonthFromFields(calendar, fields);
       }
     }, {
       key: "toPlainMonthDay",
@@ -15165,7 +15165,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        return calendar.monthDayFromFields(fields, {});
+        return ES.MonthDayFromFields(calendar, fields);
       }
     }, {
       key: "getISOFields",
