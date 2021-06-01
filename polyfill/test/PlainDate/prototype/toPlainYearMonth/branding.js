@@ -3,18 +3,19 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplainyearmonth
+features: [Symbol]
 ---*/
 
-const toYearMonth = Temporal.PlainDate.prototype.toPlainYearMonth;
+const toPlainYearMonth = Temporal.PlainDate.prototype.toPlainYearMonth;
 
-assert.sameValue(typeof toYearMonth, "function");
+assert.sameValue(typeof toPlainYearMonth, "function");
 
-assert.throws(TypeError, () => toYearMonth.call(undefined), "undefined");
-assert.throws(TypeError, () => toYearMonth.call(null), "null");
-assert.throws(TypeError, () => toYearMonth.call(true), "true");
-assert.throws(TypeError, () => toYearMonth.call(""), "empty string");
-assert.throws(TypeError, () => toYearMonth.call(Symbol()), "symbol");
-assert.throws(TypeError, () => toYearMonth.call(1), "1");
-assert.throws(TypeError, () => toYearMonth.call({}), "plain object");
-assert.throws(TypeError, () => toYearMonth.call(Temporal.PlainDate), "Temporal.PlainDate");
-assert.throws(TypeError, () => toYearMonth.call(Temporal.PlainDate.prototype), "Temporal.PlainDate.prototype");
+assert.throws(TypeError, () => toPlainYearMonth.call(undefined), "undefined");
+assert.throws(TypeError, () => toPlainYearMonth.call(null), "null");
+assert.throws(TypeError, () => toPlainYearMonth.call(true), "true");
+assert.throws(TypeError, () => toPlainYearMonth.call(""), "empty string");
+assert.throws(TypeError, () => toPlainYearMonth.call(Symbol()), "symbol");
+assert.throws(TypeError, () => toPlainYearMonth.call(1), "1");
+assert.throws(TypeError, () => toPlainYearMonth.call({}), "plain object");
+assert.throws(TypeError, () => toPlainYearMonth.call(Temporal.PlainDate), "Temporal.PlainDate");
+assert.throws(TypeError, () => toPlainYearMonth.call(Temporal.PlainDate.prototype), "Temporal.PlainDate.prototype");

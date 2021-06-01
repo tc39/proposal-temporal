@@ -1,6 +1,11 @@
 // Copyright (C) 2020 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
+/*---
+esid: sec-temporal.instant.prototype.tojson
+features: [Symbol]
+---*/
+
 const toJSON = Temporal.Instant.prototype.toJSON;
 
 assert.sameValue(typeof toJSON, "function");
