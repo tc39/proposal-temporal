@@ -6,9 +6,13 @@ esid: sec-temporal.plaintime.prototype.tostring
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 987, 650);
+const expected = "12:34:56.98765";
 
 const explicit = time.toString(undefined);
-assert.sameValue(explicit, "12:34:56.98765", "default precision is auto and rounding is trunc");
+assert.sameValue(explicit, expected, "default precision is auto and no rounding");
+
+const propertyImplicit = time.toString({});
+assert.sameValue(propertyImplicit, expected, "default precision is auto and no rounding");
 
 const implicit = time.toString();
-assert.sameValue(implicit, "12:34:56.98765", "default precision is auto and rounding is trunc");
+assert.sameValue(implicit, expected, "default precision is auto and no rounding");
