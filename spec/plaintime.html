@@ -421,6 +421,7 @@
       </p>
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalTime_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_temporalTime_.[[ISOHour]])).
