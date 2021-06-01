@@ -8,18 +8,19 @@ esid: sec-temporal.zoneddatetime.prototype.tostring
 const calendar = {
   toString() { return "custom"; }
 };
-const datetime = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC", calendar);
+const datetime1 = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC");
+const datetime2 = new Temporal.ZonedDateTime(957270896_987_650_000n, "UTC", calendar);
 
-const explicit = datetime.toString(undefined);
-assert.sameValue(
-  explicit,
-  "2000-05-02T12:34:56.98765+00:00[UTC][u-ca=custom]",
-  "default show options are auto, precision is auto, and rounding is trunc"
-);
+[
+  [datetime1, "2000-05-02T12:34:56.98765+00:00[UTC]"],
+  [datetime2, "2000-05-02T12:34:56.98765+00:00[UTC][u-ca=custom]"],
+].forEach(([datetime, expected]) => {
+  const explicit = datetime.toString(undefined);
+  assert.sameValue(explicit, expected, "default show options are auto, precision is auto, and no rounding");
 
-const implicit = datetime.toString();
-assert.sameValue(
-  implicit,
-  "2000-05-02T12:34:56.98765+00:00[UTC][u-ca=custom]",
-  "default show options are auto, precision is auto, and rounding is trunc"
-);
+  const propertyImplicit = datetime.toString({});
+  assert.sameValue(propertyImplicit, expected, "default show options are auto, precision is auto, and no rounding");
+
+  const implicit = datetime.toString();
+  assert.sameValue(implicit, expected, "default show options are auto, precision is auto, and no rounding");
+});

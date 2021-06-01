@@ -8,18 +8,19 @@ esid: sec-temporal.plaindatetime.prototype.tostring
 const calendar = {
   toString() { return "custom"; }
 };
-const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0, calendar);
+const datetime1 = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0);
+const datetime2 = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0, calendar);
 
-const explicit = datetime.toString(undefined);
-assert.sameValue(
-  explicit,
-  "2000-05-02T12:34:56.98765[u-ca=custom]",
-  "default show-calendar option is auto, precision is auto, and rounding is trunc"
-);
+[
+  [datetime1, "2000-05-02T12:34:56.98765"],
+  [datetime2, "2000-05-02T12:34:56.98765[u-ca=custom]"],
+].forEach(([datetime, expected]) => {
+  const explicit = datetime.toString(undefined);
+  assert.sameValue(explicit, expected, "default calendarName option is auto, precision is auto, and no rounding");
 
-const implicit = datetime.toString();
-assert.sameValue(
-  implicit,
-  "2000-05-02T12:34:56.98765[u-ca=custom]",
-  "default show-calendar option is auto, precision is auto, and rounding is trunc"
-);
+  const propertyImplicit = datetime.toString({});
+  assert.sameValue(propertyImplicit, expected, "default calendarName option is auto, precision is auto, and no rounding");
+
+  const implicit = datetime.toString();
+  assert.sameValue(implicit, expected, "default calendarName option is auto, precision is auto, and no rounding");
+});

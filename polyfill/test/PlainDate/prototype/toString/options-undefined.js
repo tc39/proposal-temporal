@@ -8,10 +8,16 @@ esid: sec-temporal.plaindate.prototype.tostring
 const calendar = {
   toString() { return "custom"; }
 };
-const date = new Temporal.PlainDate(2000, 5, 2, calendar);
+const date1 = new Temporal.PlainDate(2000, 5, 2);
+const date2 = new Temporal.PlainDate(2000, 5, 2, calendar);
 
-const explicit = date.toString(undefined);
-assert.sameValue(explicit, "2000-05-02[u-ca=custom]", "default show-calendar option is auto");
+[
+  [date1, "2000-05-02"],
+  [date2, "2000-05-02[u-ca=custom]"],
+].forEach(([date, expected]) => {
+  const explicit = date.toString(undefined);
+  assert.sameValue(explicit, expected, "default calendarName option is auto");
 
-const implicit = date.toString();
-assert.sameValue(implicit, "2000-05-02[u-ca=custom]", "default show-calendar option is auto");
+  const implicit = date.toString();
+  assert.sameValue(implicit, expected, "default calendarName option is auto");
+});
