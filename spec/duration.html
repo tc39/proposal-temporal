@@ -894,12 +894,12 @@
           1. Assert: _largestUnit_ is *"nanosecond"*.
         1. Return the new Record {
           [[Days]]: 𝔽(_days_),
-          [[Hours]]: 𝔽(_hours_) × _sign_,
-          [[Minutes]]: 𝔽(_minutes_) × _sign_,
-          [[Seconds]]: 𝔽(_seconds_) × _sign_,
-          [[Milliseconds]]: 𝔽(_milliseconds_) × _sign_,
-          [[Microseconds]]: 𝔽(_microseconds_) × _sign_,
-          [[Nanoseconds]]: 𝔽(_nanoseconds_) × _sign_
+          [[Hours]]: 𝔽(_hours_ × _sign_),
+          [[Minutes]]: 𝔽(_minutes_ × _sign_),
+          [[Seconds]]: 𝔽(_seconds_ × _sign_),
+          [[Milliseconds]]: 𝔽(_milliseconds_ × _sign_),
+          [[Microseconds]]: 𝔽(_microseconds_ × _sign_),
+          [[Nanoseconds]]: 𝔽(_nanoseconds_ × _sign_)
           }.
       </emu-alg>
     </emu-clause>
