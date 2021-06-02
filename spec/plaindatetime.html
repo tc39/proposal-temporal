@@ -913,7 +913,7 @@
           1. Let _result_ be ? ParseTemporalDateTimeString(_string_).
           1. If ! IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
           1. If ! IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
-        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
+          1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
