@@ -627,7 +627,7 @@
         1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _zonedDateTime_.[[Calendar]]).
         1. Let _calendar_ be ? ConsolidateCalendars(_zonedDateTime_.[[Calendar]], _plainDate_.[[Calendar]]).
         1. Let _resultPlainDateTime_ be ? CreateTemporalDateTime(_plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], _plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]], _calendar_).
-        1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _resultPlainDateTime_, *"compatible"*).
+        1. Set _instant_ to ? BuiltinTimeZoneGetInstantFor(_timeZone_, _resultPlainDateTime_, *"compatible"*).
         1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
