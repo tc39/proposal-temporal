@@ -3,9 +3,10 @@
 
 /*---
 esid: sec-get-temporal.instant.prototype.epochmicroseconds
+features: [Symbol]
 ---*/
 
-const epochMicroseconds = Object.getOwnPropertyDescriptor(Temporal.Instant.prototype, 'epochMicroseconds').get;
+const epochMicroseconds = Object.getOwnPropertyDescriptor(Temporal.Instant.prototype, "epochMicroseconds").get;
 
 assert.sameValue(typeof epochMicroseconds, "function");
 
