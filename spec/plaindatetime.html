@@ -838,7 +838,7 @@
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integer Number values.
         1. Assert: ! IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Assert: ! IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. Let _date_ be ! MakeDay(_year_, _month_, _day_).
+        1. Let _date_ be ! MakeDay(_year_, _month_ − *1*<sub>𝔽</sub>, _day_).
         1. Let _time_ be ! MakeTime(_hour_, _minute_, _second_, _millisecond_).
         1. Let _ms_ be ! MakeDate(_date_, _time_).
         1. Assert: _ms_ is finite.
