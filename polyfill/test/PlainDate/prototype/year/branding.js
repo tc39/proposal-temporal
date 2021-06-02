@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.year
+features: [Symbol]
 ---*/
 
 const year = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "year").get;
