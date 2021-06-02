@@ -949,6 +949,73 @@ var TemporalHelpers = {
   },
 
   /*
+   * springForwardFallBackTimeZone():
+   *
+   * This returns an instance of a custom time zone class that implements one
+   * single spring-forward/fall-back transition, for the purpose of testing the
+   * disambiguation option, without depending on system time zone data.
+   *
+   * The spring-forward occurs at epoch second 954669600 (2000-04-02T02:00
+   * local) and goes from offset -08:00 to -07:00.
+   *
+   * The fall-back occurs at epoch second 972810000 (2000-10-29T02:00 local) and
+   * goes from offset -07:00 to -08:00.
+   */
+  springForwardFallBackTimeZone() {
+    const { compare } = Temporal.PlainDateTime;
+    const springForwardLocal = new Temporal.PlainDateTime(2000, 4, 2, 2);
+    const springForwardEpoch = 954669600_000_000_000n;
+    const fallBackLocal = new Temporal.PlainDateTime(2000, 10, 29, 1);
+    const fallBackEpoch = 972810000_000_000_000n;
+    const winterOffset = new Temporal.TimeZone('-08:00');
+    const summerOffset = new Temporal.TimeZone('-07:00');
+
+    class SpringForwardFallBackTimeZone extends Temporal.TimeZone {
+      constructor() {
+        super("-08:00");
+      }
+
+      getOffsetNanosecondsFor(instant) {
+        if (instant.epochNanoseconds < springForwardEpoch ||
+          instant.epochNanoseconds >= fallBackEpoch) {
+          return winterOffset.getOffsetNanosecondsFor(instant);
+        }
+        return summerOffset.getOffsetNanosecondsFor(instant);
+      }
+
+      getPossibleInstantsFor(datetime) {
+        if (compare(datetime, springForwardLocal) >= 0 && compare(datetime, springForwardLocal.add({ hours: 1 })) < 0) {
+          return [];
+        }
+        if (compare(datetime, fallBackLocal) >= 0 && compare(datetime, fallBackLocal.add({ hours: 1 })) < 0) {
+          return [summerOffset.getInstantFor(datetime), winterOffset.getInstantFor(datetime)];
+        }
+        if (compare(datetime, springForwardLocal) < 0 || compare(datetime, fallBackLocal) >= 0) {
+          return [winterOffset.getInstantFor(datetime)];
+        }
+        return [summerOffset.getInstantFor(datetime)];
+      }
+
+      getPreviousTransition(instant) {
+        if (instant.epochNanoseconds > fallBackEpoch) return new Temporal.Instant(fallBackEpoch);
+        if (instant.epochNanoseconds > springForwardEpoch) return new Temporal.Instant(springForwardEpoch);
+        return null;
+      }
+
+      getNextTransition(instant) {
+        if (instant.epochNanoseconds < springForwardEpoch) return new Temporal.Instant(springForwardEpoch);
+        if (instant.epochNanoseconds < fallBackEpoch) return new Temporal.Instant(fallBackEpoch);
+        return null;
+      }
+
+      toString() {
+        return "Custom/Spring_Fall";
+      }
+    }
+    return new SpringForwardFallBackTimeZone();
+  },
+
+  /*
    * Returns an object that will append logs of any Gets or Calls of its valueOf
    * or toString properties to the array calls. Both valueOf and toString will
    * return the actual primitiveValue. propertyName is used in the log.
