@@ -360,11 +360,11 @@ describe('Intl', () => {
           'gregory: 1/1/1\n' +
           'hebrew: 18 Tevet 3761\n' +
           'indian: 10/11/-78 Saka\n' +
-          'islamic: -7/20/-639 AH\n' +
+          'islamic: 5/20/-640 AH\n' +
           'islamic-umalqura: 5/18/-640 AH\n' +
           'islamic-tbla: 5/19/-640 AH\n' +
           'islamic-civil: 5/18/-640 AH\n' +
-          'islamic-rgsa: -7/20/-639 AH\n' +
+          'islamic-rgsa: 5/20/-640 AH\n' +
           'islamicc: 5/18/-640 AH\n' +
           'japanese: 1/3/-643 Taika (645–650)\n' +
           'persian: 10/11/-621 AP\n' +
@@ -432,17 +432,17 @@ describe('Intl', () => {
         year2000: { year: 1921, month: 10, day: 11, era: 'saka' },
         // with() fails due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
         // from() succeeds because the bug only gets triggered before 1/1/1 ISO.
-        // Fixed in Node 15
+        // Fixed in later versions of Node 14/15/16
         year1: {
-          with: { nodeBefore15: RangeError, year: -78, month: 10, day: 11, era: 'saka' },
+          with: { node12: RangeError, year: -78, month: 10, day: 11, era: 'saka' },
           from: { year: -78, month: 10, day: 11, era: 'saka' }
         }
       },
       // Older islamic dates will fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10527
-      // Fixed in Node 15
+      // Fixed in later versions of Node 14/15/16
       islamic: {
         year2000: { year: 1420, month: 9, day: 25, era: 'ah' },
-        year1: { nodeBefore15: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
+        year1: { node12: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
       },
       'islamic-umalqura': {
         year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
@@ -458,7 +458,7 @@ describe('Intl', () => {
       },
       'islamic-rgsa': {
         year2000: { year: 1420, month: 9, day: 25, era: 'ah' },
-        year1: { nodeBefore15: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
+        year1: { node12: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
       },
       islamicc: {
         year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
@@ -504,8 +504,7 @@ describe('Intl', () => {
         };
         const fromValues = getValues('from');
         const fromErrorExpected =
-          fromValues === RangeError ||
-          ((nodeVersion === '14' || nodeVersion === '12') && fromValues.nodeBefore15 === RangeError);
+          fromValues === RangeError || (nodeVersion === '12' && fromValues.node12 === RangeError);
         itOrSkip(id)(`from: ${id} ${name} ${fromErrorExpected ? ' (throws)' : ''}`, () => {
           const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const values = fromValues;
@@ -600,8 +599,7 @@ describe('Intl', () => {
         });
         const withValues = getValues('with');
         const withErrorExpected =
-          withValues === RangeError ||
-          ((nodeVersion === '14' || nodeVersion === '12') && withValues.nodeBefore15 === RangeError);
+          withValues === RangeError || (nodeVersion === '12' && withValues.node12 === RangeError);
         itOrSkip(id)(`with: ${id} ${name} ${withErrorExpected ? ' (throws)' : ''}`, () => {
           const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const inCal = date.withCalendar(id);
