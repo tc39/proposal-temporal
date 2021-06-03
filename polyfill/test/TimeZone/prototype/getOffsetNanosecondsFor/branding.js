@@ -1,6 +1,11 @@
 // Copyright (C) 2020 Igalia, S.L. All rights reserved.
 // This code is governed by the BSD license found in the LICENSE file.
 
+/*---
+esid: sec-temporal.timezone.prototype.getoffsetnanosecondsfor
+features: [Symbol]
+---*/
+
 const getOffsetNanosecondsFor = Temporal.TimeZone.prototype.getOffsetNanosecondsFor;
 
 assert.sameValue(typeof getOffsetNanosecondsFor, "function");
