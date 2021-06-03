@@ -5,14 +5,14 @@ on:
     branches:
       - main
 jobs:
-  test-polyfill-node15:
+  test-polyfill-node16:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: use node.js v15.x
+    - name: use node.js v16.x
       uses: actions/setup-node@v1
       with:
-        node-version: 15.x
+        node-version: 16.x
     - run: npm ci
     - run: npm run codecov:tests
   test-polyfill-node14:
@@ -39,20 +39,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: use node.js v15.x
+    - name: use node.js v16.x
       uses: actions/setup-node@v1
       with:
-        node-version: 15.x
+        node-version: 16.x
     - run: npm ci
     - run: npm run codecov:test262
-  test-cookbook-node15:
+  test-cookbook-node16:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: use node.js v15.x
+    - name: use node.js v16.x
       uses: actions/setup-node@v1
       with:
-        node-version: 15.x
+        node-version: 16.x
     - run: npm ci
     - run: npm run test-cookbook
   test-cookbook-node14:
