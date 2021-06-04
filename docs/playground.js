@@ -10543,6 +10543,7 @@
     }, {
       key: "getOffsetStringFor",
       value: function getOffsetStringFor(instant) {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         instant = ES.ToTemporalInstant(instant);
         return ES.BuiltinTimeZoneGetOffsetStringFor(this, instant);
       }
@@ -10558,6 +10559,7 @@
       key: "getInstantFor",
       value: function getInstantFor(dateTime) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         dateTime = ES.ToTemporalDateTime(dateTime);
         options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
