@@ -6578,12 +6578,17 @@
       }
 
       var digits = options.fractionalSecondDigits;
-      if (digits === undefined || digits === 'auto') return {
-        precision: 'auto',
-        unit: 'nanosecond',
-        increment: 1
-      };
-      digits = ES.ToNumber(digits);
+      if (digits === undefined) digits = 'auto';
+
+      if (ES.Type(digits) !== 'Number') {
+        digits = ES.ToString(digits);
+        if (digits === 'auto') return {
+          precision: 'auto',
+          unit: 'nanosecond',
+          increment: 1
+        };
+        throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digits));
+      }
 
       if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
         throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digits));
