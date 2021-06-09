@@ -842,7 +842,7 @@
         1. Let _time_ be ! MakeTime(_hour_, _minute_, _second_, _millisecond_).
         1. Let _ms_ be ! MakeDate(_date_, _time_).
         1. Assert: _ms_ is finite.
-        1. Return _ms_ × 1,000,000 + _microsecond_ × 1,000 + _nanosecond_.
+        1. Return _ms_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
       </emu-alg>
     </emu-clause>
 
