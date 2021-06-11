@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.getisofields
 description: Correct field names on the object returned from getISOFields
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 654, 321);

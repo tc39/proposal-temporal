@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.era
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const era = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "era").get;

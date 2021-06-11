@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.getisofields
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getISOFields = Temporal.PlainTime.prototype.getISOFields;

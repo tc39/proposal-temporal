@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.subtract
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const subtract = Temporal.ZonedDateTime.prototype.subtract;

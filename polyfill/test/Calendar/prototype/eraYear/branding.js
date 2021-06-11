@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.erayear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const eraYear = Temporal.Calendar.prototype.eraYear;

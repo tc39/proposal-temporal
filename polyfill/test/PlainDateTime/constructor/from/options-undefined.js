@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.from
+features: [Temporal]
 ---*/
 
 const fields = { year: 2000, month: 13, day: 2 };

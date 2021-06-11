@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.from
+features: [Temporal]
 ---*/
 
 class CustomTimeZone extends Temporal.TimeZone {}

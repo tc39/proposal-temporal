@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.epochnanoseconds
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "epochNanoseconds");

@@ -29,6 +29,7 @@ info: |
     sec-temporal.plaindatetime.prototype.until step 3:
       3. Set _other_ ? ToTemporalDateTime(_other_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.add
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = Temporal.PlainDateTime.from({ year: 2000, month: 5, day: 2, minute: 34, second: 56, millisecond: 987, microsecond: 654, nanosecond: 321 });

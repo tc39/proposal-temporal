@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.since
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const since = Temporal.PlainYearMonth.prototype.since;

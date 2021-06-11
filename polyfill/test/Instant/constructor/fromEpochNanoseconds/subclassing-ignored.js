@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.fromepochnanoseconds
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkSubclassingIgnoredStatic(

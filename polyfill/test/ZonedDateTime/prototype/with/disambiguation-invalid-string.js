@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"disambiguation"*, « String », « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     sec-temporal.zoneddatetime.protoype.with step 14:
       14. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

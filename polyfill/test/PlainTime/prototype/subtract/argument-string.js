@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaintime.prototype.subtract
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = Temporal.PlainTime.from({ hour: 12, minute: 34, second: 56, millisecond: 987, microsecond: 654, nanosecond: 321 });

@@ -12,6 +12,7 @@ info: |
     sec-temporal.plaintime.prototype.with step 11:
       11. Let _overflow_ be ? ToTemporalOverflow(_options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12);

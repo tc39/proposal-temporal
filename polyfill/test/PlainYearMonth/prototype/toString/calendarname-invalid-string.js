@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, « String », « *"auto"*, *"always"*, *"never"* », *"auto"*).
     sec-temporal.plainyearmonth.protoype.tostring step 4:
       4. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 5);

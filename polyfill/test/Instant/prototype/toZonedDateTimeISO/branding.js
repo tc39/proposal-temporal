@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetimeiso
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toZonedDateTimeISO = Temporal.Instant.prototype.toZonedDateTimeISO;

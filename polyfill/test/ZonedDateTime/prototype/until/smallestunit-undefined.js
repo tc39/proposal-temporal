@@ -5,6 +5,7 @@
 esid: sec-temporal.zoneddatetime.prototype.until
 description: Fallback value for smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.ZonedDateTime(1_000_000_000_000_000_000n, "UTC");

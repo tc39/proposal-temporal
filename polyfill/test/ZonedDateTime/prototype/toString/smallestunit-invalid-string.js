@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
 description: RangeError thrown when smallestUnit option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_123_987_500n, "UTC");

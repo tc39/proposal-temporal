@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.withcalendar
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const withCalendar = Temporal.PlainDate.prototype.withCalendar;

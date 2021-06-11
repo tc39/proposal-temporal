@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dateuntil
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dateUntil = Temporal.Calendar.prototype.dateUntil;

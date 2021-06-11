@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+features: [Temporal]
 ---*/
 
 const explicit = new Temporal.PlainTime(undefined);

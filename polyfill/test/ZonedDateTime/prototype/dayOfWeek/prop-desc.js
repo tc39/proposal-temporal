@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.dayofweek
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "dayOfWeek");

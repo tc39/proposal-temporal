@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.from
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const dateTimeString = "1975-02-02T14:25:36.123456789";

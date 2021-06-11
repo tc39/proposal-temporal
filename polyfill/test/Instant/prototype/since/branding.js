@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.since
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const since = Temporal.Instant.prototype.since;

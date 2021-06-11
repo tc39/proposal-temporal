@@ -11,6 +11,7 @@ info: |
       5. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », *undefined*, 1).
     sec-temporal.duration.prototype.round step 18:
       18. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(0, 0, 0, 4, 12, 34, 56, 987, 654, 321);

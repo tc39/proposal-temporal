@@ -38,6 +38,7 @@ info: |
     sec-temporal.zoneddatetime.from step 3:
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const shiftInstant = new Temporal.Instant(3661_001_001_001n);

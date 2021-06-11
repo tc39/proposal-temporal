@@ -26,6 +26,7 @@ info: |
       9. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _isoCalendar_).
     sec-get-temporal.zoneddatetime.prototype.tostring step 9:
       9. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _showTimeZone_, _showOffset_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

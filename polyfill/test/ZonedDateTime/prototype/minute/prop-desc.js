@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.minute
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "minute");

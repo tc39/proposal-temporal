@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.valueof
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const valueOf = Temporal.PlainDate.prototype.valueOf;

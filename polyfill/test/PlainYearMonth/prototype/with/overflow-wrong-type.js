@@ -14,6 +14,7 @@ info: |
     sec-temporal.plainyearmonth.prototype.with step 16:
       16. Return ? YearMonthFromFields(_calendar_, _fields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 5);

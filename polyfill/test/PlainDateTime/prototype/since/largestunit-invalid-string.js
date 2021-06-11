@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.since
 description: RangeError thrown when largestUnit option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 0, 0, 0);

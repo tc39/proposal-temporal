@@ -5,6 +5,7 @@
 description: Temporal.PlainYearMonth.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plainyearmonth.prototype.with
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainYearMonth(2000, 5);

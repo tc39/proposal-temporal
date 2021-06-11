@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainyearmonth.prototype.getisofields
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 let called = 0;

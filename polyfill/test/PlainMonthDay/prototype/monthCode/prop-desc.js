@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.monthcode
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.PlainMonthDay.prototype, "monthCode");

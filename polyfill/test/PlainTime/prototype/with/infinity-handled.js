@@ -5,6 +5,7 @@
 description: Temporal.PlainTime.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plaintime.prototype.with
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

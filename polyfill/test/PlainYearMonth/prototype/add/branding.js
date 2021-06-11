@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const add = Temporal.PlainYearMonth.prototype.add;

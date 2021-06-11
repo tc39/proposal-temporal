@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.valueof
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const valueOf = Temporal.Instant.prototype.valueOf;

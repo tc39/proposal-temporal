@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.add
+features: [Temporal]
 ---*/
 
 const fields = ["hours", "minutes", "seconds", "milliseconds", "microseconds", "nanoseconds"];

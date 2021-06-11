@@ -12,6 +12,7 @@ info: |
     sec-temporal.plaindate.protoype.tostring step 4:
       4. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const calendar = {

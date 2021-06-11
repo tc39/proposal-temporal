@@ -5,6 +5,7 @@
 esid: sec-temporal.instant.prototype.round
 description: Fallback value for roundingMode option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_123_987_500n);

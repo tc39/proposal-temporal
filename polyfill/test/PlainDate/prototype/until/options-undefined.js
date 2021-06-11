@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.until
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainDate(2000, 5, 2);

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tojson
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toJSON = Temporal.Instant.prototype.toJSON;

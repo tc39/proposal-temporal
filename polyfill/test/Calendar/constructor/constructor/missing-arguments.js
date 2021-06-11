@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar
+features: [Temporal]
 ---*/
 
 assert.throws(RangeError, () => new Temporal.Calendar());

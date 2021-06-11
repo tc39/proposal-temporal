@@ -5,6 +5,7 @@
 esid: sec-temporal.duration.prototype.round
 description: Fallback value for smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(0, 0, 0, 0, 1, 2, 3, 123, 456, 789);

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

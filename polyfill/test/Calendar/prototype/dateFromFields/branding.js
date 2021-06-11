@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.datefromfields
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dateFromFields = Temporal.Calendar.prototype.dateFromFields;

@@ -19,6 +19,7 @@ info: |
         a. Perform ? ToTemporalOverflow(_options_).
         b. Return ...
       3. Return ? ToTemporalDate(_item_, _options_).
+features: [Temporal]
 ---*/
 
 const validValues = [

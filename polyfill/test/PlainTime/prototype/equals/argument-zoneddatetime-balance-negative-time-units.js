@@ -28,6 +28,7 @@ info: |
         ii. 1. Set _plainDateTime_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
     sec-temporal.plaintime.prototype.equals step 3:
       3. Set _other_ to ? ToTemporalTime(_other_).
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

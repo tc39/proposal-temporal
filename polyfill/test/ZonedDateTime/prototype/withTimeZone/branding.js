@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.withtimezone
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const withTimeZone = Temporal.ZonedDateTime.prototype.withTimeZone;

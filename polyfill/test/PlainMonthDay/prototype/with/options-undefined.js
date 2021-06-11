@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
+features: [Temporal]
 ---*/
 
 const monthday = new Temporal.PlainMonthDay(2, 2);

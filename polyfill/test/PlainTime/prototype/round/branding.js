@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.round
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const round = Temporal.PlainTime.prototype.round;

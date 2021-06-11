@@ -9,6 +9,7 @@ info: |
     7. Let date1 be ? CreateTemporalDate(balanceResult.[[Year]], balanceResult.[[Month]], balanceResult.[[Day]]).
     8. Let date2 be ? CreateTemporalDate(y2, mon2, d2).
     11. Let dateDifference be ? CalendarDateUntil(calendar, date1, date2, untilOptions).
+features: [Temporal]
 ---*/
 
 class Calendar extends Temporal.Calendar {

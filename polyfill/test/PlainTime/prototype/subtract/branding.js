@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.subtract
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const subtract = Temporal.PlainTime.prototype.subtract;

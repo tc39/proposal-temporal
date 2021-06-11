@@ -12,6 +12,7 @@ info: |
     sec-temporal.zoneddatetime.protoype.with step 14:
       14. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const timeZone = TemporalHelpers.springForwardFallBackTimeZone();

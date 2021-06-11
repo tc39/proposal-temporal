@@ -18,6 +18,7 @@ info: |
     sec-temporal.duration.prototype.tostring step 4:
       4. Let _precision_ be ? ToSecondsStringPrecision(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 650, 0);

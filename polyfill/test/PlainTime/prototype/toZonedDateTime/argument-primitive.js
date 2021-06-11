@@ -8,7 +8,7 @@ info: |
 
     3. If Type(item) is not Object, then
         a. Throw a TypeError exception.
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const instance = Temporal.PlainTime.from("00:00");

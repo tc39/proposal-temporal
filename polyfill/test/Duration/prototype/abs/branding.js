@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.abs
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const abs = Temporal.Duration.prototype.abs;

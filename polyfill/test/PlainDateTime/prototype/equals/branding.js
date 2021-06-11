@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.equals
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const equals = Temporal.PlainDateTime.prototype.equals;

@@ -9,6 +9,7 @@ info: |
       9. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).
       11. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _mergedFieldNames_, «»).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

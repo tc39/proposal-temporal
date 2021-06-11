@@ -5,6 +5,7 @@
 esid: sec-temporal.plaindatetime.prototype.tostring
 description: Type conversions for roundingMode option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 123, 987, 500);

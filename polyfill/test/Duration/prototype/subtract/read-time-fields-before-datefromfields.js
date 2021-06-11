@@ -12,6 +12,7 @@ info: |
       1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
       2. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const calendar = TemporalHelpers.calendarMakeInvalidGettersTime();

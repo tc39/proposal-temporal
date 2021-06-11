@@ -3,8 +3,8 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
-features: [BigInt]
 includes: [temporalHelpers.js]
+features: [BigInt, Temporal]
 ---*/
 
 const datetimeEarlier = new Temporal.PlainDateTime(2000, 10, 29, 1, 34, 56, 987, 654, 321);

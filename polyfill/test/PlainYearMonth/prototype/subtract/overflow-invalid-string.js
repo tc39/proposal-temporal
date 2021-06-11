@@ -15,6 +15,7 @@ info: |
       13. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_).
       14. ...
       15. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _options_).
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 5);

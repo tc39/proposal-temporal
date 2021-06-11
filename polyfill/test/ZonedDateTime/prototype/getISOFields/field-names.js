@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.getisofields
 description: Correct field names on the object returned from getISOFields
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_086_400_987_654_321n, "UTC");

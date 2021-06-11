@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.monthcode
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const monthCode = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "monthCode").get;

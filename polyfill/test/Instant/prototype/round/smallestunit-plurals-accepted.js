@@ -5,6 +5,7 @@
 esid: sec-temporal.instant.prototype.round
 description: Plural units are accepted as well for the smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_987_654_321n);

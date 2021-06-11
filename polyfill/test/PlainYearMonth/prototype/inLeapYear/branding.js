@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainyearmonth.prototype.inleapyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const inLeapYear = Object.getOwnPropertyDescriptor(Temporal.PlainYearMonth.prototype, "inLeapYear").get;

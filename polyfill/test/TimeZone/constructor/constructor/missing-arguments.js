@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone
+features: [Temporal]
 ---*/
 
 assert.throws(RangeError, () => new Temporal.TimeZone());

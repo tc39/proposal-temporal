@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.hoursinday
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const hoursInDay = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "hoursInDay").get;

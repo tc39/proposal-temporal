@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.second
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const second = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "second").get;

@@ -14,6 +14,7 @@ info: |
     sec-temporal.plainmonthday.prototype.with step 16:
       16. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const monthday = new Temporal.PlainMonthDay(5, 2);

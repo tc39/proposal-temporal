@@ -5,6 +5,7 @@
 esid: sec-temporal.duration.prototype.round
 description: Fallback value for largestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration1 = new Temporal.Duration(0, 0, 0, 0, 1, 120, 1, 123, 456, 789);

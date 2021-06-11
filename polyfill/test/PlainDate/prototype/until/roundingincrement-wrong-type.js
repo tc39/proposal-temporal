@@ -12,6 +12,7 @@ info: |
     sec-temporal.plaindate.prototype.until step 11:
       11. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainDate(2000, 5, 2);

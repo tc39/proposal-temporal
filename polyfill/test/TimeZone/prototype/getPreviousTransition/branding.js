@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getprevioustransition
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getPreviousTransition = Temporal.TimeZone.prototype.getPreviousTransition;

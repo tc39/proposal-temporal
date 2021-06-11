@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.tolocalestring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toLocaleString = Temporal.PlainMonthDay.prototype.toLocaleString;

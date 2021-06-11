@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaintime.prototype.since
 description: RangeError thrown when smallestUnit option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainTime(12, 34, 56, 0, 0, 0);

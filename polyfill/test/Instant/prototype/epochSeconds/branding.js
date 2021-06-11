@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.instant.prototype.epochseconds
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const epochSeconds = Object.getOwnPropertyDescriptor(Temporal.Instant.prototype, "epochSeconds").get;

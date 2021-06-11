@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.with
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 2);

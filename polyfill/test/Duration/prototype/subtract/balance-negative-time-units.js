@@ -29,6 +29,7 @@ info: |
     sec-temporal.duration.prototype.subtract step 6:
       6. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], −_other_.[[Years]], −_other_.[[Months]], −_other_.[[Weeks]], −_other_.[[Days]], −_other_.[[Hours]], −_other_.[[Minutes]], −_other_.[[Seconds]], −_other_.[[Milliseconds]], −_other_.[[Microseconds]], −_other_.[[Nanoseconds]], _relativeTo_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(0, 0, 0, 0, 1, 1, 1, 1, 1, 1);

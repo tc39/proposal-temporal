@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.until
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const a = Temporal.PlainDateTime.from('2017-10-05T08:07:14+00:00[UTC]');

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-compareisodate
+features: [Temporal]
 ---*/
 
 function CustomError() {}

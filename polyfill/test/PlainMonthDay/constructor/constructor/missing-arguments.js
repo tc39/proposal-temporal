@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainmonthday
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

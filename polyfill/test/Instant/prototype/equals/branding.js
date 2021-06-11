@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.equals
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const equals = Temporal.Instant.prototype.equals;

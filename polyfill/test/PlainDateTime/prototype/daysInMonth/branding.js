@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.daysinmonth
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInMonth = Object.getOwnPropertyDescriptor(Temporal.PlainDateTime.prototype, "daysInMonth").get;

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-sec-temporal.yearmonth.compare
+features: [Temporal]
 ---*/
 
 function CustomError() {}

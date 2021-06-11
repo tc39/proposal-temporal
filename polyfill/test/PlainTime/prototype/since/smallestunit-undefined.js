@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.since
 description: Fallback value for smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainTime(12, 34, 56, 0, 0, 0);

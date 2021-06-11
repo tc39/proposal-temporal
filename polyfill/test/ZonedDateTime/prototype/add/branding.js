@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const add = Temporal.ZonedDateTime.prototype.add;

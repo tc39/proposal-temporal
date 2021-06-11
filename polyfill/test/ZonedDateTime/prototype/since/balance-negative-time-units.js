@@ -27,6 +27,7 @@ info: |
     sec-temporal.zoneddatetime.prototype.since step 16:
       16. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _largestUnit_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const timeZone = new Temporal.TimeZone("UTC");

@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.tostring
 description: Fallback value for smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 123, 987, 500);

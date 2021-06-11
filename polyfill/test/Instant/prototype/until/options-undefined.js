@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.until
-features: [BigInt]
+features: [BigInt, Temporal]
 ---*/
 
 const earlier = new Temporal.Instant(957270896_987_654_321n);

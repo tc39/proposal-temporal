@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.duration.prototype.with
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 let called = 0;

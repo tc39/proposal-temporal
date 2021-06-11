@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.add
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 1, 31);

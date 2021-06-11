@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaintime.prototype.minute
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const minute = Object.getOwnPropertyDescriptor(Temporal.PlainTime.prototype, "minute").get;

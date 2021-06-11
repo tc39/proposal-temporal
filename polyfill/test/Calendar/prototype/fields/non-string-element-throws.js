@@ -7,6 +7,7 @@ info: |
     sec-temporal.calendar.prototype.fields step 5:
       5. For each element _fieldName_ of _fieldNames_, do
         a. If Type(_fieldName_) is not String, throw a *TypeError* exception.
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

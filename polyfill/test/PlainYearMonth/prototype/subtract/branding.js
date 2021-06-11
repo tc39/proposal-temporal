@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const subtract = Temporal.PlainYearMonth.prototype.subtract;

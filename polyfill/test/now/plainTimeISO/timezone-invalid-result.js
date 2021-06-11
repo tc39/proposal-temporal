@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.now.plaintimeiso
+features: [Temporal]
 ---*/
 
 const invalidValues = [

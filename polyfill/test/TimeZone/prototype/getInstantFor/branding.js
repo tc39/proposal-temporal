@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getInstantFor = Temporal.TimeZone.prototype.getInstantFor;

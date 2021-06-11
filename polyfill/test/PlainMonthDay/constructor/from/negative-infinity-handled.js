@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainMonthDay.from handles a property bag if any value is -Infinity
 esid: sec-temporal.plainmonthday.from
+features: [Temporal]
 ---*/
 
 // constrain

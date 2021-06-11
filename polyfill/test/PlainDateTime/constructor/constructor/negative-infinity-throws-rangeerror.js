@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainDateTime throws a RangeError if any value is -Infinity
 esid: sec-temporal.plaindatetime
+features: [Temporal]
 ---*/
 
 assert.throws(RangeError, () => new Temporal.PlainDateTime(-Infinity, 1, 1));

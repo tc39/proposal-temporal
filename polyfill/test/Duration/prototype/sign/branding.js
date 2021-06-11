@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.sign
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const sign = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "sign").get;

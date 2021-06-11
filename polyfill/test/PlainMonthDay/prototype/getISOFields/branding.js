@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.getisofields
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getISOFields = Temporal.PlainMonthDay.prototype.getISOFields;

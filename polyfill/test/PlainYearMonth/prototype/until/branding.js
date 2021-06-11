@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.until
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const until = Temporal.PlainYearMonth.prototype.until;

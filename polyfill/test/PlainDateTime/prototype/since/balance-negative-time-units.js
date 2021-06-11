@@ -25,6 +25,7 @@ info: |
     sec-temporal.plaindatetime.prototype.since step 14:
       14. Let _diff_ be ? DifferenceISODateTime(_other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], _largestUnit_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(1996, 5, 2, 1, 1, 1, 1, 1, 1);

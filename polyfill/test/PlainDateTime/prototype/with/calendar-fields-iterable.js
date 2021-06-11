@@ -9,6 +9,7 @@ info: |
     sec-temporal-calendarfields step 4:
       4. Let _result_ be ? IterableToList(_fieldsArray_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

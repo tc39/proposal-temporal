@@ -4,6 +4,7 @@
 /*---
 description: Temporal.Duration.prototype.with throws a RangeError if any value in a property bag is -Infinity
 esid: sec-temporal.duration.prototype.with
+features: [Temporal]
 ---*/
 
 const fields = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];

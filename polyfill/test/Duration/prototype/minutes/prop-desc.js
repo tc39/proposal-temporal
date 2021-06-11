@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.minutes
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "minutes");

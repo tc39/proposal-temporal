@@ -12,6 +12,7 @@ info: |
     sec-temporal.calendar.prototype.dateadd step 7:
       7. Let _overflow_ be ? ToTemporalOverflow(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

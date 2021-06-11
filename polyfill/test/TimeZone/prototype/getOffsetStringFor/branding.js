@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetstringfor
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getOffsetStringFor = Temporal.TimeZone.prototype.getOffsetStringFor;

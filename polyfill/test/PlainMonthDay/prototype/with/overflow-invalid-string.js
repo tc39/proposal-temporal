@@ -13,6 +13,7 @@ info: |
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.plainmonthday.prototype.with step 16:
       16. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
+features: [Temporal]
 ---*/
 
 const monthday = new Temporal.PlainMonthDay(5, 2);

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.weeks
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const weeks = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "weeks").get;

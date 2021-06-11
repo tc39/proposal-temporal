@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+features: [Temporal]
 ---*/
 
 const args = [2020, 12, 24];

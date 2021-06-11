@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.valueof
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const valueOf = Temporal.PlainMonthDay.prototype.valueOf;

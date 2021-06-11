@@ -11,6 +11,7 @@ info: |
     sec-temporal-getpossibleinstantsfor step 2:
       2. Let _list_ be ? IterableToList(_possibleInstants_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

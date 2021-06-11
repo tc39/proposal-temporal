@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+features: [Temporal]
 ---*/
 
 const args = [12, 34, 56, 123, 456];

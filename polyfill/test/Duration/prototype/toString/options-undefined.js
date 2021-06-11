@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tostring
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 650, 0);

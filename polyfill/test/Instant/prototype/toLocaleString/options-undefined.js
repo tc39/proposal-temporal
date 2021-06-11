@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tolocalestring
-features: [BigInt]
+features: [BigInt, Temporal]
 ---*/
 
 const instant = new Temporal.Instant(957270896_987_650_000n);

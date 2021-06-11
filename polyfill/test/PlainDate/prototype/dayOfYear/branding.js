@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.dayofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dayOfYear = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "dayOfYear").get;

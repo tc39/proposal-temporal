@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.prototype.until
 description: RangeError thrown when largestUnit option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.Instant(1_000_000_000_000_000_000n);

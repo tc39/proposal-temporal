@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.tostring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toString = Temporal.PlainTime.prototype.toString;

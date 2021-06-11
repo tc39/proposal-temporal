@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tostring
+features: [Temporal]
 ---*/
 
 const calendar = {

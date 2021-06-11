@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
+features: [Temporal]
 ---*/
 
 let called = false;

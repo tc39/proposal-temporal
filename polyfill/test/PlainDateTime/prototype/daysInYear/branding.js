@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.daysinyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInYear = Object.getOwnPropertyDescriptor(Temporal.PlainDateTime.prototype, "daysInYear").get;

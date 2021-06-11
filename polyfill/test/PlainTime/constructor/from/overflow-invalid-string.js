@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « String », « *"constrain"*, *"reject"* », *"constrain"*).
     sec-temporal.plaintime.from step 2:
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
+features: [Temporal]
 ---*/
 
 const validValues = [

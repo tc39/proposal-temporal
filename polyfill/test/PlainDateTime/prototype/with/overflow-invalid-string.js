@@ -14,6 +14,7 @@ info: |
       3. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.plaindatetime.prototype.with step 16:
       16. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12);

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.compare
+features: [Temporal]
 ---*/
 
 const duration1 = new Temporal.Duration(1);

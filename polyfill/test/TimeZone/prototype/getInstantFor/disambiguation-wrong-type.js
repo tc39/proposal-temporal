@@ -12,6 +12,7 @@ info: |
     sec-temporal.timezone.prototype.getinstantfor step 5:
       5. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2001, 9, 9, 1, 46, 40, 987, 654, 321);

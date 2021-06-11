@@ -14,6 +14,7 @@ info: |
       3. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.zoneddatetime.prototype.with step 24:
       24. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

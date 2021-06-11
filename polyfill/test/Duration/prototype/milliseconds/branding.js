@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.milliseconds
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const milliseconds = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "milliseconds").get;

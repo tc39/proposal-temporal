@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.daysinmonth
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInMonth = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "daysInMonth").get;

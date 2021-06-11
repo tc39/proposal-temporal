@@ -73,6 +73,7 @@ info: |
       10. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _dateLargestUnit_).
       11. Let _dateDifference_ be ? CalendarDateUntil(_calendar_, _date1_, _date2_, _untilOptions_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // Check with smallestUnit nanoseconds but roundingIncrement > 1; each call

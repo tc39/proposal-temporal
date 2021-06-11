@@ -5,6 +5,7 @@
 description: Temporal.PlainTime.from handles a property bag if any value is -Infinity
 esid: sec-temporal.plaintime.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // constrain

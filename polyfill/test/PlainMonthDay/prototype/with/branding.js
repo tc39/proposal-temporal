@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const with_ = Temporal.PlainMonthDay.prototype.with;

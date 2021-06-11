@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.year
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const year = Temporal.Calendar.prototype.year;

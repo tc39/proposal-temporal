@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.from
+features: [Temporal]
 ---*/
 
 const fields = { hour: 12, minute: 60 };

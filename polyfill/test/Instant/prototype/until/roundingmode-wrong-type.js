@@ -5,6 +5,7 @@
 esid: sec-temporal.instant.prototype.until
 description: Type conversions for roundingMode option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.Instant(1_000_000_000_000_000_000n);

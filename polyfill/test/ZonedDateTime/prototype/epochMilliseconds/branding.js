@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.epochmilliseconds
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const epochMilliseconds = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "epochMilliseconds").get;

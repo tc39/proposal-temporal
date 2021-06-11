@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+features: [Temporal]
 ---*/
 
 const d1 = Temporal.Duration.from({ milliseconds: 1000 });

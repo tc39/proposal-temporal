@@ -24,6 +24,7 @@ info: |
         b. Return ...
       3. Return ? ToTemporalDateTime(_item_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const validValues = [

@@ -11,6 +11,7 @@ info: |
       b. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
         i. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkToTemporalInstantFastPath((datetime) => {

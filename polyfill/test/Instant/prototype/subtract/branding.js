@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.subtract
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const subtract = Temporal.Instant.prototype.subtract;

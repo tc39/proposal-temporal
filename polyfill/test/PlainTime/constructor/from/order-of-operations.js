@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaintime.from
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

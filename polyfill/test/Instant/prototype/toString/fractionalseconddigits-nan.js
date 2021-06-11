@@ -14,6 +14,7 @@ info: |
     sec-temporal.instant.prototype.tostring step 6:
       6. Let _precision_ be ? ToSecondsStringPrecision(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_987_650_000n);

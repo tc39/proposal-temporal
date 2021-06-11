@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkSubclassingIgnoredStatic(

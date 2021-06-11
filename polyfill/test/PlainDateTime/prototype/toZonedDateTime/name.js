@@ -11,6 +11,7 @@ info: |
     Unless otherwise specified, the "name" property of a built-in function object, if it exists,
     has the attributes { [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: true }.
 includes: [propertyHelper.js]
+features: [Temporal]
 ---*/
 
 verifyProperty(Temporal.PlainDateTime.prototype.toZonedDateTime, "name", {

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tozoneddatetime
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toZonedDateTime = Temporal.PlainDateTime.prototype.toZonedDateTime;

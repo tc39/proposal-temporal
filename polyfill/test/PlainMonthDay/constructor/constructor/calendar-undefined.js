@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday
+features: [Temporal]
 ---*/
 
 const args = [5, 2];

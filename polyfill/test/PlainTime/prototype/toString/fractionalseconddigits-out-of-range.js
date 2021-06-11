@@ -11,6 +11,7 @@ info: |
       9. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
     sec-temporal.plaintime.prototype.tostring step 4:
       4. Let _precision_ be ? ToDurationSecondsStringPrecision(_options_).
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 987, 650, 0);

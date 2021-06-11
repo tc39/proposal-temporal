@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.valueof
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const valueOf = Temporal.ZonedDateTime.prototype.valueOf;

@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.timezone.prototype.tojson
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const actual = [];

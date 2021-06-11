@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.daysinmonth
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInMonth = Temporal.Calendar.prototype.daysInMonth;

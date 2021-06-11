@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindate.prototype.with
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainDate(2000, 5, 2);

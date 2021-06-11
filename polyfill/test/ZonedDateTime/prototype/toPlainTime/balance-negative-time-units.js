@@ -25,6 +25,7 @@ info: |
     sec-get-temporal.zoneddatetime.prototype.toplaintime step 5:
       5. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _zonedDateTime_.[[Calendar]]).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

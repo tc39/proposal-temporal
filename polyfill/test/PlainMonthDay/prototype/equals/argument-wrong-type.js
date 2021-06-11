@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.equals
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const instance = Temporal.PlainMonthDay.from({ month: 5, day: 2 });

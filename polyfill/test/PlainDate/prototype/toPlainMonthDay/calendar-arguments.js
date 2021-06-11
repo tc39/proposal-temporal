@@ -9,6 +9,7 @@ info: |
     3. If options is not present, then
         a. Set options to undefined.
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 class CustomCalendar extends Temporal.Calendar {

@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainYearMonth throws a RangeError if any numerical value is Infinity
 esid: sec-temporal.plainyearmonth
+features: [Temporal]
 ---*/
 
 const isoCalendar = Temporal.Calendar.from('iso8601');

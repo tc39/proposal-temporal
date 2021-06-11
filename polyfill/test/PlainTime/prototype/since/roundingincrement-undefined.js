@@ -12,6 +12,7 @@ info: |
     sec-temporal.plaintime.prototype.since step 11:
       11. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

@@ -5,6 +5,7 @@
 esid: sec-temporal.zoneddatetime.prototype.tostring
 description: Plural units are accepted as well for the smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_123_456_789n, "UTC");

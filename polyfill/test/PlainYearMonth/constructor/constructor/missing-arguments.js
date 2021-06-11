@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainyearmonth
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const expected = [

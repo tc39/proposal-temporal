@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaintime.prototype.add
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

@@ -17,6 +17,7 @@ info: |
         c. Perform ? ToTemporalOffset(_options_, *"reject"*).
         d. Return ...
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).
+features: [Temporal]
 ---*/
 
 const timeZone = new Temporal.TimeZone("-04:00");

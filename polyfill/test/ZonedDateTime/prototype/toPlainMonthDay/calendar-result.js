@@ -7,6 +7,7 @@ info: |
     MonthDayFromFields ( calendar, fields, options )
 
     4. Perform ? RequireInternalSlot(monthDay, [[InitializedTemporalMonthDay]]).
+features: [Temporal]
 ---*/
 
 class CustomCalendar extends Temporal.Calendar {

@@ -13,6 +13,7 @@ info: |
       5. Return ? ToTemporalRoundingIncrement(_normalizedOptions_, _maximum_, *false*).
     sec-temporal.zoneddatetime.prototype.round step 8:
       8. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_options_, _smallestUnit_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

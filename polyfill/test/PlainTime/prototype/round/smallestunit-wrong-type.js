@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.round
 description: Type conversions for smallestUnit option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 123, 987, 500);

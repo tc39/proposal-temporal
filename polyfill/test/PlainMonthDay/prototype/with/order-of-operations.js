@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainMonthDay(5, 2);

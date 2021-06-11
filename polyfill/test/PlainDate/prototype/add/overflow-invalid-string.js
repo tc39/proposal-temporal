@@ -13,6 +13,7 @@ info: |
       7. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.plaindate.prototype.add step 7:
       7. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _balancedDuration_, _options_).
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);

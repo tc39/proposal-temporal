@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.offsetnanoseconds
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const offsetNanoseconds = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "offsetNanoseconds").get;

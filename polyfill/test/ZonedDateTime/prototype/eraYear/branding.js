@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.erayear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const eraYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "eraYear").get;

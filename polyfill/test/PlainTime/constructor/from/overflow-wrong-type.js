@@ -12,6 +12,7 @@ info: |
     sec-temporal.plaintime.from step 2:
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const validValues = [

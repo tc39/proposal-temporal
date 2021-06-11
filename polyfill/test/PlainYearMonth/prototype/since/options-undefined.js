@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.since
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainYearMonth(2000, 5);

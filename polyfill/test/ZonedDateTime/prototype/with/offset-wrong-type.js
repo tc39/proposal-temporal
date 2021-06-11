@@ -12,6 +12,7 @@ info: |
     sec-temporal.zoneddatetime.protoype.with step 15:
       15. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

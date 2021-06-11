@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.weekofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const weekOfYear = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "weekOfYear").get;

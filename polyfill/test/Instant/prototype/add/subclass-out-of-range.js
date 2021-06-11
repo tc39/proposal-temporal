@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.add
-features: [BigInt]
+features: [BigInt, Temporal]
 ---*/
 
 let called = 0;

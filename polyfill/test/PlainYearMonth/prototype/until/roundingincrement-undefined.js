@@ -12,6 +12,7 @@ info: |
     sec-temporal.plainyearmonth.prototype.until step 12:
       12. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainYearMonth(2000, 5);

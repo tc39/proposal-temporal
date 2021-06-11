@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const add = Temporal.PlainDate.prototype.add;

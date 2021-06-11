@@ -12,6 +12,7 @@ info: |
     sec-temporal-interprettemporaldatetimefields step 2:
       2. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

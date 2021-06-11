@@ -27,6 +27,7 @@ info: |
     sec-temporal.timezone.prototype.getinstantfor step 6:
       6. Return ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const shiftInstant = new Temporal.Instant(3661_001_001_001n);
