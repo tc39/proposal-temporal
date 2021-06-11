@@ -11,7 +11,6 @@ const MathTrunc = Math.trunc;
 const NumberIsNaN = Number.isNaN;
 const NumberIsFinite = Number.isFinite;
 const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
-const NumberIsInteger = Number.isInteger;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
@@ -1819,7 +1818,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
     }
-    if (!NumberIsInteger(offsetNs) || MathAbs(offsetNs) > 86400e9) {
+    if (!ES.IsInteger(offsetNs) || MathAbs(offsetNs) > 86400e9) {
       throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
     }
     return offsetNs;
