@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.round
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const round = Temporal.ZonedDateTime.prototype.round;

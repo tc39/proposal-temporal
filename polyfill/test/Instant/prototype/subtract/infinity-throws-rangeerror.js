@@ -4,6 +4,7 @@
 /*---
 description: Temporal.Instant.prototype.subtract throws a RangeError if any value in a property bag is Infinity
 esid: sec-temporal.instant.prototype.subtract
+features: [Temporal]
 ---*/
 
 const fields = ["hours", "minutes", "seconds", "milliseconds", "microseconds", "nanoseconds"];

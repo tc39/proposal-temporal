@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.monthsinyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const monthsInYear = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "monthsInYear").get;

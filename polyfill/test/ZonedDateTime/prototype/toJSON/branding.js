@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tojson
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toJSON = Temporal.ZonedDateTime.prototype.toJSON;

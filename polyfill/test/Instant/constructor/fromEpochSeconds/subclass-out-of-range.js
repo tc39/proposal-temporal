@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.fromepochseconds
+features: [Temporal]
 ---*/
 
 let called = false;

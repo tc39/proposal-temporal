@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.withplaintime
-features: [BigInt]
+features: [BigInt, Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(957270896_987_654_321n, "UTC");

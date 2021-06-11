@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.daysinweek
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInWeek = Temporal.Calendar.prototype.daysInWeek;

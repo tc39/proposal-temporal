@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"offset"*, « String », « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
     sec-temporal.zoneddatetime.protoype.with step 15:
       15. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
+features: [Temporal]
 ---*/
 
 const timeZone = new Temporal.TimeZone("America/St_Johns");

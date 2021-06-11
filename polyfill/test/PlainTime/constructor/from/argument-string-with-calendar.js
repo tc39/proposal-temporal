@@ -8,6 +8,7 @@ info: |
     b. Let result be ? ParseTemporalTimeString(string).
     d. If result.[[Calendar]] is not one of undefined or "iso8601", then
         i. Throw a RangeError exception.
+features: [Temporal]
 ---*/
 
 const isoString = "2004-03-21T10:00:00";

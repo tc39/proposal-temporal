@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+features: [Temporal]
 ---*/
 
 const hour = 12;

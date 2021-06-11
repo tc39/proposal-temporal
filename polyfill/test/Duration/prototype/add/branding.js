@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const add = Temporal.Duration.prototype.add;

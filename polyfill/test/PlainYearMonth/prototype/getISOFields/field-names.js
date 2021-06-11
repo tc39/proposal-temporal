@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainyearmonth.prototype.getisofields
 description: Correct field names on the object returned from getISOFields
+features: [Temporal]
 ---*/
 
 const ym = new Temporal.PlainYearMonth(2000, 5);

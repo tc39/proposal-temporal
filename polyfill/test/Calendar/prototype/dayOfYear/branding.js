@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dayofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dayOfYear = Temporal.Calendar.prototype.dayOfYear;

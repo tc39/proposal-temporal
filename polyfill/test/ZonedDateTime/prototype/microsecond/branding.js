@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.microsecond
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const microsecond = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "microsecond").get;

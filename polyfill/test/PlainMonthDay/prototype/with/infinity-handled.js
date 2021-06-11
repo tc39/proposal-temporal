@@ -5,6 +5,7 @@
 description: Temporal.PlainMonthDay.prototype.with handles a property bag if any value is Infinity
 esid: sec-temporal.plainmonthday.prototype.with
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainMonthDay(5, 2);

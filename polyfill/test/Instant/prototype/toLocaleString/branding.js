@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tolocalestring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toLocaleString = Temporal.Instant.prototype.toLocaleString;

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.day
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const day = Object.getOwnPropertyDescriptor(Temporal.PlainMonthDay.prototype, "day").get;

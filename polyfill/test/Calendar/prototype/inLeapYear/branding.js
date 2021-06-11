@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.inleapyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const inLeapYear = Temporal.Calendar.prototype.inLeapYear;

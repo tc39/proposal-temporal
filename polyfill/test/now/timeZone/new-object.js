@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
+features: [Temporal]
 ---*/
 
 const tz = Temporal.now.timeZone;

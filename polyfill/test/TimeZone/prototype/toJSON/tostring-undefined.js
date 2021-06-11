@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.tojson
+features: [Temporal]
 ---*/
 
 const tz = Temporal.TimeZone.from('UTC');

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
+features: [Temporal]
 ---*/
 
 const calendar = {

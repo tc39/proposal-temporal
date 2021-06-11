@@ -12,6 +12,7 @@ info: |
     sec-temporal.duration.protoype.total step 5:
       5. Let _unit_ be ? ToTemporalDurationTotalUnit(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(0, 0, 0, 1);

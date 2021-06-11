@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration
+features: [Temporal]
 ---*/
 
 const explicit = new Temporal.Duration(undefined);

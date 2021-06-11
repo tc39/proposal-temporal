@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainyearmonth.prototype.add
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainYearMonth(2000, 5);

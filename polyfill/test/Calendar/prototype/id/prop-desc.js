@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.calendar.prototype.id
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.Calendar.prototype, "id");

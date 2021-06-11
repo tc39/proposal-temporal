@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.with
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const with_ = Temporal.Duration.prototype.with;

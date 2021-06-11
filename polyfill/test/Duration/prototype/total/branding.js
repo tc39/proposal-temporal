@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.total
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const total = Temporal.Duration.prototype.total;

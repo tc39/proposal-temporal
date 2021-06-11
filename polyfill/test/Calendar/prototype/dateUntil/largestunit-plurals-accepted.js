@@ -5,6 +5,7 @@
 esid: sec-temporal.calendar.prototype.dateuntil
 description: Plural units are accepted as well for the largestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainDate(2000, 5, 2);

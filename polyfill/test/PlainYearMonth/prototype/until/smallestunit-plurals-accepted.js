@@ -5,6 +5,7 @@
 esid: sec-temporal.plainyearmonth.prototype.until
 description: Plural units are accepted as well for the smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainYearMonth(2000, 5);

@@ -4,6 +4,7 @@
 /*---
 description: Temporal.Duration.from handles a property bag if any value is -Infinity
 esid: sec-temporal.duration.from
+features: [Temporal]
 ---*/
 
 const fields = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];

@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = Temporal.Instant.from("1969-07-16T13:32:01.234567891Z");

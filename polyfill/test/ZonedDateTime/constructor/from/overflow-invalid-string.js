@@ -24,6 +24,7 @@ info: |
         ...
         d. Return ...
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).
+features: [Temporal]
 ---*/
 
 const validValues = [

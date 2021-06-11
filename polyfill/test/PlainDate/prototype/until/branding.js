@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.until
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const until = Temporal.PlainDate.prototype.until;

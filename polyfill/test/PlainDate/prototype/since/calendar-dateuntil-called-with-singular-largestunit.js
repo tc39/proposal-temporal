@@ -9,6 +9,7 @@ info: |
       13. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
       14. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _other_, _temporalDate_, _untilOptions_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkCalendarDateUntilLargestUnitSingular(

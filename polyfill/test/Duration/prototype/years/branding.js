@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.years
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const years = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "years").get;

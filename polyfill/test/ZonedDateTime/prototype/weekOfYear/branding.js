@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.weekofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const weekOfYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "weekOfYear").get;

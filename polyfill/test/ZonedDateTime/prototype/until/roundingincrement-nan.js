@@ -11,6 +11,7 @@ info: |
       5. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », *undefined*, 1).
     sec-temporal.zoneddatetime.prototype.until step 12:
       12. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

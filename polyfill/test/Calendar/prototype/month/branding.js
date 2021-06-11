@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.month
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const month = Temporal.Calendar.prototype.month;

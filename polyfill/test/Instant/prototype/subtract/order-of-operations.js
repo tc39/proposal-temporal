@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.prototype.subtract
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.Instant(10n);

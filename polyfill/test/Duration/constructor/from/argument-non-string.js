@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+features: [Temporal]
 ---*/
 
 assert.throws(RangeError, () => Temporal.Duration.from(undefined), "undefined");

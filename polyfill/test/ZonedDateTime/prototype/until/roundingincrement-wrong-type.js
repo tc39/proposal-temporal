@@ -12,6 +12,7 @@ info: |
     sec-temporal.zoneddatetime.prototype.until step 12:
       12. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
 includes: [temporalHelpers.js, compareArray.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

@@ -4,7 +4,7 @@
 description: |
     This defines helper objects and functions for testing Temporal.
 defines: [TemporalHelpers]
-features: [Symbol.species, Symbol.iterator]
+features: [Symbol.species, Symbol.iterator, Temporal]
 ---*/
 
 var TemporalHelpers = {

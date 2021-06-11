@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dateadd
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dateAdd = Temporal.Calendar.prototype.dateAdd;

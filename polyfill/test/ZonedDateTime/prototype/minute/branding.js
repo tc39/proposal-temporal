@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.minute
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const minute = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "minute").get;

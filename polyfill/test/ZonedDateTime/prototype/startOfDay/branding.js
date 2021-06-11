@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.startofday
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const startOfDay = Temporal.ZonedDateTime.prototype.startOfDay;

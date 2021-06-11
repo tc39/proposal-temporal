@@ -5,6 +5,7 @@
 esid: sec-temporal.duration.prototype.round
 description: Type conversions for largestUnit option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(0, 0, 0, 0, 12, 34, 56, 123, 456, 789);

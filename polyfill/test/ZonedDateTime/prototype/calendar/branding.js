@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.calendar
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const calendar = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "calendar").get;

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthdayfromfields
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const monthDayFromFields = Temporal.Calendar.prototype.monthDayFromFields;

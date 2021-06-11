@@ -13,6 +13,7 @@ info: |
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.calendar.prototype.yearmonthfromfields step 6:
       6. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

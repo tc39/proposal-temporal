@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.equals
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const equals = Temporal.ZonedDateTime.prototype.equals;

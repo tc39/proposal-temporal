@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const instance = Temporal.PlainTime.from({ hour: 12, minute: 34, second: 56, millisecond: 987, microsecond: 654, nanosecond: 321 });

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.from
+features: [Temporal]
 ---*/
 
 let called = false;

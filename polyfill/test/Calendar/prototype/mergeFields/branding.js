@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.mergefields
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const mergeFields = Temporal.Calendar.prototype.mergeFields;

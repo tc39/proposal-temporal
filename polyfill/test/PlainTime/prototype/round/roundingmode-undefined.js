@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.round
 description: Fallback value for roundingMode option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 123, 987, 500);

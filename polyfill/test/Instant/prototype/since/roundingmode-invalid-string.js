@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.prototype.since
 description: RangeError thrown when roundingMode option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.Instant(1_000_000_000_000_000_000n);

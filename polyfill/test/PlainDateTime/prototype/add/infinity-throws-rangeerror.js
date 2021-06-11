@@ -4,6 +4,7 @@
 /*---
 description: Temporal.PlainDateTime.prototype.add throws a RangeError if any value in a property bag is Infinity
 esid: sec-temporal.plaindatetime.prototype.add
+features: [Temporal]
 ---*/
 
 const overflows = ["constrain", "reject"];

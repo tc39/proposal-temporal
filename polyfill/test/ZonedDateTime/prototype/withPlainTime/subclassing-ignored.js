@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.withplaintime
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkSubclassingIgnored(

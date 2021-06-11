@@ -5,6 +5,7 @@
 esid: sec-temporal.plainyearmonth.prototype.since
 description: Fallback value for largestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainYearMonth(2000, 5);

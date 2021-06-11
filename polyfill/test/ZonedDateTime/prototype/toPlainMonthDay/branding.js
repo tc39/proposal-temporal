@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplainmonthday
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toPlainMonthDay = Temporal.ZonedDateTime.prototype.toPlainMonthDay;

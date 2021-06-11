@@ -16,6 +16,7 @@ info: |
       14. ...
       15. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 5);

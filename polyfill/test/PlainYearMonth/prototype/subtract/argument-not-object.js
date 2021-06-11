@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const instance = Temporal.PlainYearMonth.from({ year: 2000, month: 5 });

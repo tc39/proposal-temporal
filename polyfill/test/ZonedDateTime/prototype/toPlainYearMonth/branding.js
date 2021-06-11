@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplainyearmonth
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toPlainYearMonth = Temporal.ZonedDateTime.prototype.toPlainYearMonth;

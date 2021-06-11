@@ -5,6 +5,7 @@
 esid: sec-temporal.plainyearmonth.prototype.since
 description: Type conversions for smallestUnit option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainYearMonth(2000, 5);

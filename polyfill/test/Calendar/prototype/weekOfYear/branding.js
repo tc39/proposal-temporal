@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.weekofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const weekOfYear = Temporal.Calendar.prototype.weekOfYear;

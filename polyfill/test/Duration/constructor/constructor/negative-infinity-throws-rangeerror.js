@@ -4,6 +4,7 @@
 /*---
 description: Temporal.Duration throws a RangeError if any value is -Infinity
 esid: sec-temporal.duration
+features: [Temporal]
 ---*/
 
 assert.throws(RangeError, () => new Temporal.Duration(-Infinity));

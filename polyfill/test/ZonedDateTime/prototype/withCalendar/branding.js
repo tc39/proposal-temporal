@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.withcalendar
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const withCalendar = Temporal.ZonedDateTime.prototype.withCalendar;

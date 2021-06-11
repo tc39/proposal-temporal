@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 assert.throws(TypeError, () => new Temporal.Instant(), "undefined");

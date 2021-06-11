@@ -7,6 +7,7 @@ info: |
     YearMonthFromFields ( calendar, fields [ , options ] )
 
     4. Perform ? RequireInternalSlot(yearMonth, [[InitializedTemporalYearMonth]]).
+features: [Temporal]
 ---*/
 
 class CustomCalendar extends Temporal.Calendar {

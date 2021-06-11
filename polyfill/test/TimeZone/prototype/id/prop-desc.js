@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.timezone.prototype.id
+features: [Temporal]
 ---*/
 
 const descriptor = Object.getOwnPropertyDescriptor(Temporal.TimeZone.prototype, "id");

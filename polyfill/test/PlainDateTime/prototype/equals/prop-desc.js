@@ -3,6 +3,7 @@
 
 /*---
 includes: [propertyHelper.js]
+features: [Temporal]
 ---*/
 
 const { PlainDateTime } = Temporal;

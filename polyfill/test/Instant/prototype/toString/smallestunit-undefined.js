@@ -5,6 +5,7 @@
 esid: sec-temporal.instant.prototype.tostring
 description: Fallback value for smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_123_987_500n);

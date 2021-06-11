@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tostring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toString = Temporal.Duration.prototype.toString;

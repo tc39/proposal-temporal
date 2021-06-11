@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.tolocalestring
+features: [Temporal]
 ---*/
 
 const defaultFormatter = new Intl.DateTimeFormat('en', Object.create(null));

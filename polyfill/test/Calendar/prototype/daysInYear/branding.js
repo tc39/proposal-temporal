@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.daysinyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInYear = Temporal.Calendar.prototype.daysInYear;

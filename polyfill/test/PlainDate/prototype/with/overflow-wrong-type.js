@@ -14,6 +14,7 @@ info: |
     sec-temporal.plaindate.prototype.with step 16:
       16. Return ? DateFromFields(_calendar_, _fields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);

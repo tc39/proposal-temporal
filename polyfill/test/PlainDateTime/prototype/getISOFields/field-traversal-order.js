@@ -5,6 +5,7 @@
 esid: sec-temporal.plaindatetime.prototype.getisofields
 description: Properties added in correct order to object returned from getISOFields
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const expected = [

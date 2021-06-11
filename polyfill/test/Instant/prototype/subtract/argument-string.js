@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.subtract
+features: [Temporal]
 ---*/
 
 const instance = Temporal.Instant.fromEpochSeconds(10);

@@ -7,6 +7,7 @@ info: |
     sec-temporal.calendar.prototype.fields step 4:
       4. Let _fieldNames_ be ? IterableToList(_fields_).
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const fieldNames = ["day", "month", "monthCode", "year"];

@@ -13,6 +13,7 @@ info: |
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.plainyearmonth.prototype.with step 16:
       16. Return ? YearMonthFromFields(_calendar_, _fields_, _options_).
+features: [Temporal]
 ---*/
 
 const yearmonth = new Temporal.PlainYearMonth(2000, 5);

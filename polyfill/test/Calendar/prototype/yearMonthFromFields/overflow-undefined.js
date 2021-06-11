@@ -14,6 +14,7 @@ info: |
     sec-temporal.calendar.prototype.yearmonthfromfields step 6:
       6. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

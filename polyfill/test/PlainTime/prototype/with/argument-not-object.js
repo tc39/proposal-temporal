@@ -8,6 +8,7 @@ info: |
 
     3. If Type(temporalTimeLike) is not Object, then
         a. Throw a TypeError exception.
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

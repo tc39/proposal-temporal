@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.inleapyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const inLeapYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "inLeapYear").get;

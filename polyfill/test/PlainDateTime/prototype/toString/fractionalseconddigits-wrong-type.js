@@ -18,6 +18,7 @@ info: |
     sec-temporal.plaindatetime.prototype.tostring step 4:
       4. Let _precision_ be ? ToSecondsStringPrecision(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 987, 650, 0);

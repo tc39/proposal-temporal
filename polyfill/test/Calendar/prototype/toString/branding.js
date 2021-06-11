@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.tostring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toString = Temporal.Calendar.prototype.toString;

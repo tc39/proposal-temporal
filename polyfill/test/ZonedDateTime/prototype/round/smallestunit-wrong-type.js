@@ -5,6 +5,7 @@
 esid: sec-temporal.zoneddatetime.prototype.round
 description: Type conversions for smallestUnit option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_123_987_500n, "UTC");

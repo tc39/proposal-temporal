@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 let called = 0;

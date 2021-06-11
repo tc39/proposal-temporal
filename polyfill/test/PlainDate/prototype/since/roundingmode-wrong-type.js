@@ -5,6 +5,7 @@
 esid: sec-temporal.plaindate.prototype.since
 description: Type conversions for roundingMode option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainDate(2000, 5, 2);

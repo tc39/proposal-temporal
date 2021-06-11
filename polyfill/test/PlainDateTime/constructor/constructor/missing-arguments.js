@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const expected = [

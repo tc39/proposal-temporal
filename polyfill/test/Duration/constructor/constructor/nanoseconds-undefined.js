@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration
+features: [Temporal]
 ---*/
 
 const args = [1, 1, 1, 1, 1, 1, 1, 1, 1];

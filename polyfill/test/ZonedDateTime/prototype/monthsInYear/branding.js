@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.monthsinyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const monthsInYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "monthsInYear").get;

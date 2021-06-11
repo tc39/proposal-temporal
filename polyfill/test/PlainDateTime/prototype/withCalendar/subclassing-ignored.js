@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.withcalendar
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const customCalendar = {

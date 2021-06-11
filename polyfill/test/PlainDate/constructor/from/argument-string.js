@@ -10,6 +10,7 @@ info: |
       1. Return ? DateFromFields(_calendar_, _fields_, _options_).
     1. Perform ? ToTemporalOverflow(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

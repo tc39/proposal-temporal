@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+features: [Temporal]
 ---*/
 
 // overflow option has no effect on addition in the ISO calendar, so verify this

@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const actual = [];

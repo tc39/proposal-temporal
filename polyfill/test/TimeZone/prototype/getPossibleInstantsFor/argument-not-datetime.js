@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getpossibleinstantsfor
+features: [Temporal]
 ---*/
 
 const timeZone = Temporal.TimeZone.from("UTC");

@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainmonthday.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const fields = { month: 2, day: 31 };

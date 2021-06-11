@@ -18,6 +18,7 @@ info: |
         d. Return ...
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_654_321n, "UTC");

@@ -5,6 +5,7 @@
 description: Temporal.PlainDateTime.from accepts a custom timezone that starts with "c".
 esid: sec-temporal.plaindatetime.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const dateTime = Temporal.PlainDateTime.from("2020-01-01T00:00:00+01:00[Custom]");

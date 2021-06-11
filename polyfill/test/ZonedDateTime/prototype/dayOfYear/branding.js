@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.dayofyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dayOfYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "dayOfYear").get;

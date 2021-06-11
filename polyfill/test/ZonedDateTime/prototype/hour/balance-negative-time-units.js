@@ -22,6 +22,7 @@ info: |
       3. Set _result_ to ? BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
     sec-get-temporal.zoneddatetime.prototype.hour step 6:
       6. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

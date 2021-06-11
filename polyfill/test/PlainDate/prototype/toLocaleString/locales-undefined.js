@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.tolocalestring
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);

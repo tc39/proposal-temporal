@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « String », « *"constrain"*, *"reject"* », *"constrain"*).
     sec-temporal.calendar.prototype.dateadd step 7:
       7. Let _overflow_ be ? ToTemporalOverflow(_options_).
+features: [Temporal]
 ---*/
 
 const calendar = new Temporal.Calendar("iso8601");

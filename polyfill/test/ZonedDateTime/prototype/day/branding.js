@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.day
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const day = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "day").get;

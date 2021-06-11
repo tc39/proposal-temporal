@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.since
 description: Type conversions for largestUnit option
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainTime(12, 34, 56, 0, 0, 0);

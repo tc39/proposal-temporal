@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.now.plaindatetime
 includes: [compareArray.js]
+features: [Temporal]
 ---*/
 
 const actual = [];

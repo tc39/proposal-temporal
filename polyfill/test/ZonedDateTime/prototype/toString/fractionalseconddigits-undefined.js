@@ -13,6 +13,7 @@ info: |
       9. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
     sec-temporal.zoneddatetime.prototype.tostring step 4:
       4. Let _precision_ be ? ToDurationSecondsStringPrecision(_options_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_650_000n, "UTC");

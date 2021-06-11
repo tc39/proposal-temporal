@@ -26,6 +26,7 @@ info: |
       9. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _isoCalendar_).
     sec-get-temporal.zoneddatetime.prototype.tojson step 3:
       3. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
+features: [Temporal]
 ---*/
 
 // This code path is encountered if the time zone offset is negative and its

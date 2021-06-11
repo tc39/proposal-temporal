@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindate.prototype.with
 includes: [propertyHelper.js]
+features: [Temporal]
 ---*/
 
 assert.sameValue(

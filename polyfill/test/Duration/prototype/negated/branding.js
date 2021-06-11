@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.negated
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const negated = Temporal.Duration.prototype.negated;

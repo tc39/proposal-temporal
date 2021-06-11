@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.until
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const until = Temporal.Instant.prototype.until;

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.tolocalestring
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toLocaleString = Temporal.PlainDate.prototype.toLocaleString;

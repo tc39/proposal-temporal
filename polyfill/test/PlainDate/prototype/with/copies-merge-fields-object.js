@@ -10,6 +10,7 @@ info: |
       14. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
       15. Return ? DateFromFields(_calendar_, _fields_, _options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected = [

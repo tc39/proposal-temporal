@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.daysinyear
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInYear = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "daysInYear").get;

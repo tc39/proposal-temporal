@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime
+features: [Temporal]
 ---*/
 
 assert.throws(TypeError, () => new Temporal.ZonedDateTime());

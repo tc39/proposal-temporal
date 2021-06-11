@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.round
 description: Plural units are accepted as well for the smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 789, 999, 999);

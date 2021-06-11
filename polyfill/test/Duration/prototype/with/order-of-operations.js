@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.duration.prototype.with
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instance = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);

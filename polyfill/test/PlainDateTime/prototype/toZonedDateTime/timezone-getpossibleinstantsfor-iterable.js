@@ -15,6 +15,7 @@ info: |
     sec-temporal-getpossibleinstantsfor step 2:
       2. Let _list_ be ? IterableToList(_possibleInstants_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const expected1 = [

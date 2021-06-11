@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.until
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const until = Temporal.ZonedDateTime.prototype.until;

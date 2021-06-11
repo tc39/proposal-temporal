@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.blank
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const blank = Object.getOwnPropertyDescriptor(Temporal.Duration.prototype, "blank").get;

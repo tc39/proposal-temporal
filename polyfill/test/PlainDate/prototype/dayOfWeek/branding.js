@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.dayofweek
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const dayOfWeek = Object.getOwnPropertyDescriptor(Temporal.PlainDate.prototype, "dayOfWeek").get;

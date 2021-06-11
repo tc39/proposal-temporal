@@ -12,6 +12,7 @@ info: |
     sec-temporal.zoneddatetime.protoype.tostring step 6:
       6. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const calendar = {

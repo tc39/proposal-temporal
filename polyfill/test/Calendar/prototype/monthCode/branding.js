@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthcode
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const monthCode = Temporal.Calendar.prototype.monthCode;

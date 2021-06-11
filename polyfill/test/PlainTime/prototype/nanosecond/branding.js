@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaintime.prototype.nanosecond
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const nanosecond = Object.getOwnPropertyDescriptor(Temporal.PlainTime.prototype, "nanosecond").get;

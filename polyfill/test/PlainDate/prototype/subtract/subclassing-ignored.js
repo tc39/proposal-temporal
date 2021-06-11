@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindate.prototype.subtract
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkSubclassingIgnored(

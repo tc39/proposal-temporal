@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.daysinweek
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const daysInWeek = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "daysInWeek").get;

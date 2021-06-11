@@ -12,6 +12,7 @@ info: |
       b. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
         i. Return ! CreateTemporalDate(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);

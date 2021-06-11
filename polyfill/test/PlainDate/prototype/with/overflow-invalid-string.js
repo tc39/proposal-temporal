@@ -13,6 +13,7 @@ info: |
       2. Let _overflow_ be ? ToTemporalOverflow(_options_).
     sec-temporal.plaindate.prototype.with step 16:
       16. Return ? DateFromFields(_calendar_, _fields_, _options_).
+features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);

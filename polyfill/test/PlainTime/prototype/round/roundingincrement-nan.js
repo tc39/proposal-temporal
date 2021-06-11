@@ -11,6 +11,7 @@ info: |
       5. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », *undefined*, 1).
     sec-temporal.plaintime.prototype.round step 11:
       10. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

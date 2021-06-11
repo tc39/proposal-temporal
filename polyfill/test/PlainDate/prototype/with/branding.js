@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.with
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const with_ = Temporal.PlainDate.prototype.with;

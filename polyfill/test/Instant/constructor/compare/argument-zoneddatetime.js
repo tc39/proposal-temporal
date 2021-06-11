@@ -12,6 +12,7 @@ info: |
       b. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
         i. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_000_000_000n);

@@ -8,6 +8,7 @@ info: |
 
     5. Let monthDay be ? Invoke(calendar, "monthDayFromFields", « fields, options »).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const options = {};

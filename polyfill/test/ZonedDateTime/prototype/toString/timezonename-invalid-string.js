@@ -11,6 +11,7 @@ info: |
       1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, « String », « *"auto"*, *"never"* », *"auto"*).
     sec-temporal.zoneddatetime.protoype.tostring step 7:
       7. Let _showTimeZone_ be ? ToShowTimeZoneNameOption(_options_).
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_987_64_321n, "UTC");

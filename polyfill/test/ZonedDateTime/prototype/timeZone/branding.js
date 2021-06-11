@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.timezone
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const timeZone = Object.getOwnPropertyDescriptor(Temporal.ZonedDateTime.prototype, "timeZone").get;

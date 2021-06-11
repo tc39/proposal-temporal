@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
+features: [Temporal]
 ---*/
 
 const calendar = Temporal.Calendar.from("iso8601");

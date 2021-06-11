@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainyearmonth.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const plainYearMonth = Temporal.PlainYearMonth.from("1970-12");

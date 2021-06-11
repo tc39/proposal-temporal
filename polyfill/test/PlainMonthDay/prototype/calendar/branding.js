@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.calendar
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const calendar = Object.getOwnPropertyDescriptor(Temporal.PlainMonthDay.prototype, "calendar").get;

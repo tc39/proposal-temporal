@@ -11,6 +11,7 @@ info: |
       b. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
         i. Return ! CreateTemporalDate(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
 includes: [compareArray.js, temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 TemporalHelpers.checkPlainDateTimeConversionFastPath((datetime, calendar) => {

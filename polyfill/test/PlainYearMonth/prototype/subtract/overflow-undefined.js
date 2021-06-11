@@ -16,6 +16,7 @@ info: |
       14. ...
       15. Return ? YearMonthFromFields(_calendar_, _addedDateFields_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // In the ISO calendar, PlainYearMonth.prototype.subtract() actually ignores the

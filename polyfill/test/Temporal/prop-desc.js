@@ -3,6 +3,7 @@
 
 /*---
 includes: [propertyHelper.js]
+features: [Temporal]
 ---*/
 
 assert.sameValue(typeof Temporal, "object");

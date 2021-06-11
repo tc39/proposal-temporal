@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+features: [Temporal]
 ---*/
 
 const args = [2000, 5, 2, 12, 34];

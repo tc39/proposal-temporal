@@ -5,6 +5,7 @@
 description: Temporal.PlainYearMonth.from handles a property bag if any value is Infinity
 esid: sec-temporal.plainyearmonth.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 // constrain

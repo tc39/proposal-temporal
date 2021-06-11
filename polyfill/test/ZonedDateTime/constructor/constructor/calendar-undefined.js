@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime
-features: [BigInt]
+features: [BigInt, Temporal]
 ---*/
 
 const args = [957270896987654321n, new Temporal.TimeZone("UTC")];

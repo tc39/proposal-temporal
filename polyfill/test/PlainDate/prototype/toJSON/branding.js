@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.tojson
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toJSON = Temporal.PlainDate.prototype.toJSON;

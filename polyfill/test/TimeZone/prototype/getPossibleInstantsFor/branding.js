@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getpossibleinstantsfor
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getPossibleInstantsFor = Temporal.TimeZone.prototype.getPossibleInstantsFor;

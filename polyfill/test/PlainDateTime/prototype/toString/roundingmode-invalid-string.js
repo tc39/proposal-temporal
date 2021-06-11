@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaindatetime.prototype.tostring
 description: RangeError thrown when roundingMode option not one of the allowed string values
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 123, 987, 500);

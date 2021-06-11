@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.toplaindate
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toPlainDate = Temporal.PlainMonthDay.prototype.toPlainDate;

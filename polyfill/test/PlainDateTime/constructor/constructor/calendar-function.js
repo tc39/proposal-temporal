@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+features: [Temporal]
 ---*/
 
 const dateTimeArgs = [2020, 12, 24, 12, 34, 56, 123, 456, 789];

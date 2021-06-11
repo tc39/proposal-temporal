@@ -5,6 +5,7 @@
 esid: sec-temporal.plaintime.prototype.since
 description: Plural units are accepted as well for the smallestUnit option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const earlier = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);

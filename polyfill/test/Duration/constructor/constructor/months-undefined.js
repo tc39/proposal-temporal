@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration
+features: [Temporal]
 ---*/
 
 const years = 1;

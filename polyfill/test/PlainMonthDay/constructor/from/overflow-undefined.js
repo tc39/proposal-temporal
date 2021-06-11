@@ -20,6 +20,7 @@ info: |
         b. Return ...
       3. Return ? ToTemporalMonthDay(_item_, _options_).
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const validValues = [

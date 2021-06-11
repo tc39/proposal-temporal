@@ -5,6 +5,7 @@
 esid: sec-temporal.zoneddatetime.prototype.round
 description: Fallback value for roundingMode option
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_123_987_500n, "UTC");

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.add
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const add = Temporal.Instant.prototype.add;

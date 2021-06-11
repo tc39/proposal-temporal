@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.subtract
+features: [Temporal]
 ---*/
 
 const duration1 = new Temporal.Duration(1);

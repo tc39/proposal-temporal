@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tojson
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const toJSON = Temporal.Duration.prototype.toJSON;

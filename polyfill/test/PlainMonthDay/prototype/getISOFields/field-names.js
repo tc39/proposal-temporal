@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plainmonthday.prototype.getisofields
 description: Correct field names on the object returned from getISOFields
+features: [Temporal]
 ---*/
 
 const md = new Temporal.PlainMonthDay(5, 2);

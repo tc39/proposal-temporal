@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.millisecond
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const millisecond = Object.getOwnPropertyDescriptor(Temporal.PlainDateTime.prototype, "millisecond").get;

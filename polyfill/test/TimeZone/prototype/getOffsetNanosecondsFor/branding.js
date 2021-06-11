@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetnanosecondsfor
-features: [Symbol]
+features: [Symbol, Temporal]
 ---*/
 
 const getOffsetNanosecondsFor = Temporal.TimeZone.prototype.getOffsetNanosecondsFor;

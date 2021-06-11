@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.from
 includes: [temporalHelpers.js]
+features: [Temporal]
 ---*/
 
 const overflowFields = { year: 2000, month: 13, day: 2, timeZone: "UTC" };
