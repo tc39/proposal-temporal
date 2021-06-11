@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.plainmonthday.prototype.equals
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { PlainMonthDay } = Temporal;
 assert.sameValue(
-  typeof PlainMonthDay.prototype.equals,
+  typeof Temporal.PlainMonthDay.prototype.equals,
   "function",
-  "`typeof MonthDay.prototype.equals` is `function`"
+  "`typeof PlainMonthDay.prototype.equals` is `function`"
 );
 
-verifyProperty(PlainMonthDay.prototype, "equals", {
+verifyProperty(Temporal.PlainMonthDay.prototype, "equals", {
   writable: true,
   enumerable: false,
   configurable: true,

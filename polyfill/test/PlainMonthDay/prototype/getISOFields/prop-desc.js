@@ -2,6 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.plainmonthday.prototype.getisofields
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
@@ -9,7 +10,7 @@ features: [Temporal]
 assert.sameValue(
   typeof Temporal.PlainMonthDay.prototype.getISOFields,
   "function",
-  "`typeof MonthDay.prototype.getISOFields` is `function`"
+  "`typeof PlainMonthDay.prototype.getISOFields` is `function`"
 );
 
 verifyProperty(Temporal.PlainMonthDay.prototype, "getISOFields", {

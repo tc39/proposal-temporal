@@ -10,7 +10,7 @@ features: [Temporal]
 assert.sameValue(
   typeof Temporal.PlainDate.prototype.add,
   "function",
-  "`typeof Date.prototype.add` is `function`"
+  "`typeof PlainDate.prototype.add` is `function`"
 );
 
 verifyProperty(Temporal.PlainDate.prototype, "add", {

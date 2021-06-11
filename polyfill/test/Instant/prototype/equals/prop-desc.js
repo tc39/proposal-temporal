@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.instant.prototype.equals
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { Instant } = Temporal;
 assert.sameValue(
-  typeof Instant.prototype.equals,
+  typeof Temporal.Instant.prototype.equals,
   "function",
   "`typeof Instant.prototype.equals` is `function`"
 );
 
-verifyProperty(Instant.prototype, "equals", {
+verifyProperty(Temporal.Instant.prototype, "equals", {
   writable: true,
   enumerable: false,
   configurable: true,
