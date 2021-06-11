@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.timezone.prototype.getpossibleinstantsfor
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { TimeZone } = Temporal;
 assert.sameValue(
-  typeof TimeZone.prototype.getPossibleInstantsFor,
+  typeof Temporal.TimeZone.prototype.getPossibleInstantsFor,
   "function",
   "`typeof TimeZone.prototype.getPossibleInstantsFor` is `function`"
 );
 
-verifyProperty(TimeZone.prototype, "getPossibleInstantsFor", {
+verifyProperty(Temporal.TimeZone.prototype, "getPossibleInstantsFor", {
   writable: true,
   enumerable: false,
   configurable: true,

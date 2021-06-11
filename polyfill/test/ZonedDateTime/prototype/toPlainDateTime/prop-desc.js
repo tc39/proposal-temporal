@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { ZonedDateTime } = Temporal;
 assert.sameValue(
-  typeof ZonedDateTime.prototype.toPlainDateTime,
+  typeof Temporal.ZonedDateTime.prototype.toPlainDateTime,
   "function",
   "`typeof ZonedDateTime.prototype.toPlainDateTime` is `function`"
 );
 
-verifyProperty(ZonedDateTime.prototype, "toPlainDateTime", {
+verifyProperty(Temporal.ZonedDateTime.prototype, "toPlainDateTime", {
   writable: true,
   enumerable: false,
   configurable: true,

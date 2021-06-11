@@ -100,6 +100,7 @@ overrides:
       TemporalHelpers: readonly
       Test262Error: readonly
       assert: readonly
+      isConstructor: readonly
       verifyProperty: readonly
     # test262 code complies to a different coding style
     extends: 'eslint:recommended'
@@ -108,6 +109,7 @@ overrides:
       comma-dangle: 'off'
       function-call-argument-newline: 'off'
       max-len: 'off'
+      no-prototype-builtins: 'off'
       prettier/prettier: 'off'
       quotes: 'off'
   - files:

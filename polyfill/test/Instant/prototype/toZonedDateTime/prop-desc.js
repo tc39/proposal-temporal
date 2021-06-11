@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.instant.prototype.tozoneddatetime
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { Instant } = Temporal;
 assert.sameValue(
-  typeof Instant.prototype.toZonedDateTime,
+  typeof Temporal.Instant.prototype.toZonedDateTime,
   "function",
   "`typeof Instant.prototype.toZonedDateTime` is `function`"
 );
 
-verifyProperty(Instant.prototype, "toZonedDateTime", {
+verifyProperty(Temporal.Instant.prototype, "toZonedDateTime", {
   writable: true,
   enumerable: false,
   configurable: true,

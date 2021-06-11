@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.plaindatetime.prototype.equals
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { PlainDateTime } = Temporal;
 assert.sameValue(
-  typeof PlainDateTime.prototype.equals,
+  typeof Temporal.PlainDateTime.prototype.equals,
   "function",
-  "`typeof DateTime.prototype.equals` is `function`"
+  "`typeof PlainDateTime.prototype.equals` is `function`"
 );
 
-verifyProperty(PlainDateTime.prototype, "equals", {
+verifyProperty(Temporal.PlainDateTime.prototype, "equals", {
   writable: true,
   enumerable: false,
   configurable: true,

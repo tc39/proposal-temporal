@@ -2,6 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.plaindatetime.prototype.getisofields
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
@@ -9,7 +10,7 @@ features: [Temporal]
 assert.sameValue(
   typeof Temporal.PlainDateTime.prototype.getISOFields,
   "function",
-  "`typeof DateTime.prototype.getISOFields` is `function`"
+  "`typeof PlainDateTime.prototype.getISOFields` is `function`"
 );
 
 verifyProperty(Temporal.PlainDateTime.prototype, "getISOFields", {

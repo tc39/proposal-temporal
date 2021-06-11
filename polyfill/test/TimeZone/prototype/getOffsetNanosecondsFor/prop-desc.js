@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.timezone.prototype.getoffsetnanosecondsfor
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { TimeZone } = Temporal;
 assert.sameValue(
-  typeof TimeZone.prototype.getOffsetNanosecondsFor,
+  typeof Temporal.TimeZone.prototype.getOffsetNanosecondsFor,
   "function",
   "`typeof TimeZone.prototype.getOffsetNanosecondsFor` is `function`"
 );
 
-verifyProperty(TimeZone.prototype, "getOffsetNanosecondsFor", {
+verifyProperty(Temporal.TimeZone.prototype, "getOffsetNanosecondsFor", {
   writable: true,
   enumerable: false,
   configurable: true,

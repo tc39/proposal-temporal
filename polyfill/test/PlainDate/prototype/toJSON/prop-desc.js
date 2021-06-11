@@ -10,7 +10,7 @@ features: [Temporal]
 assert.sameValue(
   typeof Temporal.PlainDate.prototype.toJSON,
   "function",
-  "`typeof Date.prototype.toJSON` is `function`"
+  "`typeof PlainDate.prototype.toJSON` is `function`"
 );
 
 verifyProperty(Temporal.PlainDate.prototype, "toJSON", {

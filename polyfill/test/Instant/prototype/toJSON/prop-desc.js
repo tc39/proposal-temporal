@@ -2,18 +2,18 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal.instant.prototype.tojson
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-const { Instant } = Temporal;
 assert.sameValue(
-  typeof Instant.prototype.toJSON,
+  typeof Temporal.Instant.prototype.toJSON,
   "function",
   "`typeof Instant.prototype.toJSON` is `function`"
 );
 
-verifyProperty(Instant.prototype, "toJSON", {
+verifyProperty(Temporal.Instant.prototype, "toJSON", {
   writable: true,
   enumerable: false,
   configurable: true,
