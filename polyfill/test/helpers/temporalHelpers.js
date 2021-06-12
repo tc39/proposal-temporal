@@ -1057,6 +1057,35 @@ var TemporalHelpers = {
   },
 
   /*
+   * specificOffsetTimeZone():
+   *
+   * This returns an instance of a custom time zone class, which returns a
+   * specific custom value from its getOffsetNanosecondsFrom() method. This is
+   * for the purpose of testing the validation of what this method returns.
+   *
+   * It also returns an empty array from getPossibleInstantsFor(), so as to
+   * trigger calls to getOffsetNanosecondsFor() when used from the
+   * BuiltinTimeZoneGetInstantFor operation.
+   */
+  specificOffsetTimeZone(offsetValue) {
+    class SpecificOffsetTimeZone extends Temporal.TimeZone {
+      constructor(offsetValue) {
+        super("UTC");
+        this._offsetValue = offsetValue;
+      }
+
+      getOffsetNanosecondsFor() {
+        return this._offsetValue;
+      }
+
+      getPossibleInstantsFor() {
+        return [];
+      }
+    }
+    return new SpecificOffsetTimeZone(offsetValue);
+  },
+
+  /*
    * springForwardFallBackTimeZone():
    *
    * This returns an instance of a custom time zone class that implements one
