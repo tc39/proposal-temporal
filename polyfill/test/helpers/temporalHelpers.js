@@ -15,6 +15,7 @@ var TemporalHelpers = {
    * an expected value.
    */
   assertDuration(duration, years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, description = "") {
+    assert(duration instanceof Temporal.Duration, `${description} instanceof`);
     assert.sameValue(duration.years, years, `${description} years result`);
     assert.sameValue(duration.months, months, `${description} months result`);
     assert.sameValue(duration.weeks, weeks, `${description} weeks result`);
@@ -36,6 +37,7 @@ var TemporalHelpers = {
    * result of date.calendar.toString().)
    */
   assertPlainDate(date, year, month, monthCode, day, description = "", era = undefined, eraYear = undefined) {
+    assert(date instanceof Temporal.PlainDate, `${description} instanceof`);
     assert.sameValue(date.era, era, `${description} era result`);
     assert.sameValue(date.eraYear, eraYear, `${description} eraYear result`);
     assert.sameValue(date.year, year, `${description} year result`);
@@ -53,6 +55,7 @@ var TemporalHelpers = {
    * or the result of datetime.calendar.toString().)
    */
   assertPlainDateTime(datetime, year, month, monthCode, day, hour, minute, second, millisecond, microsecond, nanosecond, description = "", era = undefined, eraYear = undefined) {
+    assert(datetime instanceof Temporal.PlainDateTime, `${description} instanceof`);
     assert.sameValue(datetime.era, era, `${description} era result`);
     assert.sameValue(datetime.eraYear, eraYear, `${description} eraYear result`);
     assert.sameValue(datetime.year, year, `${description} year result`);
@@ -76,6 +79,7 @@ var TemporalHelpers = {
    * or the result of monthDay.calendar.toString().)
    */
   assertPlainMonthDay(monthDay, monthCode, day, description = "") {
+    assert(monthDay instanceof Temporal.PlainMonthDay, `${description} instanceof`);
     assert.sameValue(monthDay.monthCode, monthCode, `${description} monthCode result`);
     assert.sameValue(monthDay.day, day, `${description} day result`);
   },
@@ -87,6 +91,7 @@ var TemporalHelpers = {
    * an expected value.
    */
   assertPlainTime(time, hour, minute, second, millisecond, microsecond, nanosecond, description = "") {
+    assert(time instanceof Temporal.PlainTime, `${description} instanceof`);
     assert.sameValue(time.hour, hour, `${description} hour result`);
     assert.sameValue(time.minute, minute, `${description} minute result`);
     assert.sameValue(time.second, second, `${description} second result`);
@@ -104,6 +109,7 @@ var TemporalHelpers = {
    * or the result of yearMonth.calendar.toString().)
    */
   assertPlainYearMonth(yearMonth, year, month, monthCode, description = "", era = undefined, eraYear = undefined) {
+    assert(yearMonth instanceof Temporal.PlainYearMonth, `${description} instanceof`);
     assert.sameValue(yearMonth.era, era, `${description} era result`);
     assert.sameValue(yearMonth.eraYear, eraYear, `${description} eraYear result`);
     assert.sameValue(yearMonth.year, year, `${description} year result`);
