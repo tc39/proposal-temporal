@@ -5845,7 +5845,6 @@
   var NumberIsNaN = Number.isNaN;
   var NumberIsFinite = Number.isFinite;
   var NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
-  var NumberIsInteger = Number.isInteger;
   var ObjectAssign$2 = Object.assign;
   var ObjectCreate$2 = Object.create;
   var ObjectDefineProperty = Object.defineProperty;
@@ -7790,7 +7789,7 @@
         throw new TypeError('bad return from getOffsetNanosecondsFor');
       }
 
-      if (!NumberIsInteger(offsetNs) || MathAbs(offsetNs) > 86400e9) {
+      if (!ES.IsInteger(offsetNs) || MathAbs(offsetNs) > 86400e9) {
         throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
       }
 
