@@ -349,6 +349,8 @@ var TemporalHelpers = {
     assert.throws(RangeError, () => checkFunc(false), "false");
     // Symbols cannot convert to strings
     assert.throws(TypeError, () => checkFunc(Symbol()), "symbol");
+    // Numbers convert to strings which are invalid
+    assert.throws(RangeError, () => checkFunc(2), "number");
     // BigInts convert to strings which are invalid
     assert.throws(RangeError, () => checkFunc(2n), "bigint");
 

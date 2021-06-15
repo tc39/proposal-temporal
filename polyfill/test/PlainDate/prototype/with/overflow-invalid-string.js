@@ -17,4 +17,6 @@ features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);
-assert.throws(RangeError, () => date.with({ month: 8 }, { overflow: "other string" }));
+["", "CONSTRAIN", "balance", "other string"].forEach((overflow) =>
+  assert.throws(RangeError, () => date.with({ month: 8 }, { overflow }))
+);

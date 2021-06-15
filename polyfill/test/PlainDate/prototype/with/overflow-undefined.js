@@ -22,3 +22,5 @@ const explicit = date.with({ month: 15 }, { overflow: undefined });
 TemporalHelpers.assertPlainDate(explicit, 2000, 12, "M12", 2, "default overflow is constrain");
 const implicit = date.with({ month: 15 }, {});
 TemporalHelpers.assertPlainDate(implicit, 2000, 12, "M12", 2, "default overflow is constrain");
+const fun = date.with({ month: 15 }, () => {});
+TemporalHelpers.assertPlainDate(fun, 2000, 12, "M12", 2, "default overflow is constrain");
