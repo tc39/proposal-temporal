@@ -7,6 +7,11 @@
     },
     {
       "type": "op",
+      "aoid": "IsIntegralNumber",
+      "id": "sec-isintegralnumber"
+    },
+    {
+      "type": "op",
       "aoid": "NumberToBigInt",
       "id": "sec-numbertobigint"
     },
