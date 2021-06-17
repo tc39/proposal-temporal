@@ -60,7 +60,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
           1. Perform ? ToTemporalOverflow(_options_).
-          1. Return ? CreateTemporalMonthDay(_item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOYear]], _item_.[[Calendar]]).
+          1. Return ? CreateTemporalMonthDay(_item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]], _item_.[[ISOYear]]).
         1. Return ? ToTemporalMonthDay(_item_, _options_).
       </emu-alg>
     </emu-clause>
@@ -376,7 +376,7 @@
         1. If _result_.[[Year]] is *undefined*, then
           1. If ! IsValidISODate(_referenceISOYear_, _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, *undefined*).
-        1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _referenceISOYear_, _calendar_).
+        1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Let _canonicalMonthDayOptions_ be ! OrdinaryObjectCreate(*null*).
         1. Return ? MonthDayFromFields(_calendar_, _result_, _canonicalMonthDayOptions_).
       </emu-alg>
