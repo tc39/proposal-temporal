@@ -898,6 +898,7 @@
     <emu-clause id="sec-temporal-compareisodate" aoid="CompareISODate">
       <h1>CompareISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_ )</h1>
       <emu-alg>
+        1. Assert: _y1_, _m1_, _d1_, _y2_, _m2_, and _d2_ are integers.
         1. If _y1_ &gt; _y2_, return 1.
         1. If _y1_ &lt; _y2_, return -1.
         1. If _m1_ &gt; _m2_, return 1.

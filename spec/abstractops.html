@@ -1388,6 +1388,7 @@
     <h1>ParseTemporalYearMonthString ( _isoString_ )</h1>
     <p>
       The ParseTemporalYearMonthString abstract operation parses a full or partial ISO 8601 string and returns the information needed to construct a Temporal.PlainYearMonth instance.
+      It returns a Record with four fields ([[Year]], [[Month]], [[Day]], and [[Calendar]]). [[Calendar]] is a String, and the others are integers.
     </p>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
