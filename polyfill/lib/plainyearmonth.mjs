@@ -9,10 +9,10 @@ const DISALLOWED_UNITS = ['week', 'day', 'hour', 'minute', 'second', 'millisecon
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
+    isoYear = ES.ToFiniteInteger(isoYear);
+    isoMonth = ES.ToFiniteInteger(isoMonth);
     calendar = ES.ToTemporalCalendar(calendar);
-    referenceISODay = ES.ToInteger(referenceISODay);
+    referenceISODay = ES.ToFiniteInteger(referenceISODay);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
     //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
