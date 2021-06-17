@@ -128,7 +128,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _calendar_ be _monthDay_.[[Calendar]].
-        1. Return ? CalendarDay(_calendar_, _monthDay_).
+        1. Return 𝔽(? CalendarDay(_calendar_, _monthDay_)).
       </emu-alg>
     </emu-clause>
 
@@ -304,7 +304,7 @@
               [[ISOYear]]
             </td>
             <td>
-              An integer Number value representing the year in the ISO 8601 calendar.
+              An integer representing the year in the ISO 8601 calendar.
               This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOMonth]] and [[ISODay]] slots are not enough to uniquely identify a month and day in that calendar.
             </td>
           </tr>
@@ -313,7 +313,7 @@
               [[ISOMonth]]
             </td>
             <td>
-              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+              An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -321,7 +321,7 @@
               [[ISODay]]
             </td>
             <td>
-              An integer Number value between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -347,7 +347,7 @@
       </p>
       <emu-alg>
         1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
-        1. Let _referenceISOYear_ be the first leap year after the Unix epoch (*1972*<sub>𝔽</sub>).
+        1. Let _referenceISOYear_ be 1972 (the first leap year after the Unix epoch).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _item_.
@@ -367,7 +367,7 @@
           1. Let _monthCode_ be ? Get(_fields_, *"monthCode"*).
           1. Let _year_ be ? Get(_fields_, *"year"*).
           1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
-            1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, _referenceISOYear_).
+            1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, 𝔽(_referenceISOYear_)).
           1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
@@ -385,6 +385,7 @@
     <emu-clause id="sec-temporal-createtemporalmonthday" aoid="CreateTemporalMonthDay">
       <h1>CreateTemporalMonthDay ( _isoMonth_, _isoDay_, _calendar_, _referenceISOYear_ [ , _newTarget_ ] )</h1>
       <emu-alg>
+        1. Assert: _isoMonth_, _isoDay_, and _referenceISOYear_ are integers.
         1. Assert: Type(_calendar_) is Object.
         1. If ! IsValidISODate(_referenceISOYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not given, set it to %Temporal.PlainMonthDay%.
