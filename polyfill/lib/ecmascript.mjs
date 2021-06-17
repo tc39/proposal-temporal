@@ -150,6 +150,13 @@ const ES2020 = {
 
 export const ES = ObjectAssign({}, ES2020, {
   ToPositiveInteger: ToPositiveInteger,
+  ToFiniteInteger: (value) => {
+    const integer = ES.ToInteger(value);
+    if (!NumberIsFinite(integer)) {
+      throw new RangeError('infinity is out of range');
+    }
+    return integer;
+  },
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
