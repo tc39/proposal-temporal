@@ -7,10 +7,10 @@ const ObjectCreate = Object.create;
 
 export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) {
-    isoMonth = ES.ToInteger(isoMonth);
-    isoDay = ES.ToInteger(isoDay);
+    isoMonth = ES.ToFiniteInteger(isoMonth);
+    isoDay = ES.ToFiniteInteger(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
-    referenceISOYear = ES.ToInteger(referenceISOYear);
+    referenceISOYear = ES.ToFiniteInteger(referenceISOYear);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
     //       be rejected by RejectISODate in CreateTemporalMonthDaySlots. This
