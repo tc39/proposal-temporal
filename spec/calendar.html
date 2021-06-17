@@ -441,7 +441,7 @@
     <emu-clause id="sec-buildisomonthcode" aoid="BuildISOMonthCode">
       <h1>BuildISOMonthCode ( _month_ )</h1>
       <p>
-        The abstract operation BuildISOMonthCode returns the corresponding string month code, given the numeric ISO calendar month _month_, which must be a Number value between 1 and 12, inclusive.
+        The abstract operation BuildISOMonthCode returns the corresponding string month code, given the numeric ISO calendar month _month_, which must be an integer between 1 and 12, inclusive.
       </p>
       <emu-alg>
         1. Let _numberPart_ be the String representation of _month_, formatted as a two-digit decimal number, padded to the left with the code unit 0x0030 (DIGIT ZERO) if necessary.
@@ -497,6 +497,7 @@
       <h1>ISOYearMonthFromFields ( _fields_, _options_ )</h1>
       <p>
         The ISOYearMonthFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.yearMonthFromFields` method for the ISO 8601 calendar.
+        It returns a Record with three fields ([[Year]], [[Month]], and [[ReferenceISODay]]). All are integers.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.

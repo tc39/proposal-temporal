@@ -126,7 +126,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarYear(_calendar_, _yearMonth_).
+        1. Return 𝔽(? CalendarYear(_calendar_, _yearMonth_)).
       </emu-alg>
     </emu-clause>
 
@@ -140,7 +140,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarMonth(_calendar_, _yearMonth_).
+        1. Return 𝔽(? CalendarMonth(_calendar_, _yearMonth_)).
       </emu-alg>
     </emu-clause>
 
@@ -514,7 +514,7 @@
               [[ISOYear]]
             </td>
             <td>
-              An integer Number value representing the year in the ISO 8601 calendar.
+              An integer representing the year in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -522,7 +522,7 @@
               [[ISOMonth]]
             </td>
             <td>
-              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+              An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -530,7 +530,7 @@
               [[ISODay]]
             </td>
             <td>
-              An integer Number value between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
+              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
               This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOYear]] and [[ISOMonth]] slots are not enough to uniquely identify a year and month in that calendar.
             </td>
           </tr>
@@ -578,7 +578,7 @@
     <emu-clause id="sec-temporal-regulateisoyearmonth" aoid="RegulateISOYearMonth">
       <h1>RegulateISOYearMonth ( _year_, _month_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integer Number values.
+        1. Assert: _year_ and _month_ are integers.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
           1. Return ! ConstrainISOYearMonth(_year_, _month_).
@@ -597,7 +597,7 @@
         The abstract operation IsValidISOMonth returns *true* if its argument is a valid month in the ISO 8601 calendar, and *false* otherwise.
       </p>
       <emu-alg>
-        1. Assert: _month_ is an integer Number value.
+        1. Assert: _month_ is an integer.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
         1. Return *true*.
@@ -616,7 +616,7 @@
         </p>
       </emu-note>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integer Number values.
+        1. Assert: _year_ and _month_ are integers.
         1. If _year_ &lt; −271821 or _year_ &gt; 275760, then
           1. Return *false*.
         1. If _year_ is −271821 and _month_ &lt; 4, then
@@ -645,7 +645,7 @@
     <emu-clause id="sec-temporal-constrainisoyearmonth" aoid="ConstrainISOYearMonth">
       <h1>ConstrainISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integer Number values.
+        1. Assert: _year_ and _month_ are integers.
         1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
         1. Return the Record {
           [[Year]]: _year_,
@@ -657,6 +657,7 @@
     <emu-clause id="sec-temporal-createtemporalyearmonth" aoid="CreateTemporalYearMonth">
       <h1>CreateTemporalYearMonth ( _isoYear_, _isoMonth_, _calendar_, _referenceISODay_ [ , _newTarget_ ] )</h1>
       <emu-alg>
+        1. Assert: _isoYear_, _isoMonth_, and _referenceISODay_ are integers.
         1. Assert: Type(_calendar_) is Object.
         1. If ! IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
         1. If ! ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
