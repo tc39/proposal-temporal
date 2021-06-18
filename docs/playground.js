@@ -5887,6 +5887,15 @@
   };
   var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
+    ToFiniteInteger: function ToFiniteInteger(value) {
+      var integer = ES.ToInteger(value);
+
+      if (!NumberIsFinite(integer)) {
+        throw new RangeError('infinity is out of range');
+      }
+
+      return integer;
+    },
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
     },
@@ -13837,10 +13846,10 @@
 
       _classCallCheck(this, PlainYearMonth);
 
-      isoYear = ES.ToInteger(isoYear);
-      isoMonth = ES.ToInteger(isoMonth);
+      isoYear = ES.ToFiniteInteger(isoYear);
+      isoMonth = ES.ToFiniteInteger(isoMonth);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISODay = ES.ToInteger(referenceISODay); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      referenceISODay = ES.ToFiniteInteger(referenceISODay); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
       //       check exists only to improve the error message.
 
