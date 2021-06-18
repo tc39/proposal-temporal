@@ -229,10 +229,14 @@ If `other` is not a `Temporal.PlainMonthDay` object, then it will be converted t
 Example usage:
 
 ```javascript
-dt1 = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-dt2 = Temporal.PlainDateTime.from('2019-01-31T15:30');
-dt1.equals(dt2); // => false
-dt1.equals(dt1); // => true
+md1 = Temporal.PlainMonthDay.from('02-28');
+md2 = Temporal.PlainMonthDay.from('02-29');
+md1.equals(md2); // => false
+md1.equals('02-29'); // => false
+md1.equals({ monthCode: 'M02', day: 29 }); // => false
+md2.equals(md2); // => true
+md2.equals('02-29'); // => true
+md2.equals({ monthCode: 'M02', day: 29 }); // => true
 ```
 
 ### monthDay.**toString**() : string
