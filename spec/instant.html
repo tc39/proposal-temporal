@@ -519,7 +519,7 @@
             1. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
         1. Let _string_ be ? ToString(_item_).
         1. Let _epochNanoseconds_ be ? ParseTemporalInstant(_string_).
-        1. Return ? CreateTemporalInstant(_epochNanoseconds_).
+        1. Return ? CreateTemporalInstant(ℤ(_epochNanoseconds_)).
       </emu-alg>
     </emu-clause>
 
@@ -585,7 +585,7 @@
         1. Else,
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _incrementNs_ be _roundingIncrement_.
-        1. Let _diff_ be _ns2_ − _ns1_.
+        1. Let _diff_ be ℝ(_ns2_ − _ns1_).
         1. Return ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
