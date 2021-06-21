@@ -994,6 +994,7 @@
         The abstract operation AddDateTime adds a duration to a combined date and time, according to the reckoning of the given _calendar_.
       </p>
       <emu-alg>
+        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _timeResult_ be ? AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -1042,6 +1043,7 @@
         The _largestUnit_ and _options_ arguments are used in _calendar_'s `dateUntil` method.
       </p>
       <emu-alg>
+        1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
         1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
         1. Let _timeDifference_ be ? DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
