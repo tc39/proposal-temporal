@@ -11484,9 +11484,9 @@
 
       _classCallCheck(this, PlainDate);
 
-      isoYear = ES.ToInteger(isoYear);
-      isoMonth = ES.ToInteger(isoMonth);
-      isoDay = ES.ToInteger(isoDay);
+      isoYear = ES.ToFiniteInteger(isoYear);
+      isoMonth = ES.ToFiniteInteger(isoMonth);
+      isoDay = ES.ToFiniteInteger(isoDay);
       calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
       //       exists only to improve the error message.
