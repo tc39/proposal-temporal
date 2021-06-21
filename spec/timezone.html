@@ -595,6 +595,7 @@
         If that call returns an empty array and _disambiguation_ is not *"reject"*, it observably calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` an additional time.
       </p>
       <emu-alg>
+        1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
         1. Let _n_ be _possibleInstants_'s length.
         1. If _n_ = 1, then
