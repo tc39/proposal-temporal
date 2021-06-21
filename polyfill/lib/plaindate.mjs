@@ -22,9 +22,9 @@ const DISALLOWED_UNITS = ['hour', 'minute', 'second', 'millisecond', 'microsecon
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
-    isoDay = ES.ToInteger(isoDay);
+    isoYear = ES.ToFiniteInteger(isoYear);
+    isoMonth = ES.ToFiniteInteger(isoMonth);
+    isoDay = ES.ToFiniteInteger(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
