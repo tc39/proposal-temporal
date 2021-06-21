@@ -769,6 +769,7 @@
     <emu-clause id="sec-temporal-regulateisodate" aoid="RegulateISODate">
       <h1>RegulateISODate ( _year_, _month_, _day_, _overflow_ )</h1>
       <emu-alg>
+        1. Assert: _year_, _month_, and _day_ are integers.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"reject"*, then
           1. If ! IsValidISODate(_year_, _month_, _day_) is *false*, throw a *RangeError* exception.
