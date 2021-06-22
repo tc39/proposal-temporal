@@ -32,15 +32,15 @@ export class PlainDateTime {
     nanosecond = 0,
     calendar = ES.GetISO8601Calendar()
   ) {
-    isoYear = ES.ToInteger(isoYear);
-    isoMonth = ES.ToInteger(isoMonth);
-    isoDay = ES.ToInteger(isoDay);
-    hour = ES.ToInteger(hour);
-    minute = ES.ToInteger(minute);
-    second = ES.ToInteger(second);
-    millisecond = ES.ToInteger(millisecond);
-    microsecond = ES.ToInteger(microsecond);
-    nanosecond = ES.ToInteger(nanosecond);
+    isoYear = ES.ToFiniteInteger(isoYear);
+    isoMonth = ES.ToFiniteInteger(isoMonth);
+    isoDay = ES.ToFiniteInteger(isoDay);
+    hour = ES.ToFiniteInteger(hour);
+    minute = ES.ToFiniteInteger(minute);
+    second = ES.ToFiniteInteger(second);
+    millisecond = ES.ToFiniteInteger(millisecond);
+    microsecond = ES.ToFiniteInteger(microsecond);
+    nanosecond = ES.ToFiniteInteger(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
 
     // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
