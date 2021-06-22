@@ -758,7 +758,7 @@
               [[ISOYear]]
             </td>
             <td>
-              An integer Number value representing the year in the ISO 8601 calendar.
+              An integer representing the year in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -766,7 +766,7 @@
               [[ISOMonth]]
             </td>
             <td>
-              An integer Number value between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+              An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -774,7 +774,7 @@
               [[ISODay]]
             </td>
             <td>
-              An integer Number value between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
@@ -782,7 +782,7 @@
               [[ISOHour]]
             </td>
             <td>
-              An integer Number value between 0 and 23, inclusive, representing the hour of the day.
+              An integer between 0 and 23, inclusive, representing the hour of the day.
             </td>
           </tr>
           <tr>
@@ -790,7 +790,7 @@
               [[ISOMinute]]
             </td>
             <td>
-              An integer Number value between 0 and 59, inclusive, representing the minute of the hour.
+              An integer between 0 and 59, inclusive, representing the minute of the hour.
             </td>
           </tr>
           <tr>
@@ -798,7 +798,7 @@
               [[ISOSecond]]
             </td>
             <td>
-              An integer Number value between 0 and 59, inclusive, representing the second within the minute.
+              An integer between 0 and 59, inclusive, representing the second within the minute.
             </td>
           </tr>
           <tr>
@@ -806,7 +806,7 @@
               [[ISOMillisecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the millisecond within the second.
+              An integer between 0 and 999, inclusive, representing the millisecond within the second.
             </td>
           </tr>
           <tr>
@@ -814,7 +814,7 @@
               [[ISOMicrosecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the microsecond within the millisecond.
+              An integer between 0 and 999, inclusive, representing the microsecond within the millisecond.
             </td>
           </tr>
           <tr>
@@ -822,7 +822,7 @@
               [[ISONanosecond]]
             </td>
             <td>
-              An integer Number value between 0 and 999, inclusive, representing the nanosecond within the microsecond.
+              An integer between 0 and 999, inclusive, representing the nanosecond within the microsecond.
             </td>
           </tr>
           <tr>
@@ -931,6 +931,7 @@
     <emu-clause id="sec-temporal-balanceisodatetime" aoid="BalanceISODateTime">
       <h1>BalanceISODateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
+        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _balancedTime_ be ? BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Let _balancedDate_ be ? BalanceISODate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
         1. Return the Record {
@@ -975,6 +976,7 @@
     <emu-clause id="sec-temporal-temporaldatetimetostring" aoid="TemporalDateTimeToString">
       <h1>TemporalDateTimeToString ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
       <emu-alg>
+        1. Assert: _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _year_ be ! PadISOYear(_isoYear_).
         1. Let _month_ be _isoMonth_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
         1. Let _day_ be _isoDay_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
@@ -990,6 +992,7 @@
     <emu-clause id="sec-temporal-compareisodatetime" aoid="CompareISODateTime">
       <h1>CompareISODateTime ( _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ )</h1>
       <emu-alg>
+        1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
         1. Let _dateResult_ be ! CompareISODate(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
         1. If _dateResult_ is not 0, then
           1. Return _dateResult_.
@@ -1028,6 +1031,7 @@
         The abstract operation RoundISODateTime rounds the time part of a combined date and time, carrying over any excess into the date part.
       </p>
       <emu-alg>
+        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _roundedTime_ be ? RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
         1. Let _balanceResult_ be ? BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the new Record {
