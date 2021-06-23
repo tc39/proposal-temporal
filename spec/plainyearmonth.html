@@ -630,9 +630,7 @@
     <emu-clause id="sec-temporal-balanceisoyearmonth" aoid="BalanceISOYearMonth">
       <h1>BalanceISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integer Number values.
-        1. If _year_ is *+∞* or *−∞*, or _month_ is *+∞* or *−∞*, then
-          1. Throw a *RangeError* exception.
+        1. Assert: _year_ and _month_ are integers.
         1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
         1. Set _month_ to (_month_ − 1) modulo 12 + 1.
         1. Return the new Record {
