@@ -1284,7 +1284,7 @@
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* », *"auto"*, *"day"*).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _result_ be ? DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+              1. Let _result_ be ! DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
               1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and the value of _calendar_.[[Identifier]].
             1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -1580,7 +1580,7 @@
               1. Let _result_ be _fieldNames_.
             1. Else,
               1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and the value of _calendar_.[[Identifier]].
-            1. Return ? CreateArrayFromList(_result_).
+            1. Return ! CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
 

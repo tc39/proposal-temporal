@@ -681,7 +681,7 @@
         1. If _calendarID_ is not *"iso8601"*, then
           1. Let _day_ be _yearMonth_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
           1. Set _result_ to the string-concatenation of _result_, the code unit 0x002D (HYPHEN-MINUS), and _day_.
-        1. Let _calendarString_ be ? FormatCalendarAnnotation(_calendarID_, _showCalendar_).
+        1. Let _calendarString_ be ! FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. If _calendarString_ is not the empty String, then
           1. Set _result_ to the string-concatenation of _result_ and _calendarString_.
         1. Return _result_.
