@@ -817,11 +817,10 @@
     <emu-clause id="sec-temporal-balanceisodate" aoid="BalanceISODate">
       <h1>BalanceISODate ( _year_, _month_, _day_ )</h1>
       <emu-alg>
-        1. If _day_ is *+∞* or *−∞*, then
-          1. Throw a *RangeError* exception.
-        1. Let _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_).
-        1. Let _month_ be _balancedYearMonth_.[[Month]].
-        1. Let _year_ be _balancedYearMonth_.[[Year]].
+        1. Assert: _year_, _month_, and _day_ are integers.
+        1. Let _balancedYearMonth_ be ! BalanceISOYearMonth(_year_, _month_).
+        1. Set _month_ to _balancedYearMonth_.[[Month]].
+        1. Set _year_ to _balancedYearMonth_.[[Year]].
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than −366 or −365.
         1. If _month_ &gt; 2, then
           1. Let _testYear_ be _year_.
@@ -839,14 +838,14 @@
           1. Set _testYear_ to _testYear_ + 1.
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in the current month, the following section subtracts months and adds days until the number of days is greater than 0.
         1. Repeat, while _day_ &lt; 1,
-          1. Set _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_ − 1).
+          1. Set _balancedYearMonth_ be ! BalanceISOYearMonth(_year_, _month_ − 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
           1. Set _day_ to _day_ + ! ISODaysInMonth(_year_, _month_).
         1. NOTE: To deal with numbers of days greater than the number of days in the current month, the following section adds months and subtracts days until the number of days is less than the number of days in the month.
         1. Repeat, while _day_ &gt; ! ISODaysInMonth(_year_, _month_),
           1. Set _day_ to _day_ − ! ISODaysInMonth(_year_, _month_).
-          1. Set _balancedYearMonth_ be ? BalanceISOYearMonth(_year_, _month_ + 1).
+          1. Set _balancedYearMonth_ be ! BalanceISOYearMonth(_year_, _month_ + 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
         1. Return the new Record {
@@ -886,15 +885,13 @@
     <emu-clause id="sec-temporal-addisodate" aoid="AddISODate">
       <h1>AddISODate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _overflow_ )</h1>
       <emu-alg>
-        1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integer Number values.
+        1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integers.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
-        1. Let _y_ be _year_ + _years_.
-        1. Let _m_ be _month_ + _months_.
-        1. Let _intermediate_ be ? BalanceISOYearMonth(_y_, _m_).
+        1. Let _intermediate_ be ! BalanceISOYearMonth(_year_ + _years_, _month_ + _months_).
         1. Let _intermediate_ be ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 × _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Let _intermediate_ be ? BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Let _intermediate_ be ! BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
         1. Return ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _overflow_).
       </emu-alg>
     </emu-clause>
