@@ -779,7 +779,13 @@
             [[Day]]: _day_
             }.
         1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainISODate(_year_, _month_, _day_).
+          1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
+          1. Set _day_ to ! ConstrainToRange(_day_, 1, ! ISODaysInMonth(_year_, _month_)).
+          1. Return the Record {
+            [[Year]]: _year_,
+            [[Month]]: _month_,
+            [[Day]]: _day_
+            }.
       </emu-alg>
     </emu-clause>
 
@@ -797,20 +803,6 @@
         1. If _day_ &lt; 1 or _day_ &gt; _daysInMonth_, then
           1. Return *false*.
         1. Return *true*.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-constrainisodate" aoid="ConstrainISODate">
-      <h1>ConstrainISODate ( _year_, _month_, _day_ )</h1>
-      <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integers.
-        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
-        1. Set _day_ to ! ConstrainToRange(_day_, 1, ! ISODaysInMonth(_year_, _month_)).
-        1. Return the Record {
-          [[Year]]: _year_,
-          [[Month]]: _month_,
-          [[Day]]: _day_
-          }.
       </emu-alg>
     </emu-clause>
 
