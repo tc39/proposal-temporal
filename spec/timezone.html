@@ -560,7 +560,9 @@
         1. If _getOffsetNanosecondsFor_ is *undefined*, set _getOffsetNanosecondsFor_ to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _instant_ »).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
-        1. If ! IsIntegralNumber(_offsetNanoseconds_) is *false* or abs(_offsetNanoseconds_) &gt; 86400 × 10<sup>9</sup>, throw a *RangeError* exception.
+        1. If ! IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
+        1. Set _offsetNanoseconds_ to ℝ(_offsetNanoseconds_).
+        1. If abs(_offsetNanoseconds_) &gt; 86400 × 10<sup>9</sup>, throw a *RangeError* exception.
         1. Return _offsetNanoseconds_.
       </emu-alg>
     </emu-clause>
@@ -568,7 +570,7 @@
     <emu-clause id="sec-temporal-builtintimezonegetoffsetstringfor" aoid="BuiltinTimeZoneGetOffsetStringFor">
       <h1>BuiltinTimeZoneGetOffsetStringFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
-        1. Let _offsetNanoseconds_ be ℝ(? GetOffsetNanosecondsFor(_timeZone_, _instant_)).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Return ? FormatTimeZoneOffsetString(_offsetNanoseconds_).
       </emu-alg>
     </emu-clause>

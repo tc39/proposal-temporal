@@ -529,7 +529,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Return ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Return 𝔽(? GetOffsetNanosecondsFor(_timeZone_, _instant_)).
       </emu-alg>
     </emu-clause>
 
@@ -1075,7 +1075,7 @@
         In the case of more than one possible exact time, or no possible exact time, an answer is determined using _disambiguation_ and _offset_.
       </p>
       <emu-alg>
-        1. Assert: _offsetNanoseconds_ is an integer mathematical value or *null*.
+        1. Assert: _offsetNanoseconds_ is an integer or *null*.
         1. Let _calendar_ be ? GetISO8601Calendar().
         1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_. _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetNanoseconds_ is *null*, or _offset_ is *"ignore"*, then

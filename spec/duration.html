@@ -828,9 +828,10 @@
         The abstract operation TotalDurationNanoseconds computes a mathematical value number of nanoseconds from the given units, applying a given time zone offset shift in nanoseconds when converting from days to hours.
       </p>
       <emu-alg>
+        1. Assert: _offsetShift_ is an integer.
         1. Set _nanoseconds_ to ℝ(_nanoseconds_).
         1. If _days_ ≠ 0, then
-          1. Set _nanoseconds_ to _nanoseconds_ − ℝ(_offsetShift_).
+          1. Set _nanoseconds_ to _nanoseconds_ − _offsetShift_.
         1. Set _hours_ to ℝ(_hours_) + ℝ(_days_) × 24.
         1. Set _minutes_ to ℝ(_minutes_) + _hours_ × 60.
         1. Set _seconds_ to ℝ(_seconds_) + _minutes_ × 60.
