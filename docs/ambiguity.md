@@ -165,7 +165,7 @@ However, opportunities for ambiguity are present when creating an exact-time typ
 zdt = Temporal.PlainDate.from('2019-02-19').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 zdt = Temporal.PlainDateTime.from('2019-02-19T00:00').toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
 
-// Even if the offset is present in the source string, if the type (like DateTime)
+// Even if the offset is present in the source string, if the type (like PlainDateTime)
 // isn't an exact type then the offset is ignored when parsing so ambiguity is possible.
 dt = Temporal.PlainDateTime.from('2019-02-19T00:00-03:00');
 zdt = dt.toZonedDateTime('America/Sao_Paulo'); // can be ambiguous
@@ -349,7 +349,7 @@ savedUsingOldTzDefinition = '2020-01-01T12:00-02:00[America/Sao_Paulo]'; // stri
   // => RangeError: Offset is invalid for '2020-01-01T12:00' in 'America/Sao_Paulo'. Provided: -02:00, expected: -03:00.
 zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'use' });
   // => 2020-01-01T11:00:00-03:00[America/Sao_Paulo]
-  // Evaluate DateTime value using old offset, which keeps UTC time constant as local time changes to 11:00
+  // Evaluate date/time string using old offset, which keeps UTC time constant as local time changes to 11:00
 zdt = Temporal.ZonedDateTime.from(savedUsingOldTzDefinition, { offset: 'ignore' });
   // => 2020-01-01T12:00:00-03:00[America/Sao_Paulo]
   // Use current time zone rules to calculate offset, ignoring any saved offset
