@@ -13374,12 +13374,12 @@
 
       _classCallCheck(this, PlainTime);
 
-      isoHour = ES.ToInteger(isoHour);
-      isoMinute = ES.ToInteger(isoMinute);
-      isoSecond = ES.ToInteger(isoSecond);
-      isoMillisecond = ES.ToInteger(isoMillisecond);
-      isoMicrosecond = ES.ToInteger(isoMicrosecond);
-      isoNanosecond = ES.ToInteger(isoNanosecond);
+      isoHour = ES.ToFiniteInteger(isoHour);
+      isoMinute = ES.ToFiniteInteger(isoMinute);
+      isoSecond = ES.ToFiniteInteger(isoSecond);
+      isoMillisecond = ES.ToFiniteInteger(isoMillisecond);
+      isoMicrosecond = ES.ToFiniteInteger(isoMicrosecond);
+      isoNanosecond = ES.ToFiniteInteger(isoNanosecond);
       ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
       CreateSlots(this);
       SetSlot(this, ISO_HOUR, isoHour);
