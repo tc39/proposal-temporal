@@ -714,7 +714,7 @@
     <emu-clause id="sec-temporal-durationsign" aoid="DurationSign">
       <h1>DurationSign ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
       <emu-alg>
-        1. For each value _v_ of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, do
+        1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
           1. If _v_ &lt; 0, return −1.
           1. If _v_ &gt; 0, return 1.
         1. Return 0.
@@ -728,7 +728,7 @@
       </p>
       <emu-alg>
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. For each value _v_ of _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, do
+        1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
           1. If _v_ is not finite, return *false*.
           1. If _v_ &lt; 0 and _sign_ &gt; 0, return *false*.
           1. If _v_ &gt; 0 and _sign_ &lt; 0, return *false*.
