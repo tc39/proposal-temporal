@@ -1096,11 +1096,11 @@
         1. Set _second_ to 59.
       1. If _fraction_ is not *undefined*, then
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-        1. Let _millisecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
+        1. Let _millisecond_ be the String value equal to the substring of _fraction_ from 0 to 3.
         1. Set _millisecond_ to ! ToIntegerOrInfinity(_millisecond_).
-        1. Let _microsecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).
+        1. Let _microsecond_ be the String value equal to the substring of _fraction_ from 3 to 6.
         1. Set _microsecond_ to ! ToIntegerOrInfinity(_microsecond_).
-        1. Let _nanosecond_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
+        1. Let _nanosecond_ be the String value equal to the substring of _fraction_ from 6 to 9.
         1. Set _nanosecond_ to ! ToIntegerOrInfinity(_nanosecond_).
       1. Else,
         1. Let _millisecond_ be 0.
@@ -1252,11 +1252,11 @@
       1. If _fSeconds_ is not *undefined*, then
         1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-        1. Let _milliseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 3 (exclusive).
+        1. Let _milliseconds_ be the String value equal to the substring of _fraction_ from 0 to 3.
         1. Set _milliseconds_ to ! ToIntegerOrInfinity(_milliseconds_) × _factor_.
-        1. Let _microseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 3 (inclusive) through 6 (exclusive).
+        1. Let _microseconds_ be the String value equal to the substring of _fraction_ from 3 to 6.
         1. Set _microseconds_ to ! ToIntegerOrInfinity(_microseconds_) × _factor_.
-        1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 6 (inclusive) through 9 (exclusive).
+        1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ from 6 to 9.
         1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_) × _factor_.
       1. Else,
         1. Let _milliseconds_ be 0.
@@ -1368,7 +1368,7 @@
         1. Set _seconds_ to ! ToIntegerOrInfinity(_seconds_).
         1. If _fraction_ is not *undefined*, then
           1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-          1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ consisting of the code units with indices 0 (inclusive) through 9 (exclusive).
+          1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ from 0 to 9.
           1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_).
         1. Else,
           1. Let _nanoseconds_ be 0.
