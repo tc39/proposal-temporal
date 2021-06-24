@@ -1136,6 +1136,7 @@
         The abstract operation CreateTemporalZonedDateTime is used to specify the creation of a new `Temporal.ZonedDateTime` object.
       </p>
       <emu-alg>
+        1. Assert: Type(_epochNanoseconds_) is BigInt.
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: Type(_calendar_) is Object.
