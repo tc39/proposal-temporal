@@ -501,7 +501,7 @@
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. If _newTarget_ is not present, set it to %Temporal.Instant%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Instant.prototype%"*, « [[InitializedTemporalInstant]], [[Nanoseconds]] »).
-        1. Set _object_.[[Nanoseconds]] to _ns_.
+        1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
         1. Return _object_.
       </emu-alg>
     </emu-clause>
