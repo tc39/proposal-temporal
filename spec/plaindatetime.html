@@ -1032,6 +1032,7 @@
       </p>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
+        1. If _dayLength_ is not present, set _dayLength_ to 8.64 × 10<sup>13</sup>.
         1. Let _roundedTime_ be ? RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
         1. Let _balanceResult_ be ! BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the new Record {

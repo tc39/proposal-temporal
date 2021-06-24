@@ -844,7 +844,8 @@
     <emu-clause id="sec-temporal-balanceduration" aoid="BalanceDuration">
       <h1>BalanceDuration ( _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <emu-alg>
-        1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
+        1. If Type(_relativeTo_) is Object and _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
           1. Set _nanoseconds_ to _endNs_ − _relativeTo_.[[Nanoseconds]].
         1. Else,
@@ -911,6 +912,7 @@
       <h1>UnbalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_ [ , _relativeTo_ ] )</h1>
       <p>The abstract operation UnbalanceDurationRelative converts the calendar units of a Temporal.Duration into a form where no unit is larger than _largestUnit_.</p>
       <emu-alg>
+        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If _largestUnit_ is *"year"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. Return the new Record {
             [[Years]]: _years_,
@@ -1215,6 +1217,7 @@
     <emu-clause id="sec-temporal-roundduration" aoid="RoundDuration">
       <h1>RoundDuration ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _increment_, _unit_, _roundingMode_ [ , _relativeTo_ ] )</h1>
       <emu-alg>
+        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. Let _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, and _increment_ each be the mathematical values of themselves.
         1. If _unit_ is *"year"*, *"month"*, or *"week"*, and _relativeTo_ is *undefined*, then
           1. Throw a *RangeError* exception.
@@ -1373,7 +1376,7 @@
         In this case, the days part of the duration is adjusted by one, and the time part is re-rounded.
       </p>
       <emu-alg>
-        1. If _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
+        1. If _relativeTo_ is not present; or Type(_relativeTo_) is not Object; or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
           1. Return the new Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
