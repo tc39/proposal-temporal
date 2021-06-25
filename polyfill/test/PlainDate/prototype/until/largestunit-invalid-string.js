@@ -9,4 +9,7 @@ features: [Temporal]
 
 const earlier = new Temporal.PlainDate(2000, 5, 2);
 const later = new Temporal.PlainDate(2001, 6, 3);
-assert.throws(RangeError, () => earlier.until(later, { largestUnit: "other string" }));
+const values = ["hours", "minutes", "seconds", "milliseconds", "microseconds", "nanoseconds", "other string"];
+for (const largestUnit of values) {
+  assert.throws(RangeError, () => earlier.until(later, { largestUnit }));
+}

@@ -18,82 +18,8 @@ import * as Temporal from 'proposal-temporal';
 const { PlainDate } = Temporal;
 
 describe('Date', () => {
-  describe('Date.toPlainDateTime() works', () => {
-    const date = PlainDate.from('1976-11-18');
-    const dt = date.toPlainDateTime(Temporal.PlainTime.from('11:30:23'));
-    it('returns a Temporal.PlainDateTime', () => assert(dt instanceof Temporal.PlainDateTime));
-  });
-  describe('Date.toZonedDateTime()', function () {
-    it('works', () => {
-      const date = PlainDate.from('2020-01-01');
-      const time = Temporal.PlainTime.from('12:00');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: time });
-      equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
-    });
-    it('works with time omitted (timeZone argument)', () => {
-      const date = PlainDate.from('2020-01-01');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime(tz);
-      equal(`${zdt}`, '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
-    });
-    it('works with time omitted (timeZone property)', () => {
-      const date = PlainDate.from('2020-01-01');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime({ timeZone: tz });
-      equal(`${zdt}`, '2020-01-01T00:00:00-08:00[America/Los_Angeles]');
-    });
-    it('casts timeZone property', () => {
-      const date = PlainDate.from('2020-07-08');
-      const time = Temporal.PlainTime.from('12:00');
-      const zdt = date.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainTime: time });
-      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-    it('casts time property', () => {
-      const date = PlainDate.from('2020-07-08');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: '12:00' });
-      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-  });
   describe('date.until() works', () => {
     const date = new PlainDate(1969, 7, 24);
-    it('date.until({ year: 1969, month: 7, day: 24 })', () => {
-      const duration = date.until(PlainDate.from({ year: 1969, month: 10, day: 5 }));
-
-      equal(duration.years, 0);
-      equal(duration.months, 0);
-      equal(duration.weeks, 0);
-      equal(duration.days, 73);
-      equal(duration.hours, 0);
-      equal(duration.minutes, 0);
-      equal(duration.seconds, 0);
-      equal(duration.milliseconds, 0);
-      equal(duration.microseconds, 0);
-      equal(duration.nanoseconds, 0);
-    });
-    it('date.until(later) === later.since(date)', () => {
-      const later = PlainDate.from({ year: 1996, month: 3, day: 3 });
-      equal(`${date.until(later)}`, `${later.since(date)}`);
-    });
-    it('date.until({ year: 2019, month: 7, day: 24 }, { largestUnit: "years" })', () => {
-      const later = PlainDate.from({ year: 2019, month: 7, day: 24 });
-      const duration = date.until(later, { largestUnit: 'years' });
-      equal(duration.years, 50);
-      equal(duration.months, 0);
-      equal(duration.weeks, 0);
-      equal(duration.days, 0);
-      equal(duration.hours, 0);
-      equal(duration.minutes, 0);
-      equal(duration.seconds, 0);
-      equal(duration.milliseconds, 0);
-      equal(duration.microseconds, 0);
-      equal(duration.nanoseconds, 0);
-    });
-    it('casts argument', () => {
-      equal(`${date.until({ year: 2019, month: 7, day: 24 })}`, 'P18262D');
-      equal(`${date.until('2019-07-24')}`, 'P18262D');
-    });
     it('takes days per month into account', () => {
       const date1 = PlainDate.from('2019-01-01');
       const date2 = PlainDate.from('2019-02-01');
@@ -117,30 +43,6 @@ describe('Date', () => {
       equal(`${date2.until(date4)}`, 'P366D');
       equal(`${date4.until(date6)}`, 'P365D');
     });
-    const feb20 = PlainDate.from('2020-02-01');
-    const feb21 = PlainDate.from('2021-02-01');
-    it('defaults to returning days', () => {
-      equal(`${feb20.until(feb21)}`, 'P366D');
-      equal(`${feb20.until(feb21, { largestUnit: 'auto' })}`, 'P366D');
-      equal(`${feb20.until(feb21, { largestUnit: 'days' })}`, 'P366D');
-    });
-    it('can return higher units', () => {
-      equal(`${feb20.until(feb21, { largestUnit: 'years' })}`, 'P1Y');
-      equal(`${feb20.until(feb21, { largestUnit: 'months' })}`, 'P12M');
-      equal(`${feb20.until(feb21, { largestUnit: 'weeks' })}`, 'P52W2D');
-    });
-    it('cannot return lower units', () => {
-      ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].forEach((largestUnit) =>
-        throws(() => feb20.until(feb21, { largestUnit }), RangeError)
-      );
-    });
-    it('does not include higher units than necessary', () => {
-      const lastFeb20 = PlainDate.from('2020-02-29');
-      const lastFeb21 = PlainDate.from('2021-02-28');
-      equal(`${lastFeb20.until(lastFeb21)}`, 'P365D');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`, 'P12M');
-      equal(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`, 'P1Y');
-    });
     it('weeks and months are mutually exclusive', () => {
       const laterDate = date.add({ days: 42 });
       const weeksDifference = date.until(laterDate, { largestUnit: 'weeks' });
@@ -150,43 +52,12 @@ describe('Date', () => {
       equal(monthsDifference.weeks, 0);
       notEqual(monthsDifference.months, 0);
     });
-    it('no two different calendars', () => {
-      const date1 = new PlainDate(2000, 1, 1);
-      const date2 = new PlainDate(2000, 1, 1, Temporal.Calendar.from('japanese'));
-      throws(() => date1.until(date2), RangeError);
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb20.until(feb21, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb20.until(feb21, options)}`, 'P366D'));
-    });
     const earlier = PlainDate.from('2019-01-08');
     const later = PlainDate.from('2021-09-07');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => earlier.until(later, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['years', 'months', 'weeks', 'days'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
       equal(`${earlier.until(later, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
       equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
       equal(`${earlier.until(later, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['years', 'P3Y'],
@@ -268,17 +139,6 @@ describe('Date', () => {
         'P1000D'
       );
     });
-    it('accepts singular units', () => {
-      equal(`${earlier.until(later, { largestUnit: 'year' })}`, `${earlier.until(later, { largestUnit: 'years' })}`);
-      equal(`${earlier.until(later, { smallestUnit: 'year' })}`, `${earlier.until(later, { smallestUnit: 'years' })}`);
-      equal(`${earlier.until(later, { largestUnit: 'month' })}`, `${earlier.until(later, { largestUnit: 'months' })}`);
-      equal(
-        `${earlier.until(later, { smallestUnit: 'month' })}`,
-        `${earlier.until(later, { smallestUnit: 'months' })}`
-      );
-      equal(`${earlier.until(later, { largestUnit: 'day' })}`, `${earlier.until(later, { largestUnit: 'days' })}`);
-      equal(`${earlier.until(later, { smallestUnit: 'day' })}`, `${earlier.until(later, { smallestUnit: 'days' })}`);
-    });
     it('rounds relative to the receiver', () => {
       const date1 = Temporal.PlainDate.from('2019-01-01');
       const date2 = Temporal.PlainDate.from('2019-02-15');
@@ -306,42 +166,6 @@ describe('Date', () => {
   });
   describe('date.since() works', () => {
     const date = new PlainDate(1976, 11, 18);
-    it('date.since({ year: 1976, month: 10, day: 5 })', () => {
-      const duration = date.since(PlainDate.from({ year: 1976, month: 10, day: 5 }));
-
-      equal(duration.years, 0);
-      equal(duration.months, 0);
-      equal(duration.weeks, 0);
-      equal(duration.days, 44);
-      equal(duration.hours, 0);
-      equal(duration.minutes, 0);
-      equal(duration.seconds, 0);
-      equal(duration.milliseconds, 0);
-      equal(duration.microseconds, 0);
-      equal(duration.nanoseconds, 0);
-    });
-    it('date.since(earlier) === earlier.until(date)', () => {
-      const earlier = PlainDate.from({ year: 1966, month: 3, day: 3 });
-      equal(`${date.since(earlier)}`, `${earlier.until(date)}`);
-    });
-    it('date.since({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
-      const later = PlainDate.from({ year: 2019, month: 11, day: 18 });
-      const duration = later.since(date, { largestUnit: 'years' });
-      equal(duration.years, 43);
-      equal(duration.months, 0);
-      equal(duration.weeks, 0);
-      equal(duration.days, 0);
-      equal(duration.hours, 0);
-      equal(duration.minutes, 0);
-      equal(duration.seconds, 0);
-      equal(duration.milliseconds, 0);
-      equal(duration.microseconds, 0);
-      equal(duration.nanoseconds, 0);
-    });
-    it('casts argument', () => {
-      equal(`${date.since({ year: 2019, month: 11, day: 5 })}`, '-P15692D');
-      equal(`${date.since('2019-11-05')}`, '-P15692D');
-    });
     it('takes days per month into account', () => {
       const date1 = PlainDate.from('2019-01-01');
       const date2 = PlainDate.from('2019-02-01');
@@ -365,33 +189,6 @@ describe('Date', () => {
       equal(`${date4.since(date2)}`, 'P366D');
       equal(`${date6.since(date4)}`, 'P365D');
     });
-    const feb20 = PlainDate.from('2020-02-01');
-    const feb21 = PlainDate.from('2021-02-01');
-    it('defaults to returning days', () => {
-      equal(`${feb21.since(feb20)}`, 'P366D');
-      equal(`${feb21.since(feb20, { largestUnit: 'auto' })}`, 'P366D');
-      equal(`${feb21.since(feb20, { largestUnit: 'days' })}`, 'P366D');
-    });
-    it('can return higher units', () => {
-      equal(`${feb21.since(feb20, { largestUnit: 'years' })}`, 'P1Y');
-      equal(`${feb21.since(feb20, { largestUnit: 'months' })}`, 'P12M');
-      equal(`${feb21.since(feb20, { largestUnit: 'weeks' })}`, 'P52W2D');
-    });
-    it('cannot return lower units', () => {
-      throws(() => feb21.since(feb20, { largestUnit: 'hours' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'minutes' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'seconds' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'milliseconds' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'microseconds' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'nanoseconds' }), RangeError);
-    });
-    it('does not include higher units than necessary', () => {
-      const lastFeb20 = PlainDate.from('2020-02-29');
-      const lastFeb21 = PlainDate.from('2021-02-28');
-      equal(`${lastFeb21.since(lastFeb20)}`, 'P365D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'months' })}`, 'P11M28D');
-      equal(`${lastFeb21.since(lastFeb20, { largestUnit: 'years' })}`, 'P11M28D');
-    });
     it('weeks and months are mutually exclusive', () => {
       const laterDate = date.add({ days: 42 });
       const weeksDifference = laterDate.since(date, { largestUnit: 'weeks' });
@@ -401,43 +198,12 @@ describe('Date', () => {
       equal(monthsDifference.weeks, 0);
       notEqual(monthsDifference.months, 0);
     });
-    it('no two different calendars', () => {
-      const date1 = new PlainDate(2000, 1, 1);
-      const date2 = new PlainDate(2000, 1, 1, Temporal.Calendar.from('japanese'));
-      throws(() => date1.since(date2), RangeError);
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb21.since(feb20, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'P366D'));
-    });
     const earlier = PlainDate.from('2019-01-08');
     const later = PlainDate.from('2021-09-07');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => later.since(earlier, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['years', 'months', 'weeks', 'days'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
       equal(`${later.since(earlier, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
       equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
       equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['years', 'P3Y'],
@@ -519,17 +285,6 @@ describe('Date', () => {
         'P1000D'
       );
     });
-    it('accepts singular units', () => {
-      equal(`${later.since(earlier, { largestUnit: 'year' })}`, `${later.since(earlier, { largestUnit: 'years' })}`);
-      equal(`${later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier, { smallestUnit: 'years' })}`);
-      equal(`${later.since(earlier, { largestUnit: 'month' })}`, `${later.since(earlier, { largestUnit: 'months' })}`);
-      equal(
-        `${later.since(earlier, { smallestUnit: 'month' })}`,
-        `${later.since(earlier, { smallestUnit: 'months' })}`
-      );
-      equal(`${later.since(earlier, { largestUnit: 'day' })}`, `${later.since(earlier, { largestUnit: 'days' })}`);
-      equal(`${later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier, { smallestUnit: 'days' })}`);
-    });
     it('rounds relative to the receiver', () => {
       const date1 = PlainDate.from('2019-01-01');
       const date2 = PlainDate.from('2019-02-15');
@@ -601,9 +356,6 @@ describe('Date', () => {
       );
     });
     it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => date.add({ months: 1 }, badOptions), TypeError)
-      );
       [{}, () => {}, undefined].forEach((options) => equal(`${date.add({ months: 1 }, options)}`, '1976-12-18'));
     });
     it('object must contain at least one correctly-spelled property', () => {
@@ -678,9 +430,6 @@ describe('Date', () => {
       );
     });
     it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => date.subtract({ months: 1 }, badOptions), TypeError)
-      );
       [{}, () => {}, undefined].forEach((options) => equal(`${date.subtract({ months: 1 }, options)}`, '2019-10-18'));
     });
     it('object must contain at least one correctly-spelled property', () => {
@@ -712,11 +461,6 @@ describe('Date', () => {
     it('default is calendar = auto', () => {
       equal(d.toString(), '1976-11-18');
       equal(d.withCalendar('gregory').toString(), '1976-11-18[u-ca=gregory]');
-    });
-    it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
-        throws(() => d.toString({ calendarName }), RangeError);
-      });
     });
   });
   describe('Date.from() works', () => {
@@ -806,9 +550,6 @@ describe('Date', () => {
     it('ignores if a timezone is specified', () =>
       equal(`${PlainDate.from('2020-01-01[Asia/Kolkata]')}`, '2020-01-01'));
     it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => PlainDate.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)
-      );
       [{}, () => {}, undefined].forEach((options) =>
         equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18')
       );
@@ -863,17 +604,6 @@ describe('Date', () => {
     it('object must contain at least the required properties', () => {
       throws(() => d2.equals({ year: 1976 }), TypeError);
     });
-  });
-  describe("Comparison operators don't work", () => {
-    const d1 = PlainDate.from('1963-02-13');
-    const d1again = PlainDate.from('1963-02-13');
-    const d2 = PlainDate.from('1976-11-18');
-    it('=== is object equality', () => equal(d1, d1));
-    it('!== is object equality', () => notEqual(d1, d1again));
-    it('<', () => throws(() => d1 < d2));
-    it('>', () => throws(() => d1 > d2));
-    it('<=', () => throws(() => d1 <= d2));
-    it('>=', () => throws(() => d1 >= d2));
   });
   describe('Min/max range', () => {
     it('constructing from numbers', () => {
@@ -933,37 +663,6 @@ describe('Date', () => {
         throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
         throws(() => max.add({ days: 1 }, { overflow }), RangeError);
       });
-    });
-  });
-  describe('date.getISOFields() works', () => {
-    const d1 = PlainDate.from('1976-11-18');
-    const fields = d1.getISOFields();
-    it('fields', () => {
-      equal(fields.isoYear, 1976);
-      equal(fields.isoMonth, 11);
-      equal(fields.isoDay, 18);
-      equal(fields.calendar.id, 'iso8601');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.isoYear, 1976);
-      equal(fields2.isoMonth, 11);
-      equal(fields2.isoDay, 18);
-      equal(fields2.calendar, fields.calendar);
-    });
-    it('as input to constructor', () => {
-      const d2 = new PlainDate(fields.isoYear, fields.isoMonth, fields.isoDay, fields.calendar);
-      assert(d2.equals(d1));
-    });
-  });
-  describe('date.withCalendar()', () => {
-    const d1 = PlainDate.from('1976-11-18');
-    it('works', () => {
-      const calendar = Temporal.Calendar.from('iso8601');
-      equal(`${d1.withCalendar(calendar)}`, '1976-11-18');
-    });
-    it('casts its argument', () => {
-      equal(`${d1.withCalendar('iso8601')}`, '1976-11-18');
     });
   });
 });
