@@ -15,4 +15,8 @@ features: [Temporal]
 ---*/
 
 const date = new Temporal.PlainDate(2000, 5, 2);
-assert.throws(RangeError, () => date.toString({ calendarName: "other string" }));
+const values = ["ALWAYS", "sometimes", "other string"];
+
+for (const calendarName of values) {
+  assert.throws(RangeError, () => date.toString({ calendarName }));
+}
