@@ -31,7 +31,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 The Temporal API follows a convention of using types whose names start with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) for objects which do not have an associated time zone.
 Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.
 
-Temporal documentation also explains core concepts like [exact time, wall-clock time, time zone handling, DST, and ambiguity](./ambiguity.md).
+Several important concepts are explained elsewhere: [exact time, wall-clock time, time zones, DST, handling ambiguity, and more](./ambiguity.md).
 
 ### **Temporal.now**
 
