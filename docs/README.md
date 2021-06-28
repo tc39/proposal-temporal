@@ -20,11 +20,7 @@ Temporal fixes these problems by:
 - Parsing a strictly specified string format
 - Supporting non-Gregorian calendars
 
-Temporal provides a number of separate types, in order to
-
-- Represent the information you have
-- Avoid buggy pattern of filling in 0 or UTC for missing info
-- Do appropriate calculations based on type
+Temporal provides separate ECMAScript classes for date-only, time-only, and other scoped use cases. This makes code more readable and prevents bugs caused by incorrectly assuming 0, UTC, or the local time zone for values that are actually unknown.
 
 ## Cookbook
 
@@ -35,7 +31,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 The Temporal API follows a convention of using types whose names start with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) for objects which do not have an associated time zone.
 Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.
 
-Read more about [handling time zones, DST, and ambiguity in `Temporal`](./ambiguity.md).
+Several important concepts are explained elsewhere: [exact time, wall-clock time, time zones, DST, handling ambiguity, and more](./ambiguity.md).
 
 ### **Temporal.now**
 
