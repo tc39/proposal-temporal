@@ -3575,7 +3575,22 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     };
   },
-  AddZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, options) => {
+  AddZonedDateTime: (
+    instant,
+    timeZone,
+    calendar,
+    years,
+    months,
+    weeks,
+    days,
+    h,
+    min,
+    s,
+    ms,
+    µs,
+    ns,
+    options = ObjectCreate(null)
+  ) => {
     // If only time is to be added, then use Instant math. It's not OK to fall
     // through to the date/time code below because compatible disambiguation in
     // the PlainDateTime=>Instant conversion will change the offset of any
