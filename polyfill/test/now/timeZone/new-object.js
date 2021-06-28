@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
+description: Each invocation of the function produces a distinct object value
 features: [Temporal]
 ---*/
 
