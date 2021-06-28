@@ -644,6 +644,9 @@ export class ZonedDateTime {
     const instantStart = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtStart, 'compatible');
     const endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
     const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
+    if (dayLengthNs.isZero()) {
+      throw new RangeError('can not round a ZonedDateTime in a calendar with zero-length days');
+    }
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
       year,
       month,
