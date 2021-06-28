@@ -747,12 +747,11 @@
             1. Let _smaller_ be the new Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
             1. Let _greater_ be the new Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
             1. Let _sign_ be −1.
-          1. Let _years_ be _greater_.[[Year]] − _smaller_.[[Year]].
           1. Let _days_ be ! ToISODayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) − ! ToISODayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
-          1. Assert: _years_ ≥ 0.
-          1. Repeat, while _years_ &gt; 0,
-            1. Set _days_ to _days_ + ! ISODaysInYear(_smaller_.[[Year]] + _years_ − 1).
-            1. Set _years_ to _years_ − 1.
+          1. Let _year_ be _smaller_.[[Year]].
+          1. Repeat, while _year_ &lt; _greater_.[[Year]],
+            1. Set _days_ to _days_ + ! ISODaysInYear(_year_).
+            1. Set _year_ to _year_ + 1.
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is *"week"*, then
             1. Set _weeks_ to floor(_days_ / 7).
