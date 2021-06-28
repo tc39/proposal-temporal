@@ -1181,12 +1181,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-addzoneddatetime" aoid="AddZonedDateTime">
-      <h1>AddZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _options_ )</h1>
+      <h1>AddZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ [ , _options_ ] )</h1>
       <p>
         The abstract operation AddZonedDateTime adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the Unix epoch, subject to the rules of _timeZone_ and _calendar_.
         As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
       </p>
       <emu-alg>
+        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
         1. If all of _years_, _months_, _weeks_, and _days_ are 0, then
           1. Return ! AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _instant_ be ? CreateTemporalInstant(_epochNanoseconds_).
