@@ -3081,12 +3081,10 @@ export const ES = ObjectAssign({}, ES2020, {
           larger = { year: y1, month: m1, day: d1 };
           sign = -1;
         }
-        let years = larger.year - smaller.year;
         let days =
           ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
-        while (years > 0) {
-          days += ES.LeapYear(smaller.year + years - 1) ? 366 : 365;
-          years -= 1;
+        for (let year = smaller.year; year < larger.year; ++year) {
+          days += ES.LeapYear(year) ? 366 : 365;
         }
         let weeks = 0;
         if (largestUnit === 'week') {
