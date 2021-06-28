@@ -461,13 +461,13 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-07-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-08-29'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> largestUnit<span class="token operator">:</span> <span class="token string">'month'</span> <span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(<em>fields</em>: Iterable<string>) : Iterable<string></h3><p><strong>Parameters:</strong></p>
+<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P1M2D</span></code></pre><h3 id="fields"><a class="heading-link" href="#fields"></a>calendar.<strong>fields</strong>(<em>fields</em>: Iterable&lt;string&gt;) : Iterable&lt;string&gt;</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>fields</code> (array of strings, or other iterable yielding strings): A list of field names.</li>
 </ul>
 <p><strong>Returns:</strong> a new list of field names.</p>
 <p>This method does not need to be called directly except in specialized code.
-It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainMonthDay</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.ZonedDateTime</code>.</p>
+It is called indirectly when using the <code>from()</code> static methods and <code>with()</code> methods of <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainMonthDay</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.ZonedDateTime</code>, and a number of other methods.</p>
 <p>Custom calendars should override this method if they accept fields in <code>from()</code> or <code>with()</code> other than the standard set of built-in calendar fields: <code>year</code>, <code>month</code>, <code>monthCode</code>, and <code>day</code>.
 The input array contains the field names that are necessary for a particular operation (for example, <code>&#39;monthCode&#39;</code> and <code>&#39;day&#39;</code> for <code>Temporal.PlainMonthDay.prototype.with()</code>).
 The method should make a copy of the array and add additional fields as needed.</p>
