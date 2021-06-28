@@ -204,18 +204,13 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <li>Parsing a strictly specified string format</li>
 <li>Supporting non-Gregorian calendars</li>
 </ul>
-<p>Temporal provides a number of separate types, in order to</p>
-<ul>
-<li>Represent the information you have</li>
-<li>Avoid buggy pattern of filling in 0 or UTC for missing info</li>
-<li>Do appropriate calculations based on type</li>
-</ul>
+<p>Temporal provides separate ECMAScript classes for date-only, time-only, and other scoped use cases. This makes code more readable and prevents bugs caused by incorrectly assuming 0, UTC, or the local time zone for values that are actually unknown.</p>
 <h2 id="cookbook">Cookbook</h2>
 <p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
 <h2 id="api-documentation">API Documentation</h2>
 <p>The Temporal API follows a convention of using types whose names start with &quot;Plain&quot; (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) for objects which do not have an associated time zone.
 Converting between such types and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.</p>
-<p>Read more about <a href="./ambiguity.html">handling time zones, DST, and ambiguity in <code>Temporal</code></a>.</p>
+<p>Several important concepts are explained elsewhere: <a href="./ambiguity.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
 <li><code>Temporal.now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
 <li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
