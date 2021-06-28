@@ -414,6 +414,7 @@
         1. If _identifier_ satisfies the syntax of a |TimeZoneNumericUTCOffset| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
           1. Set _object_.[[OffsetNanoseconds]] to ! ParseTimeZoneOffsetString(_identifier_).
         1. Else,
+          1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
           1. Set _object_.[[OffsetNanoseconds]] to *undefined*.
         1. Return _object_.
       </emu-alg>
