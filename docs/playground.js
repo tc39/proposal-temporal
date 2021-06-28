@@ -9362,13 +9362,10 @@
               _sign = -1;
             }
 
-            var _years = larger.year - smaller.year;
-
             var _days2 = ES.DayOfYear(larger.year, larger.month, larger.day) - ES.DayOfYear(smaller.year, smaller.month, smaller.day);
 
-            while (_years > 0) {
-              _days2 += ES.LeapYear(smaller.year + _years - 1) ? 366 : 365;
-              _years -= 1;
+            for (var year = smaller.year; year < larger.year; ++year) {
+              _days2 += ES.LeapYear(year) ? 366 : 365;
             }
 
             var weeks = 0;
