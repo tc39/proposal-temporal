@@ -572,6 +572,8 @@
         The abstract operation DifferenceInstant computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and rounds the result according to the given parameters.
       </p>
       <emu-alg>
+        1. Assert: Type(_ns1_) is BigInt.
+        1. Assert: Type(_ns2_) is BigInt.
         1. If _smallestUnit_ is *"hour"*, then
           1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
         1. If _smallestUnit_ is *"minute"*, then
@@ -596,6 +598,7 @@
         The abstract operation RoundTemporalInstant rounds a number of nanoseconds since the Unix epoch to the given rounding increment.
       </p>
       <emu-alg>
+        1. Assert: _ns_ is a mathematical value.
         1. If _unit_ is *"hour"*, then
           1. Let _incrementNs_ be _increment_ × 3.6 × 10<sup>12</sup>.
         1. Else if _unit_ is *"minute"*, then
