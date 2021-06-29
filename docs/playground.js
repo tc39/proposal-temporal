@@ -9828,7 +9828,8 @@
         nanosecond: nanosecond
       };
     },
-    AddZonedDateTime: function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, options) {
+    AddZonedDateTime: function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns) {
+      var options = arguments.length > 13 && arguments[13] !== undefined ? arguments[13] : ObjectCreate$2(null);
       // If only time is to be added, then use Instant math. It's not OK to fall
       // through to the date/time code below because compatible disambiguation in
       // the PlainDateTime=>Instant conversion will change the offset of any
