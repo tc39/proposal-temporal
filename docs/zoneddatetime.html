@@ -721,7 +721,7 @@ zdt<span class="token punctuation">.</span>offsetNanoseconds<span class="token p
   <span class="token comment">// => -25200000000000</span>
   <span class="token comment">// (-7 * 3600 * 1e9)</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="offset"><a class="heading-link" href="#offset"></a>zonedDateTime.<strong>offset</strong> : number</h3><p>The <code>offset</code> read-only property is the offset (formatted as a string) relative to UTC of the current time zone and exact instant. Examples: <code>&#39;-08:00&#39;</code> or <code>&#39;+05:30&#39;</code></p>
+<h3 id="offset"><a class="heading-link" href="#offset"></a>zonedDateTime.<strong>offset</strong> : string</h3><p>The <code>offset</code> read-only property is the offset (formatted as a string) relative to UTC of the current time zone and exact instant. Examples: <code>&#39;-08:00&#39;</code> or <code>&#39;+05:30&#39;</code></p>
 <p>The format used is defined in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC">ISO 8601</a> standard.</p>
 <p>The value of this field will change after DST transitions or after political changes to a time zone, e.g. a country switching to a new time zone.</p>
 <p>This field is used to uniquely map date/time fields to an exact date/time in cases where the calendar date and clock time are ambiguous due to time zone offset transitions.
