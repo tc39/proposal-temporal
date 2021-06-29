@@ -2544,7 +2544,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let days;
       ({ quotient: days, remainder: nanoseconds } = nanoseconds.divmod(dayLengthNs));
       days = days.toJSNumber();
-      return { days, nanoseconds, dayLengthNs: sign * dayLengthNs };
+      return { days, nanoseconds, dayLengthNs };
     }
 
     const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
@@ -2613,7 +2613,7 @@ export const ES = ObjectAssign({}, ES2020, {
         days += sign;
       }
     } while (isOverflow);
-    return { days, nanoseconds, dayLengthNs };
+    return { days, nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
   },
   BalanceDuration: (
     days,
@@ -3959,7 +3959,6 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       let deltaDays;
       ({ days: deltaDays, nanoseconds, dayLengthNs } = ES.NanosecondsToDays(nanoseconds, intermediate));
-      dayLengthNs = MathAbs(dayLengthNs);
       days += deltaDays;
       hours = minutes = seconds = milliseconds = microseconds = 0;
     }
