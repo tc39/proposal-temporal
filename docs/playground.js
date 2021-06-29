@@ -8633,7 +8633,7 @@
         return {
           days: _days,
           nanoseconds: nanoseconds,
-          dayLengthNs: sign * dayLengthNs
+          dayLengthNs: dayLengthNs
         };
       }
 
@@ -8688,7 +8688,7 @@
       return {
         days: days,
         nanoseconds: nanoseconds,
-        dayLengthNs: dayLengthNs
+        dayLengthNs: MathAbs(dayLengthNs)
       };
     },
     BalanceDuration: function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
@@ -10110,7 +10110,6 @@
         deltaDays = _ES$NanosecondsToDays3.days;
         nanoseconds = _ES$NanosecondsToDays3.nanoseconds;
         dayLengthNs = _ES$NanosecondsToDays3.dayLengthNs;
-        dayLengthNs = MathAbs(dayLengthNs);
         days += deltaDays;
         hours = minutes = seconds = milliseconds = microseconds = 0;
       }
