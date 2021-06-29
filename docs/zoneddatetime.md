@@ -673,7 +673,7 @@ zdt.offsetNanoseconds;
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**offset** : number
+### zonedDateTime.**offset** : string
 
 The `offset` read-only property is the offset (formatted as a string) relative to UTC of the current time zone and exact instant. Examples: `'-08:00'` or `'+05:30'`
 
