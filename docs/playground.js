@@ -11625,6 +11625,7 @@
       key: "withCalendar",
       value: function withCalendar(calendar) {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        calendar = ES.ToTemporalCalendar(calendar);
         return new PlainDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
       }
     }, {
@@ -12189,6 +12190,7 @@
       key: "withCalendar",
       value: function withCalendar(calendar) {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        calendar = ES.ToTemporalCalendar(calendar);
         return new PlainDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar);
       }
     }, {
