@@ -1231,13 +1231,13 @@
       <h1>NanosecondsToDays ( _nanoseconds_, _relativeTo_ )</h1>
       <p>
         The abstract operation NanosecondsToDays takes a number of nanoseconds relative to a Temporal.ZonedDateTime _relativeTo_, and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _relativeTo_.
-        It also returns the signed length of the last day in nanoseconds, for rounding purposes.
+        It also returns the length of the last day in nanoseconds, for rounding purposes.
       </p>
       <emu-alg>
         1. Assert: Type(_nanoseconds_) is BigInt.
-        1. Let _sign_ be ! ℤ(Sign(𝔽(_nanoseconds_))).
+        1. Let _sign_ be ! ℝ(Sign(𝔽(_nanoseconds_))).
         1. Let _dayLengthNs_ be 8.64 × 10<sup>13</sup>.
-        1. If _sign_ is *0*<sub>ℤ</sub>, then
+        1. If _sign_ is 0, then
           1. Return the new Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the new Record {
@@ -1254,7 +1254,7 @@
         1. Let _dateDifference_ be ? DifferenceISODateTime(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]], _endDateTime_.[[ISOHour]], _endDateTime_.[[ISOMinute]], _endDateTime_.[[ISOSecond]], _endDateTime_.[[ISOMillisecond]], _endDateTime_.[[ISOMicrosecond]], _endDateTime_.[[ISONanosecond]], _relativeTo_.[[Calendar]], *"day"*).
         1. Let _days_ be _dateDifference_.[[Days]].
         1. Let _intermediateNs_ be ? AddZonedDateTime(_startNs_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
-        1. If _sign_ is *1*<sub>ℤ</sub>, then
+        1. If _sign_ is 1, then
           1. Repeat, while _days_ &gt; 0 and _intermediateNs_ &gt; _endNs_,
             1. Set _days_ to _days_ − 1.
             1. Set _intermediateNs_ to ? AddZonedDateTime(_startNs_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
@@ -1262,9 +1262,9 @@
         1. Let _done_ be *false*.
         1. Repeat, while _done_ is *false*,
           1. Let _oneDayFartherNs_ be ? AddZonedDateTime(_intermediateNs_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _sign_, 0, 0, 0, 0, 0, 0).
-          1. Set _dayLengthNs_ to _oneDayFartherNs_ − _intermediateNs_.
-          1. If (_nanoseconds_ − _dayLengthNs_) × _sign_ ≥ *0*<sub>ℤ</sub>, then
-            1. Set _nanoseconds_ to _nanoseconds_ − _dayLengthNs_.
+          1. Set _dayLengthNs_ to ℝ(_oneDayFartherNs_ − _intermediateNs_).
+          1. If (ℝ(_nanoseconds_) − _dayLengthNs_) × _sign_ ≥ 0, then
+            1. Set _nanoseconds_ to _nanoseconds_ − ℤ(_dayLengthNs_).
             1. Set _intermediateNs_ to _oneDayFartherNs_.
             1. Set _days_ to _days_ + _sign_.
           1. Else,
