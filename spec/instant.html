@@ -315,8 +315,7 @@
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _maximum_ be 8.64 × 10<sup>13</sup>.
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *true*).
-        1. Let _ns_ be ℝ(_instant_.[[Nanoseconds]]).
-        1. Let _roundedNs_ be ? RoundTemporalInstant(_ns_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _roundedNs_ be ? RoundTemporalInstant(_instant_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ? CreateTemporalInstant(_roundedNs_).
       </emu-alg>
     </emu-clause>
@@ -351,8 +350,7 @@
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _ns_ be ℝ(_instant_.[[Nanoseconds]]).
-        1. Let _roundedNs_ be ? RoundTemporalInstant(_ns_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _roundedNs_ be ? RoundTemporalInstant(_instant_.[[Nanoseconds]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Let _roundedInstant_ be ? CreateTemporalInstant(_roundedNs_).
         1. Return ? TemporalInstantToString(_roundedInstant_, _timeZone_, _precision_.[[Precision]]).
       </emu-alg>
@@ -598,7 +596,7 @@
         The abstract operation RoundTemporalInstant rounds a number of nanoseconds since the Unix epoch to the given rounding increment.
       </p>
       <emu-alg>
-        1. Assert: _ns_ is a mathematical value.
+        1. Assert: Type(_ns_) is BigInt.
         1. If _unit_ is *"hour"*, then
           1. Let _incrementNs_ be _increment_ × 3.6 × 10<sup>12</sup>.
         1. Else if _unit_ is *"minute"*, then
@@ -611,7 +609,7 @@
           1. Let _incrementNs_ be _increment_ × 10<sup>3</sup>.
         1. Else,
           1. Let _incrementNs_ be _increment_.
-        1. Return ? RoundNumberToIncrement(_ns_, _incrementNs_, _roundingMode_).
+        1. Return ? RoundNumberToIncrement(ℝ(_ns_), _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
