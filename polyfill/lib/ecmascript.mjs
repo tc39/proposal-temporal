@@ -2599,13 +2599,8 @@ export const ES = ObjectAssign({}, ES2020, {
             const newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
             const untilOptions = ObjectCreate(null);
             untilOptions.largestUnit = 'month';
-            const oneYearMonths = ES.CalendarDateUntil(
-              calendar,
-              relativeTo,
-              newRelativeTo,
-              untilOptions,
-              dateUntil
-            ).months;
+            const untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+            const oneYearMonths = GetSlot(untilResult, MONTHS);
             relativeTo = newRelativeTo;
             months += oneYearMonths;
             years -= sign;
