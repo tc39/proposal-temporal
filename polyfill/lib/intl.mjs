@@ -144,7 +144,18 @@ function formatRangeToParts(a, b) {
 
 function amend(options = {}, amended = {}) {
   options = ObjectAssign({}, options);
-  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'timeZoneName']) {
+  for (let opt of [
+    'year',
+    'month',
+    'day',
+    'hour',
+    'minute',
+    'second',
+    'weekday',
+    'timeZoneName',
+    'dateStyle',
+    'timeStyle'
+  ]) {
     options[opt] = opt in amended ? amended[opt] : options[opt];
     if (options[opt] === false || options[opt] === undefined) delete options[opt];
   }
@@ -152,7 +163,14 @@ function amend(options = {}, amended = {}) {
 }
 
 function timeAmend(options) {
-  options = amend(options, { year: false, month: false, day: false, weekday: false, timeZoneName: false });
+  options = amend(options, {
+    year: false,
+    month: false,
+    day: false,
+    weekday: false,
+    timeZoneName: false,
+    dateStyle: false
+  });
   if (!hasTimeOptions(options)) {
     options = ObjectAssign({}, options, {
       hour: 'numeric',
@@ -170,7 +188,9 @@ function yearMonthAmend(options) {
     minute: false,
     second: false,
     weekday: false,
-    timeZoneName: false
+    timeZoneName: false,
+    dateStyle: false,
+    timeStyle: false
   });
   if (!('year' in options || 'month' in options)) {
     options = ObjectAssign(options, { year: 'numeric', month: 'numeric' });
@@ -185,7 +205,9 @@ function monthDayAmend(options) {
     minute: false,
     second: false,
     weekday: false,
-    timeZoneName: false
+    timeZoneName: false,
+    dateStyle: false,
+    timeStyle: false
   });
   if (!('month' in options || 'day' in options)) {
     options = ObjectAssign({}, options, { month: 'numeric', day: 'numeric' });
@@ -194,7 +216,13 @@ function monthDayAmend(options) {
 }
 
 function dateAmend(options) {
-  options = amend(options, { hour: false, minute: false, second: false, timeZoneName: false });
+  options = amend(options, {
+    hour: false,
+    minute: false,
+    second: false,
+    timeZoneName: false,
+    timeStyle: false
+  });
   if (!hasDateOptions(options)) {
     options = ObjectAssign({}, options, {
       year: 'numeric',
@@ -250,11 +278,11 @@ function instantAmend(options) {
 }
 
 function hasDateOptions(options) {
-  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
+  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
 }
 
 function hasTimeOptions(options) {
-  return 'hour' in options || 'minute' in options || 'second' in options;
+  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options;
 }
 
 function isTemporalObject(obj) {
