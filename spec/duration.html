@@ -1229,7 +1229,7 @@
             1. Set _zonedRelativeTo_ to _relativeTo_.
             1. Set _relativeTo_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
           1. Else,
-            1. Perform ? RequireInternalSlot(_relativeTo_, [[InitializedTemporalDateTime]]).
+            1. Assert: _relativeTo_ has an [[InitializedTemporalDateTime]] internal slot.
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
         1. If _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _nanoseconds_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
