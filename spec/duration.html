@@ -1446,6 +1446,7 @@
     <emu-clause id="sec-temporal-temporaldurationtostring" aoid="TemporalDurationToString">
       <h1>TemporalDurationToString ( _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _precision_ )</h1>
       <emu-alg>
+        1. Assert: _precision_ is not *"minute"*.
         1. Set _seconds_ to the mathematical value of _seconds_.
         1. Set _milliseconds_ to the mathematical value of _milliseconds_.
         1. Set _microseconds_ to the mathematical value of _microseconds_.
