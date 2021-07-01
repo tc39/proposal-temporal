@@ -1,8 +1,24 @@
 #!/usr/bin/env node
 
 const { stdin, stdout, exit } = process;
+const fs = require('fs');
+
+const PREFIXES = [
+  ['FAIL', 'PASS'],
+  ['EXPECTED FAIL', 'UNEXPECTED PASS']
+];
+
 let testOutput = '';
 const now = Date.now();
+
+const expectedFailures = new Set();
+const lines = fs.readFileSync('expected-failures.txt', { encoding: 'utf-8' });
+for (let line of lines.split('\n')) {
+  line = line.trim();
+  if (!line) continue;
+  if (line.startsWith('#')) continue;
+  expectedFailures.add(line);
+}
 
 stdin.setEncoding('utf8');
 
@@ -33,21 +49,33 @@ stdin.on('end', function () {
   // filter out the non-strict tests because they were skipped via a preprocessor
   const tests = JSON.parse(testOutput).filter((test) => test.scenario.includes('strict'));
   const failedTests = [];
+  const unexpectedPasses = [];
   for (const test of tests) {
     const { result, scenario, file } = test;
-    const message = `${result.pass ? 'PASS' : 'FAIL'} ${file} (${scenario})\n`;
+    const expectedFailure = expectedFailures.has(file);
+    const message = `${PREFIXES[+expectedFailure][+result.pass]} ${file} (${scenario})\n`;
     stdout.write(message);
-    if (!result.pass) failedTests.push({ ...test, message });
+    if (result.pass === expectedFailure) {
+      (result.pass ? unexpectedPasses : failedTests).push({ ...test, message });
+    }
   }
 
-  if (failedTests.length) {
-    stdout.write(`\n${failedTests.length} tests failed:\n`);
-    for (const test of failedTests) {
-      const { message, rawResult } = test;
-      stdout.write(`\n${message}\n`);
-      stdout.write(`${rawResult.stderr}\n`);
-      stdout.write(`${rawResult.stdout}\n`);
-      stdout.write(rawResult.message ? rawResult.message + '\n' : '');
+  if (failedTests.length || unexpectedPasses.length) {
+    if (failedTests.length) {
+      stdout.write(`\n${failedTests.length} tests failed:\n`);
+      for (const test of failedTests) {
+        const { message, rawResult } = test;
+        stdout.write(`\n${message}\n`);
+        stdout.write(`${rawResult.stderr}\n`);
+        stdout.write(`${rawResult.stdout}\n`);
+        stdout.write(rawResult.message ? rawResult.message + '\n' : '');
+      }
+    }
+    if (unexpectedPasses.length) {
+      stdout.write(`\n${unexpectedPasses.length} tests passed unexpectedly:\n`);
+      for (const { message } of unexpectedPasses) {
+        stdout.write(`${message}\n`);
+      }
     }
   } else {
     stdout.write('All results as expected.\n');
