@@ -39,16 +39,16 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _y_ be ? ToIntegerOrInfinity(_years_).
-        1. Let _mo_ be ? ToIntegerOrInfinity(_months_).
-        1. Let _w_ be ? ToIntegerOrInfinity(_weeks_).
-        1. Let _d_ be ? ToIntegerOrInfinity(_days_).
-        1. Let _h_ be ? ToIntegerOrInfinity(_hours_).
-        1. Let _m_ be ? ToIntegerOrInfinity(_minutes_).
-        1. Let _s_ be ? ToIntegerOrInfinity(_seconds_).
-        1. Let _ms_ be ? ToIntegerOrInfinity(_milliseconds_).
-        1. Let _mis_ be ? ToIntegerOrInfinity(_microseconds_).
-        1. Let _ns_ be ? ToIntegerOrInfinity(_nanoseconds_).
+        1. Let _y_ be ? ToIntegerThrowOnInfinity(_years_).
+        1. Let _mo_ be ? ToIntegerThrowOnInfinity(_months_).
+        1. Let _w_ be ? ToIntegerThrowOnInfinity(_weeks_).
+        1. Let _d_ be ? ToIntegerThrowOnInfinity(_days_).
+        1. Let _h_ be ? ToIntegerThrowOnInfinity(_hours_).
+        1. Let _m_ be ? ToIntegerThrowOnInfinity(_minutes_).
+        1. Let _s_ be ? ToIntegerThrowOnInfinity(_seconds_).
+        1. Let _ms_ be ? ToIntegerThrowOnInfinity(_milliseconds_).
+        1. Let _mis_ be ? ToIntegerThrowOnInfinity(_microseconds_).
+        1. Let _ns_ be ? ToIntegerThrowOnInfinity(_nanoseconds_).
         1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
