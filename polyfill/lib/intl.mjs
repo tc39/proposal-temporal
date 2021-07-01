@@ -152,6 +152,7 @@ function amend(options = {}, amended = {}) {
     'minute',
     'second',
     'weekday',
+    'dayPeriod',
     'timeZoneName',
     'dateStyle',
     'timeStyle'
@@ -188,6 +189,7 @@ function yearMonthAmend(options) {
     minute: false,
     second: false,
     weekday: false,
+    dayPeriod: false,
     timeZoneName: false,
     dateStyle: false,
     timeStyle: false
@@ -205,6 +207,7 @@ function monthDayAmend(options) {
     minute: false,
     second: false,
     weekday: false,
+    dayPeriod: false,
     timeZoneName: false,
     dateStyle: false,
     timeStyle: false
@@ -220,6 +223,7 @@ function dateAmend(options) {
     hour: false,
     minute: false,
     second: false,
+    dayPeriod: false,
     timeZoneName: false,
     timeStyle: false
   });
@@ -282,7 +286,9 @@ function hasDateOptions(options) {
 }
 
 function hasTimeOptions(options) {
-  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options;
+  return (
+    'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options
+  );
 }
 
 function isTemporalObject(obj) {
