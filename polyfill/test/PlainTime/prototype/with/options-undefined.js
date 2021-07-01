@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.with
+includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 
@@ -10,9 +11,10 @@ const time = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
 const fields = { minute: 60 };
 
 const explicit = time.with(fields, undefined);
-assert.sameValue(explicit.hour, 12, "default overflow is constrain");
-assert.sameValue(explicit.minute, 59, "default overflow is constrain");
+TemporalHelpers.assertPlainTime(explicit, 12, 59, 56, 987, 654, 321, "explicit");
 
-const implicit = time.with(fields, undefined);
-assert.sameValue(implicit.hour, 12, "default overflow is constrain");
-assert.sameValue(implicit.minute, 59, "default overflow is constrain");
+const implicit = time.with(fields);
+TemporalHelpers.assertPlainTime(implicit, 12, 59, 56, 987, 654, 321, "implicit");
+
+const lambda = time.with(fields, () => {});
+TemporalHelpers.assertPlainTime(lambda, 12, 59, 56, 987, 654, 321, "lambda");
