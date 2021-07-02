@@ -18,19 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainTime, PlainDateTime } = Temporal;
 
 describe('Time', () => {
-  describe('time.toPlainDateTime() works', () => {
-    const time = PlainTime.from('11:30:23.123456789');
-    const dt = time.toPlainDateTime(Temporal.PlainDate.from('1976-11-18'));
-    it('returns a Temporal.PlainDateTime', () => assert(dt instanceof Temporal.PlainDateTime));
-    it('combines the date and time', () => equal(`${dt}`, '1976-11-18T11:30:23.123456789'));
-    it('casts argument', () => {
-      equal(`${time.toPlainDateTime({ year: 1976, month: 11, day: 18 })}`, '1976-11-18T11:30:23.123456789');
-      equal(`${time.toPlainDateTime('1976-11-18')}`, '1976-11-18T11:30:23.123456789');
-    });
-    it('object must contain at least the required properties', () => {
-      throws(() => time.toPlainDateTime({ year: 1976 }), TypeError);
-    });
-  });
   describe('time.toZonedDateTime()', function () {
     it('works', () => {
       const time = PlainTime.from('12:00');
