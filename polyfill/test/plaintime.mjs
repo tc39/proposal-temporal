@@ -20,18 +20,8 @@ const { PlainTime, PlainDateTime } = Temporal;
 describe('Time', () => {
   describe('.with manipulation', () => {
     const time = new PlainTime(15, 23, 30, 123, 456, 789);
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => time.with({}), TypeError);
-      throws(() => time.with({ minutes: 12 }), TypeError);
-    });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${time.with({ minutes: 1, hour: 1 })}`, '01:23:30.123456789');
-    });
-    it('throws with calendar property', () => {
-      throws(() => time.with({ hour: 21, calendar: 'iso8601' }), TypeError);
-    });
-    it('throws with timeZone property', () => {
-      throws(() => time.with({ hour: 21, timeZone: 'UTC' }), TypeError);
     });
   });
   describe('time.toPlainDateTime() works', () => {
