@@ -18,27 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainTime, PlainDateTime } = Temporal;
 
 describe('Time', () => {
-  describe('time.toZonedDateTime()', function () {
-    it('works', () => {
-      const time = PlainTime.from('12:00');
-      const date = Temporal.PlainDate.from('2020-01-01');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime({ timeZone: tz, plainDate: date });
-      equal(`${zdt}`, '2020-01-01T12:00:00-08:00[America/Los_Angeles]');
-    });
-    it('casts timeZone property', () => {
-      const time = PlainTime.from('12:00');
-      const date = Temporal.PlainDate.from('2020-07-08');
-      const zdt = time.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainDate: date });
-      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-    it('casts date property', () => {
-      const time = PlainTime.from('12:00');
-      const tz = Temporal.TimeZone.from('America/Los_Angeles');
-      const zdt = time.toZonedDateTime({ timeZone: tz, plainDate: '2020-07-08' });
-      equal(`${zdt}`, '2020-07-08T12:00:00-07:00[America/Los_Angeles]');
-    });
-  });
   describe('time.until() works', () => {
     const time = new PlainTime(15, 23, 30, 123, 456, 789);
     const one = new PlainTime(16, 23, 30, 123, 456, 789);
