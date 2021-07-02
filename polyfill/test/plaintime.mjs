@@ -18,12 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainTime, PlainDateTime } = Temporal;
 
 describe('Time', () => {
-  describe('.with manipulation', () => {
-    const time = new PlainTime(15, 23, 30, 123, 456, 789);
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${time.with({ minutes: 1, hour: 1 })}`, '01:23:30.123456789');
-    });
-  });
   describe('time.toPlainDateTime() works', () => {
     const time = PlainTime.from('11:30:23.123456789');
     const dt = time.toPlainDateTime(Temporal.PlainDate.from('1976-11-18'));
