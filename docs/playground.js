@@ -10825,7 +10825,7 @@
     var amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     options = ObjectAssign$1({}, options);
 
-    for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'timeZoneName']; _i < _arr.length; _i++) {
+    for (var _i = 0, _arr = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'dayPeriod', 'timeZoneName', 'dateStyle', 'timeStyle']; _i < _arr.length; _i++) {
       var opt = _arr[_i];
       options[opt] = opt in amended ? amended[opt] : options[opt];
       if (options[opt] === false || options[opt] === undefined) delete options[opt];
@@ -10840,7 +10840,8 @@
       month: false,
       day: false,
       weekday: false,
-      timeZoneName: false
+      timeZoneName: false,
+      dateStyle: false
     });
 
     if (!hasTimeOptions(options)) {
@@ -10861,7 +10862,10 @@
       minute: false,
       second: false,
       weekday: false,
-      timeZoneName: false
+      dayPeriod: false,
+      timeZoneName: false,
+      dateStyle: false,
+      timeStyle: false
     });
 
     if (!('year' in options || 'month' in options)) {
@@ -10881,7 +10885,10 @@
       minute: false,
       second: false,
       weekday: false,
-      timeZoneName: false
+      dayPeriod: false,
+      timeZoneName: false,
+      dateStyle: false,
+      timeStyle: false
     });
 
     if (!('month' in options || 'day' in options)) {
@@ -10899,7 +10906,9 @@
       hour: false,
       minute: false,
       second: false,
-      timeZoneName: false
+      dayPeriod: false,
+      timeZoneName: false,
+      timeStyle: false
     });
 
     if (!hasDateOptions(options)) {
@@ -10964,11 +10973,11 @@
   }
 
   function hasDateOptions(options) {
-    return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options;
+    return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
   }
 
   function hasTimeOptions(options) {
-    return 'hour' in options || 'minute' in options || 'second' in options;
+    return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options;
   }
 
   function isTemporalObject(obj) {
