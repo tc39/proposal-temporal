@@ -49,3 +49,9 @@ export const Now = {
   zonedDateTime,
   zonedDateTimeISO
 };
+Object.defineProperty(Now, Symbol.toStringTag, {
+  value: 'Temporal.Now',
+  writable: false,
+  enumerable: false,
+  configurable: true
+});
