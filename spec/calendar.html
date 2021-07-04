@@ -239,7 +239,7 @@
       <h1>ToTemporalCalendar ( _temporalCalendarLike_ )</h1>
       <emu-alg>
         1. If Type(_temporalCalendarLike_) is Object, then
-          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalCalendarLike_.[[Calendar]].
           1. If ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
           1. Set _temporalCalendarLike_ to ? Get(_temporalCalendarLike_, *"calendar"*).
