@@ -97,7 +97,7 @@ For example, a `Temporal` object using the Hebrew calendar might store "Iyar 578
 When expressed as an ISO string, we would say:
 
 ```
-2020-04-25{hebrew}
+2020-04-25[u-ca=hebrew]
 ```
 
 Because it is ambiguous whether that string represents a `Temporal.PlainDate`, `Temporal.YearMonth`, or `Temporal.MonthDay`, the appropriate `Temporal` constructor must be chosen in order to get the expected data type back out.
