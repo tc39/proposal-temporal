@@ -32,4 +32,4 @@ const combined = plainTime.with({ minute: 8, nanosecond: 3 });
 TemporalHelpers.assertPlainTime(combined, 15, 8, 30, 123, 456, 3, "combined");
 
 const plural = plainTime.with({ minutes: 8, nanosecond: 3 });
-TemporalHelpers.assertPlainTime(combined, 15, 23, 30, 123, 456, 3, "plural");
+TemporalHelpers.assertPlainTime(plural, 15, 23, 30, 123, 456, 3, "plural");
