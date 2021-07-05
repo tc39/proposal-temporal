@@ -3,7 +3,6 @@
 
 /*---
 esid: sec-temporal.plaintime.tozoneddatetime
-includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 
@@ -12,13 +11,13 @@ const plainDate = Temporal.PlainDate.from('2020-07-08');
 const timeZone = Temporal.TimeZone.from('America/Los_Angeles');
 
 const objects = plainTime.toZonedDateTime({ timeZone, plainDate });
-TemporalHelpers.assertZonedDateTime(objects, 2020, 7, "M07", 8, 12, 0, 0, 0, 0, 0, "objects");
+assert.sameValue(objects.epochNanoseconds, 1594234800000000000n, "objects: epochNanoseconds");
 assert.sameValue(objects.timeZone, timeZone, "objects: timeZone");
 
 const timeZoneString = plainTime.toZonedDateTime({ timeZone: "America/Los_Angeles", plainDate });
-TemporalHelpers.assertZonedDateTime(timeZoneString, 2020, 7, "M07", 8, 12, 0, 0, 0, 0, 0, "timeZone string");
+assert.sameValue(timeZoneString.epochNanoseconds, 1594234800000000000n, "timeZone string: epochNanoseconds");
 assert.sameValue(timeZoneString.timeZone.id, "America/Los_Angeles", "timeZone string: timeZone");
 
 const plainDateString = plainTime.toZonedDateTime({ timeZone, plainDate: "2020-07-08" });
-TemporalHelpers.assertZonedDateTime(timeZoneString, 2020, 7, "M07", 8, 12, 0, 0, 0, 0, 0, "plainDate string");
-assert.sameValue(timeZoneString.timeZone.id, "America/Los_Angeles", "plainDate string: timeZone");
+assert.sameValue(plainDateString.epochNanoseconds, 1594234800000000000n, "plainDate string: epochNanoseconds");
+assert.sameValue(plainDateString.timeZone.id, "America/Los_Angeles", "plainDate string: timeZone");
