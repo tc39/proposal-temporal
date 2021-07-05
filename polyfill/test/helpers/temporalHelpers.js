@@ -118,30 +118,6 @@ var TemporalHelpers = {
   },
 
   /*
-   * assertZonedDateTime(zdt, year, ..., nanosecond[, description[, era, eraYear]]): XXX
-   *
-   * Shorthand for asserting that each field of a Temporal.ZonedDateTime is
-   * equal to an expected value. (Except the `calendar` property, since callers
-   * may want to assert either object equality with an object they put in there,
-   * or the result of zdt.calendar.toString().)
-   */
-  assertZonedDateTime(zdt, year, month, monthCode, day, hour, minute, second, millisecond, microsecond, nanosecond, description = "", era = undefined, eraYear = undefined) {
-    assert(zdt instanceof Temporal.ZonedDateTime, `${description} instanceof`);
-    assert.sameValue(zdt.era, era, `${description} era result`);
-    assert.sameValue(zdt.eraYear, eraYear, `${description} eraYear result`);
-    assert.sameValue(zdt.year, year, `${description} year result`);
-    assert.sameValue(zdt.month, month, `${description} month result`);
-    assert.sameValue(zdt.monthCode, monthCode, `${description} monthCode result`);
-    assert.sameValue(zdt.day, day, `${description} day result`);
-    assert.sameValue(zdt.hour, hour, `${description} hour result`);
-    assert.sameValue(zdt.minute, minute, `${description} minute result`);
-    assert.sameValue(zdt.second, second, `${description} second result`);
-    assert.sameValue(zdt.millisecond, millisecond, `${description} millisecond result`);
-    assert.sameValue(zdt.microsecond, microsecond, `${description} microsecond result`);
-    assert.sameValue(zdt.nanosecond, nanosecond, `${description} nanosecond result`);
-  },
-
-  /*
    * checkCalendarDateUntilLargestUnitSingular(func, expectedLargestUnitCalls):
    *
    * When an options object with a largestUnit property is synthesized inside
