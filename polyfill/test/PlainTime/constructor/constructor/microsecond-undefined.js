@@ -3,13 +3,14 @@
 
 /*---
 esid: sec-temporal.plaintime
+includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 
 const args = [12, 34, 56, 123];
 
 const explicit = new Temporal.PlainTime(...args, undefined);
-assert.sameValue(explicit.microsecond, 0, "microsecond default argument");
+TemporalHelpers.assertPlainTime(explicit, ...args, 0, 0, "explicit");
 
 const implicit = new Temporal.PlainTime(...args);
-assert.sameValue(implicit.microsecond, 0, "microsecond default argument");
+TemporalHelpers.assertPlainTime(implicit, ...args, 0, 0, "implicit");

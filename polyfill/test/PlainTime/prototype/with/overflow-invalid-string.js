@@ -15,4 +15,7 @@ features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12);
-assert.throws(RangeError, () => time.with({ minute: 45 }, { overflow: "other string" }));
+const values = ["", "CONSTRAIN", "balance", "other string"];
+for (const overflow of values) {
+  assert.throws(RangeError, () => time.with({ minute: 45 }, { overflow }));
+}
