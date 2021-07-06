@@ -585,7 +585,7 @@
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _incrementNs_ be _roundingIncrement_.
         1. Let _diff_ be ℝ(_ns2_ − _ns1_).
-        1. Return ? RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
+        1. Return ! RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
@@ -608,7 +608,7 @@
           1. Let _incrementNs_ be _increment_ × 10<sup>3</sup>.
         1. Else,
           1. Let _incrementNs_ be _increment_.
-        1. Return ? RoundNumberToIncrement(ℝ(_ns_), _incrementNs_, _roundingMode_).
+        1. Return ! RoundNumberToIncrement(ℝ(_ns_), _incrementNs_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
