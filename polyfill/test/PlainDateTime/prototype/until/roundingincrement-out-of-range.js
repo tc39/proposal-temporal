@@ -7,11 +7,26 @@ description: RangeError thrown when roundingIncrement option out of range
 info: |
     sec-temporal-totemporalroundingincrement step 6:
       6. If _increment_ < 1 or _increment_ > _maximum_, throw a *RangeError* exception.
+includes: [compareArray.js]
 ---*/
 
-const earlier = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 0, 0, 0);
-const later = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 0, 0, 5);
-assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: -Infinity }));
-assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: -1 }));
-assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: 0 }));
-assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: Infinity }));
+const actual = [];
+class Calendar extends Temporal.Calendar {
+  constructor() {
+    super("iso8601");
+  }
+
+  dateUntil(...args) {
+    actual.push("dateUntil");
+    return super.dateUntil(...args);
+  }
+}
+const calendar = new Calendar();
+
+const earlier = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 0, 0, 0, calendar);
+const later = new Temporal.PlainDateTime(2000, 5, 2, 12, 34, 56, 0, 0, 5, calendar);
+assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: -Infinity, smallestUnit: "year" }));
+assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: -1, smallestUnit: "year" }));
+assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: 0, smallestUnit: "year" }));
+assert.throws(RangeError, () => earlier.until(later, { roundingIncrement: Infinity, smallestUnit: "year" }));
+assert.compareArray(actual, [], "should not call dateUntil");
