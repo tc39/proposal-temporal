@@ -233,6 +233,7 @@
   <emu-clause id="sec-temporal-totemporalroundingincrement" aoid="ToTemporalRoundingIncrement">
     <h1>ToTemporalRoundingIncrement ( _normalizedOptions_, _dividend_, _inclusive_ )</h1>
     <emu-alg>
+      1. Assert: _dividend_ is *undefined* or an integer.
       1. If _dividend_ is *undefined*, then
         1. Let _maximum_ be *+∞*.
       1. Else if _inclusive_ is *true*, then
@@ -242,8 +243,10 @@
       1. Else,
         1. Let _maximum_ be 1.
       1. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », ~empty~, 1).
+      1. If _increment_ is +∞<sub>𝔽</sub> or -∞<sub>𝔽</sub>, throw a *RangeError* exception.
+      1. Set _increment_ to ℝ(_increment_).
       1. If _increment_ &lt; 1 or _increment_ &gt; _maximum_, throw a *RangeError* exception.
-      1. Set _increment_ to floor(ℝ(_increment_)).
+      1. Set _increment_ to floor(_increment_).
       1. If _dividend_ is not *undefined* and _dividend_ modulo _increment_ is not zero, then
         1. Throw a *RangeError* exception.
       1. Return _increment_.
