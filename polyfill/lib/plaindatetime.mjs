@@ -19,6 +19,8 @@ import {
   HasSlot
 } from './slots.mjs';
 
+console.log = () => {}
+
 export class PlainDateTime {
   constructor(
     isoYear,
@@ -376,8 +378,10 @@ export class PlainDateTime {
     const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    console.log(`calling ToTemporalDateTimeRoundingIncrement with ${options} (${Object.keys(options)}) ${smallestUnit}`)
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
+    console.log(`calling DifferenceISODateTime with ${calendar}`)
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       ES.DifferenceISODateTime(
         GetSlot(this, ISO_YEAR),

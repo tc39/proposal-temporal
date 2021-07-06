@@ -65,6 +65,8 @@ import {
 } from './slots.mjs';
 import { IsBuiltinCalendar } from './calendar.mjs';
 
+console.log = () => {}
+
 const DAYMILLIS = 86400000;
 const NS_MIN = bigInt(-86400).multiply(1e17);
 const NS_MAX = bigInt(86400).multiply(1e17);
@@ -662,6 +664,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
     const increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
     if (dividend !== undefined && dividend % increment !== 0) {
+      console.log(`ERROR: Rounding increment must divide evenly into ${dividend}`)
       throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);
     }
     return increment;
@@ -3118,6 +3121,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
     const untilOptions = { ...options, largestUnit: dateLargestUnit };
+    console.log(`calling CalendarDateUntil with ${calendar}`);
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
     // Signs of date part and time part may not agree; balance them together
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
@@ -4141,6 +4145,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (value === undefined) return fallback;
     value = ES.ToNumber(value);
     if (NumberIsNaN(value) || value < minimum || value > maximum) {
+      console.log(`ERROR: ${property} must be between ${minimum} and ${maximum}, not ${value}`);
       throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
     }
     return MathFloor(value);
