@@ -1,55 +1,41 @@
-# Temporal Polyfill
+# Non-Production, Test-Only Temporal Polyfill
 
-**Polyfill for [Proposal: Temporal](https://github.com/tc39/proposal-temporal)**
+A non-production polyfill was built to validate this proposal, and continues in this repo for the sole purpose of running tests.
 
-**NOTE: We encourage you to experiment with the polyfill, but don't use it in production!**
-**The API may change based on feedback from implementers, and the current non-production polyfill is very slow for some operations.**
-Please report bugs in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
+**DO NOT use this polyfill in your own projects! Instead, please use one of the polyfills listed in the table [here](../#polyfills).**
 
-Please run the polyfill with Node.js 12 or later.
+When viewing the reference documentation, this non-production polyfill is automatically loaded in your browser.
+You can experiment with Temporal by opening your browser's developer tools console.
+
+Please report polyfill bugs in the [issue tracker](https://github.com/tc39/proposal-temporal/issues).
+
+The polyfill requires Node.js 12 or later.
 
 ## Documentation
 
 Reference documentation and examples can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
 
-A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/index.html)
-
-## Import as a Module
-
-You can depend on the unstable Temporal polyfill in your personal projects:
-
-```bash
-$ npm install --save proposal-temporal
-```
-
-In code:
-
-```javascript
-const { Temporal } = require('proposal-temporal');
-```
-
-Or, import the polyfill as an ES6 module:
-
-```javascript
-import { Temporal } from 'proposal-temporal/lib/index.mjs';
-```
+A [cookbook](https://tc39.es/proposal-temporal/docs/index.html) of common use cases can help you get started with Temporal.
 
 ## Node REPL with Temporal
 
-From this directory:
+There are two easy ways to interactively run and test Temporal code using this polyfill.
+The first, as noted above, is to open the browser devtools console from any page in the [Temporal documentation](https://tc39.es/proposal-temporal/docs/index.html).
+The other is to use the built-in Node REPL.
 
 ```bash
+# run from the /polyfill folder
 $ npm run playground
 ```
 
-## Running Cookbook Files
+## Running Documentation Cookbook as Tests
 
-From this directory:
+Documentation cookbook code samples are also runnable as tests.
 
 ```bash
-# Run all cookbook files:
+# Run all cookbook tests (run from /polyfill folder)
 $ npm run test-cookbook
 
-# Run a single cookbook file:
+# Test one cookbook file (run from /polyfill folder)
 $ env TEST=dateTimeFromLegacyDate npm run test-cookbook-one
 ```
