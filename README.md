@@ -55,10 +55,14 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------- |
 | **[@js-temporal/polyfill](https://www.npmjs.com/package/@js-temporal/polyfill)** | [js-temporal/temporal-polyfill](https://github.com/js-temporal/temporal-polyfill) | Preparing for first alpha release |
 
-If you're working on a production polyfill, please file an issue or PR so we can add yours to the table above.
+If you're working on a polyfill, please file an issue or PR so we can add yours here.
 
-A [non-production polyfill](./polyfill) was built to validate this proposal, and continues in this repo for the sole purpose of running tests.
-DO NOT use this polyfill in your own projects!
-Instead, please use one of the polyfills in the table above.
+A [non-production polyfill](./polyfill) was built to validate this proposal.
+This polyfill continues to live in this repo, but only for the purposes of running tests and powering the documentation "playground" as described below.
+
+**DO NOT use this polyfill in your own projects!
+Instead, please use a polyfill from the table above.**
+
+## Documentation Playground
 
 When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the non-production polyfill is automatically loaded in your browser, so you can try out Temporal by opening your browser's developer tools console.
