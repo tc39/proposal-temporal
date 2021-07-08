@@ -263,21 +263,9 @@
     };
   }
 
-  function createCommonjsModule(fn, basedir, module) {
-  	return module = {
-  		path: basedir,
-  		exports: {},
-  		require: function (path, base) {
-  			return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-  		}
-  	}, fn(module, module.exports), module.exports;
-  }
+  var BigInteger = {exports: {}};
 
-  function commonjsRequire () {
-  	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-  }
-
-  var BigInteger = createCommonjsModule(function (module) {
+  (function (module) {
   var bigInt = (function (undefined$1) {
 
       var BASE = 1e7,
@@ -1723,7 +1711,9 @@
   if (module.hasOwnProperty("exports")) {
       module.exports = bigInt;
   }
-  });
+  }(BigInteger));
+
+  var bigInt = BigInteger.exports;
 
   /* eslint complexity: [2, 18], max-statements: [2, 33] */
   var shams = function hasSymbols() {
@@ -1767,27 +1757,27 @@
   };
 
   var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+  var hasSymbolSham = shams;
 
-
-  var hasSymbols$2 = function hasNativeSymbols() {
+  var hasSymbols$3 = function hasNativeSymbols() {
   	if (typeof origSymbol !== 'function') { return false; }
   	if (typeof Symbol !== 'function') { return false; }
   	if (typeof origSymbol('foo') !== 'symbol') { return false; }
   	if (typeof Symbol('bar') !== 'symbol') { return false; }
 
-  	return shams();
+  	return hasSymbolSham();
   };
 
   /* eslint no-invalid-this: 1 */
 
   var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
   var slice = Array.prototype.slice;
-  var toStr$4 = Object.prototype.toString;
+  var toStr$5 = Object.prototype.toString;
   var funcType = '[object Function]';
 
-  var implementation = function bind(that) {
+  var implementation$1 = function bind(that) {
       var target = this;
-      if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
+      if (typeof target !== 'function' || toStr$5.call(target) !== funcType) {
           throw new TypeError(ERROR_MESSAGE + target);
       }
       var args = slice.call(arguments, 1);
@@ -1829,9 +1819,13 @@
       return bound;
   };
 
+  var implementation = implementation$1;
+
   var functionBind = Function.prototype.bind || implementation;
 
-  var src = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
+  var bind$1 = functionBind;
+
+  var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
   var undefined$1;
 
@@ -1875,7 +1869,7 @@
   	}())
   	: throwTypeError;
 
-  var hasSymbols$1 = hasSymbols$2();
+  var hasSymbols$2 = hasSymbols$3();
 
   var getProto = Object.getPrototypeOf || function (x) { return x.__proto__; }; // eslint-disable-line no-proto
 
@@ -1887,7 +1881,7 @@
   	'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
   	'%Array%': Array,
   	'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-  	'%ArrayIteratorPrototype%': hasSymbols$1 ? getProto([][Symbol.iterator]()) : undefined$1,
+  	'%ArrayIteratorPrototype%': hasSymbols$2 ? getProto([][Symbol.iterator]()) : undefined$1,
   	'%AsyncFromSyncIteratorPrototype%': undefined$1,
   	'%AsyncFunction%': needsEval,
   	'%AsyncGenerator%': needsEval,
@@ -1915,10 +1909,10 @@
   	'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
   	'%isFinite%': isFinite,
   	'%isNaN%': isNaN,
-  	'%IteratorPrototype%': hasSymbols$1 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+  	'%IteratorPrototype%': hasSymbols$2 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
   	'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
   	'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$2 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
   	'%Math%': Math,
   	'%Number%': Number,
   	'%Object%': Object,
@@ -1931,11 +1925,11 @@
   	'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
   	'%RegExp%': RegExp,
   	'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$1 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$2 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
   	'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
   	'%String%': String,
-  	'%StringIteratorPrototype%': hasSymbols$1 ? getProto(''[Symbol.iterator]()) : undefined$1,
-  	'%Symbol%': hasSymbols$1 ? Symbol : undefined$1,
+  	'%StringIteratorPrototype%': hasSymbols$2 ? getProto(''[Symbol.iterator]()) : undefined$1,
+  	'%Symbol%': hasSymbols$2 ? Symbol : undefined$1,
   	'%SyntaxError%': $SyntaxError,
   	'%ThrowTypeError%': ThrowTypeError,
   	'%TypedArray%': TypedArray,
@@ -2029,12 +2023,12 @@
   	'%WeakSetPrototype%': ['WeakSet', 'prototype']
   };
 
-
-
-  var $concat = functionBind.call(Function.call, Array.prototype.concat);
-  var $spliceApply = functionBind.call(Function.apply, Array.prototype.splice);
-  var $replace$1 = functionBind.call(Function.call, String.prototype.replace);
-  var $strSlice$1 = functionBind.call(Function.call, String.prototype.slice);
+  var bind = functionBind;
+  var hasOwn = src;
+  var $concat = bind.call(Function.call, Array.prototype.concat);
+  var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
+  var $replace$1 = bind.call(Function.call, String.prototype.replace);
+  var $strSlice$1 = bind.call(Function.call, String.prototype.slice);
 
   /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
   var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
@@ -2058,12 +2052,12 @@
   var getBaseIntrinsic = function getBaseIntrinsic(name, allowMissing) {
   	var intrinsicName = name;
   	var alias;
-  	if (src(LEGACY_ALIASES, intrinsicName)) {
+  	if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
   		alias = LEGACY_ALIASES[intrinsicName];
   		intrinsicName = '%' + alias[0] + '%';
   	}
 
-  	if (src(INTRINSICS$1, intrinsicName)) {
+  	if (hasOwn(INTRINSICS$1, intrinsicName)) {
   		var value = INTRINSICS$1[intrinsicName];
   		if (value === needsEval) {
   			value = doEval(intrinsicName);
@@ -2124,7 +2118,7 @@
   		intrinsicBaseName += '.' + part;
   		intrinsicRealName = '%' + intrinsicBaseName + '%';
 
-  		if (src(INTRINSICS$1, intrinsicRealName)) {
+  		if (hasOwn(INTRINSICS$1, intrinsicRealName)) {
   			value = INTRINSICS$1[intrinsicRealName];
   		} else if (value != null) {
   			if (!(part in value)) {
@@ -2150,7 +2144,7 @@
   					value = value[part];
   				}
   			} else {
-  				isOwn = src(value, part);
+  				isOwn = hasOwn(value, part);
   				value = value[part];
   			}
 
@@ -2162,18 +2156,20 @@
   	return value;
   };
 
-  var callBind = createCommonjsModule(function (module) {
+  var callBind$2 = {exports: {}};
 
+  (function (module) {
 
+  var bind = functionBind;
+  var GetIntrinsic = getIntrinsic;
 
+  var $apply = GetIntrinsic('%Function.prototype.apply%');
+  var $call = GetIntrinsic('%Function.prototype.call%');
+  var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || bind.call($call, $apply);
 
-  var $apply = getIntrinsic('%Function.prototype.apply%');
-  var $call = getIntrinsic('%Function.prototype.call%');
-  var $reflectApply = getIntrinsic('%Reflect.apply%', true) || functionBind.call($call, $apply);
-
-  var $gOPD = getIntrinsic('%Object.getOwnPropertyDescriptor%', true);
-  var $defineProperty = getIntrinsic('%Object.defineProperty%', true);
-  var $max = getIntrinsic('%Math.max%');
+  var $gOPD = GetIntrinsic('%Object.getOwnPropertyDescriptor%', true);
+  var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+  var $max = GetIntrinsic('%Math.max%');
 
   if ($defineProperty) {
   	try {
@@ -2185,7 +2181,7 @@
   }
 
   module.exports = function callBind(originalFunction) {
-  	var func = $reflectApply(functionBind, $call, arguments);
+  	var func = $reflectApply(bind, $call, arguments);
   	if ($gOPD && $defineProperty) {
   		var desc = $gOPD(func, 'length');
   		if (desc.configurable) {
@@ -2201,7 +2197,7 @@
   };
 
   var applyBind = function applyBind() {
-  	return $reflectApply(functionBind, $apply, arguments);
+  	return $reflectApply(bind, $apply, arguments);
   };
 
   if ($defineProperty) {
@@ -2209,34 +2205,43 @@
   } else {
   	module.exports.apply = applyBind;
   }
-  });
+  }(callBind$2));
 
-  var $indexOf = callBind(getIntrinsic('String.prototype.indexOf'));
+  var GetIntrinsic$e = getIntrinsic;
 
-  var callBound = function callBoundIntrinsic(name, allowMissing) {
-  	var intrinsic = getIntrinsic(name, !!allowMissing);
+  var callBind$1 = callBind$2.exports;
+
+  var $indexOf = callBind$1(GetIntrinsic$e('String.prototype.indexOf'));
+
+  var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
+  	var intrinsic = GetIntrinsic$e(name, !!allowMissing);
   	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
-  		return callBind(intrinsic);
+  		return callBind$1(intrinsic);
   	}
   	return intrinsic;
   };
 
-  var $Array = getIntrinsic('%Array%');
+  var GetIntrinsic$d = getIntrinsic;
+
+  var $Array = GetIntrinsic$d('%Array%');
 
   // eslint-disable-next-line global-require
-  var toStr$3 = !$Array.isArray && callBound('Object.prototype.toString');
+  var toStr$4 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-isarray
 
-  var IsArray = $Array.isArray || function IsArray(argument) {
-  	return toStr$3(argument) === '[object Array]';
+  var IsArray$1 = $Array.isArray || function IsArray(argument) {
+  	return toStr$4(argument) === '[object Array]';
   };
 
-  var $TypeError$5 = getIntrinsic('%TypeError%');
+  var GetIntrinsic$c = getIntrinsic;
+  var callBound$1 = callBound$2;
 
+  var $TypeError$5 = GetIntrinsic$c('%TypeError%');
 
+  var IsArray = IsArray$1;
 
-  var $apply = getIntrinsic('%Reflect.apply%', true) || callBound('%Function.prototype.apply%');
+  var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$1('%Function.prototype.apply%');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-call
 
@@ -2250,11 +2255,13 @@
 
   // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
 
-  var IsPropertyKey = function IsPropertyKey(argument) {
+  var IsPropertyKey$2 = function IsPropertyKey(argument) {
   	return typeof argument === 'string' || typeof argument === 'symbol';
   };
 
-  var $TypeError$4 = getIntrinsic('%TypeError%');
+  var GetIntrinsic$b = getIntrinsic;
+
+  var $TypeError$4 = GetIntrinsic$b('%TypeError%');
 
   // http://262.ecma-international.org/5.1/#sec-9.10
 
@@ -2265,23 +2272,27 @@
   	return value;
   };
 
-  var RequireObjectCoercible = CheckObjectCoercible;
+  var RequireObjectCoercible$1 = CheckObjectCoercible;
 
-  var $Object = getIntrinsic('%Object%');
+  var GetIntrinsic$a = getIntrinsic;
 
+  var $Object = GetIntrinsic$a('%Object%');
 
+  var RequireObjectCoercible = RequireObjectCoercible$1;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-toobject
 
-  var ToObject = function ToObject(value) {
+  var ToObject$1 = function ToObject(value) {
   	RequireObjectCoercible(value);
   	return $Object(value);
   };
 
-  var $TypeError$3 = getIntrinsic('%TypeError%');
+  var GetIntrinsic$9 = getIntrinsic;
 
+  var $TypeError$3 = GetIntrinsic$9('%TypeError%');
 
-
+  var IsPropertyKey$1 = IsPropertyKey$2;
+  var ToObject = ToObject$1;
 
   /**
    * 7.3.2 GetV (V, P)
@@ -2291,9 +2302,9 @@
    * 4. Return O.[[Get]](P, V).
    */
 
-  var GetV = function GetV(V, P) {
+  var GetV$1 = function GetV(V, P) {
   	// 7.3.2.1
-  	if (!IsPropertyKey(P)) {
+  	if (!IsPropertyKey$1(P)) {
   		throw new $TypeError$3('Assertion failed: IsPropertyKey(P) is not true');
   	}
 
@@ -2346,14 +2357,14 @@
   		return false;
   	}
   };
-  var toStr$2 = Object.prototype.toString;
+  var toStr$3 = Object.prototype.toString;
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
   var hasToStringTag$1 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
   /* globals document: false */
   var documentDotAll = typeof document === 'object' && typeof document.all === 'undefined' && document.all !== undefined ? document.all : {};
 
-  var isCallable = reflectApply
+  var isCallable$2 = reflectApply
   	? function isCallable(value) {
   		if (value === documentDotAll) { return true; }
   		if (!value) { return false; }
@@ -2373,19 +2384,21 @@
   		if (typeof value === 'function' && !value.prototype) { return true; }
   		if (hasToStringTag$1) { return tryFunctionObject(value); }
   		if (isES6ClassFn(value)) { return false; }
-  		var strClass = toStr$2.call(value);
+  		var strClass = toStr$3.call(value);
   		return strClass === fnClass || strClass === genClass;
   	};
 
   // http://262.ecma-international.org/5.1/#sec-9.11
 
-  var IsCallable = isCallable;
+  var IsCallable$1 = isCallable$2;
 
-  var $TypeError$2 = getIntrinsic('%TypeError%');
+  var GetIntrinsic$8 = getIntrinsic;
 
+  var $TypeError$2 = GetIntrinsic$8('%TypeError%');
 
-
-
+  var GetV = GetV$1;
+  var IsCallable = IsCallable$1;
+  var IsPropertyKey = IsPropertyKey$2;
 
   /**
    * 7.3.9 - https://ecma-international.org/ecma-262/6.0/#sec-getmethod
@@ -2420,11 +2433,13 @@
   	return func;
   };
 
-  var $abs$1 = getIntrinsic('%Math.abs%');
+  var GetIntrinsic$7 = getIntrinsic;
+
+  var $abs$1 = GetIntrinsic$7('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
-  var abs$1 = function abs(x) {
+  var abs$3 = function abs(x) {
   	return $abs$1(x);
   };
 
@@ -2433,7 +2448,7 @@
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
-  var floor$1 = function floor(x) {
+  var floor$3 = function floor(x) {
   	// return x - modulo(x, 1);
   	return $floor$1(x);
   };
@@ -2442,25 +2457,33 @@
   	return a !== a;
   };
 
-  var $isNaN = Number.isNaN || function (a) { return a !== a; };
+  var $isNaN$2 = Number.isNaN || function (a) { return a !== a; };
 
-  var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
+  var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
+
+  var abs$2 = abs$3;
+  var floor$2 = floor$3;
+
+  var $isNaN$1 = _isNaN;
+  var $isFinite$1 = _isFinite;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-isinteger
 
   var IsInteger = function IsInteger(argument) {
-  	if (typeof argument !== 'number' || _isNaN(argument) || !_isFinite(argument)) {
+  	if (typeof argument !== 'number' || $isNaN$1(argument) || !$isFinite$1(argument)) {
   		return false;
   	}
-  	var absValue = abs$1(argument);
-  	return floor$1(absValue) === absValue;
+  	var absValue = abs$2(argument);
+  	return floor$2(absValue) === absValue;
   };
 
-  var $abs = getIntrinsic('%Math.abs%');
+  var GetIntrinsic$6 = getIntrinsic;
+
+  var $abs = GetIntrinsic$6('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
-  var abs = function abs(x) {
+  var abs$1 = function abs(x) {
   	return $abs(x);
   };
 
@@ -2469,20 +2492,20 @@
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
-  var floor = function floor(x) {
+  var floor$1 = function floor(x) {
   	// return x - modulo(x, 1);
   	return $floor(x);
   };
 
-  var isPrimitive$1 = function isPrimitive(value) {
+  var isPrimitive$4 = function isPrimitive(value) {
   	return value === null || (typeof value !== 'function' && typeof value !== 'object');
   };
 
-  var toStr$1 = Object.prototype.toString;
+  var toStr$2 = Object.prototype.toString;
 
+  var isPrimitive$3 = isPrimitive$4;
 
-
-
+  var isCallable$1 = isCallable$2;
 
   // http://ecma-international.org/ecma-262/5.1/#sec-8.12.8
   var ES5internalSlots = {
@@ -2491,16 +2514,16 @@
   		if (arguments.length > 1) {
   			actualHint = arguments[1];
   		} else {
-  			actualHint = toStr$1.call(O) === '[object Date]' ? String : Number;
+  			actualHint = toStr$2.call(O) === '[object Date]' ? String : Number;
   		}
 
   		if (actualHint === String || actualHint === Number) {
   			var methods = actualHint === String ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
   			var value, i;
   			for (i = 0; i < methods.length; ++i) {
-  				if (isCallable(O[methods[i]])) {
+  				if (isCallable$1(O[methods[i]])) {
   					value = O[methods[i]]();
-  					if (isPrimitive$1(value)) {
+  					if (isPrimitive$3(value)) {
   						return value;
   					}
   				}
@@ -2513,7 +2536,7 @@
 
   // http://ecma-international.org/ecma-262/5.1/#sec-9.1
   var es5 = function ToPrimitive(input) {
-  	if (isPrimitive$1(input)) {
+  	if (isPrimitive$3(input)) {
   		return input;
   	}
   	if (arguments.length > 1) {
@@ -2524,12 +2547,14 @@
 
   // http://262.ecma-international.org/5.1/#sec-9.1
 
-  var ToPrimitive$1 = es5;
+  var ToPrimitive$3 = es5;
+
+  var ToPrimitive$2 = ToPrimitive$3;
 
   // http://262.ecma-international.org/5.1/#sec-9.3
 
-  var ToNumber$1 = function ToNumber(value) {
-  	var prim = ToPrimitive$1(value, Number);
+  var ToNumber$3 = function ToNumber(value) {
+  	var prim = ToPrimitive$2(value, Number);
   	if (typeof prim !== 'string') {
   		return +prim; // eslint-disable-line no-implicit-coercion
   	}
@@ -2547,24 +2572,34 @@
   	return number >= 0 ? 1 : -1;
   };
 
+  var abs = abs$1;
+  var floor = floor$1;
+  var ToNumber$2 = ToNumber$3;
+
+  var $isNaN = _isNaN;
+  var $isFinite = _isFinite;
+  var $sign = sign;
+
   // http://262.ecma-international.org/5.1/#sec-9.4
 
-  var ToInteger$1 = function ToInteger(value) {
-  	var number = ToNumber$1(value);
-  	if (_isNaN(number)) { return 0; }
-  	if (number === 0 || !_isFinite(number)) { return number; }
-  	return sign(number) * floor(abs(number));
+  var ToInteger$2 = function ToInteger(value) {
+  	var number = ToNumber$2(value);
+  	if ($isNaN(number)) { return 0; }
+  	if (number === 0 || !$isFinite(number)) { return number; }
+  	return $sign(number) * floor(abs(number));
   };
 
-  var $test = getIntrinsic('RegExp.prototype.test');
+  var GetIntrinsic$5 = getIntrinsic;
 
+  var $test = GetIntrinsic$5('RegExp.prototype.test');
 
+  var callBind = callBind$2.exports;
 
-  var regexTester = function regexTester(regex) {
+  var regexTester$1 = function regexTester(regex) {
   	return callBind($test, regex);
   };
 
-  var isPrimitive = function isPrimitive(value) {
+  var isPrimitive$2 = function isPrimitive(value) {
   	return value === null || (typeof value !== 'function' && typeof value !== 'object');
   };
 
@@ -2578,7 +2613,7 @@
   	}
   };
 
-  var toStr = Object.prototype.toString;
+  var toStr$1 = Object.prototype.toString;
   var dateClass = '[object Date]';
   var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag;
 
@@ -2586,15 +2621,15 @@
   	if (typeof value !== 'object' || value === null) {
   		return false;
   	}
-  	return hasToStringTag ? tryDateObject(value) : toStr.call(value) === dateClass;
+  	return hasToStringTag ? tryDateObject(value) : toStr$1.call(value) === dateClass;
   };
 
-  var isSymbol = createCommonjsModule(function (module) {
+  var isSymbol$1 = {exports: {}};
 
   var toStr = Object.prototype.toString;
-  var hasSymbols = hasSymbols$2();
+  var hasSymbols$1 = hasSymbols$3();
 
-  if (hasSymbols) {
+  if (hasSymbols$1) {
   	var symToStr = Symbol.prototype.toString;
   	var symStringRegex = /^Symbol\(.*\)$/;
   	var isSymbolObject = function isRealSymbolObject(value) {
@@ -2604,7 +2639,7 @@
   		return symStringRegex.test(symToStr.call(value));
   	};
 
-  	module.exports = function isSymbol(value) {
+  	isSymbol$1.exports = function isSymbol(value) {
   		if (typeof value === 'symbol') {
   			return true;
   		}
@@ -2619,19 +2654,18 @@
   	};
   } else {
 
-  	module.exports = function isSymbol(value) {
+  	isSymbol$1.exports = function isSymbol(value) {
   		// this environment does not support Symbols.
   		return false ;
   	};
   }
-  });
 
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
-
-
-
-
+  var isPrimitive$1 = isPrimitive$4;
+  var isCallable = isCallable$2;
+  var isDate = isDateObject;
+  var isSymbol = isSymbol$1.exports;
 
   var ordinaryToPrimitive = function OrdinaryToPrimitive(O, hint) {
   	if (typeof O === 'undefined' || O === null) {
@@ -2694,29 +2728,33 @@
   		}
   		throw new TypeError('unable to convert exotic object to primitive');
   	}
-  	if (hint === 'default' && (isDateObject(input) || isSymbol(input))) {
+  	if (hint === 'default' && (isDate(input) || isSymbol(input))) {
   		hint = 'string';
   	}
   	return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
   };
 
+  var toPrimitive = es2015;
+
   // https://ecma-international.org/ecma-262/6.0/#sec-toprimitive
 
-  var ToPrimitive = function ToPrimitive(input) {
+  var ToPrimitive$1 = function ToPrimitive(input) {
   	if (arguments.length > 1) {
-  		return es2015(input, arguments[1]);
+  		return toPrimitive(input, arguments[1]);
   	}
-  	return es2015(input);
+  	return toPrimitive(input);
   };
 
-  var $TypeError$1 = getIntrinsic('%TypeError%');
-  var $Number$1 = getIntrinsic('%Number%');
-  var $RegExp = getIntrinsic('%RegExp%');
-  var $parseInteger = getIntrinsic('%parseInt%');
+  var GetIntrinsic$4 = getIntrinsic;
 
+  var $TypeError$1 = GetIntrinsic$4('%TypeError%');
+  var $Number$1 = GetIntrinsic$4('%Number%');
+  var $RegExp = GetIntrinsic$4('%RegExp%');
+  var $parseInteger = GetIntrinsic$4('%parseInt%');
 
-
-
+  var callBound = callBound$2;
+  var regexTester = regexTester$1;
+  var isPrimitive = isPrimitive$2;
 
   var $strSlice = callBound('String.prototype.slice');
   var isBinary = regexTester(/^0b[01]+$/i);
@@ -2739,11 +2777,11 @@
   	return $replace(value, trimRegex, '');
   };
 
-
+  var ToPrimitive = ToPrimitive$1;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-tonumber
 
-  var ToNumber = function ToNumber(argument) {
+  var ToNumber$1 = function ToNumber(argument) {
   	var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number$1);
   	if (typeof value === 'symbol') {
   		throw new $TypeError$1('Cannot convert a Symbol value to a number');
@@ -2768,30 +2806,42 @@
   	return $Number$1(value);
   };
 
+  var ES5ToInteger = ToInteger$2;
+
+  var ToNumber = ToNumber$1;
+
   // https://262.ecma-international.org/11.0/#sec-tointeger
 
-  var ToInteger = function ToInteger(value) {
+  var ToInteger$1 = function ToInteger(value) {
   	var number = ToNumber(value);
   	if (number !== 0) {
-  		number = ToInteger$1(number);
+  		number = ES5ToInteger(number);
   	}
   	return number === 0 ? 0 : number;
   };
 
-  var $Math = getIntrinsic('%Math%');
-  var $Number = getIntrinsic('%Number%');
+  var GetIntrinsic$3 = getIntrinsic;
+
+  var $Math = GetIntrinsic$3('%Math%');
+  var $Number = GetIntrinsic$3('%Number%');
 
   var maxSafeInteger = $Number.MAX_SAFE_INTEGER || $Math.pow(2, 53) - 1;
+
+  var MAX_SAFE_INTEGER = maxSafeInteger;
+
+  var ToInteger = ToInteger$1;
 
   var ToLength = function ToLength(argument) {
   	var len = ToInteger(argument);
   	if (len <= 0) { return 0; } // includes converting -0 to +0
-  	if (len > maxSafeInteger) { return maxSafeInteger; }
+  	if (len > MAX_SAFE_INTEGER) { return MAX_SAFE_INTEGER; }
   	return len;
   };
 
-  var $String = getIntrinsic('%String%');
-  var $TypeError = getIntrinsic('%TypeError%');
+  var GetIntrinsic$2 = getIntrinsic;
+
+  var $String = GetIntrinsic$2('%String%');
+  var $TypeError = GetIntrinsic$2('%TypeError%');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-tostring
 
@@ -2825,6 +2875,8 @@
   	}
   };
 
+  var ES5Type = Type$1;
+
   // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
 
   var Type = function Type(x) {
@@ -2834,7 +2886,7 @@
   	if (typeof x === 'bigint') {
   		return 'BigInt';
   	}
-  	return Type$1(x);
+  	return ES5Type(x);
   };
 
   // TODO: remove, semver-major
@@ -5851,14 +5903,14 @@
   var ObjectIs = Object.is;
   var ObjectEntries = Object.entries;
   var DAYMILLIS = 86400000;
-  var NS_MIN = BigInteger(-86400).multiply(1e17);
-  var NS_MAX = BigInteger(86400).multiply(1e17);
+  var NS_MIN = bigInt(-86400).multiply(1e17);
+  var NS_MAX = bigInt(86400).multiply(1e17);
   var YEAR_MIN = -271821;
   var YEAR_MAX = 275760;
-  var BEFORE_FIRST_DST = BigInteger(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+  var BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
   var ToPositiveInteger = function ToPositiveInteger(value, property) {
-    value = ToInteger(value);
+    value = ToInteger$1(value);
 
     if (value < 1) {
       if (property !== undefined) {
@@ -5871,17 +5923,17 @@
     return value;
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToInteger], ['month', ToPositiveInteger], ['monthCode', ToString], ['day', ToPositiveInteger], ['hour', ToInteger], ['minute', ToInteger], ['second', ToInteger], ['millisecond', ToInteger], ['microsecond', ToInteger], ['nanosecond', ToInteger], ['years', ToInteger], ['months', ToInteger], ['weeks', ToInteger], ['days', ToInteger], ['hours', ToInteger], ['minutes', ToInteger], ['seconds', ToInteger], ['milliseconds', ToInteger], ['microseconds', ToInteger], ['nanoseconds', ToInteger], ['era', ToString], ['eraYear', ToInteger], ['offset', ToString]]);
+  var BUILTIN_CASTS = new Map([['year', ToInteger$1], ['month', ToPositiveInteger], ['monthCode', ToString], ['day', ToPositiveInteger], ['hour', ToInteger$1], ['minute', ToInteger$1], ['second', ToInteger$1], ['millisecond', ToInteger$1], ['microsecond', ToInteger$1], ['nanosecond', ToInteger$1], ['years', ToInteger$1], ['months', ToInteger$1], ['weeks', ToInteger$1], ['days', ToInteger$1], ['hours', ToInteger$1], ['minutes', ToInteger$1], ['seconds', ToInteger$1], ['milliseconds', ToInteger$1], ['microseconds', ToInteger$1], ['nanoseconds', ToInteger$1], ['era', ToString], ['eraYear', ToInteger$1], ['offset', ToString]]);
   var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
   var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
   var ES2020 = {
     Call: Call,
     GetMethod: GetMethod$1,
     IsInteger: IsInteger,
-    ToInteger: ToInteger,
+    ToInteger: ToInteger$1,
     ToLength: ToLength,
-    ToNumber: ToNumber,
-    ToPrimitive: ToPrimitive,
+    ToNumber: ToNumber$1,
+    ToPrimitive: ToPrimitive$1,
     ToString: ToString,
     Type: Type
   };
@@ -7979,7 +8031,7 @@
 
       function formatNumber(num) {
         if (num <= NumberMaxSafeInteger) return num.toString(10);
-        return BigInteger(num).toString();
+        return bigInt(num).toString();
       }
 
       var years = GetSlot(duration, YEARS);
@@ -8245,14 +8297,14 @@
       legacyDate.setUTCFullYear(year, month - 1, day);
       var ms = legacyDate.getTime();
       if (NumberIsNaN(ms)) return null;
-      var ns = BigInteger(ms).multiply(1e6);
-      ns = ns.plus(BigInteger(microsecond).multiply(1e3));
-      ns = ns.plus(BigInteger(nanosecond));
+      var ns = bigInt(ms).multiply(1e6);
+      ns = ns.plus(bigInt(microsecond).multiply(1e3));
+      ns = ns.plus(bigInt(nanosecond));
       if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) return null;
       return ns;
     },
     GetISOPartsFromEpoch: function GetISOPartsFromEpoch(epochNanoseconds) {
-      var _bigInt$divmod = BigInteger(epochNanoseconds).divmod(1e6),
+      var _bigInt$divmod = bigInt(epochNanoseconds).divmod(1e6),
           quotient = _bigInt$divmod.quotient,
           remainder = _bigInt$divmod.remainder;
 
@@ -8311,8 +8363,8 @@
       var rightNanos = leftNanos;
       var rightOffsetNs = leftOffsetNs;
 
-      while (leftOffsetNs === rightOffsetNs && BigInteger(leftNanos).compare(uppercap) === -1) {
-        rightNanos = BigInteger(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
+      while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
+        rightNanos = bigInt(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
         rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
 
         if (leftOffsetNs === rightOffsetNs) {
@@ -8334,8 +8386,8 @@
       var leftNanos = rightNanos;
       var leftOffsetNs = rightOffsetNs;
 
-      while (rightOffsetNs === leftOffsetNs && BigInteger(rightNanos).compare(lowercap) === 1) {
-        leftNanos = BigInteger(rightNanos).minus(2 * 7 * DAYMILLIS * 1e6);
+      while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
+        leftNanos = bigInt(rightNanos).minus(2 * 7 * DAYMILLIS * 1e6);
         leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
 
         if (rightOffsetNs === leftOffsetNs) {
@@ -8399,7 +8451,7 @@
     GetIANATimeZoneEpochValue: function GetIANATimeZoneEpochValue(id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
       var ns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (ns === null) throw new RangeError('DateTime outside of supported range');
-      var dayNanos = BigInteger(DAYMILLIS).multiply(1e6);
+      var dayNanos = bigInt(DAYMILLIS).multiply(1e6);
       var nsEarlier = ns.minus(dayNanos);
       if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
       var nsLater = ns.plus(dayNanos);
@@ -8408,7 +8460,7 @@
       var latest = ES.GetIANATimeZoneOffsetNanoseconds(nsLater, id);
       var found = earliest === latest ? [earliest] : [earliest, latest];
       return found.map(function (offsetNanoseconds) {
-        var epochNanoseconds = BigInteger(ns).minus(offsetNanoseconds);
+        var epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
         var parts = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
 
         if (year !== parts.year || month !== parts.month || day !== parts.day || hour !== parts.hour || minute !== parts.minute || second !== parts.second || millisecond !== parts.millisecond || microsecond !== parts.microsecond || nanosecond !== parts.nanosecond) {
@@ -8603,22 +8655,22 @@
       };
     },
     TotalDurationNanoseconds: function TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) {
-      if (days !== 0) nanoseconds = BigInteger(nanoseconds).subtract(offsetShift);
-      hours = BigInteger(hours).add(BigInteger(days).multiply(24));
-      minutes = BigInteger(minutes).add(hours.multiply(60));
-      seconds = BigInteger(seconds).add(minutes.multiply(60));
-      milliseconds = BigInteger(milliseconds).add(seconds.multiply(1000));
-      microseconds = BigInteger(microseconds).add(milliseconds.multiply(1000));
-      return BigInteger(nanoseconds).add(microseconds.multiply(1000));
+      if (days !== 0) nanoseconds = bigInt(nanoseconds).subtract(offsetShift);
+      hours = bigInt(hours).add(bigInt(days).multiply(24));
+      minutes = bigInt(minutes).add(hours.multiply(60));
+      seconds = bigInt(seconds).add(minutes.multiply(60));
+      milliseconds = bigInt(milliseconds).add(seconds.multiply(1000));
+      microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
+      return bigInt(nanoseconds).add(microseconds.multiply(1000));
     },
     NanosecondsToDays: function NanosecondsToDays(nanoseconds, relativeTo) {
       var TemporalInstant = GetIntrinsic('%Temporal.Instant%');
       var sign = MathSign(nanoseconds);
-      nanoseconds = BigInteger(nanoseconds);
+      nanoseconds = bigInt(nanoseconds);
       var dayLengthNs = 86400e9;
       if (sign === 0) return {
         days: 0,
-        nanoseconds: BigInteger.zero,
+        nanoseconds: bigInt.zero,
         dayLengthNs: dayLengthNs
       };
 
@@ -8713,7 +8765,7 @@
 
       var sign = nanoseconds.lesser(0) ? -1 : 1;
       nanoseconds = nanoseconds.abs();
-      microseconds = milliseconds = seconds = minutes = hours = BigInteger.zero;
+      microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
 
       switch (largestUnit) {
         case 'year':
@@ -9786,14 +9838,14 @@
       };
     },
     AddInstant: function AddInstant(epochNanoseconds, h, min, s, ms, µs, ns) {
-      var sum = BigInteger.zero;
-      sum = sum.plus(BigInteger(ns));
-      sum = sum.plus(BigInteger(µs).multiply(1e3));
-      sum = sum.plus(BigInteger(ms).multiply(1e6));
-      sum = sum.plus(BigInteger(s).multiply(1e9));
-      sum = sum.plus(BigInteger(min).multiply(60 * 1e9));
-      sum = sum.plus(BigInteger(h).multiply(60 * 60 * 1e9));
-      var result = BigInteger(epochNanoseconds).plus(sum);
+      var sum = bigInt.zero;
+      sum = sum.plus(bigInt(ns));
+      sum = sum.plus(bigInt(µs).multiply(1e3));
+      sum = sum.plus(bigInt(ms).multiply(1e6));
+      sum = sum.plus(bigInt(s).multiply(1e9));
+      sum = sum.plus(bigInt(min).multiply(60 * 1e9));
+      sum = sum.plus(bigInt(h).multiply(60 * 60 * 1e9));
+      var result = bigInt(epochNanoseconds).plus(sum);
       ES.ValidateEpochNanoseconds(result);
       return result;
     },
@@ -9863,8 +9915,8 @@
           quotient = _quantity$divmod.quotient,
           remainder = _quantity$divmod.remainder;
 
-      if (remainder.equals(BigInteger.zero)) return quantity;
-      var sign = remainder.lt(BigInteger.zero) ? -1 : 1;
+      if (remainder.equals(bigInt.zero)) return quantity;
+      var sign = remainder.lt(bigInt.zero) ? -1 : 1;
 
       switch (mode) {
         case 'ceil':
@@ -9928,12 +9980,12 @@
     },
     RoundTime: function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
       var dayLengthNs = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 86400e9;
-      var quantity = BigInteger.zero;
+      var quantity = bigInt.zero;
 
       switch (unit) {
         case 'day':
         case 'hour':
-          quantity = BigInteger(hour);
+          quantity = bigInt(hour);
         // fall through
 
         case 'minute':
@@ -10159,8 +10211,8 @@
 
 
             oneYearDays = MathAbs(oneYearDays);
-            var divisor = BigInteger(oneYearDays).multiply(dayLengthNs);
-            nanoseconds = divisor.multiply(years).plus(BigInteger(days).multiply(dayLengthNs)).plus(nanoseconds);
+            var divisor = bigInt(oneYearDays).multiply(dayLengthNs);
+            nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
             var rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
             total = nanoseconds.toJSNumber() / divisor;
             years = rounded.divide(divisor).toJSNumber();
@@ -10213,9 +10265,9 @@
 
             oneMonthDays = MathAbs(oneMonthDays);
 
-            var _divisor = BigInteger(oneMonthDays).multiply(dayLengthNs);
+            var _divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
 
-            nanoseconds = _divisor.multiply(months).plus(BigInteger(days).multiply(dayLengthNs)).plus(nanoseconds);
+            nanoseconds = _divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 
             var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor * increment, roundingMode);
 
@@ -10252,9 +10304,9 @@
 
             oneWeekDays = MathAbs(oneWeekDays);
 
-            var _divisor2 = BigInteger(oneWeekDays).multiply(dayLengthNs);
+            var _divisor2 = bigInt(oneWeekDays).multiply(dayLengthNs);
 
-            nanoseconds = _divisor2.multiply(weeks).plus(BigInteger(days).multiply(dayLengthNs)).plus(nanoseconds);
+            nanoseconds = _divisor2.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 
             var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2 * increment, roundingMode);
 
@@ -10266,7 +10318,7 @@
 
         case 'day':
           {
-            var _divisor3 = BigInteger(dayLengthNs);
+            var _divisor3 = bigInt(dayLengthNs);
 
             nanoseconds = _divisor3.multiply(days).plus(nanoseconds);
 
@@ -10281,7 +10333,7 @@
         case 'hour':
           {
             var _divisor4 = 3600e9;
-            nanoseconds = BigInteger(hours).multiply(3600e9).plus(BigInteger(minutes).multiply(60e9)).plus(BigInteger(seconds).multiply(1e9)).plus(BigInteger(milliseconds).multiply(1e6)).plus(BigInteger(microseconds).multiply(1e3)).plus(nanoseconds);
+            nanoseconds = bigInt(hours).multiply(3600e9).plus(bigInt(minutes).multiply(60e9)).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
             total = nanoseconds.toJSNumber() / _divisor4;
 
             var _rounded4 = ES.RoundNumberToIncrement(nanoseconds, _divisor4 * increment, roundingMode);
@@ -10294,7 +10346,7 @@
         case 'minute':
           {
             var _divisor5 = 60e9;
-            nanoseconds = BigInteger(minutes).multiply(60e9).plus(BigInteger(seconds).multiply(1e9)).plus(BigInteger(milliseconds).multiply(1e6)).plus(BigInteger(microseconds).multiply(1e3)).plus(nanoseconds);
+            nanoseconds = bigInt(minutes).multiply(60e9).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
             total = nanoseconds.toJSNumber() / _divisor5;
 
             var _rounded5 = ES.RoundNumberToIncrement(nanoseconds, _divisor5 * increment, roundingMode);
@@ -10307,7 +10359,7 @@
         case 'second':
           {
             var _divisor6 = 1e9;
-            nanoseconds = BigInteger(seconds).multiply(1e9).plus(BigInteger(milliseconds).multiply(1e6)).plus(BigInteger(microseconds).multiply(1e3)).plus(nanoseconds);
+            nanoseconds = bigInt(seconds).multiply(1e9).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
             total = nanoseconds.toJSNumber() / _divisor6;
 
             var _rounded6 = ES.RoundNumberToIncrement(nanoseconds, _divisor6 * increment, roundingMode);
@@ -10320,7 +10372,7 @@
         case 'millisecond':
           {
             var _divisor7 = 1e6;
-            nanoseconds = BigInteger(milliseconds).multiply(1e6).plus(BigInteger(microseconds).multiply(1e3)).plus(nanoseconds);
+            nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
             total = nanoseconds.toJSNumber() / _divisor7;
 
             var _rounded7 = ES.RoundNumberToIncrement(nanoseconds, _divisor7 * increment, roundingMode);
@@ -10333,7 +10385,7 @@
         case 'microsecond':
           {
             var _divisor8 = 1e3;
-            nanoseconds = BigInteger(microseconds).multiply(1e3).plus(nanoseconds);
+            nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
             total = nanoseconds.toJSNumber() / _divisor8;
 
             var _rounded8 = ES.RoundNumberToIncrement(nanoseconds, _divisor8 * increment, roundingMode);
@@ -10346,7 +10398,7 @@
         case 'nanosecond':
           {
             total = nanoseconds;
-            nanoseconds = ES.RoundNumberToIncrement(BigInteger(nanoseconds), increment, roundingMode);
+            nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
             break;
           }
       }
@@ -10387,7 +10439,7 @@
       return result;
     },
     ToBigInt: function ToBigInt(arg) {
-      if (BigInteger.isInstance(arg)) {
+      if (bigInt.isInstance(arg)) {
         return arg;
       }
 
@@ -10409,7 +10461,7 @@
 
         case 'bigint':
           try {
-            return BigInteger(prim);
+            return bigInt(prim);
           } catch (e) {
             if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
             throw e;
@@ -10417,9 +10469,9 @@
 
         case 'boolean':
           if (prim) {
-            return BigInteger(1);
+            return bigInt(1);
           } else {
-            return BigInteger.zero;
+            return bigInt.zero;
           }
 
       }
@@ -10431,9 +10483,9 @@
       var ns = Date.now() % 1e6;
       return function () {
         var ms = Date.now();
-        var result = BigInteger(ms).multiply(1e6).plus(ns);
+        var result = bigInt(ms).multiply(1e6).plus(ns);
         ns = ms % 1e6;
-        return BigInteger.min(NS_MAX, BigInteger.max(NS_MIN, result));
+        return bigInt.min(NS_MAX, bigInt.max(NS_MIN, result));
       };
     }(),
     SystemTimeZone: function SystemTimeZone() {
@@ -10481,8 +10533,8 @@
   function bisect(getState, left, right) {
     var lstate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getState(left);
     var rstate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : getState(right);
-    left = BigInteger(left);
-    right = BigInteger(right);
+    left = bigInt(left);
+    right = bigInt(right);
 
     while (right.minus(left).greater(1)) {
       var middle = left.plus(right).divide(2);
@@ -11192,7 +11244,7 @@
       key: "epochMilliseconds",
       get: function get() {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        var value = BigInteger(GetSlot(this, EPOCHNANOSECONDS));
+        var value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
         return +value.divide(1e6);
       }
     }, {
@@ -11339,7 +11391,7 @@
         other = ES.ToTemporalInstant(other);
         var one = GetSlot(this, EPOCHNANOSECONDS);
         var two = GetSlot(other, EPOCHNANOSECONDS);
-        return BigInteger(one).equals(two);
+        return bigInt(one).equals(two);
       }
     }, {
       key: "toString",
@@ -11426,7 +11478,7 @@
       key: "fromEpochSeconds",
       value: function fromEpochSeconds(epochSeconds) {
         epochSeconds = ES.ToNumber(epochSeconds);
-        var epochNanoseconds = BigInteger(epochSeconds).multiply(1e9);
+        var epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
         ES.ValidateEpochNanoseconds(epochNanoseconds);
         return new Instant(epochNanoseconds);
       }
@@ -11434,7 +11486,7 @@
       key: "fromEpochMilliseconds",
       value: function fromEpochMilliseconds(epochMilliseconds) {
         epochMilliseconds = ES.ToNumber(epochMilliseconds);
-        var epochNanoseconds = BigInteger(epochMilliseconds).multiply(1e6);
+        var epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
         ES.ValidateEpochNanoseconds(epochNanoseconds);
         return new Instant(epochNanoseconds);
       }
@@ -11469,8 +11521,8 @@
         two = ES.ToTemporalInstant(two);
         one = GetSlot(one, EPOCHNANOSECONDS);
         two = GetSlot(two, EPOCHNANOSECONDS);
-        if (BigInteger(one).lesser(two)) return -1;
-        if (BigInteger(one).greater(two)) return 1;
+        if (bigInt(one).lesser(two)) return -1;
+        if (bigInt(one).greater(two)) return 1;
         return 0;
       }
     }]);
@@ -14912,7 +14964,7 @@
         other = ES.ToTemporalZonedDateTime(other);
         var one = GetSlot(this, EPOCHNANOSECONDS);
         var two = GetSlot(other, EPOCHNANOSECONDS);
-        if (!BigInteger(one).equals(two)) return false;
+        if (!bigInt(one).equals(two)) return false;
         if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) return false;
         return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
       }
@@ -15055,8 +15107,8 @@
         two = ES.ToTemporalZonedDateTime(two);
         var ns1 = GetSlot(one, EPOCHNANOSECONDS);
         var ns2 = GetSlot(two, EPOCHNANOSECONDS);
-        if (BigInteger(ns1).lesser(ns2)) return -1;
-        if (BigInteger(ns1).greater(ns2)) return 1;
+        if (bigInt(ns1).lesser(ns2)) return -1;
+        if (bigInt(ns1).greater(ns2)) return 1;
         return 0;
       }
     }]);
@@ -15090,7 +15142,7 @@
 
   function toTemporalInstant() {
     // Observable access to valueOf is not correct here, but unavoidable
-    var epochNanoseconds = BigInteger(+this).multiply(1e6);
+    var epochNanoseconds = bigInt(+this).multiply(1e6);
     return new Instant(bigIntIfAvailable(epochNanoseconds));
   }
 
