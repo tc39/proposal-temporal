@@ -10,7 +10,7 @@ This proposal is currently [Stage 3](https://github.com/tc39/proposals#stage-3) 
 
 This proposal is now in the hands of ECMAScript engine implementers, so the bar for making API changes is extremely high.
 Nonetheless, changes may occur as the result of feedback from implementation in JS engines.
-Editorial changes to the spec and bug fixes to the spec, polyfill, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
+Editorial changes to the spec and bug fixes to the spec, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
 Additional tests and documentation content are also being added during Stage 3.
 
 ## Champions
@@ -43,19 +43,26 @@ For a detailed breakdown of motivations, see:
 
 The specification text can be found [here](https://tc39.es/proposal-temporal/).
 
-## Polyfill
-
-A [non-production polyfill](./polyfill) was built to validate this proposal.
-The champions of this proposal will soon start work on a production-ready polyfill, and once it's started it will be linked here.
-If you're working on a different production-quality polyfill, let us know and we can link it here too!
-
-When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the polyfill is automatically loaded in your browser, so you can try it out by opening your browser's developer tools console.
-
-**NOTE: We encourage you to experiment with the polyfill, but don't use it in production!**
-**The API may change based on feedback from implementers, and the current non-production polyfill is very slow for some operations.**
-
 ## Documentation
 
 Reference documentation and examples can be found [here](https://tc39.es/proposal-temporal/docs/index.html).
 
 A cookbook to help you get started and learn the ins and outs of Temporal is available [here](https://tc39.es/proposal-temporal/docs/cookbook.html)
+
+## Polyfills
+
+| Polyfill                                                                         | Repo                                                                              | Status                            |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------- |
+| **[@js-temporal/polyfill](https://www.npmjs.com/package/@js-temporal/polyfill)** | [js-temporal/temporal-polyfill](https://github.com/js-temporal/temporal-polyfill) | Preparing for first alpha release |
+
+If you're working on a polyfill, please file an issue or PR so we can add yours here.
+
+A [non-production polyfill](./polyfill) was built to validate this proposal.
+This polyfill continues to live in this repo, but only for the purposes of running tests and powering the documentation "playground" as described below.
+
+**DO NOT use this polyfill in your own projects!
+Instead, please use a polyfill from the table above.**
+
+## Documentation Playground
+
+When viewing the [reference documentation](https://tc39.es/proposal-temporal/docs/index.html), the non-production polyfill is automatically loaded in your browser, so you can try out Temporal by opening your browser's developer tools console.
