@@ -27,7 +27,7 @@ export default [
   !isTest262 && {
     input: 'lib/index.mjs',
     plugins: [
-      replace({ ...replaceConfig, __debug__: !isProduction }),
+      replace({ ...replaceConfig, __debug__: !isProduction, preventAssignment: true }),
       commonjs(),
       resolve(resolveConfig),
       babel(babelConfig),
@@ -50,7 +50,11 @@ export default [
   },
   {
     input: 'lib/shim.mjs',
-    plugins: [replace({ ...replaceConfig, __debug__: false }), commonjs(), resolve(resolveConfig)],
+    plugins: [
+      replace({ ...replaceConfig, __debug__: false, __isTest262__: isTest262, preventAssignment: true }),
+      commonjs(),
+      resolve(resolveConfig)
+    ],
     output: {
       name: libName,
       file: 'script.js',
@@ -66,6 +70,11 @@ export default [
       format: 'umd',
       sourcemap: true
     },
-    plugins: [replace({ ...replaceConfig, __debug__: true }), commonjs(), resolve(resolveConfig), babel(babelConfig)]
+    plugins: [
+      replace({ ...replaceConfig, __debug__: true, preventAssignment: true }),
+      commonjs(),
+      resolve(resolveConfig),
+      babel(babelConfig)
+    ]
   }
 ].filter(Boolean);
