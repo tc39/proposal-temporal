@@ -209,17 +209,8 @@ export class ZonedDateTime {
     let fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.ToTemporalZonedDateTimeFields(fields, fieldNames);
-    let {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+      ES.InterpretTemporalDateTimeFields(calendar, fields, options);
     const offsetNs = ES.ParseOffsetString(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
@@ -400,72 +391,42 @@ export class ZonedDateTime {
         );
       }
       const untilOptions = { ...options, largestUnit };
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.RoundDuration(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
-        this
-      ));
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.AdjustRoundedDurationDays(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
-        this
-      ));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.RoundDuration(
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          roundingIncrement,
+          smallestUnit,
+          roundingMode,
+          this
+        ));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.AdjustRoundedDurationDays(
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          roundingIncrement,
+          smallestUnit,
+          roundingMode,
+          this
+        ));
     }
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
@@ -525,72 +486,42 @@ export class ZonedDateTime {
         );
       }
       const untilOptions = { ...options, largestUnit };
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.RoundDuration(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
-        this
-      ));
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.AdjustRoundedDurationDays(
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
-        this
-      ));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.RoundDuration(
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          roundingIncrement,
+          smallestUnit,
+          roundingMode,
+          this
+        ));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.AdjustRoundedDurationDays(
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          roundingIncrement,
+          smallestUnit,
+          roundingMode,
+          this
+        ));
     }
 
     const Duration = GetIntrinsic('%Temporal.Duration%');

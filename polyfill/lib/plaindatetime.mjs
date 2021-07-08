@@ -184,17 +184,8 @@ export class PlainDateTime {
     let fields = ES.ToTemporalDateTimeFields(this, fieldNames);
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.ToTemporalDateTimeFields(fields, fieldNames);
-    const {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    } = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+      ES.InterpretTemporalDateTimeFields(calendar, fields, options);
 
     return ES.CreateTemporalDateTime(
       year,
@@ -387,68 +378,48 @@ export class PlainDateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-    let {
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.DifferenceISODateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      GetSlot(other, ISO_YEAR),
-      GetSlot(other, ISO_MONTH),
-      GetSlot(other, ISO_DAY),
-      GetSlot(other, ISO_HOUR),
-      GetSlot(other, ISO_MINUTE),
-      GetSlot(other, ISO_SECOND),
-      GetSlot(other, ISO_MILLISECOND),
-      GetSlot(other, ISO_MICROSECOND),
-      GetSlot(other, ISO_NANOSECOND),
-      calendar,
-      largestUnit,
-      options
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.DifferenceISODateTime(
+        GetSlot(this, ISO_YEAR),
+        GetSlot(this, ISO_MONTH),
+        GetSlot(this, ISO_DAY),
+        GetSlot(this, ISO_HOUR),
+        GetSlot(this, ISO_MINUTE),
+        GetSlot(this, ISO_SECOND),
+        GetSlot(this, ISO_MILLISECOND),
+        GetSlot(this, ISO_MICROSECOND),
+        GetSlot(this, ISO_NANOSECOND),
+        GetSlot(other, ISO_YEAR),
+        GetSlot(other, ISO_MONTH),
+        GetSlot(other, ISO_DAY),
+        GetSlot(other, ISO_HOUR),
+        GetSlot(other, ISO_MINUTE),
+        GetSlot(other, ISO_SECOND),
+        GetSlot(other, ISO_MILLISECOND),
+        GetSlot(other, ISO_MICROSECOND),
+        GetSlot(other, ISO_NANOSECOND),
+        calendar,
+        largestUnit,
+        options
+      );
 
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      this
-    ));
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.RoundDuration(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        this
+      ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,
@@ -481,68 +452,48 @@ export class PlainDateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
 
-    let {
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.DifferenceISODateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      GetSlot(other, ISO_YEAR),
-      GetSlot(other, ISO_MONTH),
-      GetSlot(other, ISO_DAY),
-      GetSlot(other, ISO_HOUR),
-      GetSlot(other, ISO_MINUTE),
-      GetSlot(other, ISO_SECOND),
-      GetSlot(other, ISO_MILLISECOND),
-      GetSlot(other, ISO_MICROSECOND),
-      GetSlot(other, ISO_NANOSECOND),
-      calendar,
-      largestUnit,
-      options
-    );
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.DifferenceISODateTime(
+        GetSlot(this, ISO_YEAR),
+        GetSlot(this, ISO_MONTH),
+        GetSlot(this, ISO_DAY),
+        GetSlot(this, ISO_HOUR),
+        GetSlot(this, ISO_MINUTE),
+        GetSlot(this, ISO_SECOND),
+        GetSlot(this, ISO_MILLISECOND),
+        GetSlot(this, ISO_MICROSECOND),
+        GetSlot(this, ISO_NANOSECOND),
+        GetSlot(other, ISO_YEAR),
+        GetSlot(other, ISO_MONTH),
+        GetSlot(other, ISO_DAY),
+        GetSlot(other, ISO_HOUR),
+        GetSlot(other, ISO_MINUTE),
+        GetSlot(other, ISO_SECOND),
+        GetSlot(other, ISO_MILLISECOND),
+        GetSlot(other, ISO_MICROSECOND),
+        GetSlot(other, ISO_NANOSECOND),
+        calendar,
+        largestUnit,
+        options
+      );
 
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      roundingIncrement,
-      smallestUnit,
-      ES.NegateTemporalRoundingMode(roundingMode),
-      this
-    ));
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.RoundDuration(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        ES.NegateTemporalRoundingMode(roundingMode),
+        this
+      ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
       hours,

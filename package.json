@@ -10,13 +10,13 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
-    "ecmarkup": "^7.0.0",
+    "ecmarkup": "^8.0.0",
     "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.1.4",
     "mkdirp": "^1.0.4",
     "prettier": "^2.1.2",
-    "typescript": "^4.0.3"
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run test-cookbook && npm run test262",

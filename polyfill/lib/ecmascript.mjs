@@ -377,18 +377,8 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
-    const {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      offset
-    } = ES.ParseTemporalInstantString(isoString);
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offset } =
+      ES.ParseTemporalInstantString(isoString);
 
     const epochNs = ES.GetEpochFromISOParts(
       year,
@@ -770,35 +760,14 @@ export const ES = ObjectAssign({}, ES2020, {
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       const dateOptions = ObjectCreate(null);
       dateOptions.overflow = 'constrain';
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, fields, dateOptions));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+        ES.InterpretTemporalDateTimeFields(calendar, fields, dateOptions));
       offset = relativeTo.offset;
       timeZone = relativeTo.timeZone;
     } else {
       let ianaName;
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        calendar,
-        ianaName,
-        offset
-      } = ES.ParseISODateTime(ES.ToString(relativeTo), { zoneRequired: false }));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset } =
+        ES.ParseISODateTime(ES.ToString(relativeTo), { zoneRequired: false }));
       if (ianaName) timeZone = ianaName;
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
@@ -1113,31 +1082,12 @@ export const ES = ObjectAssign({}, ES2020, {
         'year'
       ]);
       const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, fields, options));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+        ES.InterpretTemporalDateTimeFields(calendar, fields, options));
     } else {
       ES.ToTemporalOverflow(options); // validate and ignore
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        calendar
-      } = ES.ParseTemporalDateTimeString(ES.ToString(item)));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar } =
+        ES.ParseTemporalDateTimeString(ES.ToString(item)));
       ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
@@ -1159,31 +1109,11 @@ export const ES = ObjectAssign({}, ES2020, {
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDuration(item)) return item;
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.ToTemporalDurationRecord(item));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.ToTemporalDurationRecord(item));
     } else {
-      ({
-        years,
-        months,
-        weeks,
-        days,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.ParseTemporalDurationString(ES.ToString(item)));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        ES.ParseTemporalDurationString(ES.ToString(item)));
     }
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     return new TemporalDuration(
@@ -1398,37 +1328,16 @@ export const ES = ObjectAssign({}, ES2020, {
         'year'
       ]);
       const fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      } = ES.InterpretTemporalDateTimeFields(calendar, fields, options));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+        ES.InterpretTemporalDateTimeFields(calendar, fields, options));
       timeZone = ES.ToTemporalTimeZone(fields.timeZone);
       offset = fields.offset;
       if (offset !== undefined) offset = ES.ToString(offset);
     } else {
       ES.ToTemporalOverflow(options); // validate and ignore
       let ianaName;
-      ({
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        ianaName,
-        offset,
-        calendar
-      } = ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, ianaName, offset, calendar } =
+        ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
       if (!ianaName) throw new RangeError('time zone ID required in brackets');
       const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       timeZone = new TemporalTimeZone(ianaName);
@@ -2001,21 +1910,12 @@ export const ES = ObjectAssign({}, ES2020, {
 
     if (options) {
       const { unit, increment, roundingMode } = options;
-      ({ seconds, milliseconds: ms, microseconds: µs, nanoseconds: ns } = ES.RoundDuration(
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+      ({
         seconds,
-        ms,
-        µs,
-        ns,
-        increment,
-        unit,
-        roundingMode
-      ));
+        milliseconds: ms,
+        microseconds: µs,
+        nanoseconds: ns
+      } = ES.RoundDuration(0, 0, 0, 0, 0, 0, seconds, ms, µs, ns, increment, unit, roundingMode));
     }
 
     const dateParts = [];
@@ -2194,17 +2094,8 @@ export const ES = ObjectAssign({}, ES2020, {
     return formatter.resolvedOptions().timeZone;
   },
   GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
-    const {
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    } = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
+      ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
     const utc = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
@@ -2740,8 +2631,13 @@ export const ES = ObjectAssign({}, ES2020, {
             const newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
             const untilOptions = ObjectCreate(null);
             untilOptions.largestUnit = 'month';
-            const oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil)
-              .months;
+            const oneYearMonths = ES.CalendarDateUntil(
+              calendar,
+              relativeTo,
+              newRelativeTo,
+              untilOptions,
+              dateUntil
+            ).months;
             relativeTo = newRelativeTo;
             months += oneYearMonths;
             years -= sign;
@@ -3485,18 +3381,8 @@ export const ES = ObjectAssign({}, ES2020, {
           largestUnit
         ));
       } else {
-        ({
-          years,
-          months,
-          weeks,
-          days,
-          hours,
-          minutes,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds
-        } = ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit));
+        ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+          ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit));
       }
     }
 

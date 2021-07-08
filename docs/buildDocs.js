@@ -121,7 +121,9 @@ async function go() {
     const tail = await fs.readFile('tail.html.part', { encoding });
     // copy or render /docs/* to /out/docs/
     await Promise.all(
-      (await fs.readdir('.')).map((file) => {
+      (
+        await fs.readdir('.')
+      ).map((file) => {
         switch (path.extname(file)) {
           // copy files *.css, *.html, *.svg to /out/docs
           case '.css':
@@ -139,7 +141,9 @@ async function go() {
     );
     // copy /docs/assets/* to /out/docs/assets/
     await Promise.all(
-      (await fs.readdir('assets')).map((file) => {
+      (
+        await fs.readdir('assets')
+      ).map((file) => {
         return fs.copyFile(path.resolve('assets', file), path.resolve('../out/docs/assets', file));
       })
     );
