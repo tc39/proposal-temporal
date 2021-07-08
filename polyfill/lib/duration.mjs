@@ -216,18 +216,8 @@ export class Duration {
   }
   add(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    let {
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.ToLimitedTemporalDuration(other);
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToLimitedTemporalDuration(other);
     options = ES.GetOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
@@ -257,18 +247,8 @@ export class Duration {
   }
   subtract(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    let {
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.ToLimitedTemporalDuration(other);
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToLimitedTemporalDuration(other);
     options = ES.GetOptionsObject(options);
     const relativeTo = ES.ToRelativeTemporalObject(options);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
@@ -353,60 +333,40 @@ export class Duration {
       largestUnit,
       relativeTo
     ));
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      relativeTo
-    ));
-    ({
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    } = ES.AdjustRoundedDurationDays(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      relativeTo
-    ));
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.RoundDuration(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        relativeTo
+      ));
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.AdjustRoundedDurationDays(
+        years,
+        months,
+        weeks,
+        days,
+        hours,
+        minutes,
+        seconds,
+        milliseconds,
+        microseconds,
+        nanoseconds,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode,
+        relativeTo
+      ));
     ({ years, months, weeks, days } = ES.BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
     if (ES.IsTemporalZonedDateTime(relativeTo)) {
       relativeTo = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
