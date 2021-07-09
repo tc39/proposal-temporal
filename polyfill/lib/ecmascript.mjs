@@ -2081,16 +2081,7 @@ export const ES = ObjectAssign({}, ES2020, {
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
     if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
-    const formatter = new IntlDateTimeFormat('en-us', {
-      timeZone: String(timeZoneIdentifier),
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
-    });
+    const formatter = getCachedDateTimeFormatter(String(timeZoneIdentifier));
     return formatter.resolvedOptions().timeZone;
   },
   GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
@@ -2209,17 +2200,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   GetFormatterParts: (timeZone, epochMilliseconds) => {
-    const formatter = new IntlDateTimeFormat('en-us', {
-      timeZone,
-      hour12: false,
-      era: 'short',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
-    });
+    const formatter = getCachedDateTimeFormatter(String(timeZone));
     // FIXME: can this use formatToParts instead?
     const datetime = formatter.format(new Date(epochMilliseconds));
     const [date, fullYear, time] = datetime.split(/,\s+/);
@@ -4174,3 +4155,23 @@ const nsPerTimeUnit = {
   microsecond: 1e3,
   nanosecond: 1
 };
+
+const timeZoneCache = new Map();
+function getCachedDateTimeFormatter(timeZone) {
+  let formatter = timeZoneCache.get(timeZone);
+  if (!formatter) {
+    formatter = new IntlDateTimeFormat('en-us', {
+      timeZone,
+      hour12: false,
+      era: 'short',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    });
+    timeZoneCache.set(timeZone, formatter);
+  }
+  return formatter;
+}
