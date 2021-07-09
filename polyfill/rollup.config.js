@@ -2,10 +2,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
-import { terser } from 'rollup-plugin-terser';
 import { env } from 'process';
 
-const isProduction = env.NODE_ENV === 'production';
 const isTest262 = !!env.TEST262;
 const libName = 'temporal';
 const babelConfig = {
@@ -20,38 +18,14 @@ const babelConfig = {
     ]
   ]
 };
-const replaceConfig = { exclude: 'node_modules/**' };
+const replaceConfig = { exclude: 'node_modules/**', preventAssignment: true };
 const resolveConfig = { preferBuiltins: false };
 
 export default [
-  !isTest262 && {
-    input: 'lib/index.mjs',
-    plugins: [
-      replace({ ...replaceConfig, __debug__: !isProduction, preventAssignment: true }),
-      commonjs(),
-      resolve(resolveConfig),
-      babel(babelConfig),
-      isProduction && terser()
-    ],
-    output: [
-      {
-        name: libName,
-        file: './dist/index.js',
-        format: 'cjs',
-        sourcemap: true
-      },
-      {
-        name: libName,
-        file: './dist/index.umd.js',
-        format: 'umd',
-        sourcemap: true
-      }
-    ]
-  },
   {
     input: 'lib/shim.mjs',
     plugins: [
-      replace({ ...replaceConfig, __debug__: false, __isTest262__: isTest262, preventAssignment: true }),
+      replace({ ...replaceConfig, __debug__: false, __isTest262__: isTest262 }),
       commonjs(),
       resolve(resolveConfig)
     ],
@@ -71,7 +45,7 @@ export default [
       sourcemap: true
     },
     plugins: [
-      replace({ ...replaceConfig, __debug__: true, preventAssignment: true }),
+      replace({ ...replaceConfig, __debug__: true, __isTest262__: false }),
       commonjs(),
       resolve(resolveConfig),
       babel(babelConfig)
