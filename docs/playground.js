@@ -15125,6 +15125,13 @@
     return ES.BuiltinTimeZoneGetPlainDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
   }
 
+  /* global false */
+
+  {
+    // eslint-disable-next-line no-console
+    console.warn('This polyfill should only be used to run tests or to experiment in the browser devtools console.\n' + 'To polyfill Temporal in your own projects, see https://github.com/tc39/proposal-temporal#polyfills.');
+  }
+
   var Temporal = /*#__PURE__*/Object.freeze({
     __proto__: null,
     Instant: Instant,
