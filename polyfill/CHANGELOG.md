@@ -1,3 +1,8 @@
+## 0.9.0
+
+This version is being released in order to add deprecation warnings.
+See https://github.com/tc39/proposal-temporal#polyfills for replacements.
+
 ## 0.8.0
 
 This version is being released in order to correspond with the state of the proposal that reached Stage 3.
