@@ -28,6 +28,8 @@ const ORIGINAL = Symbol('original');
 const TZ_RESOLVED = Symbol('timezone');
 const TZ_GIVEN = Symbol('timezone-id-given');
 const CAL_ID = Symbol('calendar-id');
+const LOCALE = Symbol('locale');
+const OPTIONS = Symbol('options');
 
 const descriptor = (value) => {
   return {
@@ -41,21 +43,44 @@ const descriptor = (value) => {
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
-export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
+// Construction of  built-in Intl.DateTimeFormat objects is sloooooow,
+// so we'll only create those instances when we need them.
+// See https://bugs.chromium.org/p/v8/issues/detail?id=6528
+function getPropLazy(obj, prop) {
+  let val = obj[prop];
+  if (prop === TZ_RESOLVED) {
+    // for TimeZone, the initializer is a string, not a function
+    if (typeof val === 'string') {
+      val = new TimeZone(val);
+      obj[prop] = val;
+    }
+  } else if (typeof val === 'function') {
+    val = new IntlDateTimeFormat(obj[LOCALE], val(obj[OPTIONS]));
+    obj[prop] = val;
+  }
+  return val;
+}
+
+export function DateTimeFormat(locale, options) {
   if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+  const original = new IntlDateTimeFormat(locale, options);
+  const ro = original.resolvedOptions();
+  options = typeof options === 'undefined' ? {} : ObjectAssign({}, options);
 
   this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
+  this[OPTIONS] = options;
+  this[LOCALE] = typeof locale === 'undefined' ? ro.locale : locale;
 
-  this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
-  this[TZ_RESOLVED] = new TimeZone(this.resolvedOptions().timeZone);
-  this[CAL_ID] = this.resolvedOptions().calendar;
-  this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options));
-  this[YM] = new IntlDateTimeFormat(locale, yearMonthAmend(options));
-  this[MD] = new IntlDateTimeFormat(locale, monthDayAmend(options));
-  this[TIME] = new IntlDateTimeFormat(locale, timeAmend(options));
-  this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmend(options));
-  this[ZONED] = new IntlDateTimeFormat(locale, zonedDateTimeAmend(options));
-  this[INST] = new IntlDateTimeFormat(locale, instantAmend(options));
+  this[ORIGINAL] = original;
+  this[TZ_RESOLVED] = ro.timeZone;
+  this[CAL_ID] = ro.calendar;
+  this[DATE] = dateAmend;
+  this[YM] = yearMonthAmend;
+  this[MD] = monthDayAmend;
+  this[TIME] = timeAmend;
+  this[DATETIME] = datetimeAmend;
+  this[ZONED] = zonedDateTimeAmend;
+  this[INST] = instantAmend;
 }
 
 DateTimeFormat.supportedLocalesOf = function (...args) {
@@ -85,6 +110,7 @@ function resolvedOptions() {
 function adjustFormatterTimeZone(formatter, timeZone) {
   if (!timeZone) return formatter;
   const options = formatter.resolvedOptions();
+  if (options.timeZone === timeZone) return formatter;
   return new IntlDateTimeFormat(options.locale, { ...options, timeZone });
 }
 
@@ -327,8 +353,8 @@ function extractOverrides(temporalObj, main) {
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[TIME]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getPropLazy(main, TZ_RESOLVED), datetime, 'compatible'),
+      formatter: getPropLazy(main, TIME)
     };
   }
 
@@ -344,8 +370,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[YM]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getPropLazy(main, TZ_RESOLVED), datetime, 'compatible'),
+      formatter: getPropLazy(main, YM)
     };
   }
 
@@ -361,8 +387,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[MD]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getPropLazy(main, TZ_RESOLVED), datetime, 'compatible'),
+      formatter: getPropLazy(main, MD)
     };
   }
 
@@ -376,8 +402,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[DATE]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getPropLazy(main, TZ_RESOLVED), datetime, 'compatible'),
+      formatter: getPropLazy(main, DATE)
     };
   }
 
@@ -413,8 +439,8 @@ function extractOverrides(temporalObj, main) {
       );
     }
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[DATETIME]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getPropLazy(main, TZ_RESOLVED), datetime, 'compatible'),
+      formatter: getPropLazy(main, DATETIME)
     };
   }
 
@@ -434,7 +460,7 @@ function extractOverrides(temporalObj, main) {
 
     return {
       instant: GetSlot(temporalObj, INSTANT),
-      formatter: main[ZONED],
+      formatter: getPropLazy(main, ZONED),
       timeZone: objTimeZone
     };
   }
@@ -442,7 +468,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       instant: temporalObj,
-      formatter: main[INST]
+      formatter: getPropLazy(main, INST)
     };
   }
 
