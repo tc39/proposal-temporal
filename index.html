@@ -8951,7 +8951,7 @@ li.menu-search-result-term:before {
       It performs the following steps:
     </p>
     <emu-note><span class="note">Note</span><div class="note-contents">The value of ? <emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref>(<emu-val>undefined</emu-val>) is 0.</div></emu-note>
-    <emu-alg><ol><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <emu-xref aoid="Type" id="_ref_1744"><a href="https://tc39.es/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>fields</var>) is Object.</li><li>Let <var>result</var> be !&nbsp;<emu-xref aoid="OrdinaryObjectCreate"><a href="https://tc39.es/ecma262/#sec-ordinaryobjectcreate">OrdinaryObjectCreate</a></emu-xref>(<emu-xref href="#sec-properties-of-the-object-prototype-object"><a href="https://tc39.es/ecma262/#sec-properties-of-the-object-prototype-object">%Object.prototype%</a></emu-xref>).</li><li>For each value <var>property</var> of <var>fieldNames</var>, do<ol><li>Let <var>value</var> be ?&nbsp;<emu-xref aoid="Get" id="_ref_1745"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>fields</var>, <var>property</var>).</li><li>If <var>value</var> is <emu-val>undefined</emu-val>, then<ol><li>If <var>requiredFields</var> contains <var>property</var>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Else,<ol><li>If <var>property</var> is in the Property column of <emu-xref href="#table-temporal-field-requirements" id="_ref_45"><a href="#table-temporal-field-requirements">Table 13</a></emu-xref>, then<ol><li>Set <var>value</var> to the corresponding Default value of the same row.</li></ol></li></ol></li></ol></li><li>Else,<ol><li>If <var>property</var> is in the Property column of <emu-xref href="#table-temporal-field-requirements" id="_ref_46"><a href="#table-temporal-field-requirements">Table 13</a></emu-xref>, then<ol><li>Let <var>Conversion</var> represent the abstract operation named by the Conversion value of the same row.</li><li>Set <var>value</var> to ? <var>Conversion</var>(<var>value</var>).</li></ol></li></ol></li><li>Perform !&nbsp;<emu-xref aoid="CreateDataPropertyOrThrow" id="_ref_1746"><a href="https://tc39.es/ecma262/#sec-createdatapropertyorthrow">CreateDataPropertyOrThrow</a></emu-xref>(<var>result</var>, <var>property</var>, <var>value</var>).</li></ol></li><li>Return <var>result</var>.</li></ol></emu-alg>
+    <emu-alg><ol><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <emu-xref aoid="Type" id="_ref_1744"><a href="https://tc39.es/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>fields</var>) is Object.</li><li>Let <var>result</var> be !&nbsp;<emu-xref aoid="OrdinaryObjectCreate"><a href="https://tc39.es/ecma262/#sec-ordinaryobjectcreate">OrdinaryObjectCreate</a></emu-xref>(<emu-xref href="#sec-properties-of-the-object-prototype-object"><a href="https://tc39.es/ecma262/#sec-properties-of-the-object-prototype-object">%Object.prototype%</a></emu-xref>).</li><li>For each value <var>property</var> of <var>fieldNames</var>, do<ol><li>Let <var>value</var> be ?&nbsp;<emu-xref aoid="Get" id="_ref_1745"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>fields</var>, <var>property</var>).</li><li>If <var>value</var> is <emu-val>undefined</emu-val>, then<ol><li>If <var>requiredFields</var> contains <var>property</var>, then<ol><li>Throw a <emu-val>TypeError</emu-val> exception.</li></ol></li><li>Else,<ol><li>If <var>property</var> is in the Property column of <emu-xref href="#table-temporal-field-requirements" id="_ref_45"><a href="#table-temporal-field-requirements">Table 13</a></emu-xref>, then<ol><li>Set <var>value</var> to the corresponding Default value of the same row.</li></ol></li></ol></li></ol></li><li>Else,<ol><li>If <var>property</var> is in the Property column of <emu-xref href="#table-temporal-field-requirements" id="_ref_46"><a href="#table-temporal-field-requirements">Table 13</a></emu-xref> and there is a Conversion value in the same row, then<ol><li>Let <var>Conversion</var> represent the abstract operation named by the Conversion value of the same row.</li><li>Set <var>value</var> to ? <var>Conversion</var>(<var>value</var>).</li></ol></li></ol></li><li>Perform !&nbsp;<emu-xref aoid="CreateDataPropertyOrThrow" id="_ref_1746"><a href="https://tc39.es/ecma262/#sec-createdatapropertyorthrow">CreateDataPropertyOrThrow</a></emu-xref>(<var>result</var>, <var>property</var>, <var>value</var>).</li></ol></li><li>Return <var>result</var>.</li></ol></emu-alg>
     <emu-table id="table-temporal-field-requirements"><figure><figcaption>Table 13: Temporal field requirements</figcaption>
       
       <table class="real-table">
@@ -9014,56 +9014,6 @@ li.menu-search-result-term:before {
             <td>0</td>
           </tr>
           <tr>
-            <td><emu-val>"years"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"months"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"weeks"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"days"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"hours"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"minutes"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"seconds"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"milliseconds"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"microseconds"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <td><emu-val>"nanoseconds"</emu-val></td>
-            <td><emu-xref aoid="ToIntegerOrInfinity"><a href="https://tc39.es/ecma262/#sec-tointegerorinfinity">ToIntegerOrInfinity</a></emu-xref></td>
-            <td>0</td>
-          </tr>
-          <tr>
             <td><emu-val>"offset"</emu-val></td>
             <td><emu-xref aoid="ToString" id="_ref_1750"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref></td>
             <td><emu-val>undefined</emu-val></td>
@@ -9076,6 +9026,11 @@ li.menu-search-result-term:before {
           <tr>
             <td><emu-val>"eraYear"</emu-val></td>
             <td><emu-xref aoid="ToInteger" id="_ref_1752"><a href="https://tc39.es/ecma262/#sec-tointeger">ToInteger</a></emu-xref></td>
+            <td><emu-val>undefined</emu-val></td>
+          </tr>
+          <tr>
+            <td><emu-val>"timeZone"</emu-val></td>
+            <td></td>
             <td><emu-val>undefined</emu-val></td>
           </tr>
         </tbody>
