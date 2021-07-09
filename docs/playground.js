@@ -3044,7 +3044,11 @@
       _excluded2 = ["month", "monthCode", "year", "era", "eraYear"];
   var ArrayIncludes = Array.prototype.includes;
   var ArrayPrototypePush$2 = Array.prototype.push;
+  var IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
+  var MathAbs$1 = Math.abs;
+  var MathFloor$1 = Math.floor;
   var ObjectAssign$3 = Object.assign;
+  var ObjectEntries$1 = Object.entries;
   var impl = {};
   var Calendar = /*#__PURE__*/function () {
     function Calendar(id) {
@@ -3609,6 +3613,25 @@
 
   var nonIsoHelperBase = {
     // The properties and methods below here should be the same for all lunar/lunisolar calendars.
+    getFormatter: function getFormatter() {
+      // `new Intl.DateTimeFormat()` is amazingly slow and chews up RAM. Per
+      // https://bugs.chromium.org/p/v8/issues/detail?id=6528#c4, we cache one
+      // DateTimeFormat instance per calendar. Caching is lazy so we only pay for
+      // calendars that are used. Note that the nonIsoHelperBase object is spread
+      // into each each calendar's implementation before any cache is created, so
+      // each calendar gets its own separate cached formatter.
+      if (typeof this.formatter === 'undefined') {
+        this.formatter = new IntlDateTimeFormat$2("en-US-u-ca-".concat(this.id), {
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric',
+          era: this.eraLength,
+          timeZone: 'UTC'
+        });
+      }
+
+      return this.formatter;
+    },
     isoToCalendarDate: function isoToCalendarDate(isoDate, cache) {
       var _this = this;
 
@@ -3624,13 +3647,7 @@
       });
       var cached = cache.get(key);
       if (cached) return cached;
-      var dateTimeFormat = new Intl.DateTimeFormat("en-US-u-ca-".concat(this.id), {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-        era: this.eraLength,
-        timeZone: 'UTC'
-      });
+      var dateTimeFormat = this.getFormatter();
       var parts, isoString;
 
       try {
@@ -4041,7 +4058,7 @@
       var _calendarDate2 = calendarDate,
           day = _calendarDate2.day;
 
-      for (var i = 0, absMonths = Math.abs(months); i < absMonths; i++) {
+      for (var i = 0, absMonths = MathAbs$1(months); i < absMonths; i++) {
         var days = months < 0 ? -this.daysInPreviousMonth(calendarDate, cache) : this.daysInMonth(calendarDate, cache);
         var isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
         var addedIso = this.addDaysIso(isoDate, days, cache);
@@ -4326,7 +4343,7 @@
       var month = calendarDate.month,
           year = calendarDate.year;
       var monthCode = this.getMonthCode(year, month);
-      var monthInfo = Object.entries(this.months).find(function (m) {
+      var monthInfo = ObjectEntries$1(this.months).find(function (m) {
         return m[1].monthCode === monthCode;
       });
       if (monthInfo === undefined) throw new RangeError("unmatched Hebrew month: ".concat(month));
@@ -4598,7 +4615,7 @@
           year = _this$adjustCalendarD2.year;
 
       return {
-        year: Math.floor(year * this.DAYS_PER_ISLAMIC_YEAR / this.DAYS_PER_ISO_YEAR) + 622,
+        year: MathFloor$1(year * this.DAYS_PER_ISLAMIC_YEAR / this.DAYS_PER_ISO_YEAR) + 622,
         month: 1,
         day: 1
       };
@@ -5332,7 +5349,7 @@
     calendarType: 'lunisolar',
     inLeapYear: function inLeapYear(calendarDate, cache) {
       var months = this.getMonthList(calendarDate.year, cache);
-      return Object.entries(months).length === 13;
+      return ObjectEntries$1(months).length === 13;
     },
     monthsInYear: function monthsInYear(calendarDate, cache) {
       return this.inLeapYear(calendarDate, cache) ? 13 : 12;
@@ -5363,13 +5380,7 @@
       });
       var cached = cache.get(key);
       if (cached) return cached;
-      var dateTimeFormat = new Intl.DateTimeFormat("en-US-u-ca-".concat(this.id), {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-        era: 'short',
-        timeZone: 'UTC'
-      });
+      var dateTimeFormat = this.getFormatter();
 
       var getCalendarDate = function getCalendarDate(isoYear, daysPastFeb1) {
         var isoStringFeb1 = toUtcIsoDateString({
@@ -5541,7 +5552,7 @@
         } else if (monthCode === undefined) {
           var _months2 = this.getMonthList(year, cache);
 
-          var monthEntries = Object.entries(_months2);
+          var monthEntries = ObjectEntries$1(_months2);
           var largestMonth = monthEntries.length;
 
           if (overflow === 'reject') {
