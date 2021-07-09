@@ -6,7 +6,10 @@ import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlo
 
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
+const MathAbs = Math.abs;
+const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
+const ObjectEntries = Object.entries;
 
 const impl = {};
 
@@ -763,7 +766,7 @@ const nonIsoHelperBase = {
   },
   addMonthsCalendar(calendarDate, months, overflow, cache) {
     const { day } = calendarDate;
-    for (let i = 0, absMonths = Math.abs(months); i < absMonths; i++) {
+    for (let i = 0, absMonths = MathAbs(months); i < absMonths; i++) {
       const days = months < 0 ? -this.daysInPreviousMonth(calendarDate, cache) : this.daysInMonth(calendarDate, cache);
       const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
       const addedIso = this.addDaysIso(isoDate, days, cache);
@@ -970,7 +973,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
   minMaxMonthLength(calendarDate, minOrMax) {
     const { month, year } = calendarDate;
     const monthCode = this.getMonthCode(year, month);
-    const monthInfo = Object.entries(this.months).find((m) => m[1].monthCode === monthCode);
+    const monthInfo = ObjectEntries(this.months).find((m) => m[1].monthCode === monthCode);
     if (monthInfo === undefined) throw new RangeError(`unmatched Hebrew month: ${month}`);
     const daysInMonth = monthInfo[1].days;
     return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
@@ -1096,7 +1099,7 @@ const helperIslamic = ObjectAssign({}, nonIsoHelperBase, {
   constantEra: 'ah',
   estimateIsoDate(calendarDate) {
     const { year } = this.adjustCalendarDate(calendarDate);
-    return { year: Math.floor((year * this.DAYS_PER_ISLAMIC_YEAR) / this.DAYS_PER_ISO_YEAR) + 622, month: 1, day: 1 };
+    return { year: MathFloor((year * this.DAYS_PER_ISLAMIC_YEAR) / this.DAYS_PER_ISO_YEAR) + 622, month: 1, day: 1 };
   }
 });
 
@@ -1587,7 +1590,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   calendarType: 'lunisolar',
   inLeapYear(calendarDate, cache) {
     const months = this.getMonthList(calendarDate.year, cache);
-    return Object.entries(months).length === 13;
+    return ObjectEntries(months).length === 13;
   },
   monthsInYear(calendarDate, cache) {
     return this.inLeapYear(calendarDate, cache) ? 13 : 12;
@@ -1723,7 +1726,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
-        const monthEntries = Object.entries(months);
+        const monthEntries = ObjectEntries(months);
         const largestMonth = monthEntries.length;
         if (overflow === 'reject') {
           ES.RejectToRange(month, 1, largestMonth);
