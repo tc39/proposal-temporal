@@ -6,6 +6,7 @@ import { CALENDAR_ID, ISO_YEAR, ISO_MONTH, ISO_DAY, CreateSlots, GetSlot, HasSlo
 
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
+const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
@@ -430,19 +431,31 @@ function simpleDateDiff(one, two) {
  */
 const nonIsoHelperBase = {
   // The properties and methods below here should be the same for all lunar/lunisolar calendars.
+  getFormatter() {
+    // `new Intl.DateTimeFormat()` is amazingly slow and chews up RAM. Per
+    // https://bugs.chromium.org/p/v8/issues/detail?id=6528#c4, we cache one
+    // DateTimeFormat instance per calendar. Caching is lazy so we only pay for
+    // calendars that are used. Note that the nonIsoHelperBase object is spread
+    // into each each calendar's implementation before any cache is created, so
+    // each calendar gets its own separate cached formatter.
+    if (typeof this.formatter === 'undefined') {
+      this.formatter = new IntlDateTimeFormat(`en-US-u-ca-${this.id}`, {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+        era: this.eraLength,
+        timeZone: 'UTC'
+      });
+    }
+    return this.formatter;
+  },
   isoToCalendarDate(isoDate, cache) {
     let { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
     const key = JSON.stringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
 
-    const dateTimeFormat = new Intl.DateTimeFormat(`en-US-u-ca-${this.id}`, {
-      day: 'numeric',
-      month: 'numeric',
-      year: 'numeric',
-      era: this.eraLength,
-      timeZone: 'UTC'
-    });
+    const dateTimeFormat = this.getFormatter();
     let parts, isoString;
     try {
       isoString = toUtcIsoDateString({ isoYear, isoMonth, isoDay });
@@ -1604,14 +1617,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const key = JSON.stringify({ func: 'getMonthList', calendarYear, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
-    const dateTimeFormat = new Intl.DateTimeFormat(`en-US-u-ca-${this.id}`, {
-      day: 'numeric',
-      month: 'numeric',
-      year: 'numeric',
-      era: 'short',
-      timeZone: 'UTC'
-    });
-
+    const dateTimeFormat = this.getFormatter();
     const getCalendarDate = (isoYear, daysPastFeb1) => {
       const isoStringFeb1 = toUtcIsoDateString({ isoYear, isoMonth: 2, isoDay: 1 });
       const legacyDate = new Date(isoStringFeb1);
