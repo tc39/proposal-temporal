@@ -148,6 +148,27 @@ const ES2020 = {
   Type
 };
 
+const IntlDateTimeFormatEnUsCache = new Map();
+
+function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
+  let instance = IntlDateTimeFormatEnUsCache.get(timeZoneIdentifier);
+  if (instance === undefined) {
+    instance = new IntlDateTimeFormat('en-us', {
+      timeZone: String(timeZoneIdentifier),
+      hour12: false,
+      era: 'short',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    });
+    IntlDateTimeFormatEnUsCache.set(timeZoneIdentifier, instance);
+  }
+  return instance;
+}
+
 export const ES = ObjectAssign({}, ES2020, {
   ToPositiveInteger: ToPositiveInteger,
   ToFiniteInteger: (value) => {
@@ -2081,16 +2102,7 @@ export const ES = ObjectAssign({}, ES2020, {
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
     const offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
     if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
-    const formatter = new IntlDateTimeFormat('en-us', {
-      timeZone: String(timeZoneIdentifier),
-      hour12: false,
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
-    });
+    const formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
     return formatter.resolvedOptions().timeZone;
   },
   GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
@@ -2209,17 +2221,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   GetFormatterParts: (timeZone, epochMilliseconds) => {
-    const formatter = new IntlDateTimeFormat('en-us', {
-      timeZone,
-      hour12: false,
-      era: 'short',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
-    });
+    const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone);
     // FIXME: can this use formatToParts instead?
     const datetime = formatter.format(new Date(epochMilliseconds));
     const [date, fullYear, time] = datetime.split(/,\s+/);
