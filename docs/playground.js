@@ -5948,6 +5948,29 @@
     ToString: ToString,
     Type: Type
   };
+  var IntlDateTimeFormatEnUsCache = new Map();
+
+  function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
+    var instance = IntlDateTimeFormatEnUsCache.get(timeZoneIdentifier);
+
+    if (instance === undefined) {
+      instance = new IntlDateTimeFormat$1('en-us', {
+        timeZone: String(timeZoneIdentifier),
+        hour12: false,
+        era: 'short',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      });
+      IntlDateTimeFormatEnUsCache.set(timeZoneIdentifier, instance);
+    }
+
+    return instance;
+  }
+
   var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
     ToFiniteInteger: function ToFiniteInteger(value) {
@@ -8246,16 +8269,7 @@
     GetCanonicalTimeZoneIdentifier: function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
       var offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
       if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
-      var formatter = new IntlDateTimeFormat$1('en-us', {
-        timeZone: String(timeZoneIdentifier),
-        hour12: false,
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-      });
+      var formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
       return formatter.resolvedOptions().timeZone;
     },
     GetIANATimeZoneOffsetNanoseconds: function GetIANATimeZoneOffsetNanoseconds(epochNanoseconds, id) {
@@ -8413,17 +8427,7 @@
       return result;
     },
     GetFormatterParts: function GetFormatterParts(timeZone, epochMilliseconds) {
-      var formatter = new IntlDateTimeFormat$1('en-us', {
-        timeZone: timeZone,
-        hour12: false,
-        era: 'short',
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-      }); // FIXME: can this use formatToParts instead?
+      var formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone); // FIXME: can this use formatToParts instead?
 
       var datetime = formatter.format(new Date(epochMilliseconds));
 
