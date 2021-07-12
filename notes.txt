@@ -1,0 +1,38 @@
+ToTemporalRoundingIncrement ( normalizedOptions, dividend, inclusive )
+Potential issue: dividend is undefined
+
+MaximumTemporalDurationRoundingIncrement returns undefined for YMWD
+ToSmallestTemporalUnit takes disallowed options
+
+3.3.23 Temporal.PlainDate.prototype.until ( other [ , options ] )
+  test
+3.3.24 Temporal.PlainDate.prototype.since ( other [ , options ] )
+  test
+4.3.13 Temporal.PlainTime.prototype.until ( other [ , options ] )
+  max is defined
+4.3.14 Temporal.PlainTime.prototype.since ( other [ , options ] )
+  max is defined
+4.3.15 Temporal.PlainTime.prototype.round ( options )
+  max is defined
+  Should use MaximumTemporalDurationRoundingIncrement
+5.3.28 Temporal.PlainDateTime.prototype.until ( other [ , options ] )
+  test
+5.3.29 Temporal.PlainDateTime.prototype.since ( other [ , options ] )
+  test
+6.3.37 Temporal.ZonedDateTime.prototype.until ( other [ , options ] )
+  need to test
+6.3.38 Temporal.ZonedDateTime.prototype.since ( other [ , options ] )
+  need to test
+7.3.20 Temporal.Duration.prototype.round ( options )
+  need to test
+8.3.9 Temporal.Instant.prototype.until ( other [ , options ] )
+  max is defined
+8.3.10 Temporal.Instant.prototype.since ( other [ , options ] )
+  max is defined
+8.3.11 Temporal.Instant.prototype.round ( options )
+  max is defined
+9.3.14 Temporal.PlainYearMonth.prototype.until ( other [ , options ] )
+  need to test
+9.3.15 Temporal.PlainYearMonth.prototype.since ( other [ , options ] )
+  need to test
+13.15 ToTemporalDateTimeRoundingIncrement ( normalizedOptions, smallestUnit )
