@@ -89,7 +89,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemInstant().
+        1. Return SystemInstant().
       </emu-alg>
     </emu-clause>
 
@@ -213,7 +213,7 @@
       <h1>SystemInstant ( )</h1>
       <emu-alg>
         1. Let _ns_ be ! SystemUTCEpochNanoseconds().
-        1. Return ? CreateTemporalInstant(_ns_).
+        1. Return ! CreateTemporalInstant(_ns_).
       </emu-alg>
     </emu-clause>
 
@@ -225,7 +225,7 @@
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. Let _instant_ be ? SystemInstant().
+        1. Let _instant_ be SystemInstant().
         1. Return ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
