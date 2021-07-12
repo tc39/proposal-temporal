@@ -571,21 +571,7 @@
       <emu-alg>
         1. Assert: Type(_ns1_) is BigInt.
         1. Assert: Type(_ns2_) is BigInt.
-        1. If _smallestUnit_ is *"hour"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 3.6 × 10<sup>12</sup>.
-        1. If _smallestUnit_ is *"minute"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 6 × 10<sup>10</sup>.
-        1. Else if _smallestUnit_ is *"second"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>9</sup>.
-        1. Else if _smallestUnit_ is *"millisecond"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>6</sup>.
-        1. Else if _smallestUnit_ is *"microsecond"*, then
-          1. Let _incrementNs_ be _roundingIncrement_ × 10<sup>3</sup>.
-        1. Else,
-          1. Assert: _smallestUnit_ is *"nanosecond"*.
-          1. Let _incrementNs_ be _roundingIncrement_.
-        1. Let _diff_ be ℝ(_ns2_ − _ns1_).
-        1. Return ! RoundNumberToIncrement(_diff_, _incrementNs_, _roundingMode_).
+        1. Return ! RoundTemporalInstant(_ns2_ − _ns1_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
