@@ -717,7 +717,7 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
-          1. Let _differenceNs_ be ? DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Let _differenceNs_ be ! DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
           1. Return ? CreateTemporalDuration(0, 0, 0, 0, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
@@ -751,7 +751,7 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
-          1. Let _differenceNs_ be ? DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Let _differenceNs_ be ! DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
           1. Return ? CreateTemporalDuration(0, 0, 0, 0, −_balanceResult_.[[Hours]], −_balanceResult_.[[Minutes]], −_balanceResult_.[[Seconds]], −_balanceResult_.[[Milliseconds]], −_balanceResult_.[[Microseconds]], −_balanceResult_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
