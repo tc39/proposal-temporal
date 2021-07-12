@@ -6877,7 +6877,7 @@ li.menu-search-result-term:before {
 
     <emu-clause id="sec-temporal-parsetemporaltimezone" aoid="ParseTemporalTimeZone">
       <h1><span class="secnum">11.6.1</span> ParseTemporalTimeZone ( <var>string</var> )</h1>
-      <emu-alg><ol><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <emu-xref aoid="Type" id="_ref_1436"><a href="https://tc39.es/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>string</var>) is String.</li><li>Let <var>result</var> be ?&nbsp;<emu-xref aoid="ParseTemporalTimeZoneString" id="_ref_1437"><a href="#sec-temporal-parsetemporaltimezonestring">ParseTemporalTimeZoneString</a></emu-xref>(<var>string</var>).</li><li>If <var>result</var>.[[Z]] is not <emu-val>undefined</emu-val>, return <emu-val>"UTC"</emu-val>.</li><li>Return <var>result</var>.[[TimeZoneName]].</li></ol></emu-alg>
+      <emu-alg><ol><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <emu-xref aoid="Type" id="_ref_1436"><a href="https://tc39.es/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>string</var>) is String.</li><li>Let <var>result</var> be ?&nbsp;<emu-xref aoid="ParseTemporalTimeZoneString" id="_ref_1437"><a href="#sec-temporal-parsetemporaltimezonestring">ParseTemporalTimeZoneString</a></emu-xref>(<var>string</var>).</li><li>If <var>result</var>.[[Z]] is not <emu-val>undefined</emu-val>, return <emu-val>"UTC"</emu-val>.</li><li>Return <var>result</var>.[[Name]].</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporaltimezone" aoid="CreateTemporalTimeZone">
