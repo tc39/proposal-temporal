@@ -79,7 +79,7 @@
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemTimeZone().
+        1. Return SystemTimeZone().
       </emu-alg>
     </emu-clause>
 
@@ -185,7 +185,7 @@
       <h1>SystemTimeZone ( )</h1>
       <emu-alg>
         1. Let _identifier_ be ! DefaultTimeZone().
-        1. Return ? CreateTemporalTimeZone(_identifier_).
+        1. Return ! CreateTemporalTimeZone(_identifier_).
       </emu-alg>
     </emu-clause>
 
@@ -221,7 +221,7 @@
       <h1>SystemDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be ? SystemTimeZone().
+          1. Let _timeZone_ be SystemTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
@@ -234,7 +234,7 @@
       <h1>SystemZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be ? SystemTimeZone().
+          1. Let _timeZone_ be SystemTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
