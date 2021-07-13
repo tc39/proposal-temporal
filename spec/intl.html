@@ -748,7 +748,7 @@
           1. Let _timeZone_ be ? ToString(_x_.[[TimeZone]]).
           1. If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then
             1. Throw a *RangeError* exception.
-          1. Let _instant_ be ? CreateTemporalInstant(_x_.[[Nanoseconds]]).
+          1. Let _instant_ be ! CreateTemporalInstant(_x_.[[Nanoseconds]]).
         1. If _pattern_ is *null*, throw a *TypeError* exception.
         1. Let _rangePatterns_ be _pattern_.[[rangePatterns]].
         1. Set _pattern_ to _pattern_.[[pattern]].
@@ -1847,7 +1847,7 @@
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-            1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+            1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
             1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
             1. Return ? CalendarEra(_calendar_, _plainDateTime_).
@@ -1864,7 +1864,7 @@
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-            1. Let _instant_ be ? CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+            1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
             1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
             1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).

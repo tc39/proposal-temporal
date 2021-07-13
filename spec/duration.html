@@ -811,10 +811,10 @@
       </p>
       <emu-alg>
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, return 0.
-        1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
+        1. Let _instant_ be ! CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
         1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instant_).
         1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_).
-        1. Let _instantAfter_ be ? CreateTemporalInstant(_after_).
+        1. Let _instantAfter_ be ! CreateTemporalInstant(_after_).
         1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instantAfter_).
         1. Return _offsetAfter_ − _offsetBefore_.
       </emu-alg>
@@ -1223,7 +1223,7 @@
         1. Let _zonedRelativeTo_ be *undefined*.
         1. If _relativeTo_ is not *undefined*, then
           1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _instant_ be ? CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
+            1. Let _instant_ be ! CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
             1. Set _zonedRelativeTo_ to _relativeTo_.
             1. Set _relativeTo_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
           1. Else,
