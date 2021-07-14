@@ -1425,6 +1425,19 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tointegerthrowoninfinity" aoid="ToIntegerThrowOnInfinity">
+    <h1>ToIntegerThrowOnInfinity ( _argument_ )</h1>
+    <p>
+      The abstract operation ToIntegerThrowOnInfinity takes argument _argument_. It converts _argument_ to an integer. It performs the following steps:
+    </p>
+    <emu-alg>
+      1. Let _integer_ be ? ToIntegerOrInfinity(_argument_).
+      1. If _integer_ is −∞ or +∞ , then
+        1. Throw a *RangeError* exception.
+      1. Return _integer_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-preparetemporalfields" aoid="PrepareTemporalFields">
     <h1>PrepareTemporalFields ( _fields_, _fieldNames_, _requiredFields_ )</h1>
     <p>
