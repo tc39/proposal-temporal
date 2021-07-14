@@ -30,14 +30,12 @@
       <p>
         When the `Temporal.PlainDate` function is called, the following steps are taken:
       </p>
+      <emu-note>The value of ? ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
-        1. Let _y_ be ? ToIntegerOrInfinity(_isoYear_).
-        1. If _y_ is +∞ or -∞, throw a *RangeError* exception.
-        1. Let _m_ be ? ToIntegerOrInfinity(_isoMonth_).
-        1. If _m_ is +∞ or -∞, throw a *RangeError* exception.
-        1. Let _d_ be ? ToIntegerOrInfinity(_isoDay_).
-        1. If _d_ is +∞ or -∞, throw a *RangeError* exception.
+        1. Let _y_ be ? ToIntegerThrowOnInfinity(_isoYear_).
+        1. Let _m_ be ? ToIntegerThrowOnInfinity(_isoMonth_).
+        1. Let _d_ be ? ToIntegerThrowOnInfinity(_isoDay_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
         1. Return ? CreateTemporalDate(_y_, _m_, _d_, _calendar_, NewTarget).
       </emu-alg>
