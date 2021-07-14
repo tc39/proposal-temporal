@@ -1176,7 +1176,7 @@
           <emu-alg>
             1. Assert: Type(_calendar_) is Object.
             1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _dateLike_ »).
-            1. If _result_ is not *undefined*, set _result_ to ? ToIntegerOrInfinity(_result_).
+            1. If _result_ is not *undefined*, set _result_ to ? ToIntegerThrowOnInfinity(_result_).
             1. Return _result_.
           </emu-alg>
         </emu-clause>
