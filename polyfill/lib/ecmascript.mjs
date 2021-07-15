@@ -65,7 +65,7 @@ import {
 } from './slots.mjs';
 import { IsBuiltinCalendar } from './calendar.mjs';
 
-console.log = () => {}
+//console.log = () => {}
 
 const DAYMILLIS = 86400000;
 const NS_MIN = bigInt(-86400).multiply(1e17);
@@ -663,6 +663,10 @@ export const ES = ObjectAssign({}, ES2020, {
     if (dividend !== undefined) maximum = dividend;
     if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
     const increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
+    console.log(`increment=${increment}`);
+    if (!NumberIsFinite(increment)) {
+      console.log("<<<<<<<< FOUND EXPECTED ERROR");
+    }
     if (dividend !== undefined && dividend % increment !== 0) {
       console.log(`ERROR: Rounding increment must divide evenly into ${dividend}`)
       throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);

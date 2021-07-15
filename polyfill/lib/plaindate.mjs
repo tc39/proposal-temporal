@@ -209,6 +209,7 @@ export class PlainDate {
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   }
   since(other, options = undefined) {
+    console.log("since")
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalDate(other);
     const calendar = GetSlot(this, CALENDAR);

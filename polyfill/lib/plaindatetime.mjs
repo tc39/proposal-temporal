@@ -19,7 +19,7 @@ import {
   HasSlot
 } from './slots.mjs';
 
-console.log = () => {}
+//console.log = () => {}
 
 export class PlainDateTime {
   constructor(
