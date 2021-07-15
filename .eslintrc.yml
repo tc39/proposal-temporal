@@ -94,7 +94,7 @@ overrides:
       - polyfill/test/PlainYearMonth/**/*.js
       - polyfill/test/ZonedDateTime/**/*.js
       - polyfill/test/helpers/*.js
-      - polyfill/test/now/**/*.js
+      - polyfill/test/Now/**/*.js
     globals:
       Temporal: readonly
       TemporalHelpers: readonly
