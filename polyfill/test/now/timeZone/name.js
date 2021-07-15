@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
-description: Temporal.now.timeZone.name is "timeZone".
+description: Temporal.Now.timeZone.name is "timeZone".
 info: |
   ## 17 ECMAScript Standard Built-in Objects:
   Every built-in Function object, including constructors, that is not
@@ -17,9 +17,9 @@ includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-assert.sameValue(Temporal.now.timeZone.name, 'timeZone');
+assert.sameValue(Temporal.Now.timeZone.name, 'timeZone');
 
-verifyProperty(Temporal.now.timeZone, 'name', {
+verifyProperty(Temporal.Now.timeZone, 'name', {
   enumerable: false,
   writable: false,
   configurable: true

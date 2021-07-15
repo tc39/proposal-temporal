@@ -20,5 +20,5 @@ includes: [temporalHelpers.js]
 ].forEach((wrongOffset) => {
   const timeZone = TemporalHelpers.specificOffsetTimeZone(wrongOffset);
 
-  assert.throws(TypeError, () => Temporal.now.plainDateTime("iso8601", timeZone));
+  assert.throws(TypeError, () => Temporal.Now.plainDateTime("iso8601", timeZone));
 });

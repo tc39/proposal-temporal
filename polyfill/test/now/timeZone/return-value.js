@@ -3,13 +3,13 @@
 
 /*---
 esid: sec-temporal.now.timezone
-description: Temporal.now.timeZone returns an instance of the TimeZone constructor
+description: Temporal.Now.timeZone returns an instance of the TimeZone constructor
 info: |
   1. Return ? SystemTimeZone().
 features: [Temporal]
 ---*/
 
 assert.sameValue(
-  Object.getPrototypeOf(Temporal.now.timeZone()),
+  Object.getPrototypeOf(Temporal.Now.timeZone()),
   Temporal.TimeZone.prototype
 );

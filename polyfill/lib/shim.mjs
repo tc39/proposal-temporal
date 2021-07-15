@@ -13,7 +13,7 @@ Object.defineProperty(globalThis, 'Temporal', {
   configurable: true
 });
 copy(globalThis.Temporal, Temporal);
-copy(globalThis.Temporal.now, Temporal.now);
+copy(globalThis.Temporal.Now, Temporal.Now);
 copy(globalThis.Intl, Intl);
 Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
   value: toTemporalInstant,

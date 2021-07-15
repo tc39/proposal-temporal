@@ -1479,12 +1479,12 @@ export namespace Temporal {
   }
 
   /**
-   * The `Temporal.now` object has several methods which give information about
+   * The `Temporal.Now` object has several methods which give information about
    * the current date, time, and time zone.
    *
    * See https://tc39.es/proposal-temporal/docs/now.html for more details.
    */
-  export namespace now {
+  export namespace Now {
     /**
      * Get the exact system date and time as a `Temporal.Instant`.
      *
@@ -1494,8 +1494,8 @@ export namespace Temporal {
      * but with nanosecond precision instead of milliseconds.
      *
      * Note that a `Temporal.Instant` doesn't know about time zones. For the
-     * exact time in a specific time zone, use `Temporal.now.zonedDateTimeISO`
-     * or `Temporal.now.zonedDateTime`.
+     * exact time in a specific time zone, use `Temporal.Now.zonedDateTimeISO`
+     * or `Temporal.Now.zonedDateTime`.
      * */
     export function instant(): Temporal.Instant;
 
@@ -1506,7 +1506,7 @@ export namespace Temporal {
      * The `calendar` parameter is required. When using the ISO 8601 calendar or
      * if you don't understand the need for or implications of a calendar, then
      * a more ergonomic alternative to this method is
-     * `Temporal.now.zonedDateTimeISO()`.
+     * `Temporal.Now.zonedDateTimeISO()`.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
@@ -1540,12 +1540,12 @@ export namespace Temporal {
      *
      * The calendar is required. When using the ISO 8601 calendar or if you
      * don't understand the need for or implications of a calendar, then a more
-     * ergonomic alternative to this method is `Temporal.now.plainDateTimeISO`.
+     * ergonomic alternative to this method is `Temporal.Now.plainDateTimeISO`.
      *
      * Note that the `Temporal.PlainDateTime` type does not persist the time zone,
      * but retaining the time zone is required for most time-zone-related use
      * cases. Therefore, it's usually recommended to use
-     * `Temporal.now.zonedDateTimeISO` or `Temporal.now.zonedDateTime` instead
+     * `Temporal.Now.zonedDateTimeISO` or `Temporal.Now.zonedDateTime` instead
      * of this function.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
@@ -1569,7 +1569,7 @@ export namespace Temporal {
      * Note that the `Temporal.PlainDateTime` type does not persist the time zone,
      * but retaining the time zone is required for most time-zone-related use
      * cases. Therefore, it's usually recommended to use
-     * `Temporal.now.zonedDateTimeISO` instead of this function.
+     * `Temporal.Now.zonedDateTimeISO` instead of this function.
      *
      * @param {TimeZoneProtocol | string} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
@@ -1584,7 +1584,7 @@ export namespace Temporal {
      *
      * The calendar is required. When using the ISO 8601 calendar or if you
      * don't understand the need for or implications of a calendar, then a more
-     * ergonomic alternative to this method is `Temporal.now.plainDateISO`.
+     * ergonomic alternative to this method is `Temporal.Now.plainDateISO`.
      *
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar

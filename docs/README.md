@@ -33,25 +33,25 @@ Converting between such types and exact time types (`Temporal.Instant` and `Temp
 
 Several important concepts are explained elsewhere: [exact time, wall-clock time, time zones, DST, handling ambiguity, and more](./ambiguity.md).
 
-### **Temporal.now**
+### **Temporal.Now**
 
-- `Temporal.now.instant()` - get the exact time since [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)
-- `Temporal.now.timeZone()` - get the current system time zone
-- `Temporal.now.zonedDateTime(calendar)` - get the current date and wall-clock time in the system time zone and specified calendar
-- `Temporal.now.zonedDateTimeISO()` - get the current date and wall-clock time in the system time zone and ISO-8601 calendar
-- `Temporal.now.plainDate(calendar)` - get the current date in the system time zone and specified calendar
-- `Temporal.now.plainDateISO()` - get the current date in the system time zone and ISO-8601 calendar
-- `Temporal.now.plainTimeISO()` - get the current wall-clock time in the system time zone and ISO-8601 calendar
-- `Temporal.now.plainDateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
-- `Temporal.now.plainDateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
+- `Temporal.Now.instant()` - get the exact time since [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)
+- `Temporal.Now.timeZone()` - get the current system time zone
+- `Temporal.Now.zonedDateTime(calendar)` - get the current date and wall-clock time in the system time zone and specified calendar
+- `Temporal.Now.zonedDateTimeISO()` - get the current date and wall-clock time in the system time zone and ISO-8601 calendar
+- `Temporal.Now.plainDate(calendar)` - get the current date in the system time zone and specified calendar
+- `Temporal.Now.plainDateISO()` - get the current date in the system time zone and ISO-8601 calendar
+- `Temporal.Now.plainTimeISO()` - get the current wall-clock time in the system time zone and ISO-8601 calendar
+- `Temporal.Now.plainDateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
+- `Temporal.Now.plainDateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
 
 ```js
-console.log('Initialization complete', Temporal.now.instant());
+console.log('Initialization complete', Temporal.Now.instant());
 // example output:
 // Initialization complete 2021-01-13T20:57:01.500944804Z
 ```
 
-See [Temporal.now Documentation](./now.md) for detailed documentation.
+See [Temporal.Now Documentation](./now.md) for detailed documentation.
 
 ### **Temporal.Instant**
 
@@ -207,8 +207,8 @@ It is also possible to implement your own time zones.
 const timeZone = Temporal.TimeZone.from('Africa/Cairo');
 timeZone.getInstantFor('2000-01-01T00:00'); // => 1999-12-31T22:00:00Z
 timeZone.getPlainDateTimeFor('2000-01-01T00:00Z'); // => 2000-01-01T02:00:00
-timeZone.getPreviousTransition(Temporal.now.instant()); // => 2014-09-25T21:00:00Z
-timeZone.getNextTransition(Temporal.now.instant()); // => null
+timeZone.getPreviousTransition(Temporal.Now.instant()); // => 2014-09-25T21:00:00Z
+timeZone.getNextTransition(Temporal.Now.instant()); // => null
 ```
 
 See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.

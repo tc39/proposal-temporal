@@ -51,8 +51,8 @@ describe('Exports', () => {
   it('should contain `Calendar`', () => {
     assert(named.includes('Calendar'));
   });
-  it('should contain `now`', () => {
-    assert(named.includes('now'));
+  it('should contain `Now`', () => {
+    assert(named.includes('Now'));
   });
 });
 

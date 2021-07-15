@@ -310,8 +310,8 @@ Example usage:
 
 ```javascript
 // How long until the next DST change from now, in the current location?
-tz = Temporal.now.timeZone();
-now = Temporal.now.instant();
+tz = Temporal.Now.timeZone();
+now = Temporal.Now.instant();
 nextTransition = tz.getNextTransition(now);
 duration = nextTransition.since(now);
 duration.toLocaleString(); // output will vary
@@ -339,8 +339,8 @@ Example usage:
 
 ```javascript
 // How long until the previous DST change from now, in the current location?
-tz = Temporal.now.timeZone();
-now = Temporal.now.instant();
+tz = Temporal.Now.timeZone();
+now = Temporal.Now.instant();
 previousTransition = tz.getPreviousTransition(now);
 duration = now.since(previousTransition);
 duration.toLocaleString(); // output will vary

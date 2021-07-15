@@ -38,7 +38,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const result = Temporal.now.plainTimeISO(timeZone);
+const result = Temporal.Now.plainTimeISO(timeZone);
 assert.sameValue(result instanceof Temporal.PlainTime, true);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], 0, property);

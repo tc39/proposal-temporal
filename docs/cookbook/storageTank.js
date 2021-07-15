@@ -8,10 +8,10 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
-  timeZone: Temporal.now.timeZone()
+  timeZone: Temporal.Now.timeZone()
 });
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
-const tankMidnight = Temporal.now.zonedDateTime(browserCalendar).withTimeZone(tankTimeZone).startOfDay().toInstant();
+const tankMidnight = Temporal.Now.zonedDateTime(browserCalendar).withTimeZone(tankTimeZone).startOfDay().toInstant();
 const atOrAfterMidnight = (x) => Temporal.Instant.compare(x, tankMidnight) >= 0;
 const dataStartIndex = tankDataX.findIndex(atOrAfterMidnight);
 const graphLabels = tankDataX.slice(dataStartIndex).map((x) => labelFormatter.format(x));

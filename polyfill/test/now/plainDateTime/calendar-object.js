@@ -38,7 +38,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.plainDateTime(calendar, timeZone);
+const result = Temporal.Now.plainDateTime(calendar, timeZone);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], 0, property);
 }

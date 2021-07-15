@@ -17,6 +17,6 @@ features: [Temporal]
 ---*/
 
 TemporalHelpers.checkToTemporalCalendarFastPath((temporalObject, calendar) => {
-  const result = Temporal.now.plainDate(temporalObject);
+  const result = Temporal.Now.plainDate(temporalObject);
   assert.sameValue(result.calendar, calendar, "Temporal object coerced to calendar");
 });

@@ -38,7 +38,7 @@ const timeZone = () => {
   return ES.SystemTimeZone();
 };
 
-export const now = {
+export const Now = {
   instant,
   plainDateTime,
   plainDateTimeISO,

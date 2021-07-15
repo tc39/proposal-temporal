@@ -31,7 +31,7 @@ const timeZone = new Proxy({
   },
 });
 
-const result = Temporal.now.plainDateTime("japanese", timeZone);
+const result = Temporal.Now.plainDateTime("japanese", timeZone);
 for (const property of ["hour", "minute", "second", "millisecond", "microsecond", "nanosecond"]) {
   assert.sameValue(result[property], 0, property);
 }

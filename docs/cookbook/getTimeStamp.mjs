@@ -5,7 +5,7 @@
  *
  */
 
-const timeStamp = Temporal.now.instant();
+const timeStamp = Temporal.Now.instant();
 
 // Timestamp in Milliseconds
 timeStamp.epochMilliseconds;

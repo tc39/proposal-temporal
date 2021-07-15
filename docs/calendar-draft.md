@@ -299,7 +299,7 @@ Here is an illustrated version of this option:
 
 ### New Factory Methods (Option 6)
 
-With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar. For example, `Temporal.now.plainDateISO` would be added to supplement `Temporal.now.plainDate`. See the full table below.
+With this option, separate methods would indicate whether the Full ISO calendar should be used versus a potentially non-ISO calendar. For example, `Temporal.Now.plainDateISO` would be added to supplement `Temporal.Now.plainDate`. See the full table below.
 
 ### Methods of Construction
 
@@ -312,8 +312,8 @@ The following table describes these semantics. Option 5 is not shown because the
 | T.Date.from(string)\*      | _From String_ | Explicit | Partial ISO | Environ. | _From String_ |
 | T.Date.from(fields)\*\*    | _From Object_ | Explicit | Partial ISO | Environ. | _From Object_ |
 | new T.Date()               | Full ISO      | Full ISO | Full ISO    | Full ISO | Full ISO      |
-| T.now.plainDate()          | Full ISO      | Explicit | Partial ISO | Environ. | Explicit      |
-| T.now.plainDateISO()       | N/A           | N/A      | N/A         | N/A      | Full ISO      |
+| T.Now.plainDate()          | Full ISO      | Explicit | Partial ISO | Environ. | Explicit      |
+| T.Now.plainDateISO()       | N/A           | N/A      | N/A         | N/A      | Full ISO      |
 | instant.inTimeZone()       | Full ISO      | Explicit | Partial ISO | Environ. | Explicit      |
 | instant.inZoneISO()        | N/A           | N/A      | N/A         | N/A      | Full ISO      |
 | date.getMonthDay()\*\*\*\* | Inherit       | Inherit  | Explicit    | Inherit  | Inherit       |
@@ -351,31 +351,31 @@ Code:
 
 ```javascript
 /// Options 1 and 4: calendar implicit
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 // OPTION 1 BUG: the ISO calendar is implicit when creating the MonthDay
 const monthDay = today.getMonthDay();
 console.log('Today is:', monthDay.toLocaleString());
 
 /// Options 2 and 6: calendar in factory method
 const calendar = navigator.locales[0].getLikelyCalendar();
-const today = Temporal.now.plainDate(calendar);
+const today = Temporal.Now.plainDate(calendar);
 const monthDay = today.getMonthDay();
 console.log('Today is:', monthDay.toLocaleString());
 
 /// Option 3 and 5: getMonthDay() requires a calendar to be given
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 const calendar = navigator.locales[0].getLikelyCalendar();
 const monthDay = today.withCalendar(calendar).getMonthDay();
 console.log('Today is:', monthDay.toLocaleString());
 
 /// Option 3 and 5 alternative: add argument to getMonthDay()
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 const calendar = navigator.locales[0].getLikelyCalendar();
 const monthDay = today.getMonthDay(calendar);
 console.log('Today is:', monthDay.toLocaleString());
 
 /// Alternative using Intl settings
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 console.log(
   'Today is:',
   today.toLocaleString(undefined, {
@@ -401,7 +401,7 @@ Code:
 
 ```javascript
 /// Options 1 and 4: calendar implicit
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 console.log('Today is:', today.toLocaleString());
 // OPTION 1 BUG:
 // Arithmetic in months must take place in the user calendar
@@ -410,13 +410,13 @@ console.log('Next month is: ', nextMonth.toLocaleString());
 
 /// Options 2 and 6: calendar in factory method
 const calendar = navigator.locales[0].getLikelyCalendar();
-const today = Temporal.now.plainDate(calendar);
+const today = Temporal.Now.plainDate(calendar);
 console.log('Today is:', today.toLocaleString());
 const nextMonth = today.add({ months: 1 });
 console.log('Next month is: ', nextMonth.toLocaleString());
 
 /// Options 3 and 5: calendar only when needed
-const today = Temporal.now.plainDate();
+const today = Temporal.Now.plainDate();
 console.log('Today is:', today.toLocaleString());
 const calendar = navigator.locales[0].getLikelyCalendar();
 const nextMonth = today.withCalendar(calendar).add({ months: 1 });
@@ -439,7 +439,7 @@ Code:
 
 ```javascript
 /// Options 1 and 4: calendar implicit
-const date = Temporal.now.plainDate();
+const date = Temporal.Now.plainDate();
 console.log('Today is:', date.toLocaleString());
 // OPTION 1 BUG:
 // The MonthDay needs to be represented in the user calendar; otherwise,
@@ -449,13 +449,13 @@ console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
 
 /// Options 2 and 6: calendar in factory method
 const calendar = navigator.locales[0].getLikelyCalendar();
-const date = Temporal.now.plainDate(calendar);
+const date = Temporal.Now.plainDate(calendar);
 console.log('Today is:', date.toLocaleString());
 const monthDay = date.getMonthDay();
 console.log(`Is ${monthDay.toLocaleString()} your birthday?`);
 
 /// Options 3 and 5: calendar only when needed
-const date = Temporal.now.plainDate();
+const date = Temporal.Now.plainDate();
 console.log('Today is:', date.toLocaleString());
 const calendar = navigator.locales[0].getLikelyCalendar();
 const monthDay = date.withCalendar(calendar).getMonthDay();
@@ -478,7 +478,7 @@ Code:
 
 ```javascript
 /// Options 1 and 4: calendar implicit
-const date = Temporal.now.plainDate();
+const date = Temporal.Now.plainDate();
 // OPTION 1 BUG:
 // The YearMonth needs to be represented in the user calendar
 const yearMonth = date.getYearMonth();
@@ -487,13 +487,13 @@ console.log('Number of days this month:', yearMonth.daysInMonth);
 
 /// Options 2 and 6: calendar in factory method
 const calendar = navigator.locales[0].getLikelyCalendar();
-const date = Temporal.now.plainDate(calendar);
+const date = Temporal.Now.plainDate(calendar);
 const yearMonth = date.getYearMonth();
 console.log('Today is:', date.toLocaleString());
 console.log('Number of days this month:', yearMonth.daysInMonth);
 
 /// Options 3 and 5: calendar only when needed
-const date = Temporal.now.plainDate();
+const date = Temporal.Now.plainDate();
 const calendar = navigator.locales[0].getLikelyCalendar();
 const yearMonth = date.withCalendar(calendar).getYearMonth();
 console.log('Today is:', date.toLocaleString());
@@ -650,16 +650,16 @@ Temporal.Instant.prototype.inTimeZone = function(timeZone, calendar) {
 }
 ```
 
-### Temporal.now
+### Temporal.Now
 
 The fourth way to get a Temporal.PlainDate is to get the current time according to the environment (or mocked for SES).
 
 As above, this API depends on whether we decide to use a default calendar. If we require an explicit calendar, it would be similar to above:
 
 ```javascript
-Temporal.now.plainDate = function (calendar) {
-  const instant = Temporal.now.instant(); // use intrinsic
-  const timeZone = Temporal.now.timeZone(); // use intrinsic
+Temporal.Now.plainDate = function (calendar) {
+  const instant = Temporal.Now.instant(); // use intrinsic
+  const timeZone = Temporal.Now.timeZone(); // use intrinsic
   return instant.inTimeZone(timeZone, calendar); // use intrinsic
 };
 ```

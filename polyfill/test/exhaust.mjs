@@ -9,7 +9,7 @@ console.log('1..N');
 let idx = 0;
 let cnt = 0;
 let fail = 0;
-const sts = Temporal.now.instant();
+const sts = Temporal.Now.instant();
 for (let one = start; Temporal.PlainDate.compare(one, end); one = one.add('P1D')) {
   for (let two = one; Temporal.PlainDate.compare(two, end); two = two.add('P1D')) {
     const ok = test(one, two);
@@ -27,7 +27,7 @@ for (let one = start; Temporal.PlainDate.compare(one, end); one = one.add('P1D')
     }
   }
 }
-const ets = Temporal.now.instant();
+const ets = Temporal.Now.instant();
 console.log(`1..${idx}`);
 console.log(`# Sucess: ${cnt - fail}/${cnt} (${ets.since(sts)})`);
 
