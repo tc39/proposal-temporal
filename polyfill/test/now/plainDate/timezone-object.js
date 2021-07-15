@@ -38,7 +38,7 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const result = Temporal.now.plainDate("iso8601", timeZone);
+const result = Temporal.Now.plainDate("iso8601", timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 
 assert.compareArray(actual, expected);

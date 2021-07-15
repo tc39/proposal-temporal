@@ -17,14 +17,14 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const systemTimeZone = Temporal.now.timeZone();
+const systemTimeZone = Temporal.Now.timeZone();
 
-const resultExplicit = Temporal.now.zonedDateTime('iso8601', undefined);
+const resultExplicit = Temporal.Now.zonedDateTime('iso8601', undefined);
 assert.sameValue(resultExplicit.timeZone.id, systemTimeZone.id);
 
 assert.compareArray(actual, expected, "Temporal.TimeZone.from should not be called");
 
-const resultImplicit = Temporal.now.zonedDateTime('iso8601');
+const resultImplicit = Temporal.Now.zonedDateTime('iso8601');
 assert.sameValue(resultImplicit.timeZone.id, systemTimeZone.id);
 
 assert.compareArray(actual, expected, "Temporal.TimeZone.from should not be called");

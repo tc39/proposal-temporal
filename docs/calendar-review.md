@@ -192,7 +192,7 @@ For example:
   Userland code can completely avoid the use of calendar-specific constants (e.g. 12 months per year) by using these properties.
 - There is never an implicit default calendar system.
   Developers must explicitly decide whether they're using the ISO calendar or another calendar.
-  For example, shortcut methods on the `Temporal.now` object are named with an ISO prefix to avoid ambiguity, such as `Temporal.now.zonedDateTimeISO()`.
+  For example, shortcut methods on the `Temporal.Now` object are named with an ISO prefix to avoid ambiguity, such as `Temporal.Now.zonedDateTimeISO()`.
 - Temporal never infers a calendar from the user's environment.
   Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.
 
@@ -305,11 +305,11 @@ In the end, the champions decided that the subclassing approach brought a high c
 
 ### Alternative 4: Separate Types for Calendared Dates
 
-This approach would mean introducing a new type that carries a date without a calendar system, to supplement the type with the calendar system.  Most documentation would recommend the calendar-agnostic type except when calendar-aware logic is necessary.  We discuss this approach in more detail as [Option 5 in calendar-draft.md](https://github.com/tc39/proposal-temporal/blob/main/docs/calendar-draft.md#new-non-calendar-types-option-5).
+This approach would mean introducing a new type that carries a date without a calendar system, to supplement the type with the calendar system. Most documentation would recommend the calendar-agnostic type except when calendar-aware logic is necessary. We discuss this approach in more detail as [Option 5 in calendar-draft.md](https://github.com/tc39/proposal-temporal/blob/main/docs/calendar-draft.md#new-non-calendar-types-option-5).
 
 We decided against the dual classes approach because:
 
 1. If the new type were truly calendar-agnostic, it could not support month and year arithmetic, because doing so would introduce an ISO bias.
 2. If the new type had ISO-like behavior for months and years, then it is no different from PlainDate with an ISO calendar.
 
-Note that (2) is true for ECMAScript because it is dynamically typed.  Statically typed languages could enforce compile-time type checking for (2) that is not possible in ECMAScript.  Note also that clients such as TypeScript can treat PlainDate as having a type parameter corresponding to the calendar system in order to enforce more compile-time type checking of calendar systems.  Separate data types are not necessary for that validation.
+Note that (2) is true for ECMAScript because it is dynamically typed. Statically typed languages could enforce compile-time type checking for (2) that is not possible in ECMAScript. Note also that clients such as TypeScript can treat PlainDate as having a type parameter corresponding to the calendar system in order to enforce more compile-time type checking of calendar systems. Separate data types are not necessary for that validation.

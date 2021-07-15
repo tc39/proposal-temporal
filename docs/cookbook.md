@@ -224,7 +224,7 @@ The graph always starts at midnight in the tank's location, but the graph labels
 <script type="text/javascript">
 {
 // Generate fictitious "data"
-const start = Temporal.now.instant().subtract({ hours: 24 });
+const start = Temporal.Now.instant().subtract({ hours: 24 });
 const blank = Array(24 * 12);
 const tankDataX = Array.from(blank, (_, ix) => start.add({ minutes: ix * 5 }));
 const tankDataY = Array.from(blank);
@@ -329,7 +329,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
   // the example; see 'Calendar input element'
   const futureDatePicker = document.querySelector('input[name="futuredate"]');
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-  const today = Temporal.now.plainDate(browserCalendar);
+  const today = Temporal.Now.plainDate(browserCalendar);
   futureDatePicker.min = today;
   futureDatePicker.value = today.add({ months: 1 });
 

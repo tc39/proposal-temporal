@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-verifyProperty(Temporal.now.zonedDateTimeISO, "length", {
+verifyProperty(Temporal.Now.zonedDateTimeISO, "length", {
   value: 0,
   writable: false,
   enumerable: false,

@@ -17,12 +17,12 @@ Object.defineProperty(Temporal.TimeZone, "from", {
   },
 });
 
-const resultExplicit = Temporal.now.plainTimeISO(undefined);
+const resultExplicit = Temporal.Now.plainTimeISO(undefined);
 assert(resultExplicit instanceof Temporal.PlainTime);
 
 assert.compareArray(actual, expected, "Temporal.TimeZone.from should not be called");
 
-const resultImplicit = Temporal.now.plainTimeISO();
+const resultImplicit = Temporal.Now.plainTimeISO();
 assert(resultImplicit instanceof Temporal.PlainTime);
 
 assert.compareArray(actual, expected, "Temporal.TimeZone.from should not be called");

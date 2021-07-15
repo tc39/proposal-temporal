@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
-description: The "timeZone" property of Temporal.now
+description: The "timeZone" property of Temporal.Now
 info: |
   Section 17: Every other data property described in clauses 18 through 26
   and in Annex B.2 has the attributes { [[Writable]]: true,
@@ -12,7 +12,7 @@ includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-verifyProperty(Temporal.now, 'timeZone', {
+verifyProperty(Temporal.Now, 'timeZone', {
   enumerable: false,
   writable: true,
   configurable: true

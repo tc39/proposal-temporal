@@ -68,12 +68,12 @@ describe('Userland time zone', () => {
     });
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
-    it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
+    it('works in Temporal.Now', () => {
+      assert(Temporal.Now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
   });
   describe('Trivial protocol implementation', () => {
@@ -107,12 +107,12 @@ describe('Userland time zone', () => {
       const zdt = new Temporal.ZonedDateTime(0n, obj);
       equal(zdt.toString(), '1970-01-01T00:00:00+00:00[Etc/Custom/UTC_Protocol]');
     });
-    it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
+    it('works in Temporal.Now', () => {
+      assert(Temporal.Now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
   });
   describe('sub-minute offset', () => {
@@ -169,12 +169,12 @@ describe('Userland time zone', () => {
     });
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));
-    it('works in Temporal.now', () => {
-      assert(Temporal.now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
-      assert(Temporal.now.plainDateISO(obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
-      assert(Temporal.now.plainTimeISO(obj) instanceof Temporal.PlainTime);
+    it('works in Temporal.Now', () => {
+      assert(Temporal.Now.plainDateTimeISO(obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateTime('gregory', obj) instanceof Temporal.PlainDateTime);
+      assert(Temporal.Now.plainDateISO(obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainDate('gregory', obj) instanceof Temporal.PlainDate);
+      assert(Temporal.Now.plainTimeISO(obj) instanceof Temporal.PlainTime);
     });
   });
 });

@@ -39,7 +39,7 @@ Object.defineProperty(Temporal.Calendar, "from", {
   },
 });
 
-const result = Temporal.now.plainDate(calendar, timeZone);
+const result = Temporal.Now.plainDate(calendar, timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 
 assert.compareArray(actual, expected);

@@ -7,7 +7,7 @@ description: Each invocation of the function produces a distinct object value
 features: [Temporal]
 ---*/
 
-const tz = Temporal.now.timeZone;
+const tz = Temporal.Now.timeZone;
 const tz1 = tz();
 const tz2 = tz();
 assert.notSameValue(tz1, tz2);

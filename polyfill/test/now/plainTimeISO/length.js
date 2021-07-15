@@ -16,7 +16,7 @@ includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 
-verifyProperty(Temporal.now.plainTimeISO, "length", {
+verifyProperty(Temporal.Now.plainTimeISO, "length", {
   value: 0,
   writable: false,
   enumerable: false,

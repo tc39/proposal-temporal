@@ -33,7 +33,7 @@ const timeZone = new Proxy({
 
 const calendar = Temporal.Calendar.from("iso8601");
 
-const result = Temporal.now.plainDate(calendar, timeZone);
+const result = Temporal.Now.plainDate(calendar, timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 
 assert.compareArray(actual, expected);

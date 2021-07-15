@@ -31,7 +31,7 @@ const timeZone = new Proxy({
   },
 });
 
-const result = Temporal.now.plainDate("japanese", timeZone);
+const result = Temporal.Now.plainDate("japanese", timeZone);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 
 assert.compareArray(actual, expected);

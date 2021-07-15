@@ -11,5 +11,5 @@ includes: [temporalHelpers.js]
 [-86400_000_000_001, 86400_000_000_001, -Infinity, Infinity].forEach((wrongOffset) => {
   const timeZone = TemporalHelpers.specificOffsetTimeZone(wrongOffset);
 
-  assert.throws(RangeError, () => Temporal.now.plainDateISO(timeZone));
+  assert.throws(RangeError, () => Temporal.Now.plainDateISO(timeZone));
 });

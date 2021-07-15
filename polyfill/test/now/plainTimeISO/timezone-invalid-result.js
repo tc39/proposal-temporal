@@ -29,5 +29,5 @@ for (const dateTime of invalidValues) {
     },
   };
 
-  assert.throws(TypeError, () => Temporal.now.plainTimeISO(timeZone));
+  assert.throws(TypeError, () => Temporal.Now.plainTimeISO(timeZone));
 }

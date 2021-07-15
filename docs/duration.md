@@ -510,7 +510,7 @@ d = d.round({
   smallestUnit: 'month',
   roundingIncrement: 3,
   roundingMode: 'trunc',
-  relativeTo: Temporal.now.plainDateISO()
+  relativeTo: Temporal.Now.plainDateISO()
 });
 quarters = d.months / 3;
 quarters; // => 3

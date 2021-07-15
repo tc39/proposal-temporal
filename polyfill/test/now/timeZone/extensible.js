@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
-description: Temporal.now.timeZone is extensible.
+description: Temporal.Now.timeZone is extensible.
 info: |
   ## 17 ECMAScript Standard Built-in Objects
 
@@ -12,4 +12,4 @@ info: |
 features: [Temporal]
 ---*/
 
-assert(Object.isExtensible(Temporal.now.timeZone));
+assert(Object.isExtensible(Temporal.Now.timeZone));

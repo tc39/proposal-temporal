@@ -40,7 +40,7 @@ const timeZone = new Proxy({
   },
 });
 
-const result = Temporal.now.plainDate("iso8601", timeZone);
+const result = Temporal.Now.plainDate("iso8601", timeZone);
 assert.notSameValue(result, undefined);
 assert.sameValue(result instanceof Temporal.PlainDate, true);
 

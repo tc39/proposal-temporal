@@ -64,7 +64,7 @@ Temporal.TimeZone.from('1820-04-01T18:16:25-06:00[America/St_Louis]');
 // returns a new StLouisTime instance
 ```
 
-In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.from()` function which performs the built-in mapping, and replace `Temporal.now.timeZone()` to avoid exposing the current time zone.
+In order to lock down any leakage of information about the host system's time zone database, one would monkeypatch the `Temporal.TimeZone.from()` function which performs the built-in mapping, and replace `Temporal.Now.timeZone()` to avoid exposing the current time zone.
 
 For example, to allow only offset time zones, and make the current time zone always UTC:
 
@@ -87,7 +87,7 @@ Temporal.TimeZone.from = function (item) {
   if (/^[+-]\d{2}:?\d{2}$/.test(id) || id === 'UTC') return originalTemporalTimeZoneFrom.call(this, id);
   throw new RangeError('invalid time zone');
 };
-Temporal.now.timeZone = function () {
+Temporal.Now.timeZone = function () {
   return Temporal.TimeZone.from('UTC');
 };
 ```

@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.now.timezone
-description: Temporal.now.timeZone does not implement [[Construct]]
+description: Temporal.Now.timeZone does not implement [[Construct]]
 info: |
   ECMAScript Function Objects
 
@@ -14,8 +14,8 @@ includes: [isConstructor.js]
 features: [Reflect.construct, Temporal]
 ---*/
 
-assert.sameValue(isConstructor(Temporal.now.timeZone), false, 'isConstructor(Temporal.now.timeZone) must return false');
+assert.sameValue(isConstructor(Temporal.Now.timeZone), false, 'isConstructor(Temporal.Now.timeZone) must return false');
 
 assert.throws(TypeError, () => {
-  new Temporal.now.timeZone();
-}, '`new Temporal.now.timeZone()` throws TypeError');
+  new Temporal.Now.timeZone();
+}, '`new Temporal.Now.timeZone()` throws TypeError');
