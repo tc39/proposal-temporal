@@ -10250,8 +10250,8 @@
             oneYearDays = MathAbs(oneYearDays);
             var divisor = bigInt(oneYearDays).multiply(dayLengthNs);
             nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
-            var rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
-            total = nanoseconds.toJSNumber() / divisor;
+            var rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
+            total = nanoseconds.toJSNumber() / divisor.toJSNumber();
             years = rounded.divide(divisor).toJSNumber();
             nanoseconds = months = weeks = days = 0;
             break;
@@ -10306,9 +10306,9 @@
 
             nanoseconds = _divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 
-            var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor * increment, roundingMode);
+            var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor;
+            total = nanoseconds.toJSNumber() / _divisor.toJSNumber();
             months = _rounded.divide(_divisor).toJSNumber();
             nanoseconds = weeks = days = 0;
             break;
@@ -10345,9 +10345,9 @@
 
             nanoseconds = _divisor2.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 
-            var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2 * increment, roundingMode);
+            var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor2;
+            total = nanoseconds.toJSNumber() / _divisor2.toJSNumber();
             weeks = _rounded2.divide(_divisor2).toJSNumber();
             nanoseconds = days = 0;
             break;
@@ -10359,9 +10359,9 @@
 
             nanoseconds = _divisor3.multiply(days).plus(nanoseconds);
 
-            var _rounded3 = ES.RoundNumberToIncrement(nanoseconds, _divisor3 * increment, roundingMode);
+            var _rounded3 = ES.RoundNumberToIncrement(nanoseconds, _divisor3.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor3;
+            total = nanoseconds.toJSNumber() / _divisor3.toJSNumber();
             days = _rounded3.divide(_divisor3).toJSNumber();
             nanoseconds = 0;
             break;
