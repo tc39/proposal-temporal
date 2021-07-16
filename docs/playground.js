@@ -13385,7 +13385,7 @@
     return ES.SystemTimeZone();
   };
 
-  var now = {
+  var Now = {
     instant: instant,
     plainDateTime: plainDateTime,
     plainDateTimeISO: plainDateTimeISO,
@@ -15155,7 +15155,7 @@
     PlainDateTime: PlainDateTime,
     Duration: Duration,
     PlainMonthDay: PlainMonthDay,
-    now: now,
+    Now: Now,
     PlainTime: PlainTime,
     TimeZone: TimeZone,
     PlainYearMonth: PlainYearMonth,
@@ -15179,7 +15179,7 @@
     configurable: true
   });
   copy(globalThis.Temporal, Temporal);
-  copy(globalThis.Temporal.now, now);
+  copy(globalThis.Temporal.Now, Now);
   copy(globalThis.Intl, Intl$1);
   Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
     value: toTemporalInstant,

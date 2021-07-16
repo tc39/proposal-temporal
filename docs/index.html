@@ -150,7 +150,7 @@
 </li>
 <li><a href="#api-documentation">API Documentation</a>
 <ul>
-<li><a href="#Temporal-now">Temporal.now</a>
+<li><a href="#Temporal-Now">Temporal.Now</a>
 </li>
 <li><a href="#Temporal-Instant">Temporal.Instant</a>
 </li>
@@ -211,20 +211,20 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <p>The Temporal API follows a convention of using types whose names start with &quot;Plain&quot; (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) for objects which do not have an associated time zone.
 Converting between such types and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.</p>
 <p>Several important concepts are explained elsewhere: <a href="./ambiguity.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
-<h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
-<li><code>Temporal.now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
-<li><code>Temporal.now.timeZone()</code> - get the current system time zone</li>
-<li><code>Temporal.now.zonedDateTime(calendar)</code> - get the current date and wall-clock time in the system time zone and specified calendar</li>
-<li><code>Temporal.now.zonedDateTimeISO()</code> - get the current date and wall-clock time in the system time zone and ISO-8601 calendar</li>
-<li><code>Temporal.now.plainDate(calendar)</code> - get the current date in the system time zone and specified calendar</li>
-<li><code>Temporal.now.plainDateISO()</code> - get the current date in the system time zone and ISO-8601 calendar</li>
-<li><code>Temporal.now.plainTimeISO()</code> - get the current wall-clock time in the system time zone and ISO-8601 calendar</li>
-<li><code>Temporal.now.plainDateTime(calendar)</code> - get the current system date/time in the system time zone, but return an object that doesn&#39;t remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).</li>
-<li><code>Temporal.now.plainDateTimeISO()</code> - same as above, but return the DateTime in the ISO-8601 calendar</li>
+<h3 id="Temporal-Now"><a class="heading-link" href="#Temporal-Now"></a><strong>Temporal.Now</strong></h3><ul>
+<li><code>Temporal.Now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
+<li><code>Temporal.Now.timeZone()</code> - get the current system time zone</li>
+<li><code>Temporal.Now.zonedDateTime(calendar)</code> - get the current date and wall-clock time in the system time zone and specified calendar</li>
+<li><code>Temporal.Now.zonedDateTimeISO()</code> - get the current date and wall-clock time in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.Now.plainDate(calendar)</code> - get the current date in the system time zone and specified calendar</li>
+<li><code>Temporal.Now.plainDateISO()</code> - get the current date in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.Now.plainTimeISO()</code> - get the current wall-clock time in the system time zone and ISO-8601 calendar</li>
+<li><code>Temporal.Now.plainDateTime(calendar)</code> - get the current system date/time in the system time zone, but return an object that doesn&#39;t remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).</li>
+<li><code>Temporal.Now.plainDateTimeISO()</code> - same as above, but return the DateTime in the ISO-8601 calendar</li>
 </ul>
-<pre class="language-js"><code class="language-js">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Initialization complete'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Initialization complete'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// example output:</span>
-<span class="token comment">// Initialization complete 2021-01-13T20:57:01.500944804Z</span></code></pre><p>See <a href="./now.html">Temporal.now Documentation</a> for detailed documentation.</p>
+<span class="token comment">// Initialization complete 2021-01-13T20:57:01.500944804Z</span></code></pre><p>See <a href="./now.html">Temporal.Now Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time (called <strong>&quot;exact time&quot;</strong>), without regard to calendar or location, e.g. July 20, 1969, at 20:17 UTC.
 For a human-readable local calendar date or clock time, use a <code>Temporal.TimeZone</code> and <code>Temporal.Calendar</code> to obtain a <code>Temporal.ZonedDateTime</code> or <code>Temporal.PlainDateTime</code>.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-20T20:17Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -304,8 +304,8 @@ Because of this <code>Temporal.TimeZone</code> can be used to convert between <c
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Africa/Cairo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T22:00:00Z</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-01-01T02:00:00</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for detailed documentation.
+timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
+timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for detailed documentation.
 A conceptual explanation of handling <a href="./ambiguity.html">time zones, DST, and ambiguity in Temporal</a> is also available.</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>

@@ -277,7 +277,7 @@ Separate <code>eraYear</code> and <code>era</code> fields are used for measuring
 Userland code can completely avoid the use of calendar-specific constants (e.g. 12 months per year) by using these properties.</li>
 <li>There is never an implicit default calendar system.
 Developers must explicitly decide whether they&#39;re using the ISO calendar or another calendar.
-For example, shortcut methods on the <code>Temporal.now</code> object are named with an ISO prefix to avoid ambiguity, such as <code>Temporal.now.zonedDateTimeISO()</code>.</li>
+For example, shortcut methods on the <code>Temporal.Now</code> object are named with an ISO prefix to avoid ambiguity, such as <code>Temporal.Now.zonedDateTimeISO()</code>.</li>
 <li>Temporal never infers a calendar from the user&#39;s environment.
 Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.</li>
 </ul>
@@ -367,13 +367,13 @@ On the other hand, if each subclass has the same set of methods as PlainDate, th
 <li>Each individual subclass would need to define its own data model, increasing the surface of the specification.</li>
 </ul>
 <p>In the end, the champions decided that the subclassing approach brought a high cost with no clear benefit over the other approaches, and that keeping all calendar-sensitive operations neatly organized into the Temporal.Calendar object resulted in a cleaner model.</p>
-<h3 id="alternative-4-separate-types-for-calendared-dates"><a class="heading-link" href="#alternative-4-separate-types-for-calendared-dates"></a>Alternative 4: Separate Types for Calendared Dates</h3><p>This approach would mean introducing a new type that carries a date without a calendar system, to supplement the type with the calendar system.  Most documentation would recommend the calendar-agnostic type except when calendar-aware logic is necessary.  We discuss this approach in more detail as <a href="https://github.com/tc39/proposal-temporal/blob/main/docs/calendar-draft.html#new-non-calendar-types-option-5">Option 5 in calendar-draft.md</a>.</p>
+<h3 id="alternative-4-separate-types-for-calendared-dates"><a class="heading-link" href="#alternative-4-separate-types-for-calendared-dates"></a>Alternative 4: Separate Types for Calendared Dates</h3><p>This approach would mean introducing a new type that carries a date without a calendar system, to supplement the type with the calendar system. Most documentation would recommend the calendar-agnostic type except when calendar-aware logic is necessary. We discuss this approach in more detail as <a href="https://github.com/tc39/proposal-temporal/blob/main/docs/calendar-draft.html#new-non-calendar-types-option-5">Option 5 in calendar-draft.md</a>.</p>
 <p>We decided against the dual classes approach because:</p>
 <ol>
 <li>If the new type were truly calendar-agnostic, it could not support month and year arithmetic, because doing so would introduce an ISO bias.</li>
 <li>If the new type had ISO-like behavior for months and years, then it is no different from PlainDate with an ISO calendar.</li>
 </ol>
-<p>Note that (2) is true for ECMAScript because it is dynamically typed.  Statically typed languages could enforce compile-time type checking for (2) that is not possible in ECMAScript.  Note also that clients such as TypeScript can treat PlainDate as having a type parameter corresponding to the calendar system in order to enforce more compile-time type checking of calendar systems.  Separate data types are not necessary for that validation.</p>
+<p>Note that (2) is true for ECMAScript because it is dynamically typed. Statically typed languages could enforce compile-time type checking for (2) that is not possible in ECMAScript. Note also that clients such as TypeScript can treat PlainDate as having a type parameter corresponding to the calendar system in order to enforce more compile-time type checking of calendar systems. Separate data types are not necessary for that validation.</p>
     <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
