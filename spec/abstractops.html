@@ -353,8 +353,10 @@
       Both singular and plural unit names are accepted, but only the singular form is returned.
     </p>
     <emu-alg>
-      1. Assert: _disallowedUnits_ does not contain _fallback_ or *"auto"*.
-      1. Assert: If _autoValue_ is present, _fallback_ is *"auto"*, and _disallowedUnits_ does not contain _autoValue_.
+      1. Assert: _disallowedUnits_ does not contain _fallback_.
+      1. Assert: _disallowedUnits_ does not contain *"auto"*.
+      1. Assert: _autoValue_ is not present or _fallback_ is *"auto"*.
+      1. Assert: _autoValue_ is not present or _disallowedUnits_ does not contain _autoValue_.
       1. Let _largestUnit_ be ? GetOption(_normalizedOptions_, *"largestUnit"*, « String », « *"auto"*, *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », _fallback_).
       1. If _largestUnit_ is *"auto"* and _autoValue_ is present, then
         1. Return _autoValue_.
