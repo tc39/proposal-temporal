@@ -27,6 +27,7 @@ import ToNumber from 'es-abstract/2020/ToNumber';
 import ToPrimitive from 'es-abstract/2020/ToPrimitive';
 import ToString from 'es-abstract/2020/ToString';
 import Type from 'es-abstract/2020/Type';
+import HasOwnProperty from 'es-abstract/2020/HasOwnProperty';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -139,6 +140,7 @@ import * as PARSE from './regex.mjs';
 const ES2020 = {
   Call,
   GetMethod,
+  HasOwnProperty,
   IsInteger,
   ToInteger,
   ToLength,

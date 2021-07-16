@@ -28,6 +28,8 @@ const ORIGINAL = Symbol('original');
 const TZ_RESOLVED = Symbol('timezone');
 const TZ_GIVEN = Symbol('timezone-id-given');
 const CAL_ID = Symbol('calendar-id');
+const LOCALE = Symbol('locale');
+const OPTIONS = Symbol('options');
 
 const descriptor = (value) => {
   return {
@@ -41,21 +43,68 @@ const descriptor = (value) => {
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
 
-export function DateTimeFormat(locale = IntlDateTimeFormat().resolvedOptions().locale, options = {}) {
+// Construction of built-in Intl.DateTimeFormat objects is sloooooow,
+// so we'll only create those instances when we need them.
+// See https://bugs.chromium.org/p/v8/issues/detail?id=6528
+function getPropLazy(obj, prop) {
+  let val = obj[prop];
+  if (typeof val === 'function') {
+    val = new IntlDateTimeFormat(obj[LOCALE], val(obj[OPTIONS]));
+    obj[prop] = val;
+  }
+  return val;
+}
+// Similarly, lazy-init TimeZone instances.
+function getResolvedTimeZoneLazy(obj) {
+  let val = obj[TZ_RESOLVED];
+  if (typeof val === 'string') {
+    val = new TimeZone(val);
+    obj[TZ_RESOLVED] = val;
+  }
+  return val;
+}
+
+export function DateTimeFormat(locale = undefined, options = undefined) {
   if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+  const hasOptions = typeof options !== 'undefined';
+  options = hasOptions ? ObjectAssign({}, options) : {};
+  const original = new IntlDateTimeFormat(locale, options);
+  const ro = original.resolvedOptions();
+
+  // DateTimeFormat instances are very expensive to create. Therefore, they will
+  // be lazily created only when needed, using the locale and options provided.
+  // But it's possible for callers to mutate those inputs before lazy creation
+  // happens. For this reason, we clone the inputs instead of caching the
+  // original objects. To avoid the complexity of deep cloning any inputs that
+  // are themselves objects (e.g. the locales array, or options property values
+  // that will be coerced to strings), we rely on `resolvedOptions()` to do the
+  // coercion and cloning for us. Unfortunately, we can't just use the resolved
+  // options as-is because our options-amending logic adds additional fields if
+  // the user doesn't supply any unit fields like year, month, day, hour, etc.
+  // Therefore, we limit the properties in the clone to properties that were
+  // present in the original input.
+  if (hasOptions) {
+    const clonedResolved = ObjectAssign({}, ro);
+    for (const prop in clonedResolved) {
+      if (!ES.HasOwnProperty(options, prop)) delete clonedResolved[prop];
+    }
+    this[OPTIONS] = clonedResolved;
+  } else {
+    this[OPTIONS] = options;
+  }
 
   this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
-
-  this[ORIGINAL] = new IntlDateTimeFormat(locale, options);
-  this[TZ_RESOLVED] = new TimeZone(this.resolvedOptions().timeZone);
-  this[CAL_ID] = this.resolvedOptions().calendar;
-  this[DATE] = new IntlDateTimeFormat(locale, dateAmend(options));
-  this[YM] = new IntlDateTimeFormat(locale, yearMonthAmend(options));
-  this[MD] = new IntlDateTimeFormat(locale, monthDayAmend(options));
-  this[TIME] = new IntlDateTimeFormat(locale, timeAmend(options));
-  this[DATETIME] = new IntlDateTimeFormat(locale, datetimeAmend(options));
-  this[ZONED] = new IntlDateTimeFormat(locale, zonedDateTimeAmend(options));
-  this[INST] = new IntlDateTimeFormat(locale, instantAmend(options));
+  this[LOCALE] = ro.locale;
+  this[ORIGINAL] = original;
+  this[TZ_RESOLVED] = ro.timeZone;
+  this[CAL_ID] = ro.calendar;
+  this[DATE] = dateAmend;
+  this[YM] = yearMonthAmend;
+  this[MD] = monthDayAmend;
+  this[TIME] = timeAmend;
+  this[DATETIME] = datetimeAmend;
+  this[ZONED] = zonedDateTimeAmend;
+  this[INST] = instantAmend;
 }
 
 DateTimeFormat.supportedLocalesOf = function (...args) {
@@ -85,6 +134,7 @@ function resolvedOptions() {
 function adjustFormatterTimeZone(formatter, timeZone) {
   if (!timeZone) return formatter;
   const options = formatter.resolvedOptions();
+  if (options.timeZone === timeZone) return formatter;
   return new IntlDateTimeFormat(options.locale, { ...options, timeZone });
 }
 
@@ -327,8 +377,8 @@ function extractOverrides(temporalObj, main) {
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[TIME]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      formatter: getPropLazy(main, TIME)
     };
   }
 
@@ -344,8 +394,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[YM]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      formatter: getPropLazy(main, YM)
     };
   }
 
@@ -361,8 +411,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[MD]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      formatter: getPropLazy(main, MD)
     };
   }
 
@@ -376,8 +426,8 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[DATE]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      formatter: getPropLazy(main, DATE)
     };
   }
 
@@ -413,8 +463,8 @@ function extractOverrides(temporalObj, main) {
       );
     }
     return {
-      instant: ES.BuiltinTimeZoneGetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
-      formatter: main[DATETIME]
+      instant: ES.BuiltinTimeZoneGetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      formatter: getPropLazy(main, DATETIME)
     };
   }
 
@@ -434,7 +484,7 @@ function extractOverrides(temporalObj, main) {
 
     return {
       instant: GetSlot(temporalObj, INSTANT),
-      formatter: main[ZONED],
+      formatter: getPropLazy(main, ZONED),
       timeZone: objTimeZone
     };
   }
@@ -442,7 +492,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       instant: temporalObj,
-      formatter: main[INST]
+      formatter: getPropLazy(main, INST)
     };
   }
 

@@ -1050,10 +1050,43 @@ describe('Intl', () => {
       it('should return an Array', () => assert(Array.isArray(Intl.DateTimeFormat.supportedLocalesOf())));
     });
 
-    const us = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York' });
-    const at = new Intl.DateTimeFormat('de-AT', { timeZone: 'Europe/Vienna' });
+    // Verify that inputs to DateTimeFormat constructor are immune to mutation.
+    // Also verify that options properties are only read once.
+    const onlyOnce = (value) => {
+      const obj = {
+        calls: 0,
+        toString() {
+          if (++this.calls > 1) throw new RangeError('prop read twice');
+          return value;
+        }
+      };
+      return obj;
+    };
+    const optionsAT = {
+      timeZone: onlyOnce('Europe/Vienna')
+    };
+    const optionsUS = {
+      calls: 0,
+      value: 'America/New_York',
+      get timeZone() {
+        if (++this.calls > 1) throw new RangeError('prop read twice');
+        return this.value;
+      },
+      set timeZone(val) {
+        this.value = val;
+      }
+    };
+    const localesAT = ['de-AT'];
+    const us = new Intl.DateTimeFormat('en-US', optionsUS);
+    const at = new Intl.DateTimeFormat(localesAT, optionsAT);
+    optionsAT.timeZone = {
+      toString: () => 'Bogus/Time-Zone',
+      toJSON: () => 'Bogus/Time-Zone'
+    };
+    optionsUS.timeZone = 'Bogus/Time-Zone';
     const us2 = new Intl.DateTimeFormat('en-US');
-    const at2 = new Intl.DateTimeFormat('de-AT');
+    const at2 = new Intl.DateTimeFormat(localesAT);
+    localesAT[0] = ['invalid locale'];
     const usCalendar = us.resolvedOptions().calendar;
     const atCalendar = at.resolvedOptions().calendar;
     const t1 = '1976-11-18T14:23:30+00:00[UTC]';
