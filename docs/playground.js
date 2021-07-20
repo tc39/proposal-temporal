@@ -4611,22 +4611,14 @@
       }, cache);
       return days === 30;
     },
-    monthsInYear: function monthsInYear()
-    /* calendarYear, cache */
-    {
+    monthsInYear: function monthsInYear() {
       return 12;
     },
     minimumMonthLength: function minimumMonthLength() {
-      return (
-        /* calendarDate */
-        29
-      );
+      return 29;
     },
     maximumMonthLength: function maximumMonthLength() {
-      return (
-        /* calendarDate */
-        30
-      );
+      return 30;
     },
     DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
     DAYS_PER_ISO_YEAR: 365.2425,
@@ -4650,9 +4642,7 @@
       // even though Persian is solar and Islamic is lunar.
       return helperIslamic.inLeapYear(calendarDate, cache);
     },
-    monthsInYear: function monthsInYear()
-    /* calendarYear, cache */
-    {
+    monthsInYear: function monthsInYear() {
       return 12;
     },
     minimumMonthLength: function minimumMonthLength(calendarDate) {
@@ -4690,9 +4680,7 @@
       // is a leap year as well.
       return isGregorianLeapYear(calendarDate.year + 78);
     },
-    monthsInYear: function monthsInYear()
-    /* calendarYear, cache */
-    {
+    monthsInYear: function monthsInYear() {
       return 12;
     },
     minimumMonthLength: function minimumMonthLength(calendarDate) {
@@ -4956,9 +4944,7 @@
 
         return isGregorianLeapYear(year);
       },
-      monthsInYear: function monthsInYear()
-      /* calendarDate */
-      {
+      monthsInYear: function monthsInYear() {
         return 12;
       },
       minimumMonthLength: function minimumMonthLength(calendarDate) {
@@ -5129,9 +5115,7 @@
         var year = calendarDate.year;
         return (year + 1) % 4 === 0;
       },
-      monthsInYear: function monthsInYear()
-      /* calendarDate */
-      {
+      monthsInYear: function monthsInYear() {
         return 13;
       },
       minimumMonthLength: function minimumMonthLength(calendarDate) {
@@ -5376,16 +5360,10 @@
       return this.inLeapYear(calendarDate, cache) ? 13 : 12;
     },
     minimumMonthLength: function minimumMonthLength() {
-      return (
-        /* calendarDate */
-        29
-      );
+      return 29;
     },
     maximumMonthLength: function maximumMonthLength() {
-      return (
-        /* calendarDate */
-        30
-      );
+      return 30;
     },
     getMonthList: function getMonthList(calendarYear, cache) {
       var _this4 = this;
