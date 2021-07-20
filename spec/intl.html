@@ -1595,7 +1595,9 @@
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Set _fields_ to ? ToObject(_fields_).
+            1. Set _fields_ to ? GetOptionsObject(_fields_).
             1. Set _additionalFields_ to ? ToObject(_additionalFields_).
+            1. Set _additionalFields_ to ? GetOptionsObject(_additionalFields_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return ? DefaultMergeFields(_fields_, _additionalFields_).
             1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
