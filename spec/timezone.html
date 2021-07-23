@@ -109,14 +109,21 @@
 
   <emu-clause id="sec-temporal-timezone-constructor">
     <h1>The Temporal.TimeZone Constructor</h1>
-    <p>
-      The Temporal.TimeZone constructor creates and initializes a new Temporal.TimeZone object when called as a constructor.
-    </p>
-    <p>
-      The Temporal.TimeZone constructor is designed to be subclassable.
-      It may be used as the value of an extends clause of a class definition.
-      Subclass constructors that intend to inherit the specified TimeZone behaviour must include a super call to the %Temporal.TimeZone% constructor to create and initialize subclass instances with the necessary internal slots.
-    </p>
+    <p>The Temporal.TimeZone constructor:</p>
+    <ul>
+      <li>
+        creates and initializes a new Temporal.TimeZone object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.TimeZone behaviour must
+        include a super call to the %Temporal.TimeZone% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
+    </ul>
 
     <emu-clause id="sec-temporal.timezone">
       <h1>Temporal.TimeZone ( _identifier_ )</h1>

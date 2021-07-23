@@ -11,8 +11,18 @@
     <h1>The Temporal.PlainDate Constructor</h1>
     <p>The Temporal.PlainDate constructor:</p>
     <ul>
-      <li>creates and initializes a new Temporal.PlainDate object when called as a constructor.</li>
-      <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the specified Temporal.PlainDate behaviour must include a super call to the %Temporal.PlainDate% constructor to create and initialize subclass instances with the necessary internal slots.</li>
+      <li>
+        creates and initializes a new Temporal.PlainDate object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.PlainDate behaviour must
+        include a super call to the %Temporal.PlainDate% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
     </ul>
 
     <emu-clause id="sec-temporal.plaindate">
