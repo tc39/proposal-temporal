@@ -14,17 +14,22 @@
 
   <emu-clause id="sec-temporal-duration-constructor">
     <h1>The Temporal.Duration Constructor</h1>
-    <p>
-      The Temporal.Duration constructor creates and initializes a new
-      Temporal.Duration object when called as a constructor.
-    </p>
-    <p>
-      The Temporal.Duration constructor is designed to be subclassable. It may
-      be used as the value of an extends clause of a class definition. Subclass
-      constructors that intend to inherit the specified Duration behaviour must
-      include a super call to the %Temporal.Duration% constructor to create and
-      initialize subclass instances with the necessary internal slots.
-    </p>
+    <p>The Temporal.Duration constructor:</p>
+    <ul>
+      <li>
+        creates and initializes a new Temporal.Duration object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.Duration behaviour must
+        include a super call to the %Temporal.Duration% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
+    </ul>
+
     <emu-clause id="sec-temporal.duration">
       <h1>Temporal.Duration ( [ _years_ [ , _months_ [ , _weeks_ [ , _days_ [ , _hours_ [ , _minutes_ [ , _seconds_ [ , _milliseconds_ [ , _microseconds_ [ , _nanoseconds_ ] ] ] ] ] ] ] ] ] ] )</h1>
       <p>

@@ -7,14 +7,21 @@
 
   <emu-clause id="sec-temporal-plaindatetime-constructor">
     <h1>The Temporal.PlainDateTime Constructor</h1>
-    <p>
-      The Temporal.PlainDateTime constructor creates and initializes a new Temporal.PlainDateTime object when called as a constructor.
-    </p>
-    <p>
-      The Temporal.PlainDateTime constructor is designed to be subclassable.
-      It may be used as the value of an extends clause of a class definition.
-      Subclass constructors that intend to inherit the specified DateTime behaviour must include a super call to the %Temporal.PlainDateTime% constructor to create and initialize subclass instances with the necessary internal slots.
-    </p>
+    <p>The Temporal.PlainDateTime constructor:</p>
+    <ul>
+      <li>
+        creates and initializes a new Temporal.PlainDateTime object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.PlainDateTime behaviour must
+        include a super call to the %Temporal.PlainDateTime% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
+    </ul>
 
     <emu-clause id="sec-temporal.plaindatetime">
       <h1>Temporal.PlainDateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _calendarLike_ ] ] ] ] ] ] ] )</h1>

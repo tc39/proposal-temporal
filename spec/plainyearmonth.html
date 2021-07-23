@@ -7,14 +7,21 @@
 
   <emu-clause id="sec-temporal-plainyearmonth-constructor">
     <h1>The Temporal.PlainYearMonth Constructor</h1>
-    <p>
-      The Temporal.PlainYearMonth constructor creates and initializes a new Temporal.PlainYearMonth object when called as a constructor.
-    </p>
-    <p>
-      The Temporal.PlainYearMonth constructor is designed to be subclassable.
-      It may be used as the value of an extends clause of a class definition.
-      Subclass constructors that intend to inherit the specified YearMonth behaviour must include a super call to the %Temporal.PlainYearMonth% constructor to create and initialize subclass instances with the necessary internal slots.
-    </p>
+    <p>The Temporal.PlainYearMonth constructor:</p>
+    <ul>
+      <li>
+        creates and initializes a new Temporal.PlainYearMonth object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.PlainYearMonth behaviour must
+        include a super call to the %Temporal.PlainYearMonth% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
+    </ul>
 
     <emu-clause id="sec-temporal.plainyearmonth">
       <h1>Temporal.PlainYearMonth ( _isoYear_, _isoMonth_ [ , _calendarLike_ [ , _referenceISODay_ ] ] )</h1>

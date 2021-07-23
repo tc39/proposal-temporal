@@ -9,14 +9,21 @@
 
   <emu-clause id="sec-temporal-zoneddatetime-constructor">
     <h1>The Temporal.ZonedDateTime Constructor</h1>
-    <p>
-      The Temporal.ZonedDateTime constructor creates and initializes a new Temporal.ZonedDateTime object when called as a constructor.
-    </p>
-    <p>
-      The Temporal.ZonedDateTime constructor is designed to be subclassable.
-      It may be used as the value of an extends clause of a class definition.
-      Subclass constructors that intend to inherit the specified ZonedDateTime behaviour must include a super call to the %Temporal.ZonedDateTime% constructor to create and initialize subclass instances with the necessary internal slots.
-    </p>
+    <p>The Temporal.ZonedDateTime constructor:</p>
+    <ul>
+      <li>
+        creates and initializes a new Temporal.ZonedDateTime object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.ZonedDateTime behaviour must
+        include a super call to the %Temporal.ZonedDateTime% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
+    </ul>
 
     <emu-clause id="sec-temporal.zoneddatetime">
       <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZoneLike_ [ , _calendarLike_ ] )</h1>

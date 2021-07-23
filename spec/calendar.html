@@ -623,9 +623,18 @@
     <h1>The Temporal.Calendar Constructor</h1>
     <p>The Temporal.Calendar constructor:</p>
     <ul>
-      <li>creates and initializes a new Temporal.Calendar object when called as a constructor.</li>
-      <li>is designed to be subclassable. It may be used as the value of an `extends` clause of a class definition. Subclass constructors that intend to inherit the specified Temporal.Calendar behaviour must include a super call to the %Temporal.Calendar% constructor to create and initialize subclass instances with the necessary internal slots.</li>
-      <li>has a *"length"* property whose value is 1.</li>
+      <li>
+        creates and initializes a new Temporal.Calendar object when called as a constructor.
+      </li>
+      <li>
+        is not intended to be called as a function and will throw an exception when called in that manner.
+      </li>
+      <li>
+        may be used as the value of an `extends` clause of a class definition.
+        Subclass constructors that intend to inherit the specified Temporal.Calendar behaviour must
+        include a super call to the %Temporal.Calendar% constructor to create and initialize subclass
+        instances with the necessary internal slots.
+      </li>
     </ul>
 
     <emu-clause id="sec-temporal.calendar">
