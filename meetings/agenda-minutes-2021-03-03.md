@@ -1,0 +1,146 @@
+# Mar 3, 2021
+
+## Attendees
+- Kevin Gibbons (KG)
+- Cam Tenny (CJT)
+- Jordan Harband (JHD)
+- Shane F. Carr (SFC)
+- Daniel Ehrenberg (DE)
+- Ujjwal Sharma (USA)
+- Philipp Dunkel (PDL)
+- Philip Chimento (PFC)
+- Leo Balter (LEO)
+- Richard Gibson (RGN)
+- Shu-yu Guo (SYG)
+
+## Agenda
+
+### Observable lookups of `from()` [#1293](https://github.com/tc39/proposal-temporal/issues/1293)
+- KG: I'd like to understand more about custom calendars and time zones. To what extent is it a polyfillability thing, where all humans agree on it universally, and to what extent is it an application-level thing like defining an America/Cupertino time zone?
+- PDL: The canonical example is Morocco where frequently DST is revoked on short notice due to Ramadan.
+- DE: There are also examples in the cookbook which may or may not be an abuse of the API, like leap seconds.
+- KG: My position is that cases like the Morocco one are not only valid, but it makes sense to want that behaviour to be applied globally. The second case is valid as such, but I don't think it should be forced on all code running on the page.
+- PFC: That coincides with what the champions have previously discussed.
+- CJT: I'd like to avoid using the language "universally agreed upon." Time zones are inherently political.
+- KG: That's a good point and makes me more suspicious of the first use case.
+- DE: Every single piece of data that's part of Intl is already tailorable by browsers. Browsers do tailor them, sometimes due to accuracy updates, and sometimes due to these geopolitical concerns. I think this is the same thing.
+- KG: The browser doesn't have a coordination problem with itself, but libraries may have a coordination problem with each other.
+- JHD: If the browser needs to change it, then it replaces the entire implementation. That is the same constraint that user code should have. There is no instance that I know of, of replacing something piecemeal. It's obvious we want users to specify custom calendars, but patching the builtins falls into the polyfilling bucket, where the ergonomics are irrelevant.
+- CJT: When you talk about user code, do you mean that it should be interoperable with multiple libraries?
+- JHD: For example React Dates uses Moment, you're expected to provide a Moment object. I would hope that they use Temporal as soon as it is Stage 3 and there is a sufficient polyfill.
+- RGN: Serialization and deserialization is the main thing here.
+- JHD: You should not expect to do `Temporal.TimeZone = ...` and expect it to work. You should replace everything.
+- KG: Here's where I want to distinguish the Morocco case from the leap seconds case.
+- PFC: I agree with KG that we don't want user code to do this in the non-polyfilling case, but there's no way to have one without the other.
+- RGN: If a global polyfill is easier than the avenue we provide, then user code will take the easier avenue.
+- JHD: Even though this is harder for me personally, it should not be a design goal to make polyfilling easier.
+- RGN: Agree, it probably should be harder, but that's not a design goal either.
+- KG: This doesn't seem different than modifying `Array.prototype` because (??)
+- JHD: We've been telling people for 20 years not to modify objects that they don't own. This is a step backwards.
+- PFC: Agree that people should not do this either in a non-polyfill case, but they will. This is a way to limit the damage they do, to one specific place.
+- PDL: (???)
+- SFC: Two main use cases: updating the data because the browser is out of date for some reason, and filling in gaps where the browser doesn't support something. One of the approaches that I had originally advocated for is an additional option to `Temporal.X.from()` where you pass a time zone resolver or calendar resolver. We ended up with this global polyfill approach, because 1) if people can do it they will do it so we should try to make it work, 2) if you're using a third-party library it's hard to make sure your call sites are all annotated with the option.
+- PDL: Not doing it globally would make it almost impossible to use any existing libraries with the annotation.
+- KG: That's the thing I most don't want.
+- SYG: So the main reason is to allow accommodating some geopolitical happening that's too recent. This doesn't require global functions.
+- PDL: With calendars, the whole semantics could be different. It's not just data.
+- SYG: So if I understand you, it's not just data that gives you the offset of the Morocco time zone. It's more complex logic. I can see why you might want a time zone that the engine doesn't give you. Why a calendar?
+- PDL: An example is sunset in the Hebrew calendar.
+- PFC: That might not be the best example because calendars aren't concerned with the time of day anyway. The example I've been using is correction days for Islamic calendars. We heard in interviews that depending on astronomical observations, it's common to provide a way to correct the date by one or two days in either direction.
+- SYG: Can we enumerate these so that we don't have to provide hooking points for arbitrary JS code? Maybe the answer is no, maybe the answer is yes and try to get it shipped by all engines.
+- USA: I think the status quo is that we do try to enumerate them, that's why Intl has several variations of the Islamic calendar. I don't know if it's acceptable to everyone.
+- PDL: That's the whole reason why we have pluggable TimeZone and Calendar objects, and these two extension points.
+- JHD: Another of the options you mentioned was a registry, which is not good, but how about a parameter to `from()` that lets you look up the object?
+- KG: That's the parameter SFC was talking about. It would be hard for libraries to have to thread that through everywhere.
+- PDL: The whole point is that the time zone object contains the information, otherwise we'd pass it as a string.
+- JHD: The trouble is that when you have a string, you don't have the object. The problem is that you have this global stateful registry.
+- (crosstalk)
+- KG: This is a thing that came up in the thread last night. It is possible for early running code to be defensive against late running code, because early running code can cache values and trust that they don't change. This breaks that.
+- PDL: You can still assign `TimeZone.from` to a variable and cache it.
+- KG: Still, you can't choose to use that version of `TimeZone.from` because Temporal will look it up on the global.
+- CJT: You can replace the global `TimeZone.from` with yours.
+- JHD: You can cache it, but it doesn't solve the problem.
+- PDL: If I say `originalTimeZoneFrom = Temporal.TimeZone.from`, and then `Temporal.TimeZone.from = originalTimeZoneFrom`, (???)
+- KG: If later-running code changes `Temporal.TimeZone.from`, then how do I avoid being subject to that?
+- CJT: Depends on what you want to polyfill.
+- KG: I don't want to polyfill anything. This is just normal defensive practice against other broken libraries.
+- CJT: This suggests that you either need to polyfill to replace time zones, or you can polyfill the whole thing to ensure that nobody after you replaces time zones.
+- KG: This defensive practice is a normal thing to do, and I don't think we should require polyfilling for that.
+- JHD: If something deletes all properties off of Temporal types, and deletes all properties of the Temporal object, and deletes Temporal from the global, then my cached values should still work.
+- RGN: I would like to dig in on global registry. We are talking about that, but in practice it would not be global. It would be tied to Temporal.
+- PDL: I can imagine something like `Temporal.TimeZone.register`.
+- KG: If it was accessed on Temporal.now then it could walk up from the `now` object and see which `Temporal` object it was called on.
+- SYG: How do the popular date/time libraries handle calendar and time zone extension? How does this work in Moment?
+- DE: In Moment, you can customize the time zone data in a build step of moment-timezone. Calendars are not supported.
+- SFC: Doing it as a build step avoids the need of doing it at runtime. That's not available to us as a builtin Temporal object.
+- KG: Back to talking about the registry, it seems like there is this fundamental tension between wanting early running code not to be affected by late running code, and coordination worries; vs. wanting the convenience of global definitions. It seems to me like the convenience thing isn't fundamental that it's a global thing. I wonder if it would be possible to make a design that would allow this convenience without affecting global state.
+- PDL: We've been racking our brains for a long time on this and didn't succeed. I sympathise with the goals you put forward, and if we chose the wrong lesser evil then that's what we're here to talk about.
+- KG: I believe this is the wrong lesser evil, indeed. I'm against global state more than anything else. Does this come up if you are passing around objects and not strings?
+- PFC: No.
+- PDL: Right, this is purely a problem in serialization and deserialization.
+- KG: The parameter that SFC was talking about earlier, the registry to use for that particular `from()` call. That's harder for the library to deal with. But the library doesn't need to keep track of that once it has the object.
+- PDL: It's for deserialization more than serialization.
+- KG: You can make sure that you do all deserialization outside of the third party library.
+- PDL: Most libraries are not written by people who are aware of these issues, so at that point you can't use most third party libraries. If I'm writing a database library and I'm not a Temporal expert, then I just do `Temporal.X.from()` and don't provide a hook.
+- KG: You can use whatever libraries you want, the problem is only the ones that specifically do deserialization.
+- SFC: I find KG's argument about protecting early running code to be compelling. I also find PDL's argument about making it work all the way through the stack compelling. I could be convinced that it's a bug in a library if it does deserialization and doesn't provide this hook.
+- KG: I definitely agree with PDL that this is unergonomic. I can see this is painful, but I prefer that according to my values.
+- JHD: This is the same pain as the JSON reviver function.
+- SYG: Would it be possible to alleviate the pain of the extra argument by wrapping it and polyfilling that onto the global?
+- PFC: There are many more entry points into Temporal where strings are deserialized.
+- SYG: I asked a question on the issue tracker about this, but deserialization happens in more places than `from()`?
+- PDL: Yes.
+- SYG: That makes is much harder to separate out the deserialization interface if deserialization is built in for ergonomics.
+- RGN: My personal assessment over the course of this conversation has actually inclined me towards a registry. It's a thing that early running code can store a reference to, or lock down, or whatever.
+- KG: That only works if you can avoid using a global registry. Do you mean a registry like SFC's parameter or a globally available object?
+- RGN: The latter.
+- KG: How does early running code avoid being affected that way?
+- RGN: By controlling the interface with which late running code can interact with the registry.
+- KG: I don't necessarily want to deny it to late running code.
+- PDL: A compromise might be to clone the registry, and allow early running code to pass in that snapshot to any later deserializations.
+- RGN: It's the ability to capture it.
+- KG: Not only the ability to capture it, but the ability to prevent early running code from being affected by it.
+- RGN: If it is possible to interact with the registry and take a snapshot, then it's possible to make sure that you use your snapshot.
+- PDL: Theoretically what we have now allows you to do that. You save the original `TimeZone.from` and then temporarily replace it back on the global whenever you need to do a deserialization.
+- KG: Later running code could have made `TimeZone.from` nonwritable. You can't rely on that.
+- PDL: Maybe we should prevent that.
+- KG: That won't get through committee.
+- RGN: You can capture a reference to the builtin `Temporal.Calendar` and `Temporal.Calendar.from`, you can replace `from()` with a version...
+- SYG: It could be an accessor that doesn't allow certain configurations.
+- RGN: You're right.
+- KG: My original problem with global state is the coordination problem between different libraries that modify it, and that's still a problem with a registry.
+- SFC: If you have a local registry that you pass in as an argument then that solves the ordering problem. I've never been entirely happy with the way that `from()` is overridden currently because it requires the overrider to implement a lot of logic including parsing the ID out of an ISO string. I hope we're all on the same page that this is not something that all code needs to do and so ergonomics isn't the first concern here.
+- DE: What are the next steps now?
+- RGN: One useful thing that came out of this is the context in which solutions can be evaluated (e.g. early running code locking it down, or not locking it down but wanting to be defensive), and coordination between libraries in the same realm.
+- DE: There are two solutions, one is the status quo and the other is always using the builtin `from()`.
+- PFC: Always using the builtin `from()` is a fallback that satisfies all the absolutes. I don't like it but if nothing else then we can go forward with that.
+- KG: I'd like the local registry argument to be considered as a solution. 
+- PDL: It kills the ergonomics, but fulfills the other constraints.
+- JHD: Does there need to be a way to snapshot the builtin registry?
+- PDL: No, you get the builtin one if your local registry doesn't have the ID.
+- DE: Can we go to stage 3 in the first place with always using the builtin, then propose a local registry for a Temporal V2?
+- SFC: Postponing the problem is analogous to what Intl has done with a similar problem, where the only solution is currently to replace Intl. We might want to consider an async registry for lazy loading of time zone data.
+- PFC: I'd rather not postpone the problem. My reason for wanting this in the first place is that people will do it anyway and if there's no easy way then they'll make a mess. If we postpone to a V2 then the messes will live on in the wild.
+- DE: I think it's more likely that people will use a hacked up version of the polyfill.
+- SYG: If the lesson from the Intl side is that people have to replace Intl, how is that received? That experience suggests that we might not need to customize.
+- KG: I don't see any problems with a registry argument. Other than maybe introducing delay.
+- SFC: Do we think it might be useful or valuable for a registry to be async?
+- DE: That would infect everything else.
+- JHD: I think it would be harmful because it would force a bunch of other APIs that people don't expect to be async.
+- SFC: My question is would the use cases justify this being an async argument?
+- JHD: If we want that to ever be possible, then the entire deserialization API has to always be async.
+- SFC: That's not my question. The mechanism is debatable, but I want to know if the use case is justified.
+- JHD: An asynchronous `from()` could take an asynchronous registry function, but that doesn't preclude a synchronous `from()` from taking a synchronous registry function.
+- SFC: Agreed. I wanted to illustrate that maybe this is a design space that we need to work on more instead of jumping in with a registry function in V2.
+- JHD: Agreed.
+- DE: Agreed.
+- SYG: My concrete recommendation for the champion group is to have a published draft that does no dynamic lookups, without the registry argument, and then have a draft that adds the registry argument with `<ins>` tags.
+- KG: If you think it's worth trying to get it into V1.
+- SYG: We can discuss more at plenary, but let's start with the minimum and review the deltas as they come.
+- USA: The idea is to move ahead to Stage 3 with or without the delta?
+- SYG: We as reviewers should review the uncontroversial core to start with, and then we can discuss the delta as well.
+- KG: Another concrete recommendation is to ask for a larger timebox. This is currently on the agenda with a 45 minute timebox. I'd happily spend all day if needed to advance the proposal.
+- SFC: Previous Temporal presentations have all run under time.
+- KG: I think people have been happy with the high level stuff but the low level stuff such as this might require a lot of discussion.
+- DE: Could we ask for 1 hour on each day?
+- SFC: That would be good if people wanted to review something in between.
