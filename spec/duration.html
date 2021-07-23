@@ -1040,7 +1040,7 @@
           1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
           1. Let _untilResult_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
-          1. Let _oneYearMonths_ be ? Get(_untilResult_, *"months"*).
+          1. Let _oneYearMonths_ be _untilResult_.[[Months]].
           1. Repeat, while abs(_months_) ≥ abs(_oneYearMonths_),
             1. Set _months_ to _months_ − _oneYearMonths_.
             1. Set _years_ to _years_ + _sign_.
@@ -1050,7 +1050,7 @@
             1. Set _untilOptions_ to ! OrdinaryObjectCreate(*null*).
             1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Set _untilResult_ to ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
-            1. Set _oneYearMonths_ to ? Get(_untilResult_, *"months"*).
+            1. Set _oneYearMonths_ to _untilResult_.[[Months]].
         1. Else if _largestUnit_ is *"month"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
