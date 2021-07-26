@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temporal documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Instant,
+            Temporal.Calendar,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
+            Temporal.Duration,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
+            Temporal.TimeZone,
+            Temporal.PlainYearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
+      }
+      pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
+      pre code { line-height: 1.4; }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h3:hover .heading-link { opacity: 1; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
+      <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
+    </div>
+<h1 id="temporal">Temporal</h1>
+<details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#イントロダクション">イントロダクション</a>
+</li>
+<li><a href="#cookbook">Cookbook</a>
+</li>
+<li><a href="#api-ドキュメント">API ドキュメント</a>
+<ul>
+<li><a href="#Temporal-now">Temporal.now</a>
+</li>
+<li><a href="#Temporal-Instant">Temporal.Instant</a>
+</li>
+<li><a href="#Temporal-ZonedDateTime">Temporal.ZonedDateTime</a>
+</li>
+<li><a href="#Temporal-PlainDate">Temporal.PlainDate</a>
+</li>
+<li><a href="#Temporal-PlainTime">Temporal.PlainTime</a>
+</li>
+<li><a href="#Temporal-PlainDateTime">Temporal.PlainDateTime</a>
+</li>
+<li><a href="#Temporal-PlainYearMonth">Temporal.PlainYearMonth</a>
+</li>
+<li><a href="#Temporal-PlainMonthDay">Temporal.PlainMonthDay</a>
+</li>
+<li><a href="#Temporal-Duration">Temporal.Duration</a>
+<ul>
+<li><a href="#balancing">Balancing</a>
+</li>
+</ul>
+</li>
+<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
+</li>
+<li><a href="#Temporal-Calendar">Temporal.Calendar</a>
+</li>
+</ul>
+</li>
+<li><a href="#object-の関係図">Object の関係図</a>
+</li>
+<li><a href="#文字列による永続性">文字列による永続性</a>
+</li>
+<li><a href="#その他のドキュメント">その他のドキュメント</a>
+<ul>
+<li><a href="#-------">キーコンセプト</a>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+
+<h2 id="イントロダクション">イントロダクション</h2>
+<p>Date は ECMAScript において長年の悩みの種でした。これは Temporal のプロポーザル（草案）です。Temporal はグローバルオブジェクトであり、（Math のように）トップレベルの名前空間として機能します。Temporal はモダンな date/time API を ECMAScript にもたらします。Date の既存の問題点や Temporal を策定することへのモチベーションに関しては<a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">Fixing JavaScript Date</a>を参照してください。</p>
+<p>Temporal は既存の Date の問題を次の方法で解決します。</p>
+<ul>
+<li>日付と時刻を操作する簡単で使いやすい API を提供します</li>
+<li>DST を考慮した演算と、すべてのタイムゾーンをサポートします</li>
+<li>オブジェクトは特定の日時や時刻を明確に表します</li>
+<li>厳格に定義された文字列をパースします</li>
+<li>グレゴリオ暦以外のカレンダーをサポートします</li>
+</ul>
+<p>Temporal は、日付のみ、時間のみ、およびその他の限定的なユースケースのための個別のクラスを提供します。これにより、コードの可読性が向上し、タイムゾーンが不明な時間に対して間違ったオフセット情報を与えるといったバグを防ぎます。</p>
+<h2 id="cookbook">Cookbook</h2>
+<p><a href="../cookbook.html">Cookbook</a>は、Temporal に入門したり、その仕組みについて理解したりするために役立ちます。</p>
+<h2 id="api-ドキュメント">API ドキュメント</h2>
+<p>Temporal の API では、タイムゾーンが関連付けられていない日付を表すオブジェクトは、「Plain」から始まる名前を持ちます。（例：<code>Temporal.PlainDate</code>、<code>Temporal.PlainTime</code>、<code>Temporal.PlainDateTime</code>）。このようなオブジェクトと exact time（カレンダーや場所によらない特定の時点での時刻）の変換は、タイムゾーンとサマータイムのために曖昧になることがあります。そして、Temporal の API は開発者にこの曖昧さを解決する方法を提供します。</p>
+<p>いくつかの重要なコンセプトについては次のドキュメントを参照してください：<a href="./ambiguity.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a></p>
+<h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
+<li><code>Temporal.now.instant()</code> - Unix epoch からの exact time を得る</li>
+<li><code>Temporal.now.timeZone()</code> - システムのタイムゾーンを得る</li>
+<li><code>Temporal.now.zonedDateTime(calendar)</code> - システムタイムゾーンと特定のカレンダーシステムから現在の wall-clock time と日付を得る</li>
+<li><code>Temporal.now.zonedDateTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time と日付を得る</li>
+<li><code>Temporal.now.plainDate(calendar)</code> - システムタイムゾーンと特定のカレンダーから日付を得る</li>
+<li><code>Temporal.now.plainDateISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから日付を得る</li>
+<li><code>Temporal.now.plainTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time を得る</li>
+<li><code>Temporal.now.plainDateTime(calendar)</code> - システムタイムゾーンと ISO8601 のカレンダーから日付/時刻を得る。ただし、タイムゾーンの情報を持っていないオブジェクトを返すため、ここから他の時刻を導出するために使用しないでください。（例：12 時間後を求める（サマータイムを考慮しなくてはならないが、タイムゾーンの情報がないので曖昧な結果になる）</li>
+<li><code>Temporal.now.plainDateTimeISO()</code> - 上記と同じだが ISO8601 のカレンダーを使用する</li>
+</ul>
+<pre class="language-js"><code class="language-js">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Initialization complete'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 出力例:</span>
+<span class="token comment">// Initialization complete 2021-01-13T20:57:01.500944804Z</span></code></pre><p>より詳しくは<a href="../now.html">Temporal.now Documentation</a>を参照してください。</p>
+<h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p><code>Temporal.Instant</code>は、カレンダーや場所によらない特定の時点での時刻（<strong>exact time</strong>と呼ばれます）を表します（例：July 20, 1969, at 20:17 UTC）。人間にとって読みやすい時刻表現を得るには<code>Temporal.ZonedDateTime</code>や<code>Temporal.PlainDateTime</code>と、<code>Temporal.TimeZone</code>や<code>Temporal.Calendar</code>を組み合わせて使用してください。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-20T20:17Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '1969-07-20T20:17:00Z'</span>
+instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => -14182980000</span></code></pre><p>より詳しくは<a href="../instant.html">Temporal.Instant Documentation</a>を参照してください。</p>
+<h3 id="Temporal-ZonedDateTime"><a class="heading-link" href="#Temporal-ZonedDateTime"></a><strong>Temporal.ZonedDateTime</strong></h3><p><code>Temporal.ZonedDateTime</code>は、特定のタイムゾーンやカレンダーにおける date/time オブジェクトであり、地球上の特定の地域から見た日時を表します。例：1995 年 12 月 7 日午前 3 時 24 分（太平洋標準時、グレゴリオ暦）。このタイプは、タイムゾーンが必要な場合、サマータイムを考慮した安全な計算を行いたい場合、RFC 5545（iCalendar）との相互運用が必要な場合といったユースケースに最適です。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> zonedDateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  timeZone<span class="token operator">:</span> <span class="token string">'America/Los_Angeles'</span><span class="token punctuation">,</span>
+  year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span>
+  millisecond<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  microsecond<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+  nanosecond<span class="token operator">:</span> <span class="token number">500</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]</span></code></pre><p>これは Tempral において最も多くの情報を持つタイプであり、<code>Temporal.TimeZone</code>、<code>Temporal.Instant</code>、<code>Temporal.PlainDateTime</code>（これには <code>Temporal.Calendar</code> が含まれます）の組み合わせとしてみなせます。</p>
+<p>より詳しくは<a href="../zoneddatetime.html">Temporal.ZonedDateTime Documentation</a>を参照してください。</p>
+<h3 id="Temporal-PlainDate"><a class="heading-link" href="#Temporal-PlainDate"></a><strong>Temporal.PlainDate</strong></h3><p>Temporal.PlainDate は、特定の時間やタイムゾーンに紐付かないカレンダー上の日付を表します。例：2006 年 8 月 24 日。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2006</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24</span>
+date<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2006</span>
+date<span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span>
+date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '2006-08-24'</span></code></pre><p>これを、<code>Temporal.PlainYearMonth</code>や<code>Temporal.PlainMonthDay</code>といった部分的な日付データへ、更に変換することもできます。</p>
+<p>より詳しくは<a href="../plaindate.html">Temporal.PlainDate Documentation</a>を参照してください。</p>
+<h3 id="Temporal-PlainTime"><a class="heading-link" href="#Temporal-PlainTime"></a><strong>Temporal.PlainTime</strong></h3><p><code>Temporal.PlainTime</code>は、特定の日付やタイムゾーンに紐付かない wall-clock（訳注：exact time とは対象的に、タイムゾーンによるオフセットが加味された時刻）を表します。例：7 時 38 分。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  hour<span class="token operator">:</span> <span class="token number">19</span><span class="token punctuation">,</span>
+  minute<span class="token operator">:</span> <span class="token number">39</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token number">9</span><span class="token punctuation">,</span>
+  millisecond<span class="token operator">:</span> <span class="token number">68</span><span class="token punctuation">,</span>
+  microsecond<span class="token operator">:</span> <span class="token number">346</span><span class="token punctuation">,</span>
+  nanosecond<span class="token operator">:</span> <span class="token number">205</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 19:39:09.068346205</span>
+
+time<span class="token punctuation">.</span>second<span class="token punctuation">;</span> <span class="token comment">// => 9</span>
+time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '19:39:09.068346205'</span></code></pre><p>より詳しくは<a href="../plaintime.html">Temporal.PlainTime Documentation</a>を参照してください。</p>
+<h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p><code>Temporal.PlainDateTime</code>は、カレンダー上の日付とタイムゾーンの情報を持たない wall-clock を表します。例：1995 年 12 月 7 日午後 3 時（グレゴリオ暦）。</p>
+<p>これは<code>Temporal.TimeZone</code>によって<code>Temporal.ZonedDateTime</code>に変換可能です。タイムゾーンを必要とする場合や、特に他の値との演算を行いたい場合は、代わりに<code>Temporal.ZonedDateTime</code>を用いることを検討してください。<code>Temporal.ZonedDateTime</code>を用いることで、サマータイムを自動的に考慮した日付の演算を行えるようになります。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  year<span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
+  month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+  day<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span>
+  hour<span class="token operator">:</span> <span class="token number">15</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T15:00:00</span>
+<span class="token keyword">const</span> dateTime1 <span class="token operator">=</span> dateTime<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  minute<span class="token operator">:</span> <span class="token number">17</span><span class="token punctuation">,</span>
+  second<span class="token operator">:</span> <span class="token number">19</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T15:17:19</span></code></pre><p>より詳しくは<a href="../plaindatetime.html">Temporal.PlainDateTime Documentation</a>を参照してください。</p>
+<h3 id="Temporal-PlainYearMonth"><a class="heading-link" href="#Temporal-PlainYearMonth"></a><strong>Temporal.PlainYearMonth</strong></h3><p><code>Temporal.PlainYearMonth</code>は、「日」を除いた日付を表します。これは、例えば「2020 年 10 月のミーティング」といった情報を表すのに便利です。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> yearMonth <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">10</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-10</span>
+yearMonth<span class="token punctuation">.</span>daysInMonth<span class="token punctuation">;</span> <span class="token comment">// => 31</span>
+yearMonth<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 366</span></code></pre><p>より詳しくは<a href="../plainyearmonth.html">Temporal.PlainYearMonth Documentation</a>を参照してください。</p>
+<h3 id="Temporal-PlainMonthDay"><a class="heading-link" href="#Temporal-PlainMonthDay"></a><strong>Temporal.PlainMonthDay</strong></h3><p><code>Temporal.PlainMonthDay</code>は、「年」を除いた日付を表します。これは、例えば「フランス革命は 7 月 14 日」といったものを表すのに便利です。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> monthDay <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> month<span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">14</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 07-14</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> monthDay<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">2030</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2030-07-14</span>
+date<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">;</span> <span class="token comment">// => 7</span></code></pre><p>より詳しくは<a href="../plainmonthday.html">Temporal.PlainMonthDay Documentation</a>を参照してください。</p>
+<h3 id="Temporal-Duration"><a class="heading-link" href="#Temporal-Duration"></a><strong>Temporal.Duration</strong></h3><p><code>Temporal.Duration</code>は 5 分や 30 秒といった時間の長さを表します。これは日付の演算処理や<code>Temporal</code>オブジェクト間の差分を表すために使われます。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> duration <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  hours<span class="token operator">:</span> <span class="token number">130</span><span class="token punctuation">,</span>
+  minutes<span class="token operator">:</span> <span class="token number">20</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+duration<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> unit<span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span></code></pre><p>より詳しくは<a href="../duration.html">Temporal.Duration Documentation</a>を参照してください。</p>
+<h4 id="balancing">Balancing</h4>
+<p>他の<code>Temporal</code>オブジェクトと異なり、<code>Temporal.Duration</code>の単位は自然に繰り上げされません。「1 時間 30 分ではなく、『90 分』を表したい」といった場面があるかもしれないからです。</p>
+<p>より詳しくは<a href="./balancing.html">Duration のバランシング</a>を参照してください。</p>
+<h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p><code>Temporal.TimeZone</code>は IANA タイムゾーンや特定の UCT オフセット、または UTC そのものを表します。タイムゾーンは、UTC の日時をローカルの日時に変換します。そのため、<code>Temporal.TimeZone</code>によって<code>Temporal.Instant</code>と<code>Temporal.PlainDateTime</code>を変換したり、特定の<code>Temporal.Instant</code>における UTC オフセットを取得したりできます。</p>
+<p>また、独自のタイムゾーンを実装することも可能です。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Africa/Cairo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeZone<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T22:00:00Z</span>
+timeZone<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-01-01T02:00:00</span>
+timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
+timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>より詳しくは<a href="../timezone.html">Temporal.TimeZone Documentation</a>を参照してください。また、これらのコンセプトを説明した<a href="./ambiguity.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a>もご覧ください。</p>
+<h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p><code>Temporal.Calendar</code>はカレンダーシステムを表します。ISO 8601 のカレンダーを使用するアプリケーションが多いと思いますが、国際化や地域化のために他のカレンダーシステムを利用することもできます。</p>
+<p>日付には、カレンダーシステム関連の演算を行うために、<code>Temporal.Calendar</code>オブジェクトが関連付けられています。内部的には、これらの日付の演算は、このカレンダーオブジェクトのメソッドによって実行されます。</p>
+<p>また、独自のカレンダーシステムを実装することも可能です。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> date <span class="token operator">=</span> cal<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token punctuation">{</span> year<span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span> month<span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> day<span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+date<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span>
+date<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 365</span></code></pre><p>より詳しくは<a href="../calendar.html">Temporal.Calendar Documentation</a>を参照してください。</p>
+<h2 id="object-の関係図">Object の関係図</h2>
+<img src="../object-model.svg">
+
+<h2 id="文字列による永続性">文字列による永続性</h2>
+<p>すべての<code>Temporal</code>タイプは、永続性や相互運用性のために文字列による表現を持っています。各タイプと文字列表現の対応を以下に示します。Temporal で使用されている ISO 8601 や RFC 3339 に関する、より詳細な情報と標準化に向けた取り組みに関しては<a href="./iso-string-ext.html">ECMAScript 拡張の ISO-8601 と RFC 3339</a>を参照してください。</p>
+<img src="../persistence-model.svg">
+
+<h2 id="その他のドキュメント">その他のドキュメント</h2>
+<h3 id="-------"><a class="heading-link" href="#-------"></a><strong>キーコンセプト</strong></h3><ul>
+<li><a href="./ambiguity.html">曖昧性</a> &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響</li>
+<li><a href="./balancing.html">バランシング</a> &mdash; <code>Temporal.Duration</code>の単位が、いつ繰り上げされる（またはされない）のかについての説明</li>
+<li><a href="./iso-string-ext.html">ISO 文字列の拡張</a> &mdash; <code>Temporal</code>で使用されている ISO 8601 および RFC 3339 の拡張に関する議論、IETF と連携した標準化への取り組み</li>
+<li><a href="./calendar-review.html">なぜ Temporal インスタンスはカレンダーの情報を持っているのか？</a> &mdash; <code>Temporal.PlainDate</code>や<code>Temporal.PlainDate</code>がカレンダーシステムを保持している理由と背景</li>
+</ul>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>
