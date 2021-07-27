@@ -13454,6 +13454,12 @@
     zonedDateTime: zonedDateTime,
     zonedDateTimeISO: zonedDateTimeISO
   };
+  Object.defineProperty(Now, Symbol.toStringTag, {
+    value: 'Temporal.Now',
+    writable: false,
+    enumerable: false,
+    configurable: true
+  });
 
   var ObjectAssign = Object.assign;
   var DISALLOWED_UNITS$1 = ['year', 'month', 'week', 'day'];
@@ -15237,6 +15243,12 @@
     configurable: true
   });
   copy(globalThis.Temporal, Temporal);
+  Object.defineProperty(globalThis.Temporal, Symbol.toStringTag, {
+    value: 'Temporal',
+    writable: false,
+    enumerable: false,
+    configurable: true
+  });
   copy(globalThis.Temporal.Now, Now);
   copy(globalThis.Intl, Intl$1);
   Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
