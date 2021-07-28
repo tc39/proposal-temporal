@@ -2253,6 +2253,8 @@
   	return $apply(F, V, argumentsList);
   };
 
+  var Call$1 = Call;
+
   // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
 
   var IsPropertyKey$3 = function IsPropertyKey(argument) {
@@ -2433,6 +2435,8 @@
   	return func;
   };
 
+  var GetMethod$2 = GetMethod$1;
+
   var GetIntrinsic$8 = getIntrinsic;
 
   var $abs$1 = GetIntrinsic$8('%Math.abs%');
@@ -2476,6 +2480,8 @@
   	var absValue = abs$2(argument);
   	return floor$2(absValue) === absValue;
   };
+
+  var IsInteger$1 = IsInteger;
 
   var GetIntrinsic$7 = getIntrinsic;
 
@@ -2547,14 +2553,14 @@
 
   // http://262.ecma-international.org/5.1/#sec-9.1
 
-  var ToPrimitive$3 = es5;
+  var ToPrimitive$4 = es5;
 
-  var ToPrimitive$2 = ToPrimitive$3;
+  var ToPrimitive$3 = ToPrimitive$4;
 
   // http://262.ecma-international.org/5.1/#sec-9.3
 
-  var ToNumber$3 = function ToNumber(value) {
-  	var prim = ToPrimitive$2(value, Number);
+  var ToNumber$4 = function ToNumber(value) {
+  	var prim = ToPrimitive$3(value, Number);
   	if (typeof prim !== 'string') {
   		return +prim; // eslint-disable-line no-implicit-coercion
   	}
@@ -2574,7 +2580,7 @@
 
   var abs = abs$1;
   var floor = floor$1;
-  var ToNumber$2 = ToNumber$3;
+  var ToNumber$3 = ToNumber$4;
 
   var $isNaN = _isNaN;
   var $isFinite = _isFinite;
@@ -2582,8 +2588,8 @@
 
   // http://262.ecma-international.org/5.1/#sec-9.4
 
-  var ToInteger$2 = function ToInteger(value) {
-  	var number = ToNumber$2(value);
+  var ToInteger$3 = function ToInteger(value) {
+  	var number = ToNumber$3(value);
   	if ($isNaN(number)) { return 0; }
   	if (number === 0 || !$isFinite(number)) { return number; }
   	return $sign(number) * floor(abs(number));
@@ -2745,6 +2751,8 @@
   	return toPrimitive(input);
   };
 
+  var ToPrimitive$2 = ToPrimitive$1;
+
   var GetIntrinsic$5 = getIntrinsic;
 
   var $TypeError$2 = GetIntrinsic$5('%TypeError%');
@@ -2806,7 +2814,9 @@
   	return $Number$1(value);
   };
 
-  var ES5ToInteger = ToInteger$2;
+  var ToNumber$2 = ToNumber$1;
+
+  var ES5ToInteger = ToInteger$3;
 
   var ToNumber = ToNumber$1;
 
@@ -2819,6 +2829,8 @@
   	}
   	return number === 0 ? 0 : number;
   };
+
+  var ToInteger$2 = ToInteger$1;
 
   var GetIntrinsic$4 = getIntrinsic;
 
@@ -2838,6 +2850,8 @@
   	return len;
   };
 
+  var ToLength$1 = ToLength;
+
   var GetIntrinsic$3 = getIntrinsic;
 
   var $String = GetIntrinsic$3('%String%');
@@ -2852,9 +2866,11 @@
   	return $String(argument);
   };
 
+  var ToString$1 = ToString;
+
   // https://262.ecma-international.org/5.1/#sec-8
 
-  var Type$2 = function Type(x) {
+  var Type$3 = function Type(x) {
   	if (x === null) {
   		return 'Null';
   	}
@@ -2875,7 +2891,7 @@
   	}
   };
 
-  var ES5Type = Type$2;
+  var ES5Type = Type$3;
 
   // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
 
@@ -2888,6 +2904,8 @@
   	}
   	return ES5Type(x);
   };
+
+  var Type$2 = Type$1;
 
   var GetIntrinsic$2 = getIntrinsic;
 
@@ -2910,9 +2928,13 @@
   	return has(O, P);
   };
 
+  var HasOwnProperty$1 = HasOwnProperty;
+
   // TODO: remove, semver-major
 
   var GetIntrinsic$1 = getIntrinsic;
+
+  var ESGetIntrinsic = GetIntrinsic$1;
 
   var INTRINSICS = {};
 
@@ -2995,7 +3017,7 @@
     INTRINSICS[key] = value;
   }
   function GetIntrinsic(intrinsic) {
-    return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : GetIntrinsic$1(intrinsic);
+    return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ESGetIntrinsic(intrinsic);
   }
 
   // Instant
@@ -5920,7 +5942,7 @@
   var BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
   var ToPositiveInteger = function ToPositiveInteger(value, property) {
-    value = ToInteger$1(value);
+    value = ToInteger$2(value);
 
     if (value < 1) {
       if (property !== undefined) {
@@ -5933,20 +5955,20 @@
     return value;
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToInteger$1], ['month', ToPositiveInteger], ['monthCode', ToString], ['day', ToPositiveInteger], ['hour', ToInteger$1], ['minute', ToInteger$1], ['second', ToInteger$1], ['millisecond', ToInteger$1], ['microsecond', ToInteger$1], ['nanosecond', ToInteger$1], ['years', ToInteger$1], ['months', ToInteger$1], ['weeks', ToInteger$1], ['days', ToInteger$1], ['hours', ToInteger$1], ['minutes', ToInteger$1], ['seconds', ToInteger$1], ['milliseconds', ToInteger$1], ['microseconds', ToInteger$1], ['nanoseconds', ToInteger$1], ['era', ToString], ['eraYear', ToInteger$1], ['offset', ToString]]);
+  var BUILTIN_CASTS = new Map([['year', ToInteger$2], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToInteger$2], ['minute', ToInteger$2], ['second', ToInteger$2], ['millisecond', ToInteger$2], ['microsecond', ToInteger$2], ['nanosecond', ToInteger$2], ['years', ToInteger$2], ['months', ToInteger$2], ['weeks', ToInteger$2], ['days', ToInteger$2], ['hours', ToInteger$2], ['minutes', ToInteger$2], ['seconds', ToInteger$2], ['milliseconds', ToInteger$2], ['microseconds', ToInteger$2], ['nanoseconds', ToInteger$2], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
   var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
   var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
   var ES2020 = {
-    Call: Call,
-    GetMethod: GetMethod$1,
-    HasOwnProperty: HasOwnProperty,
-    IsInteger: IsInteger,
-    ToInteger: ToInteger$1,
-    ToLength: ToLength,
-    ToNumber: ToNumber$1,
-    ToPrimitive: ToPrimitive$1,
-    ToString: ToString,
-    Type: Type$1
+    Call: Call$1,
+    GetMethod: GetMethod$2,
+    HasOwnProperty: HasOwnProperty$1,
+    IsInteger: IsInteger$1,
+    ToInteger: ToInteger$2,
+    ToLength: ToLength$1,
+    ToNumber: ToNumber$2,
+    ToPrimitive: ToPrimitive$2,
+    ToString: ToString$1,
+    Type: Type$2
   };
   var IntlDateTimeFormatEnUsCache = new Map();
 
