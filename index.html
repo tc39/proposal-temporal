@@ -2463,7 +2463,7 @@ li.menu-search-result-term:before {
         The <code>plainDate</code> method takes two arguments, <var>calendar</var> and <var>temporalTimeZoneLike</var>.
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_96"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return ?&nbsp;<emu-xref aoid="CreateTemporalDate" id="_ref_97"><a href="#sec-temporal-createtemporaldate">CreateTemporalDate</a></emu-xref>(<var>dateTime</var>.[[ISOYear]], <var>dateTime</var>.[[ISOMonth]], <var>dateTime</var>.[[ISODay]], <var>dateTime</var>.[[Calendar]]).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_96"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return !&nbsp;<emu-xref aoid="CreateTemporalDate" id="_ref_97"><a href="#sec-temporal-createtemporaldate">CreateTemporalDate</a></emu-xref>(<var>dateTime</var>.[[ISOYear]], <var>dateTime</var>.[[ISOMonth]], <var>dateTime</var>.[[ISODay]], <var>dateTime</var>.[[Calendar]]).</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.plaindateiso">
@@ -2472,7 +2472,7 @@ li.menu-search-result-term:before {
         The <code>plainDateISO</code> method takes one argument <var>temporalTimeZoneLike</var>.
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>calendar</var> be !&nbsp;<emu-xref aoid="GetISO8601Calendar" id="_ref_98"><a href="#sec-temporal-getiso8601calendar">GetISO8601Calendar</a></emu-xref>().</li><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_99"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return ?&nbsp;<emu-xref aoid="CreateTemporalDate" id="_ref_100"><a href="#sec-temporal-createtemporaldate">CreateTemporalDate</a></emu-xref>(<var>dateTime</var>.[[ISOYear]], <var>dateTime</var>.[[ISOMonth]], <var>dateTime</var>.[[ISODay]], <var>dateTime</var>.[[Calendar]]).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>calendar</var> be !&nbsp;<emu-xref aoid="GetISO8601Calendar" id="_ref_98"><a href="#sec-temporal-getiso8601calendar">GetISO8601Calendar</a></emu-xref>().</li><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_99"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return !&nbsp;<emu-xref aoid="CreateTemporalDate" id="_ref_100"><a href="#sec-temporal-createtemporaldate">CreateTemporalDate</a></emu-xref>(<var>dateTime</var>.[[ISOYear]], <var>dateTime</var>.[[ISOMonth]], <var>dateTime</var>.[[ISODay]], <var>dateTime</var>.[[Calendar]]).</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.plaintimeiso">
@@ -2481,7 +2481,7 @@ li.menu-search-result-term:before {
         The <code>plainTimeISO</code> method takes one argument <var>temporalTimeZoneLike</var>.
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>calendar</var> be !&nbsp;<emu-xref aoid="GetISO8601Calendar" id="_ref_101"><a href="#sec-temporal-getiso8601calendar">GetISO8601Calendar</a></emu-xref>().</li><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_102"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return ?&nbsp;<emu-xref aoid="CreateTemporalTime" id="_ref_103"><a href="#sec-temporal-createtemporaltime">CreateTemporalTime</a></emu-xref>(<var>dateTime</var>.[[ISOHour]], <var>dateTime</var>.[[ISOMinute]], <var>dateTime</var>.[[ISOSecond]], <var>dateTime</var>.[[ISOMillisecond]], <var>dateTime</var>.[[ISOMicrosecond]], <var>dateTime</var>.[[ISONanosecond]]).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>calendar</var> be !&nbsp;<emu-xref aoid="GetISO8601Calendar" id="_ref_101"><a href="#sec-temporal-getiso8601calendar">GetISO8601Calendar</a></emu-xref>().</li><li>Let <var>dateTime</var> be ?&nbsp;<emu-xref aoid="SystemDateTime" id="_ref_102"><a href="#sec-temporal-systemdatetime">SystemDateTime</a></emu-xref>(<var>temporalTimeZoneLike</var>, <var>calendar</var>).</li><li>Return !&nbsp;<emu-xref aoid="CreateTemporalTime" id="_ref_103"><a href="#sec-temporal-createtemporaltime">CreateTemporalTime</a></emu-xref>(<var>dateTime</var>.[[ISOHour]], <var>dateTime</var>.[[ISOMinute]], <var>dateTime</var>.[[ISOSecond]], <var>dateTime</var>.[[ISOMillisecond]], <var>dateTime</var>.[[ISOMicrosecond]], <var>dateTime</var>.[[ISONanosecond]]).</li></ol></emu-alg>
     </emu-clause>
   </emu-clause>
 
