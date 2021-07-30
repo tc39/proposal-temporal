@@ -11,47 +11,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainYearMonth } = Temporal;
 
 describe('YearMonth', () => {
-  describe('Structure', () => {
-    it('YearMonth is a Function', () => {
-      equal(typeof PlainYearMonth, 'function');
-    });
-    it('YearMonth has a prototype', () => {
-      assert(PlainYearMonth.prototype);
-      equal(typeof PlainYearMonth.prototype, 'object');
-    });
-    describe('YearMonth.prototype', () => {
-      it('YearMonth.prototype has month', () => {
-        assert('month' in PlainYearMonth.prototype);
-      });
-      it('YearMonth.prototype has monthCode', () => {
-        assert('monthCode' in PlainYearMonth.prototype);
-      });
-      it('YearMonth.prototype.until is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.until, 'function');
-      });
-      it('YearMonth.prototype.since is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.since, 'function');
-      });
-      it('YearMonth.prototype.equals is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.equals, 'function');
-      });
-      it('YearMonth.prototype.toString is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.toString, 'function');
-      });
-      it('YearMonth.prototype.getISOFields is a Function', () => {
-        equal(typeof PlainYearMonth.prototype.getISOFields, 'function');
-      });
-      it('YearMonth.prototype has daysInYear', () => {
-        assert('daysInYear' in PlainYearMonth.prototype);
-      });
-      it('YearMonth.prototype has monthsInYear', () => {
-        assert('monthsInYear' in PlainYearMonth.prototype);
-      });
-    });
-    it('YearMonth.compare is a Function', () => {
-      equal(typeof PlainYearMonth.compare, 'function');
-    });
-  });
   describe('Construction', () => {
     let ym;
     it('YearMonth can be constructed', () => {
