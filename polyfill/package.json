@@ -65,7 +65,7 @@
   ],
   "dependencies": {
     "big-integer": "^1.6.48",
-    "es-abstract": "^1.18.3"
+    "es-abstract": "^1.18.4"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
