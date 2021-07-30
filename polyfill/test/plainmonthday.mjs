@@ -11,29 +11,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainMonthDay } = Temporal;
 
 describe('MonthDay', () => {
-  describe('Structure', () => {
-    it('MonthDay is a Function', () => {
-      equal(typeof PlainMonthDay, 'function');
-    });
-    it('MonthDay has a prototype', () => {
-      assert(PlainMonthDay.prototype);
-      equal(typeof PlainMonthDay.prototype, 'object');
-    });
-    describe('MonthDay.prototype', () => {
-      it('MonthDay.prototype has monthCode', () => {
-        assert('monthCode' in PlainMonthDay.prototype);
-      });
-      it('MonthDay.prototype.equals is a Function', () => {
-        equal(typeof PlainMonthDay.prototype.equals, 'function');
-      });
-      it('MonthDay.prototype.toString is a Function', () => {
-        equal(typeof PlainMonthDay.prototype.toString, 'function');
-      });
-      it('MonthDay.prototype.getISOFields is a Function', () => {
-        equal(typeof PlainMonthDay.prototype.getISOFields, 'function');
-      });
-    });
-  });
   describe('Construction', () => {
     it('Leap day', () => equal(`${new PlainMonthDay(2, 29)}`, '02-29'));
     describe('.from()', () => {
