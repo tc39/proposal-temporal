@@ -116,7 +116,7 @@
             1. If either _microseconds_ or _nanoseconds_ is not 0, throw a *RangeError* exception.
             1. Let _mics_ be _fMilliseconds_ × 1000.
             1. Set _microseconds_ to floor(_mics_).
-            1. Set _fMicroseconds_ to _mils_ modulo 1.
+            1. Let _fMicroseconds_ be _mils_ modulo 1.
             1. If _fMicroseconds_ is not equal to 0, then
               1. If _nanoseconds_ is not 0, throw a *RangeError* exception.
               1. Let _nans_ be _fMicroseconds_ × 1000.
