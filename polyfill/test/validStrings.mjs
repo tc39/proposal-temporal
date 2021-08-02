@@ -319,7 +319,7 @@ const durationMinutes = seq(
 const durationHours = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.hours = +result * data.factor)),
   hoursDesignator,
-  [durationMinutes]
+  [choice(durationMinutes, durationSeconds)]
 );
 const durationTime = seq(durationTimeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
@@ -334,12 +334,12 @@ const durationWeeks = seq(
 const durationMonths = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.months = +result * data.factor)),
   monthsDesignator,
-  [durationWeeks]
+  [choice(durationWeeks, durationDays)]
 );
 const durationYears = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.years = +result * data.factor)),
   yearsDesignator,
-  [durationMonths]
+  [choice(durationMonths, durationWeeks, durationDays)]
 );
 const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
 const duration = seq(
