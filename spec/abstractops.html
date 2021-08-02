@@ -982,7 +982,8 @@
           TimeFraction
 
       DurationHoursPart :
-          DurationWholeHours DurationHoursFraction? HoursDesignator DurationMinutesPart?
+          DurationWholeHours DurationHoursFraction? HoursDesignator DurationMinutesPart
+          DurationWholeHours DurationHoursFraction? HoursDesignator DurationSecondsPart?
 
       DurationTime :
           DurationTimeDesignator DurationHoursPart
@@ -1005,13 +1006,16 @@
           Digits
 
       DurationMonthsPart :
-          DurationMonths MonthsDesignator DurationWeeksPart?
+          DurationMonths MonthsDesignator DurationWeeksPart
+          DurationMonths MonthsDesignator DurationDaysPart?
 
       DurationYears :
           Digits
 
       DurationYearsPart :
-          DurationYears YearsDesignator DurationMonthsPart?
+          DurationYears YearsDesignator DurationMonthsPart
+          DurationYears YearsDesignator DurationWeeksPart
+          DurationYears YearsDesignator DurationDaysPart?
 
       DurationDate :
           DurationYearsPart DurationTime?
