@@ -391,13 +391,9 @@ export const ES = ObjectAssign({}, ES2020, {
       minutes,
       fMinutes,
       seconds,
-      0,
       milliseconds,
-      0,
       microseconds,
-      0,
-      nanoseconds,
-      0
+      nanoseconds
     ));
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
@@ -483,32 +479,9 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return { year, month };
   },
-  DurationHandleFractions: (
-    fHours,
-    minutes,
-    fMinutes,
-    seconds,
-    fSeconds,
-    milliseconds,
-    fMilliseconds,
-    microseconds,
-    fMicroseconds,
-    nanoseconds,
-    fNanoseconds
-  ) => {
+  DurationHandleFractions: (fHours, minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds) => {
     if (fHours !== 0) {
-      [
-        minutes,
-        fMinutes,
-        seconds,
-        fSeconds,
-        milliseconds,
-        fMilliseconds,
-        microseconds,
-        fMicroseconds,
-        nanoseconds,
-        fNanoseconds
-      ].forEach((val) => {
+      [minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds].forEach((val) => {
         if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
       });
       let mins = fHours * 60;
@@ -517,40 +490,36 @@ export const ES = ObjectAssign({}, ES2020, {
     }
 
     if (fMinutes !== 0) {
-      [seconds, fSeconds, milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach(
-        (val) => {
-          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-        }
-      );
+      [seconds, milliseconds, microseconds, nanoseconds].forEach((val) => {
+        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+      });
       let secs = fMinutes * 60;
       seconds = MathTrunc(secs);
-      fSeconds = secs % 1;
-    }
+      const fSeconds = secs % 1;
 
-    if (fSeconds !== 0) {
-      [milliseconds, fMilliseconds, microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach((val) => {
-        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-      });
-      let mils = fSeconds * 1000;
-      milliseconds = MathTrunc(mils);
-      fMilliseconds = mils % 1;
-    }
+      if (fSeconds !== 0) {
+        [milliseconds, microseconds, nanoseconds].forEach((val) => {
+          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+        });
+        let mils = fSeconds * 1000;
+        milliseconds = MathTrunc(mils);
+        const fMilliseconds = mils % 1;
 
-    if (fMilliseconds !== 0) {
-      [microseconds, fMicroseconds, nanoseconds, fNanoseconds].forEach((val) => {
-        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-      });
-      let mics = fMilliseconds * 1000;
-      microseconds = MathTrunc(mics);
-      fMicroseconds = mics % 1;
-    }
+        if (fMilliseconds !== 0) {
+          [microseconds, nanoseconds].forEach((val) => {
+            if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
+          });
+          let mics = fMilliseconds * 1000;
+          microseconds = MathTrunc(mics);
+          const fMicroseconds = mics % 1;
 
-    if (fMicroseconds !== 0) {
-      [nanoseconds, fNanoseconds].forEach((val) => {
-        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-      });
-      let nans = fMicroseconds * 1000;
-      nanoseconds = MathTrunc(nans);
+          if (fMicroseconds !== 0) {
+            if (nanoseconds !== 0) throw new RangeError('only the smallest unit can be fractional');
+            let nans = fMicroseconds * 1000;
+            nanoseconds = MathTrunc(nans);
+          }
+        }
+      }
     }
 
     return { minutes, seconds, milliseconds, microseconds, nanoseconds };
