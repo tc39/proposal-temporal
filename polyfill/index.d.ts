@@ -857,10 +857,15 @@ export namespace Temporal {
       >
     ): Temporal.Duration;
     toPlainDateTime(temporalTime?: Temporal.PlainTime | TimeLike | string): Temporal.PlainDateTime;
-    toZonedDateTime(timeZoneAndTime: {
-      timeZone: TimeZoneProtocol | string;
-      plainTime?: Temporal.PlainTime | TimeLike | string;
-    }): Temporal.ZonedDateTime;
+    toZonedDateTime(
+      timeZoneAndTime:
+        | TimeZoneProtocol
+        | string
+        | {
+            timeZone: TimeZoneProtocol | string;
+            plainTime?: Temporal.PlainTime | TimeLike | string;
+          }
+    ): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     getISOFields(): DateISOFields;
