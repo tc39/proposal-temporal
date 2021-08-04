@@ -11,6 +11,7 @@ const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
 const ObjectEntries = Object.entries;
+const ObjectKeys = Object.keys;
 
 const impl = {};
 
@@ -218,13 +219,21 @@ impl['iso8601'] = {
     return fields;
   },
   mergeFields(fields, additionalFields) {
-    const { month, monthCode, ...original } = fields;
-    const { month: newMonth, monthCode: newMonthCode } = additionalFields;
-    if (newMonth === undefined && newMonthCode === undefined) {
-      original.month = month;
-      original.monthCode = monthCode;
+    const merged = {};
+    for (const nextKey of ObjectKeys(fields)) {
+      if (nextKey === 'month' || nextKey === 'monthCode') continue;
+      merged[nextKey] = fields[nextKey];
     }
-    return { ...original, ...additionalFields };
+    const newKeys = ObjectKeys(additionalFields);
+    for (const nextKey of newKeys) {
+      merged[nextKey] = additionalFields[nextKey];
+    }
+    if (!ArrayIncludes.call(newKeys, 'month') && !ArrayIncludes.call(newKeys, 'monthCode')) {
+      const { month, monthCode } = fields;
+      if (month !== undefined) merged.month = month;
+      if (monthCode !== undefined) merged.monthCode = monthCode;
+    }
+    return merged;
   },
   dateAdd(date, duration, overflow, calendar) {
     const { years, months, weeks, days } = duration;
@@ -1836,14 +1845,16 @@ const nonIsoGeneralImpl = {
     return fields;
   },
   mergeFields(fields, additionalFields) {
-    const { month, monthCode, year, era, eraYear, ...original } = fields;
+    const fieldsCopy = { ...fields };
+    const additionalFieldsCopy = { ...additionalFields };
+    const { month, monthCode, year, era, eraYear, ...original } = fieldsCopy;
     const {
       month: newMonth,
       monthCode: newMonthCode,
       year: newYear,
       era: newEra,
       eraYear: newEraYear
-    } = additionalFields;
+    } = additionalFieldsCopy;
     if (newMonth === undefined && newMonthCode === undefined) {
       original.month = month;
       original.monthCode = monthCode;
@@ -1853,7 +1864,7 @@ const nonIsoGeneralImpl = {
       original.era = era;
       original.eraYear = eraYear;
     }
-    return { ...original, ...additionalFields };
+    return { ...original, ...additionalFieldsCopy };
   },
   dateAdd(date, duration, overflow, calendar) {
     const { years, months, weeks, days } = duration;
