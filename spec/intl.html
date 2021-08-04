@@ -711,6 +711,7 @@
           1. Else,
             1. Throw a *RangeError* exception.
           1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
         1. If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].
@@ -718,6 +719,7 @@
           1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
         1. If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].
@@ -725,17 +727,20 @@
           1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
         1. If _x_ has an [[InitializedTemporalTime]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
           1. Let _isoCalendar_ be ! GetISO8601Calendar().
           1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _x_.[[ISOHour]], _x_.[[ISOMinute]], _x_.[[ISOSecond]], _x_.[[ISOMillisecond]], _x_.[[ISOMicrosecond]], _x_.[[ISONanosecond]], _isoCalendar_).
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
         1. If _x_ has an [[InitializedTemporalDateTime]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].
           1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
           1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _x_, *"compatible"*).
         1. If _x_ has an [[InitializedTemporalInstant]] internal slot, then
           1. Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].
