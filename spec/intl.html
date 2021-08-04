@@ -391,7 +391,7 @@
               1. If _v_ is 0 and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h12"*, let _v_ be 12.
             1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h24"*, then
               1. If _v_ is 0, let _v_ be 24.
-            1. <ins>If _p_ is *timeZoneName*, then</ins>
+            1. <ins>If _p_ is *"timeZoneName"*, then</ins>
               1. <ins>If _tm_ has a [[timeZoneName]] field, then</ins>
                 1. <ins>Set _v_ to _tm_.[[timeZoneName]].</ins>
               1. <ins>Else,</ins>
