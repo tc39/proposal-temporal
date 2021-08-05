@@ -607,6 +607,20 @@
       <emu-alg>
         1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
+        1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-disambiguatepossibleinstants" aoid="DisambiguatePossibleInstants">
+      <h1>DisambiguatePossibleInstants ( _possibleInstants_, _timeZone_, _dateTime_, _disambiguation_ )</h1>
+      <p>
+        The abstract operation DisambiguatePossibleInstants chooses from a List of possible `Temporal.Instant` instances the one indicated by the _disambiguation_ parameter.
+      </p>
+      <p>
+        The _possibleInstants_ List may be empty, in which case it observably calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` once, if _disambiguation_ is not *"reject"*.
+      </p>
+      <emu-alg>
+        1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Let _n_ be _possibleInstants_'s length.
         1. If _n_ = 1, then
           1. Return _possibleInstants_[0].

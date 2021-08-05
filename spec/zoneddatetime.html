@@ -1103,7 +1103,7 @@
           1. If ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
             1. Return _candidate_.[[Nanoseconds]].
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
-        1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
         1. Return _instant_.[[Nanoseconds]].
       </emu-alg>
     </emu-clause>

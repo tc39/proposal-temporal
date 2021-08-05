@@ -30,9 +30,10 @@ info: |
         ...
       ...
       6. Assert: _offset_ is *"prefer"* or *"reject"*.
+      7. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
       ...
       9. If _offset_ is *"reject"*, throw a *RangeError* exception.
-      10. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+      10. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
     sec-temporal-totemporalzoneddatetime step 7:
       7. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
     sec-temporal.zoneddatetime.from step 3:
