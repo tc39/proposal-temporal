@@ -30,9 +30,10 @@ info: |
         ...
       ...
       6. Assert: _offset_ is *"prefer"* or *"reject"*.
+      7. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
       ...
       9. If _offset_ is *"reject"*, throw a *RangeError* exception.
-      10. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+      10. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
     sec-temporal.zoneddatetime.prototype.with step 26:
       26. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
 includes: [compareArray.js, temporalHelpers.js]
@@ -47,21 +48,15 @@ const datetime1 = new Temporal.ZonedDateTime(3661_001_001_000n, tz1);
 // disambiguation is `earlier` and the shift is a spring-forward change
 datetime1.with({ nanosecond: 1 }, { offset: "ignore", disambiguation: "earlier" });
 
-const expected1 = [
+const expected = [
   "1970-01-01T01:01:01.001001001",
   "1970-01-01T01:01:01.001000999",
 ];
-assert.compareArray(tz1.getPossibleInstantsForCalledWith, expected1);
+assert.compareArray(tz1.getPossibleInstantsForCalledWith, expected);
 
 const tz2 = TemporalHelpers.oneShiftTimeZone(shiftInstant, 2);
 const datetime2 = new Temporal.ZonedDateTime(3661_001_001_000n, tz2);
 
 datetime2.with({ nanosecond: 1 }, { offset: "prefer", disambiguation: "earlier" });
 
-const expected2 = [
-  "1970-01-01T01:01:01.001001001",
-  "1970-01-01T01:01:01.001001001",
-  "1970-01-01T01:01:01.001000999",
-];
-assert.compareArray(tz2.getPossibleInstantsForCalledWith, expected2);
-
+assert.compareArray(tz2.getPossibleInstantsForCalledWith, expected);
