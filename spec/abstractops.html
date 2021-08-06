@@ -101,20 +101,20 @@
         1. If any of _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ is not 0, throw a *RangeError* exception.
         1. Let _mins_ be _fHours_ × 60.
         1. Set _minutes_ to floor(_mins_).
-        1. Set _fMinutes_ to _mins_ modulo 1.
+        1. Set _fMinutes_ to the mathematical value whose sign is the sign of _mins_ and whose magnitude is abs(_mins_) modulo 1.
       1. If _fMinutes_ is not equal to 0, then
         1. If any of _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ is not 0, throw a *RangeError* exception.
         1. Let _secs_ be _fMinutes_ × 60.
         1. Set _seconds_ to floor(_secs_).
-        1. Let _fSeconds_ be _secs_ modulo 1.
+        1. Let _fSeconds_ be the mathematical value whose sign is the sign of _secs_ and whose magnitude is abs(_secs_) modulo 1.
         1. If _fSeconds_ is not equal to 0, then
           1. Let _mils_ be _fSeconds_ × 1000.
           1. Set _milliseconds_ to floor(_mils_).
-          1. Let _fMilliseconds_ be _mils_ modulo 1.
+          1. Let _fMilliseconds_ be the mathematical value whose sign is the sign of _mils_ and whose magnitude is abs(_mils_) modulo 1.
           1. If _fMilliseconds_ is not equal to 0, then
             1. Let _mics_ be _fMilliseconds_ × 1000.
             1. Set _microseconds_ to floor(_mics_).
-            1. Let _fMicroseconds_ be _mics_ modulo 1.
+            1. Let _fMicroseconds_ be the mathematical value whose sign is the sign of _mics_ and whose magnitude is abs(_mics_) modulo 1.
             1. If _fMicroseconds_ is not equal to 0, then
               1. Let _nans_ be _fMicroseconds_ × 1000.
               1. Set _nanoseconds_ to floor(_nans_).
