@@ -1264,7 +1264,7 @@
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the Record {
             [[Days]]: the integral part of _nanoseconds_ / _dayLengthNs_,
-            [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_,
+            [[Nanoseconds]]: (abs(_nanoseconds_) modulo _dayLengthNs_) × _sign_,
             [[DayLength]]: _dayLengthNs_
             }.
         1. Let _startNs_ be ℝ(_relativeTo_.[[Nanoseconds]]).
