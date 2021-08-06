@@ -230,13 +230,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If Type(_temporalYearMonthLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Perform ? RejectTemporalCalendarType(_temporalYearMonthLike_).
-        1. Let _calendarProperty_ be ? Get(_temporalYearMonthLike_, *"calendar"*).
-        1. If _calendarProperty_ is not *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _timeZoneProperty_ be ? Get(_temporalYearMonthLike_, *"timeZone"*).
-        1. If _timeZoneProperty_ is not *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RejectObjectWithCalendarOrTimeZone(_temporalYearMonthLike_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"monthCode"*, *"year"* »).
         1. Let _partialYearMonth_ be ? PreparePartialTemporalFields(_temporalYearMonthLike_, _fieldNames_).

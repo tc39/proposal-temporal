@@ -565,13 +565,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. If Type(_temporalZonedDateTimeLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Perform ? RejectTemporalCalendarType(_temporalZonedDateTimeLike_).
-        1. Let _calendarProperty_ be ? Get(_temporalZonedDateTimeLike_, *"calendar"*).
-        1. If _calendarProperty_ is not *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _timeZoneProperty_ be ? Get(_temporalZonedDateTimeLike_, *"timeZone"*).
-        1. If _timeZoneProperty_ is not *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. Perform ? RejectObjectWithCalendarOrTimeZone(_temporalZonedDateTimeLike_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Append *"offset"* to _fieldNames_.
