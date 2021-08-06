@@ -599,15 +599,21 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-rejecttemporalcalendartype" aoid="RejectTemporalCalendarType">
-    <h1>RejectTemporalCalendarType ( _object_ )</h1>
+  <emu-clause id="sec-temporal-rejectobjectwithcalendarortimezone" aoid="RejectObjectWithCalendarOrTimeZone">
+    <h1>RejectObjectWithCalendarOrTimeZone ( _object_ )</h1>
     <p>
-      The abstract operation RejectTemporalCalendarType throws an exception if its argument _object_ is an instance of one of the Temporal types that carries a calendar.
+      The abstract operation RejectObjectWithCalendarOrTimeZone throws an exception if its argument _object_ is an instance of one of the Temporal types that carries a calendar or time zone, or is an object that has a "calendar" or "timeZone" property.
     </p>
     <emu-alg>
       1. Assert: Type(_object_) is Object.
       1. If _object_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Throw a *TypeError* exception.
+        1. Throw a *TypeError* exception.
+      1. Let _calendarProperty_ be ? Get(_object_, *"calendar"*).
+      1. If _calendarProperty_ is not *undefined*, then
+        1. Throw a *TypeError* exception.
+      1. Let _timeZoneProperty_ be ? Get(_object_, *"timeZone"*).
+      1. If _timeZoneProperty_ is not *undefined*, then
+        1. Throw a *TypeError* exception.
     </emu-alg>
   </emu-clause>
 
