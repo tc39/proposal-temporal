@@ -1716,7 +1716,7 @@
   var bigInt = BigInteger.exports;
 
   /* eslint complexity: [2, 18], max-statements: [2, 33] */
-  var shams = function hasSymbols() {
+  var shams$1 = function hasSymbols() {
   	if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
   	if (typeof Symbol.iterator === 'symbol') { return true; }
 
@@ -1757,9 +1757,9 @@
   };
 
   var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-  var hasSymbolSham = shams;
+  var hasSymbolSham = shams$1;
 
-  var hasSymbols$3 = function hasNativeSymbols() {
+  var hasSymbols$4 = function hasNativeSymbols() {
   	if (typeof origSymbol !== 'function') { return false; }
   	if (typeof Symbol !== 'function') { return false; }
   	if (typeof origSymbol('foo') !== 'symbol') { return false; }
@@ -1869,7 +1869,7 @@
   	}())
   	: throwTypeError;
 
-  var hasSymbols$2 = hasSymbols$3();
+  var hasSymbols$3 = hasSymbols$4();
 
   var getProto = Object.getPrototypeOf || function (x) { return x.__proto__; }; // eslint-disable-line no-proto
 
@@ -1881,7 +1881,7 @@
   	'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
   	'%Array%': Array,
   	'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-  	'%ArrayIteratorPrototype%': hasSymbols$2 ? getProto([][Symbol.iterator]()) : undefined$1,
+  	'%ArrayIteratorPrototype%': hasSymbols$3 ? getProto([][Symbol.iterator]()) : undefined$1,
   	'%AsyncFromSyncIteratorPrototype%': undefined$1,
   	'%AsyncFunction%': needsEval,
   	'%AsyncGenerator%': needsEval,
@@ -1909,10 +1909,10 @@
   	'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
   	'%isFinite%': isFinite,
   	'%isNaN%': isNaN,
-  	'%IteratorPrototype%': hasSymbols$2 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+  	'%IteratorPrototype%': hasSymbols$3 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
   	'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
   	'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$2 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
   	'%Math%': Math,
   	'%Number%': Number,
   	'%Object%': Object,
@@ -1925,11 +1925,11 @@
   	'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
   	'%RegExp%': RegExp,
   	'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$2 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
   	'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
   	'%String%': String,
-  	'%StringIteratorPrototype%': hasSymbols$2 ? getProto(''[Symbol.iterator]()) : undefined$1,
-  	'%Symbol%': hasSymbols$2 ? Symbol : undefined$1,
+  	'%StringIteratorPrototype%': hasSymbols$3 ? getProto(''[Symbol.iterator]()) : undefined$1,
+  	'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
   	'%SyntaxError%': $SyntaxError,
   	'%ThrowTypeError%': ThrowTypeError,
   	'%TypedArray%': TypedArray,
@@ -2362,7 +2362,7 @@
   var toStr$3 = Object.prototype.toString;
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
-  var hasToStringTag$1 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+  var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
   /* globals document: false */
   var documentDotAll = typeof document === 'object' && typeof document.all === 'undefined' && document.all !== undefined ? document.all : {};
 
@@ -2609,6 +2609,12 @@
   	return value === null || (typeof value !== 'function' && typeof value !== 'object');
   };
 
+  var hasSymbols$2 = shams$1;
+
+  var shams = function hasToStringTagShams() {
+  	return hasSymbols$2() && !!Symbol.toStringTag;
+  };
+
   var getDay = Date.prototype.getDay;
   var tryDateObject = function tryDateGetDayCall(value) {
   	try {
@@ -2621,7 +2627,7 @@
 
   var toStr$1 = Object.prototype.toString;
   var dateClass = '[object Date]';
-  var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag;
+  var hasToStringTag = shams();
 
   var isDateObject = function isDateObject(value) {
   	if (typeof value !== 'object' || value === null) {
@@ -2633,7 +2639,7 @@
   var isSymbol$1 = {exports: {}};
 
   var toStr = Object.prototype.toString;
-  var hasSymbols$1 = hasSymbols$3();
+  var hasSymbols$1 = hasSymbols$4();
 
   if (hasSymbols$1) {
   	var symToStr = Symbol.prototype.toString;
