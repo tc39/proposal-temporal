@@ -134,23 +134,17 @@ export class PlainDate {
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
-    let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    const duration = ES.ToTemporalDuration(temporalDurationLike);
     options = ES.GetOptionsObject(options);
 
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
-    duration = { years, months, weeks, days };
     return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
 
-    let duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    const duration = ES.CreateNegatedTemporalDuration(ES.ToTemporalDuration(temporalDurationLike));
     options = ES.GetOptionsObject(options);
 
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
-    duration = { years: -years, months: -months, weeks: -weeks, days: -days };
     return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
   }
   until(other, options = undefined) {

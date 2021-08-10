@@ -347,11 +347,9 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
-        1. Let _balancedDuration_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _balancedDuration_, _options_).
+        1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _duration_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -364,10 +362,9 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
-        1. Let _negatedDuration_ be ? CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _negatedDuration_ be ! CreateNegatedTemporalDuration(_duration_).
         1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _negatedDuration_, _options_).
       </emu-alg>
     </emu-clause>

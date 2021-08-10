@@ -358,7 +358,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
+        1. Return ! CreateNegatedTemporalDuration(_duration_).
       </emu-alg>
     </emu-clause>
 
@@ -812,6 +812,18 @@
         1. Set _object_.[[Microseconds]] to _microseconds_.
         1. Set _object_.[[Nanoseconds]] to _nanoseconds_.
         1. Return _object_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createnegatedtemporalduration" aoid="CreateNegatedTemporalDuration">
+      <h1>CreateNegatedTemporalDuration ( _duration_ )</h1>
+      <p>
+        The abstract operation CreateNegatedTemporalDuration returns a new Temporal.Duration instance that is the negation of _duration_.
+      </p>
+      <emu-alg>
+        1. Assert: Type(_duration_) is Object.
+        1. Assert: _duration_ has an [[InitializedTemporalDuration]] internal slot.
+        1. Return ! CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_duration_.[[Days]], −_duration_.[[Hours]], −_duration_.[[Minutes]], −_duration_.[[Seconds]], −_duration_.[[Milliseconds]], −_duration_.[[Microseconds]], −_duration_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
