@@ -2863,6 +2863,21 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return 0;
   },
+  CreateNegatedTemporalDuration: (duration) => {
+    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+    return new TemporalDuration(
+      -GetSlot(duration, YEARS),
+      -GetSlot(duration, MONTHS),
+      -GetSlot(duration, WEEKS),
+      -GetSlot(duration, DAYS),
+      -GetSlot(duration, HOURS),
+      -GetSlot(duration, MINUTES),
+      -GetSlot(duration, SECONDS),
+      -GetSlot(duration, MILLISECONDS),
+      -GetSlot(duration, MICROSECONDS),
+      -GetSlot(duration, NANOSECONDS)
+    );
+  },
 
   ConstrainToRange: (value, min, max) => MathMin(max, MathMax(min, value)),
   ConstrainISODate: (year, month, day) => {

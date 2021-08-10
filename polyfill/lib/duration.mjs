@@ -186,18 +186,7 @@ export class Duration {
   }
   negated() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return new Duration(
-      -GetSlot(this, YEARS),
-      -GetSlot(this, MONTHS),
-      -GetSlot(this, WEEKS),
-      -GetSlot(this, DAYS),
-      -GetSlot(this, HOURS),
-      -GetSlot(this, MINUTES),
-      -GetSlot(this, SECONDS),
-      -GetSlot(this, MILLISECONDS),
-      -GetSlot(this, MICROSECONDS),
-      -GetSlot(this, NANOSECONDS)
-    );
+    return ES.CreateNegatedTemporalDuration(this);
   }
   abs() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
