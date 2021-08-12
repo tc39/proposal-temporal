@@ -461,6 +461,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+        1. If _options_ is *undefined*, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _unit_ be ? ToTemporalDurationTotalUnit(_options_).

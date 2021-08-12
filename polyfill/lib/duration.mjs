@@ -398,6 +398,7 @@ export class Duration {
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
+    if (options === undefined) throw new TypeError('options argument is required');
     options = ES.GetOptionsObject(options);
     const unit = ES.ToTemporalDurationTotalUnit(options, undefined);
     if (unit === undefined) throw new RangeError('unit option is required');

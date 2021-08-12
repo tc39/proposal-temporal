@@ -1463,10 +1463,8 @@ describe('Duration', () => {
       const oneMonth = Duration.from({ months: 1 });
       equal(oneMonth.total({ unit: 'months', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } }), 1);
     });
-    it('throws if unit is missing', () => {
-      [undefined, {}, () => {}, { roundingMode: 'ceil' }].forEach((options) =>
-        throws(() => d.total(options), RangeError)
-      );
+    it('throws RangeError if unit property is missing', () => {
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => throws(() => d.total(options), RangeError));
     });
     it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
       throws(() => d2.total({ unit: 'years' }), RangeError);
