@@ -83,6 +83,9 @@ const ToIntegerThrowOnInfinity = (value) => {
 
 const ToPositiveInteger = (value, property) => {
   value = ToInteger(value);
+  if (!NumberIsFinite(value)) {
+    throw new RangeError('infinity is out of range');
+  }
   if (value < 1) {
     if (property !== undefined) {
       throw new RangeError(`property '${property}' cannot be a a number less than one`);
@@ -93,16 +96,16 @@ const ToPositiveInteger = (value, property) => {
 };
 
 const BUILTIN_CASTS = new Map([
-  ['year', ToInteger],
+  ['year', ToIntegerThrowOnInfinity],
   ['month', ToPositiveInteger],
   ['monthCode', ToString],
   ['day', ToPositiveInteger],
-  ['hour', ToInteger],
-  ['minute', ToInteger],
-  ['second', ToInteger],
-  ['millisecond', ToInteger],
-  ['microsecond', ToInteger],
-  ['nanosecond', ToInteger],
+  ['hour', ToIntegerThrowOnInfinity],
+  ['minute', ToIntegerThrowOnInfinity],
+  ['second', ToIntegerThrowOnInfinity],
+  ['millisecond', ToIntegerThrowOnInfinity],
+  ['microsecond', ToIntegerThrowOnInfinity],
+  ['nanosecond', ToIntegerThrowOnInfinity],
   ['years', ToInteger],
   ['months', ToInteger],
   ['weeks', ToInteger],
@@ -1569,7 +1572,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (result === undefined) {
       throw new RangeError('calendar year result must be an integer');
     }
-    return ES.ToInteger(result);
+    return ES.ToIntegerThrowOnInfinity(result);
   },
   CalendarMonth: (calendar, dateLike) => {
     const month = ES.GetMethod(calendar, 'month');
@@ -1607,7 +1610,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const eraYear = ES.GetMethod(calendar, 'eraYear');
     let result = ES.Call(eraYear, calendar, [dateLike]);
     if (result !== undefined) {
-      result = ES.ToInteger(result);
+      result = ES.ToIntegerThrowOnInfinity(result);
     }
     return result;
   },

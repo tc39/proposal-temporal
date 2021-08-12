@@ -2,24 +2,19 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-description: Temporal.PlainYearMonth.prototype.toPlainDate throws a RangeError if the argument is Infinity
+description: Throws if any value in the property bag is Infinity or -Infinity
 esid: sec-temporal.plainyearmonth.prototype.toplaindate
+includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 
 const instance = new Temporal.PlainYearMonth(2000, 5);
 
-assert.throws(RangeError, () => instance.toPlainDate({ day: Infinity }));
+[Infinity, -Infinity].forEach((inf) => {
+  assert.throws(RangeError, () => instance.toPlainDate({ day: inf }), `day property cannot be ${inf}`);
 
-let calls = 0;
-const obj = {
-  day: {
-    valueOf() {
-      calls++;
-      return Infinity;
-    }
-  }
-};
-
-assert.throws(RangeError, () => instance.toPlainDate(obj));
-assert.sameValue(calls, 1, "it fails after fetching the primitive value");
+  const calls = [];
+  const obj = TemporalHelpers.toPrimitiveObserver(calls, inf, "day");
+  assert.throws(RangeError, () => instance.toPlainDate({ day: obj }));
+  assert.compareArray(calls, ["get day.valueOf", "call day.valueOf"], "it fails after fetching the primitive value");
+});
