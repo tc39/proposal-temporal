@@ -22,12 +22,13 @@ const DISALLOWED_UNITS = ['hour', 'minute', 'second', 'millisecond', 'microsecon
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
-    isoYear = ES.ToFiniteInteger(isoYear);
-    isoMonth = ES.ToFiniteInteger(isoMonth);
-    isoDay = ES.ToFiniteInteger(isoDay);
+    isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
+    isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+    isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
 
-    // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+    // Note: if the arguments are not passed,
+    //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
     //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
     //       exists only to improve the error message.
     if (arguments.length < 3) {

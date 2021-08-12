@@ -73,6 +73,14 @@ const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
+const ToIntegerThrowOnInfinity = (value) => {
+  const integer = ES.ToInteger(value);
+  if (!NumberIsFinite(integer)) {
+    throw new RangeError('infinity is out of range');
+  }
+  return integer;
+};
+
 const ToPositiveInteger = (value, property) => {
   value = ToInteger(value);
   if (value < 1) {
@@ -173,13 +181,7 @@ function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
 
 export const ES = ObjectAssign({}, ES2020, {
   ToPositiveInteger: ToPositiveInteger,
-  ToFiniteInteger: (value) => {
-    const integer = ES.ToInteger(value);
-    if (!NumberIsFinite(integer)) {
-      throw new RangeError('infinity is out of range');
-    }
-    return integer;
-  },
+  ToIntegerThrowOnInfinity,
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),

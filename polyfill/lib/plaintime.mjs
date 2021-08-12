@@ -66,12 +66,12 @@ function TemporalTimeToString(time, precision, options = undefined) {
 
 export class PlainTime {
   constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
-    isoHour = ES.ToFiniteInteger(isoHour);
-    isoMinute = ES.ToFiniteInteger(isoMinute);
-    isoSecond = ES.ToFiniteInteger(isoSecond);
-    isoMillisecond = ES.ToFiniteInteger(isoMillisecond);
-    isoMicrosecond = ES.ToFiniteInteger(isoMicrosecond);
-    isoNanosecond = ES.ToFiniteInteger(isoNanosecond);
+    isoHour = ES.ToIntegerThrowOnInfinity(isoHour);
+    isoMinute = ES.ToIntegerThrowOnInfinity(isoMinute);
+    isoSecond = ES.ToIntegerThrowOnInfinity(isoSecond);
+    isoMillisecond = ES.ToIntegerThrowOnInfinity(isoMillisecond);
+    isoMicrosecond = ES.ToIntegerThrowOnInfinity(isoMicrosecond);
+    isoNanosecond = ES.ToIntegerThrowOnInfinity(isoNanosecond);
 
     ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
     CreateSlots(this);
