@@ -1056,6 +1056,47 @@ var TemporalHelpers = {
   },
 
   /*
+   * A custom calendar whose mergeFields() method returns a primitive value,
+   * given by @primitive, and which records the number of calls made to its
+   * dateFromFields(), yearMonthFromFields(), and monthDayFromFields() methods.
+   */
+  calendarMergeFieldsReturnsPrimitive(primitive) {
+    class CalendarMergeFieldsPrimitive extends Temporal.Calendar {
+      constructor(mergeFieldsReturnValue) {
+        super("iso8601");
+        this._mergeFieldsReturnValue = mergeFieldsReturnValue;
+        this.dateFromFieldsCallCount = 0;
+        this.monthDayFromFieldsCallCount = 0;
+        this.yearMonthFromFieldsCallCount = 0;
+      }
+
+      toString() {
+        return "merge-fields-primitive";
+      }
+
+      dateFromFields(fields, options) {
+        this.dateFromFieldsCallCount++;
+        return super.dateFromFields(fields, options);
+      }
+
+      yearMonthFromFields(fields, options) {
+        this.yearMonthFromFieldsCallCount++;
+        return super.yearMonthFromFields(fields, options);
+      }
+
+      monthDayFromFields(fields, options) {
+        this.monthDayFromFieldsCallCount++;
+        return super.monthDayFromFields(fields, options);
+      }
+
+      mergeFields() {
+        return this._mergeFieldsReturnValue;
+      }
+    }
+    return new CalendarMergeFieldsPrimitive(primitive);
+  },
+
+  /*
    * observeProperty(calls, object, propertyName, value):
    *
    * Defines an own property @object.@propertyName with value @value, that
