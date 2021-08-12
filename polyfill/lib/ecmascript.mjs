@@ -1510,7 +1510,9 @@ export const ES = ObjectAssign({}, ES2020, {
   CalendarMergeFields: (calendar, fields, additionalFields) => {
     const mergeFields = ES.GetMethod(calendar, 'mergeFields');
     if (mergeFields === undefined) return { ...fields, ...additionalFields };
-    return ES.Call(mergeFields, calendar, [fields, additionalFields]);
+    const result = ES.Call(mergeFields, calendar, [fields, additionalFields]);
+    if (ES.Type(result) !== 'Object') throw new TypeError('bad return from calendar.mergeFields()');
+    return result;
   },
   CalendarDateAdd: (calendar, date, duration, options, dateAdd) => {
     if (dateAdd === undefined) {
