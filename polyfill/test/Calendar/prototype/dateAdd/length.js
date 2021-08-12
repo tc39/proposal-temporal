@@ -17,7 +17,7 @@ features: [Temporal]
 ---*/
 
 verifyProperty(Temporal.Calendar.prototype.dateAdd, "length", {
-  value: 3,
+  value: 2,
   writable: false,
   enumerable: false,
   configurable: true,

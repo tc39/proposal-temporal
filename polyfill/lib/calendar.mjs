@@ -39,19 +39,19 @@ export class Calendar {
   get id() {
     return ES.ToString(this);
   }
-  dateFromFields(fields, options) {
+  dateFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
     return impl[GetSlot(this, CALENDAR_ID)].dateFromFields(fields, options, this);
   }
-  yearMonthFromFields(fields, options) {
+  yearMonthFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
     return impl[GetSlot(this, CALENDAR_ID)].yearMonthFromFields(fields, options, this);
   }
-  monthDayFromFields(fields, options) {
+  monthDayFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
@@ -70,7 +70,7 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return impl[GetSlot(this, CALENDAR_ID)].mergeFields(fields, additionalFields);
   }
-  dateAdd(date, duration, options) {
+  dateAdd(date, duration, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     date = ES.ToTemporalDate(date);
     duration = ES.ToTemporalDuration(duration);
@@ -78,7 +78,7 @@ export class Calendar {
     const overflow = ES.ToTemporalOverflow(options);
     return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow, this);
   }
-  dateUntil(one, two, options) {
+  dateUntil(one, two, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
