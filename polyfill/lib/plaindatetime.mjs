@@ -32,18 +32,19 @@ export class PlainDateTime {
     nanosecond = 0,
     calendar = ES.GetISO8601Calendar()
   ) {
-    isoYear = ES.ToFiniteInteger(isoYear);
-    isoMonth = ES.ToFiniteInteger(isoMonth);
-    isoDay = ES.ToFiniteInteger(isoDay);
-    hour = ES.ToFiniteInteger(hour);
-    minute = ES.ToFiniteInteger(minute);
-    second = ES.ToFiniteInteger(second);
-    millisecond = ES.ToFiniteInteger(millisecond);
-    microsecond = ES.ToFiniteInteger(microsecond);
-    nanosecond = ES.ToFiniteInteger(nanosecond);
+    isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
+    isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+    isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+    hour = ES.ToIntegerThrowOnInfinity(hour);
+    minute = ES.ToIntegerThrowOnInfinity(minute);
+    second = ES.ToIntegerThrowOnInfinity(second);
+    millisecond = ES.ToIntegerThrowOnInfinity(millisecond);
+    microsecond = ES.ToIntegerThrowOnInfinity(microsecond);
+    nanosecond = ES.ToIntegerThrowOnInfinity(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
 
-    // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+    // Note: if the arguments are not passed,
+    //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
     //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
     //       check exists only to improve the error message.
     if (arguments.length < 3) {
