@@ -17,7 +17,7 @@ features: [Temporal]
 ---*/
 
 verifyProperty(Temporal.Calendar.prototype.monthDayFromFields, "length", {
-  value: 2,
+  value: 1,
   writable: false,
   enumerable: false,
   configurable: true,
