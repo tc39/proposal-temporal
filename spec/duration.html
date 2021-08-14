@@ -810,7 +810,7 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-calculateoffsetshift" aoid="CalculateOffsetShift">
-      <h1>CalculateOffsetShift ( _relativeTo_, _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_ )</h1>
+      <h1>CalculateOffsetShift ( _relativeTo_, _y_, _mon_, _w_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_ )</h1>
       <p>
         The abstract operation CalculateOffsetShift returns the difference in nanoseconds between the time zone offset at the time of _relativeTo_, and the time zone offset at the time of _relativeTo_ plus the given duration.
       </p>
@@ -818,7 +818,7 @@
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, return 0.
         1. Let _instant_ be ! CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
         1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instant_).
-        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_).
+        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _w_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_).
         1. Let _instantAfter_ be ! CreateTemporalInstant(_after_).
         1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instantAfter_).
         1. Return _offsetAfter_ − _offsetBefore_.
