@@ -22,4 +22,5 @@ const fields = [
 ];
 fields.forEach((field) => {
   assert.throws(RangeError, () => instance.with({ [field]: 1.5 }));
+  assert.throws(RangeError, () => instance.with({ [field]: -1.5 }));
 });

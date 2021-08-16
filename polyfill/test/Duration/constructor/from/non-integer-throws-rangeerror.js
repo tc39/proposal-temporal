@@ -21,4 +21,5 @@ const fields = [
 ];
 fields.forEach((field) => {
   assert.throws(RangeError, () => Temporal.Duration.from({ [field]: 1.5 }));
+  assert.throws(RangeError, () => Temporal.Duration.from({ [field]: -1.5 }));
 });
