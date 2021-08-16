@@ -245,11 +245,11 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
+        1. If Type(_item_) is not Object, then
+          1. Throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
         1. Let _receiverFieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _receiverFieldNames_, «»).
-        1. If Type(_item_) is not Object, then
-          1. Throw a *TypeError* exception.
         1. Let _inputFieldNames_ be ? CalendarFields(_calendar_, « *"year"* »).
         1. Let _inputFields_ be ? PrepareTemporalFields(_item_, _inputFieldNames_, «»).
         1. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).

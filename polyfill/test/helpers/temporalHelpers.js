@@ -118,6 +118,20 @@ var TemporalHelpers = {
   },
 
   /*
+   * assertUnreachable(description):
+   *
+   * Helper for asserting that code is not executed. This is useful for
+   * assertions that methods of user calendars and time zones are not called.
+   */
+  assertUnreachable(description) {
+    let message = "This code should not be executed";
+    if (description) {
+      message = `${message}: ${description}`;
+    }
+    throw new Test262Error(message);
+  },
+
+  /*
    * checkCalendarDateUntilLargestUnitSingular(func, expectedLargestUnitCalls):
    *
    * When an options object with a largestUnit property is synthesized inside
@@ -1057,6 +1071,63 @@ var TemporalHelpers = {
         calls.push(`set ${propertyName}`);
       }
     });
+  },
+
+  /*
+   * A custom calendar that does not allow any of its methods to be called, for
+   * the purpose of asserting that a particular operation does not call into
+   * user code.
+   */
+  calendarThrowEverything() {
+    class CalendarThrowEverything extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+      }
+      toString() {
+        TemporalHelpers.assertUnreachable("toString should not be called");
+      }
+      dateFromFields() {
+        TemporalHelpers.assertUnreachable("dateFromFields should not be called");
+      }
+      yearMonthFromFields() {
+        TemporalHelpers.assertUnreachable("yearMonthFromFields should not be called");
+      }
+      monthDayFromFields() {
+        TemporalHelpers.assertUnreachable("monthDayFromFields should not be called");
+      }
+      dateAdd() {
+        TemporalHelpers.assertUnreachable("dateAdd should not be called");
+      }
+      dateUntil() {
+        TemporalHelpers.assertUnreachable("dateUntil should not be called");
+      }
+      era() {
+        TemporalHelpers.assertUnreachable("era should not be called");
+      }
+      eraYear() {
+        TemporalHelpers.assertUnreachable("eraYear should not be called");
+      }
+      year() {
+        TemporalHelpers.assertUnreachable("year should not be called");
+      }
+      month() {
+        TemporalHelpers.assertUnreachable("month should not be called");
+      }
+      monthCode() {
+        TemporalHelpers.assertUnreachable("monthCode should not be called");
+      }
+      day() {
+        TemporalHelpers.assertUnreachable("day should not be called");
+      }
+      fields() {
+        TemporalHelpers.assertUnreachable("fields should not be called");
+      }
+      mergeFields() {
+        TemporalHelpers.assertUnreachable("mergeFields should not be called");
+      }
+    }
+
+    return new CalendarThrowEverything();
   },
 
   /*
