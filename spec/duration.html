@@ -683,7 +683,6 @@
 
     <emu-clause id="sec-temporal-totemporaldurationrecord" aoid="ToTemporalDurationRecord">
       <h1>ToTemporalDurationRecord ( _temporalDurationLike_ )</h1>
-      <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalDurationLike_) is Object.
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
@@ -787,7 +786,9 @@
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. Set _value_ to ? ToIntegerOrInfinity(_value_).
+            1. Set _value_ to ? ToNumber(_value_).
+            1. If ! IsIntegralNumber(_value_) is *false*, then
+              1. Throw a *RangeError* exception.
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
