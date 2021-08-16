@@ -296,6 +296,7 @@ export class PlainYearMonth {
   }
   toPlainDate(item) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    if (ES.Type(item) !== 'Object') throw new TypeError('argument should be an object');
     const calendar = GetSlot(this, CALENDAR);
 
     const receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
