@@ -5947,6 +5947,16 @@
   var YEAR_MAX = 275760;
   var BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
+  var ToIntegerThrowOnInfinity = function ToIntegerThrowOnInfinity(value) {
+    var integer = ES.ToInteger(value);
+
+    if (!NumberIsFinite(integer)) {
+      throw new RangeError('infinity is out of range');
+    }
+
+    return integer;
+  };
+
   var ToPositiveInteger = function ToPositiveInteger(value, property) {
     value = ToInteger$2(value);
 
@@ -6001,15 +6011,7 @@
 
   var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
-    ToFiniteInteger: function ToFiniteInteger(value) {
-      var integer = ES.ToInteger(value);
-
-      if (!NumberIsFinite(integer)) {
-        throw new RangeError('infinity is out of range');
-      }
-
-      return integer;
-    },
+    ToIntegerThrowOnInfinity: ToIntegerThrowOnInfinity,
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
     },
@@ -11643,10 +11645,11 @@
 
       _classCallCheck(this, PlainDate);
 
-      isoYear = ES.ToFiniteInteger(isoYear);
-      isoMonth = ES.ToFiniteInteger(isoMonth);
-      isoDay = ES.ToFiniteInteger(isoDay);
-      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
+      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed,
+      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
       //       exists only to improve the error message.
 
@@ -12117,16 +12120,17 @@
 
       _classCallCheck(this, PlainDateTime);
 
-      isoYear = ES.ToFiniteInteger(isoYear);
-      isoMonth = ES.ToFiniteInteger(isoMonth);
-      isoDay = ES.ToFiniteInteger(isoDay);
-      hour = ES.ToFiniteInteger(hour);
-      minute = ES.ToFiniteInteger(minute);
-      second = ES.ToFiniteInteger(second);
-      millisecond = ES.ToFiniteInteger(millisecond);
-      microsecond = ES.ToFiniteInteger(microsecond);
-      nanosecond = ES.ToFiniteInteger(nanosecond);
-      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
+      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+      hour = ES.ToIntegerThrowOnInfinity(hour);
+      minute = ES.ToIntegerThrowOnInfinity(minute);
+      second = ES.ToIntegerThrowOnInfinity(second);
+      millisecond = ES.ToIntegerThrowOnInfinity(millisecond);
+      microsecond = ES.ToIntegerThrowOnInfinity(microsecond);
+      nanosecond = ES.ToIntegerThrowOnInfinity(nanosecond);
+      calendar = ES.ToTemporalCalendar(calendar); // Note: if the arguments are not passed,
+      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
       //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
       //       check exists only to improve the error message.
 
@@ -13231,10 +13235,11 @@
 
       _classCallCheck(this, PlainMonthDay);
 
-      isoMonth = ES.ToFiniteInteger(isoMonth);
-      isoDay = ES.ToFiniteInteger(isoDay);
+      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISOYear = ES.ToFiniteInteger(referenceISOYear); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      referenceISOYear = ES.ToIntegerThrowOnInfinity(referenceISOYear); // Note: if the arguments are not passed,
+      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalMonthDaySlots. This
       //       check exists only to improve the error message.
 
@@ -13541,12 +13546,12 @@
 
       _classCallCheck(this, PlainTime);
 
-      isoHour = ES.ToFiniteInteger(isoHour);
-      isoMinute = ES.ToFiniteInteger(isoMinute);
-      isoSecond = ES.ToFiniteInteger(isoSecond);
-      isoMillisecond = ES.ToFiniteInteger(isoMillisecond);
-      isoMicrosecond = ES.ToFiniteInteger(isoMicrosecond);
-      isoNanosecond = ES.ToFiniteInteger(isoNanosecond);
+      isoHour = ES.ToIntegerThrowOnInfinity(isoHour);
+      isoMinute = ES.ToIntegerThrowOnInfinity(isoMinute);
+      isoSecond = ES.ToIntegerThrowOnInfinity(isoSecond);
+      isoMillisecond = ES.ToIntegerThrowOnInfinity(isoMillisecond);
+      isoMicrosecond = ES.ToIntegerThrowOnInfinity(isoMicrosecond);
+      isoNanosecond = ES.ToIntegerThrowOnInfinity(isoNanosecond);
       ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
       CreateSlots(this);
       SetSlot(this, ISO_HOUR, isoHour);
@@ -14013,10 +14018,11 @@
 
       _classCallCheck(this, PlainYearMonth);
 
-      isoYear = ES.ToFiniteInteger(isoYear);
-      isoMonth = ES.ToFiniteInteger(isoMonth);
+      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
+      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISODay = ES.ToFiniteInteger(referenceISODay); // Note: if the arguments are not passed, ToInteger(undefined) will have returned 0, which will
+      referenceISODay = ES.ToIntegerThrowOnInfinity(referenceISODay); // Note: if the arguments are not passed,
+      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
       //       check exists only to improve the error message.
 
