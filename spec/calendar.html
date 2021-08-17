@@ -507,7 +507,7 @@
         1. If _year_ is *undefined*, throw a *TypeError* exception.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
         1. Let _result_ be ? RegulateISOYearMonth(_year_, _month_, _overflow_).
-        1. Return the new Record {
+        1. Return the Record {
             [[Year]]: _result_.[[Year]],
             [[Month]]: _result_.[[Month]],
             [[ReferenceISODay]]: 1
@@ -537,7 +537,7 @@
           1. Let _result_ be ? RegulateISODate(_year_, _month_, _day_, _overflow_).
         1. Else,
           1. Let _result_ be ? RegulateISODate(_referenceISOYear_, _month_, _day_, _overflow_).
-        1. Return the new Record {
+        1. Return the Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]],
             [[ReferenceISOYear]]: _referenceISOYear_

@@ -763,7 +763,7 @@
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Let _result_ be the new Record {
+        1. Let _result_ be the Record {
             [[Years]]: *undefined*,
             [[Months]]: *undefined*,
             [[Weeks]]: *undefined*,
@@ -900,7 +900,7 @@
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
         1. Else,
           1. Assert: _largestUnit_ is *"nanosecond"*.
-        1. Return the new Record {
+        1. Return the Record {
           [[Days]]: 𝔽(_days_),
           [[Hours]]: 𝔽(_hours_ × _sign_),
           [[Minutes]]: 𝔽(_minutes_ × _sign_),
@@ -918,7 +918,7 @@
       <emu-alg>
         1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If _largestUnit_ is *"year"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
-          1. Return the new Record {
+          1. Return the Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
             [[Weeks]]: _weeks_,
@@ -981,7 +981,7 @@
               1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
               1. Set _days_ to _days_ + _moveResult_.[[Days]].
               1. Set _weeks_ to _weeks_ − _sign_.
-        1. Return the new Record {
+        1. Return the Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
           [[Weeks]]: _weeks_,
@@ -995,7 +995,7 @@
       <p>The abstract operation BalanceDurationRelative converts the calendar units of a duration into a form where lower units are converted into higher units as much as possible, up to _largestUnit_.</p>
       <emu-alg>
         1. If _largestUnit_ is not one of *"year"*, *"month"*, or *"week"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
-          1. Return the new Record {
+          1. Return the Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
             [[Weeks]]: _weeks_,
@@ -1066,7 +1066,7 @@
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneWeekDays_ to _moveResult_.[[Days]].
-        1. Return the new Record {
+        1. Return the Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
           [[Weeks]]: _weeks_,
@@ -1156,7 +1156,7 @@
             1. Let _microseconds_ be _result_.[[Microseconds]].
             1. Let _nanoseconds_ be _result_.[[Nanoseconds]].
         1. If ! IsValidDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Return the new Record {
+        1. Return the Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
           [[Weeks]]: _weeks_,
@@ -1195,7 +1195,7 @@
         1. Let _later_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, _options_).
         1. Let _days_ be ? DaysUntil(_relativeTo_, _later_).
         1. Let _dateTime_ be ? CreateTemporalDateTime(_later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], _relativeTo_.[[ISOHour]], _relativeTo_.[[ISOMinute]], _relativeTo_.[[ISOSecond]], _relativeTo_.[[ISOMillisecond]], _relativeTo_.[[ISOMicrosecond]], _relativeTo_.[[ISONanosecond]], _relativeTo_.[[Calendar]]).
-        1. Return the new Record {
+        1. Return the Record {
             [[RelativeTo]]: _dateTime_,
             [[Days]]: _days_
           }.
@@ -1351,7 +1351,7 @@
           1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to ! RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ − _nanoseconds_.
-        1. Return the new Record {
+        1. Return the Record {
           [[Years]]: _years_,
           [[Months]]: _months_,
           [[Weeks]]: _weeks_,
@@ -1376,7 +1376,7 @@
       </p>
       <emu-alg>
         1. If _relativeTo_ is not present; or Type(_relativeTo_) is not Object; or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
-          1. Return the new Record {
+          1. Return the Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
             [[Weeks]]: _weeks_,
@@ -1394,7 +1394,7 @@
         1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ − _dayStart_).
         1. If (_timeRemainderNs_ − _dayLengthNs_) × _direction_ &lt; 0, then
-          1. Return the new Record {
+          1. Return the Record {
             [[Years]]: _years_,
             [[Months]]: _months_,
             [[Weeks]]: _weeks_,
@@ -1409,7 +1409,7 @@
         1. Set _timeRemainderNs_ to ? RoundTemporalInstant(ℤ(_timeRemainderNs_ − _dayLengthNs_), _increment_, _unit_, _roundingMode_).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
         1. Let _adjustedTimeDuration_ be ? BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
-        1. Return the new Record {
+        1. Return the Record {
           [[Years]]: _adjustedDateDuration_.[[Years]],
           [[Months]]: _adjustedDateDuration_.[[Months]],
           [[Weeks]]: _adjustedDateDuration_.[[Weeks]],

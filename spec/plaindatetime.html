@@ -882,7 +882,7 @@
         1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _timeResult_ be ? RegulateTime(_timeResult_.[[Hour]], _timeResult_.[[Minute]], _timeResult_.[[Second]], _timeResult_.[[Millisecond]], _timeResult_.[[Microsecond]], _timeResult_.[[Nanosecond]], _overflow_).
-        1. Return the new Record {
+        1. Return the Record {
           [[Year]]: _temporalDate_.[[ISOYear]],
           [[Month]]: _temporalDate_.[[ISOMonth]],
           [[Day]]: _temporalDate_.[[ISODay]],
@@ -1009,7 +1009,7 @@
         1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
-        1. Return the new Record {
+        1. Return the Record {
             [[Year]]: _addedDate_.[[ISOYear]],
             [[Month]]: _addedDate_.[[ISOMonth]],
             [[Day]]: _addedDate_.[[ISODay]],
@@ -1018,7 +1018,7 @@
             [[Second]]: _timeResult_.[[Second]],
             [[Millisecond]]: _timeResult_.[[Millisecond]],
             [[Microsecond]]: _timeResult_.[[Microsecond]],
-            [[Nanosecond]]: _timeResult_.[[Nanosecond]],
+            [[Nanosecond]]: _timeResult_.[[Nanosecond]]
           }.
       </emu-alg>
     </emu-clause>
@@ -1033,7 +1033,7 @@
         1. If _dayLength_ is not present, set _dayLength_ to 8.64 × 10<sup>13</sup>.
         1. Let _roundedTime_ be ! RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
         1. Let _balanceResult_ be ! BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
-        1. Return the new Record {
+        1. Return the Record {
             [[Year]]: _balanceResult_.[[Year]],
             [[Month]]: _balanceResult_.[[Month]],
             [[Day]]: _balanceResult_.[[Day]],
