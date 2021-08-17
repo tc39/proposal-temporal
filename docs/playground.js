@@ -9400,7 +9400,7 @@
             // 2) end is previous month from intermediate (negative duration)
             // 3) end is next month from intermediate (positive duration)
 
-            if (mid.month === end.month && mid.year === end.year) {
+            if (mid.month === end.month) {
               // 1) same month: use simple subtraction
               days = end.day - mid.day;
             } else if (sign < 0) {
