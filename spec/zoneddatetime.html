@@ -1220,7 +1220,7 @@
         1. Assert: Type(_ns1_) is BigInt.
         1. Assert: Type(_ns2_) is BigInt.
         1. If _ns1_ is _ns2_, then
-          1. Return the new Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0, [[Hours]]: 0, [[Minutes]]: 0, [[Seconds]]: 0, [[Milliseconds]]: 0, [[Microseconds]]: 0, [[Nanoseconds]]: 0 }.
+          1. Return the Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0, [[Hours]]: 0, [[Minutes]]: 0, [[Seconds]]: 0, [[Milliseconds]]: 0, [[Microseconds]]: 0, [[Nanoseconds]]: 0 }.
         1. Let _startInstant_ be ! CreateTemporalInstant(_ns1_).
         1. Let _startDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _startInstant_, _calendar_).
         1. Let _endInstant_ be ! CreateTemporalInstant(_ns2_).
@@ -1231,7 +1231,7 @@
         1. Let _intermediate_ be ? CreateTemporalZonedDateTime(_intermediateNs_, _timeZone_, _calendar_).
         1. Let _result_ be ? NanosecondsToDays(_timeRemainderNs_, _intermediate_).
         1. Let _timeDifference_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _result_.[[Nanoseconds]], *"hour"*).
-        1. Return the new Record { [[Years]]: _dateDifference_.[[Years]], [[Months]]: _dateDifference_.[[Months]], [[Weeks]]: _dateDifference_.[[Weeks]], [[Days]]: _result_.[[Days]], [[Hours]]: _timeDifference_.[[Hours]], [[Minutes]]: _timeDifference_.[[Minutes]], [[Seconds]]: _timeDifference_.[[Seconds]], [[Milliseconds]]: _timeDifference_.[[Milliseconds]], [[Microseconds]]: _timeDifference_.[[Microseconds]], [[Nanoseconds]]: _timeDifference_.[[Nanoseconds]] }.
+        1. Return the Record { [[Years]]: _dateDifference_.[[Years]], [[Months]]: _dateDifference_.[[Months]], [[Weeks]]: _dateDifference_.[[Weeks]], [[Days]]: _result_.[[Days]], [[Hours]]: _timeDifference_.[[Hours]], [[Minutes]]: _timeDifference_.[[Minutes]], [[Seconds]]: _timeDifference_.[[Seconds]], [[Milliseconds]]: _timeDifference_.[[Milliseconds]], [[Microseconds]]: _timeDifference_.[[Microseconds]], [[Nanoseconds]]: _timeDifference_.[[Nanoseconds]] }.
       </emu-alg>
     </emu-clause>
 
@@ -1247,9 +1247,9 @@
         1. Let _sign_ be ! ℝ(Sign(𝔽(_nanoseconds_))).
         1. Let _dayLengthNs_ be 8.64 × 10<sup>13</sup>.
         1. If _sign_ is 0, then
-          1. Return the new Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
+          1. Return the Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Return the new Record {
+          1. Return the Record {
             [[Days]]: the integral part of _nanoseconds_ / _dayLengthNs_,
             [[Nanoseconds]]: _nanoseconds_ modulo _dayLengthNs_,
             [[DayLength]]: _dayLengthNs_
@@ -1278,7 +1278,7 @@
             1. Set _days_ to _days_ + _sign_.
           1. Else,
             1. Set _done_ to *true*.
-        1. Return the new Record {
+        1. Return the Record {
           [[Days]]: _days_,
           [[Nanoseconds]]: _nanoseconds_,
           [[DayLength]]: abs(_dayLengthNs_)

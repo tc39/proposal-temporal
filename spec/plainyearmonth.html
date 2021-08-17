@@ -591,7 +591,7 @@
           1. Return ! ConstrainISOYearMonth(_year_, _month_).
         1. If _overflow_ is *"reject"*, then
           1. If ! IsValidISOMonth(_month_) is *false*, throw a *RangeError* exception.
-          1. Return the new Record {
+          1. Return the Record {
               [[Year]]: _year_,
               [[Month]]: _month_
             }.
@@ -640,7 +640,7 @@
         1. Assert: _year_ and _month_ are integers.
         1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
         1. Set _month_ to (_month_ − 1) modulo 12 + 1.
-        1. Return the new Record {
+        1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_
           }.
