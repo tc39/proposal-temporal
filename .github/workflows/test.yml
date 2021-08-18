@@ -15,6 +15,8 @@ jobs:
         node-version: 16.x
     - run: npm ci
     - run: npm run codecov:tests
+      env:
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   test-polyfill-node14:
     runs-on: ubuntu-latest
     steps:
