@@ -65,20 +65,6 @@ describe('Instant', () => {
       equal(typeof Instant.compare, 'function');
     });
   });
-  describe('Construction', () => {
-    it('can construct', () => {
-      const epochMillis = Date.UTC(1976, 10, 18, 14, 23, 30, 123);
-      const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
-      const instant = new Instant(epochNanos);
-      assert(instant);
-      equal(typeof instant, 'object');
-      equal(instant.epochSeconds, Math.floor(Date.UTC(1976, 10, 18, 14, 23, 30, 123) / 1e3), 'epochSeconds');
-      equal(instant.epochMilliseconds, Date.UTC(1976, 10, 18, 14, 23, 30, 123), 'epochMilliseconds');
-    });
-    it('constructs from string', () => equal(`${new Instant('0')}`, '1970-01-01T00:00:00Z'));
-    it('throws on number', () => throws(() => new Instant(1234), TypeError));
-    it('throws on string that does not convert to BigInt', () => throws(() => new Instant('abc123'), SyntaxError));
-  });
   describe('instant.toString() works', () => {
     it('`1976-11-18T14:23:30.123456789Z`.toString()', () => {
       const iso = '1976-11-18T14:23:30.123456789Z';
