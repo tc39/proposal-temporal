@@ -3,3 +3,10 @@ Instant/prototype/toLocaleString/options-conflict.js
 PlainDateTime/prototype/toLocaleString/options-conflict.js
 PlainTime/prototype/toLocaleString/options-conflict.js
 ZonedDateTime/prototype/toLocaleString/options-conflict.js
+
+# Blocked on https://github.com/tc39/proposal-temporal/issues/1695
+Duration/constructor/compare/relativeto-string-zoneddatetime-no-z.js
+Duration/prototype/add/relativeto-string-zoneddatetime-no-z.js
+Duration/prototype/round/relativeto-string-zoneddatetime-no-z.js
+Duration/prototype/subtract/relativeto-string-zoneddatetime-no-z.js
+Duration/prototype/total/relativeto-string-zoneddatetime-no-z.js

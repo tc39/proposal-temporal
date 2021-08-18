@@ -502,7 +502,7 @@
         1. Let _timeZone_ be ? Get(_value_, *"timeZone"*).
       1. Else,
         1. Let _string_ be ? ToString(_value_).
-        1. Let _result_ be ? ParseISODateTime(_string_).
+        1. Let _result_ be ? ParseTemporalRelativeToString(_string_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Let _offset_ be _result_.[[TimeZoneOffset]].
         1. Let _timeZone_ be _result_.[[TimeZoneIANAName]].
@@ -1315,6 +1315,42 @@
         [[Year]]: _year_,
         [[Month]]: _month_,
         [[Day]]: _day_
+        }.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-parsetemporalrelativetostring" aoid="ParseTemporalRelativeToString">
+    <h1>ParseTemporalRelativeToString ( _isoString_ )</h1>
+    <p>
+      The ParseTemporalRelativeToString abstract operation parses an ISO 8601 string with or without a time zone, and returns the information needed to construct either a Temporal.ZonedDateTime or a Temporal.PlainDateTime instance, e.g. as the value of a `relativeTo` option.
+    </p>
+    <emu-alg>
+      1. Assert: Type(_isoString_) is String.
+      1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+        1. Throw a *RangeError* exception.
+      1. Let _result_ be ! ParseISODateTime(_isoString_).
+      1. If _isoString_ satisfies the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+        1. Let _timeZoneResult_ be ! ParseTemporalTimeZoneString(_isoString_).
+        1. If _timeZoneResult_.[[Z]] is not *undefined*, then
+          1. Throw a *RangeError* exception.
+        1. Let _offset_ be _timeZoneResult_.[[Offset]].
+        1. Let _timeZone_ be _timeZoneResult_.[[Name]].
+      1. Else,
+        1. Let _offset_ be *undefined*.
+        1. Let _timeZone_ be *undefined*.
+      1. Return the Record {
+          [[Year]]: _result_.[[Year]],
+          [[Month]]: _result_.[[Month]],
+          [[Day]]: _result_.[[Day]],
+          [[Hour]]: _result_.[[Hour]],
+          [[Minute]]: _result_.[[Minute]],
+          [[Second]]: _result_.[[Second]],
+          [[Millisecond]]: _result_.[[Millisecond]],
+          [[Microsecond]]: _result_.[[Microsecond]],
+          [[Nanosecond]]: _result_.[[Nanosecond]],
+          [[Calendar]]: _result_.[[Calendar]],
+          [[TimeZoneOffset]]: _offset_,
+          [[TimeZoneIANAName]]: _timeZone_
         }.
     </emu-alg>
   </emu-clause>
