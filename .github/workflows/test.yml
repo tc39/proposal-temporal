@@ -26,7 +26,7 @@ jobs:
       with:
         node-version: 14.x
     - run: npm ci
-    - run: npm run codecov:tests
+    - run: npm run test
   test-polyfill-node12:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
       with:
         node-version: 12.x
     - run: npm ci
-    - run: npm run codecov:tests
+    - run: npm run test
   test-test262:
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +47,8 @@ jobs:
         node-version: 16.x
     - run: npm ci
     - run: npm run codecov:test262
+      env:
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   test-cookbook-node16:
     runs-on: ubuntu-latest
     steps:
