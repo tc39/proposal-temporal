@@ -6481,7 +6481,7 @@ li.menu-search-result-term:before {
         <code>Temporal.PlainMonthDay.prototype.calendar</code> is an <emu-xref href="#sec-object-type"><a href="https://tc39.es/ecma262/#sec-object-type">accessor property</a></emu-xref> whose set accessor function is <emu-val>undefined</emu-val>.
         Its get accessor function performs the following steps:
       </p>
-      <emu-alg><ol><li>Let <var>plainMonthDay</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>plainMonthDay</var>, [[InitializedTemporalMonthDay]]).</li><li>Return <var>plainMonthDay</var>.[[Calendar]].</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>monthDay</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>monthDay</var>, [[InitializedTemporalMonthDay]]).</li><li>Return <var>monthDay</var>.[[Calendar]].</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.plainmonthday.prototype.monthcode">
