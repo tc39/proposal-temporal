@@ -856,6 +856,25 @@ var TemporalHelpers = {
   },
 
   /*
+   * A custom calendar that returns @returnValue from its dateUntil() method,
+   * recording the call in @calls.
+   */
+  calendarDateUntilObservable(calls, returnValue) {
+    class CalendarDateUntilObservable extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+      }
+
+      dateUntil() {
+        calls.push("call dateUntil");
+        return returnValue;
+      }
+    }
+
+    return new CalendarDateUntilObservable();
+  },
+
+  /*
    * A custom calendar that returns an iterable instead of an array from its
    * fields() method, otherwise identical to the ISO calendar.
    */
@@ -996,6 +1015,24 @@ var TemporalHelpers = {
       }
     }
     return new CalendarMergeFieldsGetters();
+  },
+
+  /*
+   * observeProperty(calls, object, propertyName, value):
+   *
+   * Defines an own property @object.@propertyName with value @value, that
+   * will log any calls to its accessors to the array @calls.
+   */
+  observeProperty(calls, object, propertyName, value) {
+    Object.defineProperty(object, propertyName, {
+      get() {
+        calls.push(`get ${propertyName}`);
+        return value;
+      },
+      set(v) {
+        calls.push(`set ${propertyName}`);
+      }
+    });
   },
 
   /*

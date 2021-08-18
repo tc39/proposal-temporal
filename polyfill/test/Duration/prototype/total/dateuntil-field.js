@@ -3,30 +3,26 @@
 
 /*---
 esid: sec-temporal.duration.prototype.total
-includes: [compareArray.js]
+description: >
+    When consulting calendar.dateUntil() to calculate the number of months in a
+    year, the months property is not accessed on the result Duration
+includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 
 const actual = [];
-const duration = Temporal.Duration.from({ months: 12 });
-Object.defineProperty(duration, "months", {
-  get() {
-    actual.push("get months");
-    return 1;
-  }
-});
-class Calendar extends Temporal.Calendar {
-  constructor() {
-    super("iso8601");
-  }
-  dateUntil() {
-    actual.push("dateUntil");
-    return duration;
-  }
-}
-const relativeTo = Temporal.PlainDateTime.from("2018-10-12").withCalendar(new Calendar());
+const expected = [
+  "call dateUntil",
+  "call dateUntil",
+];
 
-const days = Temporal.Duration.from({ years: 1 });
-const result = days.total({ unit: "months", relativeTo });
-assert.sameValue(result, 12, "result");
-assert.compareArray(actual, ["dateUntil"], "operations");
+const duration = new Temporal.Duration(0, 12);
+TemporalHelpers.observeProperty(actual, duration, "months", 1);
+
+const calendar = TemporalHelpers.calendarDateUntilObservable(actual, duration);
+const relativeTo = new Temporal.PlainDateTime(2018, 10, 12, 0, 0, 0, 0, 0, 0, calendar);
+
+const years = new Temporal.Duration(2);
+const result = years.total({ unit: "months", relativeTo });
+assert.sameValue(result, 24, "result");
+assert.compareArray(actual, expected, "operations");
