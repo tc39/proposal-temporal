@@ -2702,7 +2702,8 @@ export const ES = ObjectAssign({}, ES2020, {
         const dateUntil = ES.GetMethod(calendar, 'dateUntil');
         const untilOptions = ObjectCreate(null);
         untilOptions.largestUnit = 'month';
-        let oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
+        let untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+        let oneYearMonths = GetSlot(untilResult, MONTHS);
         while (MathAbs(months) >= MathAbs(oneYearMonths)) {
           months -= oneYearMonths;
           years += sign;
@@ -2711,7 +2712,8 @@ export const ES = ObjectAssign({}, ES2020, {
           newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
           const untilOptions = ObjectCreate(null);
           untilOptions.largestUnit = 'month';
-          oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
+          untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+          oneYearMonths = GetSlot(untilResult, MONTHS);
         }
         break;
       }
