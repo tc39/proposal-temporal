@@ -23,6 +23,7 @@
     "codecov:tests": "cd polyfill && npm install && npm run codecov:tests",
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook",
+    "test-demitasse": "cd polyfill && npm install && npm run test",
     "test262": "cd polyfill && npm install && npm run test262",
     "lint": "eslint . --ext js,mjs,.d.ts --max-warnings 0 --cache",
     "postlint": "npm run tscheck",
