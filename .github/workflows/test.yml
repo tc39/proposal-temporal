@@ -26,7 +26,7 @@ jobs:
       with:
         node-version: 14.x
     - run: npm ci
-    - run: npm run test
+    - run: npm run test-demitasse
   test-polyfill-node12:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
       with:
         node-version: 12.x
     - run: npm ci
-    - run: npm run test
+    - run: npm run test-demitasse
   test-test262:
     runs-on: ubuntu-latest
     steps:
