@@ -180,22 +180,6 @@ describe('Instant', () => {
       [{}, () => {}, undefined].forEach((options) => equal(i1.toString(options), '1976-11-18T15:23:00Z'));
     });
   });
-  describe('Instant.toJSON() works', () => {
-    it('`1976-11-18T15:23:30.123456789+01:00`.toJSON()', () => {
-      const inst = Instant.from('1976-11-18T15:23:30.123456789+01:00');
-      assert(inst);
-      equal(inst.toJSON(), '1976-11-18T14:23:30.123456789Z');
-    });
-    it('`1963-02-13T10:36:29.123456789+01:00`.toJSON()', () => {
-      const inst = Instant.from('1963-02-13T10:36:29.123456789+01:00');
-      assert(inst);
-      equal(inst.toJSON(), '1963-02-13T09:36:29.123456789Z');
-    });
-    it('argument is ignored', () => {
-      const inst = Instant.from('1976-11-18T15:23:30.123456789+01:00');
-      equal(inst.toJSON('+01:00'), inst.toJSON());
-    });
-  });
   describe('Instant.epochSeconds works', () => {
     it('post-epoch', () => {
       const epochMs = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
