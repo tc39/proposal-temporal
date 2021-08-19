@@ -1025,11 +1025,11 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   InterpretTemporalDateTimeFields: (calendar, fields, options) => {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
+    const overflow = ES.ToTemporalOverflow(options);
     const date = ES.DateFromFields(calendar, fields, options);
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
-    const overflow = ES.ToTemporalOverflow(options);
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
