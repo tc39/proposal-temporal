@@ -107,10 +107,11 @@ export class PlainYearMonth {
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
     const startDate = ES.DateFromFields(calendar, { ...fields, day });
+    const optionsCopy = { ...options };
     const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
-    return ES.YearMonthFromFields(calendar, addedDateFields, options);
+    return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -138,10 +139,11 @@ export class PlainYearMonth {
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
     const startDate = ES.DateFromFields(calendar, { ...fields, day });
+    const optionsCopy = { ...options };
     const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
-    return ES.YearMonthFromFields(calendar, addedDateFields, options);
+    return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

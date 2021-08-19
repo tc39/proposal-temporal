@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
-description: plainyearmonth.prototype.subtract should respect calendar arguments and pass copied options objects.
+description: plainyearmonth.prototype.subtract should pass extra fields in copied options objects.
 info: |
     YearMonthFromFields ( calendar, fields [ , options ] )
 
@@ -14,14 +14,10 @@ features: [Temporal]
 
 const actual = [];
 const expected = [
+  "get extra",
   "get overflow",
-  "get overflow",
-  "get overflow.toString",
-  "call overflow.toString",
-  "get overflow.toString",
-  "call overflow.toString",
 ];
-const options = new Proxy({ overflow: "constrain" }, {
+const options = new Proxy({ extra: 5 }, {
   get(target, key) {
     actual.push(`get ${key}`);
     const result = target[key];
@@ -52,7 +48,7 @@ class CustomCalendar extends Temporal.Calendar {
     return super.yearMonthFromFields(...args);
   }
 }
-const plainYearMonth = new Temporal.PlainYearMonth(2000, 7, new CustomCalendar());
-const result = plainYearMonth.subtract({ months: 9 }, options);
+const plainYearMonth = new Temporal.PlainYearMonth(2000, 3, new CustomCalendar());
+const result = plainYearMonth.subtract({ months: 5 }, options);
 TemporalHelpers.assertPlainYearMonth(result, 1999, 10, "M10");
-assert.compareArray(actual, expected, "copied options object order of operations");
+assert.compareArray(actual, expected, "extra field options object order of operations");
