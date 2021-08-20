@@ -1580,7 +1580,24 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. Let _fieldNames_ be ? IterableToListOfType(_fields_, « String »).
+            1. Let _iteratorRecord_ be ? Getiterator(_fields_, ~sync~).
+            1. Let _fieldNames_ be a new empty List.
+            1. Let _next_ be *true*.
+            1. Repeat, while _next_ is not *false*,
+              1. Let _length_ be the number of elements in _fieldNames_.
+              1. If _length_ &gt; 10, then
+                1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
+                1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+              1. Set _next_ to ? IteratorStep(_iteratorRecord_).
+              1. If _next_ is not *false*, then
+                1. Let _nextValue_ be ? IteratorValue(_next_).
+                1. If _fieldNames_ contains _nextValue_, then
+                  1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
+                  1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+                1. If _nextValue_ is not one of *"year"*, *"month"*, *"monthCode"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"*, then
+                    1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
+                    1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+                1. Append _nextValue_ to the end of the List _fieldNames_.
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be _fieldNames_.
             1. Else,
