@@ -102,6 +102,7 @@ overrides:
       assert: readonly
       isConstructor: readonly
       verifyProperty: readonly
+      arrayContains: readonly
     # test262 code complies to a different coding style
     extends: 'eslint:recommended'
     rules:

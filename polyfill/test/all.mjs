@@ -16,7 +16,6 @@ import './regex.mjs';
 import './ecmascript.mjs';
 
 // tests of public API
-import './exports.mjs';
 import './now.mjs';
 import './timezone.mjs';
 import './instant.mjs';
