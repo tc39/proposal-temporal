@@ -270,18 +270,13 @@ const timeZoneIANAName = withCode(
   choice(...timezoneNames),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
-const timeZone = withCode(
-  choice(timeZoneUTCOffset, seq([timeZoneNumericUTCOffset], timeZoneBracketedAnnotation)),
-  (data) => {
-    if (!('offset' in data)) data.offset = undefined;
-  }
-);
-const timeZoneOffsetRequired = withCode(
-  choice(utcDesignator, seq(timeZoneNumericUTCOffset, [timeZoneBracketedAnnotation])),
-  (data) => {
-    if (!('offset' in data)) data.offset = undefined;
-  }
-);
+const timeZoneOffsetRequired = withCode(seq(timeZoneUTCOffset, [timeZoneBracketedAnnotation]), (data) => {
+  if (!('offset' in data)) data.offset = undefined;
+});
+const timeZoneNameRequired = withCode(seq([timeZoneUTCOffset], timeZoneBracketedAnnotation), (data) => {
+  if (!('offset' in data)) data.offset = undefined;
+});
+const timeZone = choice(timeZoneOffsetRequired, timeZoneNameRequired);
 const temporalTimeZoneIdentifier = withCode(choice(timeZoneNumericUTCOffset, timeZoneIANAName), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });
@@ -291,12 +286,13 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
+const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 
 const dateSpecMonthDay = seq(['--'], dateMonth, ['-'], dateDay);
 const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
 const time = seq(timeSpec, [timeZone]);
-const dateTime = seq(date, [seq(dateTimeSeparator, timeSpec)], [timeZone]);
+const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
@@ -348,14 +344,8 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, [seq(dateTimeSeparator, timeSpec)], timeZoneOffsetRequired);
-const zonedDateTime = seq(
-  date,
-  seq([dateTimeSeparator, timeSpec]),
-  [timeZoneNumericUTCOffset],
-  timeZoneBracketedAnnotation,
-  [calendar]
-);
+const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired);
+const zonedDateTime = seq(date, [timeSpecSeparator], timeZoneNameRequired, [calendar]);
 
 // goal elements
 const goals = {
@@ -365,7 +355,7 @@ const goals = {
   Duration: duration,
   MonthDay: choice(dateSpecMonthDay, dateTime),
   Time: choice(time, dateTime),
-  TimeZone: choice(temporalTimeZoneIdentifier, instant),
+  TimeZone: choice(temporalTimeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
   YearMonth: choice(dateSpecYearMonth, dateTime),
   ZonedDateTime: zonedDateTime
 };
