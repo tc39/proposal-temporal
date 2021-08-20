@@ -265,9 +265,9 @@ export class Duration {
     ));
     return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
-  round(options) {
+  round(properties) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    if (options === undefined) throw new TypeError('options parameter is required');
+    if (properties === undefined) throw new TypeError('properties parameter is required');
     let years = GetSlot(this, YEARS);
     let months = GetSlot(this, MONTHS);
     let weeks = GetSlot(this, WEEKS);
@@ -291,7 +291,7 @@ export class Duration {
       microseconds,
       nanoseconds
     );
-    options = ES.GetOptionsObject(options);
+    const options = ES.GetOptionsObject(properties);
     let smallestUnit = ES.ToSmallestTemporalUnit(options, undefined);
     let smallestUnitPresent = true;
     if (!smallestUnit) {
@@ -374,7 +374,7 @@ export class Duration {
 
     return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
-  total(options) {
+  total(properties) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     let years = GetSlot(this, YEARS);
     let months = GetSlot(this, MONTHS);
@@ -387,8 +387,8 @@ export class Duration {
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
-    if (options === undefined) throw new TypeError('options argument is required');
-    options = ES.GetOptionsObject(options);
+    if (properties === undefined) throw new TypeError('properties argument is required');
+    const options = ES.GetOptionsObject(properties);
     const unit = ES.ToTemporalDurationTotalUnit(options, undefined);
     if (unit === undefined) throw new RangeError('unit option is required');
     const relativeTo = ES.ToRelativeTemporalObject(options);

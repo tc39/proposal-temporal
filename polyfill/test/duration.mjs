@@ -935,8 +935,10 @@ describe('Duration', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
-    it('options may only be an object', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
+    it('properties may only be an object', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badProperties) =>
+        throws(() => d.round(badProperties), TypeError)
+      );
     });
     it('throws without parameter', () => {
       throws(() => d.round(), TypeError);
@@ -1119,9 +1121,9 @@ describe('Duration', () => {
     });
     it('throws if neither one of largestUnit or smallestUnit is given', () => {
       const hoursOnly = new Duration(0, 0, 0, 0, 1);
-      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => {
-        throws(() => d.round(options), RangeError);
-        throws(() => hoursOnly.round(options), RangeError);
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((properties) => {
+        throws(() => d.round(properties), RangeError);
+        throws(() => hoursOnly.round(properties), RangeError);
       });
     });
     it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
@@ -1319,23 +1321,23 @@ describe('Duration', () => {
     });
     it('valid hour increments divide into 24', () => {
       [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
-        const options = { smallestUnit: 'hours', roundingIncrement, relativeTo };
-        assert(d.round(options) instanceof Temporal.Duration);
+        const properties = { smallestUnit: 'hours', roundingIncrement, relativeTo };
+        assert(d.round(properties) instanceof Temporal.Duration);
       });
     });
     ['minutes', 'seconds'].forEach((smallestUnit) => {
       it(`valid ${smallestUnit} increments divide into 60`, () => {
         [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
-          const options = { smallestUnit, roundingIncrement, relativeTo };
-          assert(d.round(options) instanceof Temporal.Duration);
+          const properties = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(properties) instanceof Temporal.Duration);
         });
       });
     });
     ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
       it(`valid ${smallestUnit} increments divide into 1000`, () => {
         [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
-          const options = { smallestUnit, roundingIncrement, relativeTo };
-          assert(d.round(options) instanceof Temporal.Duration);
+          const properties = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(properties) instanceof Temporal.Duration);
         });
       });
     });
@@ -1416,8 +1418,10 @@ describe('Duration', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
-    it('options may only be an object', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
+    it('properties may only be an object', () => {
+      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badProperties) =>
+        throws(() => d.total(badProperties), TypeError)
+      );
     });
     it('throws on disallowed or invalid smallestUnit', () => {
       ['era', 'nonsense'].forEach((unit) => {
@@ -1464,7 +1468,7 @@ describe('Duration', () => {
       equal(oneMonth.total({ unit: 'months', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } }), 1);
     });
     it('throws RangeError if unit property is missing', () => {
-      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => throws(() => d.total(options), RangeError));
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((properties) => throws(() => d.total(properties), RangeError));
     });
     it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
       throws(() => d2.total({ unit: 'years' }), RangeError);

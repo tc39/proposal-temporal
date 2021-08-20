@@ -263,7 +263,7 @@ export namespace Temporal {
     roundingMode?: RoundingMode;
   }
 
-  export interface DurationRoundOptions {
+  export interface DurationRoundProperties {
     /**
      * The largest unit to allow in the resulting `Temporal.Duration` object.
      *
@@ -379,9 +379,9 @@ export namespace Temporal {
   }
 
   /**
-   * Options to control behavior of `Duration.prototype.total()`
+   * Properties to control behavior of `Duration.prototype.total()`
    */
-  export interface DurationTotalOptions {
+  export interface DurationTotalProperties {
     /**
      * The unit to convert the duration to. This option is required.
      */
@@ -513,10 +513,10 @@ export namespace Temporal {
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
     with(durationLike: DurationLike): Temporal.Duration;
-    add(other: Temporal.Duration | DurationLike | string, options?: DurationRoundOptions): Temporal.Duration;
-    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationRoundOptions): Temporal.Duration;
-    round(options: DurationRoundOptions): Temporal.Duration;
-    total(options: DurationTotalOptions): number;
+    add(other: Temporal.Duration | DurationLike | string, options?: DurationRoundProperties): Temporal.Duration;
+    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationRoundProperties): Temporal.Duration;
+    round(properties: DurationRoundProperties): Temporal.Duration;
+    total(properties: DurationTotalProperties): number;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;

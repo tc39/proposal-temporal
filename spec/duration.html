@@ -409,17 +409,17 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.round">
-      <h1>Temporal.Duration.prototype.round ( _options_ )</h1>
+      <h1>Temporal.Duration.prototype.round ( _properties_ )</h1>
       <p>
-        The `round` method takes one argument _options_.
+        The `round` method takes one argument _properties_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. If _options_ is *undefined*, then
+        1. If _properties_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _options_ be ? GetOptionsObject(_properties_).
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « », *undefined*).
@@ -453,16 +453,16 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.total">
-      <h1>Temporal.Duration.prototype.total ( _options_ )</h1>
+      <h1>Temporal.Duration.prototype.total ( _properties_ )</h1>
       <p>
-        The `total` method takes one argument _options_.
+        The `total` method takes one argument _properties_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. If _options_ is *undefined*, throw a *TypeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. If _properties_ is *undefined*, throw a *TypeError* exception.
+        1. Let _options_ be ? GetOptionsObject(_properties_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _unit_ be ? ToTemporalDurationTotalUnit(_options_).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _unit_, _relativeTo_).

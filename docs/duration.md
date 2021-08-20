@@ -386,12 +386,12 @@ d = Temporal.Duration.from('-PT8H30M');
 d.abs(); // PT8H30M
 ```
 
-### duration.**round**(_options_: object) : Temporal.Duration
+### duration.**round**(_properties_: object) : Temporal.Duration
 
 **Parameters:**
 
-- `options` (object): An object with properties representing options for the operation.
-  The following options are recognized:
+- `properties` (object): An object with properties describing how to carry out the rounding operation.
+  The following properties are recognized:
   - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
     Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
     The default is `'auto'`.
@@ -516,12 +516,12 @@ quarters = d.months / 3;
 quarters; // => 3
 ```
 
-### duration.**total**(_options_: object) : number
+### duration.**total**(_properties_: object) : number
 
 **Parameters:**
 
-- `options` (object): An object with properties representing options for the operation.
-  The following options are recognized:
+- `properties` (object): An object with properties describing how to carry out the operation.
+  The following properties are recognized:
   - `unit` (string): The unit of time that will be returned.
     Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
     There is no default; `unit` is required.
