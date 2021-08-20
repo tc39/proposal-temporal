@@ -407,8 +407,9 @@
       <emu-alg>
         1. Assert: Type(_string_) is String.
         1. Let _result_ be ? ParseTemporalTimeZoneString(_string_).
-        1. If _result_.[[Z]] is not *undefined*, return *"UTC"*.
-        1. Return _result_.[[Name]].
+        1. If _result_.[[Name]] is not *undefined*, return _result_.[[Name]].
+        1. If _result_.[[Z]] is *true*, return *"UTC"*.
+        1. Return _result_.[[OffsetString]].
       </emu-alg>
     </emu-clause>
 

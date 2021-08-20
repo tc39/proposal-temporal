@@ -307,8 +307,9 @@ describe('ZonedDateTime', () => {
       throws(() => ZonedDateTime.from('2020-03-08T01:00-08:00'), RangeError);
       throws(() => ZonedDateTime.from('2020-03-08T01:00Z'), RangeError);
     });
-    it('"Z" is a time zone designation, not an offset', () => {
-      throws(() => ZonedDateTime.from('2020-03-08T09:00:00Z[America/Los_Angeles]'), RangeError);
+    it('"Z" means preserve the exact time in the given IANA time zone', () => {
+      const zdt = ZonedDateTime.from('2020-03-08T09:00:00Z[America/Los_Angeles]');
+      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
     });
     it('ZonedDateTime.from(ISO string leap second) is constrained', () => {
       equal(

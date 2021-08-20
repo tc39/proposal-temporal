@@ -487,6 +487,7 @@
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
       1. If _value_ is *undefined*, then
         1. Return _value_.
+      1. Let _offsetBehaviour_ be ~option~.
       1. If Type(_value_) is Object, then
         1. If _value_ has either an [[InitializedTemporalDateTime]] or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _value_.
@@ -498,22 +499,28 @@
         1. Let _dateOptions_ be ! OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_dateOptions_, *"overflow"*, *"constrain"*).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _dateOptions_).
-        1. Let _offset_ be ? Get(_value_, *"offset"*).
+        1. Let _offsetString_ be ? Get(_value_, *"offset"*).
         1. Let _timeZone_ be ? Get(_value_, *"timeZone"*).
+        1. If _offsetString_ is *undefined*, then
+          1. Set _offsetBehaviour_ to ~wall~.
       1. Else,
         1. Let _string_ be ? ToString(_value_).
         1. Let _result_ be ? ParseTemporalRelativeToString(_string_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
-        1. Let _offset_ be _result_.[[TimeZoneOffset]].
+        1. Let _offsetString_ be _result_.[[TimeZoneOffset]].
         1. Let _timeZone_ be _result_.[[TimeZoneIANAName]].
+        1. If _result_.[[Z]] is *true*, then
+          1. Set _offsetBehaviour_ to ~exact~.
+        1. Else if _offsetString_ is *undefined*, then
+          1. Set _offsetBehaviour_ to ~wall~.
       1. If _timeZone_ is not *undefined*, then
         1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
-        1. If _offset_ is not *undefined*, then
-          1. Set _offset_ to ? ToString(_offset_).
-          1. Let _offsetNs_ be ? ParseTimeZoneOffsetString(_offset_).
+        1. If _offsetBehaviour_ is ~option~, then
+          1. Set _offsetString_ to ? ToString(_offsetString_).
+          1. Let _offsetNs_ be ? ParseTimeZoneOffsetString(_offsetString_).
         1. Else,
-          1. Let _offsetNs_ be *null*.
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetNs_, _timeZone_, *"compatible"*, *"reject"*).
+          1. Let _offsetNs_ be 0.
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*).
         1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
     </emu-alg>
@@ -913,13 +920,15 @@
       TimeZoneBracketedAnnotation :
           `[` TimeZoneBracketedName `]`
 
-      TimeZone :
-          TimeZoneUTCOffset
-          TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation
-
       TimeZoneOffsetRequired :
-          UTCDesignator
-          TimeZoneNumericUTCOffset TimeZoneBracketedAnnotation?
+          TimeZoneUTCOffset TimeZoneBracketedAnnotation?
+
+      TimeZoneNameRequired :
+          TimeZoneUTCOffset? TimeZoneBracketedAnnotation
+
+      TimeZone :
+          TimeZoneOffsetRequired
+          TimeZoneNameRequired
 
       CalChar :
           Alpha
@@ -1054,15 +1063,14 @@
 
       TemporalTimeZoneString :
           TemporalTimeZoneIdentifier
-          TemporalInstantString
+          Date TimeSpecSeparator? TimeZone Calendar?
 
       TemporalYearMonthString :
           DateSpecYearMonth
           DateTime
 
       TemporalZonedDateTimeString :
-          Date TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
-          Date DateTimeSeparator TimeSpec TimeZoneNumericUTCOffset? TimeZoneBracketedAnnotation Calendar?
+          Date TimeSpecSeparator? TimeZoneNameRequired Calendar?
 
       TemporalCalendarString :
           CalendarName
@@ -1071,6 +1079,10 @@
           Time
           DateSpecYearMonth
           DateSpecMonthDay
+
+      TemporalRelativeToString :
+          TemporalDateTimeString
+          TemporalZonedDateTimeString
     </emu-grammar>
   </emu-clause>
 
@@ -1139,7 +1151,10 @@
         1. Throw a *RangeError* exception.
       1. Let _result_ be ! ParseISODateTime(_isoString_).
       1. Let _timeZoneResult_ be ? ParseTemporalTimeZoneString(_isoString_).
-      1. Assert: _timeZoneResult_.[[OffsetString]] is not *undefined*.
+      1. Let _offsetString_ be _timeZoneResult_.[[OffsetString]].
+      1. If _timeZoneResult_.[[Z]] is *true*, then
+        1. Set _offsetString_ to *"+00:00"*.
+      1. Assert: _offsetString_ is not *undefined*.
       1. Return the Record {
         [[Year]]: _result_.[[Year]],
         [[Month]]: _result_.[[Month]],
@@ -1166,8 +1181,6 @@
         1. Throw a *RangeError* exception.
       1. Let _result_ be ! ParseISODateTime(_isoString_).
       1. Let _timeZoneResult_ be ? ParseTemporalTimeZoneString(_isoString_).
-      1. If _timeZoneResult_.[[Z]] is not *undefined*, then
-        1. Throw a *RangeError* exception.
       1. Return the Record {
         [[Year]]: _result_.[[Year]],
         [[Month]]: _result_.[[Month]],
@@ -1178,6 +1191,7 @@
         [[Millisecond]]: _result_.[[Millisecond]],
         [[Microsecond]]: _result_.[[Microsecond]],
         [[Nanosecond]]: _result_.[[Nanosecond]],
+        [[TimeZoneZ]]: _timeZoneResult_.[[Z]],
         [[TimeZoneOffsetString]]: _timeZoneResult_.[[OffsetString]],
         [[TimeZoneName]]: _timeZoneResult_.[[Name]]
         }.
@@ -1332,16 +1346,16 @@
     </p>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+      1. If _isoString_ does not satisfy the syntax of a |TemporalRelativeToString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ! ParseISODateTime(_isoString_).
       1. If _isoString_ satisfies the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Let _timeZoneResult_ be ! ParseTemporalTimeZoneString(_isoString_).
-        1. If _timeZoneResult_.[[Z]] is not *undefined*, then
-          1. Throw a *RangeError* exception.
+        1. Let _z_ be _timeZoneResult_.[[Z]].
         1. Let _offset_ be _timeZoneResult_.[[Offset]].
         1. Let _timeZone_ be _timeZoneResult_.[[Name]].
       1. Else,
+        1. Let _z_ be *false*.
         1. Let _offset_ be *undefined*.
         1. Let _timeZone_ be *undefined*.
       1. Return the Record {
@@ -1355,6 +1369,7 @@
           [[Microsecond]]: _result_.[[Microsecond]],
           [[Nanosecond]]: _result_.[[Nanosecond]],
           [[Calendar]]: _result_.[[Calendar]],
+          [[TimeZoneZ]]: _z_,
           [[TimeZoneOffset]]: _offset_,
           [[TimeZoneIANAName]]: _timeZone_
         }.
@@ -1395,9 +1410,9 @@
       1. Let _z_, _sign_, _hours_, _minutes_, _seconds_, _fraction_ and _name_ be the parts of _isoString_ produced respectively by the |UTCDesignator|, |TimeZoneUTCOffsetSign|, |TimeZoneUTCOffsetHour|, |TimeZoneUTCOffsetMinute|, |TimeZoneUTCOffsetSecond|, |TimeZoneUTCOffsetFraction|, and |TimeZoneIANAName| productions, or *undefined* if not present.
       1. If _z_ is not *undefined*, then
         1. Return the Record {
-          [[Z]]: *"Z"*,
-          [[OffsetString]]: *"+00:00"*,
-          [[Name]]: *undefined*
+          [[Z]]: *true*,
+          [[OffsetString]]: *undefined*,
+          [[Name]]: _name_
           }.
       1. If _hours_ is *undefined*, then
         1. Let _offsetString_ be *undefined*.
@@ -1422,7 +1437,7 @@
         1. If ! IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
         1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
       1. Return the Record {
-        [[Z]]: *undefined*,
+        [[Z]]: *false*,
         [[OffsetString]]: _offsetString_,
         [[Name]]: _name_
         }.
