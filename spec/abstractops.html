@@ -1298,13 +1298,15 @@
         1. Let _microseconds_ be 0.
         1. Let _nanoseconds_ be 0.
       1. If _fHours_ is not *undefined*, then
-        1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
-        1. Set _fHours_ to ! ToIntegerOrInfinity(_fraction_) × _factor_ / 10 raised to the power of the length of _fHours_.
+        1. Let _fHoursDigits_ be the substring of _fHours_ from 1.
+        1. Let _fHoursScale_ be the length of _fHoursDigits_.
+        1. Set _fHours_ to ! ToIntegerOrInfinity(_fHoursDigits_) × _factor_ / 10<sup>_fHoursScale_</sup>.
       1. Else,
         1. Set _fHours_ to 0.
       1. If _fMinutes_ is not *undefined*, then
-        1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
-        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fraction_) × _factor_ / 10 raised to the power of the length of _fMinutes_.
+        1. Let _fMinutesDigits_ be the substring of _fMinutes_ from 1.
+        1. Let _fMinutesScale_ be the length of _fMinutesDigits_.
+        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fMinutesDigits_) × _factor_ / 10<sup>_fMinutesScale_</sup>.
       1. Else,
         1. Set _fMinutes_ to 0.
       1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
