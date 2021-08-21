@@ -1285,13 +1285,13 @@
       1. Set _minutes_ to ? ToIntegerOrInfinity(_minutes_) × _factor_.
       1. Set _seconds_ to ? ToIntegerOrInfinity(_seconds_) × _factor_.
       1. If _fSeconds_ is not *undefined*, then
-        1. Let _fraction_ be the part of _isoString_ produced by the |TimeFractionalPart| production.
-        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-        1. Let _milliseconds_ be the String value equal to the substring of _fraction_ from 0 to 3.
+        1. Let _fSecondsDigits_ be the substring of _fSeconds_ from 1.
+        1. Let _fSecondsDigitsExtended_ be the string-concatenation of _fSecondsDigits_ and *"000000000"*.
+        1. Let _milliseconds_ be the substring of _fSecondsDigitsExtended_ from 0 to 3.
         1. Set _milliseconds_ to ! ToIntegerOrInfinity(_milliseconds_) × _factor_.
-        1. Let _microseconds_ be the String value equal to the substring of _fraction_ from 3 to 6.
+        1. Let _microseconds_ be the substring of _fSecondsDigitsExtended_ from 3 to 6.
         1. Set _microseconds_ to ! ToIntegerOrInfinity(_microseconds_) × _factor_.
-        1. Let _nanoseconds_ be the String value equal to the substring of _fraction_ from 6 to 9.
+        1. Let _nanoseconds_ be the substring of _fSecondsDigitsExtended_ from 6 to 9.
         1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_) × _factor_.
       1. Else,
         1. Let _milliseconds_ be 0.
