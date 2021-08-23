@@ -12,7 +12,6 @@ const { PlainMonthDay } = Temporal;
 
 describe('MonthDay', () => {
   describe('Construction', () => {
-    it('Leap day', () => equal(`${new PlainMonthDay(2, 29)}`, '02-29'));
     describe('.from()', () => {
       it('MonthDay.from(10-01) == 10-01', () => equal(`${PlainMonthDay.from('10-01')}`, '10-01'));
       it('MonthDay.from(2019-10-01T09:00:00Z) == 10-01', () =>
