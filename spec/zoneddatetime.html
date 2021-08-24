@@ -588,7 +588,7 @@
         1. If _offsetString_ is not *undefined*, then
           1. Perform ? Set(_fields_, *"offset"*, _offsetString_).
         1. Else,
-          1. Set _offsetString_ to ? Get(_fields_, *"offset"*).
+          1. Set _offsetString_ to ? ToString(? Get(_fields_, *"offset"*)).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
         1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
