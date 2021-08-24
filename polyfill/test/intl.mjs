@@ -729,6 +729,96 @@ describe('Intl', () => {
           equal(`start ${calculatedStart.toString()}`, `start ${start.toString()}`);
           const diff = start.until(end, { largestUnit: unit });
           equal(`diff ${unit} ${id}: ${diff}`, `diff ${unit} ${id}: ${duration}`);
+
+          if (unit === 'months') {
+            const startYesterday = start.subtract({ days: 1 });
+            let endYesterday = startYesterday.add(duration);
+            equal(
+              `add from end-of-month ${unit} ${id} day (initial): ${endYesterday.day}`,
+              `add from end-of-month ${unit} ${id} day (initial): ${Math.min(
+                startYesterday.day,
+                endYesterday.daysInMonth
+              )}`
+            );
+            // Now advance to the first day of the next month, which should be
+            // the same as the expected end date above.
+            let endYesterdayNextDay = endYesterday.add({ days: 1 });
+            while (endYesterdayNextDay.day !== 1) {
+              // It's possible that we may be more than one day off in some
+              // calendars, e.g. when original start date was March 1, so day
+              // before was Feb 28, so adding P6M to Feb 28 will be Oct 28, so
+              // need to advance three days.
+              endYesterdayNextDay = endYesterdayNextDay.add({ days: 1 });
+            }
+            equal(
+              `add from end-of-month ${unit} ${id} day: ${endYesterdayNextDay.day}`,
+              `add from end-of-month ${unit} ${id} day: ${values.day}`
+            );
+            equal(
+              `add from end-of-month ${unit} ${id} eraYear: ${endYesterdayNextDay.eraYear}`,
+              `add from end-of-month ${unit} ${id} eraYear: ${values.eraYear}`
+            );
+            equal(
+              `add from end-of-month ${unit} ${id} era: ${endYesterdayNextDay.era}`,
+              `add from end-of-month ${unit} ${id} era: ${values.era}`
+            );
+            equal(
+              `add from end-of-month ${unit} ${id} year: ${endYesterdayNextDay.year}`,
+              `add from end-of-month ${unit} ${id} year: ${values.year}`
+            );
+            equal(
+              `add from end-of-month ${unit} ${id} month: ${endYesterdayNextDay.month}`,
+              `add from end-of-month ${unit} ${id} month: ${values.month}`
+            );
+            equal(
+              `add from end-of-month ${unit} ${id} monthCode: ${endYesterdayNextDay.monthCode}`,
+              `add from end-of-month ${unit} ${id} monthCode: ${values.monthCode}`
+            );
+
+            // Now test the reverse operation: subtracting from the last day of
+            // the previous month.
+            const endReverse = endYesterdayNextDay.subtract({ days: 1 });
+            const startReverse = endReverse.subtract(duration);
+            equal(
+              `add from end-of-month ${unit} ${id} day (initial): ${startReverse.day}`,
+              `add from end-of-month ${unit} ${id} day (initial): ${Math.min(endReverse.day, startReverse.daysInMonth)}`
+            );
+            // Now advance to the first day of the next month, which should be
+            // the same as the original start date above.
+            let startReverseNextDay = startReverse.add({ days: 1 });
+            while (startReverseNextDay.day !== 1) {
+              // It's possible that we may be more than one day off in some
+              // calendars, e.g. when original start date was March 1, so day
+              // before was Feb 28, so adding P6M to Feb 28 will be Oct 28, so
+              // need to advance three days.
+              startReverseNextDay = startReverseNextDay.add({ days: 1 });
+            }
+            equal(
+              `subtract from end-of-month ${unit} ${id} day: ${startReverseNextDay.day}`,
+              `subtract from end-of-month ${unit} ${id} day: ${start.day}`
+            );
+            equal(
+              `subtract from end-of-month ${unit} ${id} eraYear: ${startReverseNextDay.eraYear}`,
+              `subtract from end-of-month ${unit} ${id} eraYear: ${start.eraYear}`
+            );
+            equal(
+              `subtract from end-of-month ${unit} ${id} era: ${startReverseNextDay.era}`,
+              `subtract from end-of-month ${unit} ${id} era: ${start.era}`
+            );
+            equal(
+              `subtract from end-of-month ${unit} ${id} year: ${startReverseNextDay.year}`,
+              `subtract from end-of-month ${unit} ${id} year: ${start.year}`
+            );
+            equal(
+              `subtract from end-of-month ${unit} ${id} month: ${startReverseNextDay.month}`,
+              `subtract from end-of-month ${unit} ${id} month: ${start.month}`
+            );
+            equal(
+              `subtract from end-of-month ${unit} ${id} monthCode: ${startReverseNextDay.monthCode}`,
+              `subtract from end-of-month ${unit} ${id} monthCode: ${start.monthCode}`
+            );
+          }
+
           const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - now;
           totalNow += ms;
           // eslint-disable-next-line no-console
