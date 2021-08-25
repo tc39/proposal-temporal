@@ -4136,10 +4136,26 @@
           day = _calendarDate2.day;
 
       for (var i = 0, absMonths = MathAbs$1(months); i < absMonths; i++) {
-        var days = months < 0 ? -this.daysInPreviousMonth(calendarDate, cache) : this.daysInMonth(calendarDate, cache);
+        var _calendarDate3 = calendarDate,
+            month = _calendarDate3.month;
+        var oldCalendarDate = calendarDate;
+        var days = months < 0 ? -Math.max(day, this.daysInPreviousMonth(calendarDate, cache)) : this.daysInMonth(calendarDate, cache);
         var isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
         var addedIso = this.addDaysIso(isoDate, days, cache);
-        calendarDate = this.isoToCalendarDate(addedIso, cache);
+        calendarDate = this.isoToCalendarDate(addedIso, cache); // Normally, we can advance one month by adding the number of days in the
+        // current month. However, if we're at the end of the current month and
+        // the next month has fewer days, then we rolled over to the after-next
+        // month. Below we detect this condition and back up until we're back in
+        // the desired month.
+
+        if (months > 0) {
+          var monthsInOldYear = this.monthsInYear(oldCalendarDate, cache);
+
+          while (calendarDate.month - 1 !== month % monthsInOldYear) {
+            addedIso = this.addDaysIso(addedIso, -1, cache);
+            calendarDate = this.isoToCalendarDate(addedIso, cache);
+          }
+        }
 
         if (calendarDate.day !== day) {
           // try to retain the original day-of-month, if possible
@@ -4218,7 +4234,7 @@
             var next = yearsAdded;
 
             do {
-              months++;
+              months += sign;
               current = next;
               next = this.addMonthsCalendar(current, sign, 'constrain', cache);
 
@@ -4230,11 +4246,10 @@
               }
             } while (this.compareCalendarDates(calendarTwo, next) * sign >= 0);
 
-            months--; // correct for loop above which overshoots by 1
+            months -= sign; // correct for loop above which overshoots by 1
 
             var remainingDays = this.calendarDaysUntil(current, calendarTwo, cache);
-            days = remainingDays % 7;
-            weeks = (remainingDays - days) / 7;
+            days = remainingDays;
             break;
           }
       }
@@ -5114,9 +5129,9 @@
       /*, fromLegacyDate = false */
       ) {
         // Because this is not a lunisolar calendar, it's safe to convert monthCode to a number
-        var _calendarDate3 = calendarDate,
-            month = _calendarDate3.month,
-            monthCode = _calendarDate3.monthCode;
+        var _calendarDate4 = calendarDate,
+            month = _calendarDate4.month,
+            monthCode = _calendarDate4.monthCode;
         if (month === undefined) calendarDate = _objectSpread2(_objectSpread2({}, calendarDate), {}, {
           month: monthCodeNumberPart(monthCode)
         });
@@ -5127,10 +5142,10 @@
       },
       estimateIsoDate: function estimateIsoDate(calendarDate) {
         calendarDate = this.adjustCalendarDate(calendarDate);
-        var _calendarDate4 = calendarDate,
-            year = _calendarDate4.year,
-            month = _calendarDate4.month,
-            day = _calendarDate4.day;
+        var _calendarDate5 = calendarDate,
+            year = _calendarDate5.year,
+            month = _calendarDate5.month,
+            day = _calendarDate5.day;
         var anchorEra = this.anchorEra;
         var isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
         return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain');
