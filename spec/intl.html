@@ -1300,7 +1300,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
@@ -1318,7 +1318,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
@@ -1337,7 +1337,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _year_ be ! ISOYear(_temporalDateLike_).
@@ -1359,7 +1359,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. If Type(_temporalDateLike_) is Object and _temporalDateLike_ has an [[InitializedTemporalMonthDay]] internal slot, then
               1. Throw a *TypeError* exception.
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _month_ be ! ISOMonth(_temporalDateLike_).
@@ -1379,7 +1379,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthCode_ be ! ISOMonthCode(_temporalDateLike_).
@@ -1399,7 +1399,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalMonthDay]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _day_ be ! ISODay(_temporalDateLike_).
@@ -1495,7 +1495,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slots, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slots, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInMonth_ be ! ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]]).
@@ -1515,7 +1515,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInYear_ be ! ISODaysInYear(_temporalDateLike_.[[ISOYear]]).
@@ -1535,7 +1535,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthsInYear_ be 12.
@@ -1555,7 +1555,7 @@
           <emu-alg>
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]] or [[InitializedTemporalYearMonth]] internal slot, then
+            1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _inLeapYear_ be ! IsISOLeapYear(_temporalDateLike_.[[ISOYear]]).
