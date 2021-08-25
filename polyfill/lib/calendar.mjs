@@ -871,8 +871,7 @@ const nonIsoHelperBase = {
         } while (this.compareCalendarDates(calendarTwo, next) * sign >= 0);
         months -= sign; // correct for loop above which overshoots by 1
         const remainingDays = this.calendarDaysUntil(current, calendarTwo, cache);
-        days = remainingDays % 7;
-        weeks = (remainingDays - days) / 7;
+        days = remainingDays;
         break;
       }
     }
