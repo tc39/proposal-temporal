@@ -488,6 +488,8 @@
           1. Let _whole_ be _roundResult_.[[Milliseconds]].
         1. If _unit_ is *"microsecond"*, then
           1. Let _whole_ be _roundResult_.[[Microseconds]].
+        1. If _unit_ is *"nanosecond"*, then
+          1. Let _whole_ be _roundResult_.[[Nanoseconds]].
         1. Return _whole_ + _roundResult_.[[Remainder]].
       </emu-alg>
     </emu-clause>
