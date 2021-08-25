@@ -690,7 +690,7 @@ describe('Intl', () => {
       roc: { year: 2001, month: 6, day: 1, monthCode: 'M06', eraYear: 2001, era: 'minguo' }
     };
     const addYearsMonthsDaysCases = Object.entries(addMonthsCases).reduce((obj, entry) => {
-      obj[entry[0]] = entry[1] === RangeError ? RangeError : { ...entry[1], day: 4 };
+      obj[entry[0]] = entry[1] === RangeError ? RangeError : { ...entry[1], day: 18 };
       return obj;
     }, {});
     const tests = {
@@ -701,7 +701,7 @@ describe('Intl', () => {
       // recognizes the leap month.
       months: { duration: { months: 6 }, results: addMonthsCases, startDate: { year: 2000, month: 12, day: 1 } },
       years: {
-        duration: { years: 3, months: 6, days: 3 },
+        duration: { years: 3, months: 6, days: 17 },
         results: addYearsMonthsDaysCases,
         startDate: { year: 1997, month: 12, day: 1 }
       }
@@ -780,8 +780,11 @@ describe('Intl', () => {
             const endReverse = endYesterdayNextDay.subtract({ days: 1 });
             const startReverse = endReverse.subtract(duration);
             equal(
-              `add from end-of-month ${unit} ${id} day (initial): ${startReverse.day}`,
-              `add from end-of-month ${unit} ${id} day (initial): ${Math.min(endReverse.day, startReverse.daysInMonth)}`
+              `subtract from end-of-month ${unit} ${id} day (initial): ${startReverse.day}`,
+              `subtract from end-of-month ${unit} ${id} day (initial): ${Math.min(
+                endReverse.day,
+                startReverse.daysInMonth
+              )}`
             );
             // Now advance to the first day of the next month, which should be
             // the same as the original start date above.
