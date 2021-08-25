@@ -58,13 +58,19 @@ describe('Date.since(normal, leap)', () => {
 });
 
 function build(name, sone, stwo) {
-  const [one, two] = [Temporal.PlainDate.from(sone), Temporal.PlainDate.from(stwo)].sort(Temporal.PlainDate.compare);
+  const calendars = ['iso8601', 'gregory'];
   describe(name, () => {
     const largestUnits = ['years', 'months', 'weeks', 'days'];
-    buildSub(one, two, largestUnits);
-    buildSub(one.with({ day: 25 }), two.with({ day: 5 }), largestUnits);
-    buildSub(one.with({ day: 30 }), two.with({ day: 29 }), largestUnits);
-    buildSub(one.with({ day: 30 }), two.with({ day: 5 }), largestUnits);
+    for (const calendar of calendars) {
+      const [one, two] = [
+        Temporal.PlainDate.from(sone).withCalendar(calendar),
+        Temporal.PlainDate.from(stwo).withCalendar(calendar)
+      ].sort(Temporal.PlainDate.compare);
+      buildSub(one, two, largestUnits);
+      buildSub(one.with({ day: 25 }), two.with({ day: 5 }), largestUnits);
+      buildSub(one.with({ day: 30 }), two.with({ day: 29 }), largestUnits);
+      buildSub(one.with({ day: 30 }), two.with({ day: 5 }), largestUnits);
+    }
   });
 }
 function buildSub(one, two, largestUnits) {

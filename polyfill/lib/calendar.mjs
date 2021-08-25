@@ -861,7 +861,7 @@ const nonIsoHelperBase = {
         let current;
         let next = yearsAdded;
         do {
-          months++;
+          months += sign;
           current = next;
           next = this.addMonthsCalendar(current, sign, 'constrain', cache);
           if (next.day !== calendarOne.day) {
@@ -869,7 +869,7 @@ const nonIsoHelperBase = {
             next = this.regulateDate({ ...next, day: calendarOne.day }, 'constrain', cache);
           }
         } while (this.compareCalendarDates(calendarTwo, next) * sign >= 0);
-        months--; // correct for loop above which overshoots by 1
+        months -= sign; // correct for loop above which overshoots by 1
         const remainingDays = this.calendarDaysUntil(current, calendarTwo, cache);
         days = remainingDays % 7;
         weeks = (remainingDays - days) / 7;
