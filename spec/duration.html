@@ -101,10 +101,10 @@
         1. Let _shift1_ be ! CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
         1. Let _shift2_ be ! CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
         1. If any of _one_.[[Years]], _two_.[[Years]], _one_.[[Months]], _two_.[[Months]], _one_.[[Weeks]], or _two_.[[Weeks]] are not 0, then
-          1. Let _balanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"day"*, _relativeTo_).
-          1. Let _balanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"day"*, _relativeTo_).
-          1. Let _days1_ be _balanceResult1_.[[Days]].
-          1. Let _days2_ be _balanceResult2_.[[Days]].
+          1. Let _unbalanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"day"*, _relativeTo_).
+          1. Let _unbalanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"day"*, _relativeTo_).
+          1. Let _days1_ be _unbalanceResult1_.[[Days]].
+          1. Let _days2_ be _unbalanceResult2_.[[Days]].
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
