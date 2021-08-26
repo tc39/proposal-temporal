@@ -1357,7 +1357,7 @@ export namespace Temporal {
     isoMillisecond: number;
     isoMicrosecond: number;
     isoNanosecond: number;
-    offsetNanoseconds: number;
+    offset: string;
     timeZone: TimeZoneProtocol;
     calendar: CalendarProtocol;
   };
