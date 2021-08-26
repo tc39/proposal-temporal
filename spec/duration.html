@@ -1041,9 +1041,9 @@
             1. Set _months_ to _months_ − _oneYearMonths_.
             1. Set _years_ to _years_ + _sign_.
             1. Set _relativeTo_ to _newRelativeTo_.
-            1. Let _addOptions_ be ! OrdinaryObjectCreate(*null*).
+            1. Set _addOptions_ to ! OrdinaryObjectCreate(*null*).
             1. Set _newRelativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
-            1. Let _untilOptions_ be ! OrdinaryObjectCreate(*null*).
+            1. Set _untilOptions_ to ! OrdinaryObjectCreate(*null*).
             1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Set _untilResult_ to ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
             1. Set _oneYearMonths_ to ? Get(_untilResult_, *"months"*).
