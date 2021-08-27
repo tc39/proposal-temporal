@@ -12,5 +12,5 @@ features: [Temporal]
 
 const calendar = new Temporal.Calendar("iso8601");
 [true, 3, 3n, {}, () => {}, Symbol(), undefined, null].forEach((element) => {
-  assert.throws(RangeError, () => calendar.fields([element]), "bad input to calendar.fields()");
+  assert.throws(TypeError, () => calendar.fields([element]), "bad input to calendar.fields()");
 });

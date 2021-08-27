@@ -74,8 +74,8 @@ export class Calendar {
       'nanosecond'
     ]);
     for (const name of fields) {
-      if (fieldsArray.length > 10) throw new RangeError('too many fields');
-      if (!allowed.has(name)) throw new RangeError('invalid field name');
+      if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
+      if (!allowed.has(name)) throw new RangeError(`invalid field name ${name}`);
       allowed.delete(name);
       ArrayPrototypePush.call(fieldsArray, name);
     }
