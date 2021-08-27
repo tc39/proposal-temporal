@@ -1092,6 +1092,13 @@ describe('Intl', () => {
       // equal(date.era, 'bce');
       // equal(date.eraYear, 1);
     });
+    it("`with` doesn't crash when constraining dates out of bounds of the current era", () => {
+      // https://github.com/tc39/proposal-temporal/issues/1784
+      let date = Temporal.PlainDate.from('1989-01-07')
+        .withCalendar(Temporal.Calendar.from('japanese'))
+        .with({ day: 10 });
+      equal(`${date}`, '1989-01-10[u-ca=japanese]');
+    });
   });
 
   describe('Hebrew leap months', () => {
