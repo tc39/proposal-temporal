@@ -1781,34 +1781,104 @@ export const ES = ObjectAssign({}, ES2020, {
       }
     }
 
-    const utcns = ES.GetEpochFromISOParts(
-      GetSlot(dateTime, ISO_YEAR),
-      GetSlot(dateTime, ISO_MONTH),
-      GetSlot(dateTime, ISO_DAY),
-      GetSlot(dateTime, ISO_HOUR),
-      GetSlot(dateTime, ISO_MINUTE),
-      GetSlot(dateTime, ISO_SECOND),
-      GetSlot(dateTime, ISO_MILLISECOND),
-      GetSlot(dateTime, ISO_MICROSECOND),
-      GetSlot(dateTime, ISO_NANOSECOND)
-    );
+    const year = GetSlot(dateTime, ISO_YEAR);
+    const month = GetSlot(dateTime, ISO_MONTH);
+    const day = GetSlot(dateTime, ISO_DAY);
+    const hour = GetSlot(dateTime, ISO_HOUR);
+    const minute = GetSlot(dateTime, ISO_MINUTE);
+    const second = GetSlot(dateTime, ISO_SECOND);
+    const millisecond = GetSlot(dateTime, ISO_MILLISECOND);
+    const microsecond = GetSlot(dateTime, ISO_MICROSECOND);
+    const nanosecond = GetSlot(dateTime, ISO_NANOSECOND);
+    const utcns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const dayBefore = new Instant(utcns.minus(86400e9));
     const dayAfter = new Instant(utcns.plus(86400e9));
     const offsetBefore = ES.GetOffsetNanosecondsFor(timeZone, dayBefore);
     const offsetAfter = ES.GetOffsetNanosecondsFor(timeZone, dayAfter);
     const nanoseconds = offsetAfter - offsetBefore;
-    const diff = ES.ToTemporalDurationRecord({ nanoseconds }, 'reject');
     switch (disambiguation) {
       case 'earlier': {
-        const earlier = dateTime.subtract(diff);
-        return ES.GetPossibleInstantsFor(timeZone, earlier)[0];
+        const calendar = GetSlot(dateTime, CALENDAR);
+        const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+        const earlier = ES.AddDateTime(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+          calendar,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -nanoseconds,
+          undefined
+        );
+        const earlierPlainDateTime = new PlainDateTime(
+          earlier.year,
+          earlier.month,
+          earlier.day,
+          earlier.hour,
+          earlier.minute,
+          earlier.second,
+          earlier.millisecond,
+          earlier.microsecond,
+          earlier.nanosecond,
+          calendar
+        );
+        return ES.GetPossibleInstantsFor(timeZone, earlierPlainDateTime)[0];
       }
       case 'compatible':
       // fall through because 'compatible' means 'later' for "spring forward" transitions
       case 'later': {
-        const later = dateTime.add(diff);
-        const possible = ES.GetPossibleInstantsFor(timeZone, later);
+        const calendar = GetSlot(dateTime, CALENDAR);
+        const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+        const later = ES.AddDateTime(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+          nanosecond,
+          calendar,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          nanoseconds,
+          undefined
+        );
+        const laterPlainDateTime = new PlainDateTime(
+          later.year,
+          later.month,
+          later.day,
+          later.hour,
+          later.minute,
+          later.second,
+          later.millisecond,
+          later.microsecond,
+          later.nanosecond,
+          calendar
+        );
+        const possible = ES.GetPossibleInstantsFor(timeZone, laterPlainDateTime);
         return possible[possible.length - 1];
       }
       case 'reject': {
@@ -3429,22 +3499,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     };
   },
-  AddZonedDateTime: (
-    instant,
-    timeZone,
-    calendar,
-    years,
-    months,
-    weeks,
-    days,
-    h,
-    min,
-    s,
-    ms,
-    µs,
-    ns,
-    options = ObjectCreate(null)
-  ) => {
+  AddZonedDateTime: (instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, options) => {
     // If only time is to be added, then use Instant math. It's not OK to fall
     // through to the date/time code below because compatible disambiguation in
     // the PlainDateTime=>Instant conversion will change the offset of any

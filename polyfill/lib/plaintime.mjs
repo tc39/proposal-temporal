@@ -461,7 +461,18 @@ export class PlainTime {
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const dt = new PlainDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
