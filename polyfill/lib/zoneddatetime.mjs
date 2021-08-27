@@ -250,7 +250,18 @@ export class ZonedDateTime {
     calendar = ES.ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
     const timeZone = GetSlot(this, TIME_ZONE);
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const dt = new PlainDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
@@ -274,7 +285,18 @@ export class ZonedDateTime {
 
     const timeZone = GetSlot(this, TIME_ZONE);
     const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const dt = new PlainDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
@@ -656,10 +678,22 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const dt = dateTime(this);
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
+    const calendar = GetSlot(this, CALENDAR);
+    const dtStart = new DateTime(
+      GetSlot(dt, ISO_YEAR),
+      GetSlot(dt, ISO_MONTH),
+      GetSlot(dt, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      calendar
+    );
     const timeZone = GetSlot(this, TIME_ZONE);
     const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtStart, 'compatible');
-    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toInstant() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

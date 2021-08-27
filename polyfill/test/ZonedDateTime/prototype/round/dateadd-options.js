@@ -27,6 +27,4 @@ assert.sameValue(actual.length, 4, "three arguments");
 assert.sameValue(actual[0], calendar, "this value");
 TemporalHelpers.assertPlainDate(actual[1], 1970, 1, "M01", 1, "date argument");
 TemporalHelpers.assertDuration(actual[2], 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, "duration argument");
-assert.sameValue(typeof actual[3], "object", "options type");
-assert.notSameValue(actual[3], null, "options not null");
-assert.sameValue(Object.getPrototypeOf(actual[3]), null, "options prototype");
+assert.sameValue(actual[3], undefined, "options should be undefined");

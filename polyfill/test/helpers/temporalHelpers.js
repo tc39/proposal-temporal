@@ -856,6 +856,30 @@ var TemporalHelpers = {
   },
 
   /*
+   * A custom calendar that asserts its dateAdd() method is called with the
+   * options parameter having the value undefined.
+   */
+  calendarDateAddUndefinedOptions() {
+    class CalendarDateAddUndefinedOptions extends Temporal.Calendar {
+      constructor() {
+        super("iso8601");
+        this.dateAddCallCount = 0;
+      }
+
+      toString() {
+        return "dateadd-undef-options";
+      }
+
+      dateAdd(one, two, options) {
+        this.dateAddCallCount++;
+        assert.sameValue(options, undefined, "dateAdd shouldn't be called with options");
+        return super.dateAdd(one, two, options);
+      }
+    }
+    return new CalendarDateAddUndefinedOptions();
+  },
+
+  /*
    * A custom calendar that returns @returnValue from its dateUntil() method,
    * recording the call in @calls.
    */

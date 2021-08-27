@@ -10,3 +10,11 @@ Duration/prototype/add/relativeto-string-zoneddatetime-no-z.js
 Duration/prototype/round/relativeto-string-zoneddatetime-no-z.js
 Duration/prototype/subtract/relativeto-string-zoneddatetime-no-z.js
 Duration/prototype/total/relativeto-string-zoneddatetime-no-z.js
+
+# Blocked on https://github.com/tc39/proposal-temporal/issues/1685
+# (MoveRelativeDate should pass undefined as options)
+Duration/constructor/compare/calendar-dateadd-called-with-options-undefined.js
+Duration/prototype/round/calendar-dateadd-called-with-options-undefined.js
+Duration/prototype/total/calendar-dateadd-called-with-options-undefined.js
+ZonedDateTime/prototype/since/calendar-dateadd-called-with-options-undefined.js
+ZonedDateTime/prototype/until/calendar-dateadd-called-with-options-undefined.js
