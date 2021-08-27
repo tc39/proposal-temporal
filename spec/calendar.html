@@ -1077,13 +1077,12 @@
         1. Let _fieldNames_ be a new empty List.
         1. Let _next_ be *true*.
         1. Repeat, while _next_ is not *false*,
-          1. Let _length_ be the number of elements in _fieldNames_.
-          1. If _length_ &gt; 10, then
-            1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
-            1. Return ? IteratorClose(_iteratorRecord_, _completion_).
           1. Set _next_ to ? IteratorStep(_iteratorRecord_).
           1. If _next_ is not *false*, then
             1. Let _nextValue_ be ? IteratorValue(_next_).
+            1. If Type(_nextValue_) is not String, then
+              1. Let _completion_ be ThrowCompletion(a newly created *TypeError* object).
+              1. Return ? IteratorClose(_iteratorRecord_, _completion_).
             1. If _fieldNames_ contains _nextValue_, then
               1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
               1. Return ? IteratorClose(_iteratorRecord_, _completion_).
