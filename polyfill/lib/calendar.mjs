@@ -1915,6 +1915,8 @@ const nonIsoGeneralImpl = {
   mergeFields(fields, additionalFields) {
     const fieldsCopy = { ...fields };
     const additionalFieldsCopy = { ...additionalFields };
+    // era and eraYear are intentionally unused
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { month, monthCode, year, era, eraYear, ...original } = fieldsCopy;
     const {
       month: newMonth,
@@ -1928,9 +1930,10 @@ const nonIsoGeneralImpl = {
       original.monthCode = monthCode;
     }
     if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
+      // Only `year` is needed. We don't set era and eraYear because it's
+      // possible to create a conflict for eras that start or end mid-year. See
+      // https://github.com/tc39/proposal-temporal/issues/1784.
       original.year = year;
-      original.era = era;
-      original.eraYear = eraYear;
     }
     return { ...original, ...additionalFieldsCopy };
   },
