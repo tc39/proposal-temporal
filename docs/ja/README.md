@@ -31,18 +31,18 @@ Temporal の API では、タイムゾーンが関連付けられていない日
 
 ### **Temporal.now**
 
-- `Temporal.now.instant()` - Unix epoch からの exact time を得る
-- `Temporal.now.timeZone()` - システムのタイムゾーンを得る
-- `Temporal.now.zonedDateTime(calendar)` - システムタイムゾーンと特定のカレンダーシステムから現在の wall-clock time と日付を得る
-- `Temporal.now.zonedDateTimeISO()` - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time と日付を得る
-- `Temporal.now.plainDate(calendar)` - システムタイムゾーンと特定のカレンダーから日付を得る
-- `Temporal.now.plainDateISO()` - システムタイムゾーンと ISO8601 のカレンダーから日付を得る
-- `Temporal.now.plainTimeISO()` - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time を得る
-- `Temporal.now.plainDateTime(calendar)` - システムタイムゾーンと ISO8601 のカレンダーから日付/時刻を得る。ただし、タイムゾーンの情報を持っていないオブジェクトを返すため、ここから他の時刻を導出するために使用しないでください。（例：12 時間後を求める（サマータイムを考慮しなくてはならないが、タイムゾーンの情報がないので曖昧な結果になる）
-- `Temporal.now.plainDateTimeISO()` - 上記と同じだが ISO8601 のカレンダーを使用する
+- `Temporal.Now.instant()` - Unix epoch からの exact time を得る
+- `Temporal.Now.timeZone()` - システムのタイムゾーンを得る
+- `Temporal.Now.zonedDateTime(calendar)` - システムタイムゾーンと特定のカレンダーシステムから現在の wall-clock time と日付を得る
+- `Temporal.Now.zonedDateTimeISO()` - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time と日付を得る
+- `Temporal.Now.plainDate(calendar)` - システムタイムゾーンと特定のカレンダーから日付を得る
+- `Temporal.Now.plainDateISO()` - システムタイムゾーンと ISO8601 のカレンダーから日付を得る
+- `Temporal.Now.plainTimeISO()` - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time を得る
+- `Temporal.Now.plainDateTime(calendar)` - システムタイムゾーンと ISO8601 のカレンダーから日付/時刻を得る。ただし、タイムゾーンの情報を持っていないオブジェクトを返すため、ここから他の時刻を導出するために使用しないでください。（例：12 時間後を求める（サマータイムを考慮しなくてはならないが、タイムゾーンの情報がないので曖昧な結果になる）
+- `Temporal.Now.plainDateTimeISO()` - 上記と同じだが ISO8601 のカレンダーを使用する
 
 ```js
-console.log('Initialization complete', Temporal.now.instant());
+console.log('Initialization complete', Temporal.Now.instant());
 // 出力例:
 // Initialization complete 2021-01-13T20:57:01.500944804Z
 ```
