@@ -208,17 +208,17 @@
 <p>Temporal の API では、タイムゾーンが関連付けられていない日付を表すオブジェクトは、「Plain」から始まる名前を持ちます。（例：<code>Temporal.PlainDate</code>、<code>Temporal.PlainTime</code>、<code>Temporal.PlainDateTime</code>）。このようなオブジェクトと exact time（カレンダーや場所によらない特定の時点での時刻）の変換は、タイムゾーンとサマータイムのために曖昧になることがあります。そして、Temporal の API は開発者にこの曖昧さを解決する方法を提供します。</p>
 <p>いくつかの重要なコンセプトについては次のドキュメントを参照してください：<a href="./ambiguity.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a></p>
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
-<li><code>Temporal.now.instant()</code> - Unix epoch からの exact time を得る</li>
-<li><code>Temporal.now.timeZone()</code> - システムのタイムゾーンを得る</li>
-<li><code>Temporal.now.zonedDateTime(calendar)</code> - システムタイムゾーンと特定のカレンダーシステムから現在の wall-clock time と日付を得る</li>
-<li><code>Temporal.now.zonedDateTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time と日付を得る</li>
-<li><code>Temporal.now.plainDate(calendar)</code> - システムタイムゾーンと特定のカレンダーから日付を得る</li>
-<li><code>Temporal.now.plainDateISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから日付を得る</li>
-<li><code>Temporal.now.plainTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time を得る</li>
-<li><code>Temporal.now.plainDateTime(calendar)</code> - システムタイムゾーンと ISO8601 のカレンダーから日付/時刻を得る。ただし、タイムゾーンの情報を持っていないオブジェクトを返すため、ここから他の時刻を導出するために使用しないでください。（例：12 時間後を求める（サマータイムを考慮しなくてはならないが、タイムゾーンの情報がないので曖昧な結果になる）</li>
-<li><code>Temporal.now.plainDateTimeISO()</code> - 上記と同じだが ISO8601 のカレンダーを使用する</li>
+<li><code>Temporal.Now.instant()</code> - Unix epoch からの exact time を得る</li>
+<li><code>Temporal.Now.timeZone()</code> - システムのタイムゾーンを得る</li>
+<li><code>Temporal.Now.zonedDateTime(calendar)</code> - システムタイムゾーンと特定のカレンダーシステムから現在の wall-clock time と日付を得る</li>
+<li><code>Temporal.Now.zonedDateTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time と日付を得る</li>
+<li><code>Temporal.Now.plainDate(calendar)</code> - システムタイムゾーンと特定のカレンダーから日付を得る</li>
+<li><code>Temporal.Now.plainDateISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから日付を得る</li>
+<li><code>Temporal.Now.plainTimeISO()</code> - システムタイムゾーンと ISO8601 のカレンダーから現在の wall-clock time を得る</li>
+<li><code>Temporal.Now.plainDateTime(calendar)</code> - システムタイムゾーンと ISO8601 のカレンダーから日付/時刻を得る。ただし、タイムゾーンの情報を持っていないオブジェクトを返すため、ここから他の時刻を導出するために使用しないでください。（例：12 時間後を求める（サマータイムを考慮しなくてはならないが、タイムゾーンの情報がないので曖昧な結果になる）</li>
+<li><code>Temporal.Now.plainDateTimeISO()</code> - 上記と同じだが ISO8601 のカレンダーを使用する</li>
 </ul>
-<pre class="language-js"><code class="language-js">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Initialization complete'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Initialization complete'</span><span class="token punctuation">,</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// 出力例:</span>
 <span class="token comment">// Initialization complete 2021-01-13T20:57:01.500944804Z</span></code></pre><p>より詳しくは<a href="../now.html">Temporal.now Documentation</a>を参照してください。</p>
 <h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p><code>Temporal.Instant</code>は、カレンダーや場所によらない特定の時点での時刻（<strong>exact time</strong>と呼ばれます）を表します（例：July 20, 1969, at 20:17 UTC）。人間にとって読みやすい時刻表現を得るには<code>Temporal.ZonedDateTime</code>や<code>Temporal.PlainDateTime</code>と、<code>Temporal.TimeZone</code>や<code>Temporal.Calendar</code>を組み合わせて使用してください。</p>
