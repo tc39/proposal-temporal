@@ -3131,7 +3131,8 @@
       }
     }, {
       key: "dateFromFields",
-      value: function dateFromFields(fields, options) {
+      value: function dateFromFields(fields) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.GetOptionsObject(options);
@@ -3139,7 +3140,8 @@
       }
     }, {
       key: "yearMonthFromFields",
-      value: function yearMonthFromFields(fields, options) {
+      value: function yearMonthFromFields(fields) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.GetOptionsObject(options);
@@ -3147,7 +3149,8 @@
       }
     }, {
       key: "monthDayFromFields",
-      value: function monthDayFromFields(fields, options) {
+      value: function monthDayFromFields(fields) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
         options = ES.GetOptionsObject(options);
@@ -3184,7 +3187,8 @@
       }
     }, {
       key: "dateAdd",
-      value: function dateAdd(date, duration, options) {
+      value: function dateAdd(date, duration) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         date = ES.ToTemporalDate(date);
         duration = ES.ToTemporalDuration(duration);
@@ -3194,7 +3198,8 @@
       }
     }, {
       key: "dateUntil",
-      value: function dateUntil(one, two, options) {
+      value: function dateUntil(one, two) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         one = ES.ToTemporalDate(one);
         two = ES.ToTemporalDate(two);
