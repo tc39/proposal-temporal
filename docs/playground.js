@@ -6007,6 +6007,10 @@
   var ToPositiveInteger = function ToPositiveInteger(value, property) {
     value = ToInteger$2(value);
 
+    if (!NumberIsFinite(value)) {
+      throw new RangeError('infinity is out of range');
+    }
+
     if (value < 1) {
       if (property !== undefined) {
         throw new RangeError("property '".concat(property, "' cannot be a a number less than one"));
@@ -6018,7 +6022,7 @@
     return value;
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToInteger$2], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToInteger$2], ['minute', ToInteger$2], ['second', ToInteger$2], ['millisecond', ToInteger$2], ['microsecond', ToInteger$2], ['nanosecond', ToInteger$2], ['years', ToInteger$2], ['months', ToInteger$2], ['weeks', ToInteger$2], ['days', ToInteger$2], ['hours', ToInteger$2], ['minutes', ToInteger$2], ['seconds', ToInteger$2], ['milliseconds', ToInteger$2], ['microseconds', ToInteger$2], ['nanoseconds', ToInteger$2], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
+  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToInteger$2], ['months', ToInteger$2], ['weeks', ToInteger$2], ['days', ToInteger$2], ['hours', ToInteger$2], ['minutes', ToInteger$2], ['seconds', ToInteger$2], ['milliseconds', ToInteger$2], ['microseconds', ToInteger$2], ['nanoseconds', ToInteger$2], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
   var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
   var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
   var ES2020 = {
@@ -7752,7 +7756,7 @@
         throw new RangeError('calendar year result must be an integer');
       }
 
-      return ES.ToInteger(result);
+      return ES.ToIntegerThrowOnInfinity(result);
     },
     CalendarMonth: function CalendarMonth(calendar, dateLike) {
       var month = ES.GetMethod(calendar, 'month');
@@ -7799,7 +7803,7 @@
       var result = ES.Call(eraYear, calendar, [dateLike]);
 
       if (result !== undefined) {
-        result = ES.ToInteger(result);
+        result = ES.ToIntegerThrowOnInfinity(result);
       }
 
       return result;
