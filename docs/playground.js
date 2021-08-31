@@ -8994,7 +8994,8 @@
               var newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, addOptions, dateAdd);
               var untilOptions = ObjectCreate$2(null);
               untilOptions.largestUnit = 'month';
-              var oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
+              var untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+              var oneYearMonths = GetSlot(untilResult, MONTHS);
               relativeTo = newRelativeTo;
               months += oneYearMonths;
               years -= sign;
@@ -9151,7 +9152,8 @@
             var dateUntil = ES.GetMethod(calendar, 'dateUntil');
             var untilOptions = ObjectCreate$2(null);
             untilOptions.largestUnit = 'month';
-            var oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil).months;
+            var untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+            var oneYearMonths = GetSlot(untilResult, MONTHS);
 
             while (MathAbs(months) >= MathAbs(oneYearMonths)) {
               months -= oneYearMonths;
@@ -9165,7 +9167,8 @@
               var _untilOptions = ObjectCreate$2(null);
 
               _untilOptions.largestUnit = 'month';
-              oneYearMonths = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, _untilOptions, dateUntil).months;
+              untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, _untilOptions, dateUntil);
+              oneYearMonths = GetSlot(untilResult, MONTHS);
             }
 
             break;
