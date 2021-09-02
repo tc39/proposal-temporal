@@ -6027,7 +6027,17 @@
     return value;
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToInteger$2], ['months', ToInteger$2], ['weeks', ToInteger$2], ['days', ToInteger$2], ['hours', ToInteger$2], ['minutes', ToInteger$2], ['seconds', ToInteger$2], ['milliseconds', ToInteger$2], ['microseconds', ToInteger$2], ['nanoseconds', ToInteger$2], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
+  var ToIntegerNoFraction = function ToIntegerNoFraction(value) {
+    value = ES.ToNumber(value);
+
+    if (!ES.IsInteger(value)) {
+      throw new RangeError("unsupported fractional value ".concat(value));
+    }
+
+    return value;
+  };
+
+  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerNoFraction], ['months', ToIntegerNoFraction], ['weeks', ToIntegerNoFraction], ['days', ToIntegerNoFraction], ['hours', ToIntegerNoFraction], ['minutes', ToIntegerNoFraction], ['seconds', ToIntegerNoFraction], ['milliseconds', ToIntegerNoFraction], ['microseconds', ToIntegerNoFraction], ['nanoseconds', ToIntegerNoFraction], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
   var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
   var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
   var ES2020 = {
@@ -6068,6 +6078,7 @@
   var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
     ToIntegerThrowOnInfinity: ToIntegerThrowOnInfinity,
+    ToIntegerNoFraction: ToIntegerNoFraction,
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
     },
@@ -6562,15 +6573,7 @@
         };
       }
 
-      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], function (v) {
-        v = ES.ToNumber(v);
-
-        if (MathFloor(v) !== v) {
-          throw new RangeError("unsupported fractional value ".concat(v));
-        }
-
-        return v;
-      });
+      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
       if (!props) throw new TypeError('invalid duration-like');
       var _props$years = props.years,
           years = _props$years === void 0 ? 0 : _props$years,
