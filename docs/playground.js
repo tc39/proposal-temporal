@@ -13414,6 +13414,7 @@
       key: "toPlainDate",
       value: function toPlainDate(item) {
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+        if (ES.Type(item) !== 'Object') throw new TypeError('argument should be an object');
         var calendar = GetSlot(this, CALENDAR);
         var receiverFieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, receiverFieldNames);
@@ -14423,6 +14424,7 @@
       key: "toPlainDate",
       value: function toPlainDate(item) {
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+        if (ES.Type(item) !== 'Object') throw new TypeError('argument should be an object');
         var calendar = GetSlot(this, CALENDAR);
         var receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
