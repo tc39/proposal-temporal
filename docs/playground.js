@@ -3161,6 +3161,7 @@
       value: function fields(_fields) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         var fieldsArray = [];
+        var allowed = new Set(['year', 'month', 'monthCode', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond']);
 
         var _iterator = _createForOfIteratorHelper(_fields),
             _step;
@@ -3169,6 +3170,8 @@
           for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var name = _step.value;
             if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
+            if (!allowed.has(name)) throw new RangeError("invalid field name ".concat(name));
+            allowed.delete(name);
             ArrayPrototypePush$2.call(fieldsArray, name);
           }
         } catch (err) {
