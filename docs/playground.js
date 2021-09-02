@@ -7764,7 +7764,9 @@
     CalendarMergeFields: function CalendarMergeFields(calendar, fields, additionalFields) {
       var mergeFields = ES.GetMethod(calendar, 'mergeFields');
       if (mergeFields === undefined) return _objectSpread2(_objectSpread2({}, fields), additionalFields);
-      return ES.Call(mergeFields, calendar, [fields, additionalFields]);
+      var result = ES.Call(mergeFields, calendar, [fields, additionalFields]);
+      if (ES.Type(result) !== 'Object') throw new TypeError('bad return from calendar.mergeFields()');
+      return result;
     },
     CalendarDateAdd: function CalendarDateAdd(calendar, date, duration, options, dateAdd) {
       if (dateAdd === undefined) {
