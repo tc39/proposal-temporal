@@ -1206,7 +1206,7 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
-              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
+              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
@@ -1227,7 +1227,7 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « »).
-              1. Let _result_ be a Record with [[Year]], [[Month]], and [[ReferenceISODay]] integer fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
+              1. Let _result_ be a Record with [[Year]], [[Month]], and [[ReferenceISODay]] integer fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
             1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
           </emu-alg>
         </emu-clause>
@@ -1248,7 +1248,7 @@
             1. Else,
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-              1. Let _result_ be a Record with [[Month]], [[Day]], and [[ReferenceISOYear]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and the value of _calendar_.[[Identifier]].
+              1. Let _result_ be a Record with [[Month]], [[Day]], and [[ReferenceISOYear]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
             1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
           </emu-alg>
         </emu-clause>
@@ -1292,7 +1292,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be ! DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
-              1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and the value of _calendar_.[[Identifier]].
+              1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and _calendar_.[[Identifier]].
             1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
           </emu-alg>
         </emu-clause>
@@ -1310,7 +1310,7 @@
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
-            1. Let _era_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+            1. Let _era_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return _era_.
           </emu-alg>
         </emu-clause>
@@ -1328,7 +1328,7 @@
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
-            1. Let _eraYear_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+            1. Let _eraYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_eraYear_).
           </emu-alg>
         </emu-clause>
@@ -1348,7 +1348,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _year_ be ! ISOYear(_temporalDateLike_).
             1. Else,
-              1. Let _year_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _year_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_year_).
           </emu-alg>
         </emu-clause>
@@ -1370,7 +1370,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _month_ be ! ISOMonth(_temporalDateLike_).
             1. Else,
-              1. Let _month_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _month_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_month_).
           </emu-alg>
         </emu-clause>
@@ -1390,7 +1390,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthCode_ be ! ISOMonthCode(_temporalDateLike_).
             1. Else,
-              1. Let _monthCode_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _monthCode_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return _monthCode_.
           </emu-alg>
         </emu-clause>
@@ -1410,7 +1410,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _day_ be ! ISODay(_temporalDateLike_).
             1. Else,
-              1. Let _day_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _day_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_day_).
           </emu-alg>
         </emu-clause>
@@ -1429,7 +1429,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _dayOfWeek_ be ! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _dayOfWeek_ be the result of implementation-defined processing of _temporalDate_ and the value of _calendar_.[[Identifier]].
+              1. Let _dayOfWeek_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_dayOfWeek_).
           </emu-alg>
         </emu-clause>
@@ -1448,7 +1448,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _dayOfYear_ be ! ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _dayOfYear_ be the result of implementation-defined processing of _temporalDate_ and the value of _calendar_.[[Identifier]].
+              1. Let _dayOfYear_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_dayOfYear_).
           </emu-alg>
         </emu-clause>
@@ -1467,7 +1467,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _weekOfYear_ be ! ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _weekOfYear_ be the result of implementation-defined processing of _temporalDate_ and the value of _calendar_.[[Identifier]].
+              1. Let _weekOfYear_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_weekOfYear_).
           </emu-alg>
         </emu-clause>
@@ -1486,7 +1486,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInWeek_ be 7.
             1. Else,
-              1. Let _daysInWeek_ be the result of implementation-defined processing of _temporalDate_ and the value of _calendar_.[[Identifier]].
+              1. Let _daysInWeek_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_daysInWeek_).
           </emu-alg>
         </emu-clause>
@@ -1506,7 +1506,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInMonth_ be ! ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]]).
             1. Else,
-              1. Let _daysInMonth_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _daysInMonth_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_daysInMonth_).
           </emu-alg>
         </emu-clause>
@@ -1526,7 +1526,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInYear_ be ! ISODaysInYear(_temporalDateLike_.[[ISOYear]]).
             1. Else,
-              1. Let _daysInYear_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _daysInYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_daysInYear_).
           </emu-alg>
         </emu-clause>
@@ -1546,7 +1546,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthsInYear_ be 12.
             1. Else,
-              1. Let _monthsInYear_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _monthsInYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return 𝔽(_monthsInYear_).
           </emu-alg>
         </emu-clause>
@@ -1566,7 +1566,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _inLeapYear_ be ! IsISOLeapYear(_temporalDateLike_.[[ISOYear]]).
             1. Else,
-              1. Let _inLeapYear_ be the result of implementation-defined processing of _temporalDateLike_ and the value of _calendar_.[[Identifier]].
+              1. Let _inLeapYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
             1. Return _inLeapYear_.
           </emu-alg>
         </emu-clause>
@@ -1585,7 +1585,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be _fieldNames_.
             1. Else,
-              1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and the value of _calendar_.[[Identifier]].
+              1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and _calendar_.[[Identifier]].
             1. Return ! CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
@@ -1616,7 +1616,7 @@
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_additionalFieldsCopied_, _key_, _propValue_).
-            1. Return the result of implementation-defined processing of _fieldsCopied_, _additionalFieldsCopied_, and the value of _calendar_.[[Identifier]].
+            1. Return the result of implementation-defined processing of _fieldsCopied_, _additionalFieldsCopied_, and _calendar_.[[Identifier]].
           </emu-alg>
         </emu-clause>
       </emu-clause>
