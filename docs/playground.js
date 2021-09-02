@@ -13185,6 +13185,7 @@
         var milliseconds = GetSlot(this, MILLISECONDS);
         var microseconds = GetSlot(this, MICROSECONDS);
         var nanoseconds = GetSlot(this, NANOSECONDS);
+        if (options === undefined) throw new TypeError('options argument is required');
         options = ES.GetOptionsObject(options);
         var unit = ES.ToTemporalDurationTotalUnit(options, undefined);
         if (unit === undefined) throw new RangeError('unit option is required');
