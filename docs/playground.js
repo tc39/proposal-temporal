@@ -7524,7 +7524,7 @@
       // so fall back to use the time zone instead.
 
 
-      var instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, disambiguation);
+      var instant = ES.DisambiguatePossibleInstants(possibleInstants, timeZone, dt, disambiguation);
       return GetSlot(instant, EPOCHNANOSECONDS);
     },
     ToTemporalZonedDateTime: function ToTemporalZonedDateTime(item) {
@@ -8031,8 +8031,11 @@
       return ES.CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     },
     BuiltinTimeZoneGetInstantFor: function BuiltinTimeZoneGetInstantFor(timeZone, dateTime, disambiguation) {
-      var Instant = GetIntrinsic('%Temporal.Instant%');
       var possibleInstants = ES.GetPossibleInstantsFor(timeZone, dateTime);
+      return ES.DisambiguatePossibleInstants(possibleInstants, timeZone, dateTime, disambiguation);
+    },
+    DisambiguatePossibleInstants: function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTime, disambiguation) {
+      var Instant = GetIntrinsic('%Temporal.Instant%');
       var numInstants = possibleInstants.length;
       if (numInstants === 1) return possibleInstants[0];
 
