@@ -3197,7 +3197,11 @@
         duration = ES.ToTemporalDuration(duration);
         options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, duration, overflow, this);
+
+        var _ES$BalanceDuration = ES.BalanceDuration(GetSlot(duration, DAYS), GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS), 'day'),
+            days = _ES$BalanceDuration.days;
+
+        return impl[GetSlot(this, CALENDAR_ID)].dateAdd(date, GetSlot(duration, YEARS), GetSlot(duration, MONTHS), GetSlot(duration, WEEKS), days, overflow, this);
       }
     }, {
       key: "dateUntil",
@@ -3440,11 +3444,7 @@
 
       return merged;
     },
-    dateAdd: function dateAdd(date, duration, overflow, calendar) {
-      var years = duration.years,
-          months = duration.months,
-          weeks = duration.weeks,
-          days = duration.days;
+    dateAdd: function dateAdd(date, years, months, weeks, days, overflow, calendar) {
       var year = GetSlot(date, ISO_YEAR);
       var month = GetSlot(date, ISO_MONTH);
       var day = GetSlot(date, ISO_DAY);
@@ -5782,11 +5782,7 @@
 
       return _objectSpread2(_objectSpread2({}, original), additionalFieldsCopy);
     },
-    dateAdd: function dateAdd(date, duration, overflow, calendar) {
-      var years = duration.years,
-          months = duration.months,
-          weeks = duration.weeks,
-          days = duration.days;
+    dateAdd: function dateAdd(date, years, months, weeks, days, overflow, calendar) {
       var cache = OneObjectCache.getCacheForObject(date);
       var calendarDate = this.helper.temporalToCalendarDate(date, cache);
       var added = this.helper.addCalendar(calendarDate, {
@@ -9309,6 +9305,10 @@
 
       return 0;
     },
+    CreateNegatedTemporalDuration: function CreateNegatedTemporalDuration(duration) {
+      var TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+      return new TemporalDuration(-GetSlot(duration, YEARS), -GetSlot(duration, MONTHS), -GetSlot(duration, WEEKS), -GetSlot(duration, DAYS), -GetSlot(duration, HOURS), -GetSlot(duration, MINUTES), -GetSlot(duration, SECONDS), -GetSlot(duration, MILLISECONDS), -GetSlot(duration, MICROSECONDS), -GetSlot(duration, NANOSECONDS));
+    },
     ConstrainToRange: function ConstrainToRange(value, min, max) {
       return MathMin(max, MathMax(min, value));
     },
@@ -11900,29 +11900,8 @@
       value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDuration(temporalDurationLike);
         options = ES.GetOptionsObject(options);
-        var _duration = duration,
-            years = _duration.years,
-            months = _duration.months,
-            weeks = _duration.weeks,
-            days = _duration.days,
-            hours = _duration.hours,
-            minutes = _duration.minutes,
-            seconds = _duration.seconds,
-            milliseconds = _duration.milliseconds,
-            microseconds = _duration.microseconds,
-            nanoseconds = _duration.nanoseconds;
-
-        var _ES$BalanceDuration = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day');
-
-        days = _ES$BalanceDuration.days;
-        duration = {
-          years: years,
-          months: months,
-          weeks: weeks,
-          days: days
-        };
         return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
       }
     }, {
@@ -11930,29 +11909,8 @@
       value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.CreateNegatedTemporalDuration(ES.ToTemporalDuration(temporalDurationLike));
         options = ES.GetOptionsObject(options);
-        var _duration2 = duration,
-            years = _duration2.years,
-            months = _duration2.months,
-            weeks = _duration2.weeks,
-            days = _duration2.days,
-            hours = _duration2.hours,
-            minutes = _duration2.minutes,
-            seconds = _duration2.seconds,
-            milliseconds = _duration2.milliseconds,
-            microseconds = _duration2.microseconds,
-            nanoseconds = _duration2.nanoseconds;
-
-        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day');
-
-        days = _ES$BalanceDuration2.days;
-        duration = {
-          years: -years,
-          months: -months,
-          weeks: -weeks,
-          days: -days
-        };
         return ES.CalendarDateAdd(GetSlot(this, CALENDAR), this, duration, options);
       }
     }, {
@@ -12998,7 +12956,7 @@
       key: "negated",
       value: function negated() {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        return new Duration(-GetSlot(this, YEARS), -GetSlot(this, MONTHS), -GetSlot(this, WEEKS), -GetSlot(this, DAYS), -GetSlot(this, HOURS), -GetSlot(this, MINUTES), -GetSlot(this, SECONDS), -GetSlot(this, MILLISECONDS), -GetSlot(this, MICROSECONDS), -GetSlot(this, NANOSECONDS));
+        return ES.CreateNegatedTemporalDuration(this);
       }
     }, {
       key: "abs",
