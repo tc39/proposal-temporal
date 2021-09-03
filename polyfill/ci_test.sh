@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TESTS=${@:-"./*/**/*.js"}
+PRELUDE=${PRELUDE:-script.js}
 
 export NODE_PATH=$PWD/node_modules
 npm run build262
@@ -13,9 +14,8 @@ else
   cd ..
 fi
 
-PRELUDE=script.js
 if [ "x$COVERAGE" = xyes ]; then
-  nyc instrument script.js > script-instrumented.js
+  nyc instrument "$PRELUDE" > script-instrumented.js
   PRELUDE=script-instrumented.js
   TRANSFORMER_ARG="--transformer ./transform.test262.js"
 fi
