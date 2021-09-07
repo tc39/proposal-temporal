@@ -42,14 +42,6 @@ describe('MonthDay', () => {
           '1972-11-18[u-ca=gregory]'
         );
       });
-      it('options may only be an object or undefined', () => {
-        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-          throws(() => PlainMonthDay.from({ month: 11, day: 18 }, badOptions), TypeError)
-        );
-        [{}, () => {}, undefined].forEach((options) =>
-          equal(`${PlainMonthDay.from({ month: 11, day: 18 }, options)}`, '11-18')
-        );
-      });
       describe('Overflow', () => {
         const bad = { month: 1, day: 32 };
         it('reject', () => throws(() => PlainMonthDay.from(bad, { overflow: 'reject' }), RangeError));
