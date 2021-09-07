@@ -49,13 +49,6 @@ describe('MonthDay', () => {
           equal(`${PlainMonthDay.from(bad)}`, '01-31');
           equal(`${PlainMonthDay.from(bad, { overflow: 'constrain' })}`, '01-31');
         });
-        it('throw on bad overflow', () => {
-          [new PlainMonthDay(11, 18), { month: 1, day: 1 }, '01-31'].forEach((input) => {
-            ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-              throws(() => PlainMonthDay.from(input, { overflow }), RangeError)
-            );
-          });
-        });
         it('constrain has no effect on invalid ISO string', () => {
           throws(() => PlainMonthDay.from('13-34', { overflow: 'constrain' }), RangeError);
         });
