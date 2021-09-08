@@ -5,7 +5,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { throws, equal, notEqual } = assert;
+const { throws, equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { PlainMonthDay } = Temporal;
@@ -142,17 +142,6 @@ describe('MonthDay', () => {
       const md2 = new PlainMonthDay(1, 1, iso, 2000);
       assert(!md1.equals(md2));
     });
-  });
-  describe("Comparison operators don't work", () => {
-    const md1 = PlainMonthDay.from('02-13');
-    const md1again = PlainMonthDay.from('02-13');
-    const md2 = PlainMonthDay.from('11-18');
-    it('=== is object equality', () => equal(md1, md1));
-    it('!== is object equality', () => notEqual(md1, md1again));
-    it('<', () => throws(() => md1 < md2));
-    it('>', () => throws(() => md1 > md2));
-    it('<=', () => throws(() => md1 <= md2));
-    it('>=', () => throws(() => md1 >= md2));
   });
   describe('MonthDay.toPlainDate()', () => {
     const md = PlainMonthDay.from('01-22');
