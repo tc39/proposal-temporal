@@ -2,7 +2,8 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.plainmonthday.prototype.tostring
+esid: sec-temporal.plainmonthday.protoype.tostring
+description: If calendarName is "auto", "iso8601" should be omitted.
 features: [Temporal]
 ---*/
 
@@ -16,9 +17,6 @@ const tests = [
 
 for (const [args, expected] of tests) {
   const monthday = new Temporal.PlainMonthDay(5, 2, ...args);
-  const explicit = monthday.toString(undefined);
-  assert.sameValue(explicit, expected, "default calendarName option is auto");
-
-  const implicit = monthday.toString();
-  assert.sameValue(implicit, expected, "default calendarName option is auto");
+  const result = monthday.toString({ calendarName: "auto" });
+  assert.sameValue(result, expected);
 }

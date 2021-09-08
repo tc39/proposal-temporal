@@ -14,19 +14,19 @@ info: |
 features: [Temporal]
 ---*/
 
-const calendar = {
-  toString() { return "custom"; }
-};
-const monthday1 = new Temporal.PlainMonthDay(5, 2);
-const monthday2 = new Temporal.PlainMonthDay(5, 2, calendar);
+const tests = [
+  [[], "05-02"],
+  [[{ toString() { return "custom"; } }], "1972-05-02[u-ca=custom]"],
+  [[{ toString() { return "iso8601"; } }], "05-02"],
+  [[{ toString() { return "ISO8601"; } }], "1972-05-02[u-ca=ISO8601]"],
+  [[{ toString() { return "\u0131so8601"; } }], "1972-05-02[u-ca=\u0131so8601]"], // dotless i
+];
 
-[
-  [monthday1, "05-02"],
-  [monthday2, "1972-05-02[u-ca=custom]"],
-].forEach(([monthday, expected]) => {
+for (const [args, expected] of tests) {
+  const monthday = new Temporal.PlainMonthDay(5, 2, ...args);
   const explicit = monthday.toString({ calendarName: undefined });
   assert.sameValue(explicit, expected, "default calendarName option is auto");
 
   const implicit = monthday.toString({});
   assert.sameValue(implicit, expected, "default calendarName option is auto");
-});
+}

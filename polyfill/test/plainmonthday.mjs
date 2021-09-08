@@ -179,25 +179,6 @@ describe('MonthDay', () => {
       equal(`${leapDay.toPlainDate({ year: 2019 }, { overflow: 'constrain' })}`, '2019-02-28');
     });
   });
-  describe('MonthDay.toString()', () => {
-    const md1 = PlainMonthDay.from('11-18');
-    const md2 = PlainMonthDay.from({ monthCode: 'M11', day: 18, calendar: 'gregory' });
-    it('shows only non-ISO calendar if calendarName = auto', () => {
-      equal(md1.toString({ calendarName: 'auto' }), '11-18');
-      equal(md2.toString({ calendarName: 'auto' }), '1972-11-18[u-ca=gregory]');
-    });
-    it('shows ISO calendar if calendarName = always', () => {
-      equal(md1.toString({ calendarName: 'always' }), '11-18[u-ca=iso8601]');
-    });
-    it('omits non-ISO calendar, but not year, if calendarName = never', () => {
-      equal(md1.toString({ calendarName: 'never' }), '11-18');
-      equal(md2.toString({ calendarName: 'never' }), '1972-11-18');
-    });
-    it('default is calendar = auto', () => {
-      equal(md1.toString(), '11-18');
-      equal(md2.toString(), '1972-11-18[u-ca=gregory]');
-    });
-  });
 });
 
 import { normalize } from 'path';
