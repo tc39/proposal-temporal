@@ -143,20 +143,6 @@ describe('MonthDay', () => {
       assert(!md1.equals(md2));
     });
   });
-  describe('MonthDay.toPlainDate()', () => {
-    const md = PlainMonthDay.from('01-22');
-    it('takes an object argument with year property', () => {
-      equal(`${md.toPlainDate({ year: 2002 })}`, '2002-01-22');
-    });
-    it('needs at least a year property on the object in the ISO calendar', () => {
-      throws(() => md.toPlainDate({ something: 'nothing' }), TypeError);
-    });
-    it("constrains if the MonthDay doesn't exist in the year", () => {
-      const leapDay = PlainMonthDay.from('02-29');
-      equal(`${leapDay.toPlainDate({ year: 2019 })}`, '2019-02-28');
-      equal(`${leapDay.toPlainDate({ year: 2019 }, { overflow: 'constrain' })}`, '2019-02-28');
-    });
-  });
 });
 
 import { normalize } from 'path';
