@@ -908,9 +908,12 @@
       TimeZoneIANANameComponent :
           TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? but not one of `.` or `..`
 
-      TimeZoneIANAName :
+      TimeZoneIANANameTail :
           TimeZoneIANANameComponent
-          TimeZoneIANAName `/` TimeZoneIANANameComponent
+          TimeZoneIANANameComponent `/` TimeZoneIANANameTail
+
+      TimeZoneIANAName :
+          TimeZoneIANANameTail
 
       TimeZoneBracketedName :
           TimeZoneIANAName
@@ -937,10 +940,13 @@
       CalendarNameComponent :
           CalChar CalChar CalChar CalChar? CalChar? CalChar? CalChar? CalChar?
 
-      CalendarName :
+      CalendarNameTail :
           CalendarNameComponent
-          CalendarNameComponent `-` CalendarName
-
+          CalendarNameComponent `-` CalendarNameTail
+      
+      CalendarName :
+          CalendarNameTail
+     
       Calendar :
           `[u-ca=` CalendarName `]`
 
