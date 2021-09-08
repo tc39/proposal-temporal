@@ -203,27 +203,6 @@ describe('MonthDay', () => {
       });
     });
   });
-  describe('monthDay.getISOFields() works', () => {
-    const md1 = PlainMonthDay.from('11-18');
-    const fields = md1.getISOFields();
-    it('fields', () => {
-      equal(fields.isoMonth, 11);
-      equal(fields.isoDay, 18);
-      equal(fields.calendar.id, 'iso8601');
-      equal(typeof fields.isoYear, 'number');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.isoMonth, 11);
-      equal(fields2.isoDay, 18);
-      equal(fields2.calendar, fields.calendar);
-      equal(typeof fields2.isoYear, 'number');
-    });
-    it('as input to constructor', () => {
-      const md2 = new PlainMonthDay(fields.isoMonth, fields.isoDay, fields.calendar, fields.isoYear);
-      assert(md2.equals(md1));
-    });
-  });
 });
 
 import { normalize } from 'path';
