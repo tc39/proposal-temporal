@@ -145,11 +145,6 @@ describe('MonthDay', () => {
   });
   describe('MonthDay.toPlainDate()', () => {
     const md = PlainMonthDay.from('01-22');
-    it("doesn't take a primitive argument", () => {
-      [2002, '2002', false, 2002n, Symbol('2002'), null].forEach((bad) => {
-        throws(() => md.toPlainDate(bad), TypeError);
-      });
-    });
     it('takes an object argument with year property', () => {
       equal(`${md.toPlainDate({ year: 2002 })}`, '2002-01-22');
     });
