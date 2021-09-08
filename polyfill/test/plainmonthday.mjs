@@ -197,11 +197,6 @@ describe('MonthDay', () => {
       equal(md1.toString(), '11-18');
       equal(md2.toString(), '1972-11-18[u-ca=gregory]');
     });
-    it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
-        throws(() => md1.toString({ calendarName }), RangeError);
-      });
-    });
   });
 });
 

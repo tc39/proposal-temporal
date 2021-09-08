@@ -15,4 +15,6 @@ features: [Temporal]
 ---*/
 
 const monthday = new Temporal.PlainMonthDay(5, 2);
-assert.throws(RangeError, () => monthday.toString({ calendarName: "other string" }));
+for (const calendarName of ["ALWAYS", "sometimes", "other string"]) {
+  assert.throws(RangeError, () => monthday.toString({ calendarName }));
+}
