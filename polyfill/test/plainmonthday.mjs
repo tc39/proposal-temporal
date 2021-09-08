@@ -113,12 +113,6 @@ describe('MonthDay', () => {
     it('throws with timeZone property', () => {
       throws(() => md.with({ day: 1, timeZone: 'UTC' }), TypeError);
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => md.with({ day: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${md.with({ day: 1 }, options)}`, '01-01'));
-    });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => md.with({}), TypeError);
       throws(() => md.with({ months: 12 }), TypeError);

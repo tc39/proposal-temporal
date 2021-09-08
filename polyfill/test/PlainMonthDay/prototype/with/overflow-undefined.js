@@ -22,3 +22,5 @@ const explicit = monthday.with({ day: 33 }, { overflow: undefined });
 TemporalHelpers.assertPlainMonthDay(explicit, "M05", 31, "default overflow is constrain");
 const implicit = monthday.with({ day: 33 }, {});
 TemporalHelpers.assertPlainMonthDay(implicit, "M05", 31, "default overflow is constrain");
+const lambda = monthday.with({ day: 33 }, () => {});
+TemporalHelpers.assertPlainMonthDay(lambda, "M05", 31, "default overflow is constrain");
