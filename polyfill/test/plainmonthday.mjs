@@ -42,37 +42,6 @@ describe('MonthDay', () => {
           '1972-11-18[u-ca=gregory]'
         );
       });
-      describe('Leap day', () => {
-        ['reject', 'constrain'].forEach((overflow) =>
-          it(overflow, () => equal(`${PlainMonthDay.from({ month: 2, day: 29 }, { overflow })}`, '02-29'))
-        );
-        it("rejects when year isn't a leap year", () =>
-          throws(() => PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 'reject' }), RangeError));
-        it('constrains non-leap year', () =>
-          equal(`${PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 'constrain' })}`, '02-28'));
-      });
-      describe('Leap day with calendar', () => {
-        it('requires year with calendar', () =>
-          throws(
-            () => PlainMonthDay.from({ month: 2, day: 29, calendar: 'iso8601' }, { overflow: 'reject' }),
-            TypeError
-          ));
-        it('rejects leap day with non-leap year', () =>
-          throws(
-            () => PlainMonthDay.from({ month: 2, day: 29, year: 2001, calendar: 'iso8601' }, { overflow: 'reject' }),
-            RangeError
-          ));
-        it('constrains leap day', () =>
-          equal(
-            `${PlainMonthDay.from({ month: 2, day: 29, year: 2001, calendar: 'iso8601' }, { overflow: 'constrain' })}`,
-            '02-28'
-          ));
-        it('accepts leap day with monthCode', () =>
-          equal(
-            `${PlainMonthDay.from({ monthCode: 'M02', day: 29, calendar: 'iso8601' }, { overflow: 'reject' })}`,
-            '02-29'
-          ));
-      });
     });
     describe('.with()', () => {
       const md = PlainMonthDay.from('01-22');
