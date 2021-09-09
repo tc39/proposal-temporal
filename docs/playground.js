@@ -2810,12 +2810,12 @@
   			return ToNumber($parseInteger($strSlice(value, 2), 8));
   		} else if (hasNonWS(value) || isInvalidHexLiteral(value)) {
   			return NaN;
-  		} else {
-  			var trimmed = $trim(value);
-  			if (trimmed !== value) {
-  				return ToNumber(trimmed);
-  			}
   		}
+  		var trimmed = $trim(value);
+  		if (trimmed !== value) {
+  			return ToNumber(trimmed);
+  		}
+
   	}
   	return $Number$1(value);
   };
