@@ -1,5 +1,4 @@
 # Node v16.x does not yet support 'dayPeriod':
-PlainDateTime/prototype/toLocaleString/options-conflict.js
 PlainTime/prototype/toLocaleString/options-conflict.js
 ZonedDateTime/prototype/toLocaleString/options-conflict.js
 
