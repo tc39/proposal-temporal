@@ -42,17 +42,6 @@ describe('MonthDay', () => {
           '1972-11-18[u-ca=gregory]'
         );
       });
-      describe('Overflow', () => {
-        const bad = { month: 1, day: 32 };
-        it('reject', () => throws(() => PlainMonthDay.from(bad, { overflow: 'reject' }), RangeError));
-        it('constrain', () => {
-          equal(`${PlainMonthDay.from(bad)}`, '01-31');
-          equal(`${PlainMonthDay.from(bad, { overflow: 'constrain' })}`, '01-31');
-        });
-        it('constrain has no effect on invalid ISO string', () => {
-          throws(() => PlainMonthDay.from('13-34', { overflow: 'constrain' }), RangeError);
-        });
-      });
       describe('Leap day', () => {
         ['reject', 'constrain'].forEach((overflow) =>
           it(overflow, () => equal(`${PlainMonthDay.from({ month: 2, day: 29 }, { overflow })}`, '02-29'))
