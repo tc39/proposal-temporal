@@ -82,5 +82,5 @@ stdin.on('end', function () {
   }
   reportStatus(tests.length);
   stdout.write('\n\n');
-  exit(failedTests.length ? 1 : 0);
+  exit(failedTests.length || unexpectedPasses.length ? 1 : 0);
 });
