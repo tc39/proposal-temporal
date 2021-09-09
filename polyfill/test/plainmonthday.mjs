@@ -82,25 +82,6 @@ describe('MonthDay', () => {
       equal(md.with({ year: 1900 }).getISOFields().isoYear, md.getISOFields().isoYear);
     });
   });
-  describe('MonthDay.equals()', () => {
-    const md1 = PlainMonthDay.from('01-22');
-    const md2 = PlainMonthDay.from('12-15');
-    it('equal', () => assert(md1.equals(md1)));
-    it('unequal', () => assert(!md1.equals(md2)));
-    it('casts argument', () => {
-      assert(md1.equals('01-22'));
-      assert(md1.equals({ month: 1, day: 22 }));
-    });
-    it('object must contain at least the required properties', () => {
-      throws(() => md1.equals({ month: 1 }), TypeError);
-    });
-    it('takes [[ISOYear]] into account', () => {
-      const iso = Temporal.Calendar.from('iso8601');
-      const md1 = new PlainMonthDay(1, 1, iso, 1972);
-      const md2 = new PlainMonthDay(1, 1, iso, 2000);
-      assert(!md1.equals(md2));
-    });
-  });
 });
 
 import { normalize } from 'path';
