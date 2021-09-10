@@ -29,11 +29,11 @@ assert.throws(RangeError,
   "from reject with non-leap year");
 
 const nonLeap = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: "constrain" });
-TemporalHelpers.assertPlainMonthDay(nonLeap, "M02", 28, "from constrain with non-leap year", 2001);
+TemporalHelpers.assertPlainMonthDay(nonLeap, "M02", 28, "from constrain with non-leap year");
 
 assert.throws(RangeError,
   () => Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001, calendar: "iso8601" }, { overflow: "reject" }),
   "from reject with non-leap year and explicit calendar");
 
 const nonLeapCalendar = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001, calendar: "iso8601" }, { overflow: "constrain" });
-TemporalHelpers.assertPlainMonthDay(nonLeapCalendar, "M02", 28, "from constrain with non-leap year and explicit calendar", 2001);
+TemporalHelpers.assertPlainMonthDay(nonLeapCalendar, "M02", 28, "from constrain with non-leap year and explicit calendar");
