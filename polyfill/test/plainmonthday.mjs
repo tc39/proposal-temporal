@@ -43,39 +43,6 @@ describe('MonthDay', () => {
         );
       });
     });
-    describe('.with()', () => {
-      const md = PlainMonthDay.from('01-22');
-      it('with(12-)', () => equal(`${md.with({ monthCode: 'M12' })}`, '12-22'));
-      it('with(-15)', () => equal(`${md.with({ day: 15 })}`, '01-15'));
-    });
-  });
-  describe('MonthDay.with()', () => {
-    const md = PlainMonthDay.from('01-15');
-    it('with({monthCode})', () => equal(`${md.with({ monthCode: 'M12' })}`, '12-15'));
-    it('with({month}) not accepted', () => {
-      throws(() => md.with({ month: 12 }), TypeError);
-    });
-    it('with({month, monthCode}) accepted', () => equal(`${md.with({ month: 12, monthCode: 'M12' })}`, '12-15'));
-    it('month and monthCode must agree', () => {
-      throws(() => md.with({ month: 12, monthCode: 'M11' }), RangeError);
-    });
-    it('with({year, month}) accepted', () => equal(`${md.with({ year: 2000, month: 12 })}`, '12-15'));
-    it('throws with calendar property', () => {
-      throws(() => md.with({ day: 1, calendar: 'iso8601' }), TypeError);
-    });
-    it('throws with timeZone property', () => {
-      throws(() => md.with({ day: 1, timeZone: 'UTC' }), TypeError);
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => md.with({}), TypeError);
-      throws(() => md.with({ months: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${md.with({ monthCode: 'M12', days: 1 })}`, '12-15');
-    });
-    it('year is ignored when determining ISO reference year', () => {
-      equal(md.with({ year: 1900 }).getISOFields().isoYear, md.getISOFields().isoYear);
-    });
   });
 });
 
