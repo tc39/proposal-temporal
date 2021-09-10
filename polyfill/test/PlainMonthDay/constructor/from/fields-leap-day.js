@@ -20,7 +20,7 @@ features: [Temporal]
   TemporalHelpers.assertPlainMonthDay(implicit, "M02", 29, `from ${overflow} without year`);
 
   const explicit = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 1996 }, { overflow });
-  TemporalHelpers.assertPlainMonthDay(explicit, "M02", 29, `from ${overflow} with leap year`, 1996);
+  TemporalHelpers.assertPlainMonthDay(explicit, "M02", 29, `from ${overflow} with leap year`);
 });
 
 // Non-leap years
