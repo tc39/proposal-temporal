@@ -60,11 +60,6 @@ describe('MonthDay', () => {
       throws(() => md.with({ month: 12, monthCode: 'M11' }), RangeError);
     });
     it('with({year, month}) accepted', () => equal(`${md.with({ year: 2000, month: 12 })}`, '12-15'));
-    it('throws on bad overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => md.with({ day: 1 }, { overflow }), RangeError)
-      );
-    });
     it('throws with calendar property', () => {
       throws(() => md.with({ day: 1, calendar: 'iso8601' }), TypeError);
     });
