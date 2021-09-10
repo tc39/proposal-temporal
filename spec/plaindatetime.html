@@ -644,7 +644,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
-        1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _dateTime_.[[Calendar]]).
+        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 

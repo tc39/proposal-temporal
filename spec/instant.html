@@ -422,7 +422,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
-        1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -441,7 +441,7 @@
             1. Set _item_ to _timeZoneProperty_.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
         1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Return ? CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
