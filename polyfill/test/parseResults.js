@@ -52,6 +52,11 @@ stdin.on('end', function () {
   const unexpectedPasses = [];
   for (const test of tests) {
     const { result, scenario, file } = test;
+    if (result.message === 'Debugger attached.\nWaiting for the debugger to disconnect...\n') {
+      // work around https://github.com/nodejs/node/issues/34799 when running tests in the debugger
+      result.message = '';
+      result.pass = true;
+    }
     const expectedFailure = expectedFailures.has(file);
     const message = `${PREFIXES[+expectedFailure][+result.pass]} ${file} (${scenario})\n`;
     stdout.write(message);

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TESTS=${@:-"./*/**/*.js"}
+TIMEOUT=${TIMEOUT:-10000}
 PRELUDE=${PRELUDE:-script.js}
 
 export NODE_PATH=$PWD/node_modules
@@ -37,6 +38,7 @@ test262-harness \
   --reporter-keys file,rawResult,result,scenario \
   --test262Dir ../test262 \
   --prelude "../$PRELUDE" \
+  --timeout "$TIMEOUT" \
   --preprocessor ./preprocessor.test262.js \
   $TRANSFORMER_ARG \
   "$TESTS" \
