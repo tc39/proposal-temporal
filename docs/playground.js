@@ -5754,14 +5754,16 @@
     mergeFields: function mergeFields(fields, additionalFields) {
       var fieldsCopy = _objectSpread2({}, fields);
 
-      var additionalFieldsCopy = _objectSpread2({}, additionalFields);
+      var additionalFieldsCopy = _objectSpread2({}, additionalFields); // era and eraYear are intentionally unused
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 
       var month = fieldsCopy.month,
           monthCode = fieldsCopy.monthCode,
-          year = fieldsCopy.year,
-          era = fieldsCopy.era,
-          eraYear = fieldsCopy.eraYear,
-          original = _objectWithoutProperties(fieldsCopy, _excluded);
+          year = fieldsCopy.year;
+          fieldsCopy.era;
+          fieldsCopy.eraYear;
+          var original = _objectWithoutProperties(fieldsCopy, _excluded);
 
       var newMonth = additionalFieldsCopy.month,
           newMonthCode = additionalFieldsCopy.monthCode,
@@ -5775,9 +5777,10 @@
       }
 
       if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
+        // Only `year` is needed. We don't set era and eraYear because it's
+        // possible to create a conflict for eras that start or end mid-year. See
+        // https://github.com/tc39/proposal-temporal/issues/1784.
         original.year = year;
-        original.era = era;
-        original.eraYear = eraYear;
       }
 
       return _objectSpread2(_objectSpread2({}, original), additionalFieldsCopy);
