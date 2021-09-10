@@ -257,7 +257,7 @@
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Let _ns_ be ! SystemUTCEpochNanoseconds().
-        1. Return ? CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

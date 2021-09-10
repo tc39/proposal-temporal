@@ -521,7 +521,7 @@
         1. Else,
           1. Let _offsetNs_ be 0.
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*).
-        1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
     </emu-alg>
   </emu-clause>
