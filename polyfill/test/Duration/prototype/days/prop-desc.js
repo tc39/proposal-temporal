@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.days
+description: The "days" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

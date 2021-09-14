@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetime
+description: The "toZonedDateTime" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

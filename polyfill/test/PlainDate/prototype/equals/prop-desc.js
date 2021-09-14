@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.equals
+description: The "equals" property of Temporal.PlainDate.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

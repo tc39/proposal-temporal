@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.tostring
+description: Temporal.TimeZone.prototype.toString.length is 0
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named

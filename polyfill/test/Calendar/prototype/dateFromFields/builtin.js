@@ -3,6 +3,10 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.datefromfields
+description: >
+    Tests that Temporal.Calendar.prototype.dateFromFields
+    meets the requirements for built-in objects defined by the
+    introduction of chapter 17 of the ECMAScript Language Specification.
 info: |
     Built-in functions that are not constructors do not have a "prototype" property unless
     otherwise specified in the description of a particular function.

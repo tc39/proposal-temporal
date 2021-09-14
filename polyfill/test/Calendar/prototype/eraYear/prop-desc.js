@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.erayear
+description: The "eraYear" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.inleapyear
+description: The "inLeapYear" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

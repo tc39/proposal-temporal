@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.daysinyear
+description: The "daysInYear" property of Temporal.PlainDate.prototype
 features: [Temporal]
 ---*/
 

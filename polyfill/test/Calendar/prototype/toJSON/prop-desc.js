@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.tojson
+description: The "toJSON" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

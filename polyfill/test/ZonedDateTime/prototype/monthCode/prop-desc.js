@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.monthcode
+description: The "monthCode" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

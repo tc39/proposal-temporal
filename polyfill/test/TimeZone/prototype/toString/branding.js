@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.tostring
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.calendar.prototype.id
+description: The "id" property of Temporal.Calendar.prototype
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.toplaindatetime
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

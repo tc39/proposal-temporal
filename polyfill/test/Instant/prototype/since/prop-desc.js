@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.since
+description: The "since" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

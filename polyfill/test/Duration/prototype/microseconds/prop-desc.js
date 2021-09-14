@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.microseconds
+description: The "microseconds" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

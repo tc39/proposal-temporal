@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.tolocalestring
+description: The "toLocaleString" property of Temporal.PlainMonthDay.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

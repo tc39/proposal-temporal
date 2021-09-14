@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.inleapyear
+description: The "inLeapYear" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

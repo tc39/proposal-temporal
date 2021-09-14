@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.datefromfields
+description: The "dateFromFields" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

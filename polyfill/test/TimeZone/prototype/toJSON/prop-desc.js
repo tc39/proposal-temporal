@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.tojson
+description: The "toJSON" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

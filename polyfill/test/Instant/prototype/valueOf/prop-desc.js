@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.valueof
+description: The "valueOf" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

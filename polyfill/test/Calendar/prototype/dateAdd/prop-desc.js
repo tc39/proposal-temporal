@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dateadd
+description: The "dateAdd" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

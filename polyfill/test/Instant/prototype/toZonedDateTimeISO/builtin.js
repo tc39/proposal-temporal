@@ -3,6 +3,10 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetimeiso
+description: >
+    Tests that Temporal.Instant.prototype.toZonedDateTimeISO
+    meets the requirements for built-in objects defined by the
+    introduction of chapter 17 of the ECMAScript Language Specification.
 info: |
     Built-in functions that are not constructors do not have a "prototype" property unless
     otherwise specified in the description of a particular function.

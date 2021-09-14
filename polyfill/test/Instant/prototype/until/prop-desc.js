@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.until
+description: The "until" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

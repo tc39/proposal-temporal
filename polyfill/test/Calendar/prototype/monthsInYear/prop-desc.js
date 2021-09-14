@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthsinyear
+description: The "monthsInYear" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

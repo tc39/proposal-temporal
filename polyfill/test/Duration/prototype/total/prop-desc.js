@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.total
+description: The "total" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

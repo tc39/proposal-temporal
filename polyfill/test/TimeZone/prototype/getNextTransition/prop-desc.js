@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getnexttransition
+description: The "getNextTransition" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

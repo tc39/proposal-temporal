@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tojson
+description: The "toJSON" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

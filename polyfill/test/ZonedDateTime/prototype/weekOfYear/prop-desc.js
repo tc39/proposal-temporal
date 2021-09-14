@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.weekofyear
+description: The "weekOfYear" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

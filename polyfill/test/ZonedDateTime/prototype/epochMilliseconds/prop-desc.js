@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.epochmilliseconds
+description: The "epochMilliseconds" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

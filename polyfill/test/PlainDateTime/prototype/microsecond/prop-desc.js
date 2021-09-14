@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.microsecond
+description: The "microsecond" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

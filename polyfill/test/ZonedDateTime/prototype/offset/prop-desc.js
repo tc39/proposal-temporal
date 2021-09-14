@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.offset
+description: The "offset" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

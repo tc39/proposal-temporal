@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.round
+description: The "round" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

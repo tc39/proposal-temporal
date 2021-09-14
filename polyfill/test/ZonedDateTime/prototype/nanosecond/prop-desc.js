@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.nanosecond
+description: The "nanosecond" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

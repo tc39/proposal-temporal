@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.blank
+description: The "blank" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

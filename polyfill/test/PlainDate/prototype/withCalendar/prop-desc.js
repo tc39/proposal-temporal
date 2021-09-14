@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.withcalendar
+description: The "withCalendar" property of Temporal.PlainDate.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

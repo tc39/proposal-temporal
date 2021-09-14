@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.daysinmonth
+description: The "daysInMonth" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

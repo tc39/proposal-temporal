@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaintime.prototype.second
+description: The "second" property of Temporal.PlainTime.prototype
 features: [Temporal]
 ---*/
 

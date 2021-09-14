@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.erayear
+description: The "eraYear" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

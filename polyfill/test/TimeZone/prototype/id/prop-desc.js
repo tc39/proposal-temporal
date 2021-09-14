@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.timezone.prototype.id
+description: The "id" property of Temporal.TimeZone.prototype
 features: [Temporal]
 ---*/
 

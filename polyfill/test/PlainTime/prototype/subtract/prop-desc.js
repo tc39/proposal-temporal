@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.subtract
+description: The "subtract" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

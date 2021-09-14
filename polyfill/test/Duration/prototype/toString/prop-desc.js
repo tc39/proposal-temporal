@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tostring
+description: The "toString" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

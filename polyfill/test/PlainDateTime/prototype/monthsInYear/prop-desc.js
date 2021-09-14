@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.monthsinyear
+description: The "monthsInYear" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
+description: The "getPlainDateTimeFor" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

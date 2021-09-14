@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.second
+description: The "second" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

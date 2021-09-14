@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthsinyear
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

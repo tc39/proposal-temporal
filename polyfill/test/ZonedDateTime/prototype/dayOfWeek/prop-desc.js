@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.dayofweek
+description: The "dayOfWeek" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

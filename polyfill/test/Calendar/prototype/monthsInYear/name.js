@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthsinyear
+description: Temporal.Calendar.prototype.monthsInYear.name is "monthsInYear".
 info: |
     Every built-in function object, including constructors, that is not identified as an anonymous
     function has a "name" property whose value is a String. Unless otherwise specified, this value

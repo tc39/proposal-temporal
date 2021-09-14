@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tolocalestring
+description: The "toLocaleString" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

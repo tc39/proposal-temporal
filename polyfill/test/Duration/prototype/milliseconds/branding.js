@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.milliseconds
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 
