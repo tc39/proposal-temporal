@@ -3,7 +3,8 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
-features: [Temporal]
+description: TypeError thrown when options argument is a primitive
+features: [BigInt, Symbol, Temporal]
 ---*/
 
 const instance = new Temporal.PlainMonthDay(2, 2);
