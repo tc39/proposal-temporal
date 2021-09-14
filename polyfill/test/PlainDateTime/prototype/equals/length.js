@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.equals
+description: Temporal.PlainDateTime.prototype.equals.length is 1
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named

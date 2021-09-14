@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.dayofyear
+description: The "dayOfYear" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

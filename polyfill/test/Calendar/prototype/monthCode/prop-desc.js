@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.monthcode
+description: The "monthCode" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

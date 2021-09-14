@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.tozoneddatetime
+description: The "toZonedDateTime" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

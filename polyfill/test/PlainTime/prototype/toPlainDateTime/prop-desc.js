@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.toplaindatetime
+description: The "toPlainDateTime" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

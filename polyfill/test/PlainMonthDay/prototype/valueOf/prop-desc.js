@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.valueof
+description: The "valueOf" property of Temporal.PlainMonthDay.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.weeks
+description: The "weeks" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

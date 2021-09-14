@@ -3,6 +3,8 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.day
+description: >
+  Temporal.Calendar.prototype.day does not implement [[Construct]], is not new-able
 info: |
     Built-in function objects that are not identified as constructors do not implement the
     [[Construct]] internal method unless otherwise specified in the description of a particular

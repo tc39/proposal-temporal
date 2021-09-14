@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.instant.prototype.epochseconds
+description: The "epochSeconds" property of Temporal.Instant.prototype
 features: [Temporal]
 ---*/
 

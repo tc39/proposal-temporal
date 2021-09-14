@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.until
+description: The "until" property of Temporal.PlainYearMonth.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

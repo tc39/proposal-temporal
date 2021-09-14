@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+description: The "subtract" property of Temporal.PlainYearMonth.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

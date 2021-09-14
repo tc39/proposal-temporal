@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dayofweek
+description: The "dayOfWeek" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

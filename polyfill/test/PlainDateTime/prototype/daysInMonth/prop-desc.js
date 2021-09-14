@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.daysinmonth
+description: The "daysInMonth" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.sign
+description: The "sign" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

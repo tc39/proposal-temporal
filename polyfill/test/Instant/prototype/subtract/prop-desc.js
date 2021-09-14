@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.subtract
+description: The "subtract" property of Temporal.Instant.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

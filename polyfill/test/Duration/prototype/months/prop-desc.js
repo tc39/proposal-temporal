@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.months
+description: The "months" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

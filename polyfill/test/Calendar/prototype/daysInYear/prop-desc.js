@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.daysinyear
+description: The "daysInYear" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

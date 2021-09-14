@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplainmonthday
+description: The "toPlainMonthDay" property of Temporal.ZonedDateTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

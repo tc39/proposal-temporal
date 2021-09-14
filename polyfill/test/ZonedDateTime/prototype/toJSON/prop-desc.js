@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tojson
+description: The "toJSON" property of Temporal.ZonedDateTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.erayear
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

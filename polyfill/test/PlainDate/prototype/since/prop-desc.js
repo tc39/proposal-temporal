@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+description: The "since" property of Temporal.PlainDate.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

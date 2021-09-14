@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.day
+description: The "day" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

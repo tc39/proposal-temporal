@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tojson
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

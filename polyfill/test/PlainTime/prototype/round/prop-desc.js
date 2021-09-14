@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.round
+description: The "round" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

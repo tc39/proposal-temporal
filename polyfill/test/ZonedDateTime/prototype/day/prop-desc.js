@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.day
+description: The "day" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

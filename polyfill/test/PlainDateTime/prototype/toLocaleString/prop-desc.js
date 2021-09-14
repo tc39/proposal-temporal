@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tolocalestring
+description: The "toLocaleString" property of Temporal.PlainDateTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

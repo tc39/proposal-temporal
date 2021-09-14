@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.duration.prototype.years
+description: The "years" property of Temporal.Duration.prototype
 features: [Temporal]
 ---*/
 

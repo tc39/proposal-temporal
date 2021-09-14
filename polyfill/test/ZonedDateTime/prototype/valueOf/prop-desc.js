@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.valueof
+description: The "valueOf" property of Temporal.ZonedDateTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

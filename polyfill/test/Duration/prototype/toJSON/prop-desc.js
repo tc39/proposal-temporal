@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.tojson
+description: The "toJSON" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

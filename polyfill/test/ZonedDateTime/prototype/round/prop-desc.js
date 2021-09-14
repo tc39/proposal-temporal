@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.round
+description: The "round" property of Temporal.ZonedDateTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

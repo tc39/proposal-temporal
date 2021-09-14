@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.add
+description: Temporal.Duration.prototype.add.name is "add".
 info: |
     Every built-in function object, including constructors, that is not identified as an anonymous
     function has a "name" property whose value is a String. Unless otherwise specified, this value

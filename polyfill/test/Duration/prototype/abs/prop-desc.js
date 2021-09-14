@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.abs
+description: The "abs" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

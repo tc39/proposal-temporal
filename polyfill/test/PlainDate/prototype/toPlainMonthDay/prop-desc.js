@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplainmonthday
+description: The "toPlainMonthDay" property of Temporal.PlainDate.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

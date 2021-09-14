@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.with
+description: The "with" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

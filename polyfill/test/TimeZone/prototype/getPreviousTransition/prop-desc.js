@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getprevioustransition
+description: The "getPreviousTransition" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

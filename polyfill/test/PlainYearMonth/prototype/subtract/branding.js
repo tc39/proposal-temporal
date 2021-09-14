@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

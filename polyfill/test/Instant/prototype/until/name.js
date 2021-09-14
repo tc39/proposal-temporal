@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.until
+description: Temporal.Instant.prototype.until.name is "until".
 info: |
     Every built-in function object, including constructors, that is not identified as an anonymous
     function has a "name" property whose value is a String. Unless otherwise specified, this value

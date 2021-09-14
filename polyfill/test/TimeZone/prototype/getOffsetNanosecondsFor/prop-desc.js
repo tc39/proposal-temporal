@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetnanosecondsfor
+description: The "getOffsetNanosecondsFor" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

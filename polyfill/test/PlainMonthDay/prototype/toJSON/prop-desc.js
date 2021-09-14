@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.tojson
+description: The "toJSON" property of Temporal.PlainMonthDay.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

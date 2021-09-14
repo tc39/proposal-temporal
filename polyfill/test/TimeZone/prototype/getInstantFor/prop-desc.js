@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
+description: The "getInstantFor" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

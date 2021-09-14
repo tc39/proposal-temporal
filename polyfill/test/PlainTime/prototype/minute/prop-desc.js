@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaintime.prototype.minute
+description: The "minute" property of Temporal.PlainTime.prototype
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.daysinweek
+description: The "daysInWeek" property of Temporal.PlainDate.prototype
 features: [Temporal]
 ---*/
 

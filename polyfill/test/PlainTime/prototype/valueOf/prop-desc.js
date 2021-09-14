@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.valueof
+description: The "valueOf" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

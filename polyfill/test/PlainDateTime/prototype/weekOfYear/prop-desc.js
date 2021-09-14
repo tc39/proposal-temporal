@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.weekofyear
+description: The "weekOfYear" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

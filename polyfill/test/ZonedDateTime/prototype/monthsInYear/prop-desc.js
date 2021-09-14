@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.monthsinyear
+description: The "monthsInYear" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

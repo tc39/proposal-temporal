@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.weekofyear
+description: The "weekOfYear" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

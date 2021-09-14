@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetimeiso
+description: Throw a TypeError if the receiver is invalid
 features: [Symbol, Temporal]
 ---*/
 

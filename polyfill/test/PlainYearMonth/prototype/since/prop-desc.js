@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.since
+description: The "since" property of Temporal.PlainYearMonth.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

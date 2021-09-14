@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dateuntil
+description: The "dateUntil" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

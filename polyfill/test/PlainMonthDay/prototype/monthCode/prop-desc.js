@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.monthcode
+description: The "monthCode" property of Temporal.PlainMonthDay.prototype
 features: [Temporal]
 ---*/
 

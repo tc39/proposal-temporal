@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.fields
+description: The "fields" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetstringfor
+description: The "getOffsetStringFor" property of Temporal.TimeZone.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

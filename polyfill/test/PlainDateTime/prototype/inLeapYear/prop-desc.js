@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.inleapyear
+description: The "inLeapYear" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

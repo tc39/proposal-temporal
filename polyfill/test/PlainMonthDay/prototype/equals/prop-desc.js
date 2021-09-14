@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.equals
+description: The "equals" property of Temporal.PlainMonthDay.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

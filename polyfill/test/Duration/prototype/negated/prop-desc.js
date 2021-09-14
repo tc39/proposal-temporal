@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.negated
+description: The "negated" property of Temporal.Duration.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

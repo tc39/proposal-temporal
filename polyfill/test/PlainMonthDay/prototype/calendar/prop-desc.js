@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.calendar
+description: The "calendar" property of Temporal.PlainMonthDay.prototype
 features: [Temporal]
 ---*/
 

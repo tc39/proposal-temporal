@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.tostring
+description: The "toString" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

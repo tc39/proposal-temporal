@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.erayear
+description: The "eraYear" property of Temporal.PlainDate.prototype
 features: [Temporal]
 ---*/
 

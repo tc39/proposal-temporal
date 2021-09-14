@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.tojson
+description: The "toJSON" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

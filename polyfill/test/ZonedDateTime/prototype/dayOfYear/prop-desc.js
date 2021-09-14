@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.dayofyear
+description: The "dayOfYear" property of Temporal.ZonedDateTime.prototype
 features: [Temporal]
 ---*/
 

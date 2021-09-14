@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.day
+description: The "day" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

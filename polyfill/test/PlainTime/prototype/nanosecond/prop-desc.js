@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaintime.prototype.nanosecond
+description: The "nanosecond" property of Temporal.PlainTime.prototype
 features: [Temporal]
 ---*/
 

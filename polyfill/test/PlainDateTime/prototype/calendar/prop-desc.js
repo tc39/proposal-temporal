@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindatetime.prototype.calendar
+description: The "calendar" property of Temporal.PlainDateTime.prototype
 features: [Temporal]
 ---*/
 

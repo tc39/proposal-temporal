@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.mergefields
+description: The "mergeFields" property of Temporal.Calendar.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

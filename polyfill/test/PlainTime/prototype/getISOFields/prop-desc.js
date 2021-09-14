@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.getisofields
+description: The "getISOFields" property of Temporal.PlainTime.prototype
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
