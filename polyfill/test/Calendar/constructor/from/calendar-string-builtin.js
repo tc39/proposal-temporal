@@ -3,17 +3,17 @@
 
 /*---
 esid: sec-temporal.calendar.from
-description: from() throws if the argument is not a built-in calendar name.
+description: Calendar.from should support iso8601.
 features: [Temporal]
 ---*/
 
 const tests = [
-  "local",
-  "iso-8601",
-  "[u-ca=iso8601]",
-  "invalid-calendar",
+  "iso8601",
+  "1994-11-05T08:15:30-05:00",
 ];
 
 for (const item of tests) {
-  assert.throws(RangeError, () => Temporal.Calendar.from(item));
+  const calendar = Temporal.Calendar.from(item);
+  assert(calendar instanceof Temporal.Calendar);
+  assert.sameValue(calendar.id, "iso8601");
 }
