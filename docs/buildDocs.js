@@ -122,9 +122,10 @@ async function go() {
     const tail = await fs.readFile('tail.html.part', { encoding });
     // copy or render /docs/* to /out/docs/
     await Promise.all(
-      [...(await fs.readdir('.')), 
-       ...(await fs.readdir('ja')).map((x) => 'ja/' + x), 
-       ...(await fs.readdir('zh_CN')).map((x) => 'zh_CN/' + x)
+      [
+        ...(await fs.readdir('.')),
+        ...(await fs.readdir('ja')).map((x) => 'ja/' + x),
+        ...(await fs.readdir('zh_CN')).map((x) => 'zh_CN/' + x)
       ].map((file) => {
         switch (path.extname(file)) {
           // copy files *.css, *.html, *.svg to /out/docs
