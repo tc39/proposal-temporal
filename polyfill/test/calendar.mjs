@@ -19,7 +19,7 @@ describe('Calendar', () => {
   const iso = Calendar.from('iso8601');
   describe('Calendar.from()', () => {
     describe('from identifier', () => {
-      test('iso8601');
+      // 402
       test('gregory');
       test('japanese');
       function test(id) {
@@ -27,46 +27,8 @@ describe('Calendar', () => {
         it(`Calendar.from(${id}) is a calendar`, () => assert(calendar instanceof Calendar));
         it(`Calendar.from(${id}) has the correct ID`, () => equal(calendar.id, id));
       }
-      it('other types with a calendar are accepted', () => {
-        [
-          Temporal.PlainDate.from('1976-11-18[u-ca=gregory]'),
-          Temporal.PlainDateTime.from('1976-11-18[u-ca=gregory]'),
-          Temporal.PlainMonthDay.from('1972-11-18[u-ca=gregory]'),
-          Temporal.PlainYearMonth.from('1976-11-01[u-ca=gregory]')
-        ].forEach((obj) => {
-          const calFrom = Calendar.from(obj);
-          assert(calFrom instanceof Calendar);
-          equal(calFrom.id, 'gregory');
-        });
-      });
-      it('property bag with calendar object is accepted', () => {
-        const cal = new Calendar('iso8601');
-        const calFrom = Calendar.from({ calendar: cal });
-        assert(calFrom instanceof Calendar);
-        equal(calFrom.id, 'iso8601');
-      });
-      it('property bag with string is accepted', () => {
-        const calFrom = Calendar.from({ calendar: 'iso8601' });
-        assert(calFrom instanceof Calendar);
-        equal(calFrom.id, 'iso8601');
-      });
-      it('property bag with custom calendar is accepted', () => {
-        const custom = { id: 'custom-calendar' };
-        const calFrom = Calendar.from({ calendar: custom });
-        equal(calFrom, custom);
-      });
-      it('throws with bad identifier', () => {
-        throws(() => Calendar.from('local'), RangeError);
-        throws(() => Calendar.from('iso-8601'), RangeError);
-        throws(() => Calendar.from('[u-ca=iso8601]'), RangeError);
-      });
-      it('throws with bad value in property bag', () => {
-        throws(() => Calendar.from({ calendar: 'local' }), RangeError);
-        throws(() => Calendar.from({ calendar: { calendar: 'iso8601' } }), RangeError);
-      });
     });
     describe('Calendar.from(ISO string)', () => {
-      test('1994-11-05T08:15:30-05:00', 'iso8601');
       test('1994-11-05T08:15:30-05:00[u-ca=gregory]', 'gregory');
       test('1994-11-05T13:15:30Z[u-ca=japanese]', 'japanese');
       function test(isoString, id) {
