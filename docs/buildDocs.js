@@ -122,7 +122,11 @@ async function go() {
     const tail = await fs.readFile('tail.html.part', { encoding });
     // copy or render /docs/* to /out/docs/
     await Promise.all(
-      [...(await fs.readdir('.')), ...(await fs.readdir('ja')).map((x) => 'ja/' + x)].map((file) => {
+      [
+        ...(await fs.readdir('.')),
+        ...(await fs.readdir('ja')).map((x) => 'ja/' + x),
+        ...(await fs.readdir('zh_CN')).map((x) => 'zh_CN/' + x)
+      ].map((file) => {
         switch (path.extname(file)) {
           // copy files *.css, *.html, *.svg to /out/docs
           case '.css':
@@ -151,6 +155,7 @@ async function go() {
       [
         ['../out/docs/README.html', '../out/docs/index.html'],
         ['../out/docs/ja/README.html', '../out/docs/ja/index.html'],
+        ['../out/docs/zh_CN/README.html', '../out/docs/zh_CN/index.html'],
         ['node_modules/prismjs/themes/prism.css', '../out/docs/prism.css']
       ].map(([file1, file2]) => {
         return fs.copyFile(path.resolve(file1), path.resolve(file2));
