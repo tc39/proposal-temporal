@@ -1087,7 +1087,7 @@
         In the case of more than one possible exact time, or no possible exact time, an answer is determined using _offsetBehaviour_ (one of ~option~, ~exact~, or ~wall~), _disambiguation_ (one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*) and _offsetOption_ (one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*).
       </p>
       <emu-alg>
-        1. Assert: _offsetNanoseconds_ is an integer or *undefined*.
+        1. Assert: _offsetNanoseconds_ is an integer.
         1. Let _calendar_ be ! GetISO8601Calendar().
         1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_. _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetOption_ is *"ignore"*, then
