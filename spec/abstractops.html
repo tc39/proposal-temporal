@@ -509,7 +509,7 @@
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Let _offsetString_ be _result_.[[TimeZoneOffset]].
         1. Let _timeZone_ be _result_.[[TimeZoneIANAName]].
-        1. If _result_.[[Z]] is *true*, then
+        1. If _result_.[[TimeZoneZ]] is *true*, then
           1. Set _offsetBehaviour_ to ~exact~.
         1. Else if _offsetString_ is *undefined*, then
           1. Set _offsetBehaviour_ to ~wall~.
