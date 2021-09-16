@@ -38,27 +38,6 @@ describe('Calendar', () => {
       }
     });
   });
-  describe('Calendar.dateFromFields()', () => {
-    it('throws on non-object fields', () => {
-      ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.dateFromFields(bad, {}), TypeError);
-      });
-    });
-  });
-  describe('Calendar.monthDayFromFields()', () => {
-    it('throws on non-object fields', () => {
-      ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.monthDayFromFields(bad, {}), TypeError);
-      });
-    });
-  });
-  describe('Calendar.yearMonthFromFields()', () => {
-    it('throws on non-object fields', () => {
-      ['string', Math.PI, false, 42n, Symbol('sym'), null].forEach((bad) => {
-        throws(() => iso.yearMonthFromFields(bad, {}), TypeError);
-      });
-    });
-  });
   describe('Calendar.year()', () => {
     const res = 1994;
     it('accepts Date', () => equal(iso.year(Temporal.PlainDate.from('1994-11-05')), res));
