@@ -835,8 +835,10 @@
       DateSpecYearMonth :
           DateYear `-`? DateMonth
 
+      TwoDashes :
+          `--`
       DateSpecMonthDay :
-          `--`? DateMonth `-`? DateDay
+          TwoDashes? DateMonth `-`? DateDay
 
       Date :
           DateYear `-` DateMonth `-` DateDay
