@@ -1137,7 +1137,7 @@
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
           1. Assert: _result_.[[TimeZoneName]] is not *undefined*.
           1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
-          1. If _result_.[[Z]] is *true*, then
+          1. If _result_.[[TimeZoneZ]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.
           1. Else if _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
