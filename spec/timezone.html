@@ -565,7 +565,6 @@
       <h1>GetOffsetNanosecondsFor ( _timeZone_, _instant_ )</h1>
       <emu-alg>
         1. Let _getOffsetNanosecondsFor_ be ? GetMethod(_timeZone_, *"getOffsetNanosecondsFor"*).
-        1. If _getOffsetNanosecondsFor_ is *undefined*, set _getOffsetNanosecondsFor_ to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _instant_ »).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
         1. If ! IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
