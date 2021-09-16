@@ -1089,7 +1089,7 @@
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer or *undefined*.
         1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_. _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
+        1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetOption_ is *"ignore"*, then
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
           1. Return _instant_.[[Nanoseconds]].
