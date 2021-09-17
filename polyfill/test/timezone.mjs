@@ -17,55 +17,6 @@ const { deepEqual, equal, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
-  describe('Construction', () => {
-    test('+01:00');
-    test('-01:00');
-    test('+0330');
-    test('-0650');
-    test('-08');
-    test('\u221201:00');
-    test('\u22120650');
-    test('\u221208');
-    test('+01:00:00');
-    test('-010000');
-    test('+03:30:00.000000001');
-    test('-033000.1');
-    test('Europe/Vienna');
-    test('America/New_York');
-    test('Africa/CAIRO'); // capitalization
-    test('Asia/Ulan_Bator'); // IANA Link Name
-    test('UTC');
-    test('GMT');
-    function test(zone) {
-      it(`${zone} is a zone`, () => equal(typeof new Temporal.TimeZone(zone), 'object'));
-    }
-    ['+00:01.1', '-01.1'].forEach((id) => {
-      it(`${id} is not a zone`, () => throws(() => new Temporal.TimeZone(id), RangeError));
-    });
-  });
-  describe('.id property', () => {
-    test('+01:00');
-    test('-01:00');
-    test('+0330', '+03:30');
-    test('-0650', '-06:50');
-    test('-08', '-08:00');
-    test('\u221201:00', '-01:00');
-    test('\u22120650', '-06:50');
-    test('\u221208', '-08:00');
-    test('+01:00:00', '+01:00');
-    test('-010000', '-01:00');
-    test('+03:30:00.000000001', '+03:30:00.000000001');
-    test('-033000.1', '-03:30:00.1');
-    test('Europe/Vienna');
-    test('America/New_York');
-    test('Africa/CAIRO', 'Africa/Cairo');
-    test('Asia/Ulan_Bator', 'Asia/Ulaanbaatar');
-    test('UTC');
-    test('GMT', 'UTC');
-    function test(zone, id = zone) {
-      it(`${zone} has ID ${id}`, () => equal(new Temporal.TimeZone(zone).id, id));
-    }
-  });
   describe('TimeZone.from(identifier)', () => {
     test('+01:00');
     test('-01:00');
