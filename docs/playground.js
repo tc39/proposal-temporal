@@ -7206,11 +7206,11 @@
           microsecond = _ES$ToTemporalTimeRec.microsecond,
           nanosecond = _ES$ToTemporalTimeRec.nanosecond;
 
+      var overflow = ES.ToTemporalOverflow(options);
       var date = ES.DateFromFields(calendar, fields, options);
       var year = GetSlot(date, ISO_YEAR);
       var month = GetSlot(date, ISO_MONTH);
       var day = GetSlot(date, ISO_DAY);
-      var overflow = ES.ToTemporalOverflow(options);
 
       var _ES$RegulateTime = ES.RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow);
 
@@ -14223,11 +14223,14 @@
         var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }));
+
+        var optionsCopy = _objectSpread2({}, options);
+
         var addedDate = ES.CalendarDateAdd(calendar, startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options);
         var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-        return ES.YearMonthFromFields(calendar, addedDateFields, options);
+        return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
       }
     }, {
       key: "subtract",
@@ -14271,11 +14274,14 @@
         var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }));
+
+        var optionsCopy = _objectSpread2({}, options);
+
         var addedDate = ES.CalendarDateAdd(calendar, startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
           days: days
         }), options);
         var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-        return ES.YearMonthFromFields(calendar, addedDateFields, options);
+        return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
       }
     }, {
       key: "until",
