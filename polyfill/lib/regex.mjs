@@ -8,7 +8,11 @@ const calComponent = /[A-Za-z0-9]{3,8}/;
 export const calendarID = new RegExp(`(?:${calComponent.source}(?:-${calComponent.source})*)`);
 
 const yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
-export const datesplit = new RegExp(`(${yearpart.source})(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))`);
+const monthpart = /(?:0[1-9]|1[0-2])/;
+const daypart = /(?:0[1-9]|[12]\d|3[01])/;
+export const datesplit = new RegExp(
+  `(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`
+);
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
 const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[(${timeZoneID.source})\\])?`);
@@ -30,8 +34,8 @@ export const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:$
 // with the reference fields.
 // YYYYMM forbidden by ISO 8601, but since it is not ambiguous with anything
 // else we could parse in a YearMonth context, we allow it
-export const yearmonth = new RegExp(`^(${yearpart.source})-?(\\d{2})$`);
-export const monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
+export const yearmonth = new RegExp(`^(${yearpart.source})-?(${monthpart.source})$`);
+export const monthday = new RegExp(`^(?:--)?(${monthpart.source})-?(${daypart.source})$`);
 
 const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 

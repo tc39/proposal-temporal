@@ -33,47 +33,65 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components.slice(0, 6));
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Without time component
-    test('2020-01-01Z', [2020, 1, 1, 0, 0, 0]);
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) =>
-      generateTest(`1976-11-18${timeSep}15:23`, 'Z', [1976, 11, 18, 15, 23, 30, 123, 456, 789])
-    );
-    // Time zone with bracketed name
-    ['+01:00', '+01', '+0100', '+01:00:00', '+010000', '+01:00:00.000000000', '+010000.0'].forEach((zoneString) => {
-      generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
-      generateTest('1976-11-18T15:23', `+01:00[${zoneString}]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
+    describe('valid', () => {
+      // Without time component
+      test('2020-01-01Z', [2020, 1, 1, 0, 0, 0]);
+      // Time separators
+      ['T', 't', ' '].forEach((timeSep) =>
+        generateTest(`1976-11-18${timeSep}15:23`, 'Z', [1976, 11, 18, 15, 23, 30, 123, 456, 789])
+      );
+      // Time zone with bracketed name
+      ['+01:00', '+01', '+0100', '+01:00:00', '+010000', '+01:00:00.000000000', '+010000.0'].forEach((zoneString) => {
+        generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
+        generateTest('1976-11-18T15:23', `+01:00[${zoneString}]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
+      });
+      // Time zone with only offset
+      ['-04:00', '-04', '-0400', '-04:00:00', '-040000', '-04:00:00.000000000', '-040000.0'].forEach((zoneString) =>
+        generateTest('1976-11-18T15:23', zoneString, [1976, 11, 18, 19, 23, 30, 123, 456, 789])
+      );
+      // Various numbers of decimal places
+      test('1976-11-18T15:23:30.1Z', [1976, 11, 18, 15, 23, 30, 100]);
+      test('1976-11-18T15:23:30.12Z', [1976, 11, 18, 15, 23, 30, 120]);
+      test('1976-11-18T15:23:30.123Z', [1976, 11, 18, 15, 23, 30, 123]);
+      test('1976-11-18T15:23:30.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      test('1976-11-18T15:23:30.12345Z', [1976, 11, 18, 15, 23, 30, 123, 450]);
+      test('1976-11-18T15:23:30.123456Z', [1976, 11, 18, 15, 23, 30, 123, 456]);
+      test('1976-11-18T15:23:30.1234567Z', [1976, 11, 18, 15, 23, 30, 123, 456, 700]);
+      test('1976-11-18T15:23:30.12345678Z', [1976, 11, 18, 15, 23, 30, 123, 456, 780]);
+      // Lowercase UTC designator
+      generateTest('1976-11-18T15:23', 'z', [1976, 11, 18, 15, 23, 30, 123, 456, 789]);
+      // Comma decimal separator
+      test('1976-11-18T15:23:30,1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      // Unicode minus sign
+      ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
+        test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 19, 23, 30, 123, 400])
+      );
+      test('\u2212009999-11-18T15:23:30.1234Z', [-9999, 11, 18, 15, 23, 30, 123, 400]);
+      // Mixture of basic and extended format
+      test('1976-11-18T152330Z', [1976, 11, 18, 15, 23, 30]);
+      test('1976-11-18T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      test('19761118T15:23:30Z', [1976, 11, 18, 15, 23, 30]);
+      test('19761118T152330Z', [1976, 11, 18, 15, 23, 30]);
+      test('19761118T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      // Representations with reduced precision
+      test('1976-11-18T15Z', [1976, 11, 18, 15]);
     });
-    // Time zone with only offset
-    ['-04:00', '-04', '-0400', '-04:00:00', '-040000', '-04:00:00.000000000', '-040000.0'].forEach((zoneString) =>
-      generateTest('1976-11-18T15:23', zoneString, [1976, 11, 18, 19, 23, 30, 123, 456, 789])
-    );
-    // Various numbers of decimal places
-    test('1976-11-18T15:23:30.1Z', [1976, 11, 18, 15, 23, 30, 100]);
-    test('1976-11-18T15:23:30.12Z', [1976, 11, 18, 15, 23, 30, 120]);
-    test('1976-11-18T15:23:30.123Z', [1976, 11, 18, 15, 23, 30, 123]);
-    test('1976-11-18T15:23:30.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    test('1976-11-18T15:23:30.12345Z', [1976, 11, 18, 15, 23, 30, 123, 450]);
-    test('1976-11-18T15:23:30.123456Z', [1976, 11, 18, 15, 23, 30, 123, 456]);
-    test('1976-11-18T15:23:30.1234567Z', [1976, 11, 18, 15, 23, 30, 123, 456, 700]);
-    test('1976-11-18T15:23:30.12345678Z', [1976, 11, 18, 15, 23, 30, 123, 456, 780]);
-    // Lowercase UTC designator
-    generateTest('1976-11-18T15:23', 'z', [1976, 11, 18, 15, 23, 30, 123, 456, 789]);
-    // Comma decimal separator
-    test('1976-11-18T15:23:30,1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    // Unicode minus sign
-    ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
-      test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 19, 23, 30, 123, 400])
-    );
-    test('\u2212009999-11-18T15:23:30.1234Z', [-9999, 11, 18, 15, 23, 30, 123, 400]);
-    // Mixture of basic and extended format
-    test('1976-11-18T152330Z', [1976, 11, 18, 15, 23, 30]);
-    test('1976-11-18T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    test('19761118T15:23:30Z', [1976, 11, 18, 15, 23, 30]);
-    test('19761118T152330Z', [1976, 11, 18, 15, 23, 30]);
-    test('19761118T152330.1234Z', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    // Representations with reduced precision
-    test('1976-11-18T15Z', [1976, 11, 18, 15]);
+    describe('not valid', () => {
+      // Invalid month values
+      ['00', '13', '20', '99'].forEach((monthString) => {
+        const invalidIsoString = `1976-${monthString}-18T00:00:00Z`;
+        it(invalidIsoString, () => {
+          throws(() => Temporal.Instant.from(invalidIsoString), RangeError);
+        });
+      });
+      // Invalid day values
+      ['00', '32', '40', '99'].forEach((dayString) => {
+        const invalidIsoString = `1976-11-${dayString}T00:00:00Z`;
+        it(invalidIsoString, () => {
+          throws(() => Temporal.Instant.from(invalidIsoString), RangeError);
+        });
+      });
+    });
   });
 
   describe('datetime', () => {
@@ -99,51 +117,69 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components.slice(0, 6));
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
-    // Various forms of time zone
-    [
-      '+0100[Europe/Vienna]',
-      '+01:00[Europe/Vienna]',
-      '[Europe/Vienna]',
-      '+01:00[Custom/Vienna]',
-      '-0400',
-      '-04:00',
-      '-04:00:00.000000000',
-      '+010000.0[Europe/Vienna]',
-      '+01:00[+01:00]',
-      '+01:00[+0100]',
-      ''
-    ].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
-    // Various numbers of decimal places
-    test('1976-11-18T15:23:30.1', [1976, 11, 18, 15, 23, 30, 100]);
-    test('1976-11-18T15:23:30.12', [1976, 11, 18, 15, 23, 30, 120]);
-    test('1976-11-18T15:23:30.123', [1976, 11, 18, 15, 23, 30, 123]);
-    test('1976-11-18T15:23:30.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    test('1976-11-18T15:23:30.12345', [1976, 11, 18, 15, 23, 30, 123, 450]);
-    test('1976-11-18T15:23:30.123456', [1976, 11, 18, 15, 23, 30, 123, 456]);
-    test('1976-11-18T15:23:30.1234567', [1976, 11, 18, 15, 23, 30, 123, 456, 700]);
-    test('1976-11-18T15:23:30.12345678', [1976, 11, 18, 15, 23, 30, 123, 456, 780]);
-    // Comma decimal separator
-    test('1976-11-18T15:23:30,1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    // Unicode minus sign
-    ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
-      test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 15, 23, 30, 123, 400])
-    );
-    test('\u2212009999-11-18T15:23:30.1234', [-9999, 11, 18, 15, 23, 30, 123, 400]);
-    // Mixture of basic and extended format
-    test('1976-11-18T152330', [1976, 11, 18, 15, 23, 30]);
-    test('1976-11-18T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    test('19761118T15:23:30', [1976, 11, 18, 15, 23, 30]);
-    test('19761118T152330', [1976, 11, 18, 15, 23, 30]);
-    test('19761118T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
-    // Representations with reduced precision
-    test('1976-11-18T15', [1976, 11, 18, 15]);
-    test('1976-11-18', [1976, 11, 18]);
-    // Representations with calendar
-    ['', 'Z', '+01:00[Europe/Vienna]', '+01:00[Custom/Vienna]', '[Europe/Vienna]'].forEach((zoneString) =>
-      test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [1976, 11, 18, 15, 23, 30, 123, 456, 789])
-    );
+    describe('valid', () => {
+      // Time separators
+      ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
+      // Various forms of time zone
+      [
+        '+0100[Europe/Vienna]',
+        '+01:00[Europe/Vienna]',
+        '[Europe/Vienna]',
+        '+01:00[Custom/Vienna]',
+        '-0400',
+        '-04:00',
+        '-04:00:00.000000000',
+        '+010000.0[Europe/Vienna]',
+        '+01:00[+01:00]',
+        '+01:00[+0100]',
+        ''
+      ].forEach((zoneString) => generateTest('1976-11-18T15:23', zoneString));
+      // Various numbers of decimal places
+      test('1976-11-18T15:23:30.1', [1976, 11, 18, 15, 23, 30, 100]);
+      test('1976-11-18T15:23:30.12', [1976, 11, 18, 15, 23, 30, 120]);
+      test('1976-11-18T15:23:30.123', [1976, 11, 18, 15, 23, 30, 123]);
+      test('1976-11-18T15:23:30.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      test('1976-11-18T15:23:30.12345', [1976, 11, 18, 15, 23, 30, 123, 450]);
+      test('1976-11-18T15:23:30.123456', [1976, 11, 18, 15, 23, 30, 123, 456]);
+      test('1976-11-18T15:23:30.1234567', [1976, 11, 18, 15, 23, 30, 123, 456, 700]);
+      test('1976-11-18T15:23:30.12345678', [1976, 11, 18, 15, 23, 30, 123, 456, 780]);
+      // Comma decimal separator
+      test('1976-11-18T15:23:30,1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      // Unicode minus sign
+      ['\u221204:00', '\u221204', '\u22120400'].forEach((offset) =>
+        test(`1976-11-18T15:23:30.1234${offset}`, [1976, 11, 18, 15, 23, 30, 123, 400])
+      );
+      test('\u2212009999-11-18T15:23:30.1234', [-9999, 11, 18, 15, 23, 30, 123, 400]);
+      // Mixture of basic and extended format
+      test('1976-11-18T152330', [1976, 11, 18, 15, 23, 30]);
+      test('1976-11-18T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      test('19761118T15:23:30', [1976, 11, 18, 15, 23, 30]);
+      test('19761118T152330', [1976, 11, 18, 15, 23, 30]);
+      test('19761118T152330.1234', [1976, 11, 18, 15, 23, 30, 123, 400]);
+      // Representations with reduced precision
+      test('1976-11-18T15', [1976, 11, 18, 15]);
+      test('1976-11-18', [1976, 11, 18]);
+      // Representations with calendar
+      ['', 'Z', '+01:00[Europe/Vienna]', '+01:00[Custom/Vienna]', '[Europe/Vienna]'].forEach((zoneString) =>
+        test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [1976, 11, 18, 15, 23, 30, 123, 456, 789])
+      );
+    });
+    describe('not valid', () => {
+      // Invalid month values
+      ['00', '13', '20', '99'].forEach((monthString) => {
+        const invalidIsoString = `1976-${monthString}-18T00:00:00`;
+        it(invalidIsoString, () => {
+          throws(() => Temporal.PlainDateTime.from(invalidIsoString), RangeError);
+        });
+      });
+      // Invalid day values
+      ['00', '32', '40', '99'].forEach((dayString) => {
+        const invalidIsoString = `1976-11-${dayString}T00:00:00`;
+        it(invalidIsoString, () => {
+          throws(() => Temporal.PlainDateTime.from(invalidIsoString), RangeError);
+        });
+      });
+    });
   });
 
   describe('date', () => {
