@@ -13,31 +13,7 @@ import { strict as assert } from 'assert';
 const { equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
-const { Calendar } = Temporal;
 
-describe('Calendar', () => {
-  describe('Calendar.from()', () => {
-    describe('from identifier', () => {
-      // 402
-      test('gregory');
-      test('japanese');
-      function test(id) {
-        const calendar = Calendar.from(id);
-        it(`Calendar.from(${id}) is a calendar`, () => assert(calendar instanceof Calendar));
-        it(`Calendar.from(${id}) has the correct ID`, () => equal(calendar.id, id));
-      }
-    });
-    describe('Calendar.from(ISO string)', () => {
-      test('1994-11-05T08:15:30-05:00[u-ca=gregory]', 'gregory');
-      test('1994-11-05T13:15:30Z[u-ca=japanese]', 'japanese');
-      function test(isoString, id) {
-        const calendar = Calendar.from(isoString);
-        it(`Calendar.from(${isoString}) is a calendar`, () => assert(calendar instanceof Calendar));
-        it(`Calendar.from(${isoString}) has ID ${id}`, () => equal(calendar.id, id));
-      }
-    });
-  });
-});
 describe('Built-in calendars (not standardized yet)', () => {
   describe('gregory', () => {
     it('era CE', () => {
