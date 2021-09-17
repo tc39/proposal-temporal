@@ -26,7 +26,6 @@ import './plaindatetime.mjs';
 import './duration.mjs';
 import './plainyearmonth.mjs';
 import './intl.mjs';
-import './calendar.mjs';
 
 // tests of userland objects
 import './usertimezone.mjs';
