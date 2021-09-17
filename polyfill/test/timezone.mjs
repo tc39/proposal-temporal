@@ -18,11 +18,6 @@ import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
   describe('TimeZone.from(identifier)', () => {
-    it('throws with bad identifier', () => {
-      ['local', 'Z', '-08:00[America/Vancouver]', '+00:01.1', '-01.1'].forEach((bad) => {
-        throws(() => Temporal.TimeZone.from(bad), RangeError);
-      });
-    });
     it('throws with bad value in property bag', () => {
       throws(() => Temporal.TimeZone.from({ timeZone: 'local' }), RangeError);
       throws(() => Temporal.TimeZone.from({ timeZone: { timeZone: 'Africa/Cairo' } }), RangeError);
