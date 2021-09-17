@@ -17,12 +17,6 @@ const { deepEqual, equal, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
-  describe('TimeZone.from(identifier)', () => {
-    it('throws with bad value in property bag', () => {
-      throws(() => Temporal.TimeZone.from({ timeZone: 'local' }), RangeError);
-      throws(() => Temporal.TimeZone.from({ timeZone: { timeZone: 'Africa/Cairo' } }), RangeError);
-    });
-  });
   describe('TimeZone.from(ISO string)', () => {
     test('1994-11-05T08:15:30-05:00', '-05:00');
     test('1994-11-05T08:15:30-05:00[America/New_York]', 'America/New_York');
