@@ -10,13 +10,12 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { Calendar } = Temporal;
 
 describe('Calendar', () => {
-  const iso = Calendar.from('iso8601');
   describe('Calendar.from()', () => {
     describe('from identifier', () => {
       // 402
@@ -36,24 +35,6 @@ describe('Calendar', () => {
         it(`Calendar.from(${isoString}) is a calendar`, () => assert(calendar instanceof Calendar));
         it(`Calendar.from(${isoString}) has ID ${id}`, () => equal(calendar.id, id));
       }
-    });
-  });
-  describe('Calendar.dateUntil()', () => {
-    const date1 = Temporal.PlainDate.from('1999-09-03');
-    const date2 = Temporal.PlainDate.from('2000-01-01');
-    it('casts first argument', () => {
-      equal(`${iso.dateUntil(Temporal.PlainDateTime.from('1999-09-03T08:15:30'), date2, {})}`, 'P120D');
-      equal(`${iso.dateUntil({ year: 1999, month: 9, day: 3 }, date2, {})}`, 'P120D');
-      equal(`${iso.dateUntil('1999-09-03', date2, {})}`, 'P120D');
-    });
-    it('casts second argument', () => {
-      equal(`${iso.dateUntil(date1, Temporal.PlainDateTime.from('2000-01-01T08:15:30'), {})}`, 'P120D');
-      equal(`${iso.dateUntil(date1, { year: 2000, month: 1, day: 1 }, {})}`, 'P120D');
-      equal(`${iso.dateUntil(date1, '2000-01-01', {})}`, 'P120D');
-    });
-    it('objects must contain at least the required properties', () => {
-      throws(() => iso.dateUntil({ month: 11 }, date2, {}), TypeError);
-      throws(() => iso.dateUntil(date1, { month: 11 }, {}), TypeError);
     });
   });
 });
