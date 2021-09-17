@@ -17,30 +17,6 @@ const { deepEqual, equal, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
-  describe('Structure', () => {
-    it('Temporal.TimeZone is a function', () => equal(typeof Temporal.TimeZone, 'function'));
-    it('Temporal.TimeZone has prototype', () => equal(typeof Temporal.TimeZone.prototype, 'object'));
-    describe('Temporal.TimeZone.prototype', () => {
-      it('Temporal.TimeZone.prototype has id', () => assert('id' in Temporal.TimeZone.prototype));
-      it('Temporal.TimeZone.prototype has getOffsetNanosecondsFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getOffsetNanosecondsFor, 'function'));
-      it('Temporal.TimeZone.prototype has getOffsetStringFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getOffsetStringFor, 'function'));
-      it('Temporal.TimeZone.prototype has getPlainDateTimeFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getPlainDateTimeFor, 'function'));
-      it('Temporal.TimeZone.prototype has getInstantFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getInstantFor, 'function'));
-      it('Temporal.TimeZone.prototype has getPossibleInstantsFor', () =>
-        equal(typeof Temporal.TimeZone.prototype.getPossibleInstantsFor, 'function'));
-      it('Temporal.TimeZone.prototype has getNextTransition', () =>
-        equal(typeof Temporal.TimeZone.prototype.getNextTransition, 'function'));
-      it('Temporal.TimeZone.prototype has getPreviousTransition', () =>
-        equal(typeof Temporal.TimeZone.prototype.getPreviousTransition, 'function'));
-      it('Temporal.TimeZone.prototype has toString', () =>
-        equal(typeof Temporal.TimeZone.prototype.toString, 'function'));
-    });
-    it('Temporal.TimeZone has from', () => equal(typeof Temporal.TimeZone.from, 'function'));
-  });
   describe('Construction', () => {
     test('+01:00');
     test('-01:00');
