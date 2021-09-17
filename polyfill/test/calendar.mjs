@@ -38,36 +38,6 @@ describe('Calendar', () => {
       }
     });
   });
-  describe('Calendar.dateAdd()', () => {
-    const date = Temporal.PlainDate.from('1994-11-05');
-    const duration = Temporal.Duration.from({ months: 1, weeks: 1 });
-    it('casts date argument', () => {
-      equal(
-        `${iso.dateAdd(Temporal.PlainDateTime.from('1994-11-05T08:15:30'), duration, {}, Temporal.PlainDate)}`,
-        '1994-12-12'
-      );
-      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {}, Temporal.PlainDate)}`, '1994-12-12');
-      equal(`${iso.dateAdd('1994-11-05', duration, {}, Temporal.PlainDate)}`, '1994-12-12');
-    });
-    it('date object must contain at least the required properties', () => {
-      throws(() => iso.dateAdd({ month: 11 }, duration, {}, Temporal.PlainDate), TypeError);
-    });
-    it('casts duration argument', () => {
-      equal(`${iso.dateAdd(date, { months: 1, weeks: 1 }, {}, Temporal.PlainDate)}`, '1994-12-12');
-      equal(`${iso.dateAdd(date, 'P1M1W', {}, Temporal.PlainDate)}`, '1994-12-12');
-    });
-    it('duration object must contain at least one correctly-spelled property', () => {
-      throws(() => iso.dateAdd(date, { month: 1 }, {}, Temporal.PlainDate), TypeError);
-    });
-  });
-  describe('Calendar.dateAdd() (negative duration)', () => {
-    const duration = Temporal.Duration.from({ months: 1, weeks: 1 }).negated();
-    it('casts date argument', () => {
-      equal(`${iso.dateAdd(Temporal.PlainDateTime.from('1994-11-05T08:15:30'), duration, {})}`, '1994-09-28');
-      equal(`${iso.dateAdd({ year: 1994, month: 11, day: 5 }, duration, {})}`, '1994-09-28');
-      equal(`${iso.dateAdd('1994-11-05', duration, {})}`, '1994-09-28');
-    });
-  });
   describe('Calendar.dateUntil()', () => {
     const date1 = Temporal.PlainDate.from('1999-09-03');
     const date2 = Temporal.PlainDate.from('2000-01-01');
