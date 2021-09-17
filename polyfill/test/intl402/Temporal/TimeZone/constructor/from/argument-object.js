@@ -9,11 +9,8 @@ features: [Temporal]
 class CustomTimeZone extends Temporal.TimeZone {}
 
 const objects = [
-  new Temporal.TimeZone("UTC"),
-  new CustomTimeZone("UTC"),
-  {},
-  { getPlainDateTimeFor: null },
-  { id: "Etc/Custom" },
+  new Temporal.TimeZone("Europe/Madrid"),
+  new CustomTimeZone("Africa/Accra"),
 ];
 
 const thisValues = [
@@ -31,17 +28,17 @@ for (const thisValue of thisValues) {
     assert.sameValue(result, object);
   }
 
-  const zdt = new Temporal.ZonedDateTime(0n, "UTC");
+  const zdt = new Temporal.ZonedDateTime(0n, "Africa/Cairo");
   const fromZdt = Temporal.TimeZone.from.call(thisValue, zdt);
   assert.sameValue(fromZdt, zdt.timeZone);
-  assert.sameValue(fromZdt.id, "UTC");
+  assert.sameValue(fromZdt.id, "Africa/Cairo");
 
-  const tz = new Temporal.TimeZone("UTC");
+  const tz = new Temporal.TimeZone("Africa/Cairo");
   const fromPropertyBagObject = Temporal.TimeZone.from.call(thisValue, { timeZone: tz });
   assert.sameValue(fromPropertyBagObject, tz);
-  assert.sameValue(fromPropertyBagObject.id, "UTC");
+  assert.sameValue(fromPropertyBagObject.id, "Africa/Cairo");
 
-  const fromPropertyBagString = Temporal.TimeZone.from.call(thisValue, { timeZone: "UTC" });
+  const fromPropertyBagString = Temporal.TimeZone.from.call(thisValue, { timeZone: "Africa/Cairo" });
   assert(fromPropertyBagString instanceof Temporal.TimeZone);
-  assert.sameValue(fromPropertyBagString.id, "UTC");
+  assert.sameValue(fromPropertyBagString.id, "Africa/Cairo");
 }
