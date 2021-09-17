@@ -18,18 +18,6 @@ import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
   describe('TimeZone.from(ISO string)', () => {
-    test('1994-11-05T08:15:30-05:00', '-05:00');
-    test('1994-11-05T08:15:30-05:00[America/New_York]', 'America/New_York');
-    test('1994-11-05T08:15:30-05[America/New_York]', 'America/New_York');
-    test('1994-11-05T08:15:30\u221205:00', '-05:00');
-    test('1994-11-05T08:15:30\u221205:00[America/New_York]', 'America/New_York');
-    test('1994-11-05T08:15:30\u221205[America/New_York]', 'America/New_York');
-    test('1994-11-05T13:15:30Z', 'UTC');
-    function test(isoString, id) {
-      const tz = Temporal.TimeZone.from(isoString);
-      it(`TimeZone.from(${isoString}) is a time zone`, () => equal(typeof tz, 'object'));
-      it(`TimeZone.from(${isoString}) has ID ${id}`, () => equal(tz.id, id));
-    }
     it('offset disagreeing with IANA name throws', () => {
       throws(() => Temporal.TimeZone.from('1994-11-05T08:15:30-05:00[UTC]'), RangeError);
       throws(() => Temporal.TimeZone.from('1994-11-05T13:15:30+00:00[America/New_York]'), RangeError);
