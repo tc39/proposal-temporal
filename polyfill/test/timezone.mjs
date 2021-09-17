@@ -18,49 +18,6 @@ import * as Temporal from 'proposal-temporal';
 
 describe('TimeZone', () => {
   describe('TimeZone.from(identifier)', () => {
-    test('+01:00');
-    test('-01:00');
-    test('+0330');
-    test('-0650');
-    test('-08');
-    test('\u221201:00');
-    test('\u22120650');
-    test('\u221208');
-    test('Europe/Vienna');
-    test('America/New_York');
-    test('Africa/CAIRO');
-    test('Asia/Ulan_Bator');
-    test('UTC');
-    test('GMT');
-    function test(zone) {
-      const timezoneFrom = Temporal.TimeZone.from(zone);
-      const timezoneObj = new Temporal.TimeZone(zone);
-      it(`TimeZone.from(${zone}) is a time zone`, () => equal(typeof timezoneFrom, 'object'));
-      it(`TimeZone.from(${zone}) does the same thing as new TimeZone(${zone})`, () =>
-        equal(timezoneFrom.id, timezoneObj.id));
-    }
-    it('ZonedDateTime is accepted', () => {
-      const zdt = new Temporal.ZonedDateTime(0n, 'Africa/Cairo');
-      const tzFrom = Temporal.TimeZone.from(zdt);
-      assert(tzFrom instanceof Temporal.TimeZone);
-      equal(tzFrom.id, 'Africa/Cairo');
-    });
-    it('property bag with time zone object is accepted', () => {
-      const tz = new Temporal.TimeZone('Africa/Cairo');
-      const tzFrom = Temporal.TimeZone.from({ timeZone: tz });
-      assert(tzFrom instanceof Temporal.TimeZone);
-      equal(tzFrom.id, 'Africa/Cairo');
-    });
-    it('property bag with string is accepted', () => {
-      const tzFrom = Temporal.TimeZone.from({ timeZone: 'Africa/Cairo' });
-      assert(tzFrom instanceof Temporal.TimeZone);
-      equal(tzFrom.id, 'Africa/Cairo');
-    });
-    it('property bag with custom time zone is accepted', () => {
-      const custom = { id: 'Etc/Custom' };
-      const tzFrom = Temporal.TimeZone.from({ timeZone: custom });
-      equal(tzFrom, custom);
-    });
     it('throws with bad identifier', () => {
       ['local', 'Z', '-08:00[America/Vancouver]', '+00:01.1', '-01.1'].forEach((bad) => {
         throws(() => Temporal.TimeZone.from(bad), RangeError);
