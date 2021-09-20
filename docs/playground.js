@@ -5957,7 +5957,9 @@
   var calComponent = /[A-Za-z0-9]{3,8}/;
   var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
-  var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))"));
+  var monthpart = /(?:0[1-9]|1[0-2])/;
+  var daypart = /(?:0[1-9]|[12]\d|3[01])/;
+  var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(").concat(monthpart.source, ")-(").concat(daypart.source, ")|(").concat(monthpart.source, ")(").concat(daypart.source, "))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[(").concat(timeZoneID.source, ")\\])?"));
@@ -5970,8 +5972,8 @@
   // YYYYMM forbidden by ISO 8601, but since it is not ambiguous with anything
   // else we could parse in a YearMonth context, we allow it
 
-  var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(\\d{2})$"));
-  var monthday = /^(?:--)?(\d{2})-?(\d{2})$/;
+  var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(").concat(monthpart.source, ")$"));
+  var monthday = new RegExp("^(?:--)?(".concat(monthpart.source, ")-?(").concat(daypart.source, ")$"));
   var fraction = /(\d+)(?:[.,](\d{1,9}))?/;
   var durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
   var durationTime = new RegExp("(?:".concat(fraction.source, "H)?(?:").concat(fraction.source, "M)?(?:").concat(fraction.source, "S)?"));
