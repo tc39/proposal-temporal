@@ -7,7 +7,7 @@ description: Conversion of ISO date-time strings to Temporal.Instant instances
 features: [Temporal]
 ---*/
 
-const instance = new Temporal.TimeZone("UTC");
+const instance = new Temporal.TimeZone("America/Vancouver");
 
 let str = "1970-01-01T00:00";
 assert.throws(RangeError, () => instance.getOffsetNanosecondsFor(str), "bare date-time string is not an instant");
@@ -24,5 +24,5 @@ const valids = [
 ];
 for (const str of valids) {
   const result = instance.getOffsetNanosecondsFor(str);
-  assert.sameValue(result, 0);
+  assert.sameValue(result, -28800e9);
 }

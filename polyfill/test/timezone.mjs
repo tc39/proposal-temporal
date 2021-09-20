@@ -107,9 +107,6 @@ describe('TimeZone', () => {
   });
   describe('Casting', () => {
     const zone = Temporal.TimeZone.from('+03:30');
-    it('getOffsetNanosecondsFor() casts its argument', () => {
-      equal(zone.getOffsetNanosecondsFor('2019-02-17T01:45Z'), 126e11);
-    });
     it('getOffsetNanosecondsFor() casts only from string', () => {
       throws(() => zone.getOffsetNanosecondsFor(0n), RangeError);
       throws(() => zone.getOffsetNanosecondsFor({}), RangeError);
