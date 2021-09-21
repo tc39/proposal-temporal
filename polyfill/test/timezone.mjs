@@ -143,9 +143,6 @@ describe('TimeZone', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => tz.getInstantFor(dt, badOptions), TypeError)
       );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${tz.getInstantFor(dt, options)}`, '2019-10-29T13:46:38.271986102Z')
-      );
     });
     it('casts argument', () => {
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');

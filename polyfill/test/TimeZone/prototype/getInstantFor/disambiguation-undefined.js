@@ -27,4 +27,6 @@ const fallBackDateTime = new Temporal.PlainDateTime(2000, 10, 29, 1, 30);
   assert.sameValue(explicit.epochNanoseconds, expected, "default disambiguation is compatible");
   const implicit = timeZone.getInstantFor(datetime, {});
   assert.sameValue(implicit.epochNanoseconds, expected, "default disambiguation is compatible");
+  const lambda = timeZone.getInstantFor(datetime, () => {});
+  assert.sameValue(lambda.epochNanoseconds, expected, "default disambiguation is compatible");
 });
