@@ -105,12 +105,6 @@ describe('TimeZone', () => {
       throws(() => zone.getInstantFor(dtm, { disambiguation: 'reject' }), RangeError);
     });
   });
-  describe('Casting', () => {
-    const zone = Temporal.TimeZone.from('+03:30');
-    it('getPlainDateTimeFor() casts its argument', () => {
-      equal(`${zone.getPlainDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15:00');
-    });
-  });
   describe('TimeZone.getInstantFor() works', () => {
     it('recent date', () => {
       const dt = Temporal.PlainDateTime.from('2019-10-29T10:46:38.271986102');
