@@ -107,23 +107,11 @@ describe('TimeZone', () => {
   });
   describe('Casting', () => {
     const zone = Temporal.TimeZone.from('+03:30');
-    it('getOffsetNanosecondsFor() casts only from string', () => {
-      throws(() => zone.getOffsetNanosecondsFor(0n), RangeError);
-      throws(() => zone.getOffsetNanosecondsFor({}), RangeError);
-    });
     it('getOffsetStringFor() casts its argument', () => {
       equal(zone.getOffsetStringFor('2019-02-17T01:45Z'), '+03:30');
     });
-    it('getOffsetStringFor() casts only from string', () => {
-      throws(() => zone.getOffsetStringFor(0n), RangeError);
-      throws(() => zone.getOffsetStringFor({}), RangeError);
-    });
     it('getPlainDateTimeFor() casts its argument', () => {
       equal(`${zone.getPlainDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15:00');
-    });
-    it('getPlainDateTimeFor() casts only from string', () => {
-      throws(() => zone.getPlainDateTimeFor(0n), RangeError);
-      throws(() => zone.getPlainDateTimeFor({}), RangeError);
     });
   });
   describe('TimeZone.getInstantFor() works', () => {
