@@ -107,9 +107,6 @@ describe('TimeZone', () => {
   });
   describe('Casting', () => {
     const zone = Temporal.TimeZone.from('+03:30');
-    it('getOffsetStringFor() casts its argument', () => {
-      equal(zone.getOffsetStringFor('2019-02-17T01:45Z'), '+03:30');
-    });
     it('getPlainDateTimeFor() casts its argument', () => {
       equal(`${zone.getPlainDateTimeFor('2019-02-17T01:45Z')}`, '2019-02-17T05:15:00');
     });
