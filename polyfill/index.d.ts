@@ -520,6 +520,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;
+    readonly [Symbol.toStringTag]: 'Temporal.Duration';
   }
 
   /**
@@ -616,6 +617,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: InstantToStringOptions): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.Instant';
   }
 
   export interface CalendarProtocol {
@@ -779,6 +781,7 @@ export namespace Temporal {
     fields(fields: Iterable<string>): Iterable<string>;
     mergeFields(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
+    readonly [Symbol.toStringTag]: 'Temporal.Calendar';
   }
 
   export type PlainDateLike = {
@@ -875,6 +878,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: ShowCalendarOption): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.PlainDate';
   }
 
   export type PlainDateTimeLike = {
@@ -1044,6 +1048,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: CalendarTypeToStringOptions): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.PlainDateTime';
   }
 
   export type PlainMonthDayLike = {
@@ -1078,6 +1083,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: ShowCalendarOption): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.PlainMonthDay';
   }
 
   // Temporal.PlainTime's `calendar` field is a Temporal.Calendar, not a
@@ -1215,6 +1221,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.PlainTime';
   }
 
   /**
@@ -1272,6 +1279,7 @@ export namespace Temporal {
     getPossibleInstantsFor(dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string): Temporal.Instant[];
     toString(): string;
     toJSON(): string;
+    readonly [Symbol.toStringTag]: 'Temporal.TimeZone';
   }
 
   export type PlainYearMonthLike = {
@@ -1329,6 +1337,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: ShowCalendarOption): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.PlainYearMonth';
   }
 
   export type ZonedDateTimeLike = {
@@ -1492,6 +1501,7 @@ export namespace Temporal {
     toJSON(): string;
     toString(options?: ZonedDateTimeToStringOptions): string;
     valueOf(): never;
+    readonly [Symbol.toStringTag]: 'Temporal.ZonedDateTime';
   }
 
   /**
@@ -1500,7 +1510,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/now.html for more details.
    */
-  export namespace Now {
+  export const Now: {
     /**
      * Get the exact system date and time as a `Temporal.Instant`.
      *
@@ -1513,7 +1523,7 @@ export namespace Temporal {
      * exact time in a specific time zone, use `Temporal.Now.zonedDateTimeISO`
      * or `Temporal.Now.zonedDateTime`.
      * */
-    export function instant(): Temporal.Instant;
+    instant: () => Temporal.Instant;
 
     /**
      * Get the current calendar date and clock time in a specific calendar and
@@ -1533,10 +1543,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function zonedDateTime(
-      calendar: CalendarProtocol | string,
-      tzLike?: TimeZoneProtocol | string
-    ): Temporal.ZonedDateTime;
+    zonedDateTime: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.ZonedDateTime;
 
     /**
      * Get the current calendar date and clock time in a specific time zone,
@@ -1548,7 +1555,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function zonedDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.ZonedDateTime;
+    zonedDateTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.ZonedDateTime;
 
     /**
      * Get the current calendar date and clock time in a specific calendar and
@@ -1573,10 +1580,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    export function plainDateTime(
-      calendar: CalendarProtocol | string,
-      tzLike?: TimeZoneProtocol | string
-    ): Temporal.PlainDateTime;
+    plainDateTime: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.PlainDateTime;
 
     /**
      * Get the current date and clock time in a specific time zone, using the
@@ -1593,7 +1597,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function plainDateTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDateTime;
+    plainDateTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainDateTime;
 
     /**
      * Get the current calendar date in a specific calendar and time zone.
@@ -1611,10 +1615,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    export function plainDate(
-      calendar: CalendarProtocol | string,
-      tzLike?: TimeZoneProtocol | string
-    ): Temporal.PlainDate;
+    plainDate: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.PlainDate;
 
     /**
      * Get the current date in a specific time zone, using the ISO 8601
@@ -1626,7 +1627,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function plainDateISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainDate;
+    plainDateISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainDate;
 
     /**
      * Get the current clock time in a specific time zone, using the ISO 8601 calendar.
@@ -1637,7 +1638,7 @@ export namespace Temporal {
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    export function plainTimeISO(tzLike?: TimeZoneProtocol | string): Temporal.PlainTime;
+    plainTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainTime;
 
     /**
      * Get the environment's current time zone.
@@ -1646,8 +1647,10 @@ export namespace Temporal {
      * named
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone}.
      */
-    export function timeZone(): Temporal.TimeZone;
-  }
+    timeZone: () => Temporal.TimeZone;
+
+    readonly [Symbol.toStringTag]: 'Temporal.Now';
+  };
 }
 
 declare namespace IntlPolyfill {
