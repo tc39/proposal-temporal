@@ -2,7 +2,7 @@
 
 A non-production polyfill was built to validate this proposal.
 This polyfill continues to live in this repo, but only for the purposes of running tests and powering the documentation "playground" as described below.
-**DO NOT use this polyfill in your own projects! Instead, please use a polyfill listed in the table [here](../#polyfills).**
+**DO NOT use this polyfill in your own projects! Instead, please use a polyfill listed in the table [here](../README.md#polyfills).**
 
 ## Documentation
 
