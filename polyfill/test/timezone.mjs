@@ -240,6 +240,8 @@ describe('TimeZone', () => {
   });
   describe('getNextTransition works', () => {
     const nyc = Temporal.TimeZone.from('America/New_York');
+    const noTransitionTZ = Temporal.TimeZone.from('Etc/GMT+10');
+
     it('should not have bug #510', () => {
       // See https://github.com/tc39/proposal-temporal/issues/510 for more.
       const a1 = Temporal.Instant.from('2019-04-16T21:01Z');
@@ -252,6 +254,10 @@ describe('TimeZone', () => {
       const inst = Temporal.Instant.from('2019-01-01T00:00Z');
       equal(`${nyc.getNextTransition(inst)}`, '2019-03-10T07:00:00Z');
       equal(`${nyc.getNextTransition(nyc.getNextTransition(inst))}`, '2019-11-03T06:00:00Z');
+    });
+    it('should work for timezones with no scheduled transitions in the near future', () => {
+      const start = Temporal.Instant.from('1945-10-15T13:00:00Z');
+      equal(noTransitionTZ.getNextTransition(start), null);
     });
     it('casts argument', () => {
       equal(`${nyc.getNextTransition('2019-04-16T21:01Z')}`, '2019-11-03T06:00:00Z');
