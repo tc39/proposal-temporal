@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+description: The "PlainDate" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar
+description: Tests that Temporal.Calendar meets the requirements for built-in objects
 info: |
     Unless specified otherwise, a built-in object that is callable as a function is a built-in
     function object with the characteristics described in 10.3. Unless specified otherwise, the

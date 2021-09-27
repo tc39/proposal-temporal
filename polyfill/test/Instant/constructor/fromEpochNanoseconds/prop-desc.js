@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.fromepochnanoseconds
+description: The "fromEpochNanoseconds" property of Temporal.Instant
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

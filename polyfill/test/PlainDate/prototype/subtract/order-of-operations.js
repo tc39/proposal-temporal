@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.subtract
+description: Properties on an object passed to subtract() are accessed in the correct order
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

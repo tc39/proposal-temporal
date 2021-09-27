@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.fromepochmicroseconds
+description: The receiver is never called by fromEpochMicroseconds()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

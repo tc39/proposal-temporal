@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.compare
+description: Tests that Temporal.PlainDate.compare meets the requirements for built-in objects
 info: |
     Built-in functions that are not constructors do not have a "prototype" property unless
     otherwise specified in the description of a particular function.

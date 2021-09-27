@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.compare
+description: The "compare" property of Temporal.PlainYearMonth
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

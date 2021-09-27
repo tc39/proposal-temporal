@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+description: Passing a primitive other than string to subtract() throws
 features: [Symbol, Temporal]
 ---*/
 

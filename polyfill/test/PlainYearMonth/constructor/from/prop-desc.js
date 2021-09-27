@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
+description: The "from" property of Temporal.PlainYearMonth
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

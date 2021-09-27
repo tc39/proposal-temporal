@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.from
+description: The receiver is never called when calling from()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

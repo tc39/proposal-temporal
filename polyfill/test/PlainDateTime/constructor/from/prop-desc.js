@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.from
+description: The "from" property of Temporal.PlainDateTime
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

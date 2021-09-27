@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.from
+description: Tests that Temporal.TimeZone.from meets the requirements for built-in objects
 info: |
     Built-in functions that are not constructors do not have a "prototype" property unless
     otherwise specified in the description of a particular function.

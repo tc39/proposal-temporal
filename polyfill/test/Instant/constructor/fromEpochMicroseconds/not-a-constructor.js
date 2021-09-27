@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.fromepochmicroseconds
+description: Temporal.Instant.fromEpochMicroseconds does not implement [[Construct]], is not new-able
 info: |
     Built-in function objects that are not identified as constructors do not implement the
     [[Construct]] internal method unless otherwise specified in the description of a particular
