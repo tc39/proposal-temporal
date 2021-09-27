@@ -55,5 +55,5 @@ const argument = new Proxy(fields, {
   },
 });
 const result = instance.subtract(argument);
-assert.sameValue(result.epochNanoseconds, -3661001000991n, "nanoseconds result");
+assert.sameValue(result.epochNanoseconds, -3661001000991n, "epochNanoseconds result");
 assert.compareArray(actual, expected, "order of operations");

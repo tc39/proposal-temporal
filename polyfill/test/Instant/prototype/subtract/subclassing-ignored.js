@@ -13,6 +13,6 @@ TemporalHelpers.checkSubclassingIgnored(
   "subtract",
   [{ nanoseconds: 5 }],
   (result) => {
-    assert.sameValue(result.epochNanoseconds, 5n, "epochNansoeconds result");
+    assert.sameValue(result.epochNanoseconds, 5n, "epochNanoseconds result");
   },
 );

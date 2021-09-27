@@ -28,7 +28,7 @@ const fields = {
 const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
-    if (key === "calendar") return Temporal.Calendar.from('iso8601');
+    if (key === "calendar") return Temporal.Calendar.from("iso8601");
     const result = target[key];
     return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
