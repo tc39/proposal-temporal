@@ -10,9 +10,6 @@ info: |
 
     Unless otherwise specified every built-in function and every built-in constructor has the
     Function prototype object [...] as the value of its [[Prototype]] internal slot.
-
-    The initial value of Temporal.Duration.prototype is
-    %Temporal.Duration.prototype%.
 features: [Temporal]
 ---*/
 
