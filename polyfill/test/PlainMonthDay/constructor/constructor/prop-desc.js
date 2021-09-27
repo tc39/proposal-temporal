@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday
+description: The "PlainMonthDay" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

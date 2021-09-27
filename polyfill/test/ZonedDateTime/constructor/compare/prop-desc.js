@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.compare
+description: The "compare" property of Temporal.ZonedDateTime
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

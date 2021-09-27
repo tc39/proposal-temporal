@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar
+description: The "Calendar" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime
+description: The "ZonedDateTime" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

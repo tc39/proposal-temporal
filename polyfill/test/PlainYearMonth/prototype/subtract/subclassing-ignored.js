@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.subtract
+description: Objects of a subclass are never created as return values for subtract()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

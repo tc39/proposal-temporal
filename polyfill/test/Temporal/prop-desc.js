@@ -3,6 +3,7 @@
 
 /*---
 includes: [propertyHelper.js]
+description: The "Temporal" property of the global object
 features: [Temporal]
 ---*/
 

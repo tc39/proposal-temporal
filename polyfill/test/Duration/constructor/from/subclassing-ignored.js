@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+description: The receiver is never called when calling from()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

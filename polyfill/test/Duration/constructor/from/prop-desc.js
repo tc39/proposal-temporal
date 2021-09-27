@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+description: The "from" property of Temporal.Duration
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

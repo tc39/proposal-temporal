@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.subtract
+description: Passing a primitive other than string to subtract() throws
 features: [Symbol, Temporal]
 ---*/
 

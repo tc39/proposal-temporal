@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.from
+description: The "from" property of Temporal.Instant
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

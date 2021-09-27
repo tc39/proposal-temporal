@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.compare
+description: The "compare" property of Temporal.PlainTime
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

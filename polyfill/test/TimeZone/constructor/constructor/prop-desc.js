@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone
+description: The "TimeZone" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

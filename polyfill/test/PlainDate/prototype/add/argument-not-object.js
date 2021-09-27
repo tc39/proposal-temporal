@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.add
+description: Passing a primitive other than string to add() throws
 features: [Symbol, Temporal]
 ---*/
 

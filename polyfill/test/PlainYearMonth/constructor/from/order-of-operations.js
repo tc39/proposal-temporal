@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
+description: Properties on an object passed to from() are accessed in the correct order
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.add
+description: Properties on an object passed to add() are accessed in the correct order
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.add
+description: Objects of a subclass are never created as return values for add()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

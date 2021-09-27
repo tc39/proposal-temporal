@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration
+description: The "Duration" property of Temporal
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

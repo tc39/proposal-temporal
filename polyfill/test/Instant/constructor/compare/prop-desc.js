@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.compare
+description: The "compare" property of Temporal.Instant
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

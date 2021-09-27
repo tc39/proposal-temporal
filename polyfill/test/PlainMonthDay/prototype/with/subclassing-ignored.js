@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
+description: Objects of a subclass are never created as return values for with()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

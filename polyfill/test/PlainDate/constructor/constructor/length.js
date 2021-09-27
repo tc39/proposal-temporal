@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+description: Temporal.PlainDate.length is 3
 info: |
     Every built-in function object, including constructors, has a "length" property whose value is
     an integer. Unless otherwise specified, this value is equal to the largest number of named

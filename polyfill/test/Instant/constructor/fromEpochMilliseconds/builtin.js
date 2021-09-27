@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.fromepochmilliseconds
+description: Tests that Temporal.Instant.fromEpochMilliseconds meets the requirements for built-in objects
 info: |
     Built-in functions that are not constructors do not have a "prototype" property unless
     otherwise specified in the description of a particular function.
