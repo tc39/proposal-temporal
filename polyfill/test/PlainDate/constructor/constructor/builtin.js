@@ -10,9 +10,6 @@ info: |
 
     Unless otherwise specified every built-in function and every built-in constructor has the
     Function prototype object [...] as the value of its [[Prototype]] internal slot.
-
-    The initial value of Temporal.PlainDate.prototype is
-    %Temporal.PlainDate.prototype%.
 features: [Temporal]
 ---*/
 
