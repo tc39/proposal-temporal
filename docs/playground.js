@@ -5996,9 +5996,10 @@
   var ObjectDefineProperty = Object.defineProperty;
   var ObjectIs = Object.is;
   var ObjectEntries = Object.entries;
-  var DAYMILLIS = 86400000;
-  var NS_MIN = bigInt(-86400).multiply(1e17);
-  var NS_MAX = bigInt(86400).multiply(1e17);
+  var DAY_SECONDS = 86400;
+  var DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
+  var NS_MIN = bigInt(-DAY_SECONDS).multiply(1e17);
+  var NS_MAX = bigInt(DAY_SECONDS).multiply(1e17);
   var YEAR_MIN = -271821;
   var YEAR_MAX = 275760;
   var BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
@@ -8513,14 +8514,14 @@
       return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     },
     GetIANATimeZoneNextTransition: function GetIANATimeZoneNextTransition(epochNanoseconds, id) {
-      var uppercap = ES.SystemUTCEpochNanoSeconds() + 366 * DAYMILLIS * 1e6;
+      var uppercap = ES.SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
       var leftNanos = epochNanoseconds;
       var leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
       var rightNanos = leftNanos;
       var rightOffsetNs = leftOffsetNs;
 
       while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
-        rightNanos = bigInt(leftNanos).plus(2 * 7 * DAYMILLIS * 1e6);
+        rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
         rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
 
         if (leftOffsetNs === rightOffsetNs) {
@@ -8543,7 +8544,7 @@
       var leftOffsetNs = rightOffsetNs;
 
       while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
-        leftNanos = bigInt(rightNanos).minus(2 * 7 * DAYMILLIS * 1e6);
+        leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
         leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
 
         if (rightOffsetNs === leftOffsetNs) {
@@ -8597,10 +8598,9 @@
     GetIANATimeZoneEpochValue: function GetIANATimeZoneEpochValue(id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
       var ns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (ns === null) throw new RangeError('DateTime outside of supported range');
-      var dayNanos = bigInt(DAYMILLIS).multiply(1e6);
-      var nsEarlier = ns.minus(dayNanos);
+      var nsEarlier = ns.minus(DAY_NANOS);
       if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
-      var nsLater = ns.plus(dayNanos);
+      var nsLater = ns.plus(DAY_NANOS);
       if (nsLater.greater(NS_MAX)) nsLater = ns;
       var earliest = ES.GetIANATimeZoneOffsetNanoseconds(nsEarlier, id);
       var latest = ES.GetIANATimeZoneOffsetNanoseconds(nsLater, id);
