@@ -3,7 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.subtract
-includes: [compareArray.js]
+includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 
@@ -11,18 +11,24 @@ const instance = new Temporal.Instant(10n);
 const expected = [
   "get days",
   "get hours",
-  "valueOf hours",
+  "get hours.valueOf",
+  "call hours.valueOf",
   "get microseconds",
-  "valueOf microseconds",
+  "get microseconds.valueOf",
+  "call microseconds.valueOf",
   "get milliseconds",
-  "valueOf milliseconds",
+  "get milliseconds.valueOf",
+  "call milliseconds.valueOf",
   "get minutes",
-  "valueOf minutes",
+  "get minutes.valueOf",
+  "call minutes.valueOf",
   "get months",
   "get nanoseconds",
-  "valueOf nanoseconds",
+  "get nanoseconds.valueOf",
+  "call nanoseconds.valueOf",
   "get seconds",
-  "valueOf seconds",
+  "get seconds.valueOf",
+  "call seconds.valueOf",
   "get weeks",
   "get years",
 ];
@@ -42,12 +48,7 @@ const argument = new Proxy(fields, {
     if (result === undefined) {
       return undefined;
     }
-    return {
-      valueOf() {
-        actual.push(`valueOf ${key}`);
-        return result;
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
   has(target, key) {
     actual.push(`has ${key}`);

@@ -10,25 +10,35 @@ features: [Temporal]
 const instance = new Temporal.PlainTime(12, 34, 56, 987, 654, 321);
 const expected = [
   "get days",
-  "valueOf days",
+  "get days.valueOf",
+  "call days.valueOf",
   "get hours",
-  "valueOf hours",
+  "get hours.valueOf",
+  "call hours.valueOf",
   "get microseconds",
-  "valueOf microseconds",
+  "get microseconds.valueOf",
+  "call microseconds.valueOf",
   "get milliseconds",
-  "valueOf milliseconds",
+  "get milliseconds.valueOf",
+  "call milliseconds.valueOf",
   "get minutes",
-  "valueOf minutes",
+  "get minutes.valueOf",
+  "call minutes.valueOf",
   "get months",
-  "valueOf months",
+  "get months.valueOf",
+  "call months.valueOf",
   "get nanoseconds",
-  "valueOf nanoseconds",
+  "get nanoseconds.valueOf",
+  "call nanoseconds.valueOf",
   "get seconds",
-  "valueOf seconds",
+  "get seconds.valueOf",
+  "call seconds.valueOf",
   "get weeks",
-  "valueOf weeks",
+  "get weeks.valueOf",
+  "call weeks.valueOf",
   "get years",
-  "valueOf years",
+  "get years.valueOf",
+  "call years.valueOf",
 ];
 const actual = [];
 const fields = {
@@ -50,12 +60,7 @@ const argument = new Proxy(fields, {
     if (result === undefined) {
       return undefined;
     }
-    return {
-      valueOf() {
-        actual.push(`valueOf ${key}`);
-        return result;
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
   has(target, key) {
     actual.push(`has ${key}`);
@@ -64,4 +69,5 @@ const argument = new Proxy(fields, {
 });
 const result = instance.subtract(argument);
 TemporalHelpers.assertPlainTime(result, 11, 33, 55, 986, 653, 320);
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

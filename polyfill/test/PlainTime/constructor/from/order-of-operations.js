@@ -10,17 +10,23 @@ features: [Temporal]
 const expected = [
   "get calendar",
   "get hour",
-  "valueOf hour",
+  "get hour.valueOf",
+  "call hour.valueOf",
   "get microsecond",
-  "valueOf microsecond",
+  "get microsecond.valueOf",
+  "call microsecond.valueOf",
   "get millisecond",
-  "valueOf millisecond",
+  "get millisecond.valueOf",
+  "call millisecond.valueOf",
   "get minute",
-  "valueOf minute",
+  "get minute.valueOf",
+  "call minute.valueOf",
   "get nanosecond",
-  "valueOf nanosecond",
+  "get nanosecond.valueOf",
+  "call nanosecond.valueOf",
   "get second",
-  "valueOf second",
+  "get second.valueOf",
+  "call second.valueOf",
 ];
 const actual = [];
 const fields = {
@@ -34,16 +40,9 @@ const fields = {
 const argument = new Proxy(fields, {
   get(target, key) {
     actual.push(`get ${key}`);
+    if (key === "calendar") return Temporal.Calendar.from("iso8601");
     const result = target[key];
-    if (key === "calendar") {
-      return undefined;
-    }
-    return {
-      valueOf() {
-        actual.push(`valueOf ${key}`);
-        return result;
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
   has(target, key) {
     actual.push(`has ${key}`);
@@ -52,4 +51,5 @@ const argument = new Proxy(fields, {
 });
 const result = Temporal.PlainTime.from(argument);
 TemporalHelpers.assertPlainTime(result, 1, 1, 1, 1, 1, 1);
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

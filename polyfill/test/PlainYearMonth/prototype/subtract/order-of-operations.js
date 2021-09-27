@@ -69,4 +69,5 @@ const argument = new Proxy(fields, {
 });
 const result = instance.subtract(argument);
 TemporalHelpers.assertPlainYearMonth(result, 1999, 4, "M04");
+assert.sameValue(result.calendar.id, "iso8601", "calendar result");
 assert.compareArray(actual, expected, "order of operations");

@@ -10,25 +10,35 @@ features: [Temporal]
 const expected = [
   "get calendar",
   "get day",
-  "valueOf day",
+  "get day.valueOf",
+  "call day.valueOf",
   "get hour",
-  "valueOf hour",
+  "get hour.valueOf",
+  "call hour.valueOf",
   "get microsecond",
-  "valueOf microsecond",
+  "get microsecond.valueOf",
+  "call microsecond.valueOf",
   "get millisecond",
-  "valueOf millisecond",
+  "get millisecond.valueOf",
+  "call millisecond.valueOf",
   "get minute",
-  "valueOf minute",
+  "get minute.valueOf",
+  "call minute.valueOf",
   "get month",
-  "valueOf month",
+  "get month.valueOf",
+  "call month.valueOf",
   "get monthCode",
-  "toString monthCode",
+  "get monthCode.toString",
+  "call monthCode.toString",
   "get nanosecond",
-  "valueOf nanosecond",
+  "get nanosecond.valueOf",
+  "call nanosecond.valueOf",
   "get second",
-  "valueOf second",
+  "get second.valueOf",
+  "call second.valueOf",
   "get year",
-  "valueOf year",
+  "get year.valueOf",
+  "call year.valueOf",
 ];
 const actual = [];
 const fields = {
@@ -48,16 +58,7 @@ const argument = new Proxy(fields, {
     actual.push(`get ${key}`);
     if (key === "calendar") return Temporal.Calendar.from("iso8601");
     const result = target[key];
-    return {
-      valueOf() {
-        actual.push(`valueOf ${key}`);
-        return result;
-      },
-      toString() {
-        actual.push(`toString ${key}`);
-        return result.toString();
-      }
-    };
+    return TemporalHelpers.toPrimitiveObserver(actual, result, key);
   },
   has(target, key) {
     actual.push(`has ${key}`);
