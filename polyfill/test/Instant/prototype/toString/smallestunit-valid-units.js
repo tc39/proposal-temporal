@@ -16,6 +16,7 @@ assert.sameValue(instant.toString({ smallestUnit: "microsecond" }), "2001-09-09T
 assert.sameValue(instant.toString({ smallestUnit: "nanosecond" }), "2001-09-09T01:46:40.123456789Z");
 
 const notValid = [
+  "era",
   "year",
   "month",
   "week",

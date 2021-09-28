@@ -18,53 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { Instant } = Temporal;
 
 describe('Instant', () => {
-  describe('Structure', () => {
-    it('Instant is a Function', () => {
-      equal(typeof Instant, 'function');
-    });
-    it('Instant has a prototype', () => {
-      assert(Instant.prototype);
-      equal(typeof Instant.prototype, 'object');
-    });
-    describe('Instant.prototype', () => {
-      it('Instant.prototype.equals is a Function', () => {
-        equal(typeof Instant.prototype.equals, 'function');
-      });
-      it('Instant.prototype.until is a Function', () => {
-        equal(typeof Instant.prototype.until, 'function');
-      });
-      it('Instant.prototype.since is a Function', () => {
-        equal(typeof Instant.prototype.since, 'function');
-      });
-      it('Instant.prototype.round is a Function', () => {
-        equal(typeof Instant.prototype.round, 'function');
-      });
-      it('Instant.prototype.toZonedDateTimeISO is a Function', () => {
-        equal(typeof Instant.prototype.toZonedDateTimeISO, 'function');
-      });
-      it('Instant.prototype.toZonedDateTime is a Function', () => {
-        equal(typeof Instant.prototype.toZonedDateTime, 'function');
-      });
-    });
-    it('Instant.fromEpochSeconds is a Function', () => {
-      equal(typeof Instant.fromEpochSeconds, 'function');
-    });
-    it('Instant.fromEpochMicroseconds is a Function', () => {
-      equal(typeof Instant.fromEpochMicroseconds, 'function');
-    });
-    it('Instant.fromEpochMilliseconds is a Function', () => {
-      equal(typeof Instant.fromEpochMilliseconds, 'function');
-    });
-    it('Instant.fromEpochNanoseconds is a Function', () => {
-      equal(typeof Instant.fromEpochNanoseconds, 'function');
-    });
-    it('Instant.from is a Function', () => {
-      equal(typeof Instant.from, 'function');
-    });
-    it('Instant.compare is a Function', () => {
-      equal(typeof Instant.compare, 'function');
-    });
-  });
   describe('instant.toString() works', () => {
     it('`1976-11-18T14:23:30.123456789Z`.toString()', () => {
       const iso = '1976-11-18T14:23:30.123456789Z';
@@ -99,28 +52,6 @@ describe('Instant', () => {
     it('default is to emit seconds and drop trailing zeros after the decimal', () => {
       equal(i1.toString(), '1976-11-18T15:23:00Z');
       equal(i2.toString(), '1976-11-18T15:23:30Z');
-      equal(i3.toString(), '1976-11-18T15:23:30.1234Z');
-    });
-    it('truncates to minute', () => {
-      [i1, i2, i3].forEach((i) => equal(i.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23Z'));
-    });
-    it('other smallestUnits are aliases for fractional digits', () => {
-      equal(i3.toString({ smallestUnit: 'second' }), i3.toString({ fractionalSecondDigits: 0 }));
-      equal(i3.toString({ smallestUnit: 'millisecond' }), i3.toString({ fractionalSecondDigits: 3 }));
-      equal(i3.toString({ smallestUnit: 'microsecond' }), i3.toString({ fractionalSecondDigits: 6 }));
-      equal(i3.toString({ smallestUnit: 'nanosecond' }), i3.toString({ fractionalSecondDigits: 9 }));
-    });
-    it('throws on invalid or disallowed smallestUnit', () => {
-      ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
-        throws(() => i1.toString({ smallestUnit }), RangeError)
-      );
-    });
-    it('accepts plural units', () => {
-      equal(i3.toString({ smallestUnit: 'minutes' }), i3.toString({ smallestUnit: 'minute' }));
-      equal(i3.toString({ smallestUnit: 'seconds' }), i3.toString({ smallestUnit: 'second' }));
-      equal(i3.toString({ smallestUnit: 'milliseconds' }), i3.toString({ smallestUnit: 'millisecond' }));
-      equal(i3.toString({ smallestUnit: 'microseconds' }), i3.toString({ smallestUnit: 'microsecond' }));
-      equal(i3.toString({ smallestUnit: 'nanoseconds' }), i3.toString({ smallestUnit: 'nanosecond' }));
     });
     it('truncates or pads to 2 places', () => {
       const options = { fractionalSecondDigits: 2 };
@@ -137,19 +68,8 @@ describe('Instant', () => {
     it('auto is the default', () => {
       [i1, i2, i3].forEach((i) => equal(i.toString({ fractionalSecondDigits: 'auto' }), i.toString()));
     });
-    it('throws on out of range or invalid fractionalSecondDigits', () => {
-      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
-        throws(() => i1.toString({ fractionalSecondDigits }), RangeError)
-      );
-    });
-    it('accepts and truncates fractional fractionalSecondDigits', () => {
-      equal(i3.toString({ fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340Z');
-    });
     it('smallestUnit overrides fractionalSecondDigits', () => {
       equal(i3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }), '1976-11-18T15:23Z');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => i1.toString({ roundingMode: 'cile' }), RangeError);
     });
     it('rounds to nearest', () => {
       equal(i2.toString({ smallestUnit: 'minute', roundingMode: 'halfExpand' }), '1976-11-18T15:24Z');
@@ -360,15 +280,6 @@ describe('Instant', () => {
         BigInt(Date.UTC(1900, 0, 1, 12)) * BigInt(1e6)
       );
     });
-    it('throws when offset not provided', () => {
-      throws(() => Instant.from('2019-02-16T23:45[America/Sao_Paulo]'), RangeError);
-    });
-    it('ignores the bracketed IANA time zone when the offset is incorrect', () => {
-      equal(
-        Instant.from('2019-02-16T23:45-04:00[America/Sao_Paulo]').epochNanoseconds,
-        BigInt(Date.UTC(2019, 1, 17, 3, 45)) * BigInt(1e6)
-      );
-    });
     it('Instant.from(string-convertible) converts to string', () => {
       const obj = {
         toString() {
@@ -455,9 +366,6 @@ describe('Instant', () => {
       const later = inst.add(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
     });
-    it('casts argument', () => {
-      equal(`${inst.add('PT240H0.000000800S')}`, '1970-01-04T12:23:45.678902034Z');
-    });
     it('invalid to add years, months, weeks, or days', () => {
       throws(() => inst.add({ years: 1 }), RangeError);
       throws(() => inst.add({ months: 1 }), RangeError);
@@ -480,9 +388,6 @@ describe('Instant', () => {
     it('inst.subtract(durationObj)', () => {
       const earlier = inst.subtract(Temporal.Duration.from('PT240H0.000000800S'));
       equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
-    });
-    it('casts argument', () => {
-      equal(`${inst.subtract('PT240H0.000000800S')}`, '1969-12-15T12:23:45.678900434Z');
     });
     it('invalid to subtract years, months, weeks, or days', () => {
       throws(() => inst.subtract({ years: 1 }), RangeError);
@@ -511,8 +416,6 @@ describe('Instant', () => {
     it('cross epoch larger/smaller', () => equal(Instant.compare(i2, i1), 1));
     it('epoch smaller/larger', () => equal(Instant.compare(i2, i3), -1));
     it('epoch larger/smaller', () => equal(Instant.compare(i3, i2), 1));
-    it('casts first argument', () => equal(Instant.compare(i1, i1.toString()), 0));
-    it('casts second argument', () => equal(Instant.compare(i2.toString(), i2), 0));
     it('only casts from a string', () => {
       throws(() => Instant.compare(i2.epochNanoseconds, i2), RangeError);
       throws(() => Instant.compare({}, i2), RangeError);
@@ -526,11 +429,6 @@ describe('Instant', () => {
     it('epoch equal', () => assert(i2.equals(i2)));
     it('cross epoch unequal', () => assert(!i1.equals(i2)));
     it('epoch unequal', () => assert(!i2.equals(i3)));
-    it('casts argument', () => assert(i1.equals('1963-02-13T09:36:29.123456789Z')));
-    it('casts only from string', () => {
-      throws(() => i1.equals(i1.epochNanoseconds), RangeError);
-      throws(() => i1.equals({}), RangeError);
-    });
   });
   describe("Comparison operators don't work", () => {
     const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
@@ -553,22 +451,12 @@ describe('Instant', () => {
       equal(`${earlier.until(later)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    it('casts argument from string', () => {
-      equal(`${later.since(earlier.toString())}`, `${diff}`);
-    });
     it('only casts from a string', () => {
       throws(() => later.since(earlier.epochNanoseconds), RangeError);
       throws(() => earlier.since({}), RangeError);
     });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');
-    it('defaults to returning seconds', () => {
-      equal(`${feb21.since(feb20)}`, 'PT31622400S');
-      equal(`${feb21.since(feb20, { largestUnit: 'auto' })}`, 'PT31622400S');
-      equal(`${feb21.since(feb20, { largestUnit: 'seconds' })}`, 'PT31622400S');
-      equal(`${Instant.from('2021-02-01T00:00:00.000000001Z').since(feb20)}`, 'PT31622400.000000001S');
-      equal(`${feb21.since(Instant.from('2020-02-01T00:00:00.000000001Z'))}`, 'PT31622399.999999999S');
-    });
     it('can return minutes and hours', () => {
       equal(`${feb21.since(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb21.since(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
@@ -623,9 +511,6 @@ describe('Instant', () => {
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
       equal(`${later.since(earlier, { smallestUnit: 'hours', roundingMode: 'halfExpand' })}`, 'PT376435H');
       equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingMode: 'halfExpand' })}`, 'PT22586123M');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
     });
     const largestUnit = 'hours';
     const incrementOneNearest = [
@@ -687,10 +572,6 @@ describe('Instant', () => {
         equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
-    });
-    it('trunc is the default', () => {
-      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT376435H23M8.148S');
-      equal(`${later.since(earlier, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT376435H23M8.148529S');
     });
     it('rounds to an increment of hours', () => {
       equal(
@@ -814,53 +695,6 @@ describe('Instant', () => {
         RangeError
       );
     });
-    it('accepts singular units', () => {
-      equal(`${later.since(earlier, { largestUnit: 'hour' })}`, `${later.since(earlier, { largestUnit: 'hours' })}`);
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'hour' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'hours' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'minute' })}`,
-        `${later.since(earlier, { largestUnit: 'minutes' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'minute' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'minutes' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'second' })}`,
-        `${later.since(earlier, { largestUnit: 'seconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'second' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'seconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'millisecond' })}`,
-        `${later.since(earlier, { largestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'millisecond' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'microsecond' })}`,
-        `${later.since(earlier, { largestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'microsecond' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'nanosecond' })}`,
-        `${later.since(earlier, { largestUnit: 'nanoseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit, smallestUnit: 'nanosecond' })}`,
-        `${later.since(earlier, { largestUnit, smallestUnit: 'nanoseconds' })}`
-      );
-    });
   });
   describe('Instant.until() works', () => {
     const earlier = Instant.from('1969-07-24T16:50:35.123456789Z');
@@ -872,22 +706,12 @@ describe('Instant', () => {
       equal(`${later.since(earlier)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    it('casts argument from string', () => {
-      equal(`${earlier.until(later.toString())}`, `${diff}`);
-    });
     it('only casts from a string', () => {
       throws(() => earlier.until(later.epochNanoseconds), RangeError);
       throws(() => earlier.until({}), RangeError);
     });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');
-    it('defaults to returning seconds', () => {
-      equal(`${feb20.until(feb21)}`, 'PT31622400S');
-      equal(`${feb20.until(feb21, { largestUnit: 'auto' })}`, 'PT31622400S');
-      equal(`${feb20.until(feb21, { largestUnit: 'seconds' })}`, 'PT31622400S');
-      equal(`${feb20.until(Instant.from('2021-02-01T00:00:00.000000001Z'))}`, 'PT31622400.000000001S');
-      equal(`${Instant.from('2020-02-01T00:00:00.000000001Z').until(feb21)}`, 'PT31622399.999999999S');
-    });
     it('can return minutes and hours', () => {
       equal(`${feb20.until(feb21, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb20.until(feb21, { largestUnit: 'minutes' })}`, 'PT527040M');
@@ -942,9 +766,6 @@ describe('Instant', () => {
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
       equal(`${earlier.until(later, { smallestUnit: 'hours', roundingMode: 'halfExpand' })}`, 'PT440610H');
       equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingMode: 'halfExpand' })}`, 'PT26436596M');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
     });
     const largestUnit = 'hours';
     const incrementOneNearest = [
@@ -1006,10 +827,6 @@ describe('Instant', () => {
         equal(`${earlier.until(later, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
-    });
-    it('trunc is the default', () => {
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'milliseconds' })}`, 'PT440609H56M3.148S');
-      equal(`${earlier.until(later, { largestUnit, smallestUnit: 'microseconds' })}`, 'PT440609H56M3.148529S');
     });
     it('rounds to an increment of hours', () => {
       equal(
@@ -1133,59 +950,9 @@ describe('Instant', () => {
         RangeError
       );
     });
-    it('accepts singular units', () => {
-      equal(`${earlier.until(later, { largestUnit: 'hour' })}`, `${earlier.until(later, { largestUnit: 'hours' })}`);
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'hour' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'hours' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'minute' })}`,
-        `${earlier.until(later, { largestUnit: 'minutes' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'minute' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'minutes' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'second' })}`,
-        `${earlier.until(later, { largestUnit: 'seconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'second' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'seconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'millisecond' })}`,
-        `${earlier.until(later, { largestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'millisecond' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'microsecond' })}`,
-        `${earlier.until(later, { largestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'microsecond' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'nanosecond' })}`,
-        `${earlier.until(later, { largestUnit: 'nanoseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit, smallestUnit: 'nanosecond' })}`,
-        `${earlier.until(later, { largestUnit, smallestUnit: 'nanoseconds' })}`
-      );
-    });
   });
   describe('Instant.round works', () => {
     const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
-    it('throws without parameter', () => {
-      throws(() => inst.round(), TypeError);
-    });
     it('throws without required smallestUnit parameter', () => {
       throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
@@ -1196,9 +963,6 @@ describe('Instant', () => {
           throws(() => inst.round({ smallestUnit }), RangeError);
         }
       );
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => inst.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['hour', '1976-11-18T14:00:00Z'],
@@ -1237,10 +1001,6 @@ describe('Instant', () => {
         equal(`${inst.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
       it(`truncates to ${smallestUnit}`, () =>
         equal(`${inst.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
-    });
-    it('nearest is the default', () => {
-      equal(`${inst.round({ smallestUnit: 'minute' })}`, '1976-11-18T14:24:00Z');
-      equal(`${inst.round({ smallestUnit: 'second' })}`, '1976-11-18T14:23:30Z');
     });
     it('rounding down is towards the Big Bang, not towards the epoch', () => {
       const inst2 = Instant.from('1969-12-15T12:00:00.5Z');
@@ -1288,14 +1048,6 @@ describe('Instant', () => {
       throws(() => inst.round({ smallestUnit: 'microsecond', roundingIncrement: 29 }), RangeError);
       throws(() => inst.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
     });
-    it('accepts plural units', () => {
-      assert(inst.round({ smallestUnit: 'hours' }).equals(inst.round({ smallestUnit: 'hour' })));
-      assert(inst.round({ smallestUnit: 'minutes' }).equals(inst.round({ smallestUnit: 'minute' })));
-      assert(inst.round({ smallestUnit: 'seconds' }).equals(inst.round({ smallestUnit: 'second' })));
-      assert(inst.round({ smallestUnit: 'milliseconds' }).equals(inst.round({ smallestUnit: 'millisecond' })));
-      assert(inst.round({ smallestUnit: 'microseconds' }).equals(inst.round({ smallestUnit: 'microsecond' })));
-      assert(inst.round({ smallestUnit: 'nanoseconds' }).equals(inst.round({ smallestUnit: 'nanosecond' })));
-    });
   });
   describe('Min/max range', () => {
     it('constructing from ns', () => {
@@ -1324,12 +1076,6 @@ describe('Instant', () => {
       const utc = Temporal.TimeZone.from('UTC');
       throws(() => utc.getInstantFor(min), RangeError);
       throws(() => utc.getInstantFor(max), RangeError);
-    });
-    it('adding and subtracting beyond limit', () => {
-      const min = Instant.from('-271821-04-20T00:00Z');
-      const max = Instant.from('+275760-09-13T00:00Z');
-      throws(() => min.subtract({ nanoseconds: 1 }), RangeError);
-      throws(() => max.add({ nanoseconds: 1 }), RangeError);
     });
   });
   describe('Instant.toZonedDateTimeISO() works', () => {
