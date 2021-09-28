@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.compare
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.zoneddatetime.compare steps 1–2:
       1. Set _one_ to ? ToTemporalZonedDateTime(_one_).

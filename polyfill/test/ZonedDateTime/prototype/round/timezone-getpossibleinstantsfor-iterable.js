@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.round
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.zoneddatetime.prototype.round steps 14, 16, and 20:
       14. Let _instantStart_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dtStart_, *"compatible"*).

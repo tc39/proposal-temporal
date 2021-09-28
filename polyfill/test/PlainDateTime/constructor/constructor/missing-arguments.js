@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+description: RangeError thrown after processing given args when invoked without all required args
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

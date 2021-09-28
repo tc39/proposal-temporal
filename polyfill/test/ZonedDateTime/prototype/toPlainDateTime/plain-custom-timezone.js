@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplaindatetime
+description: timeZone.getOffsetNanosecondsFor() called
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

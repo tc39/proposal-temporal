@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+description: Basic tests for the PlainDate constructor.
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

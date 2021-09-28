@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplaindatetime
+description: Basic tests for toPlainDateTime().
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

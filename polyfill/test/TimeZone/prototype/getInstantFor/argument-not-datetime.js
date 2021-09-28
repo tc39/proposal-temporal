@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
+description: Appropriate error thrown when argument cannot be converted to Temporal.PlainDateTime
 features: [Temporal]
 ---*/
 

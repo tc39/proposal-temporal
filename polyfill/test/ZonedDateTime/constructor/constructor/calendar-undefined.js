@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime
+description: Calendar argument defaults to the built-in ISO 8601 calendar
 features: [BigInt, Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.timezone.prototype.id
+description: TypeError thrown when toString property not present
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+description: Millisecond argument defaults to 0 if not given
 features: [Temporal]
 ---*/
 

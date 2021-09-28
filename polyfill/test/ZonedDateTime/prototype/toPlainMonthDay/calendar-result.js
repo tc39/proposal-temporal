@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplainmonthday
+description: TypeError thrown when calendar method returns an object with the wrong brand
 info: |
     MonthDayFromFields ( calendar, fields, options )
 

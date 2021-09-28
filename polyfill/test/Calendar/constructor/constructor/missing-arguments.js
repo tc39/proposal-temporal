@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar
+description: RangeError thrown when constructor invoked with no argument
 features: [Temporal]
 ---*/
 

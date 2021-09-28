@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.timezone.prototype.id
+description: Getter calls toString() and returns its value
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

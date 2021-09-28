@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.tozoneddatetime
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.plaindate.prototype.tozoneddatetime step 7:
       7. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _temporalDateTime_, *"compatible"*).

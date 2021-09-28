@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.with
+description: TypeError thrown when a primitive is passed as the options argument
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.day
+description: Basic tests for day().
 features: [Temporal]
 ---*/
 

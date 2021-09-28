@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+description: RangeError thrown when constructor invoked with no argument
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

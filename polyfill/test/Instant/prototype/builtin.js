@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-instant-objects
+description: Temporal.Instant.prototype meets the requirements for built-in objects
 features: [Temporal]
 ---*/
 

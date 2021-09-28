@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone
+description: RangeError thrown when constructor invoked with no argument
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.add
+description: RangeError thrown if result is outside representable range
 features: [Temporal]
 ---*/
 

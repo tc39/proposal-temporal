@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday
+description: Basic tests for the PlainMonthDay constructor.
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.until
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.zoneddatetime.prototype.until step 3:
       3. Set _other_ to ? ToTemporalZonedDateTime(_other_).

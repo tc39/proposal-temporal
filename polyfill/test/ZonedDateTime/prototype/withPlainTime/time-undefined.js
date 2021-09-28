@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.withplaintime
+description: The time is assumed to be midnight if not given
 features: [BigInt, Temporal]
 ---*/
 

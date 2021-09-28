@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime
+description: Arguments are converted to primitives in the correct order
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

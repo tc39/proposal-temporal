@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+description: Hour argument defaults to 0 if not given
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

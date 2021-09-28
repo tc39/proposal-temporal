@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+description: RangeError thrown when smallestUnit is larger than largestUnit
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.toplaindatetime
+description: Basic tests for toPlainDateTime().
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

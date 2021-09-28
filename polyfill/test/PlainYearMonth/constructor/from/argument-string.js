@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
+description: A string is parsed into the correct object when passed as the argument
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

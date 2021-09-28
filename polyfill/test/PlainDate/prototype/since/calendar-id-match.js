@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+description: Calculation is performed if calendars' toString results match
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

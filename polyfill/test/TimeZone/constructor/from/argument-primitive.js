@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.from
+description: RangeError thrown if a value is passed that converts to an invalid string
 features: [Temporal]
 ---*/
 

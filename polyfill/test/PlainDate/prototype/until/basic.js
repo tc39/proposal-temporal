@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.until
+description: Basic tests for until().
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

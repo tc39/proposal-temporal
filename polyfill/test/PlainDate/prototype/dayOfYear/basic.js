@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.dayofyear
+description: Basic tests for dayOfYear().
 features: [Temporal]
 ---*/
 

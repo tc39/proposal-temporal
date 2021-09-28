@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetstringfor
+description: Appropriate error thrown when argument cannot be converted to Temporal.Instant
 features: [Temporal]
 ---*/
 

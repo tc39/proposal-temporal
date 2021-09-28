@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+description: Appropriate error thrown if primitive input cannot convert to a valid string
 features: [Temporal]
 ---*/
 

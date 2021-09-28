@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.tozoneddatetime
+description: Basic tests for toZonedDateTime().
 features: [Temporal]
 ---*/
 

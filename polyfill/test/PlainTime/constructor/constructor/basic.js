@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+description: Basic tests for the PlainTime constructor.
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

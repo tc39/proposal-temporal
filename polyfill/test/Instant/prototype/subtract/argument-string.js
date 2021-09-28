@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.subtract
+description: A string is parsed into the correct object when passed as the argument
 features: [Temporal]
 ---*/
 

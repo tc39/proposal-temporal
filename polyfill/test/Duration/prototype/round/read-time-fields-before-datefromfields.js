@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.round
+description: The time fields are read from the object before being passed to dateFromFields().
 info: |
     sec-temporal.duration.prototype.round step 19:
       19. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

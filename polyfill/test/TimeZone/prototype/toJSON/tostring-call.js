@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.tojson
+description: toJSON() calls toString() and returns its value
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

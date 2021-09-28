@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.dayofweek
+description: Basic tests for dayOfWeek().
 features: [Temporal]
 ---*/
 

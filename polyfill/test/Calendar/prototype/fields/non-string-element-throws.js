@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.fields
+description: TypeError thrown if the input iterable yields a non-String value
 info: |
     sec-temporal.calendar.prototype.fields step 5:
       5. For each element _fieldName_ of _fieldNames_, do

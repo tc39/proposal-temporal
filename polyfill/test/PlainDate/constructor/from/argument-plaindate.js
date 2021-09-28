@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.from
+description: A PlainDate object is copied, not returned directly
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
