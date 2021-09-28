@@ -4,7 +4,6 @@
 /*---
 esid: sec-temporal.plaintime.prototype.tostring
 description: Fallback value for roundingMode option
-includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 

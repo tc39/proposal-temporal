@@ -5,7 +5,6 @@
 esid: sec-temporal.duration.compare
 description: The relativeTo option accepts a ZonedDateTime-like ISO 8601 string
 features: [Temporal]
-includes: [temporalHelpers.js]
 ---*/
 
 [
