@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.from
+description: The receiver is never called when calling from()
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tolocalestring
+description: Omitting the locales argument defaults to the DateTimeFormat default
 features: [BigInt, Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.withplaintime
+description: The time is assumed to be midnight if not given
 features: [Temporal]
 ---*/
 

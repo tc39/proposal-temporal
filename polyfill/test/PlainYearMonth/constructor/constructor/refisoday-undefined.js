@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth
+description: referenceISODay argument defaults to 1 if not given
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.monthsinyear
+description: Basic tests for monthsInYear().
 features: [Temporal]
 ---*/
 

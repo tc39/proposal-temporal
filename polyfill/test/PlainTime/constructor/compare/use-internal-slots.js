@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-comparetemporaltime
+description: compare() ignores the observable properties and uses internal slots
 features: [Temporal]
 ---*/
 

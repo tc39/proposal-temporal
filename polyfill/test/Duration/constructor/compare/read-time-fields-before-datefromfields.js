@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.compare
+description: The time fields are read from the object before being passed to dateFromFields().
 info: |
     sec-temporal.duration.compare step 4:
       4. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.with
+description: TypeError is thrown if a primitive is passed, including ISO strings
 info: |
     Temporal.PlainTime.prototype.with ( temporalTimeLike [ , options ] )
 

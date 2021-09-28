@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.round
+description: dateAdd() is called with the correct three arguments
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

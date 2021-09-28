@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.compare
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.duration.compare steps 4–6:
       4. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

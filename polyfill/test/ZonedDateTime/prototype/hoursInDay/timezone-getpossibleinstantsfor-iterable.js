@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.zoneddatetime.prototype.hoursinday
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-get-temporal.zoneddatetime.prototype.hoursinday steps 13–14:
       13. Let _todayInstant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _today_, *"compatible"*).

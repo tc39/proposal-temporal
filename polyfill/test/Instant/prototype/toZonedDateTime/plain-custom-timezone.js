@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.tozoneddatetime
+description: TimeZone.getPlainDateTimeFor is not called
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

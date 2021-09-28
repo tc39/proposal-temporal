@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-now-@@tostringtag
+description: The @@toStringTag property of Temporal.Now
 includes: [propertyHelper.js]
 features: [Symbol.toStringTag, Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.daysinweek
+description: Basic tests for daysInWeek().
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
+description: Fall back to calling intrinsic getOffsetNanosecondsFor() when method is deleted
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plainmonthday.prototype.monthcode
+description: Basic tests for monthCode().
 features: [Temporal]
 ---*/
 

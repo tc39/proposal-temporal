@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.with
+description: Correct options value is passed to calendar method
 info: |
     YearMonthFromFields ( calendar, fields [ , options ] )
 

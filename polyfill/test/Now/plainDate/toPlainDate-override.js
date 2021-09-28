@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.now.plaindate
+description: PlainDateTime.toPlainDate is not observably called
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

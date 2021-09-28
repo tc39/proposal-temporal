@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.until
+description: Results with opposite-sign components (e.g. months=1, hours=-1) are balanced correctly
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

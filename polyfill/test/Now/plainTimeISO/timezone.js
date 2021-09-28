@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.now.plaintimeiso
+description: The value returned by TimeZone.getOffsetNanosecondsFor affects the result
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

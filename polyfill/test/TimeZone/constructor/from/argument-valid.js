@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.from
+description: Built-in time zones are parsed correctly out of valid strings
 features: [Temporal]
 ---*/
 

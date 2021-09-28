@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.fields
+description: A non-Array iterable passed as the argument is exhausted
 info: |
     sec-temporal.calendar.prototype.fields step 4:
       4. Let _fieldNames_ be ? IterableToList(_fields_).

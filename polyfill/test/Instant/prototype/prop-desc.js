@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-instant-objects
+description: The "prototype" property of Temporal.Instant
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

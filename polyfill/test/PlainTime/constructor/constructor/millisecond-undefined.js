@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime
+description: Millisecond argument defaults to 0 if not given
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

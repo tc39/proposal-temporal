@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype-@@tostringtag
+description: The @@toStringTag property of Temporal.Instant
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

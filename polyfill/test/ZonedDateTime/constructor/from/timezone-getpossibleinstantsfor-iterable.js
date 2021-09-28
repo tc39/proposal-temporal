@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.from
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.zoneddatetime.from step 3:
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).

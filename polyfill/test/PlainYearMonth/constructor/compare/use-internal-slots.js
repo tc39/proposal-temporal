@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal-sec-temporal.yearmonth.compare
+description: compare() ignores the observable properties and uses internal slots
 features: [Temporal]
 ---*/
 

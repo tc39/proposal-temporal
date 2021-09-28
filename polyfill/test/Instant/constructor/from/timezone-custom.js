@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.from
+description: Time zone annotation is ignored in input ISO string
 features: [Temporal]
 ---*/
 

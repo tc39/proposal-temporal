@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant
+description: TypeError thrown if input is of wrong primitive type
 features: [Symbol, Temporal]
 ---*/
 

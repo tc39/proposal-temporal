@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplaindatetime
+description: TypeError thrown if an invalid property bag passed
 features: [Temporal]
 ---*/
 

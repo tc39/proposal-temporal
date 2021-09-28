@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+description: Basic tests for since().
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

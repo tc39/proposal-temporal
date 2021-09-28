@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.toplaindate
+description: Basic tests for toPlainDate().
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

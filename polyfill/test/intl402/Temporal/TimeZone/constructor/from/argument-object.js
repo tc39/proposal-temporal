@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.from
+description: An object is returned unchanged
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.equals
+description: Appropriate error thrown when argument cannot be converted to a valid string
 features: [Symbol, Temporal]
 ---*/
 

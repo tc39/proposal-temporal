@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.round
+description: RangeError thrown if the calculated day length is zero
 features: [Temporal]
 ---*/
 

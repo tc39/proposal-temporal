@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.with
+description: Basic tests for with().
 includes: [compareArray.js, temporalHelpers.js]
 features: [Symbol, Temporal]
 ---*/

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.until
+description: RangeError thrown if calendars' toString results do not match
 features: [Temporal]
 ---*/
 

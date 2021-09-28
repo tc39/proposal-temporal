@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.getisofields
+description: Properties on the returned object have the correct descriptor
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/

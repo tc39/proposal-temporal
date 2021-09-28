@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.tozoneddatetime
+description: TypeError thrown if a primitive is passed as the argument
 info: |
     Temporal.PlainTime.prototype.toZonedDateTime ( item )
 

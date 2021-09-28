@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.round
+description: TypeError thrown when options argument is missing or a primitive
 features: [Symbol, Temporal]
 ---*/
 

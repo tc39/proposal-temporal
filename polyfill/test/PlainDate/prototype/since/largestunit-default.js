@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.since
+description: Default value for largestUnit option is days
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

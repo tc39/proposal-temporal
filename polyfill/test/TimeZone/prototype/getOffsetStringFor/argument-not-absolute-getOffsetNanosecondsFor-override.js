@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetstringfor
+description: timeZone.getOffsetNanosecondsFor not called when argument cannot be converted to Temporal.Instant
 features: [Temporal]
 ---*/
 

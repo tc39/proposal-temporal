@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getoffsetstringfor
+description: Fall back to calling intrinsic getOffsetNanosecondsFor() when method is deleted
 features: [Temporal]
 ---*/
 

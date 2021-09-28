@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-get-temporal.plaindate.prototype.weekofyear
+description: Basic tests for weekOfYear().
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
+description: Test of basic functionality for an exact time earlier than the Unix epoch
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

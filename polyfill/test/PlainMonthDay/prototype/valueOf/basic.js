@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.valueof
+description: Basic tests for valueOf().
 features: [Temporal]
 ---*/
 

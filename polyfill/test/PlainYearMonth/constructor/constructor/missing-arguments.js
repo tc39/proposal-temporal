@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth
+description: RangeError thrown after processing given args when invoked without all required args
 includes: [compareArray.js]
 features: [Temporal]
 ---*/

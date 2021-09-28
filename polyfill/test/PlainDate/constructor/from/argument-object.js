@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.from
+description: Property bag is correctly converted into PlainDate
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

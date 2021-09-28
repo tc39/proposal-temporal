@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.with
+description: Throws TypeError on an argument that is not a PlainDate-like property bag
 features: [Temporal]
 ---*/
 

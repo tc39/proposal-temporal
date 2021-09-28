@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate
+description: Calendar argument defaults to the built-in ISO 8601 calendar
 features: [Temporal]
 ---*/
 

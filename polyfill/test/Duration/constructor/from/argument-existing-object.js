@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.from
+description: Property bag is converted to Duration; Duration is copied
 features: [Temporal]
 ---*/
 

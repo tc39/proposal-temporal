@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.round
+description: An iterable returned from timeZone.getPossibleInstantsFor is consumed after each call
 info: |
     sec-temporal.duration.prototype.round steps 19, 21, and 24:
       19. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

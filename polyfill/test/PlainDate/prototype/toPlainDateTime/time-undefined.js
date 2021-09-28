@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.prototype.toplaindatetime
+description: The time is assumed to be midnight if not given
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

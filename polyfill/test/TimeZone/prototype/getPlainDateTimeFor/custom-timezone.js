@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getplaindatetimefor
+description: getOffsetNanosecondsFor is called by getPlainDateTimeFor
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
