@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.duration.prototype.tostring
 description: Valid units for the smallestUnit option
+features: [Temporal]
 ---*/
 
 const duration = new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321);

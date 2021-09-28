@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
 description: Valid units for the smallestUnit option
+features: [Temporal]
 ---*/
 
 const datetime = new Temporal.ZonedDateTime(1_000_000_000_123_456_789n, "UTC");

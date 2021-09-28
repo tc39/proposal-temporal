@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.plaintime.prototype.tostring
 description: Valid units for the smallestUnit option
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 789, 999, 999);
