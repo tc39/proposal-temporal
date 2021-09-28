@@ -2,6 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal-instant-objects
 includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
