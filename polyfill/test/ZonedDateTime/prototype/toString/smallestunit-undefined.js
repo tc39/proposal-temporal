@@ -4,7 +4,6 @@
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
 description: Fallback value for smallestUnit option
-includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 

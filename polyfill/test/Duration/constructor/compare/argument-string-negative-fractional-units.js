@@ -4,7 +4,6 @@
 /*---
 esid: sec-temporal.duration.compare
 description: Strings with fractional duration units are treated with the correct sign
-includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 

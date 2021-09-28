@@ -3,7 +3,6 @@
 
 /*---
 esid: sec-temporal.instant.from
-includes: [compareArray.js]
 features: [Temporal]
 ---*/
 

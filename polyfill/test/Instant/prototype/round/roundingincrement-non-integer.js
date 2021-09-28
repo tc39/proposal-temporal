@@ -7,7 +7,6 @@ description: Rounding for roundingIncrement option
 info: |
     sec-temporal-totemporalroundingincrement step 7:
       7. Set _increment_ to floor(ℝ(_increment_)).
-includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/
 

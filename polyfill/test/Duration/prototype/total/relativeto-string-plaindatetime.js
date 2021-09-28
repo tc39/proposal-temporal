@@ -5,7 +5,6 @@
 esid: sec-temporal.duration.prototype.total
 description: The relativeTo option accepts a PlainDateTime-like ISO 8601 string
 features: [Temporal]
-includes: [temporalHelpers.js]
 ---*/
 
 ['2000-01-01', '2000-01-01T00:00', '2000-01-01T00:00[u-ca=iso8601]'].forEach((relativeTo) => {

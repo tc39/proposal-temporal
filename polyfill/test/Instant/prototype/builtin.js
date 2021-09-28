@@ -3,7 +3,6 @@
 
 /*---
 esid: sec-temporal-instant-objects
-includes: [propertyHelper.js]
 features: [Temporal]
 ---*/
 

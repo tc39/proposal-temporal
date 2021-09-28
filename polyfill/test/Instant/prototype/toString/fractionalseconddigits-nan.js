@@ -13,7 +13,6 @@ info: |
       9. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
     sec-temporal.instant.prototype.tostring step 6:
       6. Let _precision_ be ? ToSecondsStringPrecision(_options_).
-includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 

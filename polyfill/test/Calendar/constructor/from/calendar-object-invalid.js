@@ -4,7 +4,6 @@
 /*---
 esid: sec-temporal.calendar.from
 description: Converting objects to Temporal.Calendar
-includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
 
