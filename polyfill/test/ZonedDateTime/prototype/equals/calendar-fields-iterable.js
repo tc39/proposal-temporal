@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.equals
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.zoneddatetime.prototype.equals step 3:
       3. Set _other_ to ? ToTemporalZonedDateTime(_other_).

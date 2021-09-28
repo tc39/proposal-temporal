@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.toplainmonthday
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.zoneddatetime.prototype.toplainmonthday step 7:
       7. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).

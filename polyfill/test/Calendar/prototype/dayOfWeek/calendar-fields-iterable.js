@@ -3,13 +3,14 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dayofweek
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.calendar.prototype.dayofweek step 4:
       4. Let _date_ be ? ToTemporalDate(_dateOrDateTime_).
     sec-temporal-totemporaldate step 2.c:
       c. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
     sec-temporal-calendarfields step 4:
-      4. Let _result_ be ? IterableToList(_fieldsArray_).
+      4. Let _result_ be ? IterableToListOfType(_fieldsArray_, « String »).
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/

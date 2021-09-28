@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.tostring
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

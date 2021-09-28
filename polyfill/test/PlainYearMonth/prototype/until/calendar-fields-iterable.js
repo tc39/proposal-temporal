@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.until
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plainyearmonth.prototype.until step 3:
       3. Set _other_ to ? ToTemporalYearMonth(_other_).

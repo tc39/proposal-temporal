@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.prototype.add
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.duration.prototype.add step 5:
       5. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

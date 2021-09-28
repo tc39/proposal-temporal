@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.prototype.tostring
 includes: [compareArray.js]
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

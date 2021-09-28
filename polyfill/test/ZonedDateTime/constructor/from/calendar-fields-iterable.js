@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.from
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.zoneddatetime.from step 3:
       3. Return ? ToTemporalZonedDateTime(_item_, _options_).

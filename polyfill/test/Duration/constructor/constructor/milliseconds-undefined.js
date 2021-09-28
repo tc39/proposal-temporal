@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration
+description: Undefined arguments should be treated as zero.
 features: [Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.prototype.withplaindate
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plaindatetime.prototype.withplaindate step 3:
       3. Let _plainDate_ be ? ToTemporalDate(_plainDateLike_).

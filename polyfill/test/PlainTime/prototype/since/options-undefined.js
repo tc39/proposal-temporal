@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.since
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

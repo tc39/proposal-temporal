@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.timezone.prototype.getinstantfor step 3:
       3. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).

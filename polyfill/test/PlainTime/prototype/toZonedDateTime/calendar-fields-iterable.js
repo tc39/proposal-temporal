@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.tozoneddatetime
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plaintime.prototype.tozoneddatetime step 5:
       3. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).

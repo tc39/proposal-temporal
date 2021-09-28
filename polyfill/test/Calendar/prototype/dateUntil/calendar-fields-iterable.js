@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.calendar.prototype.dateuntil
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.calendar.prototype.dateuntil steps 4–5:
       4. Set _one_ to ? ToTemporalDate(_one_).
@@ -10,7 +11,7 @@ info: |
     sec-temporal-totemporaldate step 2.c:
       c. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
     sec-temporal-calendarfields step 4:
-      4. Let _result_ be ? IterableToList(_fieldsArray_).
+      4. Let _result_ be ? IterableToListOfType(_fieldsArray_, « String »).
 includes: [compareArray.js, temporalHelpers.js]
 features: [Temporal]
 ---*/
