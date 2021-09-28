@@ -2,6 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
+esid: sec-temporal-objects
 includes: [propertyHelper.js]
 description: The "Temporal" property of the global object
 features: [Temporal]
