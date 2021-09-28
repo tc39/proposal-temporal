@@ -2,7 +2,7 @@
 // This code is governed by the BSD license found in the LICENSE file.
 
 /*---
-esid: sec-temporal.duration.prototype.add
+esid: sec-temporal.duration.compare
 description: Strings with fractional duration units are treated with the correct sign
 includes: [temporalHelpers.js]
 features: [Temporal]
