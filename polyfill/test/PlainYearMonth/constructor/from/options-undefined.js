@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.from
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

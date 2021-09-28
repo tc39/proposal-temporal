@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.round
+description: Objects of a subclass are never created as return values.
 includes: [temporalHelpers.js]
 features: [Temporal]
 ---*/

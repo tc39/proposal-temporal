@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.instant.prototype.since
+description: Verify that undefined options are handled correctly.
 features: [BigInt, Temporal]
 ---*/
 

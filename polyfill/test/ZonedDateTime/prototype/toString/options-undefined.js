@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tostring
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

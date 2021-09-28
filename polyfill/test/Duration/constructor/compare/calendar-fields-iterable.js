@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.compare
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.duration.compare step 4:
       4. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).

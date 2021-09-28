@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.prototype.add
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plainyearmonth.prototype.add step 8:
       8. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).

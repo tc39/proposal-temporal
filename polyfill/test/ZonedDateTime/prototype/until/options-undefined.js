@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.until
+description: Verify that undefined options are handled correctly.
 features: [BigInt, Temporal]
 ---*/
 

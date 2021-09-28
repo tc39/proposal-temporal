@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.from
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plainmonthday.from step 3:
       3. Return ? ToTemporalMonthDay(_item_, _options_).

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.duration.compare
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

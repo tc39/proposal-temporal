@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindate.from
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

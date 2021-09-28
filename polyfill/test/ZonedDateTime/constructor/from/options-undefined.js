@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.zoneddatetime.from
 includes: [temporalHelpers.js]
+description: Verify that undefined options are handled correctly.
 features: [Temporal]
 ---*/
 

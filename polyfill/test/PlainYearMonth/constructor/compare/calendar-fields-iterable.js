@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainyearmonth.compare
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plainyearmonth.compare steps 1–2:
       1. Set _one_ to ? ToTemporalYearMonth(_one_).

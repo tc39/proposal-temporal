@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.zoneddatetime.prototype.tolocalestring
+description: Verify that undefined options are handled correctly.
 features: [BigInt, Temporal]
 ---*/
 

@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaintime.prototype.toplaindatetime
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plaintime.prototype.toplaindatetime step 3:
       3. Set _temporalDate_ to ? ToTemporalDate(_temporalDate_).

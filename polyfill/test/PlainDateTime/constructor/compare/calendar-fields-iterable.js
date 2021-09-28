@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.compare
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plaindatetime.compare steps 1–2:
       1. Set _one_ to ? ToTemporalDateTime(_one_).

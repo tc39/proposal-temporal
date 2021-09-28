@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plainmonthday.prototype.equals
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plainmonthday.prototype.equals step 3:
       3. Set _other_ to ? ToTemporalMonthDay(_other_).

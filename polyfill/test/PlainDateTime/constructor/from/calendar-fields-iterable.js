@@ -3,6 +3,7 @@
 
 /*---
 esid: sec-temporal.plaindatetime.from
+description: Verify the result of calendar.fields() is treated correctly.
 info: |
     sec-temporal.plaindatetime.from step 3:
       3. Return ? ToTemporalDateTime(_item_, _options_).

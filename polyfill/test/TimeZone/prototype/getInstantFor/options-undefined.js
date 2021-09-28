@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.timezone.prototype.getinstantfor
 includes: [temporalHelpers.js]
+description: Verify that undefined options are handled correctly.
 features: [BigInt, Temporal]
 ---*/
 
