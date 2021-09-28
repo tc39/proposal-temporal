@@ -4,6 +4,7 @@
 /*---
 esid: sec-temporal.instant.prototype.tostring
 description: Valid units for the smallestUnit option
+features: [Temporal]
 ---*/
 
 const instant = new Temporal.Instant(1_000_000_000_123_456_789n);

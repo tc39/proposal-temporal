@@ -7,6 +7,7 @@ description: RangeError thrown when roundingIncrement option out of range
 info: |
     sec-temporal-totemporalroundingincrement step 6:
       6. If _increment_ < 1 or _increment_ > _maximum_, throw a *RangeError* exception.
+features: [Temporal]
 ---*/
 
 const time = new Temporal.PlainTime(12, 34, 56, 0, 0, 5);
