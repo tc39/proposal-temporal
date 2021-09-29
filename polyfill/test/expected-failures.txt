@@ -1,10 +1,2 @@
-# Bug: https://github.com/tc39/proposal-temporal/issues/1791
-Duration/constructor/compare/relativeto-string-datetime.js
-
-# Blocked on https://github.com/tc39/proposal-temporal/issues/1685
-# (MoveRelativeDate should pass undefined as options)
-Duration/constructor/compare/calendar-dateadd-called-with-options-undefined.js
-Duration/prototype/round/calendar-dateadd-called-with-options-undefined.js
-Duration/prototype/total/calendar-dateadd-called-with-options-undefined.js
-ZonedDateTime/prototype/since/calendar-dateadd-called-with-options-undefined.js
-ZonedDateTime/prototype/until/calendar-dateadd-called-with-options-undefined.js
+# Blocked on https://github.com/tc39/test262/pull/3188
+built-ins/Temporal/Calendar/prototype/fields/long-input.js
