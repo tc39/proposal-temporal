@@ -12,7 +12,7 @@ let testOutput = '';
 const now = Date.now();
 
 const expectedFailures = new Set();
-const lines = fs.readFileSync('expected-failures.txt', { encoding: 'utf-8' });
+const lines = fs.readFileSync('../../test/expected-failures.txt', { encoding: 'utf-8' });
 for (let line of lines.split('\n')) {
   line = line.trim();
   if (!line) continue;
