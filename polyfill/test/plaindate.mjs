@@ -19,39 +19,6 @@ const { PlainDate } = Temporal;
 
 describe('Date', () => {
   describe('date.until() works', () => {
-    const date = new PlainDate(1969, 7, 24);
-    it('takes days per month into account', () => {
-      const date1 = PlainDate.from('2019-01-01');
-      const date2 = PlainDate.from('2019-02-01');
-      const date3 = PlainDate.from('2019-03-01');
-      equal(`${date1.until(date2)}`, 'P31D');
-      equal(`${date2.until(date3)}`, 'P28D');
-
-      const date4 = PlainDate.from('2020-02-01');
-      const date5 = PlainDate.from('2020-03-01');
-      equal(`${date4.until(date5)}`, 'P29D');
-    });
-    it('takes days per year into account', () => {
-      const date1 = PlainDate.from('2019-01-01');
-      const date2 = PlainDate.from('2019-06-01');
-      const date3 = PlainDate.from('2020-01-01');
-      const date4 = PlainDate.from('2020-06-01');
-      const date5 = PlainDate.from('2021-01-01');
-      const date6 = PlainDate.from('2021-06-01');
-      equal(`${date1.until(date3)}`, 'P365D');
-      equal(`${date3.until(date5)}`, 'P366D');
-      equal(`${date2.until(date4)}`, 'P366D');
-      equal(`${date4.until(date6)}`, 'P365D');
-    });
-    it('weeks and months are mutually exclusive', () => {
-      const laterDate = date.add({ days: 42 });
-      const weeksDifference = date.until(laterDate, { largestUnit: 'weeks' });
-      notEqual(weeksDifference.weeks, 0);
-      equal(weeksDifference.months, 0);
-      const monthsDifference = date.until(laterDate, { largestUnit: 'months' });
-      equal(monthsDifference.weeks, 0);
-      notEqual(monthsDifference.months, 0);
-    });
     const earlier = PlainDate.from('2019-01-08');
     const later = PlainDate.from('2021-09-07');
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
