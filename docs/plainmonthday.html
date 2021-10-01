@@ -194,11 +194,11 @@ For example, it could be used to represent a yearly recurring event, like &quot;
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.PlainDate</code> or even <code>Temporal.PlainDateTime</code>.
 A <code>Temporal.PlainMonthDay</code> can be converted into a <code>Temporal.PlainDate</code> by combining it with a year, using the <code>toPlainDate()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-PlainMonthDay"><a class="heading-link" href="#new-Temporal-PlainMonthDay"></a><strong>new Temporal.PlainMonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: object, <em>referenceISOYear</em>?: number) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-PlainMonthDay"><a class="heading-link" href="#new-Temporal-PlainMonthDay"></a><strong>new Temporal.PlainMonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>?: string | object, <em>referenceISOYear</em>?: number) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
-<li><code>calendar</code> (optional <code>Temporal.Calendar</code> or plain object): A calendar to project the date into.</li>
+<li><code>calendar</code> (optional <code>Temporal.Calendar</code>, plain object, or string): A calendar to project the date into.</li>
 <li><code>referenceISOYear</code> (optional for ISO 8601 calendar; required for other calendars):
 A reference year in the ISO 8601 calendar for disambiguation when implementing calendar systems.
 The default for the ISO 8601 calendar is the first leap year after the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>.
