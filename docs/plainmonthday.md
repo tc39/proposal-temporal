@@ -13,13 +13,13 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 
 ## Constructor
 
-### **new Temporal.PlainMonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: object, _referenceISOYear_?: number) : Temporal.PlainMonthDay
+### **new Temporal.PlainMonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: string | object, _referenceISOYear_?: number) : Temporal.PlainMonthDay
 
 **Parameters:**
 
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
+- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the date into.
 - `referenceISOYear` (optional for ISO 8601 calendar; required for other calendars):
   A reference year in the ISO 8601 calendar for disambiguation when implementing calendar systems.
   The default for the ISO 8601 calendar is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).

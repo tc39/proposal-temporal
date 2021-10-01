@@ -17,14 +17,14 @@ It can also be combined with a `Temporal.PlainTime` to yield a "zoneless" `Tempo
 
 ## Constructor
 
-### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: object) : Temporal.PlainDate
+### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: string | object) : Temporal.PlainDate
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the date into.
+- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the date into.
 
 **Returns:** a new `Temporal.PlainDate` object.
 
