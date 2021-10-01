@@ -31,7 +31,7 @@ The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, whic
 
 - `epochNanoseconds` (bigint): A number of nanoseconds.
 - `timeZone` (`Temporal.TimeZone` or plain object): The time zone in which the event takes place.
-- `calendar` (optional `Temporal.Calendar` or plain object): Calendar used to interpret dates and times. Usually set to `'iso8601'`.
+- `calendar` (optional `Temporal.Calendar`, plain object, or string): Calendar used to interpret dates and times. Usually set to `'iso8601'`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object.
 

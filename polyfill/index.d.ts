@@ -663,25 +663,25 @@ export namespace Temporal {
     ): boolean;
     dateFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd?(
       date: Temporal.PlainDate | PlainDateLike | string,
       duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions
+      options?: ArithmeticOptions
     ): Temporal.PlainDate;
     dateUntil?(
       one: Temporal.PlainDate | PlainDateLike | string,
       two: Temporal.PlainDate | PlainDateLike | string,
-      options: DifferenceOptions<
+      options?: DifferenceOptions<
         | 'year'
         | 'month'
         | 'week'
@@ -749,20 +749,20 @@ export namespace Temporal {
     ): boolean;
     dateFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
       fields: { year: number | undefined; month: number | undefined; monthCode: string | undefined; day: number },
-      options: AssignmentOptions
+      options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd(
       date: Temporal.PlainDate | PlainDateLike | string,
       duration: Temporal.Duration | DurationLike | string,
-      options: ArithmeticOptions
+      options?: ArithmeticOptions
     ): Temporal.PlainDate;
     dateUntil(
       one: Temporal.PlainDate | PlainDateLike | string,
@@ -814,7 +814,7 @@ export namespace Temporal {
       one: Temporal.PlainDate | PlainDateLike | string,
       two: Temporal.PlainDate | PlainDateLike | string
     ): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol);
+    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol | string);
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
     readonly year: number;
@@ -937,7 +937,7 @@ export namespace Temporal {
       millisecond?: number,
       microsecond?: number,
       nanosecond?: number,
-      calendar?: CalendarProtocol
+      calendar?: CalendarProtocol | string
     );
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
@@ -1071,7 +1071,7 @@ export namespace Temporal {
       item: Temporal.PlainMonthDay | PlainMonthDayLike | string,
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
-    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol, referenceISOYear?: number);
+    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol | string, referenceISOYear?: number);
     readonly monthCode: string;
     readonly day: number;
     readonly calendar: CalendarProtocol;
@@ -1305,7 +1305,7 @@ export namespace Temporal {
       one: Temporal.PlainYearMonth | PlainYearMonthLike | string,
       two: Temporal.PlainYearMonth | PlainYearMonthLike | string
     ): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol, referenceISODay?: number);
+    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol | string, referenceISODay?: number);
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
     readonly year: number;

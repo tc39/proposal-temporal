@@ -36,7 +36,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 
 ## Constructor
 
-### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: object) : Temporal.PlainDateTime
+### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: string | object) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -49,7 +49,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 - `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional `Temporal.Calendar` or plain object): A calendar to project the datetime into.
+- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the datetime into.
 
 **Returns:** a new `Temporal.PlainDateTime` object.
 
