@@ -1,7 +1,7 @@
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, TIME_ZONE, GetSlot, HasSlot } from './slots.mjs';
+import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, GetSlot } from './slots.mjs';
 
 const ObjectCreate = Object.create;
 
@@ -41,15 +41,7 @@ export class PlainMonthDay {
     if (ES.Type(temporalMonthDayLike) !== 'Object') {
       throw new TypeError('invalid argument');
     }
-    if (HasSlot(temporalMonthDayLike, CALENDAR) || HasSlot(temporalMonthDayLike, TIME_ZONE)) {
-      throw new TypeError('with() does not support a calendar or timeZone property');
-    }
-    if (temporalMonthDayLike.calendar !== undefined) {
-      throw new TypeError('with() does not support a calendar property');
-    }
-    if (temporalMonthDayLike.timeZone !== undefined) {
-      throw new TypeError('with() does not support a timeZone property');
-    }
+    ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
