@@ -219,6 +219,18 @@ export const ES = ObjectAssign({}, ES2020, {
   IsTemporalYearMonth: (item) => HasSlot(item, YEAR_MONTH_BRAND),
   IsTemporalMonthDay: (item) => HasSlot(item, MONTH_DAY_BRAND),
   IsTemporalZonedDateTime: (item) => HasSlot(item, EPOCHNANOSECONDS, TIME_ZONE, CALENDAR),
+  RejectObjectWithCalendarOrTimeZone: (item) => {
+    if (HasSlot(item, CALENDAR) || HasSlot(item, TIME_ZONE)) {
+      throw new TypeError('with() does not support a calendar or timeZone property');
+    }
+    if (item.calendar !== undefined) {
+      throw new TypeError('with() does not support a calendar property');
+    }
+    if (item.timeZone !== undefined) {
+      throw new TypeError('with() does not support a timeZone property');
+    }
+  },
+
   TemporalTimeZoneFromString: (stringIdent) => {
     let { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
     let identifier = ianaName;

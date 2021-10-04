@@ -15,8 +15,7 @@ import {
   ISO_NANOSECOND,
   ISO_SECOND,
   TIME_ZONE,
-  GetSlot,
-  HasSlot
+  GetSlot
 } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -173,15 +172,7 @@ export class ZonedDateTime {
     if (ES.Type(temporalZonedDateTimeLike) !== 'Object') {
       throw new TypeError('invalid zoned-date-time-like');
     }
-    if (HasSlot(temporalZonedDateTimeLike, CALENDAR) || HasSlot(temporalZonedDateTimeLike, TIME_ZONE)) {
-      throw new TypeError('with() does not support a calendar or timeZone property');
-    }
-    if (temporalZonedDateTimeLike.calendar !== undefined) {
-      throw new TypeError('calendar invalid for with(). use withCalendar()');
-    }
-    if (temporalZonedDateTimeLike.timeZone !== undefined) {
-      throw new TypeError('timeZone invalid for with(). use withTimeZone()');
-    }
+    ES.RejectObjectWithCalendarOrTimeZone(temporalZonedDateTimeLike);
 
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
