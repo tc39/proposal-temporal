@@ -1107,7 +1107,7 @@
   <emu-clause id="sec-temporal-parseisodatetime" aoid="ParseISODateTime">
     <h1>ParseISODateTime ( _isoString_ )</h1>
     <p>
-      The ParseISODateTime abstract operation examines any |Time|, |DateTime| or |CalendarDateTime| string accepted by the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
+      The ParseISODateTime abstract operation examines any ISO 8601 string that adheres to the syntax of the |TemporalDateString|, |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalRelativeToString|, |TemporalTimeString|, |TemporalYearMonthString|, or |TemporalZonedDateTimeString| productions of the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
     </p>
     <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
