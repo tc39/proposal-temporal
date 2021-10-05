@@ -12024,7 +12024,7 @@
           if (val1 !== val2) return false;
         }
 
-        return ES.CalendarEquals(this, other);
+        return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
       }
     }, {
       key: "toString",
@@ -12663,7 +12663,7 @@
           if (val1 !== val2) return false;
         }
 
-        return ES.CalendarEquals(this, other);
+        return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
       }
     }, {
       key: "toString",
@@ -13383,7 +13383,7 @@
           if (val1 !== val2) return false;
         }
 
-        return ES.CalendarEquals(this, other);
+        return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
       }
     }, {
       key: "toString",
@@ -14399,7 +14399,7 @@
           if (val1 !== val2) return false;
         }
 
-        return ES.CalendarEquals(this, other);
+        return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
       }
     }, {
       key: "toString",
