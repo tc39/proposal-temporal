@@ -749,7 +749,18 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
       calendar = ES.GetTemporalCalendarWithISODefault(relativeTo);
-      const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+      const fieldNames = ES.CalendarFields(calendar, [
+        'day',
+        'hour',
+        'microsecond',
+        'millisecond',
+        'minute',
+        'month',
+        'monthCode',
+        'nanosecond',
+        'second',
+        'year'
+      ]);
       const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
       const dateOptions = ObjectCreate(null);
       dateOptions.overflow = 'constrain';
