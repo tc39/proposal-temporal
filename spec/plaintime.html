@@ -824,6 +824,7 @@
 
     <emu-clause id="sec-temporal-totemporaltimerecord" aoid="ToTemporalTimeRecord">
       <h1>ToTemporalTimeRecord ( _temporalTimeLike_ )</h1>
+      <emu-note>The value of ? ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalTimeLike_) is Object.
         1. Let _result_ be the Record {
@@ -834,13 +835,16 @@
           [[Microsecond]]: *undefined*,
           [[Nanosecond]]: *undefined*
           }.
+        1. Let _any_ be *false*.
         1. For each row of <emu-xref href="#table-temporal-temporaltimelike-properties"></emu-xref>, except the header row, in table order, do
           1. Let _property_ be the Property value of the current row.
           1. Let _value_ be ? Get(_temporalTimeLike_, _property_).
-          1. If _value_ is *undefined*, then
-            1. Throw a *TypeError* exception.
+          1. If _value_ is not *undefined*, then
+            1. Set _any_ to *true*.
           1. Set _value_ to ? ToIntegerThrowOnInfinity(_value_).
           1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+        1. If _any_ is *false*, then
+          1. Throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
