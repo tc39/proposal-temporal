@@ -223,10 +223,10 @@ export class PlainDate {
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const untilOptions = { ...options, largestUnit };
-    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, this, other, untilOptions);
+    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, other, this, untilOptions);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     if (smallestUnit === 'day' && roundingIncrement === 1) {
-      return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
+      return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     }
     const relativeTo = ES.CreateTemporalDateTime(
       GetSlot(this, ISO_YEAR),
@@ -241,10 +241,10 @@ export class PlainDate {
       GetSlot(this, CALENDAR)
     );
     ({ years, months, weeks, days } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
+      -years,
+      -months,
+      -weeks,
+      -days,
       0,
       0,
       0,
