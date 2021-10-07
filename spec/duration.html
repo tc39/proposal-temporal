@@ -1498,7 +1498,9 @@
           1. Let _decimalPart_ be _fraction_ formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
           1. If _precision_ is *"auto"*, then
             1. Set _decimalPart_ to the longest possible substring of _decimalPart_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
-          1. Else if _precision_ ≠ 0, then
+          1. Else if _precision_ = 0, then
+            1. Set _decimalPart_ to *""*.
+          1. Else,
             1. Set _decimalPart_ to the substring of _decimalPart_ from 0 to _precision_.
           1. Let _secondsPart_ be abs(_seconds_) formatted as a decimal number.
           1. If _decimalPart_ is not *""*, then
