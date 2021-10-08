@@ -206,9 +206,29 @@ export class ZonedDateTime {
     if (!props) {
       throw new TypeError('invalid zoned-date-time-like');
     }
-    let fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+    const entries = [
+      ['day', undefined],
+      ['hour', 0],
+      ['microsecond', 0],
+      ['millisecond', 0],
+      ['minute', 0],
+      ['month', undefined],
+      ['monthCode', undefined],
+      ['nanosecond', 0],
+      ['second', 0],
+      ['year', undefined],
+      ['offset'],
+      ['timeZone']
+    ];
+    // Add extra fields from the calendar at the end
+    fieldNames.forEach((fieldName) => {
+      if (!entries.some(([name]) => name === fieldName)) {
+        entries.push([fieldName, undefined]);
+      }
+    });
+    let fields = ES.PrepareTemporalFields(this, entries);
     fields = ES.CalendarMergeFields(calendar, fields, props);
-    fields = ES.ToTemporalZonedDateTimeFields(fields, fieldNames);
+    fields = ES.PrepareTemporalFields(fields, entries);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
     const offsetNs = ES.ParseOffsetString(fields.offset);
