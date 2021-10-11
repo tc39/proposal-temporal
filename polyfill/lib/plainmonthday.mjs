@@ -119,6 +119,7 @@ export class PlainMonthDay {
     });
     mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
     const options = ObjectCreate(null);
+    options.overflow = 'reject';
     return ES.DateFromFields(calendar, mergedFields, options);
   }
   getISOFields() {
