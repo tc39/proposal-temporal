@@ -1262,7 +1262,7 @@ Examples:
 - `2011-12-03T10:15:30+01:00[Europe/Paris]`
 - `2011-12-03T10:15:30+09:00[Asia/Tokyo][u-ca=japanese]`
 
-This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `zonedDateTime`.
+This method overrides the `Object.prototype.toString()` method and provides a convenient string representation of `zonedDateTime`.
 The string is "round-trippable".
 This means that it can be passed to `Temporal.ZonedDateTime.from()` to create a new `Temporal.ZonedDateTime` object with the same field values as the original.
 
@@ -1277,6 +1277,7 @@ By setting the `calendarName` option to `'always'` or `'never'` this can be over
 For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
 
 Likewise, passing `'never'` to the `timeZoneName` or `offset` options controls whether the time zone offset (`+01:00`) or name annotation (`[Europe/Paris]`) are shown.
+If the time zone offset is shown, it is always shown rounded to the nearest minute.
 
 The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output.
 For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).

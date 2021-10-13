@@ -1189,7 +1189,8 @@
         1. If _showOffset_ is *"never"*, then
           1. Let _offsetString_ be the empty String.
         1. Else,
-          1. Let _offsetString_ be ? BuiltinTimeZoneGetOffsetStringFor(_timeZone_, _instant_).
+          1. Let _offsetNs_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+          1. Let _offsetString_ be ! FormatISOTimeZoneOffsetString(_offsetNs_).
         1. If _showTimeZone_ is *"never"*, then
           1. Let _timeZoneString_ be the empty String.
         1. Else,

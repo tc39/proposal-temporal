@@ -161,11 +161,11 @@ describe('Userland time zone', () => {
       equal(`${obj.getInstantFor(dt)}`, '1976-11-18T15:23:31.2345679Z');
     });
     it('converts to string', () => equal(`${obj}`, obj.id));
-    it('offset prints in instant.toString', () =>
-      equal(inst.toString({ timeZone: obj }), '1969-12-31T23:59:58.888888889-00:00:01.111111111'));
-    it('prints in zdt.toString', () => {
+    it('offset prints with minute precision in instant.toString', () =>
+      equal(inst.toString({ timeZone: obj }), '1969-12-31T23:59:58.888888889+00:00'));
+    it('offset prints with minute precision prints in zdt.toString', () => {
       const zdt = new Temporal.ZonedDateTime(0n, obj);
-      equal(zdt.toString(), '1969-12-31T23:59:58.888888889-00:00:01.111111111[Custom/Subminute]');
+      equal(zdt.toString(), '1969-12-31T23:59:58.888888889+00:00[Custom/Subminute]');
     });
     it('has no next transitions', () => assert.equal(obj.getNextTransition(), null));
     it('has no previous transitions', () => assert.equal(obj.getPreviousTransition(), null));

@@ -32,7 +32,7 @@ describe('Instant', () => {
     it('sub-minute offset', () => {
       const inst = Instant.from('1900-01-01T12:00Z');
       const timeZone = Temporal.TimeZone.from('Europe/Amsterdam');
-      equal(inst.toString({ timeZone }), '1900-01-01T12:19:32+00:19:32');
+      equal(inst.toString({ timeZone }), '1900-01-01T12:19:32+00:20');
     });
     const i1 = Instant.from('1976-11-18T15:23Z');
     const i2 = Instant.from('1976-11-18T15:23:30Z');

@@ -1985,7 +1985,10 @@ export const ES = ObjectAssign({}, ES2020, {
       precision
     );
     let timeZoneString = 'Z';
-    if (timeZone !== undefined) timeZoneString = ES.BuiltinTimeZoneGetOffsetStringFor(outputTimeZone, instant);
+    if (timeZone !== undefined) {
+      const offsetNs = ES.GetOffsetNanosecondsFor(outputTimeZone, instant);
+      timeZoneString = ES.FormatISOTimeZoneOffsetString(offsetNs);
+    }
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
   },
   TemporalDurationToString: (duration, precision = 'auto', options = undefined) => {
@@ -2159,7 +2162,10 @@ export const ES = ObjectAssign({}, ES2020, {
       precision
     );
     let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
-    if (showOffset !== 'never') result += ES.BuiltinTimeZoneGetOffsetStringFor(tz, instant);
+    if (showOffset !== 'never') {
+      const offsetNs = ES.GetOffsetNanosecondsFor(tz, instant);
+      result += ES.FormatISOTimeZoneOffsetString(offsetNs);
+    }
     if (showTimeZone !== 'never') result += `[${tz}]`;
     const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
     result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
@@ -2209,6 +2215,17 @@ export const ES = ObjectAssign({}, ES2020, {
       post = `:${secondString}`;
     }
     return `${sign}${hourString}:${minuteString}${post}`;
+  },
+  FormatISOTimeZoneOffsetString: (offsetNanoseconds) => {
+    offsetNanoseconds = ES.RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
+    const sign = offsetNanoseconds < 0 ? '-' : '+';
+    offsetNanoseconds = MathAbs(offsetNanoseconds);
+    const minutes = (offsetNanoseconds / 60e9) % 60;
+    const hours = MathFloor(offsetNanoseconds / 3600e9);
+
+    const hourString = ES.ISODateTimePartString(hours);
+    const minuteString = ES.ISODateTimePartString(minutes);
+    return `${sign}${hourString}:${minuteString}`;
   },
   GetEpochFromISOParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     // Note: Date.UTC() interprets one and two-digit years as being in the
