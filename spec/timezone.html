@@ -548,6 +548,24 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-formatisotimezoneoffsetstring" aoid="FormatISOTimeZoneOffsetString">
+      <h1>FormatISOTimeZoneOffsetString ( _offsetNanoseconds_ )</h1>
+      <p>
+        The abstract operation FormatISOTimeZoneOffsetString is similar to FormatTimeZoneOffsetString but rounds the offset to the nearest minute boundary, in order to produce a ±HH:MM format offset string for use in ISO 8601 strings.
+      </p>
+      <emu-alg>
+        1. Assert: _offsetNanoseconds_ is an integer.
+        1. Set _offsetNanoseconds_ to ! RoundNumberToIncrement(_offsetNanoseconds_, 60 × 10<sup>9</sup>, *"halfExpand"*).
+        1. If _offsetNanoseconds_ ≥ 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
+        1. Set _offsetNanoseconds_ to abs(_offsetNanoseconds_).
+        1. Let _minutes_ be _offsetNanoseconds_ / (60 × 10<sup>9</sup>) modulo 60.
+        1. Let _hours_ be floor(_offsetNanoseconds_ / (3600 × 10<sup>9</sup>)).
+        1. Let _h_ be _hours_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _m_ be _minutes_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), and _m_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
       <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
       <emu-alg>

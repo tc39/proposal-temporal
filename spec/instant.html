@@ -622,7 +622,8 @@
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZoneString_ be *"Z"*.
         1. Else,
-          1. Let _timeZoneString_ be ? BuiltinTimeZoneGetOffsetStringFor(_timeZone_, _instant_).
+          1. Let _offsetNs_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+          1. Let _timeZoneString_ be ! FormatISOTimeZoneOffsetString(_offsetNs_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>
     </emu-clause>

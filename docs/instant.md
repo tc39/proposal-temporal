@@ -573,7 +573,7 @@ one.equals(one); // => true
 
 **Returns:** a string in the ISO 8601 date format representing `instant`.
 
-This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `instant`.
+This method overrides the `Object.prototype.toString()` method and provides a convenient string representation of `instant`.
 The string can be passed to `Temporal.Instant.from()` to create a new `Temporal.Instant` object.
 
 The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
@@ -582,7 +582,7 @@ If no options are given, the default is `fractionalSecondDigits: 'auto'`, which 
 The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
 Note that rounding may change the value of other units as well.
 
-If the `timeZone` option is given, then the string will express the time in the given time zone, and contain the time zone's UTC offset.
+If the `timeZone` option is given, then the string will express the time in the given time zone, and contain the time zone's UTC offset, rounded to the nearest minute.
 
 Example usage:
 
