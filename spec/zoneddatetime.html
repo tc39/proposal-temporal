@@ -582,7 +582,7 @@
         1. Assert: Type(_offsetString_) is String.
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
         1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -793,7 +793,7 @@
           1. Throw a *RangeError* exception.
         1. Let _roundResult_ be ! RoundISODateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _dayLengthNs_).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*, ~match exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1072,10 +1072,14 @@
     <h1>Abstract operations</h1>
 
     <emu-clause id="sec-temporal-interpretisodatetimeoffset" aoid="InterpretISODateTimeOffset">
-      <h1>InterpretISODateTimeOffset ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_ )</h1>
+      <h1>InterpretISODateTimeOffset ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_ )</h1>
       <p>
         The abstract operation InterpretISODateTimeOffset determines the exact time in _timeZone_ corresponding to the given calendar date and time, and the given UTC offset in nanoseconds.
         In the case of more than one possible exact time, or no possible exact time, an answer is determined using _offsetBehaviour_ (one of ~option~, ~exact~, or ~wall~), _disambiguation_ (one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*) and _offsetOption_ (one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*).
+      </p>
+      <p>
+        As a special case when parsing ISO 8601 strings which are only required to specify time zone offsets to minutes precision, if _matchBehaviour_ is ~match minutes~, then a value for _offsetNanoseconds_ that is rounded to the nearest minute will be accepted in those cases where _offsetNanoseconds_ is compared against _timeZone_'s offset.
+        If _matchBehaviour_ is ~match exactly~, then this does not happen.
       </p>
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer.
@@ -1091,8 +1095,13 @@
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
         1. For each element _candidate_ of _possibleInstants_, do
-          1. If ? GetOffsetNanosecondsFor(_timeZone_, _candidate_) = _offsetNanoseconds_, then
+          1. Let _candidateNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _candidate_).
+          1. If _candidateNanoseconds_ = _offsetNanoseconds_, then
             1. Return _candidate_.[[Nanoseconds]].
+          1. If _matchBehaviour_ is ~match minutes~, then
+            1. Let _roundedCandidateNanoseconds_ be ! RoundNumberToIncrement(_candidateNanoseconds_, 60 × 10<sup>9</sup>, *"halfExpand"*).
+            1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
+              1. Return _candidate_.[[Nanoseconds]].
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
         1. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
         1. Return _instant_.[[Nanoseconds]].
@@ -1107,6 +1116,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
         1. Let _offsetBehaviour_ be ~option~.
+        1. Let _matchBehaviour_ be ~match exactly~.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _item_.
@@ -1135,12 +1145,13 @@
             1. Set _offsetBehaviour_ to ~wall~.
           1. Let _timeZone_ be ? CreateTemporalTimeZone(_result_.[[TimeZoneName]]).
           1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
+          1. Set _matchBehaviour_ to ~match minutes~.
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseTimeZoneOffsetString(_offsetString_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offsetOption_ be ? ToTemporalOffset(_options_, *"reject"*).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>

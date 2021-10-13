@@ -726,6 +726,70 @@ describe('ZonedDateTime', () => {
         });
       });
     });
+    describe('sub-minute time zone offsets', () => {
+      ['use', 'ignore', 'prefer', 'reject'].forEach((offset) => {
+        it(`accepts the exact offset string (offset=${offset})`, () => {
+          const zdt1 = ZonedDateTime.from('1971-01-01T12:00-00:44:30[Africa/Monrovia]', { offset });
+          equal(`${zdt1}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
+          equal(zdt1.offset, '-00:44:30');
+
+          const zdt2 = ZonedDateTime.from('1921-01-01T12:00+00:19:32[Europe/Amsterdam]', { offset });
+          equal(`${zdt2}`, '1921-01-01T12:00:00+00:20[Europe/Amsterdam]');
+          equal(zdt2.offset, '+00:19:32');
+        });
+      });
+      it('prioritizes the offset string with HH:MM precision when offset=use', () => {
+        const zdt1 = ZonedDateTime.from('1971-01-01T12:00-00:45[Africa/Monrovia]', { offset: 'use' });
+        equal(`${zdt1}`, '1971-01-01T12:00:30-00:45[Africa/Monrovia]');
+        equal(zdt1.offset, '-00:44:30');
+
+        const zdt2 = ZonedDateTime.from('1921-01-01T12:00+00:20[Europe/Amsterdam]', { offset: 'use' });
+        equal(`${zdt2}`, '1921-01-01T11:59:32+00:20[Europe/Amsterdam]');
+        equal(zdt2.offset, '+00:19:32');
+      });
+      ['ignore', 'prefer', 'reject'].forEach((offset) => {
+        it(`accepts the offset string with HH:MM precision (offset=${offset})`, () => {
+          const zdt1 = ZonedDateTime.from('1971-01-01T12:00-00:45[Africa/Monrovia]', { offset });
+          equal(`${zdt1}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
+          equal(zdt1.offset, '-00:44:30');
+
+          const zdt2 = ZonedDateTime.from('1921-01-01T12:00+00:20[Europe/Amsterdam]', { offset });
+          equal(`${zdt2}`, '1921-01-01T12:00:00+00:20[Europe/Amsterdam]');
+          equal(zdt2.offset, '+00:19:32');
+        });
+      });
+      it('does not do fuzzy matching on HH:MM offset string passed in a property bag in from()', () => {
+        const properties = { year: 1971, month: 1, day: 1, hour: 12, offset: '-00:45', timeZone: 'Africa/Monrovia' };
+        const zdt1 = ZonedDateTime.from(properties, { offset: 'use' });
+        equal(`${zdt1}`, '1971-01-01T12:00:30-00:45[Africa/Monrovia]');
+
+        const zdt2 = ZonedDateTime.from(properties, { offset: 'ignore' });
+        equal(`${zdt2}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
+
+        const zdt3 = ZonedDateTime.from(properties, { offset: 'prefer' });
+        equal(`${zdt3}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
+
+        throws(() => ZonedDateTime.from(properties, { offset: 'reject' }), RangeError);
+      });
+      it('does not do fuzzy matching on HH:MM offset string passed in a property bag in with()', () => {
+        const zdt = ZonedDateTime.from({ year: 1971, month: 1, day: 1, hour: 12, timeZone: 'Africa/Monrovia' });
+
+        const zdt1 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'use' });
+        equal(`${zdt1}`, '1971-02-01T12:00:30-00:45[Africa/Monrovia]');
+
+        const zdt2 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'ignore' });
+        equal(`${zdt2}`, '1971-02-01T12:00:00-00:45[Africa/Monrovia]');
+
+        const zdt3 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'prefer' });
+        equal(`${zdt3}`, '1971-02-01T12:00:00-00:45[Africa/Monrovia]');
+
+        throws(() => zdt.with({ month: 2, offset: '-00:45' }, { offset: 'reject' }), RangeError);
+      });
+      it('does not truncate offset property to minutes', () => {
+        const zdt = ZonedDateTime.from({ year: 1971, month: 1, day: 1, hour: 12, timeZone: 'Africa/Monrovia' });
+        equal(zdt.offset, '-00:44:30');
+      });
+    });
   });
 
   describe('ZonedDateTime.with()', () => {

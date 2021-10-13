@@ -653,6 +653,21 @@ describe('Duration', () => {
       equal(`${oneDay.add(hours24, { relativeTo: '2019-11-02T00:00' })}`, 'P2D');
       equal(`${oneDay.add(hours24, { relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'P2D');
     });
+    it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
+      throws(() => oneDay.add(hours24, { relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }), RangeError);
+    });
+    it('does not throw on HH:MM rounded offset for ZonedDateTime relativeTo string', () => {
+      equal(`${oneDay.add(hours24, { relativeTo: '1971-01-01T00:00-00:45[Africa/Monrovia]' })}`, 'P2D');
+    });
+    it('throws on HH:MM rounded offset for ZonedDateTime relativeTo property bag', () => {
+      throws(
+        () =>
+          oneDay.add(hours24, {
+            relativeTo: { year: 1971, month: 1, day: 1, offset: '-00:45', timeZone: 'Africa/Monrovia' }
+          }),
+        RangeError
+      );
+    });
     it('at least the required properties must be present in relativeTo', () => {
       throws(() => oneDay.add(hours24, { relativeTo: { month: 11, day: 3 } }), TypeError);
       throws(() => oneDay.add(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
@@ -838,6 +853,21 @@ describe('Duration', () => {
     it('casts relativeTo to PlainDateTime if possible', () => {
       equal(`${oneDay.subtract(hours24, { relativeTo: '2019-11-02T00:00' })}`, 'PT0S');
       equal(`${oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'PT0S');
+    });
+    it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
+      throws(() => oneDay.subtract(hours24, { relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }), RangeError);
+    });
+    it('does not throw on HH:MM rounded offset for ZonedDateTime relativeTo string', () => {
+      equal(`${oneDay.subtract(hours24, { relativeTo: '1971-01-01T00:00-00:45[Africa/Monrovia]' })}`, 'PT0S');
+    });
+    it('throws on HH:MM rounded offset for ZonedDateTime relativeTo property bag', () => {
+      throws(
+        () =>
+          oneDay.subtract(hours24, {
+            relativeTo: { year: 1971, month: 1, day: 1, offset: '-00:45', timeZone: 'Africa/Monrovia' }
+          }),
+        RangeError
+      );
     });
     it('at least the required properties must be present in relativeTo', () => {
       throws(() => oneDay.subtract(hours24, { relativeTo: { month: 11, day: 3 } }), TypeError);
@@ -1101,6 +1131,28 @@ describe('Duration', () => {
       [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
         throws(() => d.round({ smallestUnit: 'seconds', relativeTo }), RangeError);
       });
+    });
+    it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
+      throws(
+        () => d.round({ smallestUnit: 'seconds', relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }),
+        RangeError
+      );
+    });
+    it('does not throw on HH:MM rounded offset for ZonedDateTime relativeTo string', () => {
+      equal(
+        `${d.round({ smallestUnit: 'seconds', relativeTo: '1971-01-01T00:00-00:45[Africa/Monrovia]' })}`,
+        'P5Y5M5W5DT5H5M5S'
+      );
+    });
+    it('throws on HH:MM rounded offset for ZonedDateTime relativeTo property bag', () => {
+      throws(
+        () =>
+          d.round({
+            smallestUnit: 'seconds',
+            relativeTo: { year: 1971, month: 1, day: 1, offset: '-00:45', timeZone: 'Africa/Monrovia' }
+          }),
+        RangeError
+      );
     });
     it('relativeTo object must contain at least the required correctly-spelled properties', () => {
       throws(() => hours25.round({ largestUnit: 'days', relativeTo: { month: 11, day: 3 } }), TypeError);
@@ -1454,6 +1506,23 @@ describe('Duration', () => {
       [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
         throws(() => d.total({ unit: 'months', relativeTo }), RangeError);
       });
+    });
+    it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
+      throws(() => d.total({ unit: 'months', relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }), RangeError);
+    });
+    it('does not throw on HH:MM rounded offset for ZonedDateTime relativeTo string', () => {
+      const oneMonth = Duration.from({ months: 1 });
+      equal(oneMonth.total({ unit: 'months', relativeTo: '1971-01-01T00:00-00:45[Africa/Monrovia]' }), 1);
+    });
+    it('throws on HH:MM rounded offset for ZonedDateTime relativeTo property bag', () => {
+      throws(
+        () =>
+          d.total({
+            unit: 'months',
+            relativeTo: { year: 1971, month: 1, day: 1, offset: '-00:45', timeZone: 'Africa/Monrovia' }
+          }),
+        RangeError
+      );
     });
     it('relativeTo object must contain at least the required correctly-spelled properties', () => {
       throws(() => d.total({ unit: 'months', relativeTo: {} }), TypeError);

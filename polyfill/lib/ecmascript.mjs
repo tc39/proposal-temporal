@@ -743,6 +743,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (relativeTo === undefined) return relativeTo;
 
     let offsetBehaviour = 'option';
+    let matchMinutes = false;
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
     if (ES.Type(relativeTo) === 'Object') {
       if (ES.IsTemporalZonedDateTime(relativeTo) || ES.IsTemporalDateTime(relativeTo)) return relativeTo;
@@ -793,6 +794,7 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+      matchMinutes = true;
     }
     if (timeZone) {
       timeZone = ES.ToTemporalTimeZone(timeZone);
@@ -812,7 +814,8 @@ export const ES = ObjectAssign({}, ES2020, {
         offsetNs,
         timeZone,
         'compatible',
-        'reject'
+        'reject',
+        matchMinutes
       );
       return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
     }
@@ -1283,7 +1286,8 @@ export const ES = ObjectAssign({}, ES2020, {
     offsetNs,
     timeZone,
     disambiguation,
-    offsetOpt
+    offsetOpt,
+    matchMinute
   ) => {
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -1319,7 +1323,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
     for (const candidate of possibleInstants) {
       const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-      if (candidateOffset === offsetNs) return GetSlot(candidate, EPOCHNANOSECONDS);
+      const roundedCandidateOffset = ES.RoundNumberToIncrement(
+        bigInt(candidateOffset),
+        60e9,
+        'halfExpand'
+      ).toJSNumber();
+      if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
+        return GetSlot(candidate, EPOCHNANOSECONDS);
+      }
     }
 
     // the user-provided offset doesn't match any instants for this time
@@ -1336,6 +1347,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ToTemporalZonedDateTime: (item, options = ObjectCreate(null)) => {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+    let matchMinute = false;
     let offsetBehaviour = 'option';
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalZonedDateTime(item)) return item;
@@ -1377,6 +1389,7 @@ export const ES = ObjectAssign({}, ES2020, {
       timeZone = new TemporalTimeZone(ianaName);
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
+      matchMinute = true; // ISO strings may specify offset with less precision
     }
     let offsetNs = 0;
     if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(offset);
@@ -1396,7 +1409,8 @@ export const ES = ObjectAssign({}, ES2020, {
       offsetNs,
       timeZone,
       disambiguation,
-      offsetOpt
+      offsetOpt,
+      matchMinute
     );
     return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   },
