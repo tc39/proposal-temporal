@@ -78,7 +78,8 @@ describe('TimeZone', () => {
     const dtm = Temporal.PlainDateTime.from('1900-01-01T12:00');
     it(`${zone} has ID ${zone}`, () => equal(zone.id, `${zone}`));
     it(`${zone} has offset +00:19:32 in ns`, () => equal(zone.getOffsetNanosecondsFor(inst), 1172000000000));
-    it(`${zone} has offset +00:19:32`, () => equal(zone.getOffsetStringFor(inst), '+00:19:32'));
+    it(`${zone} has offset +00:19:32, does not truncate to HH:MM`, () =>
+      equal(zone.getOffsetStringFor(inst), '+00:19:32'));
     it(`(${zone}).getPlainDateTimeFor(${inst})`, () =>
       equal(`${zone.getPlainDateTimeFor(inst)}`, '1900-01-01T12:19:32'));
     it(`(${zone}).getInstantFor(${dtm})`, () => equal(`${zone.getInstantFor(dtm)}`, '1900-01-01T11:40:28Z'));

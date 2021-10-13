@@ -246,7 +246,8 @@ export class ZonedDateTime {
       offsetNs,
       timeZone,
       disambiguation,
-      offset
+      offset,
+      /* matchMinute = */ false
     );
 
     return ES.CreateTemporalZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
@@ -657,7 +658,8 @@ export class ZonedDateTime {
       offsetNs,
       timeZone,
       'compatible',
-      'prefer'
+      'prefer',
+      /* matchMinute = */ false
     );
 
     return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
