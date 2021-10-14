@@ -117,7 +117,7 @@ d = Temporal.Duration.from('P0D'); // => PT0S
 - `two` (`Temporal.Duration` or value convertible to one): Second duration to compare.
 - `options` (object): An object with properties representing options for the operation.
   The following option is recognized:
-  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
+  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
 
 **Returns:** &minus;1, 0, or 1.
 
@@ -134,10 +134,10 @@ If any of the `years`, `months`, or `weeks` properties of either of the duration
 
 Negative durations are treated as the same as negative numbers for comparison purposes: they are "less" (shorter) than zero.
 
-The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when comparing days with hours. If `relativeTo` is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when comparing days with hours. If `relativeTo` is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
 
-If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
+If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
 
 This function can be used to sort arrays of `Temporal.Duration` objects.
 For example:
@@ -256,7 +256,7 @@ duration = duration.with({ years, months });
 - `other` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following option is recognized:
-  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
+  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
 
@@ -271,10 +271,10 @@ For usage examples and a more complete explanation of how balancing works and wh
 By default, you cannot add durations with years, months, or weeks, as that could be ambiguous depending on the start date.
 To do this, you must provide a start date using the `relativeTo` option.
 
-The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
 
-If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
+If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
 
 Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
@@ -311,7 +311,7 @@ oneAndAHalfMonth.add(oneAndAHalfMonth, { relativeTo: '2000-03-01' }); // => P2M3
 - `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following option is recognized:
-  - `relativeTo` (`Temporal.PlainDateTime`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
+  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
 
@@ -328,10 +328,10 @@ For usage examples and a more complete explanation of how balancing works and wh
 By default, you cannot subtract durations with years, months, or weeks, as that could be ambiguous depending on the start date.
 To do this, you must provide a start date using the `relativeTo` option.
 
-The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDateTime`, then days are always considered equal to 24 hours.
+The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
 
-If `relativeTo` is neither a `Temporal.PlainDateTime` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDateTime.from()`.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDateTime`.
+If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
 
 Subtracting a negative duration is equivalent to adding the absolute value of that duration.
 
@@ -406,8 +406,7 @@ d.abs(); // PT8H30M
     - `roundingMode` (string): How to handle the remainder, if rounding.
       Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
       The default is `'halfExpand'`.
-    - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
-      It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
+    - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which is `duration`, rounded and/or balanced.
 
@@ -455,9 +454,10 @@ The `roundingMode` option controls how the rounding is performed.
   For this reason, `trunc` is recommended for most "round down" use cases.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a `Temporal.PlainDateTime` instance.
-If any other type of value is given, then it will be converted to a `Temporal.PlainDateTime` as if it were passed to `Temporal.PlainDateTime.from(..., { overflow: 'reject' })`.
-A `Temporal.PlainDate` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.PlainDateTime`.
+It may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
+
+If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
 
 Example usage:
 
@@ -531,8 +531,7 @@ quarters; // => 3
     - `unit` (string): The unit of time that will be returned.
       Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
       There is no default; `unit` is required.
-    - `relativeTo` (`Temporal.PlainDateTime` ): The starting point to use when converting between years, months, weeks, and days.
-      It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
+    - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
 
 **Returns:** a floating-point number representing the number of desired units in the `Temporal.Duration`.
 
@@ -545,9 +544,10 @@ Therefore, if `unit` is `'year'`, `'month'`, or `'week'`, or the duration has no
 For this reason, it's required to use the object (not string) form of `totalOf` in these cases.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a `Temporal.PlainDateTime` or `Temporal.ZonedDateTime` instance.
-If any other type is provided, then it will be converted to a `Temporal.PlainDateTime` as if it were passed to `Temporal.PlainDateTime.from(..., { overflow: 'reject' })`.
-A `Temporal.PlainDate` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.PlainDateTime`.
+It may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
+
+If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
 
 Example usage:
 

@@ -480,7 +480,7 @@
     <p>
       The abstract operation ToRelativeTemporalObject examines the value of the `relativeTo` property of its _options_ argument.
       If this is not present, it returns *undefined*.
-      Otherwise, it attempts to return a Temporal.ZonedDateTime instance or Temporal.PlainDateTime instance, in order of preference, by converting the value.
+      Otherwise, it attempts to return a Temporal.ZonedDateTime instance or Temporal.PlainDate instance, in order of preference, by converting the value.
       If neither of those are possible, the operation throws a *RangeError*.
     </p>
     <emu-alg>
@@ -491,10 +491,10 @@
       1. Let _offsetBehaviour_ be ~option~.
       1. Let _matchBehaviour_ be ~match exactly~.
       1. If Type(_value_) is Object, then
-        1. If _value_ has either an [[InitializedTemporalDateTime]] or [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. If _value_ has either an [[InitializedTemporalDate]] or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _value_.
-        1. If _value_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Return ? CreateTemporalDateTime(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], 0, 0, 0, 0, 0, 0, _value_.[[Calendar]]).
+        1. If _value_ has an [[InitializedTemporalDateTime]] internal slot, then
+          1. Return ! CreateTemporalDate(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], _value_.[[Calendar]]).
         1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_value_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_value_, _fieldNames_, «»).
@@ -525,7 +525,7 @@
           1. Let _offsetNs_ be 0.
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
-      1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
+      1. Return ! CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
     </emu-alg>
   </emu-clause>
 
