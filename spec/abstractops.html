@@ -1513,6 +1513,21 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tointegerwithoutrounding" aoid="ToIntegerWithoutRounding">
+    <h1>ToIntegerWithoutRounding ( _argument_ )</h1>
+    <p>
+      The abstract operation ToIntegerWithoutRounding takes argument _argument_.
+      It converts _argument_ to an integer, throwing if doing so would require rounding.
+      It performs the following steps:
+    </p>
+    <emu-alg>
+      1. Let _number_ be ? ToNumber(_argument_).
+      1. If _number_ is *NaN*, *+0*<sub>𝔽</sub>, or *−0*<sub>𝔽</sub> return 0.
+      1. If ! IsIntegralNumber(_number_) is *false*, throw a *RangeError* exception.
+      1. Return ℝ(_number_).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-preparetemporalfields" aoid="PrepareTemporalFields">
     <h1>PrepareTemporalFields ( _fields_, _fieldNames_, _requiredFields_ )</h1>
     <p>

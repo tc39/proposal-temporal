@@ -118,6 +118,18 @@ describe('Duration', () => {
       throws(() => new Duration(1, 1, 1, 1, 1, 1, 1, 1, -1, 1), RangeError);
       throws(() => new Duration(1, 1, 1, 1, 1, 1, 1, 1, 1, -1), RangeError);
     });
+    it('fractional values throw', () => {
+      throws(() => new Duration(1.1), RangeError);
+      throws(() => new Duration(0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 1.1), RangeError);
+      throws(() => new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 1.1), RangeError);
+    });
   });
   describe('from()', () => {
     it('Duration.from(P5Y) is not the same object', () => {
