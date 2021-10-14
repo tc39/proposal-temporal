@@ -396,6 +396,7 @@ export class PlainDateTime {
         options
       );
 
+    const relativeTo = ES.TemporalDateTimeToDate(this);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       ES.RoundDuration(
         years,
@@ -411,7 +412,7 @@ export class PlainDateTime {
         roundingIncrement,
         smallestUnit,
         roundingMode,
-        this
+        relativeTo
       ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,
@@ -470,6 +471,7 @@ export class PlainDateTime {
         options
       );
 
+    const relativeTo = ES.TemporalDateTimeToDate(this);
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       ES.RoundDuration(
         years,
@@ -485,7 +487,7 @@ export class PlainDateTime {
         roundingIncrement,
         smallestUnit,
         ES.NegateTemporalRoundingMode(roundingMode),
-        this
+        relativeTo
       ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       days,

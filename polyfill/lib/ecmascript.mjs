@@ -741,21 +741,8 @@ export const ES = ObjectAssign({}, ES2020, {
     let matchMinutes = false;
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
     if (ES.Type(relativeTo) === 'Object') {
-      if (ES.IsTemporalZonedDateTime(relativeTo) || ES.IsTemporalDateTime(relativeTo)) return relativeTo;
-      if (ES.IsTemporalDate(relativeTo)) {
-        return ES.CreateTemporalDateTime(
-          GetSlot(relativeTo, ISO_YEAR),
-          GetSlot(relativeTo, ISO_MONTH),
-          GetSlot(relativeTo, ISO_DAY),
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          GetSlot(relativeTo, CALENDAR)
-        );
-      }
+      if (ES.IsTemporalZonedDateTime(relativeTo) || ES.IsTemporalDate(relativeTo)) return relativeTo;
+      if (ES.IsTemporalDateTime(relativeTo)) return ES.TemporalDateTimeToDate(relativeTo);
       calendar = ES.GetTemporalCalendarWithISODefault(relativeTo);
       const fieldNames = ES.CalendarFields(calendar, [
         'day',
@@ -814,18 +801,7 @@ export const ES = ObjectAssign({}, ES2020, {
       );
       return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
     }
-    return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    return ES.CreateTemporalDate(year, month, day, calendar);
   },
   ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
     if (ALLOWED_UNITS.indexOf(largestUnit) > ALLOWED_UNITS.indexOf(smallestUnit)) {
@@ -2721,7 +2697,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let calendar;
     if (relativeTo) {
-      relativeTo = ES.ToTemporalDateTime(relativeTo);
+      relativeTo = ES.ToTemporalDate(relativeTo);
       calendar = GetSlot(relativeTo, CALENDAR);
     }
 
@@ -2809,7 +2785,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     let calendar;
     if (relativeTo) {
-      relativeTo = ES.ToTemporalDateTime(relativeTo);
+      relativeTo = ES.ToTemporalDate(relativeTo);
       calendar = GetSlot(relativeTo, CALENDAR);
     }
 
@@ -3414,28 +3390,22 @@ export const ES = ObjectAssign({}, ES2020, {
         ns1 + ns2,
         largestUnit
       ));
-    } else if (ES.IsTemporalDateTime(relativeTo)) {
+    } else if (ES.IsTemporalDate(relativeTo)) {
       const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
       const calendar = GetSlot(relativeTo, CALENDAR);
 
-      const datePart = ES.CreateTemporalDate(
-        GetSlot(relativeTo, ISO_YEAR),
-        GetSlot(relativeTo, ISO_MONTH),
-        GetSlot(relativeTo, ISO_DAY),
-        calendar
-      );
       const dateDuration1 = new TemporalDuration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
       const dateDuration2 = new TemporalDuration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
       const dateAdd = ES.GetMethod(calendar, 'dateAdd');
       const firstAddOptions = ObjectCreate(null);
-      const intermediate = ES.CalendarDateAdd(calendar, datePart, dateDuration1, firstAddOptions, dateAdd);
+      const intermediate = ES.CalendarDateAdd(calendar, relativeTo, dateDuration1, firstAddOptions, dateAdd);
       const secondAddOptions = ObjectCreate(null);
       const end = ES.CalendarDateAdd(calendar, intermediate, dateDuration2, secondAddOptions, dateAdd);
 
       const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
       const differenceOptions = ObjectCreate(null);
       differenceOptions.largestUnit = dateLargestUnit;
-      ({ years, months, weeks, days } = ES.CalendarDateUntil(calendar, datePart, end, differenceOptions));
+      ({ years, months, weeks, days } = ES.CalendarDateUntil(calendar, relativeTo, end, differenceOptions));
       // Signs of date part and time part may not agree; balance them together
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
         days,
@@ -3758,19 +3728,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const options = ObjectCreate(null);
     const later = ES.CalendarDateAdd(calendar, relativeTo, duration, options);
     const days = ES.DaysUntil(relativeTo, later);
-    relativeTo = ES.CreateTemporalDateTime(
-      GetSlot(later, ISO_YEAR),
-      GetSlot(later, ISO_MONTH),
-      GetSlot(later, ISO_DAY),
-      GetSlot(relativeTo, ISO_HOUR),
-      GetSlot(relativeTo, ISO_MINUTE),
-      GetSlot(relativeTo, ISO_SECOND),
-      GetSlot(relativeTo, ISO_MILLISECOND),
-      GetSlot(relativeTo, ISO_MICROSECOND),
-      GetSlot(relativeTo, ISO_NANOSECOND),
-      GetSlot(relativeTo, CALENDAR)
-    );
-    return { relativeTo, days };
+    return { relativeTo: later, days };
   },
   MoveRelativeZonedDateTime: (relativeTo, years, months, weeks, days) => {
     const timeZone = GetSlot(relativeTo, TIME_ZONE);
@@ -3933,13 +3891,14 @@ export const ES = ObjectAssign({}, ES2020, {
     if (relativeTo) {
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
         zdtRelative = relativeTo;
-        relativeTo = ES.BuiltinTimeZoneGetPlainDateTimeFor(
+        const pdt = ES.BuiltinTimeZoneGetPlainDateTimeFor(
           GetSlot(relativeTo, TIME_ZONE),
           GetSlot(relativeTo, INSTANT),
           GetSlot(relativeTo, CALENDAR)
         );
-      } else if (!ES.IsTemporalDateTime(relativeTo)) {
-        throw new TypeError('starting point must be PlainDateTime or ZonedDateTime');
+        relativeTo = ES.TemporalDateTimeToDate(pdt);
+      } else if (!ES.IsTemporalDate(relativeTo)) {
+        throw new TypeError('starting point must be PlainDate or ZonedDateTime');
       }
       calendar = GetSlot(relativeTo, CALENDAR);
     }

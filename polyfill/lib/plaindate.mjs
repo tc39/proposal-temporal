@@ -161,18 +161,6 @@ export class PlainDate {
     if (smallestUnit === 'day' && roundingIncrement === 1) return result;
 
     let { years, months, weeks, days } = result;
-    const relativeTo = ES.CreateTemporalDateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      GetSlot(this, CALENDAR)
-    );
     ({ years, months, weeks, days } = ES.RoundDuration(
       years,
       months,
@@ -187,7 +175,7 @@ export class PlainDate {
       roundingIncrement,
       smallestUnit,
       roundingMode,
-      relativeTo
+      this
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
@@ -218,18 +206,6 @@ export class PlainDate {
     if (smallestUnit === 'day' && roundingIncrement === 1) {
       return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
     }
-    const relativeTo = ES.CreateTemporalDateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      GetSlot(this, CALENDAR)
-    );
     ({ years, months, weeks, days } = ES.RoundDuration(
       years,
       months,
@@ -244,7 +220,7 @@ export class PlainDate {
       roundingIncrement,
       smallestUnit,
       ES.NegateTemporalRoundingMode(roundingMode),
-      relativeTo
+      this
     ));
 
     return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);

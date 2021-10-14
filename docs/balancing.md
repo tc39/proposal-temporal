@@ -62,7 +62,7 @@ Finally, in time zones that use Daylight Saving Time (DST) days are not always 2
 
 Therefore, any `Duration` object with nonzero days, weeks, months, or years can refer to a different length of time depending on the specific date and time that it starts from.
 To handle this potential ambiguity, the `relativeTo` option is used to provide a starting point.
-`relativeTo` must be (or be parseable into) a `Temporal.ZonedDateTime` for timezone-specific durations or `Temporal.PlainDateTime` for timezone-neutral data.
+`relativeTo` must be (or be parseable into) a `Temporal.ZonedDateTime` for timezone-specific durations or `Temporal.PlainDate` for timezone-neutral data.
 `relativeTo` is required when balancing to or from weeks, months, or years.
 
 ```javascript
