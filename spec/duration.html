@@ -39,16 +39,16 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _y_ be ? ToIntegerThrowOnInfinity(_years_).
-        1. Let _mo_ be ? ToIntegerThrowOnInfinity(_months_).
-        1. Let _w_ be ? ToIntegerThrowOnInfinity(_weeks_).
-        1. Let _d_ be ? ToIntegerThrowOnInfinity(_days_).
-        1. Let _h_ be ? ToIntegerThrowOnInfinity(_hours_).
-        1. Let _m_ be ? ToIntegerThrowOnInfinity(_minutes_).
-        1. Let _s_ be ? ToIntegerThrowOnInfinity(_seconds_).
-        1. Let _ms_ be ? ToIntegerThrowOnInfinity(_milliseconds_).
-        1. Let _mis_ be ? ToIntegerThrowOnInfinity(_microseconds_).
-        1. Let _ns_ be ? ToIntegerThrowOnInfinity(_nanoseconds_).
+        1. Let _y_ be ? ToIntegerWithoutRounding(_years_).
+        1. Let _mo_ be ? ToIntegerWithoutRounding(_months_).
+        1. Let _w_ be ? ToIntegerWithoutRounding(_weeks_).
+        1. Let _d_ be ? ToIntegerWithoutRounding(_days_).
+        1. Let _h_ be ? ToIntegerWithoutRounding(_hours_).
+        1. Let _m_ be ? ToIntegerWithoutRounding(_minutes_).
+        1. Let _s_ be ? ToIntegerWithoutRounding(_seconds_).
+        1. Let _ms_ be ? ToIntegerWithoutRounding(_milliseconds_).
+        1. Let _mis_ be ? ToIntegerWithoutRounding(_microseconds_).
+        1. Let _ns_ be ? ToIntegerWithoutRounding(_nanoseconds_).
         1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -708,9 +708,7 @@
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to 0.
           1. Else,
             1. Set _any_ to *true*.
-            1. Let _val_ be ? ToNumber(_val_).
-            1. If ! IsIntegralNumber(_val_) is *false*, then
-              1. Throw a *RangeError* exception.
+            1. Let _val_ be 𝔽(? ToIntegerWithoutRounding(_val_)).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _val_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
@@ -785,9 +783,7 @@
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. Set _value_ to ? ToNumber(_value_).
-            1. If ! IsIntegralNumber(_value_) is *false*, then
-              1. Throw a *RangeError* exception.
+            1. Set _value_ to 𝔽(? ToIntegerWithoutRounding(_value_)).
             1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
