@@ -1161,7 +1161,7 @@ describe('DateTime', () => {
       equal(`${dt.round({ smallestUnit: 'second' })}`, '1976-11-18T14:23:30');
     });
     it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
-      const dt2 = PlainDateTime.from('-000099-12-15T12:00:00.5Z');
+      const dt2 = PlainDateTime.from('-000099-12-15T12:00:00.5');
       const smallestUnit = 'second';
       equal(`${dt2.round({ smallestUnit, roundingMode: 'ceil' })}`, '-000099-12-15T12:00:01');
       equal(`${dt2.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00:00');
@@ -1303,23 +1303,27 @@ describe('DateTime', () => {
         throws(() => PlainDateTime.from('2020-13-34T24:60', { overflow: 'constrain' }), RangeError);
       });
     });
+    it('Z not supported', () => {
+      throws(() => PlainDateTime.from('2019-10-01T09:00:00Z'), RangeError);
+      throws(() => PlainDateTime.from('2019-10-01T09:00:00Z[Europe/Berlin]'), RangeError);
+    });
     it('variant time separators', () => {
-      equal(`${PlainDateTime.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23:00');
-      equal(`${PlainDateTime.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23:00');
+      equal(`${PlainDateTime.from('1976-11-18t15:23')}`, '1976-11-18T15:23:00');
+      equal(`${PlainDateTime.from('1976-11-18 15:23')}`, '1976-11-18T15:23:00');
     });
     it('any number of decimal places', () => {
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.1');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.12');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123Z')}`, '1976-11-18T15:23:30.123');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.1234');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.12345');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123456Z')}`, '1976-11-18T15:23:30.123456');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.1234567');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.12345678');
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1')}`, '1976-11-18T15:23:30.1');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12')}`, '1976-11-18T15:23:30.12');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123')}`, '1976-11-18T15:23:30.123');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1234')}`, '1976-11-18T15:23:30.1234');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12345')}`, '1976-11-18T15:23:30.12345');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123456')}`, '1976-11-18T15:23:30.123456');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.1234567')}`, '1976-11-18T15:23:30.1234567');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.12345678')}`, '1976-11-18T15:23:30.12345678');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30.123456789')}`, '1976-11-18T15:23:30.123456789');
     });
     it('variant decimal separator', () => {
-      equal(`${PlainDateTime.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.12');
+      equal(`${PlainDateTime.from('1976-11-18T15:23:30,12')}`, '1976-11-18T15:23:30.12');
     });
     it('variant minus sign', () => {
       equal(`${PlainDateTime.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T15:23:30.12');

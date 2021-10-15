@@ -335,9 +335,11 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond = ES.ToInteger(fraction.slice(6, 9));
       calendar = match[15];
     } else {
-      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar } = ES.ParseISODateTime(isoString, {
+      let z;
+      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } = ES.ParseISODateTime(isoString, {
         zoneRequired: false
       }));
+      if (z) throw new RangeError('Z designator not supported for PlainTime');
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
   },
@@ -351,7 +353,9 @@ export const ES = ObjectAssign({}, ES2020, {
       month = ES.ToInteger(match[2]);
       calendar = match[3];
     } else {
-      ({ year, month, calendar, day: referenceISODay } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      let z;
+      ({ year, month, calendar, day: referenceISODay, z } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (z) throw new RangeError('Z designator not supported for PlainYearMonth');
     }
     return { year, month, calendar, referenceISODay };
   },
@@ -362,7 +366,9 @@ export const ES = ObjectAssign({}, ES2020, {
       month = ES.ToInteger(match[1]);
       day = ES.ToInteger(match[2]);
     } else {
-      ({ month, day, calendar, year: referenceISOYear } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      let z;
+      ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      if (z) throw new RangeError('Z designator not supported for PlainMonthDay');
     }
     return { month, day, calendar, referenceISOYear };
   },
@@ -1017,7 +1023,8 @@ export const ES = ObjectAssign({}, ES2020, {
       return ES.DateFromFields(calendar, fields, options);
     }
     ES.ToTemporalOverflow(options); // validate and ignore
-    let { year, month, day, calendar } = ES.ParseTemporalDateString(ES.ToString(item));
+    let { year, month, day, calendar, z } = ES.ParseTemporalDateString(ES.ToString(item));
+    if (z) throw new RangeError('Z designator not supported for PlainDate');
     const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
     return new TemporalPlainDate(year, month, day, calendar); // include validation
   },
@@ -1083,8 +1090,10 @@ export const ES = ObjectAssign({}, ES2020, {
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
     } else {
       ES.ToTemporalOverflow(options); // validate and ignore
-      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar } =
+      let z;
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } =
         ES.ParseTemporalDateTimeString(ES.ToString(item)));
+      if (z) throw new RangeError('Z designator not supported for PlainDateTime');
       ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (calendar === undefined) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);

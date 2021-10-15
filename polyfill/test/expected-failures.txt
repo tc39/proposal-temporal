@@ -115,3 +115,6 @@ intl402/Temporal/ZonedDateTime/prototype/eraYear/timezone-getoffsetnanosecondsfo
 
 # https://github.com/tc39/test262/pull/3316
 intl402/Temporal/TimeZone/from/argument-invalid.js
+
+# Waiting on submitting tests for https://github.com/tc39/proposal-temporal/pull/1874
+built-ins/Temporal/PlainMonthDay/from/fields-string.js

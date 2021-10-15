@@ -26,8 +26,12 @@ describe('YearMonth', () => {
     it('ym.monthsInYear is 12', () => equal(ym.monthsInYear, 12));
     describe('.from()', () => {
       it('YearMonth.from(2019-10) == 2019-10', () => equal(`${PlainYearMonth.from('2019-10')}`, '2019-10'));
-      it('YearMonth.from(2019-10-01T09:00:00Z) == 2019-10', () =>
-        equal(`${PlainYearMonth.from('2019-10-01T09:00:00Z')}`, '2019-10'));
+      it('YearMonth.from(2019-10-01T09:00:00+00:00) == 2019-10', () =>
+        equal(`${PlainYearMonth.from('2019-10-01T09:00:00+00:00')}`, '2019-10'));
+      it('Z not supported', () => {
+        throws(() => PlainYearMonth.from('2019-10-01T09:00:00Z'), RangeError);
+        throws(() => PlainYearMonth.from('2019-10-01T09:00:00Z[Europe/Berlin]'), RangeError);
+      });
       it("YearMonth.from('1976-11') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11')}`, '1976-11'));
       it("YearMonth.from('1976-11-18') == (1976-11)", () => equal(`${PlainYearMonth.from('1976-11-18')}`, '1976-11'));
       it('can be constructed with monthCode and without month', () =>

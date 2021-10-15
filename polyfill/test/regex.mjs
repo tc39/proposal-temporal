@@ -160,7 +160,7 @@ describe('fromString regex', () => {
       test('1976-11-18T15', [1976, 11, 18, 15]);
       test('1976-11-18', [1976, 11, 18]);
       // Representations with calendar
-      ['', 'Z', '+01:00[Europe/Vienna]', '+01:00[Custom/Vienna]', '[Europe/Vienna]'].forEach((zoneString) =>
+      ['', '+01:00[Europe/Vienna]', '+01:00[Custom/Vienna]', '[Europe/Vienna]'].forEach((zoneString) =>
         test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [1976, 11, 18, 15, 23, 30, 123, 456, 789])
       );
     });
@@ -240,7 +240,7 @@ describe('fromString regex', () => {
     test('1512-11-18', [1512, 11, 18]);
     test('15121118', [1512, 11, 18]);
     // Representations with calendar
-    ['', 'Z', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
+    ['', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
       test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [1976, 11, 18])
     );
     test('1976-11-18[u-ca=iso8601]', [1976, 11, 18]);
@@ -304,7 +304,7 @@ describe('fromString regex', () => {
       test(`15${zoneStr}`, [15])
     );
     // Representations with calendar
-    ['', 'Z', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
+    ['', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
       test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [15, 23, 30, 123, 456, 789])
     );
     test('15:23:30.123456789[u-ca=iso8601]', [15, 23, 30, 123, 456, 789]);
@@ -357,7 +357,7 @@ describe('fromString regex', () => {
       '1976-11-18T15'
     ].forEach((str) => test(str, [1976, 11]));
     // Unicode minus sign
-    test('\u2212009999-11-18T15:23:30.1234Z', [-9999, 11]);
+    test('\u2212009999-11-18T15:23:30.1234', [-9999, 11]);
     // Date-only forms
     test('1976-11-18', [1976, 11]);
     test('19761118', [1976, 11]);
@@ -377,7 +377,7 @@ describe('fromString regex', () => {
     test('1512-11', [1512, 11]);
     test('151211', [1512, 11]);
     // Representations with calendar
-    ['', 'Z', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
+    ['', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
       test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [1976, 11])
     );
     test('1976-11-01[u-ca=iso8601]', [1976, 11]);
@@ -453,7 +453,7 @@ describe('fromString regex', () => {
     test('--11-18', [11, 18]);
     test('--1118', [11, 18]);
     // Representations with calendar
-    ['', 'Z', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
+    ['', '+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]'].forEach((zoneString) =>
       test(`1976-11-18T15:23:30.123456789${zoneString}[u-ca=iso8601]`, [11, 18])
     );
     test('1972-11-18[u-ca=iso8601]', [11, 18]);

@@ -1243,6 +1243,8 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDateString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
+      1. If _isoString_ contains a |UTCDesignator|, then
+        1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
         [[Year]]: _result_.[[Year]],
@@ -1261,6 +1263,8 @@
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+        1. Throw a *RangeError* exception.
+      1. If _isoString_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return _result_.
@@ -1340,6 +1344,8 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalMonthDayString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
+      1. If _isoString_ contains a |UTCDesignator|, then
+        1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _year_ be _result_.[[Year]].
       1. If no part of _isoString_ is produced by the |DateYear| production, then
@@ -1398,6 +1404,8 @@
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+        1. Throw a *RangeError* exception.
+      1. If _isoString_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
@@ -1467,6 +1475,8 @@
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalYearMonthString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+        1. Throw a *RangeError* exception.
+      1. If _isoString_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
