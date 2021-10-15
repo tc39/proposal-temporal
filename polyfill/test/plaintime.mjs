@@ -966,19 +966,23 @@ describe('Time', () => {
       const t = PlainTime.from('2020-02-12T11:42:00+01:00[Europe/Amsterdam]');
       notEqual(PlainTime.from(t), t);
     });
+    it('Z not supported', () => {
+      throws(() => PlainTime.from('2019-10-01T09:00:00Z'), RangeError);
+      throws(() => PlainTime.from('2019-10-01T09:00:00Z[Europe/Berlin]'), RangeError);
+    });
     it('any number of decimal places', () => {
-      equal(`${PlainTime.from('1976-11-18T15:23:30.1Z')}`, '15:23:30.1');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.12Z')}`, '15:23:30.12');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.123Z')}`, '15:23:30.123');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.1234Z')}`, '15:23:30.1234');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.12345Z')}`, '15:23:30.12345');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.123456Z')}`, '15:23:30.123456');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.1234567Z')}`, '15:23:30.1234567');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.12345678Z')}`, '15:23:30.12345678');
-      equal(`${PlainTime.from('1976-11-18T15:23:30.123456789Z')}`, '15:23:30.123456789');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.1')}`, '15:23:30.1');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.12')}`, '15:23:30.12');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.123')}`, '15:23:30.123');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.1234')}`, '15:23:30.1234');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.12345')}`, '15:23:30.12345');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.123456')}`, '15:23:30.123456');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.1234567')}`, '15:23:30.1234567');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.12345678')}`, '15:23:30.12345678');
+      equal(`${PlainTime.from('1976-11-18T15:23:30.123456789')}`, '15:23:30.123456789');
     });
     it('variant decimal separator', () => {
-      equal(`${PlainTime.from('1976-11-18T15:23:30,12Z')}`, '15:23:30.12');
+      equal(`${PlainTime.from('1976-11-18T15:23:30,12')}`, '15:23:30.12');
     });
     it('variant minus sign', () => {
       equal(`${PlainTime.from('1976-11-18T15:23:30.12\u221202:00')}`, '15:23:30.12');
