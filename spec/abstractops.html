@@ -476,7 +476,7 @@
         1. Let _string_ be ? ToString(_value_).
         1. Let _result_ be ? ParseTemporalRelativeToString(_string_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
-        1. Let _offsetString_ be _result_.[[TimeZoneOffset]].
+        1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
         1. Let _timeZoneName_ be _result_.[[TimeZoneIANAName]].
         1. If _timeZoneName_ is not *undefined*, then
           1. If ParseText(! StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is not a List of errors, then
@@ -1412,11 +1412,11 @@
       1. If _isoString_ satisfies the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Let _timeZoneResult_ be ! ParseTemporalTimeZoneString(_isoString_).
         1. Let _z_ be _timeZoneResult_.[[Z]].
-        1. Let _offset_ be _timeZoneResult_.[[Offset]].
+        1. Let _offsetString_ be _timeZoneResult_.[[OffsetString]].
         1. Let _timeZone_ be _timeZoneResult_.[[Name]].
       1. Else,
         1. Let _z_ be *false*.
-        1. Let _offset_ be *undefined*.
+        1. Let _offsetString_ be *undefined*.
         1. Let _timeZone_ be *undefined*.
       1. Return the Record {
           [[Year]]: _result_.[[Year]],
@@ -1430,7 +1430,7 @@
           [[Nanosecond]]: _result_.[[Nanosecond]],
           [[Calendar]]: _result_.[[Calendar]],
           [[TimeZoneZ]]: _z_,
-          [[TimeZoneOffset]]: _offset_,
+          [[TimeZoneOffsetString]]: _offsetString_,
           [[TimeZoneIANAName]]: _timeZone_
         }.
     </emu-alg>
