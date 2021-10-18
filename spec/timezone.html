@@ -138,14 +138,12 @@
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Set _identifier_ to ? ToString(_identifier_).
-        1. If _identifier_ satisfies the syntax of a |TimeZoneNumericUTCOffset| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-          1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_identifier_).
-          1. Let _canonical_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
-        1. Else,
+        1. Let _parseResult_ be ParseText(! StringToCodePoints(_identifier_), |TimeZoneNumericUTCOffset|).
+        1. If _parseResult_ is a List of errors, then
           1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
             1. Throw a *RangeError* exception.
-          1. Let _canonical_ be ! CanonicalizeTimeZoneName(_identifier_).
-        1. Return ? CreateTemporalTimeZone(_canonical_, NewTarget).
+          1. Set _identifier_ to ! CanonicalizeTimeZoneName(_identifier_).
+        1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
