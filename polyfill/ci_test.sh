@@ -13,6 +13,11 @@ if [ "x$COVERAGE" = xyes ]; then
   TRANSFORMER_ARG="--transformer ../../test/transform.test262.js"
 fi
 
+if [ ! -d "$(dirname "$0")"/./test262/test/ ]; then
+  echo "Missing Test262 directory. Try initializing the submodule with 'git submodule init && git submodule update'";
+  exit 1;
+fi
+
 pushd test262/test/
 
 if [ "$(uname)" = 'Darwin' ]; then
