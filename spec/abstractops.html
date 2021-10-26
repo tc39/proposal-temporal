@@ -97,6 +97,7 @@
   <emu-clause id="sec-temporal-durationhandlefractions" aoid="DurationHandleFractions">
     <h1>DurationHandleFractions ( _fHours_, _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
     <emu-alg>
+      1. Assert: _fHours_, _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integers.
       1. If _fHours_ is not equal to 0, then
         1. If any of _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ is not 0, throw a *RangeError* exception.
         1. Let _mins_ be _fHours_ × 60.
@@ -648,6 +649,7 @@
   <emu-clause id="sec-temporal-constraintorange" aoid="ConstrainToRange">
     <h1>ConstrainToRange ( _x_, _minimum_, _maximum_ )</h1>
     <emu-alg>
+      1. Assert: _x_, _minimum_ and _maximum_ are mathematical values.
       1. Return min(max(_x_, _minimum_), _maximum_).
     </emu-alg>
   </emu-clause>
@@ -655,6 +657,7 @@
   <emu-clause id="sec-temporal-roundtowardszero" aoid="RoundTowardsZero">
     <h1>RoundTowardsZero ( _x_ )</h1>
     <emu-alg>
+      1. Assert: _x_ is a mathematical value.
       1. Return the mathematical value that is the same sign as _x_ and whose magnitude is floor(abs(_x_)).
     </emu-alg>
   </emu-clause>
@@ -662,6 +665,7 @@
   <emu-clause id="sec-temporal-roundhalfawayfromzero" aoid="RoundHalfAwayFromZero">
     <h1>RoundHalfAwayFromZero ( _x_ )</h1>
     <emu-alg>
+      1. Assert: _x_ is a mathematical value.
       1. Return the mathematical value that is closest to _x_ and is an integer.
          If two integers are equally close to _x_, then the result is the integer that is farther away from 0. If _x_ is already an integer, then the result is _x_.
     </emu-alg>
