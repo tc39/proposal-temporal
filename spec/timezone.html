@@ -434,6 +434,7 @@
         The abstract operation GetISOPartsFromEpoch returns the components of a date corresponding to the given number of nanoseconds since the Unix epoch in UTC.
       </p>
       <emu-alg>
+        1. Assert: _epochNanoseconds_ is an integer.
         1. Let _remainderNs_ be remainder(_epochNanoseconds_, 10<sup>6</sup>).
         1. Let _epochMilliseconds_ be (_epochNanoseconds_ − _remainderNs_) / 10<sup>6</sup>.
         1. Let _year_ be ! YearFromTime(_epochMilliseconds_).
@@ -590,8 +591,9 @@
         It observably calls the given _timeZone_'s `getOffsetNanosecondsFor` method.
       </p>
       <emu-alg>
+        1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
-        1. Let _result_ be ! GetISOPartsFromEpoch(_instant_.[[Nanoseconds]]).
+        1. Let _result_ be ! GetISOPartsFromEpoch(ℝ(_instant_.[[Nanoseconds]])).
         1. Set _result_ to ! BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
       </emu-alg>
