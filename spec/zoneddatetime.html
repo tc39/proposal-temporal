@@ -1122,6 +1122,7 @@
           1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
           1. Append *"timeZone"* to _fieldNames_.
+          1. Append *"offset"* to _fieldNames_.
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
           1. Let _timeZone_ be ? Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
