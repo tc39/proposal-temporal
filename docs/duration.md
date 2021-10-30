@@ -58,7 +58,7 @@ Any missing or `undefined` numerical arguments are taken to be zero, and all non
 Any non-zero arguments must all have the same sign.
 
 Use this constructor directly if you have the correct parameters already as numerical values.
-Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows controlling the overflow behaviour.
+Otherwise `Temporal.Duration.from()` is probably more convenient because it accepts more kinds of input and allows controlling the overflow behavior.
 
 Usage examples:
 
@@ -420,7 +420,7 @@ For usage examples and a more complete explanation of how balancing works, see [
 
 A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given, means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
 For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'day'`.
-This behavior implies that the default balancing behaviour of this method to not 'grow' the duration beyond its current largest unit unless needed for rounding.
+This behavior implies that the default balancing behavior of this method to not "grow" the duration beyond its current largest unit unless needed for rounding.
 
 The `smallestUnit` option determines the unit to round to.
 For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
