@@ -29,7 +29,7 @@ It can also be combined with a `Temporal.PlainTime` to yield a "zoneless" `Tempo
 **Returns:** a new `Temporal.PlainDate` object.
 
 Use this constructor if you have the correct parameters for the date already as individual number values in the ISO 8601 calendar.
-Otherwise, `Temporal.PlainDate.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behaviour, is probably more convenient.
+Otherwise, `Temporal.PlainDate.from()`, which accepts more kinds of input, allows inputting dates in different calendar reckonings, and allows controlling the overflow behavior, is probably more convenient.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.

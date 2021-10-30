@@ -285,7 +285,7 @@ If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converte
 Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
-Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
+Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
 During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.PlainDateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
 ### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant | string) : Temporal.Instant
