@@ -1781,10 +1781,7 @@ export const ES = ObjectAssign({}, ES2020, {
     );
   },
   GetOffsetNanosecondsFor: (timeZone, instant) => {
-    let getOffsetNanosecondsFor = ES.GetMethod(timeZone, 'getOffsetNanosecondsFor');
-    if (getOffsetNanosecondsFor === undefined) {
-      getOffsetNanosecondsFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
-    }
+    const getOffsetNanosecondsFor = ES.GetMethod(timeZone, 'getOffsetNanosecondsFor');
     const offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [instant]);
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
