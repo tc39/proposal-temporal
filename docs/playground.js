@@ -4693,10 +4693,14 @@
     monthsInYear: function monthsInYear() {
       return 12;
     },
-    minimumMonthLength: function minimumMonthLength() {
+    minimumMonthLength: function
+      /* calendarDate */
+    minimumMonthLength() {
       return 29;
     },
-    maximumMonthLength: function maximumMonthLength() {
+    maximumMonthLength: function
+      /* calendarDate */
+    maximumMonthLength() {
       return 30;
     },
     DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
@@ -5438,10 +5442,14 @@
     monthsInYear: function monthsInYear(calendarDate, cache) {
       return this.inLeapYear(calendarDate, cache) ? 13 : 12;
     },
-    minimumMonthLength: function minimumMonthLength() {
+    minimumMonthLength: function
+      /* calendarDate */
+    minimumMonthLength() {
       return 29;
     },
-    maximumMonthLength: function maximumMonthLength() {
+    maximumMonthLength: function
+      /* calendarDate */
+    maximumMonthLength() {
       return 30;
     },
     getMonthList: function getMonthList(calendarYear, cache) {
@@ -13452,6 +13460,7 @@
         });
         mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
         var options = ObjectCreate$1(null);
+        options.overflow = 'reject';
         return ES.DateFromFields(calendar, mergedFields, options);
       }
     }, {
