@@ -326,7 +326,8 @@ describe('Intl', () => {
           'persian: 10/11/1378 AP\n' +
           'roc: 1/1/89 Minguo'
       };
-      equal(year2000Content, year2000Snapshots[`node${nodeVersion}`]);
+      year2000Snapshots.other = year2000Snapshots.node16;
+      equal(year2000Content, year2000Snapshots[`node${nodeVersion}`] || year2000Snapshots.other);
 
       const year1Snapshots = {
         node12:
@@ -390,7 +391,8 @@ describe('Intl', () => {
           'persian: 10/11/-621 AP\n' +
           'roc: 1/3/1911 Before R.O.C.'
       };
-      equal(year1Content, year1Snapshots[`node${nodeVersion}`]);
+      year1Snapshots.other = year1Snapshots.node16;
+      equal(year1Content, year1Snapshots[`node${nodeVersion}`] || year1Snapshots.other);
     });
 
     const fromWithCases = {
