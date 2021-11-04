@@ -14762,9 +14762,21 @@
           throw new TypeError('invalid zoned-date-time-like');
         }
 
-        var fields = ES.ToTemporalZonedDateTimeFields(this, fieldNames);
+        var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset'], ['timeZone']]; // Add extra fields from the calendar at the end
+
+        fieldNames.forEach(function (fieldName) {
+          if (!entries.some(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 1),
+                name = _ref2[0];
+
+            return name === fieldName;
+          })) {
+            entries.push([fieldName, undefined]);
+          }
+        });
+        var fields = ES.PrepareTemporalFields(this, entries);
         fields = ES.CalendarMergeFields(calendar, fields, props);
-        fields = ES.ToTemporalZonedDateTimeFields(fields, fieldNames);
+        fields = ES.PrepareTemporalFields(fields, entries);
 
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
             year = _ES$InterpretTemporal.year,
