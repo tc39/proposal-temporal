@@ -6122,6 +6122,19 @@
     IsTemporalZonedDateTime: function IsTemporalZonedDateTime(item) {
       return HasSlot(item, EPOCHNANOSECONDS, TIME_ZONE, CALENDAR);
     },
+    RejectObjectWithCalendarOrTimeZone: function RejectObjectWithCalendarOrTimeZone(item) {
+      if (HasSlot(item, CALENDAR) || HasSlot(item, TIME_ZONE)) {
+        throw new TypeError('with() does not support a calendar or timeZone property');
+      }
+
+      if (item.calendar !== undefined) {
+        throw new TypeError('with() does not support a calendar property');
+      }
+
+      if (item.timeZone !== undefined) {
+        throw new TypeError('with() does not support a timeZone property');
+      }
+    },
     TemporalTimeZoneFromString: function TemporalTimeZoneFromString(stringIdent) {
       var _ES$ParseTemporalTime = ES.ParseTemporalTimeZoneString(stringIdent),
           ianaName = _ES$ParseTemporalTime.ianaName,
@@ -11875,18 +11888,7 @@
           throw new TypeError('invalid argument');
         }
 
-        if (HasSlot(temporalDateLike, CALENDAR) || HasSlot(temporalDateLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalDateLike.calendar !== undefined) {
-          throw new TypeError('with() does not support a calendar property');
-        }
-
-        if (temporalDateLike.timeZone !== undefined) {
-          throw new TypeError('with() does not support a timeZone property');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalDateLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalDateLike, fieldNames);
@@ -12350,18 +12352,7 @@
           throw new TypeError('invalid argument');
         }
 
-        if (HasSlot(temporalDateTimeLike, CALENDAR) || HasSlot(temporalDateTimeLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalDateTimeLike.calendar !== undefined) {
-          throw new TypeError('with() does not support a calendar property');
-        }
-
-        if (temporalDateTimeLike.timeZone !== undefined) {
-          throw new TypeError('with() does not support a timeZone property');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalDateTimeLike);
         options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
@@ -13352,18 +13343,7 @@
           throw new TypeError('invalid argument');
         }
 
-        if (HasSlot(temporalMonthDayLike, CALENDAR) || HasSlot(temporalMonthDayLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalMonthDayLike.calendar !== undefined) {
-          throw new TypeError('with() does not support a calendar property');
-        }
-
-        if (temporalMonthDayLike.timeZone !== undefined) {
-          throw new TypeError('with() does not support a timeZone property');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
@@ -13700,18 +13680,7 @@
           throw new TypeError('invalid argument');
         }
 
-        if (HasSlot(temporalTimeLike, CALENDAR) || HasSlot(temporalTimeLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalTimeLike.calendar !== undefined) {
-          throw new TypeError('with() does not support a calendar property');
-        }
-
-        if (temporalTimeLike.timeZone !== undefined) {
-          throw new TypeError('with() does not support a timeZone property');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalTimeLike);
         options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
         var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
@@ -14179,18 +14148,7 @@
           throw new TypeError('invalid argument');
         }
 
-        if (HasSlot(temporalYearMonthLike, CALENDAR) || HasSlot(temporalYearMonthLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalYearMonthLike.calendar !== undefined) {
-          throw new TypeError('with() does not support a calendar property');
-        }
-
-        if (temporalYearMonthLike.timeZone !== undefined) {
-          throw new TypeError('with() does not support a timeZone property');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalYearMonthLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
         var props = ES.ToPartialRecord(temporalYearMonthLike, fieldNames);
@@ -14737,18 +14695,7 @@
           throw new TypeError('invalid zoned-date-time-like');
         }
 
-        if (HasSlot(temporalZonedDateTimeLike, CALENDAR) || HasSlot(temporalZonedDateTimeLike, TIME_ZONE)) {
-          throw new TypeError('with() does not support a calendar or timeZone property');
-        }
-
-        if (temporalZonedDateTimeLike.calendar !== undefined) {
-          throw new TypeError('calendar invalid for with(). use withCalendar()');
-        }
-
-        if (temporalZonedDateTimeLike.timeZone !== undefined) {
-          throw new TypeError('timeZone invalid for with(). use withTimeZone()');
-        }
-
+        ES.RejectObjectWithCalendarOrTimeZone(temporalZonedDateTimeLike);
         options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var offset = ES.ToTemporalOffset(options, 'prefer');
