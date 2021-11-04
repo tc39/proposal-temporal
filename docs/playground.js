@@ -6908,6 +6908,7 @@
       var relativeTo = options.relativeTo;
       if (relativeTo === undefined) return relativeTo;
       var offsetBehaviour = 'option';
+      var matchMinutes = false;
       var year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
 
       if (ES.Type(relativeTo) === 'Object') {
@@ -6967,13 +6968,14 @@
 
         if (!calendar) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
+        matchMinutes = true;
       }
 
       if (timeZone) {
         timeZone = ES.ToTemporalTimeZone(timeZone);
         var offsetNs = 0;
         if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(ES.ToString(offset));
-        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject');
+        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
         return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
       }
 
@@ -7500,7 +7502,7 @@
       var canonicalOptions = ObjectCreate$2(null);
       return ES.YearMonthFromFields(calendar, result, canonicalOptions);
     },
-    InterpretISODateTimeOffset: function InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt) {
+    InterpretISODateTimeOffset: function InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute) {
       var DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
       var dt = new DateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 
@@ -7532,7 +7534,11 @@
         for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
           var candidate = _step7.value;
           var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-          if (candidateOffset === offsetNs) return GetSlot(candidate, EPOCHNANOSECONDS);
+          var roundedCandidateOffset = ES.RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
+
+          if (candidateOffset === offsetNs || matchMinute && roundedCandidateOffset === offsetNs) {
+            return GetSlot(candidate, EPOCHNANOSECONDS);
+          }
         } // the user-provided offset doesn't match any instants for this time
         // zone and date/time.
 
@@ -7556,6 +7562,7 @@
     ToTemporalZonedDateTime: function ToTemporalZonedDateTime(item) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ObjectCreate$2(null);
       var year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+      var matchMinute = false;
       var offsetBehaviour = 'option';
 
       if (ES.Type(item) === 'Object') {
@@ -7615,13 +7622,14 @@
         timeZone = new TemporalTimeZone(ianaName);
         if (!calendar) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
+        matchMinute = true; // ISO strings may specify offset with less precision
       }
 
       var offsetNs = 0;
       if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(offset);
       var disambiguation = ES.ToTemporalDisambiguation(options);
       var offsetOpt = ES.ToTemporalOffset(options, 'reject');
-      var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt);
+      var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute);
       return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
     },
     CreateTemporalDateSlots: function CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar) {
@@ -8209,7 +8217,12 @@
       var minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
       var seconds = ES.FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
       var timeZoneString = 'Z';
-      if (timeZone !== undefined) timeZoneString = ES.BuiltinTimeZoneGetOffsetStringFor(outputTimeZone, instant);
+
+      if (timeZone !== undefined) {
+        var offsetNs = ES.GetOffsetNanosecondsFor(outputTimeZone, instant);
+        timeZoneString = ES.FormatISOTimeZoneOffsetString(offsetNs);
+      }
+
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
     },
     TemporalDurationToString: function TemporalDurationToString(duration) {
@@ -8403,7 +8416,12 @@
       var minute = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
       var seconds = ES.FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
       var result = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds);
-      if (showOffset !== 'never') result += ES.BuiltinTimeZoneGetOffsetStringFor(tz, instant);
+
+      if (showOffset !== 'never') {
+        var offsetNs = ES.GetOffsetNanosecondsFor(tz, instant);
+        result += ES.FormatISOTimeZoneOffsetString(offsetNs);
+      }
+
       if (showTimeZone !== 'never') result += "[".concat(tz, "]");
       var calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
       result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
@@ -8466,6 +8484,16 @@
       }
 
       return "".concat(sign).concat(hourString, ":").concat(minuteString).concat(post);
+    },
+    FormatISOTimeZoneOffsetString: function FormatISOTimeZoneOffsetString(offsetNanoseconds) {
+      offsetNanoseconds = ES.RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
+      var sign = offsetNanoseconds < 0 ? '-' : '+';
+      offsetNanoseconds = MathAbs(offsetNanoseconds);
+      var minutes = offsetNanoseconds / 60e9 % 60;
+      var hours = MathFloor(offsetNanoseconds / 3600e9);
+      var hourString = ES.ISODateTimePartString(hours);
+      var minuteString = ES.ISODateTimePartString(minutes);
+      return "".concat(sign).concat(hourString, ":").concat(minuteString);
     },
     GetEpochFromISOParts: function GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
       // Note: Date.UTC() interprets one and two-digit years as being in the
@@ -14737,7 +14765,9 @@
             nanosecond = _ES$InterpretTemporal.nanosecond;
 
         var offsetNs = ES.ParseOffsetString(fields.offset);
-        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, disambiguation, offset);
+        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, disambiguation, offset,
+        /* matchMinute = */
+        false);
         return ES.CreateTemporalZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
       }
     }, {
@@ -15109,7 +15139,9 @@
         // new date/time values. If DST disambiguation is required, the `compatible`
         // disambiguation algorithm will be used.
         var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
-        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, 'compatible', 'prefer');
+        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, 'compatible', 'prefer',
+        /* matchMinute = */
+        false);
         return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
       }
     }, {

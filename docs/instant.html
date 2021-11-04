@@ -603,13 +603,13 @@ The default is <code>&#39;trunc&#39;</code>.</li>
 </li>
 </ul>
 <p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>instant</code>.</p>
-<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>instant</code>.
+<p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient string representation of <code>instant</code>.
 The string can be passed to <code>Temporal.Instant.from()</code> to create a new <code>Temporal.Instant</code> object.</p>
 <p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
 If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&#39;</code>, which omits trailing zeroes after the decimal point.</p>
 <p>The value is truncated to fit the requested precision, unless a different rounding mode is given with the <code>roundingMode</code> option, as in <code>Temporal.PlainDateTime.round()</code>.
 Note that rounding may change the value of other units as well.</p>
-<p>If the <code>timeZone</code> option is given, then the string will express the time in the given time zone, and contain the time zone&#39;s UTC offset.</p>
+<p>If the <code>timeZone</code> option is given, then the string will express the time in the given time zone, and contain the time zone&#39;s UTC offset, rounded to the nearest minute.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span><span class="token number">1574074321816</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '2019-11-18T10:52:01.816Z'</span>
