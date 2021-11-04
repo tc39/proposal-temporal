@@ -605,7 +605,7 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _resultPlainDateTime_ be ? CreateTemporalDateTime(_plainDateTime_.[[ISOYear]], _plainDateTime_.[[ISOMonth]], _plainDateTime_.[[ISODay]], _plainTime_.[[ISOHour]], _plainTime_.[[ISOMinute]], _plainTime_.[[ISOSecond]], _plainTime_.[[ISOMillisecond]], _plainTime_.[[ISOMicrosecond]], _plainTime_.[[ISONanosecond]], _calendar_).
-        1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _resultPlainDateTime_, *"compatible"*).
+        1. Set _instant_ to ? BuiltinTimeZoneGetInstantFor(_timeZone_, _resultPlainDateTime_, *"compatible"*).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
