@@ -6905,7 +6905,7 @@
         }
 
         calendar = ES.GetTemporalCalendarWithISODefault(relativeTo);
-        var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+        var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         var fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
         var dateOptions = ObjectCreate$2(null);
         dateOptions.overflow = 'constrain';
