@@ -382,7 +382,7 @@ This behavior avoids exceptions when converting non-existent <code>Temporal.Plai
 <p>If <code>dateTime</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
 <p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
-<p>Although this method is useful for implementing a custom time zone or custom disambiguation behaviour, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
+<p>Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
 During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.PlainDateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
 <h3 id="getNextTransition"><a class="heading-link" href="#getNextTransition"></a>timeZone.<strong>getNextTransition</strong>(<em>startingPoint</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>

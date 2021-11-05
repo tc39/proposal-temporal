@@ -735,7 +735,7 @@ Temporal<span class="token punctuation">.</span><span class="token class-name">I
 <li>Temporal.PlainYearMonth</li>
 <li>Temporal.PlainMonthDay</li>
 </ul>
-<h3 id="new-behaviour-of-temporalplainmonthdaywithyear"><a class="heading-link" href="#new-behaviour-of-temporalplainmonthdaywithyear"></a>New behaviour of Temporal.PlainMonthDay.withYear</h3><p>In some calendars (such as the Japanese imperial calendar) a year is not enough information to be able to convert Temporal.PlainMonthDay to Temporal.PlainDate.
+<h3 id="new-behavior-of-temporalplainmonthdaywithyear"><a class="heading-link" href="#new-behavior-of-temporalplainmonthdaywithyear"></a>New behavior of Temporal.PlainMonthDay.withYear</h3><p>In some calendars (such as the Japanese imperial calendar) a year is not enough information to be able to convert Temporal.PlainMonthDay to Temporal.PlainDate.
 Temporal.PlainMonthDay.withYear, which previously took a number argument (the year), can now be passed an object which must have properties that provide the needed information.
 (In the Japanese calendar, it needs to have <code>era</code> and <code>year</code> properties.)</p>
 <p>Passing a numerical year argument <code>num</code> is equivalent to passing <code>{ year: num }</code>.
