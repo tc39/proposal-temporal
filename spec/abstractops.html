@@ -751,12 +751,6 @@
           `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m`
           `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
-      Digit : one of
-          `0` `1` `2` `3` `4` `5` `6` `7` `8` `9`
-
-      NonzeroDigit : one of
-          `1` `2` `3` `4` `5` `6` `7` `8` `9`
-
       ASCIISign : one of
           `+` `-`
 
@@ -765,20 +759,20 @@
           U+2212
 
       Hour :
-          `0` Digit
-          `1` Digit
+          `0` DecimalDigit
+          `1` DecimalDigit
           `20`
           `21`
           `22`
           `23`
 
       MinuteSecond :
-          `0` Digit
-          `1` Digit
-          `2` Digit
-          `3` Digit
-          `4` Digit
-          `5` Digit
+          `0` DecimalDigit
+          `1` DecimalDigit
+          `2` DecimalDigit
+          `3` DecimalDigit
+          `4` DecimalDigit
+          `5` DecimalDigit
 
       DecimalSeparator : one of
           `.` `,`
@@ -818,29 +812,26 @@
       UTCDesignator : one of
           `Z` `z`
 
-      Digits :
-          Digit Digits?
-
       DateFourDigitYear :
-          Digit Digit Digit Digit
+          DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateExtendedYear :
-          Sign Digit Digit Digit Digit Digit Digit
+          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateYear :
           DateFourDigitYear
           DateExtendedYear
 
       DateMonth :
-          `0` NonzeroDigit
+          `0` NonZeroDigit
           `10`
           `11`
           `12`
 
       DateDay :
-          `0` NonzeroDigit
-          `1` Digit
-          `2` Digit
+          `0` NonZeroDigit
+          `1` DecimalDigit
+          `2` DecimalDigit
           `30`
           `31`
 
@@ -867,7 +858,7 @@
           `60`
 
       FractionalPart :
-          Digit Digit? Digit? Digit? Digit? Digit? Digit? Digit? Digit?
+          DecimalDigit DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit?
 
       TimeFractionalPart :
           FractionalPart
@@ -955,7 +946,7 @@
 
       CalChar :
           Alpha
-          Digit
+          DecimalDigit
 
       CalendarNameComponent :
           CalChar CalChar CalChar CalChar? CalChar? CalChar? CalChar? CalChar?
@@ -993,7 +984,7 @@
           DateTime Calendar?
 
       DurationWholeSeconds :
-          Digits
+          DecimalDigits
 
       DurationSecondsFraction :
           TimeFraction
@@ -1002,7 +993,7 @@
           DurationWholeSeconds DurationSecondsFraction? SecondsDesignator
 
       DurationWholeMinutes :
-          Digits
+          DecimalDigits
 
       DurationMinutesFraction :
           TimeFraction
@@ -1011,7 +1002,7 @@
           DurationWholeMinutes DurationMinutesFraction? MinutesDesignator DurationSecondsPart?
 
       DurationWholeHours :
-          Digits
+          DecimalDigits
 
       DurationHoursFraction :
           TimeFraction
@@ -1026,26 +1017,26 @@
           DurationTimeDesignator DurationSecondsPart
 
       DurationDays :
-          Digits
+          DecimalDigits
 
       DurationDaysPart :
           DurationDays DaysDesignator
 
       DurationWeeks :
-          Digits
+          DecimalDigits
 
       DurationWeeksPart :
           DurationWeeks WeeksDesignator DurationDaysPart?
 
       DurationMonths :
-          Digits
+          DecimalDigits
 
       DurationMonthsPart :
           DurationMonths MonthsDesignator DurationWeeksPart
           DurationMonths MonthsDesignator DurationDaysPart?
 
       DurationYears :
-          Digits
+          DecimalDigits
 
       DurationYearsPart :
           DurationYears YearsDesignator DurationMonthsPart
