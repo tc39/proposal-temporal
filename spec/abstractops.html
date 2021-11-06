@@ -1238,10 +1238,6 @@
       1. Let _duration_ be ParseText(! StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
       1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node enclosed by _duration_, or an empty sequence of code points if not present.
-      1. If _sign_ contains the code point 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
-        1. Let _factor_ be −1.
-      1. Else,
-        1. Let _factor_ be 1.
       1. Let _yearsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_years_)).
       1. Let _monthsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_months_)).
       1. Let _weeksMV_ be ! ToIntegerOrInfinity(CodePointsToString(_weeks_)).
@@ -1271,6 +1267,10 @@
         1. Let _millisecondsMV_ be remainder(_secondsMV_, 1) × 1000.
       1. Let _microsecondsMV_ be remainder(_millisecondsMV_, 1) × 1000.
       1. Let _nanosecondsMV_ be remainder(_microsecondsMV_, 1) × 1000.
+      1. If _sign_ contains the code point 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
+        1. Let _factor_ be −1.
+      1. Else,
+        1. Let _factor_ be 1.
       1. Return the Record {
         [[Years]]: _yearsMV_ × _factor_,
         [[Months]]: _monthsMV_ × _factor_,
