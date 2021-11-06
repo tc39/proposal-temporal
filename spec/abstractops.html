@@ -1291,45 +1291,45 @@
         1. Let _factor_ be −1.
       1. Else,
         1. Let _factor_ be 1.
-      1. Set _years_ to ! ToIntegerOrInfinity(CodePointsToString(_years_)) × _factor_.
-      1. Set _months_ to ! ToIntegerOrInfinity(CodePointsToString(_months_)) × _factor_.
-      1. Set _weeks_ to ! ToIntegerOrInfinity(CodePointsToString(_weeks_)) × _factor_.
-      1. Set _days_ to ! ToIntegerOrInfinity(CodePointsToString(_days_)) × _factor_.
-      1. Set _hours_ to ! ToIntegerOrInfinity(CodePointsToString(_hours_)) × _factor_.
-      1. Set _minutes_ to ! ToIntegerOrInfinity(CodePointsToString(_minutes_)) × _factor_.
-      1. Set _seconds_ to ! ToIntegerOrInfinity(CodePointsToString(_seconds_)) × _factor_.
+      1. Let _yearsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_years_)) × _factor_.
+      1. Let _monthsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_months_)) × _factor_.
+      1. Let _weeksMV_ be ! ToIntegerOrInfinity(CodePointsToString(_weeks_)) × _factor_.
+      1. Let _daysMV_ be ! ToIntegerOrInfinity(CodePointsToString(_days_)) × _factor_.
+      1. Let _hoursMV_ be ! ToIntegerOrInfinity(CodePointsToString(_hours_)) × _factor_.
+      1. Let _minutesMV_ be ! ToIntegerOrInfinity(CodePointsToString(_minutes_)) × _factor_.
+      1. Let _secondsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_seconds_)) × _factor_.
       1. If _fSeconds_ is not empty, then
         1. Let _fSecondsDigits_ be the substring of ! CodePointsToString(_fSeconds_) from 1.
         1. Let _fSecondsDigitsExtended_ be the string-concatenation of _fSecondsDigits_ and *"000000000"*.
         1. Let _milliseconds_ be the substring of _fSecondsDigitsExtended_ from 0 to 3.
-        1. Set _milliseconds_ to ! ToIntegerOrInfinity(_milliseconds_) × _factor_.
+        1. Let _millisecondsMV_ be ! ToIntegerOrInfinity(_milliseconds_) × _factor_.
         1. Let _microseconds_ be the substring of _fSecondsDigitsExtended_ from 3 to 6.
-        1. Set _microseconds_ to ! ToIntegerOrInfinity(_microseconds_) × _factor_.
+        1. Let _microsecondsMV_ be ! ToIntegerOrInfinity(_microseconds_) × _factor_.
         1. Let _nanoseconds_ be the substring of _fSecondsDigitsExtended_ from 6 to 9.
-        1. Set _nanoseconds_ to ! ToIntegerOrInfinity(_nanoseconds_) × _factor_.
+        1. Let _nanosecondsMV_ be ! ToIntegerOrInfinity(_nanoseconds_) × _factor_.
       1. Else,
-        1. Let _milliseconds_ be 0.
-        1. Let _microseconds_ be 0.
-        1. Let _nanoseconds_ be 0.
+        1. Let _millisecondsMV_ be 0.
+        1. Let _microsecondsMV_ be 0.
+        1. Let _nanosecondsMV_ be 0.
       1. If _fHours_ is not empty, then
         1. Let _fHoursDigits_ be the substring of ! CodePointsToString(_fHours_) from 1.
         1. Let _fHoursScale_ be the length of _fHoursDigits_.
-        1. Set _fHours_ to ! ToIntegerOrInfinity(_fHoursDigits_) × _factor_ / 10<sup>_fHoursScale_</sup>.
+        1. Let _fHoursMV_ be ! ToIntegerOrInfinity(_fHoursDigits_) × _factor_ / 10<sup>_fHoursScale_</sup>.
       1. Else,
-        1. Set _fHours_ to 0.
+        1. Let _fHoursMV_ be 0.
       1. If _fMinutes_ is not empty, then
         1. Let _fMinutesDigits_ be the substring of ! CodePointsToString(_fMinutes_) from 1.
         1. Let _fMinutesScale_ be the length of _fMinutesDigits_.
-        1. Set _fMinutes_ to ! ToIntegerOrInfinity(_fMinutesDigits_) × _factor_ / 10<sup>_fMinutesScale_</sup>.
+        1. Let _fMinutesMV_ be ! ToIntegerOrInfinity(_fMinutesDigits_) × _factor_ / 10<sup>_fMinutesScale_</sup>.
       1. Else,
-        1. Set _fMinutes_ to 0.
-      1. Let _result_ be ? DurationHandleFractions(_fHours_, _minutes_, _fMinutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _fMinutesMV_ be 0.
+      1. Let _result_ be ? DurationHandleFractions(_fHoursMV_, _minutesMV_, _fMinutesMV_, _secondsMV_, _millisecondsMV_, _microsecondsMV_, _nanosecondsMV_).
       1. Return the Record {
-        [[Years]]: _years_,
-        [[Months]]: _months_,
-        [[Weeks]]: _weeks_,
-        [[Days]]: _days_,
-        [[Hours]]: _hours_,
+        [[Years]]: _yearsMV_,
+        [[Months]]: _monthsMV_,
+        [[Weeks]]: _weeksMV_,
+        [[Days]]: _daysMV_,
+        [[Hours]]: _hoursMV_,
         [[Minutes]]: _result_.[[Minutes]],
         [[Seconds]]: _result_.[[Seconds]],
         [[Milliseconds]]: _result_.[[Milliseconds]],
