@@ -41,6 +41,24 @@
       "id": "sec-tointegerorinfinity"
     },
     {
+      "type": "production",
+      "name": "DecimalDigit",
+      "key": "DecimalDigit",
+      "id": "prod-DecimalDigit"
+    },
+    {
+      "type": "production",
+      "name": "DecimalDigits",
+      "key": "DecimalDigits",
+      "id": "prod-DecimalDigits"
+    },
+    {
+      "type": "production",
+      "name": "NonZeroDigit",
+      "key": "NonZeroDigit",
+      "id": "prod-NonZeroDigit"
+    },
+    {
       "type": "term",
       "term": "%Date.now%",
       "id": "sec-date.now"
