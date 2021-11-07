@@ -984,7 +984,7 @@
           DateTime Calendar?
 
       DurationWholeSeconds :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationSecondsFraction :
           TimeFraction
@@ -993,7 +993,7 @@
           DurationWholeSeconds DurationSecondsFraction? SecondsDesignator
 
       DurationWholeMinutes :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationMinutesFraction :
           TimeFraction
@@ -1002,7 +1002,7 @@
           DurationWholeMinutes DurationMinutesFraction? MinutesDesignator DurationSecondsPart?
 
       DurationWholeHours :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationHoursFraction :
           TimeFraction
@@ -1017,26 +1017,26 @@
           DurationTimeDesignator DurationSecondsPart
 
       DurationDays :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationDaysPart :
           DurationDays DaysDesignator
 
       DurationWeeks :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationWeeksPart :
           DurationWeeks WeeksDesignator DurationDaysPart?
 
       DurationMonths :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationMonthsPart :
           DurationMonths MonthsDesignator DurationWeeksPart
           DurationMonths MonthsDesignator DurationDaysPart?
 
       DurationYears :
-          DecimalDigits
+          DecimalDigits[~Sep]
 
       DurationYearsPart :
           DurationYears YearsDesignator DurationMonthsPart
