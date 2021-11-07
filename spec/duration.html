@@ -1213,7 +1213,7 @@
         1. Assert: _relativeTo_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Let _options_ be ! OrdinaryObjectCreate(*null*).
         1. Let _later_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, _options_).
-        1. Let _days_ be ? DaysUntil(_relativeTo_, _later_).
+        1. Let _days_ be ! DaysUntil(_relativeTo_, _later_).
         1. Let _dateTime_ be ? CreateTemporalDateTime(_later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], _relativeTo_.[[ISOHour]], _relativeTo_.[[ISOMinute]], _relativeTo_.[[ISOSecond]], _relativeTo_.[[ISOMillisecond]], _relativeTo_.[[ISOMicrosecond]], _relativeTo_.[[ISONanosecond]], _relativeTo_.[[Calendar]]).
         1. Return the Record {
             [[RelativeTo]]: _dateTime_,
@@ -1268,7 +1268,7 @@
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _secondAddOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
-          1. Let _monthsWeeksInDays_ be ? DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
+          1. Let _monthsWeeksInDays_ be ! DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_.
           1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
@@ -1283,7 +1283,7 @@
           1. Let _yearsDuration_ be ? CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _fourthAddOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _fourthAddOptions_, _dateAdd_).
-          1. Let _daysPassed_ be ? DaysUntil(_oldRelativeTo_, _relativeTo_).
+          1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
           1. Let _sign_ be ! Sign(_days_).
           1. If _sign_ is 0, set _sign_ to 1.
@@ -1303,7 +1303,7 @@
           1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _secondAddOptions_ be ! OrdinaryObjectCreate(*null*).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
-          1. Let _weeksInDays_ be ? DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
+          1. Let _weeksInDays_ be ! DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.
           1. Let _sign_ be ! Sign(_days_).
