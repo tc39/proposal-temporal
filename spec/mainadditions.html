@@ -19,9 +19,13 @@
       </p>
     </emu-note>
     <emu-grammar type="definition">
+      NumericLiteralSeparator ::
+        `_`
+
       DecimalDigits[Sep] ::
         DecimalDigit
         DecimalDigits[?Sep] DecimalDigit
+        [+Sep] DecimalDigits[+Sep] NumericLiteralSeparator DecimalDigit
 
       DecimalDigit :: one of
         `0` `1` `2` `3` `4` `5` `6` `7` `8` `9`
