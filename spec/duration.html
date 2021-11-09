@@ -934,7 +934,6 @@
       <h1>UnbalanceDurationRelative ( _years_, _months_, _weeks_, _days_, _largestUnit_, _relativeTo_ )</h1>
       <p>The abstract operation UnbalanceDurationRelative converts the calendar units of a Temporal.Duration into a form where no unit is larger than _largestUnit_.</p>
       <emu-alg>
-        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If _largestUnit_ is *"year"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. Return the Record {
             [[Years]]: _years_,
