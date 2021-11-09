@@ -1185,7 +1185,7 @@
         1. If _increment_ is not present, set it to 1.
         1. If _unit_ is not present, set it to *"nanosecond"*.
         1. If _roundingMode_ is not present, set it to *"trunc"*.
-        1. Let _ns_ be ? RoundTemporalInstant(_zonedDateTime_.[[Nanoseconds]], _increment_, _unit_, _roundingMode_).
+        1. Let _ns_ be ! RoundTemporalInstant(_zonedDateTime_.[[Nanoseconds]], _increment_, _unit_, _roundingMode_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_ns_).
         1. Let _isoCalendar_ be ! GetISO8601Calendar().
