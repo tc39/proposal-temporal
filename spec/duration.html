@@ -1427,7 +1427,7 @@
             [[Microseconds]]: _microseconds_,
             [[Nanoseconds]]: _nanoseconds_
             }.
-        1. Set _timeRemainderNs_ to ? RoundTemporalInstant(ℤ(_timeRemainderNs_ − _dayLengthNs_), _increment_, _unit_, _roundingMode_).
+        1. Set _timeRemainderNs_ to ! RoundTemporalInstant(ℤ(_timeRemainderNs_ − _dayLengthNs_), _increment_, _unit_, _roundingMode_).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
         1. Let _adjustedTimeDuration_ be ? BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
         1. Return the Record {
