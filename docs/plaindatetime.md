@@ -184,14 +184,14 @@ dt = Temporal.PlainDateTime.from({ year: 2001, month: 1, day: 1, minute: 60 }, {
 Compares two `Temporal.PlainDateTime` objects.
 Returns an integer indicating whether `one` comes before or after or is equal to `two`.
 
-- &minus;1 if `one` comes before `two`;
-- 0 if `one` and `two` are the same date and their `calendar` properties are also the same;
-- 1 if `one` comes after `two`.
+- &minus;1 if `one` comes before `two`
+- 0 if `one` and `two` are the same date and time when projected into the ISO 8601 calendar
+- 1 if `one` comes after `two`
 
 If `one` and `two` are not `Temporal.PlainDateTime` objects, then they will be converted to one as if they were passed to `Temporal.PlainDateTime.from()`.
 
-Note that this function will not return 0 if the two objects have different `calendar` properties, even if the actual dates and times are equal.
-If the dates and times are equal, then `.calendar.id` will be compared lexicographically, in order to ensure a deterministic sort order.
+Calendars are ignored in the comparison.
+For example, this method returns `0` for instances that fall on the same day and time in the ISO 8601 calendar, even if their calendars describe it with a different `year`, `month`, and/or `day`.
 
 This function can be used to sort arrays of `Temporal.PlainDateTime` objects.
 For example:
