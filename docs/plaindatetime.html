@@ -404,13 +404,13 @@ dt <span class="token operator">=</span> Temporal<span class="token punctuation"
 <p>Compares two <code>Temporal.PlainDateTime</code> objects.
 Returns an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
 <ul>
-<li>&minus;1 if <code>one</code> comes before <code>two</code>;</li>
-<li>0 if <code>one</code> and <code>two</code> are the same date and their <code>calendar</code> properties are also the same;</li>
-<li>1 if <code>one</code> comes after <code>two</code>.</li>
+<li>&minus;1 if <code>one</code> comes before <code>two</code></li>
+<li>0 if <code>one</code> and <code>two</code> are the same date and time when projected into the ISO 8601 calendar</li>
+<li>1 if <code>one</code> comes after <code>two</code></li>
 </ul>
 <p>If <code>one</code> and <code>two</code> are not <code>Temporal.PlainDateTime</code> objects, then they will be converted to one as if they were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
-<p>Note that this function will not return 0 if the two objects have different <code>calendar</code> properties, even if the actual dates and times are equal.
-If the dates and times are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.</p>
+<p>Calendars are ignored in the comparison.
+For example, this method returns <code>0</code> for instances that fall on the same day and time in the ISO 8601 calendar, even if their calendars describe it with a different <code>year</code>, <code>month</code>, and/or <code>day</code>.</p>
 <p>This function can be used to sort arrays of <code>Temporal.PlainDateTime</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

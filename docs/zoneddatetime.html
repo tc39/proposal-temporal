@@ -438,16 +438,14 @@ zdt <span class="token operator">=</span> Temporal<span class="token punctuation
 </ul>
 <p><strong>Returns:</strong> an integer indicating whether <code>one</code> comes before or after or is equal to <code>two</code>.</p>
 <ul>
-<li>Zero if all fields are equal, including the calendar ID and the time zone ID.</li>
 <li>&minus;1 if <code>one</code> is less than <code>two</code></li>
-<li>1 if <code>one</code> is greater than <code>two</code>.</li>
+<li>Zero if the two instances describe the same exact instant, ignoring the time zone and calendar</li>
+<li>1 if <code>one</code> is greater than <code>two</code></li>
 </ul>
 <p>This function can be used to sort arrays of <code>Temporal.ZonedDateTime</code> objects.</p>
 <p>Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
 Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.</p>
-<p>Note that this function will not return 0 if the two objects have different <code>calendar</code> or <code>timeZone</code> properties, even if the exact timestamps are equal.
-If exact timestamps are equal, then <code>.calendar.id</code> will be compared lexicographically, in order to ensure a deterministic sort order.
-If those are equal too, then <code>.timeZone.id</code> will be compared lexicographically.</p>
+<p>Note that this function will return <code>0</code> if the two objects have different <code>calendar</code> or <code>timeZone</code> properties, as long as their exact timestamps are equal.</p>
 <p>For example:</p>
 <pre class="language-javascript"><code class="language-javascript">arr <span class="token operator">=</span> <span class="token punctuation">[</span>
   Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-01T12:30-05:00[America/Toronto]'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>

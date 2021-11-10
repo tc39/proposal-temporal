@@ -1445,10 +1445,10 @@
           var digits = toBase(range, BASE).value;
           var result = [], restricted = true;
           for (var i = 0; i < digits.length; i++) {
-              var top = restricted ? digits[i] : BASE;
+              var top = restricted ? digits[i] + (i + 1 < digits.length ? digits[i + 1] / BASE : 0) : BASE;
               var digit = truncate(usedRNG() * top);
               result.push(digit);
-              if (digit < top) restricted = false;
+              if (digit < digits[i]) restricted = false;
           }
           return low.add(Integer.fromArray(result, BASE, false));
       }
