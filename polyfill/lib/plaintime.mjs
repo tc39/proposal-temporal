@@ -22,6 +22,7 @@ import {
 } from './slots.mjs';
 
 const ObjectAssign = Object.assign;
+const ObjectCreate = Object.create;
 
 const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
 const MAX_INCREMENTS = {
@@ -332,14 +333,20 @@ export class PlainTime {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
-  round(options) {
+  round(roundTo) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, DISALLOWED_UNITS);
+    if (roundTo === undefined) throw new TypeError('options parameter is required');
+    if (ES.Type(roundTo) === 'String') {
+      const stringParam = roundTo;
+      roundTo = ObjectCreate(null);
+      roundTo.smallestUnit = stringParam;
+    } else {
+      roundTo = ES.GetOptionsObject(roundTo);
+    }
+    const smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, DISALLOWED_UNITS);
     if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
+    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, MAX_INCREMENTS[smallestUnit], false);
 
     let hour = GetSlot(this, ISO_HOUR);
     let minute = GetSlot(this, ISO_MINUTE);

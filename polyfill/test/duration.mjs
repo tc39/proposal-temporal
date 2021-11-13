@@ -977,8 +977,8 @@ describe('Duration', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
-    it('options may only be an object', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
+    it('parameter may only be an object or string', () => {
+      [null, 1, true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
     });
     it('throws without parameter', () => {
       throws(() => d.round(), TypeError);
@@ -989,9 +989,14 @@ describe('Duration', () => {
     it("succeeds with largestUnit: 'auto'", () => {
       equal(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('throws on disallowed or invalid smallestUnit (object param)', () => {
       ['era', 'nonsense'].forEach((smallestUnit) => {
         throws(() => d.round({ smallestUnit }), RangeError);
+      });
+    });
+    it('throws on disallowed or invalid smallestUnit (string param)', () => {
+      ['era', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => d.round(smallestUnit), RangeError);
       });
     });
     it('throws if smallestUnit is larger than largestUnit', () => {
@@ -1014,6 +1019,24 @@ describe('Duration', () => {
           throws(() => d.round({ largestUnit, smallestUnit, relativeTo }), RangeError);
         }
       }
+    });
+    it('accepts string parameter as a shortcut for {smallestUnit}', () => {
+      const d = Temporal.Duration.from({
+        days: 1,
+        hours: 2,
+        minutes: 3,
+        seconds: 4,
+        milliseconds: 5,
+        microseconds: 6,
+        nanoseconds: 7
+      });
+      equal(d.round('day').toString(), 'P1D');
+      equal(d.round('hour').toString(), 'P1DT2H');
+      equal(d.round('minute').toString(), 'P1DT2H3M');
+      equal(d.round('second').toString(), 'P1DT2H3M4S');
+      equal(d.round('millisecond').toString(), 'P1DT2H3M4.005S');
+      equal(d.round('microsecond').toString(), 'P1DT2H3M4.005006S');
+      equal(d.round('nanosecond').toString(), 'P1DT2H3M4.005006007S');
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than the default', () => {
       const almostYear = Duration.from({ days: 364 });
@@ -1183,12 +1206,26 @@ describe('Duration', () => {
     });
     it('throws if neither one of largestUnit or smallestUnit is given', () => {
       const hoursOnly = new Duration(0, 0, 0, 0, 1);
-      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => {
-        throws(() => d.round(options), RangeError);
-        throws(() => hoursOnly.round(options), RangeError);
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((roundTo) => {
+        throws(() => d.round(roundTo), RangeError);
+        throws(() => hoursOnly.round(roundTo), RangeError);
       });
     });
-    it('relativeTo is not required for rounding non-calendar units in durations without calendar units', () => {
+    it('relativeTo not required to round non-calendar units in durations w/o calendar units (string param)', () => {
+      equal(`${d2.round('days')}`, 'P5D');
+      equal(`${d2.round('hours')}`, 'P5DT5H');
+      equal(`${d2.round('minutes')}`, 'P5DT5H5M');
+      equal(`${d2.round('seconds')}`, 'P5DT5H5M5S');
+      equal(`${d2.round('milliseconds')}`, 'P5DT5H5M5.005S');
+      equal(`${d2.round('microseconds')}`, 'P5DT5H5M5.005005S');
+      equal(`${d2.round('nanoseconds')}`, 'P5DT5H5M5.005005005S');
+    });
+    it('relativeTo is required to round calendar units even in durations w/o calendar units (string param)', () => {
+      throws(() => d2.round('years'), RangeError);
+      throws(() => d2.round('months'), RangeError);
+      throws(() => d2.round('weeks'), RangeError);
+    });
+    it('relativeTo not required to round non-calendar units in durations w/o calendar units (object param)', () => {
       equal(`${d2.round({ smallestUnit: 'days' })}`, 'P5D');
       equal(`${d2.round({ smallestUnit: 'hours' })}`, 'P5DT5H');
       equal(`${d2.round({ smallestUnit: 'minutes' })}`, 'P5DT5H5M');
@@ -1197,7 +1234,7 @@ describe('Duration', () => {
       equal(`${d2.round({ smallestUnit: 'microseconds' })}`, 'P5DT5H5M5.005005S');
       equal(`${d2.round({ smallestUnit: 'nanoseconds' })}`, 'P5DT5H5M5.005005005S');
     });
-    it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
+    it('relativeTo is required to round calendar units even in durations w/o calendar units (object param)', () => {
       throws(() => d2.round({ smallestUnit: 'years' }), RangeError);
       throws(() => d2.round({ smallestUnit: 'months' }), RangeError);
       throws(() => d2.round({ smallestUnit: 'weeks' }), RangeError);
@@ -1390,16 +1427,16 @@ describe('Duration', () => {
     ['minutes', 'seconds'].forEach((smallestUnit) => {
       it(`valid ${smallestUnit} increments divide into 60`, () => {
         [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
-          const options = { smallestUnit, roundingIncrement, relativeTo };
-          assert(d.round(options) instanceof Temporal.Duration);
+          const roundTo = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(roundTo) instanceof Temporal.Duration);
         });
       });
     });
     ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
       it(`valid ${smallestUnit} increments divide into 1000`, () => {
         [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
-          const options = { smallestUnit, roundingIncrement, relativeTo };
-          assert(d.round(options) instanceof Temporal.Duration);
+          const roundTo = { smallestUnit, roundingIncrement, relativeTo };
+          assert(d.round(roundTo) instanceof Temporal.Duration);
         });
       });
     });
@@ -1480,12 +1517,26 @@ describe('Duration', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
-    it('options may only be an object', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
+    it('parameter may only be an object or string', () => {
+      [null, 1, true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('accepts string parameter as shortcut for {unit}', () => {
+      equal(d2.total({ unit: 'days' }).toString(), d2.total('days').toString());
+      equal(d2.total({ unit: 'hours' }).toString(), d2.total('hours').toString());
+      equal(d2.total({ unit: 'minutes' }).toString(), d2.total('minutes').toString());
+      equal(d2.total({ unit: 'seconds' }).toString(), d2.total('seconds').toString());
+      equal(d2.total({ unit: 'milliseconds' }).toString(), d2.total('milliseconds').toString());
+      equal(d2.total({ unit: 'microseconds' }).toString(), d2.total('microseconds').toString());
+      equal(d2.total({ unit: 'nanoseconds' }).toString(), d2.total('nanoseconds').toString());
+    });
+    it('throws on disallowed or invalid unit (object param)', () => {
       ['era', 'nonsense'].forEach((unit) => {
         throws(() => d.total({ unit }), RangeError);
+      });
+    });
+    it('throws on disallowed or invalid unit (string param)', () => {
+      ['era', 'nonsense'].forEach((unit) => {
+        throws(() => d.total(unit), RangeError);
       });
     });
     it('does not lose precision for seconds and smaller units', () => {
@@ -1545,14 +1596,19 @@ describe('Duration', () => {
       equal(oneMonth.total({ unit: 'months', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } }), 1);
     });
     it('throws RangeError if unit property is missing', () => {
-      [{}, () => {}, { roundingMode: 'ceil' }].forEach((options) => throws(() => d.total(options), RangeError));
+      [{}, () => {}, { roundingMode: 'ceil' }].forEach((roundTo) => throws(() => d.total(roundTo), RangeError));
     });
-    it('relativeTo is required for rounding calendar units even in durations without calendar units', () => {
+    it('relativeTo required to round calendar units even in durations w/o calendar units (object param)', () => {
       throws(() => d2.total({ unit: 'years' }), RangeError);
       throws(() => d2.total({ unit: 'months' }), RangeError);
       throws(() => d2.total({ unit: 'weeks' }), RangeError);
     });
-    it('relativeTo is required for rounding durations with calendar units', () => {
+    it('relativeTo required to round calendar units even in durations w/o calendar units (string param)', () => {
+      throws(() => d2.total('years'), RangeError);
+      throws(() => d2.total('months'), RangeError);
+      throws(() => d2.total('weeks'), RangeError);
+    });
+    it('relativeTo is required to round durations with calendar units (object param)', () => {
       throws(() => d.total({ unit: 'years' }), RangeError);
       throws(() => d.total({ unit: 'months' }), RangeError);
       throws(() => d.total({ unit: 'weeks' }), RangeError);
@@ -1563,6 +1619,18 @@ describe('Duration', () => {
       throws(() => d.total({ unit: 'milliseconds' }), RangeError);
       throws(() => d.total({ unit: 'microseconds' }), RangeError);
       throws(() => d.total({ unit: 'nanoseconds' }), RangeError);
+    });
+    it('relativeTo is required to round durations with calendar units (string param)', () => {
+      throws(() => d.total('years'), RangeError);
+      throws(() => d.total('months'), RangeError);
+      throws(() => d.total('weeks'), RangeError);
+      throws(() => d.total('days'), RangeError);
+      throws(() => d.total('hours'), RangeError);
+      throws(() => d.total('minutes'), RangeError);
+      throws(() => d.total('seconds'), RangeError);
+      throws(() => d.total('milliseconds'), RangeError);
+      throws(() => d.total('microseconds'), RangeError);
+      throws(() => d.total('nanoseconds'), RangeError);
     });
     const d2Nanoseconds =
       d2.days * 24 * 3.6e12 +

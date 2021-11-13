@@ -829,10 +829,17 @@ describe('Instant', () => {
       throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('throws on disallowed or invalid smallestUnit (object param)', () => {
       ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
         (smallestUnit) => {
           throws(() => inst.round({ smallestUnit }), RangeError);
+        }
+      );
+    });
+    it('throws on disallowed or invalid smallestUnit (string param)', () => {
+      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
+        (smallestUnit) => {
+          throws(() => inst.round(smallestUnit), RangeError);
         }
       );
     });
@@ -919,6 +926,16 @@ describe('Instant', () => {
       throws(() => inst.round({ smallestUnit: 'millisecond', roundingIncrement: 29 }), RangeError);
       throws(() => inst.round({ smallestUnit: 'microsecond', roundingIncrement: 29 }), RangeError);
       throws(() => inst.round({ smallestUnit: 'nanosecond', roundingIncrement: 29 }), RangeError);
+    });
+    it('accepts plural units', () => {
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(inst.round({ smallestUnit }).equals(inst.round({ smallestUnit: `${smallestUnit}s` })));
+      });
+    });
+    it('accepts string parameter as shortcut for {smallestUnit}', () => {
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(inst.round(smallestUnit).equals(inst.round({ smallestUnit })));
+      });
     });
   });
   describe('Min/max range', () => {

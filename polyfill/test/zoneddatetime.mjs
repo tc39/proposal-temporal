@@ -1959,9 +1959,14 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.round({}), RangeError);
       throws(() => zdt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('throws on disallowed or invalid smallestUnit (object param)', () => {
       ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
         throws(() => zdt.round({ smallestUnit }), RangeError);
+      });
+    });
+    it('throws on disallowed or invalid smallestUnit (string param)', () => {
+      ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => zdt.round(smallestUnit), RangeError);
       });
     });
     it('throws on invalid roundingMode', () => {
@@ -2107,26 +2112,28 @@ describe('ZonedDateTime', () => {
       });
     });
     it('accepts plural units', () => {
-      assert(zdt.round({ smallestUnit: 'hours' }).equals(zdt.round({ smallestUnit: 'hour' })));
-      assert(zdt.round({ smallestUnit: 'minutes' }).equals(zdt.round({ smallestUnit: 'minute' })));
-      assert(zdt.round({ smallestUnit: 'seconds' }).equals(zdt.round({ smallestUnit: 'second' })));
-      assert(zdt.round({ smallestUnit: 'milliseconds' }).equals(zdt.round({ smallestUnit: 'millisecond' })));
-      assert(zdt.round({ smallestUnit: 'microseconds' }).equals(zdt.round({ smallestUnit: 'microsecond' })));
-      assert(zdt.round({ smallestUnit: 'nanoseconds' }).equals(zdt.round({ smallestUnit: 'nanosecond' })));
+      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(zdt.round({ smallestUnit }).equals(zdt.round({ smallestUnit: `${smallestUnit}s` })));
+      });
+    });
+    it('accepts string parameter as shortcut for {smallestUnit}', () => {
+      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(zdt.round(smallestUnit).equals(zdt.round({ smallestUnit })));
+      });
     });
     it('rounds correctly to a 25-hour day', () => {
-      const options = { smallestUnit: 'day' };
+      const roundTo = { smallestUnit: 'day' };
       const roundMeDown = ZonedDateTime.from('2020-11-01T12:29:59-08:00[America/Vancouver]');
-      equal(`${roundMeDown.round(options)}`, '2020-11-01T00:00:00-07:00[America/Vancouver]');
+      equal(`${roundMeDown.round(roundTo)}`, '2020-11-01T00:00:00-07:00[America/Vancouver]');
       const roundMeUp = ZonedDateTime.from('2020-11-01T12:30:01-08:00[America/Vancouver]');
-      equal(`${roundMeUp.round(options)}`, '2020-11-02T00:00:00-08:00[America/Vancouver]');
+      equal(`${roundMeUp.round(roundTo)}`, '2020-11-02T00:00:00-08:00[America/Vancouver]');
     });
     it('rounds correctly to a 23-hour day', () => {
-      const options = { smallestUnit: 'day' };
+      const roundTo = { smallestUnit: 'day' };
       const roundMeDown = ZonedDateTime.from('2020-03-08T11:29:59-07:00[America/Vancouver]');
-      equal(`${roundMeDown.round(options)}`, '2020-03-08T00:00:00-08:00[America/Vancouver]');
+      equal(`${roundMeDown.round(roundTo)}`, '2020-03-08T00:00:00-08:00[America/Vancouver]');
       const roundMeUp = ZonedDateTime.from('2020-03-08T11:30:01-07:00[America/Vancouver]');
-      equal(`${roundMeUp.round(options)}`, '2020-03-09T00:00:00-07:00[America/Vancouver]');
+      equal(`${roundMeUp.round(roundTo)}`, '2020-03-09T00:00:00-07:00[America/Vancouver]');
     });
     it('rounding up to a nonexistent wall-clock time', () => {
       const almostSkipped = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');

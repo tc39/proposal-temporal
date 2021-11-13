@@ -7,6 +7,8 @@ import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
 
+const ObjectCreate = Object.create;
+
 const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
 const MAX_DIFFERENCE_INCREMENTS = {
   hour: 24,
@@ -161,13 +163,19 @@ export class Instant {
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
-  round(options) {
+  round(roundTo) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, DISALLOWED_UNITS);
+    if (roundTo === undefined) throw new TypeError('options parameter is required');
+    if (ES.Type(roundTo) === 'String') {
+      const stringParam = roundTo;
+      roundTo = ObjectCreate(null);
+      roundTo.smallestUnit = stringParam;
+    } else {
+      roundTo = ES.GetOptionsObject(roundTo);
+    }
+    const smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, DISALLOWED_UNITS);
     if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
+    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const maximumIncrements = {
       hour: 24,
       minute: 1440,
@@ -176,7 +184,7 @@ export class Instant {
       microsecond: 86400e6,
       nanosecond: 86400e9
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], true);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, maximumIncrements[smallestUnit], true);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
     return new Instant(roundedNs);

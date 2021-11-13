@@ -21,6 +21,7 @@ import {
 import bigInt from 'big-integer';
 
 const ArrayPrototypePush = Array.prototype.push;
+const ObjectCreate = Object.create;
 
 export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) {
@@ -573,13 +574,19 @@ export class ZonedDateTime {
       -nanoseconds
     );
   }
-  round(options) {
+  round(roundTo) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    if (options === undefined) throw new TypeError('options parameter is required');
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, ['year', 'month', 'week']);
+    if (roundTo === undefined) throw new TypeError('options parameter is required');
+    if (ES.Type(roundTo) === 'String') {
+      const stringParam = roundTo;
+      roundTo = ObjectCreate(null);
+      roundTo.smallestUnit = stringParam;
+    } else {
+      roundTo = ES.GetOptionsObject(roundTo);
+    }
+    const smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, ['year', 'month', 'week']);
     if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'halfExpand');
+    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const maximumIncrements = {
       day: 1,
       hour: 24,
@@ -589,7 +596,7 @@ export class ZonedDateTime {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, maximumIncrements[smallestUnit], false);
 
     // first, round the underlying DateTime fields
     const dt = dateTime(this);

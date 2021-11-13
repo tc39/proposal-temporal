@@ -386,25 +386,28 @@ d = Temporal.Duration.from('-PT8H30M');
 d.abs(); // PT8H30M
 ```
 
-### duration.**round**(_options_: object) : Temporal.Duration
+### duration.**round**(_roundTo_: string | object) : Temporal.Duration
 
 **Parameters:**
 
-- `options` (object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'nanosecond'`, i.e. no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'halfExpand'`.
-  - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
-    It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
+- `roundTo` (string | object): A required string or object to control the operation.
+  - If a string is provided, the resulting `Temporal.Duration` object will be rounded to that unit.
+    Valid values are `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    A string parameter is treated the same as an object whose `smallestUnit` property value is that string.
+  - If an object is passed, the following properties are recognized:
+    - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
+      Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+      The default is `'auto'`.
+    - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
+      Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+      The default is `'nanosecond'`, i.e. no rounding.
+    - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+      The default is 1.
+    - `roundingMode` (string): How to handle the remainder, if rounding.
+      Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+      The default is `'halfExpand'`.
+    - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
+      It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
 
 **Returns:** a new `Temporal.Duration` object which is `duration`, rounded and/or balanced.
 
@@ -418,15 +421,15 @@ This operation is called "balancing."
 
 For usage examples and a more complete explanation of how balancing works, see [Duration balancing](./balancing.md).
 
-A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given, means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
+A `largestUnit` value of `'auto'`, which is the default if only `smallestUnit` is given (or if `roundTo` is a string), means that `largestUnit` should be the largest nonzero unit in the duration that is larger than `smallestUnit`.
 For example, in a duration of 3 days and 12 hours, `largestUnit: 'auto'` would mean the same as `largestUnit: 'day'`.
 This behavior implies that the default balancing behavior of this method to not "grow" the duration beyond its current largest unit unless needed for rounding.
 
-The `smallestUnit` option determines the unit to round to.
+The `smallestUnit` option (or the value of `roundTo` if a string parameter is used) determines the unit to round to.
 For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
-The default, if only `largestUnit` is given, is to do no rounding.
+The default, if only `largestUnit` is given, is to do no rounding of smaller units.
 
-At least one of `largestUnit` or `smallestUnit` is required.
+If an object parameter is used, at least one of `largestUnit` or `smallestUnit` is required.
 
 Converting between years, months, weeks, and other units requires a reference point.
 If `largestUnit` or `smallestUnit` is years, months, or weeks, or the duration has nonzero years, months, or weeks, then the `relativeTo` option is required.
@@ -516,17 +519,20 @@ quarters = d.months / 3;
 quarters; // => 3
 ```
 
-### duration.**total**(_options_: object) : number
+### duration.**total**(_totalOf_: string | object) : number
 
 **Parameters:**
 
-- `options` (object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `unit` (string): The unit of time that will be returned.
-    Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    There is no default; `unit` is required.
-  - `relativeTo` (`Temporal.PlainDateTime`): The starting point to use when converting between years, months, weeks, and days.
-    It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
+- `totalOf` (string | object): A required string or object to control the operation.
+  - If a string is passed, it represents the unit of time that will be returned.
+    Valid values are `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    A string parameter is treated the same as an object whose `unit` property value is that string.
+  - If an object is passed, the following properties are recognized:
+    - `unit` (string): The unit of time that will be returned.
+      Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+      There is no default; `unit` is required.
+    - `relativeTo` (`Temporal.PlainDateTime` ): The starting point to use when converting between years, months, weeks, and days.
+      It must be a `Temporal.PlainDateTime`, or a value that can be passed to `Temporal.PlainDateTime.from()`.
 
 **Returns:** a floating-point number representing the number of desired units in the `Temporal.Duration`.
 
@@ -535,10 +541,11 @@ If the duration IS NOT evenly divisible by the desired unit, then a fractional r
 If the duration IS evenly divisible by the desired unit, then the integer result will be identical to `duration.round({ smallestUnit: unit, largestUnit: unit, relativeTo })[unit]`.
 
 Interpreting years, months, or weeks requires a reference point.
-Therefore, `unit` is `'year'`, `'month'`, or `'week'`, or the duration has nonzero 'year', 'month', or 'week', then the `relativeTo` option is required.
+Therefore, if `unit` is `'year'`, `'month'`, or `'week'`, or the duration has nonzero 'year', 'month', or 'week', then the `relativeTo` option is required.
+For this reason, it's required to use the object (not string) form of `totalOf` in these cases.
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a `Temporal.PlainDateTime` instance.
+It is a `Temporal.PlainDateTime` or `Temporal.ZonedDateTime` instance.
 If any other type is provided, then it will be converted to a `Temporal.PlainDateTime` as if it were passed to `Temporal.PlainDateTime.from(..., { overflow: 'reject' })`.
 A `Temporal.PlainDate` or a date string like `2020-01-01` is also accepted because time is optional when creating a `Temporal.PlainDateTime`.
 
