@@ -473,23 +473,24 @@
         1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
         1. If _unit_ is *"year"*, then
           1. Let _whole_ be _roundResult_.[[Years]].
-        1. If _unit_ is *"month"*, then
+        1. Else if _unit_ is *"month"*, then
           1. Let _whole_ be _roundResult_.[[Months]].
-        1. If _unit_ is *"week"*, then
+        1. Else if _unit_ is *"week"*, then
           1. Let _whole_ be _roundResult_.[[Weeks]].
-        1. If _unit_ is *"day"*, then
+        1. Else if _unit_ is *"day"*, then
           1. Let _whole_ be _roundResult_.[[Days]].
-        1. If _unit_ is *"hour"*, then
+        1. Else if _unit_ is *"hour"*, then
           1. Let _whole_ be _roundResult_.[[Hours]].
-        1. If _unit_ is *"minute"*, then
+        1. Else if _unit_ is *"minute"*, then
           1. Let _whole_ be _roundResult_.[[Minutes]].
-        1. If _unit_ is *"second"*, then
+        1. Else if _unit_ is *"second"*, then
           1. Let _whole_ be _roundResult_.[[Seconds]].
-        1. If _unit_ is *"millisecond"*, then
+        1. Else if _unit_ is *"millisecond"*, then
           1. Let _whole_ be _roundResult_.[[Milliseconds]].
-        1. If _unit_ is *"microsecond"*, then
+        1. Else if _unit_ is *"microsecond"*, then
           1. Let _whole_ be _roundResult_.[[Microseconds]].
-        1. If _unit_ is *"nanosecond"*, then
+        1. Else,
+          1. Assert: _unit_ is *"nanosecond"*.
           1. Let _whole_ be _roundResult_.[[Nanoseconds]].
         1. Return _whole_ + _roundResult_.[[Remainder]].
       </emu-alg>
