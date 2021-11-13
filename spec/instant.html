@@ -296,20 +296,25 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.round">
-      <h1>Temporal.Instant.prototype.round ( _options_ )</h1>
+      <h1>Temporal.Instant.prototype.round ( _roundTo_ )</h1>
       <p>
-        The `round` method takes one argument _options_.
+        The `round` method takes one argument _roundTo_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If _options_ is *undefined*, then
+        1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *undefined*).
+        1. If Type(_roundTo_) is String, then
+          1. Let _paramString_ be _roundTo_.
+          1. Set _roundTo_ to ! OrdinaryObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"_smallestUnit_"*, _paramString_).
+        1. Else,
+          1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_roundTo_, « *"year"*, *"month"*, *"week"*, *"day"* », *undefined*).
         1. If _smallestUnit_ is *undefined*, throw a *RangeError* exception.
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"halfExpand"*).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
         1. If _smallestUnit_ is *"hour"*, then
           1. Let _maximum_ be 24.
         1. Else if _smallestUnit_ is *"minute"*, then
@@ -323,7 +328,7 @@
         1. Else,
           1. Assert: _smallestUnit_ is *"nanosecond"*.
           1. Let _maximum_ be 8.64 × 10<sup>13</sup>.
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *true*).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_, _maximum_, *true*).
         1. Let _roundedNs_ be ! RoundTemporalInstant(_instant_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ! CreateTemporalInstant(_roundedNs_).
       </emu-alg>

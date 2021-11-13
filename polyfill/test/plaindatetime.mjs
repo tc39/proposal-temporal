@@ -1104,9 +1104,14 @@ describe('DateTime', () => {
       throws(() => dt.round({}), RangeError);
       throws(() => dt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('throws on disallowed or invalid smallestUnit (object param)', () => {
       ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
         throws(() => dt.round({ smallestUnit }), RangeError);
+      });
+    });
+    it('throws on disallowed or invalid smallestUnit (string param)', () => {
+      ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
+        throws(() => dt.round(smallestUnit), RangeError);
       });
     });
     it('throws on invalid roundingMode', () => {
@@ -1228,13 +1233,14 @@ describe('DateTime', () => {
       });
     });
     it('accepts plural units', () => {
-      assert(dt.round({ smallestUnit: 'days' }).equals(dt.round({ smallestUnit: 'day' })));
-      assert(dt.round({ smallestUnit: 'hours' }).equals(dt.round({ smallestUnit: 'hour' })));
-      assert(dt.round({ smallestUnit: 'minutes' }).equals(dt.round({ smallestUnit: 'minute' })));
-      assert(dt.round({ smallestUnit: 'seconds' }).equals(dt.round({ smallestUnit: 'second' })));
-      assert(dt.round({ smallestUnit: 'milliseconds' }).equals(dt.round({ smallestUnit: 'millisecond' })));
-      assert(dt.round({ smallestUnit: 'microseconds' }).equals(dt.round({ smallestUnit: 'microsecond' })));
-      assert(dt.round({ smallestUnit: 'nanoseconds' }).equals(dt.round({ smallestUnit: 'nanosecond' })));
+      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(dt.round({ smallestUnit }).equals(dt.round({ smallestUnit: `${smallestUnit}s` })));
+      });
+    });
+    it('accepts string parameter as shortcut for {smallestUnit}', () => {
+      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(dt.round(smallestUnit).equals(dt.round({ smallestUnit })));
+      });
     });
   });
   describe('DateTime.from() works', () => {

@@ -374,25 +374,28 @@ time.since(Temporal.PlainTime.from('19:39:09.068346205')); // => PT34M11.9030518
 time.since(Temporal.PlainTime.from('22:39:09.068346205')); // => -PT2H25M48.096948106S
 ```
 
-### time.**round**(_options_: object) : Temporal.PlainTime
+### time.**round**(_roundTo_: string | object) : Temporal.PlainTime
 
 **Parameters:**
 
-- `options` (object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `smallestUnit` (required string): The unit to round to.
+- `roundTo` (string | object): A required string or object to control the operation.
+  - If a string is provided, the resulting `Temporal.PlainTime` object will be rounded to that unit.
     Valid values are `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
-    The default is `'halfExpand'`.
+    A string parameter is treated the same as an object whose `smallestUnit` property value is that string.
+  - If an object is passed, the following properties are recognized:
+    - `smallestUnit` (required string): The unit to round to.
+      Valid values are `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
+    - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
+      The default is 1.
+    - `roundingMode` (string): How to handle the remainder.
+      Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+      The default is `'halfExpand'`.
 
-**Returns:** a new `Temporal.PlainTime` object which is `time` rounded to `roundingIncrement` of `smallestUnit`.
+**Returns:** a new `Temporal.PlainTime` object which is `time` rounded to `roundTo` (if a string parameter is used) or `roundingIncrement` of `smallestUnit` (if an object parameter is used).
 
 Rounds `time` to the given unit and increment, and returns the result as a new `Temporal.PlainTime` object.
 
-The `smallestUnit` option determines the unit to round to.
+The `smallestUnit` option (or the value of `roundTo` if a string parameter is used) determines the unit to round to.
 For example, to round to the nearest minute, use `smallestUnit: 'minute'`.
 This option is required.
 
@@ -411,6 +414,10 @@ The `roundingMode` option controls how the rounding is performed.
   (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
 - `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `ceil`.
+
+As expected for a method named "round", the default rounding mode is `'halfExpand'` to match the behavior of `Math.round`.
+Note that this is different than the `'trunc'` default used by `until` and `since` options because rounding up would be an unexpected default for those operations.
+Other properties behave identically between these methods.
 
 Example usage:
 

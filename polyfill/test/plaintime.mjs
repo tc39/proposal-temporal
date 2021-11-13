@@ -563,10 +563,17 @@ describe('Time', () => {
       throws(() => time.round({}), RangeError);
       throws(() => time.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    it('throws on disallowed or invalid smallestUnit', () => {
+    it('throws on disallowed or invalid smallestUnit (object param)', () => {
       ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
         (smallestUnit) => {
           throws(() => time.round({ smallestUnit }), RangeError);
+        }
+      );
+    });
+    it('throws on disallowed or invalid smallestUnit (string param)', () => {
+      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
+        (smallestUnit) => {
+          throws(() => time.round(smallestUnit), RangeError);
         }
       );
     });
@@ -676,12 +683,14 @@ describe('Time', () => {
       });
     });
     it('accepts plural units', () => {
-      assert(time.round({ smallestUnit: 'hours' }).equals(time.round({ smallestUnit: 'hour' })));
-      assert(time.round({ smallestUnit: 'minutes' }).equals(time.round({ smallestUnit: 'minute' })));
-      assert(time.round({ smallestUnit: 'seconds' }).equals(time.round({ smallestUnit: 'second' })));
-      assert(time.round({ smallestUnit: 'milliseconds' }).equals(time.round({ smallestUnit: 'millisecond' })));
-      assert(time.round({ smallestUnit: 'microseconds' }).equals(time.round({ smallestUnit: 'microsecond' })));
-      assert(time.round({ smallestUnit: 'nanoseconds' }).equals(time.round({ smallestUnit: 'nanosecond' })));
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(time.round({ smallestUnit }).equals(time.round({ smallestUnit: `${smallestUnit}s` })));
+      });
+    });
+    it('accepts string parameter as shortcut for {smallestUnit}', () => {
+      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
+        assert(time.round(smallestUnit).equals(time.round({ smallestUnit })));
+      });
     });
   });
   describe('Time.compare() works', () => {
