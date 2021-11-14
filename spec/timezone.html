@@ -30,10 +30,8 @@
       When called with any other string, it will throw a *RangeError* exception.
     </p>
     <p>
-      Implementations are encouraged to support the Zone and Link names of the IANA Time Zone Database, and to use the best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations.
-    </p>
-    <p>
-      An ECMAScript implementation that includes the ECMA-402 Internationalization API has additional requirements for the built-in time zones that must be supported, as specified in the ECMA-402 specification.
+      An ECMAScript implementation that includes the ECMA-402 Internationalization API must define built-in named time zones in correspondence with the Zone and Link names of the IANA Time Zone Database and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
+      Other implementations are encouraged to do the same.
     </p>
 
     <emu-clause id="sec-isvalidtimezonename" aoid="IsValidTimeZoneName">
