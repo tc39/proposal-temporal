@@ -29,15 +29,13 @@
     </p>
 
     <p>
-      A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names), and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
+      A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names) <ins>as built-in</ins>, and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
     </p>
 
+    <del class="block">
     <emu-clause id="sup-isvalidtimezonename">
       <h1><a href="https://tc39.es/ecma402/#sec-isvalidtimezonename">IsValidTimeZoneName</a> ( _timeZone_ )</h1>
 
-      <ins class="block">
-        <p>This definition supersedes the definition provided in <emu-xref href="#sec-isvalidtimezonename"></emu-xref>.</p>
-      </ins>
       <p>
         The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value, and verifies that it represents a valid Zone or Link name of the IANA Time Zone Database.
       </p>
@@ -48,6 +46,7 @@
         1. Return *false*.
       </emu-alg>
     </emu-clause>
+    </del>
 
     <emu-clause id="sup-canonicalizetimezonename" aoid="CanonicalizeTimeZoneName402">
       <h1><a href="https://tc39.es/ecma402/#sec-canonicalizetimezonename">CanonicalizeTimeZoneName</a> ( _timeZone_ )</h1>

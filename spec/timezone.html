@@ -45,20 +45,15 @@
         <dd>It returns *true* if _timeZone_ is an ASCII-case-insensitive match for a built-in time zone name and *false* otherwise.</dd>
       </dl>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the IsValidTimeZoneName abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
-      </p>
-      <p>
         Once IsValidTimeZoneName(_timeZone_) has returned *true*, for the lifetime of the surrounding agent, IsValidTimeZoneName(_variant_) must return *true* if _variant_ is an ASCII-case-insensitive match for either _timeZone_ or CanonicalizeTimeZoneName(_timeZone_).
       </p>
       <p>
         For the purposes of this section, a String value _A_ is an ASCII-case-insensitive match for String value _B_ if the String value derived from _A_ by replacing each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) with the corresponding uppercase ASCII letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units is exactly the same sequence of code units as the String value that is derived from _B_ in the same way.
       </p>
-      <p>The minimum implementation of IsValidTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
-      </p>
 
       <emu-alg>
         1. If _timeZone_ is an ASCII-case-insensitive match for *"UTC"*, return *true*.
+        1. If the implementation-defined built-in time zones include a named time zone whose name is an ASCII case-insensitive match for _tzUpper_, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -79,12 +74,22 @@
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the CanonicalizeTimeZoneName abstract operation is used.
       </p>
       <p>
+        For the purposes of this section, a String value _A_ is an ASCII-case-insensitive match for String value _B_ if the String value derived from _A_ by replacing each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) with the corresponding uppercase ASCII letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units is exactly the same sequence of code units as the String value that is derived from _B_ in the same way.
+      </p>
+      <p>
         The minimum implementation of CanonicalizeTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
       </p>
 
       <emu-alg>
-        1. Return *"UTC"*.
+        1. Assert: Type(_timeZone_) is String.
+        1. Assert: ! IsValidTimeZoneName(_timeZone_) is *true*.
+        1. Let _tzUpper_ be the String value that is the same as _timeZone_ except that each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) has been replaced with its uppercase analog (0x0041 through 0x005A, inclusive).
+        1. If _tzUpper_ is *"UTC"*, return *"UTC"*.
+        1. Return the String value containing the implementation-defined canonical and case-regularized name of the built-in time zone whose name is an ASCII case-insensitive match for _tzUpper_.
       </emu-alg>
+      <emu-note>
+        If _timeZone_ is an ASCII-case-insensitive match for the name of a Link in the IANA Time Zone Database, the value returned from CanonicalizeTimeZoneName(_timeZone_) should be derived from the corresponding Zone name rather than from the Link name. And if either that Zone name or _timeZone_ are *"Etc/UTC"* or *"Etc/GMT"*, the value returned should be *"UTC"*. Both behaviours are required of an ECMAScript implementation that includes the ECMA-402 Internationalization API.
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-defaulttimezone" type="abstract operation">
