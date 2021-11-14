@@ -25,11 +25,11 @@
     </ins>
 
     <p>
-      The ECMAScript 2021 Internationalization API Specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database.
+      The ECMAScript 2021 Internationalization API Specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database except as specifically overridden by CanonicalizeTimeZoneName.
     </p>
 
     <p>
-      All registered Zone and Link names are allowed. Implementations must recognize all such names, and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
+      A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names), and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
     </p>
 
     <emu-clause id="sup-isvalidtimezonename">
@@ -39,36 +39,37 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-isvalidtimezonename"></emu-xref>.</p>
       </ins>
       <p>
-        The IsValidTimeZoneName abstract operation verifies that the _timeZone_ argument (which must be a String value) represents a valid Zone or Link name of the IANA Time Zone Database.
+        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value, and verifies that it represents a valid Zone or Link name of the IANA Time Zone Database.
       </p>
-      <p>
-        The abstract operation returns true if _timeZone_, converted to upper case as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>, is equal to one of the Zone or Link names of the IANA Time Zone Database, converted to upper case as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>. It returns false otherwise.
-      </p>
+
+      <emu-alg>
+        1. If one of the Zone or Link names of the IANA Time Zone Database is an ASCII-case-insensitive match of _timeZone_ as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>, return *true*.
+        1. If _timeZone_ is an ASCII-case-insensitive match of *"UTC"*, return *true*.
+        1. Return *false*.
+      </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sup-canonicalizetimezonename">
-      <h1><a href="https://tc39.es/ecma402/#sec-canonicalizetimezonename">CanonicalizeTimeZoneName</a> <ins>( _timeZone_ )</ins></h1>
+    <emu-clause id="sup-canonicalizetimezonename" type="abstract operation">
+      <h1>
+        CanonicalizeTimeZoneName (
+          _timeZone_: a String value that is a valid time zone name as verified by IsValidTimeZoneName,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns the canonical and case-regularized form of _timeZone_.</dd>
+      </dl>
 
       <ins class="block">
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-canonicalizetimezonename"></emu-xref>.</p>
       </ins>
-      <p>
-        The CanonicalizeTimeZoneName abstract operation returns the canonical and case-regularized form of the _timeZone_ argument (which must be a String value that is a valid time zone name as verified by the IsValidTimeZoneName abstract operation).
-        The following steps are taken:
-      </p>
 
       <emu-alg>
-        1. <ins>Assert: Type(_timeZone_) is String.</ins>
-        1. <ins>Assert: ! IsValidTimeZoneName(_timeZone_) is *true*.</ins>
-        1. Let _ianaTimeZone_ be the Zone or Link name of the IANA Time Zone Database such that _timeZone_, converted to upper case as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>, is equal to _ianaTimeZone_, converted to upper case as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>.
-        1. If _ianaTimeZone_ is a Link name, let _ianaTimeZone_ be the corresponding Zone name as specified in the *"backward"* file of the IANA Time Zone Database.
+        1. Let _ianaTimeZone_ be the String value of the Zone or Link name of the IANA Time Zone Database that is an ASCII-case-insensitive match of _timeZone_ as described in <emu-xref href="#sec-case-sensitivity-and-case-mapping"></emu-xref>.
+        1. If _ianaTimeZone_ is a Link name, let _ianaTimeZone_ be the String value of the corresponding Zone name as specified in the file <code>backward</code> of the IANA Time Zone Database.
         1. If _ianaTimeZone_ is *"Etc/UTC"* or *"Etc/GMT"*, return *"UTC"*.
         1. Return _ianaTimeZone_.
       </emu-alg>
-
-      <p>
-        The Intl.DateTimeFormat constructor allows this time zone name; if the time zone is not specified, the host environment's current time zone is used. Implementations shall support UTC and the <del>host environment's current</del> time zone <ins>returned from DefaultTimeZone</ins> (if different from UTC) in formatting.
-      </p>
     </emu-clause>
 
     <emu-clause id="sup-defaulttimezone">
