@@ -71,10 +71,7 @@
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the CanonicalizeTimeZoneName abstract operation is used.
       </p>
       <p>
-        The abstract operation CanonicalizeTimeZoneName takes argument _timeZone_, a String value, and returns the canonical and case-regularized form of _timeZone_.
-      </p>
-      <p>
-        CanonicalizeTimeZoneName may only be called with a _timeZone_ parameter that is a valid time zone name according to IsValidTimeZoneName.
+        The abstract operation CanonicalizeTimeZoneName takes argument _timeZone_, a String value that is a valid time zone name as verified by IsValidTimeZoneName, and returns the canonical and case-regularized form of _timeZone_.
       </p>
       <p>
         The minimum implementation of CanonicalizeTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
