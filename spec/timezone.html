@@ -42,8 +42,7 @@
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
       </p>
       <p>
-        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value. It returns *true* if _timeZone_, converted to upper case, is equal to one of the built-in named time zone names, converted to upper case.
-        It returns *false* otherwise.
+        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value. It returns *true* if _timeZone_ is an ASCII case-insensitive match for a built-in time zone name and *false* otherwise.
       </p>
       <p>
         Once IsValidTimeZoneName has returned *true* for a particular value of _timeZone_, for the lifetime of the surrounding agent, it may no longer return *false* for that value of _timeZone_, or for the value of CanonicalizeTimeZoneName(_timeZone_).
@@ -53,10 +52,8 @@
 
       <emu-alg>
         1. Assert: Type(_timeZone_) is String.
-        1. Let _tzText_ be ! StringToCodePoints(_timeZone_).
-        1. Let _tzUpperText_ be the result of toUppercase(_tzText_), according to the Unicode Default Case Conversion algorithm.
-        1. Let _tzUpper_ be ! CodePointsToString(_tzUpperText_).
-        1. If _tzUpper_ and *"UTC"* are the same sequence of code points, return *true*.
+        1. Let _tzUpper_ be the String value that is the same as _timeZone_ except that each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) has been replaced with its uppercase analog (0x0041 through 0x005A, inclusive).
+        1. If _tzUpper_ is *"UTC"*, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
