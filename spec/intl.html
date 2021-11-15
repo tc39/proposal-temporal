@@ -721,7 +721,6 @@
       </emu-alg>
     </emu-clause>
     </ins>
-        
     <ins class="block">
     <emu-clause id="sec-temporal-handledatetimevaluetemporalyearmonth" aoid="HandleDateTimeTemporalYearMonth">
       <h1>HandleDateTimeTemporalYearMonth ( _dateTimeFormat_, _temporalYearMonth_ )</h1>
@@ -847,7 +846,6 @@
       </emu-alg>
     </emu-clause>
     </ins>
-        
     <ins class="block">
     <emu-clause id="sec-temporal-handledatetimevaluetemporalzoneddatetime" aoid="HandleDateTimeTemporalZonedDateTime">
       <h1>HandleDateTimeTemporalZonedDateTime ( _dateTimeFormat_, _zonedDateTime_ )</h1>
@@ -902,7 +900,7 @@
         }.
       </emu-alg>
     </emu-clause>
-    </ins>        
+    </ins>
     <ins class="block">
     <emu-clause id="sec-temporal-handledatetimevalue" aoid="HandleDateTimeValue">
       <h1>HandleDateTimeValue ( _dateTimeFormat_, _x_ )</h1>
@@ -918,16 +916,16 @@
         1. If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Return ! HandleDateTimeTemporalYearMonth( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Return ! HandleDateTimeTemporalMonthDay( _dateTimeFormat_, _x_ ).          
+          1. Return ! HandleDateTimeTemporalMonthDay( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Return ! HandleDateTimeTemporalTime( _dateTimeFormat_, _x_ ).          
+          1. Return ! HandleDateTimeTemporalTime( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Return ! HandleDateTimeTemporalDateTime( _dateTimeFormat_, _x_ ).          
+          1. Return ! HandleDateTimeTemporalDateTime( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalInstant]] internal slot, then
-          1. Return ! HandleDateTimeTemporalInstant( _dateTimeFormat_, _x_ ).          
+          1. Return ! HandleDateTimeTemporalInstant( _dateTimeFormat_, _x_ ).
         1. Assert: _x_ has an [[InitializedTemporalZonedDateTime]] internal slot.
-        1. Return ! HandleDateTimeTemporalZonedDateTime( _dateTimeFormat_, _x_ ).          
-      1. Return ! HandleDateTimeOthers( _dateTimeFormat_, _x_ ).          
+        1. Return ! HandleDateTimeTemporalZonedDateTime( _dateTimeFormat_, _x_ ).
+      1. Return ! HandleDateTimeOthers( _dateTimeFormat_, _x_ ).
       </emu-alg>
     </emu-clause>
     </ins>
