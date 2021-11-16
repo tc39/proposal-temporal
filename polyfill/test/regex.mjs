@@ -483,9 +483,10 @@ describe('fromString regex', () => {
       generateTest('1976-11-18T15:23', zoneString, '-04:00')
     );
     // Various numbers of decimal places
-    ['1', '12', '123', '1234', '12345', '123456', '1234567', '12345678'].forEach((decimals) =>
-      test(`1976-11-18T15:23:30.${decimals}Z`, 'UTC')
-    );
+    ['1', '12', '123', '1234', '12345', '123456', '1234567', '12345678'].forEach((decimals) => {
+      test(`1976-11-18T15:23:30.${decimals}Z`, 'UTC');
+      test(`1976-11-18T15:23+01:00[+01:00:00.${decimals}]`, `+01:00:00.${decimals}`);
+    });
     // Lowercase UTC designator
     generateTest('1976-11-18T15:23', 'z', 'UTC');
     // Comma decimal separator

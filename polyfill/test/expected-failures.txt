@@ -112,3 +112,6 @@ intl402/Temporal/PlainTime/prototype/toLocaleString/timezone-getoffsetnanosecond
 intl402/Temporal/PlainYearMonth/prototype/toLocaleString/timezone-getoffsetnanosecondsfor-not-callable.js
 intl402/Temporal/ZonedDateTime/prototype/era/timezone-getoffsetnanosecondsfor-not-callable.js
 intl402/Temporal/ZonedDateTime/prototype/eraYear/timezone-getoffsetnanosecondsfor-not-callable.js
+
+# https://github.com/tc39/test262/pull/3316
+intl402/Temporal/TimeZone/from/argument-invalid.js

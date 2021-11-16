@@ -235,20 +235,11 @@ export const ES = ObjectAssign({}, ES2020, {
     }
   },
 
-  TemporalTimeZoneFromString: (stringIdent) => {
+  ParseTemporalTimeZone: (stringIdent) => {
     let { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
-    let identifier = ianaName;
-    if (!identifier && z) identifier = 'UTC';
-    if (!identifier) identifier = offset;
-    const result = ES.GetCanonicalTimeZoneIdentifier(identifier);
-    if (offset && identifier !== offset) {
-      const ns = ES.ParseTemporalInstant(stringIdent);
-      const offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
-      if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
-        throw new RangeError(`invalid offset ${offset}[${ianaName}]`);
-      }
-    }
-    return result;
+    if (ianaName) return ianaName;
+    if (z) return 'UTC';
+    return offset;
   },
   FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
@@ -1751,7 +1742,7 @@ export const ES = ObjectAssign({}, ES2020, {
       }
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
-    const timeZone = ES.TemporalTimeZoneFromString(identifier);
+    const timeZone = ES.ParseTemporalTimeZone(identifier);
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     return new TemporalTimeZone(timeZone);
   },
@@ -4232,7 +4223,7 @@ export const ES = ObjectAssign({}, ES2020, {
   SystemTimeZone: () => {
     const fmt = new IntlDateTimeFormat('en-us');
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
+    return new TemporalTimeZone(ES.ParseTemporalTimeZone(fmt.resolvedOptions().timeZone));
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
   GetOptionsObject: (options) => {
