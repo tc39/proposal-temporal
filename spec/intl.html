@@ -1352,6 +1352,270 @@
             1. Return _result_.
           </emu-alg>
         </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatetoiso" type="abstract operation">
+          <h1>
+            CalendarDateToISO (
+              _calendar_: a String,
+              _fields_: a Record,
+              _overflow_: an Object,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by the string _calendar_ to the ISO calendar and returns the corresponding day, month and year values as a Record with the fields [[Day]], [[Month]] and [[Year]] respectively.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateaddition" type="abstract operation">
+          <h1>
+            CalendarDateAddition (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+              _duration_: a %Temporal.Duration%,
+              _overflow_: an Object,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by the string _calendar_ and returns the corresponding day, month and year of the result in the ISO calendar values as a Record with the fields [[Day]], [[Month]] and [[Year]] respectively.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedifference" type="abstract operation">
+          <h1>
+            CalendarDateDifference (
+              _calendar_: a String,
+              _one_: a %Temporal.PlainDate%,
+              _two_: a %Temporal.PlainDate%,
+              _largestUnit_: a String,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the difference between the two dates _one_ and _two_ in the context of the calendar represented by the string _calendar_ and returns the corresponding years, months, weeks and days as a Record with the fields [[Years]], [[Months]], [[Weeks]] and [[Days]] respectively.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateera" type="abstract operation">
+          <h1>
+            CalendarDateEra (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISOYear]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the era for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a lowercase string identifier for calendars that have eras and *undefined* otherwise.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateerayear" type="abstract operation">
+          <h1>
+            CalendarDateEraYear (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISOYear]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the year of the current era for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be an integer for calendars that have eras and *undefined* otherwise.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateyear" type="abstract operation">
+          <h1>
+            CalendarDateYear (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISOYear]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the year for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a signed integer relative to the first day of a calendar-specific "epoch year".</dd>
+          </dl>
+
+          <emu-note>The year is relative to the first day of the calendar's epoch year, so if the epoch era starts in the middle of the year, the year will be the same value before and after the start date of the era.</emu-note>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatemonth" type="abstract operation">
+          <h1>
+            CalendarDateMonth (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISOMonth]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the month for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a 1-based integer.</dd>
+          </dl>
+          <emu-note>
+            The return value represents the ordinal index of the month in the current year. This means that for lunisolar calendars, the same month can return a different index depending on whether it's in a leap year.
+          </emu-note>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatemonthcode" type="abstract operation">
+          <h1>
+            CalendarDateMonthCode (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISOMonth]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the monthCode corresponding to the month for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a string identifier that starts with the literal grapheme *"M"* followed by two graphemes representing the zero-padded month number of the current month in a normal (non-leap) year and suffixed by an optional literal grapheme *"L"* if this is a leap month in a lunisolar calendar.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateday" type="abstract operation">
+          <h1>
+            CalendarDateDay (
+              _calendar_: a String,
+              _datetime_: an Object with the [[ISODay]] internal slot,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _datetime_ in the context of the calendar represented by the string _calendar_ and returns it. The return value should be 1-based.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedayofweek" type="abstract operation">
+          <h1>
+            CalendarDateDayOfWeek (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the day of the week in the calendar represented by _calendar_. The return value should be 1-based, where 1 is the day corresponding to Monday in the given calendar.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedayofyear" type="abstract operation">
+          <h1>
+            CalendarDateDayOfYear (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the day of the year in the calendar represented by _calendar_. The return value should be 1-based.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateweekofyear" type="abstract operation">
+          <h1>
+            CalendarDateWeekOfYear (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the week of the year in the calendar represented by _calendar_. The return value should be 1-based.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedaysinweek" type="abstract operation">
+          <h1>
+            CalendarDateDaysInWeek (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the number of days in the given week in the calendar represented by _calendar_.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedaysinmonth" type="abstract operation">
+          <h1>
+            CalendarDateDaysInMonth (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the number of days in the given month in the calendar represented by _calendar_.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatedaysinyear" type="abstract operation">
+          <h1>
+            CalendarDateDaysInYear (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the number of days in the given year in the calendar represented by _calendar_.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatemonthsinyear" type="abstract operation">
+          <h1>
+            CalendarDateMonthsInYear (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns the number of months in the given year in the calendar represented by _calendar_.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardateinleapyear" type="abstract operation">
+          <h1>
+            CalendarDateInLeapYear (
+              _calendar_: a String,
+              _date_: a %Temporal.PlainDate%,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a date-like object _date_ and returns *true* if it falls within a leap year for the calendar represented by _calendar_ and *false* otherwise.</dd>
+          </dl>
+          <emu-note>
+            A "leap year" is a year that contains more days than other years (for solar or lunar calendars) or more months than other years (for lunisolar calendars like Hebrew or Chinese).
+          </emu-note>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatefields" type="abstract operation">
+          <h1>
+            CalendarDateFields (
+              _calendar_: a String,
+              _fields_: a List of Strings,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes a list of standard fields in _fields_ that are necessary for a given operation and returns a new list by adding relevant calendar-specific fields for the calendar represented by _calendar_. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
+          </dl>
+        </emu-clause>
+
+        <emu-clause id="sec-temporal-calendardatemergefields" type="abstract operation">
+          <h1>
+            CalendarDateMergeFields (
+              _calendar_: a String,
+              _fields_: a List of Strings,
+              _additionalFields_: a List of Strings,
+            )
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>It takes two lists of calendar-specific fields for the calendar represented by _calendar_ in _fields_ and _additionalFields_ and returns a new list that includes both sets of fields. The values in _additionalFields_ should supersede the values in _fields_. Also, the returned field list must be free of ambiguity or conflicts. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
+          </dl>
+          <emu-note>
+            For example, if _fields_ contains *"year"* but _additionalFields_ contains *"era"* and *"eraYear"*, then the returned list must not include *"year"* in order to avoid ambiguity or conflict between different ways of specifying the year.
+          </emu-note>
+        </emu-clause>
       </emu-clause>
 
       <emu-clause id="sup-properties-of-the-temporal-calendar-prototype-object">
@@ -1373,7 +1637,7 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
-              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
@@ -1394,7 +1658,8 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « »).
-              1. Let _result_ be a Record with [[Year]], [[Month]], and [[ReferenceISODay]] integer fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+              1. Set _result_.[[ReferenceISODay]] to _result_.[[Day]].
             1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
           </emu-alg>
         </emu-clause>
@@ -1415,7 +1680,8 @@
             1. Else,
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-              1. Let _result_ be a Record with [[Month]], [[Day]], and [[ReferenceISOYear]] fields, that is the result of implementation-defined processing of _fields_, _overflow_, and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+              1. Set _result_.[[ReferenceISOYear]] to _result_.[[Year]].
             1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
           </emu-alg>
         </emu-clause>
@@ -1437,7 +1703,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
             1. Else,
-              1. Let _result_ be a Record with [[Year]], [[Month]], and [[Day]] fields, that is the result of implementation-defined processing of _date_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_, and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateAddition(_calendar_, _date_, _balanceResult_, _overflow_).
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
@@ -1459,9 +1725,9 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be ! DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
-              1. Let _result_ be a Date Duration Record, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateDifference(_calendar_.[[Identifier]], _one_, _two_, _largestUnit_).
               1. Assert: ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
-            1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+            1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
           </emu-alg>
         </emu-clause>
 
@@ -1478,7 +1744,7 @@
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
-            1. Let _era_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+            1. Let _era_ be ! CalendarDateEra(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return _era_.
           </emu-alg>
         </emu-clause>
@@ -1496,7 +1762,7 @@
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
-            1. Let _eraYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+            1. Let _eraYear_ be ! CalendarDateEraYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_eraYear_).
           </emu-alg>
         </emu-clause>
@@ -1516,7 +1782,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _year_ be ! ISOYear(_temporalDateLike_).
             1. Else,
-              1. Let _year_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _year_ be ! CalendarDateYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_year_).
           </emu-alg>
         </emu-clause>
@@ -1538,7 +1804,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _month_ be ! ISOMonth(_temporalDateLike_).
             1. Else,
-              1. Let _month_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _month_ be ! CalendarDateMonth(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_month_).
           </emu-alg>
         </emu-clause>
@@ -1558,7 +1824,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthCode_ be ! ISOMonthCode(_temporalDateLike_).
             1. Else,
-              1. Let _monthCode_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _monthCode_ be ! CalendarDateMonthCode(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return _monthCode_.
           </emu-alg>
         </emu-clause>
@@ -1578,7 +1844,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _day_ be ! ISODay(_temporalDateLike_).
             1. Else,
-              1. Let _day_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _day_ be ! CalendarDateDay(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_day_).
           </emu-alg>
         </emu-clause>
@@ -1597,7 +1863,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _dayOfWeek_ be ! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _dayOfWeek_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
+              1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfWeek_).
           </emu-alg>
         </emu-clause>
@@ -1616,7 +1882,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _dayOfYear_ be ! ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _dayOfYear_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
+              1. Let _dayOfYear_ be ! CalendarDateDayOfYear(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfYear_).
           </emu-alg>
         </emu-clause>
@@ -1635,7 +1901,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _weekOfYear_ be ! ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
-              1. Let _weekOfYear_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
+              1. Let _weekOfYear_ be ! CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_weekOfYear_).
           </emu-alg>
         </emu-clause>
@@ -1654,7 +1920,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInWeek_ be 7.
             1. Else,
-              1. Let _daysInWeek_ be the result of implementation-defined processing of _temporalDate_ and _calendar_.[[Identifier]].
+              1. Let _daysInWeek_ be ! CalendarDateDaysInWeek(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_daysInWeek_).
           </emu-alg>
         </emu-clause>
@@ -1674,7 +1940,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInMonth_ be ! ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]]).
             1. Else,
-              1. Let _daysInMonth_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _daysInMonth_ be ! CalendarDateDaysInMonth(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_daysInMonth_).
           </emu-alg>
         </emu-clause>
@@ -1694,7 +1960,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInYear_ be ! ISODaysInYear(_temporalDateLike_.[[ISOYear]]).
             1. Else,
-              1. Let _daysInYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _daysInYear_ be ! CalendarDateDaysInYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_daysInYear_).
           </emu-alg>
         </emu-clause>
@@ -1714,7 +1980,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _monthsInYear_ be 12.
             1. Else,
-              1. Let _monthsInYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _monthsInYear_ be ! CalendarDateMonthsInYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_monthsInYear_).
           </emu-alg>
         </emu-clause>
@@ -1734,7 +2000,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _inLeapYear_ be ! IsISOLeapYear(_temporalDateLike_.[[ISOYear]]).
             1. Else,
-              1. Let _inLeapYear_ be the result of implementation-defined processing of _temporalDateLike_ and _calendar_.[[Identifier]].
+              1. Let _inLeapYear_ be ! CalendarDateInLeapYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return _inLeapYear_.
           </emu-alg>
         </emu-clause>
@@ -1769,7 +2035,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be _fieldNames_.
             1. Else,
-              1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and _calendar_.[[Identifier]].
+              1. Let _result_ be ! CalendarDateFields(_calendar_.[[Identifier]], _fieldNames_).
             1. Return CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
@@ -1800,7 +2066,7 @@
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_additionalFieldsCopied_, _key_, _propValue_).
-            1. Return the result of implementation-defined processing of _fieldsCopied_, _additionalFieldsCopied_, and _calendar_.[[Identifier]].
+            1. Return ! CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopied_, _additionalFieldsCopied_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
