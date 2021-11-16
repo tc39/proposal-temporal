@@ -824,7 +824,7 @@
           1. Set _year_ to _year_ − 1.
           1. Set _testYear_ to _testYear_ − 1.
         1. NOTE: To deal with numbers of days greater than the number of days in a year, the following section adds years and subtracts days until the number of days is less than 366 or 365.
-        1. Let _testYear_ be _year_ + 1.
+        1. Set _testYear_ to _testYear_ + 1.
         1. Repeat, while _day_ &gt; ! ISODaysInYear(_testYear_),
           1. Set _day_ to _day_ − ! ISODaysInYear(_testYear_).
           1. Set _year_ to _year_ + 1.
