@@ -692,6 +692,216 @@
     </ins>
 
     <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporaldate" aoid="HandleDateTimeTemporalDate">
+      <h1>HandleDateTimeTemporalDate ( _dateTimeFormat_, _temporalDate_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalDate accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalDate_ (which must be an ECMAScript value has an [[InitializedTemporalDate]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].
+      1. Let _calendar_ be ? ToString(_temporalDate_.[[Calendar]]).
+      1. If _calendar_ is _dateTimeFormat_.[[Calendar]], then
+        1. Let _calendarOverride_ be _temporalDate_.[[Calendar]].
+      1. Else if _calendar_ is *"iso8601"*, then
+        1. Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).
+      1. Else,
+        1. Throw a *RangeError* exception.
+      1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).
+      1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
+      1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporalyearmonth" aoid="HandleDateTimeTemporalYearMonth">
+      <h1>HandleDateTimeTemporalYearMonth ( _dateTimeFormat_, _temporalYearMonth_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalYearMonth accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalYearMonth_ (which must be an ECMAScript value has an [[InitializedTemporalYearMonth]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _temporalYearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].
+      1. Let _calendar_ be ? ToString(_temporalYearMonth_.[[Calendar]]).
+      1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
+        1. Throw a *RangeError* exception.
+      1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalYearMonth_.[[ISOYear]], _temporalYearMonth_.[[ISOMonth]], _temporalYearMonth_.[[ISODay]], 12, 0, 0, 0, 0, 0, _temporalYearMonth_.[[Calendar]]).
+      1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
+      1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporalmonthday" aoid="HandleDateTimeTemporalMonthDay">
+      <h1>HandleDateTimeTemporalMonthDay ( _dateTimeFormat_, _temporalMonthDay_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalMonthDay accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalMonthDay_ (which must be an ECMAScript value has an [[InitializedTemporalMonthDay]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _temporalMonthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].
+      1. Let _calendar_ be ? ToString(_temporalMonthDay_.[[Calendar]]).
+      1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
+        1. Throw a *RangeError* exception.
+      1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalMonthDay_.[[ISOYear]], _temporalMonthDay_.[[ISOMonth]], _temporalMonthDay_.[[ISODay]], 12, 0, 0, 0, 0, 0, _temporalMonthDay_.[[Calendar]]).
+      1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
+      1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporaltime" aoid="HandleDateTimeTemporalTime">
+      <h1>HandleDateTimeTemporalTime ( _dateTimeFormat_, _temporalTime_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalTime_ (which must be an ECMAScript value has an [[InitializedTemporalTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _temporalTime_ has an [[InitializedTemporalTime]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
+      1. Let _isoCalendar_ be ! GetISO8601Calendar().
+      1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _isoCalendar_).
+      1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
+      1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporaldatetime" aoid="HandleDateTimeTemporalDateTime">
+      <h1>HandleDateTimeTemporalDateTime ( _dateTimeFormat_, _dateTime_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalDateTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _dateTime_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].
+      1. Let _calendar_ be ? ToString(_dateTime_.[[Calendar]]).
+      1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
+        1. Throw a *RangeError* exception.
+      1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
+      1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, *"compatible"*).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporalinstant" aoid="HandleDateTimeTemporalInstant">
+      <h1>HandleDateTimeTemporalInstant ( _dateTimeFormat_, _instant_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalInstant accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _instant_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimevaluetemporalzoneddatetime" aoid="HandleDateTimeTemporalZonedDateTime">
+      <h1>HandleDateTimeTemporalZonedDateTime ( _dateTimeFormat_, _zonedDateTime_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeTemporalZonedDateTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _zonedDateTime_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: _zonedDateTime_ has an [[InitializedTemporalZonedDateTime]] internal slot.
+      1. Let _pattern_ be _dateTimeFormat_.[[TemporalZonedDateTimePattern]].
+      1. Let _calendar_ be ? ToString(_zonedDateTime_.[[Calendar]]).
+      1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
+        1. Throw a *RangeError* exception.
+      1. Let _timeZone_ be ? ToString(_zonedDateTime_.[[TimeZone]]).
+      1. If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then
+        1. Throw a *RangeError* exception.
+      1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+      1. If _pattern_ is *null*, throw a *TypeError* exception.
+      1. Return the Record {
+          [[pattern]]: _pattern_.[[pattern]],
+          [[rangePatterns]]: _pattern_.[[rangePatterns]],
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-temporal-handledatetimeothers" aoid="HandleDateTimeOthers">
+      <h1>HandleDateTimeOthers ( _dateTimeFormat_, _x_ )</h1>
+
+      <p>
+        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be an ECMAScript value which IsTemporalObject(_x_) return *false* ). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+      </p>
+
+      <emu-alg>
+      1. Assert: ! IsTemporalObject(_x_) is *false*.
+      1. Let _pattern_ be _dateTimeFormat_.[[Pattern]].
+      1. Let _rangePatterns_ be _dateTimeFormat_.[[RangePatterns]].
+      1. If _x_ is *undefined*, then
+        1. Set _x_ to ! Call(%Date.now%, *undefined*).
+      1. Else,
+        1. Set _x_ to ? ToNumber(_x_).
+      1. Set _x_ to TimeClip(_x_).
+      1. If _x_ is *NaN*, throw a *RangeError* exception.
+      1. Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.
+      1. Return the Record {
+          [[pattern]]: _pattern_,
+          [[rangePatterns]]: _rangePatterns_,
+          [[epochNanoseconds]]: _epochNanoseconds_
+        }.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+    <ins class="block">
     <emu-clause id="sec-temporal-handledatetimevalue" aoid="HandleDateTimeValue">
       <h1>HandleDateTimeValue ( _dateTimeFormat_, _x_ )</h1>
 
@@ -702,77 +912,20 @@
       <emu-alg>
       1. If ! IsTemporalObject(_x_) is *true*, then
         1. If _x_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].
-          1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
-          1. If _calendar_ is _dateTimeFormat_.[[Calendar]], then
-            1. Let _calendarOverride_ be _x_.[[Calendar]].
-          1. Else if _calendar_ is *"iso8601"*, then
-            1. Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).
-          1. Else,
-            1. Throw a *RangeError* exception.
-          1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
-          1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+          1. Return ! HandleDateTimeTemporalDate( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].
-          1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
-          1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
-            1. Throw a *RangeError* exception.
-          1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
-          1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+          1. Return ! HandleDateTimeTemporalYearMonth( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].
-          1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
-          1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
-            1. Throw a *RangeError* exception.
-          1. Let _plainDateTime_ be ? CreateTemporalDateTime(_x_.[[ISOYear]], _x_.[[ISOMonth]], _x_.[[ISODay]], 12, 0, 0, 0, 0, 0, _x_.[[Calendar]]).
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
-          1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+          1. Return ! HandleDateTimeTemporalMonthDay( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
-          1. Let _isoCalendar_ be ! GetISO8601Calendar().
-          1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _x_.[[ISOHour]], _x_.[[ISOMinute]], _x_.[[ISOSecond]], _x_.[[ISOMillisecond]], _x_.[[ISOMicrosecond]], _x_.[[ISONanosecond]], _isoCalendar_).
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
-          1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
+          1. Return ! HandleDateTimeTemporalTime( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].
-          1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
-          1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
-            1. Throw a *RangeError* exception.
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
-          1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _x_, *"compatible"*).
+          1. Return ! HandleDateTimeTemporalDateTime( _dateTimeFormat_, _x_ ).
         1. If _x_ has an [[InitializedTemporalInstant]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].
-          1. Let _instant_ be _x_.
-        1. If _x_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _pattern_ be _dateTimeFormat_.[[TemporalZonedDateTimePattern]].
-          1. Let _calendar_ be ? ToString(_x_.[[Calendar]]).
-          1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
-            1. Throw a *RangeError* exception.
-          1. Let _timeZone_ be ? ToString(_x_.[[TimeZone]]).
-          1. If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then
-            1. Throw a *RangeError* exception.
-          1. Let _instant_ be ! CreateTemporalInstant(_x_.[[Nanoseconds]]).
-        1. If _pattern_ is *null*, throw a *TypeError* exception.
-        1. Let _rangePatterns_ be _pattern_.[[rangePatterns]].
-        1. Set _pattern_ to _pattern_.[[pattern]].
-        1. Let _epochNanoseconds_ be _instant_.[[Nanoseconds]].
-      1. Else,
-        1. Let _pattern_ be _dateTimeFormat_.[[Pattern]].
-        1. Let _rangePatterns_ be _dateTimeFormat_.[[RangePatterns]].
-        1. If _x_ is *undefined*, then
-          1. Set _x_ to ! Call(%Date.now%, *undefined*).
-        1. Else,
-          1. Set _x_ to ? ToNumber(_x_).
-        1. Set _x_ to TimeClip(_x_).
-        1. If _x_ is *NaN*, throw a *RangeError* exception.
-        1. Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.
-      1. Return the Record {
-          [[pattern]]: _pattern_,
-          [[rangePatterns]]: _rangePatterns_,
-          [[epochNanoseconds]]: _epochNanoseconds_
-        }.
+          1. Return ! HandleDateTimeTemporalInstant( _dateTimeFormat_, _x_ ).
+        1. Assert: _x_ has an [[InitializedTemporalZonedDateTime]] internal slot.
+        1. Return ! HandleDateTimeTemporalZonedDateTime( _dateTimeFormat_, _x_ ).
+      1. Return ! HandleDateTimeOthers( _dateTimeFormat_, _x_ ).
       </emu-alg>
     </emu-clause>
     </ins>
