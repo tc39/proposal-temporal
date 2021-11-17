@@ -6040,17 +6040,22 @@
     return value;
   };
 
-  var ToIntegerNoFraction = function ToIntegerNoFraction(value) {
+  var ToIntegerWithoutRounding = function ToIntegerWithoutRounding(value) {
     value = ES.ToNumber(value);
+    if (NumberIsNaN(value)) return 0;
+
+    if (!NumberIsFinite(value)) {
+      throw new RangeError('infinity is out of range');
+    }
 
     if (!ES.IsInteger(value)) {
       throw new RangeError("unsupported fractional value ".concat(value));
     }
 
-    return value;
+    return ES.ToInteger(value); // ℝ(value) in spec text; converts -0 to 0
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerNoFraction], ['months', ToIntegerNoFraction], ['weeks', ToIntegerNoFraction], ['days', ToIntegerNoFraction], ['hours', ToIntegerNoFraction], ['minutes', ToIntegerNoFraction], ['seconds', ToIntegerNoFraction], ['milliseconds', ToIntegerNoFraction], ['microseconds', ToIntegerNoFraction], ['nanoseconds', ToIntegerNoFraction], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
+  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerWithoutRounding], ['months', ToIntegerWithoutRounding], ['weeks', ToIntegerWithoutRounding], ['days', ToIntegerWithoutRounding], ['hours', ToIntegerWithoutRounding], ['minutes', ToIntegerWithoutRounding], ['seconds', ToIntegerWithoutRounding], ['milliseconds', ToIntegerWithoutRounding], ['microseconds', ToIntegerWithoutRounding], ['nanoseconds', ToIntegerWithoutRounding], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
   var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
   var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
   var ES2020 = {
@@ -6091,7 +6096,7 @@
   var ES = ObjectAssign$2({}, ES2020, {
     ToPositiveInteger: ToPositiveInteger,
     ToIntegerThrowOnInfinity: ToIntegerThrowOnInfinity,
-    ToIntegerNoFraction: ToIntegerNoFraction,
+    ToIntegerWithoutRounding: ToIntegerWithoutRounding,
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
     },
@@ -12839,16 +12844,16 @@
 
       _classCallCheck(this, Duration);
 
-      years = ES.ToIntegerThrowOnInfinity(years);
-      months = ES.ToIntegerThrowOnInfinity(months);
-      weeks = ES.ToIntegerThrowOnInfinity(weeks);
-      days = ES.ToIntegerThrowOnInfinity(days);
-      hours = ES.ToIntegerThrowOnInfinity(hours);
-      minutes = ES.ToIntegerThrowOnInfinity(minutes);
-      seconds = ES.ToIntegerThrowOnInfinity(seconds);
-      milliseconds = ES.ToIntegerThrowOnInfinity(milliseconds);
-      microseconds = ES.ToIntegerThrowOnInfinity(microseconds);
-      nanoseconds = ES.ToIntegerThrowOnInfinity(nanoseconds);
+      years = ES.ToIntegerWithoutRounding(years);
+      months = ES.ToIntegerWithoutRounding(months);
+      weeks = ES.ToIntegerWithoutRounding(weeks);
+      days = ES.ToIntegerWithoutRounding(days);
+      hours = ES.ToIntegerWithoutRounding(hours);
+      minutes = ES.ToIntegerWithoutRounding(minutes);
+      seconds = ES.ToIntegerWithoutRounding(seconds);
+      milliseconds = ES.ToIntegerWithoutRounding(milliseconds);
+      microseconds = ES.ToIntegerWithoutRounding(microseconds);
+      nanoseconds = ES.ToIntegerWithoutRounding(nanoseconds);
       var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
       for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
