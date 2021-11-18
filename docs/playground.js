@@ -8022,11 +8022,6 @@
     },
     GetOffsetNanosecondsFor: function GetOffsetNanosecondsFor(timeZone, instant) {
       var getOffsetNanosecondsFor = ES.GetMethod(timeZone, 'getOffsetNanosecondsFor');
-
-      if (getOffsetNanosecondsFor === undefined) {
-        getOffsetNanosecondsFor = GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%');
-      }
-
       var offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [instant]);
 
       if (typeof offsetNs !== 'number') {
