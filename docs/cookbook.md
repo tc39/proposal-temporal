@@ -38,13 +38,23 @@ How to get a Unix timestamp?
 
 ## Converting between Temporal types and legacy Date
 
-### Instant from legacy Date
+### Temporal types from legacy Date
 
-Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in exact time.
+Here's how to convert legacy ECMAScript Date into a Temporal.Instant or Temporal.ZonedDateTime instance corresponding to the same instant in exact time.
 
 <!-- prettier-ignore-start -->
 ```javascript
-{{cookbook/instantFromLegacyDate.mjs}}
+{{cookbook/fromLegacyDate.mjs}}
+```
+<!-- prettier-ignore-end -->
+
+### Legacy Date from Temporal types
+
+Legacy Date represents an exact time, so it's straightforward to convert a Temporal.Instant or Temporal.ZonedDateTime instance into a legacy Date instance that corresponds to it.
+
+<!-- prettier-ignore-start -->
+```javascript
+{{cookbook/toLegacyDate.mjs}}
 ```
 <!-- prettier-ignore-end -->
 

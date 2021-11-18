@@ -24,5 +24,5 @@ Documentation cookbook code samples are also runnable as tests.
 $ npm run test-cookbook
 
 # Test one cookbook file (run from /polyfill folder)
-$ env TEST=dateTimeFromLegacyDate npm run test-cookbook-one
+$ env TEST=fromLegacyDate npm run test-cookbook-one
 ```
