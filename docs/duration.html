@@ -502,10 +502,13 @@ It returns a newly constructed <code>Temporal.Duration</code> with all the field
 If <code>duration</code> is already positive or zero, then the returned object is a copy of <code>duration</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-PT8H30M'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-d<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// PT8H30M</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>duration.<strong>round</strong>(<em>options</em>: object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+d<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// PT8H30M</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>duration.<strong>round</strong>(<em>roundTo</em>: string | object) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>options</code> (object): An object with properties representing options for the operation.
-The following options are recognized:<ul>
+<li><code>roundTo</code> (string | object): A required string or object to control the operation.<ul>
+<li>If a string is provided, the resulting <code>Temporal.Duration</code> object will be rounded to that unit.
+Valid values are <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
+A string parameter is treated the same as an object whose <code>smallestUnit</code> property value is that string.</li>
+<li>If an object is passed, the following properties are recognized:<ul>
 <li><code>largestUnit</code> (string): The largest unit of time to allow in the resulting <code>Temporal.Duration</code> object.
 Valid values are <code>&#39;auto&#39;</code>, <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, <code>&#39;week&#39;</code>, <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
@@ -522,6 +525,8 @@ It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed 
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object which is <code>duration</code>, rounded and/or balanced.</p>
 <p>Rounds and/or balances <code>duration</code> to the given largest and smallest units and rounding increment, and returns the result as a new <code>Temporal.Duration</code> object.</p>
 <p>The <code>largestUnit</code> determines the largest unit allowed in the result.
@@ -530,13 +535,13 @@ For example, with <code>largestUnit: &#39;minute&#39;</code>, a duration of 1 ho
 These durations are equally long, so no rounding takes place, but they are expressed differently.
 This operation is called &quot;balancing.&quot;</p>
 <p>For usage examples and a more complete explanation of how balancing works, see <a href="./balancing.html">Duration balancing</a>.</p>
-<p>A <code>largestUnit</code> value of <code>&#39;auto&#39;</code>, which is the default if only <code>smallestUnit</code> is given, means that <code>largestUnit</code> should be the largest nonzero unit in the duration that is larger than <code>smallestUnit</code>.
+<p>A <code>largestUnit</code> value of <code>&#39;auto&#39;</code>, which is the default if only <code>smallestUnit</code> is given (or if <code>roundTo</code> is a string), means that <code>largestUnit</code> should be the largest nonzero unit in the duration that is larger than <code>smallestUnit</code>.
 For example, in a duration of 3 days and 12 hours, <code>largestUnit: &#39;auto&#39;</code> would mean the same as <code>largestUnit: &#39;day&#39;</code>.
 This behavior implies that the default balancing behavior of this method to not &quot;grow&quot; the duration beyond its current largest unit unless needed for rounding.</p>
-<p>The <code>smallestUnit</code> option determines the unit to round to.
+<p>The <code>smallestUnit</code> option (or the value of <code>roundTo</code> if a string parameter is used) determines the unit to round to.
 For example, to round to the nearest minute, use <code>smallestUnit: &#39;minute&#39;</code>.
-The default, if only <code>largestUnit</code> is given, is to do no rounding.</p>
-<p>At least one of <code>largestUnit</code> or <code>smallestUnit</code> is required.</p>
+The default, if only <code>largestUnit</code> is given, is to do no rounding of smaller units.</p>
+<p>If an object parameter is used, at least one of <code>largestUnit</code> or <code>smallestUnit</code> is required.</p>
 <p>Converting between years, months, weeks, and other units requires a reference point.
 If <code>largestUnit</code> or <code>smallestUnit</code> is years, months, or weeks, or the duration has nonzero years, months, or weeks, then the <code>relativeTo</code> option is required.</p>
 <p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
@@ -616,15 +621,20 @@ d <span class="token operator">=</span> d<span class="token punctuation">.</span
   relativeTo<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 quarters <span class="token operator">=</span> d<span class="token punctuation">.</span>months <span class="token operator">/</span> <span class="token number">3</span><span class="token punctuation">;</span>
-quarters<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre><h3 id="total"><a class="heading-link" href="#total"></a>duration.<strong>total</strong>(<em>options</em>: object) : number</h3><p><strong>Parameters:</strong></p>
+quarters<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre><h3 id="total"><a class="heading-link" href="#total"></a>duration.<strong>total</strong>(<em>totalOf</em>: string | object) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>options</code> (object): An object with properties representing options for the operation.
-The following options are recognized:<ul>
+<li><code>totalOf</code> (string | object): A required string or object to control the operation.<ul>
+<li>If a string is passed, it represents the unit of time that will be returned.
+Valid values are <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
+A string parameter is treated the same as an object whose <code>unit</code> property value is that string.</li>
+<li>If an object is passed, the following properties are recognized:<ul>
 <li><code>unit</code> (string): The unit of time that will be returned.
 Valid values are <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, <code>&#39;week&#39;</code>, <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 There is no default; <code>unit</code> is required.</li>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>): The starting point to use when converting between years, months, weeks, and days.
+<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code> ): The starting point to use when converting between years, months, weeks, and days.
 It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed to <code>Temporal.PlainDateTime.from()</code>.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -633,9 +643,10 @@ It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed 
 If the duration IS NOT evenly divisible by the desired unit, then a fractional remainder will be present in the result.
 If the duration IS evenly divisible by the desired unit, then the integer result will be identical to <code>duration.round({ smallestUnit: unit, largestUnit: unit, relativeTo })[unit]</code>.</p>
 <p>Interpreting years, months, or weeks requires a reference point.
-Therefore, <code>unit</code> is <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, or <code>&#39;week&#39;</code>, or the duration has nonzero &#39;year&#39;, &#39;month&#39;, or &#39;week&#39;, then the <code>relativeTo</code> option is required.</p>
+Therefore, if <code>unit</code> is <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, or <code>&#39;week&#39;</code>, or the duration has nonzero &#39;year&#39;, &#39;month&#39;, or &#39;week&#39;, then the <code>relativeTo</code> option is required.
+For this reason, it&#39;s required to use the object (not string) form of <code>totalOf</code> in these cases.</p>
 <p>The <code>relativeTo</code> option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a <code>Temporal.PlainDateTime</code> instance.
+It is a <code>Temporal.PlainDateTime</code> or <code>Temporal.ZonedDateTime</code> instance.
 If any other type is provided, then it will be converted to a <code>Temporal.PlainDateTime</code> as if it were passed to <code>Temporal.PlainDateTime.from(..., { overflow: &#39;reject&#39; })</code>.
 A <code>Temporal.PlainDate</code> or a date string like <code>2020-01-01</code> is also accepted because time is optional when creating a <code>Temporal.PlainDateTime</code>.</p>
 <p>Example usage:</p>

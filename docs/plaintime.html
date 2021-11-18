@@ -475,10 +475,13 @@ Using default options, <code>time1.since(time2)</code> yields the same result as
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT34M11.903051894S</span>
-time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M48.096948106S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>options</em>: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'22:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -PT2H25M48.096948106S</span></code></pre><h3 id="round"><a class="heading-link" href="#round"></a>time.<strong>round</strong>(<em>roundTo</em>: string | object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>options</code> (object): An object with properties representing options for the operation.
-The following options are recognized:<ul>
+<li><code>roundTo</code> (string | object): A required string or object to control the operation.<ul>
+<li>If a string is provided, the resulting <code>Temporal.PlainTime</code> object will be rounded to that unit.
+Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
+A string parameter is treated the same as an object whose <code>smallestUnit</code> property value is that string.</li>
+<li>If an object is passed, the following properties are recognized:<ul>
 <li><code>smallestUnit</code> (required string): The unit to round to.
 Valid values are <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
@@ -489,9 +492,11 @@ The default is <code>&#39;halfExpand&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is <code>time</code> rounded to <code>roundingIncrement</code> of <code>smallestUnit</code>.</p>
+</li>
+</ul>
+<p><strong>Returns:</strong> a new <code>Temporal.PlainTime</code> object which is <code>time</code> rounded to <code>roundTo</code> (if a string parameter is used) or <code>roundingIncrement</code> of <code>smallestUnit</code> (if an object parameter is used).</p>
 <p>Rounds <code>time</code> to the given unit and increment, and returns the result as a new <code>Temporal.PlainTime</code> object.</p>
-<p>The <code>smallestUnit</code> option determines the unit to round to.
+<p>The <code>smallestUnit</code> option (or the value of <code>roundTo</code> if a string parameter is used) determines the unit to round to.
 For example, to round to the nearest minute, use <code>smallestUnit: &#39;minute&#39;</code>.
 This option is required.</p>
 <p>The <code>roundingIncrement</code> option allows rounding to an integer number of units.
@@ -508,6 +513,9 @@ Instead of 60 minutes, use 1 hour.)</p>
 <li><code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
 When there is a tie, round up, like <code>ceil</code>.</li>
 </ul>
+<p>As expected for a method named &quot;round&quot;, the default rounding mode is <code>&#39;halfExpand&#39;</code> to match the behavior of <code>Math.round</code>.
+Note that this is different than the <code>&#39;trunc&#39;</code> default used by <code>until</code> and <code>since</code> options because rounding up would be an unexpected default for those operations.
+Other properties behave identically between these methods.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
