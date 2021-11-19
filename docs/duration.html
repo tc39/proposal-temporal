@@ -335,7 +335,7 @@ d <span class="token operator">=</span> Temporal<span class="token punctuation">
 <li><code>two</code> (<code>Temporal.Duration</code> or value convertible to one): Second duration to compare.</li>
 <li><code>options</code> (object): An object with properties representing options for the operation.
 The following option is recognized:<ul>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.</li>
+<li><code>relativeTo</code> (<code>Temporal.PlainDate</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.</li>
 </ul>
 </li>
 </ul>
@@ -350,9 +350,9 @@ Returns an integer indicating whether <code>one</code> is shorter or longer or i
 <p>If <code>one</code> and <code>two</code> are not <code>Temporal.Duration</code> objects, then they will be converted to one as if they were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If any of the <code>years</code>, <code>months</code>, or <code>weeks</code> properties of either of the durations are nonzero, then the <code>relativeTo</code> option is required, since comparing durations with years, months, or weeks requires a point on the calendar to figure out how long they are.</p>
 <p>Negative durations are treated as the same as negative numbers for comparison purposes: they are &quot;less&quot; (shorter) than zero.</p>
-<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when comparing days with hours. If <code>relativeTo</code> is a <code>Temporal.PlainDateTime</code>, then days are always considered equal to 24 hours.</p>
-<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDateTime</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDateTime.from()</code>.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDateTime</code>.</p>
+<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when comparing days with hours. If <code>relativeTo</code> is a <code>Temporal.PlainDate</code>, then days are always considered equal to 24 hours.</p>
+<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDate</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDate.from()</code>.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDate</code>.</p>
 <p>This function can be used to sort arrays of <code>Temporal.Duration</code> objects.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">one <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">79</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">10</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -415,7 +415,7 @@ duration <span class="token operator">=</span> duration<span class="token punctu
 <li><code>other</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to add.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following option is recognized:<ul>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.</li>
+<li><code>relativeTo</code> (<code>Temporal.PlainDate</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.</li>
 </ul>
 </li>
 </ul>
@@ -427,9 +427,9 @@ If <code>other</code> is not a <code>Temporal.Duration</code> object, then it wi
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html">Duration balancing</a>.</p>
 <p>By default, you cannot add durations with years, months, or weeks, as that could be ambiguous depending on the start date.
 To do this, you must provide a start date using the <code>relativeTo</code> option.</p>
-<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDateTime</code>, then days are always considered equal to 24 hours.</p>
-<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDateTime</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDateTime.from()</code>.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDateTime</code>.</p>
+<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDate</code>, then days are always considered equal to 24 hours.</p>
+<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDate</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDate.from()</code>.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDate</code>.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
 <p>Usage example:</p>
 <!-- prettier-ignore-start -->
@@ -457,7 +457,7 @@ oneAndAHalfMonth<span class="token punctuation">.</span><span class="token funct
 <li><code>other</code> (<code>Temporal.Duration</code> or value convertible to one): The duration to subtract.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following option is recognized:<ul>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.</li>
+<li><code>relativeTo</code> (<code>Temporal.PlainDate</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.</li>
 </ul>
 </li>
 </ul>
@@ -470,9 +470,9 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html#duration-arithmetic">Duration balancing</a>.</p>
 <p>By default, you cannot subtract durations with years, months, or weeks, as that could be ambiguous depending on the start date.
 To do this, you must provide a start date using the <code>relativeTo</code> option.</p>
-<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDateTime</code>, then days are always considered equal to 24 hours.</p>
-<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDateTime</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDateTime.from()</code>.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDateTime</code>.</p>
+<p>The <code>relativeTo</code> option may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDate</code>, then days are always considered equal to 24 hours.</p>
+<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDate</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDate.from()</code>.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDate</code>.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">hourAndAHalf <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'PT1H30M'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -520,8 +520,7 @@ The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
 Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
 The default is <code>&#39;halfExpand&#39;</code>.</li>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code>): The starting point to use when converting between years, months, weeks, and days.
-It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed to <code>Temporal.PlainDateTime.from()</code>.</li>
+<li><code>relativeTo</code> (<code>Temporal.PlainDate</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.</li>
 </ul>
 </li>
 </ul>
@@ -563,9 +562,9 @@ This mode acts the same as <code>trunc</code> for positive durations but for neg
 For this reason, <code>trunc</code> is recommended for most &quot;round down&quot; use cases.</li>
 </ul>
 <p>The <code>relativeTo</code> option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a <code>Temporal.PlainDateTime</code> instance.
-If any other type of value is given, then it will be converted to a <code>Temporal.PlainDateTime</code> as if it were passed to <code>Temporal.PlainDateTime.from(..., { overflow: &#39;reject&#39; })</code>.
-A <code>Temporal.PlainDate</code> or a date string like <code>2020-01-01</code> is also accepted because time is optional when creating a <code>Temporal.PlainDateTime</code>.</p>
+It may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDate</code>, then days are always considered equal to 24 hours.</p>
+<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDate</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDate.from()</code>.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDate</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Balance a duration as far as possible without knowing a starting point</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> minutes<span class="token operator">:</span> <span class="token number">130</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -631,8 +630,7 @@ A string parameter is treated the same as an object whose <code>unit</code> prop
 <li><code>unit</code> (string): The unit of time that will be returned.
 Valid values are <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, <code>&#39;week&#39;</code>, <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.
 There is no default; <code>unit</code> is required.</li>
-<li><code>relativeTo</code> (<code>Temporal.PlainDateTime</code> ): The starting point to use when converting between years, months, weeks, and days.
-It must be a <code>Temporal.PlainDateTime</code>, or a value that can be passed to <code>Temporal.PlainDateTime.from()</code>.</li>
+<li><code>relativeTo</code> (<code>Temporal.PlainDate</code>, <code>Temporal.ZonedDateTime</code>, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.</li>
 </ul>
 </li>
 </ul>
@@ -646,9 +644,9 @@ If the duration IS evenly divisible by the desired unit, then the integer result
 Therefore, if <code>unit</code> is <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, or <code>&#39;week&#39;</code>, or the duration has nonzero &#39;year&#39;, &#39;month&#39;, or &#39;week&#39;, then the <code>relativeTo</code> option is required.
 For this reason, it&#39;s required to use the object (not string) form of <code>totalOf</code> in these cases.</p>
 <p>The <code>relativeTo</code> option gives the starting point used when converting between or rounding to years, months, weeks, or days.
-It is a <code>Temporal.PlainDateTime</code> or <code>Temporal.ZonedDateTime</code> instance.
-If any other type is provided, then it will be converted to a <code>Temporal.PlainDateTime</code> as if it were passed to <code>Temporal.PlainDateTime.from(..., { overflow: &#39;reject&#39; })</code>.
-A <code>Temporal.PlainDate</code> or a date string like <code>2020-01-01</code> is also accepted because time is optional when creating a <code>Temporal.PlainDateTime</code>.</p>
+It may be a <code>Temporal.ZonedDateTime</code> in which case time zone offset changes will be taken into account when converting between days and hours. If <code>relativeTo</code> is omitted or is a <code>Temporal.PlainDate</code>, then days are always considered equal to 24 hours.</p>
+<p>If <code>relativeTo</code> is neither a <code>Temporal.PlainDate</code> nor a <code>Temporal.ZonedDateTime</code>, then it will be converted to one of the two, as if it were first attempted with <code>Temporal.ZonedDateTime.from()</code> and then with <code>Temporal.PlainDate.from()</code>.
+This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a <code>timeZone</code> property, will be converted to a <code>Temporal.ZonedDateTime</code>, and an ISO 8601 string without a time zone name or a property bag without a <code>timeZone</code> property will be converted to a <code>Temporal.PlainDate</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How many seconds in 18 hours and 20 minutes?</span>
 d <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> hours<span class="token operator">:</span> <span class="token number">130</span><span class="token punctuation">,</span> minutes<span class="token operator">:</span> <span class="token number">20</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
