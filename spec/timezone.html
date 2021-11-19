@@ -544,6 +544,8 @@
           1. Let _post_ be the string-concatenation of the code unit 0x003A (COLON), _s_, the code unit 0x002E (FULL STOP), and _fraction_.
         1. Else if seconds ≠ 0, then
           1. Let _post_ be the string-concatenation of the code unit 0x003A (COLON) and _s_.
+        1. Else,
+          1. Let _post_ be the empty String.
         1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), _m_, and _post_.
       </emu-alg>
     </emu-clause>
