@@ -777,7 +777,7 @@
         1. If Type(_roundTo_) is String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to ! OrdinaryObjectCreate(*null*).
-          1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"_smallestUnit_"*, _paramString_).
+          1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_roundTo_, « *"year"*, *"month"*, *"week"* », *undefined*).
