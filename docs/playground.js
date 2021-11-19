@@ -6140,27 +6140,15 @@
         throw new TypeError('with() does not support a timeZone property');
       }
     },
-    TemporalTimeZoneFromString: function TemporalTimeZoneFromString(stringIdent) {
+    ParseTemporalTimeZone: function ParseTemporalTimeZone(stringIdent) {
       var _ES$ParseTemporalTime = ES.ParseTemporalTimeZoneString(stringIdent),
           ianaName = _ES$ParseTemporalTime.ianaName,
           offset = _ES$ParseTemporalTime.offset,
           z = _ES$ParseTemporalTime.z;
 
-      var identifier = ianaName;
-      if (!identifier && z) identifier = 'UTC';
-      if (!identifier) identifier = offset;
-      var result = ES.GetCanonicalTimeZoneIdentifier(identifier);
-
-      if (offset && identifier !== offset) {
-        var ns = ES.ParseTemporalInstant(stringIdent);
-        var offsetNs = ES.GetIANATimeZoneOffsetNanoseconds(ns, result);
-
-        if (ES.FormatTimeZoneOffsetString(offsetNs) !== offset) {
-          throw new RangeError("invalid offset ".concat(offset, "[").concat(ianaName, "]"));
-        }
-      }
-
-      return result;
+      if (ianaName) return ianaName;
+      if (z) return 'UTC';
+      return offset;
     },
     FormatCalendarAnnotation: function FormatCalendarAnnotation(id, showCalendar) {
       if (showCalendar === 'never') return '';
@@ -8003,7 +7991,7 @@
       }
 
       var identifier = ES.ToString(temporalTimeZoneLike);
-      var timeZone = ES.TemporalTimeZoneFromString(identifier);
+      var timeZone = ES.ParseTemporalTimeZone(identifier);
       var TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       return new TemporalTimeZone(timeZone);
     },
@@ -10692,7 +10680,7 @@
     SystemTimeZone: function SystemTimeZone() {
       var fmt = new IntlDateTimeFormat$1('en-us');
       var TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-      return new TemporalTimeZone(ES.TemporalTimeZoneFromString(fmt.resolvedOptions().timeZone));
+      return new TemporalTimeZone(ES.ParseTemporalTimeZone(fmt.resolvedOptions().timeZone));
     },
     ComparisonResult: function ComparisonResult(value) {
       return value < 0 ? -1 : value > 0 ? 1 : value;
