@@ -69,12 +69,14 @@ If the value is another `Temporal.PlainYearMonth` object, a new object represent
 If the value is any other object, it must have `year` (or `era` and `eraYear`), `month` (or `monthCode`) properties, and optionally a `calendar` property.
 A `Temporal.PlainYearMonth` will be constructed from these properties.
 
-If the `calendar` property is not present, it will be assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+If the `calendar` property is not present, it's assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 In this calendar, `era` is ignored.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.
+
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
+A `RangeError` will also be thrown for strings that contain a `Z` in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.
 
 The `overflow` option works as follows, if `thing` is an object:
 

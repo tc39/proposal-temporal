@@ -70,7 +70,11 @@ If the value is any other object, it:
 - May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
-Any time or time zone part is optional and will be ignored.
+Any time part is optional and will be ignored.
+Time zone or UTC offset information will also be ignored, with one exception: if a string contains a `Z` in place of a numeric UTC offset, then a `RangeError` will be thrown because interpreting these strings as a local date and time is usually a bug. `Temporal.Instant.from` should be used instead to parse these strings, and the result's `toZonedDateTimeISO` method can be used to obtain a timezone-local date and time.
+
+In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC date": `Temporal.Instant.from(thing).toZonedDateTimeISO('UTC').toPlainDate()`.
+
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
 The `overflow` option works as follows, if `thing` is an object:

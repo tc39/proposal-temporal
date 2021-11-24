@@ -74,7 +74,9 @@ Any non-object value will be converted to a string, which is expected to be in I
 For the ISO 8601 calendar, only the month and day will be parsed from the string.
 For other calendars, the year and calendar are also parsed in addition to month and day.
 Any other parts of the string are optional and will be ignored.
+
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
+A `RangeError` will also be thrown for strings that contain a `Z` in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.
 
 The `overflow` option works as follows, if `thing` is an object:
 
