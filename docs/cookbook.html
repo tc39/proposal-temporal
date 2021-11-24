@@ -157,7 +157,9 @@
 </li>
 <li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a>
 <ul>
-<li><a href="#instant-from-legacy-date">Instant from legacy Date</a>
+<li><a href="#temporal-types-from-legacy-date">Temporal types from legacy Date</a>
+</li>
+<li><a href="#legacy-date-from-temporal-types">Legacy Date from Temporal types</a>
 </li>
 </ul>
 </li>
@@ -298,12 +300,78 @@ timeStamp<span class="token punctuation">.</span>epochSeconds<span class="token 
 </code></pre><!-- prettier-ignore-end -->
 
 <h2 id="converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</h2>
-<h3 id="instant-from-legacy-date"><a class="heading-link" href="#instant-from-legacy-date"></a>Instant from legacy Date</h3><p>Map a legacy ECMAScript Date instance into a Temporal.Instant instance corresponding to the same instant in exact time.</p>
+<h3 id="temporal-types-from-legacy-date"><a class="heading-link" href="#temporal-types-from-legacy-date"></a>Temporal types from legacy Date</h3><p>Here&#39;s how to convert legacy ECMAScript Date into a Temporal.Instant or Temporal.ZonedDateTime instance corresponding to the same instant in exact time.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> legacyDate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> instant <span class="token operator">=</span> legacyDate<span class="token punctuation">.</span><span class="token function">toTemporalInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">,</span> legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// If you need a ZonedDateTime, use the toZonedDateTime() or</span>
+<span class="token comment">// toZonedDateTimeISO() method of the resulting Instant.</span>
+<span class="token comment">// You will need to specify a time zone, because legacy Date only</span>
+<span class="token comment">// stores an exact time, and does not store a time zone.</span>
+
+<span class="token comment">// When calling methods on a legacy Date instance, you must decide</span>
+<span class="token comment">// whether you want that exact time interpreted as a UTC value</span>
+<span class="token comment">// (using methods containing "UTC" in their names) or in the</span>
+<span class="token comment">// current system time zone (using other methods). This is</span>
+<span class="token comment">// confusing, so Temporal has a more explict way to do this.</span>
+
+<span class="token comment">// To use the system's local time zone, which corresponds to using</span>
+<span class="token comment">// legacy Date's getFullYear(), getMonth(), etc. methods, pass</span>
+<span class="token comment">// Temporal.Now.timeZone() as the time zone. In a browser, this</span>
+<span class="token comment">// will be the user's time zone, but on a server the value may not</span>
+<span class="token comment">// be what you expect, so avoid doing this in a server context.</span>
+
+<span class="token keyword">const</span> zoned <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>zoned<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">,</span> legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Here's an example of using a particular time zone. Especially</span>
+<span class="token comment">// in a server context, you would be getting this time zone from</span>
+<span class="token comment">// elsewhere in the data that you are processing.</span>
+
+<span class="token keyword">const</span> zoned2 <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'Asia/Shanghai'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>zoned2<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">,</span> legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>zoned2<span class="token punctuation">.</span>timeZone<span class="token punctuation">.</span>id<span class="token punctuation">,</span> <span class="token string">'Asia/Shanghai'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// (And if the legacy Date instance was accessed using the</span>
+<span class="token comment">// getUTCFullYear(), getUTCMonth(), etc. methods, consider just</span>
+<span class="token comment">// using Instant. If you have to use ZonedDateTime, the specific</span>
+<span class="token comment">// time zone may need to be 'UTC'.)</span>
+</code></pre><!-- prettier-ignore-end -->
+
+<h3 id="legacy-date-from-temporal-types"><a class="heading-link" href="#legacy-date-from-temporal-types"></a>Legacy Date from Temporal types</h3><p>Legacy Date represents an exact time, so it&#39;s straightforward to convert a Temporal.Instant or Temporal.ZonedDateTime instance into a legacy Date instance that corresponds to it.</p>
+<!-- prettier-ignore-start -->
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// To convert Instant to legacy Date, use the epochMilliseconds property.</span>
+
+<span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-01T00:00:01.000999Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1577836801000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ms since Unix epoch</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-01-01T00:00:01.000Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Same thing for ZonedDateTime.</span>
+<span class="token comment">// Note that legacy Date will not preserve the ZonedDateTime's time zone.</span>
+
+<span class="token keyword">const</span> zoned <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-01T00:00:01.001[Asia/Tokyo]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> result2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>zoned<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result2<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1577804401001</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// note, different time</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result2<span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2019-12-31T15:00:01.001Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// For most use cases, new Date(x.epochMilliseconds) is fine.</span>
+<span class="token comment">// You may need to add an extra round() step if you want other</span>
+<span class="token comment">// rounding behaviour than truncation. For example, here the 999</span>
+<span class="token comment">// microseconds is rounded to 1 millisecond.</span>
+
+<span class="token keyword">const</span> result3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> smallestUnit<span class="token operator">:</span> <span class="token string">'millisecond'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result3<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1577836801001</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result3<span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-01-01T00:00:01.001Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
 <h2 id="construction">Construction</h2>
