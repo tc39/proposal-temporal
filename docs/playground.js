@@ -6262,6 +6262,8 @@
         nanosecond = ES.ToInteger(fraction.slice(6, 9));
         calendar = match[15];
       } else {
+        var z;
+
         var _ES$ParseISODateTime = ES.ParseISODateTime(isoString, {
           zoneRequired: false
         });
@@ -6273,6 +6275,8 @@
         microsecond = _ES$ParseISODateTime.microsecond;
         nanosecond = _ES$ParseISODateTime.nanosecond;
         calendar = _ES$ParseISODateTime.calendar;
+        z = _ES$ParseISODateTime.z;
+        if (z) throw new RangeError('Z designator not supported for PlainTime');
       }
 
       return {
@@ -6296,6 +6300,8 @@
         month = ES.ToInteger(match[2]);
         calendar = match[3];
       } else {
+        var z;
+
         var _ES$ParseISODateTime2 = ES.ParseISODateTime(isoString, {
           zoneRequired: false
         });
@@ -6304,6 +6310,8 @@
         month = _ES$ParseISODateTime2.month;
         calendar = _ES$ParseISODateTime2.calendar;
         referenceISODay = _ES$ParseISODateTime2.day;
+        z = _ES$ParseISODateTime2.z;
+        if (z) throw new RangeError('Z designator not supported for PlainYearMonth');
       }
 
       return {
@@ -6321,6 +6329,8 @@
         month = ES.ToInteger(match[1]);
         day = ES.ToInteger(match[2]);
       } else {
+        var z;
+
         var _ES$ParseISODateTime3 = ES.ParseISODateTime(isoString, {
           zoneRequired: false
         });
@@ -6329,6 +6339,8 @@
         day = _ES$ParseISODateTime3.day;
         calendar = _ES$ParseISODateTime3.calendar;
         referenceISOYear = _ES$ParseISODateTime3.year;
+        z = _ES$ParseISODateTime3.z;
+        if (z) throw new RangeError('Z designator not supported for PlainMonthDay');
       }
 
       return {
@@ -7207,8 +7219,10 @@
           year = _ES$ParseTemporalDate.year,
           month = _ES$ParseTemporalDate.month,
           day = _ES$ParseTemporalDate.day,
-          calendar = _ES$ParseTemporalDate.calendar;
+          calendar = _ES$ParseTemporalDate.calendar,
+          z = _ES$ParseTemporalDate.z;
 
+      if (z) throw new RangeError('Z designator not supported for PlainDate');
       var TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
       return new TemporalPlainDate(year, month, day, calendar); // include validation
     },
@@ -7280,6 +7294,8 @@
       } else {
         ES.ToTemporalOverflow(options); // validate and ignore
 
+        var z;
+
         var _ES$ParseTemporalDate2 = ES.ParseTemporalDateTimeString(ES.ToString(item));
 
         year = _ES$ParseTemporalDate2.year;
@@ -7292,6 +7308,8 @@
         microsecond = _ES$ParseTemporalDate2.microsecond;
         nanosecond = _ES$ParseTemporalDate2.nanosecond;
         calendar = _ES$ParseTemporalDate2.calendar;
+        z = _ES$ParseTemporalDate2.z;
+        if (z) throw new RangeError('Z designator not supported for PlainDateTime');
         ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
         if (calendar === undefined) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
