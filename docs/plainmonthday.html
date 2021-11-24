@@ -244,8 +244,9 @@ If <code>month</code> is used and <code>calendar</code> is provided, then <code>
 <p>Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
 For the ISO 8601 calendar, only the month and day will be parsed from the string.
 For other calendars, the year and calendar are also parsed in addition to month and day.
-Any other parts of the string are optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
+Any other parts of the string are optional and will be ignored.</p>
+<p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.
+A <code>RangeError</code> will also be thrown for strings that contain a <code>Z</code> in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.</p>
 <p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, with &quot;nearest&quot; defined by the calendar.</li>

@@ -264,11 +264,12 @@ The default is <code>constrain</code>.</li>
 If the value is another <code>Temporal.PlainYearMonth</code> object, a new object representing the same month is returned.
 If the value is any other object, it must have <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>) properties, and optionally a <code>calendar</code> property.
 A <code>Temporal.PlainYearMonth</code> will be constructed from these properties.</p>
-<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+<p>If the <code>calendar</code> property is not present, it&#39;s assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 In this calendar, <code>era</code> is ignored.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
-Any parts of the string other than the year and the month are optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
+Any parts of the string other than the year and the month are optional and will be ignored.</p>
+<p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.
+A <code>RangeError</code> will also be thrown for strings that contain a <code>Z</code> in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.</p>
 <p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>

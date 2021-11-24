@@ -280,8 +280,10 @@ If the value is any other object, it:</p>
 <li>May have a <code>calendar</code> property. If omitted, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a> will be used by default.</li>
 </ul>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
-Any time or time zone part is optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
+Any time part is optional and will be ignored.
+Time zone or UTC offset information will also be ignored, with one exception: if a string contains a <code>Z</code> in place of a numeric UTC offset, then a <code>RangeError</code> will be thrown because interpreting these strings as a local date and time is usually a bug. <code>Temporal.Instant.from</code> should be used instead to parse these strings, and the result&#39;s <code>toZonedDateTimeISO</code> method can be used to obtain a timezone-local date and time.</p>
+<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(thing).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
+<p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>

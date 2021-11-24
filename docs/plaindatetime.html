@@ -325,11 +325,12 @@ If the value is another <code>Temporal.PlainDateTime</code> object, a new object
 If the value is any other object, a <code>Temporal.PlainDateTime</code> will be constructed from the values of any <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>), <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and <code>calendar</code> properties that are present.</p>
 <p>At least the <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>), and <code>day</code> properties must be present.
 Default values for other missing fields are determined by the calendar.</p>
-<p>If the <code>calendar</code> property is not present, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+<p>If the <code>calendar</code> property is not present, it&#39;s assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Any other missing properties will be assumed to be 0 (for time fields).</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
-Any time zone part is optional and will be ignored.
-If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
+Time zone or UTC offset information will be ignored, with one exception: if a string contains a <code>Z</code> in place of a numeric UTC offset, then a <code>RangeError</code> will be thrown because interpreting these strings as a local date and time is usually a bug. <code>Temporal.Instant.from</code> should be used instead to parse these strings, and the result&#39;s <code>toZonedDateTimeISO</code> method can be used to obtain a timezone-local date and time.</p>
+<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(thing).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
+<p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
