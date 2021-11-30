@@ -1611,7 +1611,7 @@
           1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>, then
             1. Let _Conversion_ represent the abstract operation named by the Conversion value of the same row.
             1. Set _value_ to ? _Conversion_(_value_).
-        1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+          1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
       1. If _any_ is *false*, then
         1. Throw a *TypeError* exception.
       1. Return _result_.
