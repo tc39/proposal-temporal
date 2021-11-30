@@ -435,7 +435,7 @@
       </p>
       <emu-alg>
         1. Assert: _epochNanoseconds_ is an integer.
-        1. Let _remainderNs_ be remainder(_epochNanoseconds_, 10<sup>6</sup>).
+        1. Let _remainderNs_ be _epochNanoseconds_ modulo 10<sup>6</sup>.
         1. Let _epochMilliseconds_ be (_epochNanoseconds_ − _remainderNs_) / 10<sup>6</sup>.
         1. Let _year_ be ! YearFromTime(_epochMilliseconds_).
         1. Let _month_ be ! MonthFromTime(_epochMilliseconds_) + 1.
