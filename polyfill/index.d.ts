@@ -258,7 +258,7 @@ export namespace Temporal {
    * `smallestUnit` property value is that string.
    */
   export type RoundTo<T extends DateTimeUnit> =
-    | T
+    | SmallestUnit<T>
     | {
         /**
          * The unit to round to. For example, to round to the nearest minute,
@@ -266,7 +266,7 @@ export namespace Temporal {
          * same-named property is optional when passed to `until` or `since`
          * methods, because those methods do no rounding by default.
          */
-        smallestUnit: T;
+        smallestUnit: SmallestUnit<T>;
 
         /**
          * Allows rounding to an integer number of units. For example, to round to
@@ -301,7 +301,7 @@ export namespace Temporal {
    * object whose `smallestUnit` property value is that string.
    */
   export type DurationRoundTo =
-    | DateTimeUnit
+    | SmallestUnit<DateTimeUnit>
     | ((
         | {
             /**
@@ -421,7 +421,7 @@ export namespace Temporal {
    * Options to control behavior of `Duration.prototype.total()`
    */
   export type DurationTotalOf =
-    | DateTimeUnit
+    | TotalUnit<DateTimeUnit>
     | {
         /**
          * The unit to convert the duration to. This option is required.
