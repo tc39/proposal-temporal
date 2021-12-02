@@ -185,7 +185,7 @@ const monthsDesignator = character('Mm');
 const durationDesignator = character('Pp');
 const secondsDesignator = character('Ss');
 const dateTimeSeparator = character(' Tt');
-const durationTimeDesignator = character('Tt');
+const timeDesignator = character('Tt');
 const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
@@ -293,7 +293,7 @@ const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
-const calendarTime = seq(timeSpec, [timeZone], [calendar]);
+const calendarTime = seq([timeDesignator], timeSpec, [timeZone], [calendar]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -317,7 +317,7 @@ const durationHours = seq(
   hoursDesignator,
   [choice(durationMinutes, durationSeconds)]
 );
-const durationTime = seq(durationTimeDesignator, choice(durationHours, durationMinutes, durationSeconds));
+const durationTime = seq(timeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
   withCode(oneOrMore(digit()), (data, result) => (data.days = +result * data.factor)),
   daysDesignator

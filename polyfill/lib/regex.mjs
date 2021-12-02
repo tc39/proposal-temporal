@@ -23,7 +23,7 @@ export const zoneddatetime = new RegExp(
   'i'
 );
 
-export const time = new RegExp(`^${timesplit.source}(?:${zonesplit.source})?(?:${calendar.source})?$`, 'i');
+export const time = new RegExp(`^T?${timesplit.source}(?:${zonesplit.source})?(?:${calendar.source})?$`, 'i');
 
 // The short forms of YearMonth and MonthDay are only for the ISO calendar.
 // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
