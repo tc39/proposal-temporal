@@ -765,7 +765,7 @@
           `T`
           `t`
 
-      DurationTimeDesignator : one of
+      TimeDesignator : one of
           `T` `t`
 
       WeeksDesignator : one of
@@ -937,7 +937,7 @@
           Date TimeSpecSeparator? TimeZone?
 
       CalendarTime :
-          TimeSpec TimeZone? Calendar?
+          TimeDesignator? TimeSpec TimeZone? Calendar?
 
       CalendarDateTime:
           DateTime Calendar?
@@ -971,9 +971,9 @@
           DurationWholeHours DurationHoursFraction? HoursDesignator DurationSecondsPart?
 
       DurationTime :
-          DurationTimeDesignator DurationHoursPart
-          DurationTimeDesignator DurationMinutesPart
-          DurationTimeDesignator DurationSecondsPart
+          TimeDesignator DurationHoursPart
+          TimeDesignator DurationMinutesPart
+          TimeDesignator DurationSecondsPart
 
       DurationDays :
           DecimalDigits[~Sep]

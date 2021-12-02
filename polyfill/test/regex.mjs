@@ -297,9 +297,10 @@ describe('fromString regex', () => {
     test('19761118T152330.1234', [15, 23, 30, 123, 400]);
     // Representations with reduced precision
     test('1976-11-18T15', [15]);
-    test('1976-11-18', []);
     // Time-only forms
-    generateTest('15:23', '');
+    ['T', 't', ''].forEach((prefix) => generateTest(`${prefix}15:23`, ''));
+    test('T1523', [15, 23]);
+    test('T152330', [15, 23, 30]);
     ['+01:00[Europe/Vienna]', '[Europe/Vienna]', '+01:00[Custom/Vienna]', '-04:00', 'Z', ''].forEach((zoneStr) =>
       test(`15${zoneStr}`, [15])
     );
