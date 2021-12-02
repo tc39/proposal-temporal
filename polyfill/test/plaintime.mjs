@@ -1018,6 +1018,9 @@ describe('Time', () => {
       equal(`${PlainTime.from('T15:23:30')}`, '15:23:30');
       equal(`${PlainTime.from('t152330')}`, '15:23:30');
     });
+    it('no implicit midnight from date-only string', () => {
+      throws(() => PlainTime.from('1976-11-18'), RangeError);
+    });
     it('no junk at end of string', () => throws(() => PlainTime.from('15:23:30.100junk'), RangeError));
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>

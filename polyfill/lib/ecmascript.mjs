@@ -246,7 +246,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (showCalendar === 'auto' && id === 'iso8601') return '';
     return `[u-ca=${id}]`;
   },
-  ParseISODateTime: (isoString) => {
+  ParseISODateTime: (isoString, { timeRequired = false } = {}) => {
     // ZDT is the superset of fields for every other Temporal type
     const match = PARSE.zoneddatetime.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
@@ -255,6 +255,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const year = ES.ToInteger(yearString);
     const month = ES.ToInteger(match[2] || match[4]);
     const day = ES.ToInteger(match[3] || match[5]);
+    if (timeRequired && match[6] === undefined) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const hour = ES.ToInteger(match[6]);
     const minute = ES.ToInteger(match[7] || match[10]);
     let second = ES.ToInteger(match[8] || match[11]);
@@ -340,7 +341,9 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = match[15];
     } else {
       let z;
-      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } = ES.ParseISODateTime(isoString));
+      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } = ES.ParseISODateTime(isoString, {
+        timeRequired: true
+      }));
       if (z) throw new RangeError('Z designator not supported for PlainTime');
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
