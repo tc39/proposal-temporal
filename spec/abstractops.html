@@ -942,6 +942,9 @@
       CalendarDateTime:
           DateTime Calendar?
 
+      CalendarDateTimeTimeRequired :
+          Date TimeSpecSeparator TimeZone? Calendar?
+
       DurationWholeSeconds :
           DecimalDigits[~Sep]
 
@@ -1030,7 +1033,7 @@
 
       TemporalTimeString :
           CalendarTime
-          CalendarDateTime
+          CalendarDateTimeTimeRequired
 
       TemporalTimeZoneIdentifier :
           TimeZoneNumericUTCOffset

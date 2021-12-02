@@ -293,6 +293,7 @@ const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
+const calendarDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [calendar]);
 const calendarTime = seq([timeDesignator], timeSpec, [timeZone], [calendar]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
@@ -354,7 +355,7 @@ const goals = {
   DateTime: calendarDateTime,
   Duration: duration,
   MonthDay: choice(dateSpecMonthDay, calendarDateTime),
-  Time: choice(calendarTime, calendarDateTime),
+  Time: choice(calendarTime, calendarDateTimeTimeRequired),
   TimeZone: choice(temporalTimeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
   YearMonth: choice(dateSpecYearMonth, calendarDateTime),
   ZonedDateTime: zonedDateTime
