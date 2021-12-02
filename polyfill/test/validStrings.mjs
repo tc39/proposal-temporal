@@ -384,12 +384,16 @@ const comparisonItems = {
   YearMonth: ['year', 'month'],
   ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'ianaName', 'calendar']
 };
+const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
 const mode = 'Instant';
 
 for (let count = 0; count < 1000; count++) {
-  const generatedData = {};
-  const fuzzed = goals[mode].generate(generatedData);
+  let generatedData, fuzzed;
+  do {
+    generatedData = {};
+    fuzzed = goals[mode].generate(generatedData);
+  } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
   try {
     const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
     for (let prop of comparisonItems[mode]) {
