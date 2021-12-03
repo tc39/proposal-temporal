@@ -291,9 +291,9 @@ const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 const dateSpecMonthDay = seq(['--'], dateMonth, ['-'], dateDay);
 const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
 const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
-const time = seq(timeSpec, [timeZone]);
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
+const calendarTime = seq(timeSpec, [timeZone], [calendar]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -353,10 +353,10 @@ const goals = {
   Date: calendarDateTime,
   DateTime: calendarDateTime,
   Duration: duration,
-  MonthDay: choice(dateSpecMonthDay, dateTime),
-  Time: choice(time, dateTime),
+  MonthDay: choice(dateSpecMonthDay, calendarDateTime),
+  Time: choice(calendarTime, calendarDateTime),
   TimeZone: choice(temporalTimeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
-  YearMonth: choice(dateSpecYearMonth, dateTime),
+  YearMonth: choice(dateSpecYearMonth, calendarDateTime),
   ZonedDateTime: zonedDateTime
 };
 
@@ -378,10 +378,10 @@ const comparisonItems = {
     'microseconds',
     'nanoseconds'
   ],
-  MonthDay: ['month', 'day'],
-  Time: timeItems,
+  MonthDay: ['month', 'day', 'calendar'],
+  Time: [...timeItems, 'calendar'],
   TimeZone: ['offset', 'ianaName'],
-  YearMonth: ['year', 'month'],
+  YearMonth: ['year', 'month', 'calendar'],
   ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'ianaName', 'calendar']
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];

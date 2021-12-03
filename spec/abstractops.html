@@ -930,14 +930,14 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
-      Time :
-          TimeSpec TimeZone?
-
       TimeSpecSeparator :
           DateTimeSeparator TimeSpec
 
       DateTime :
           Date TimeSpecSeparator? TimeZone?
+
+      CalendarTime :
+          TimeSpec TimeZone? Calendar?
 
       CalendarDateTime:
           DateTime Calendar?
@@ -1026,11 +1026,11 @@
 
       TemporalMonthDayString :
           DateSpecMonthDay
-          DateTime
+          CalendarDateTime
 
       TemporalTimeString :
-          Time
-          DateTime
+          CalendarTime
+          CalendarDateTime
 
       TemporalTimeZoneIdentifier :
           TimeZoneNumericUTCOffset
@@ -1042,7 +1042,7 @@
 
       TemporalYearMonthString :
           DateSpecYearMonth
-          DateTime
+          CalendarDateTime
 
       TemporalZonedDateTimeString :
           Date TimeSpecSeparator? TimeZoneNameRequired Calendar?
@@ -1051,7 +1051,7 @@
           CalendarName
           TemporalInstantString
           CalendarDateTime
-          Time
+          CalendarTime
           DateSpecYearMonth
           DateSpecMonthDay
 
