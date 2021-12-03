@@ -204,12 +204,26 @@ const dateYear = withCode(
 const dateMonth = withCode(zeroPaddedInclusive(1, 12, 2), (data, result) => (data.month = +result));
 const dateDay = withCode(zeroPaddedInclusive(1, 31, 2), (data, result) => (data.day = +result));
 
-const timeHour = withCode(hour, (data, result) => (data.hour = +result));
-const timeMinute = withCode(minuteSecond, (data, result) => (data.minute = +result));
-const timeSecond = withCode(choice(minuteSecond, '60'), (data, result) => {
+function saveHour(data, result) {
+  data.hour = +result;
+}
+function saveMinute(data, result) {
+  data.minute = +result;
+}
+function saveSecond(data, result) {
   data.second = +result;
   if (data.second === 60) data.second = 59;
-});
+}
+const timeHour = withCode(hour, saveHour);
+const timeMinute = withCode(minuteSecond, saveMinute);
+const timeSecond = withCode(choice(minuteSecond, '60'), saveSecond);
+const timeHourNotValidMonth = withCode(choice('00', zeroPaddedInclusive(13, 23, 2)), saveHour);
+const timeHourNot31DayMonth = withCode(choice('02', '04', '06', '09', '11'), saveHour);
+const timeHour2Only = withCode('02', saveHour);
+const timeMinuteNotValidDay = withCode(choice('00', zeroPaddedInclusive(32, 59, 2)), saveMinute);
+const timeMinute30Only = withCode('30', saveMinute);
+const timeMinute31Only = withCode('31', saveMinute);
+const timeSecondNotValidMonth = withCode(choice('00', zeroPaddedInclusive(13, 60, 2)), saveSecond);
 const timeFraction = withCode(fraction, (data, result) => {
   result = result.slice(1);
   const fraction = result.padEnd(9, '0');
@@ -221,7 +235,11 @@ const timeZoneUTCOffsetSign = withCode(
   sign,
   (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
 );
-const timeZoneUTCOffsetHour = withCode(hour, (data, result) => (data.offsetHour = +result));
+function saveOffsetHour(data, result) {
+  data.offsetHour = +result;
+}
+const timeZoneUTCOffsetHour = withCode(hour, saveOffsetHour);
+const timeZoneUTCOffsetHourNotValidMonth = withCode(zeroPaddedInclusive(13, 23, 2), saveOffsetHour);
 const timeZoneUTCOffsetMinute = withCode(minuteSecond, (data, result) => (data.offsetMinute = +result));
 const timeZoneUTCOffsetSecond = withCode(minuteSecond, (data, result) => (data.offsetSecond = +result));
 const timeZoneUTCOffsetFraction = withCode(fraction, (data, result) => {
@@ -229,6 +247,22 @@ const timeZoneUTCOffsetFraction = withCode(fraction, (data, result) => {
   const fraction = result.padEnd(9, '0');
   data.offsetFraction = +fraction;
 });
+function saveOffset(data) {
+  if (data.offsetSign !== undefined && data.offsetHour !== undefined) {
+    const h = `${data.offsetHour}`.padStart(2, '0');
+    const m = `${data.offsetMinute || 0}`.padStart(2, '0');
+    const s = `${data.offsetSecond || 0}`.padStart(2, '0');
+    data.offset = `${data.offsetSign}${h}:${m}`;
+    if (data.offsetFraction) {
+      let fraction = `${data.offsetFraction}`.padStart(9, '0');
+      while (fraction.endsWith('0')) fraction = fraction.slice(0, -1);
+      data.offset += `:${s}.${fraction}`;
+    } else if (data.offsetSecond) {
+      data.offset += `:${s}`;
+    }
+    if (data.offset === '-00:00') data.offset = '+00:00';
+  }
+}
 const timeZoneNumericUTCOffset = withCode(
   seq(
     timeZoneUTCOffsetSign,
@@ -238,22 +272,25 @@ const timeZoneNumericUTCOffset = withCode(
       seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
     )
   ),
-  (data) => {
-    if (data.offsetSign !== undefined && data.offsetHour !== undefined) {
-      const h = `${data.offsetHour}`.padStart(2, '0');
-      const m = `${data.offsetMinute || 0}`.padStart(2, '0');
-      const s = `${data.offsetSecond || 0}`.padStart(2, '0');
-      data.offset = `${data.offsetSign}${h}:${m}`;
-      if (data.offsetFraction) {
-        let fraction = `${data.offsetFraction}`.padStart(9, '0');
-        while (fraction.endsWith('0')) fraction = fraction.slice(0, -1);
-        data.offset += `:${s}.${fraction}`;
-      } else if (data.offsetSecond) {
-        data.offset += `:${s}`;
-      }
-      if (data.offset === '-00:00') data.offset = '+00:00';
-    }
-  }
+  saveOffset
+);
+const timeZoneNumericUTCOffsetNotAmbiguous = withCode(
+  choice(
+    seq(character('+\u2212'), timeZoneUTCOffsetHour),
+    seq(
+      timeZoneUTCOffsetSign,
+      timeZoneUTCOffsetHour,
+      choice(
+        seq(timeZoneUTCOffsetMinute, [timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]]),
+        seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
+      )
+    )
+  ),
+  saveOffset
+);
+const timeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour = withCode(
+  choice(timeZoneNumericUTCOffsetNotAmbiguous, seq('-', timeZoneUTCOffsetHourNotValidMonth)),
+  saveOffset
 );
 const timeZoneUTCOffset = choice(utcDesignator, timeZoneNumericUTCOffset);
 const timeZoneUTCOffsetName = seq(
@@ -286,6 +323,29 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
+const timeSpecWithOptionalTimeZoneNotAmbiguous = choice(
+  seq(timeHour, [timeZoneNumericUTCOffsetNotAmbiguous], [timeZoneBracketedAnnotation]),
+  seq(timeHourNotValidMonth, timeZone),
+  seq(
+    choice(
+      seq(timeHourNotValidMonth, timeMinute),
+      seq(timeHour, timeMinuteNotValidDay),
+      seq(timeHourNot31DayMonth, timeMinute31Only),
+      seq(timeHour2Only, timeMinute30Only)
+    ),
+    [timeZoneBracketedAnnotation]
+  ),
+  seq(
+    timeHour,
+    timeMinute,
+    choice(
+      seq(timeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour, [timeZoneBracketedAnnotation]),
+      seq(timeSecondNotValidMonth, [timeZone]),
+      seq(timeSecond, timeFraction, [timeZone])
+    )
+  ),
+  seq(timeHour, ':', timeMinute, [':', timeSecond, [timeFraction]], [timeZone])
+);
 const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 
 const dateSpecMonthDay = seq(['--'], dateMonth, ['-'], dateDay);
@@ -294,7 +354,11 @@ const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, d
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
 const calendarDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [calendar]);
-const calendarTime = seq([timeDesignator], timeSpec, [timeZone], [calendar]);
+const calendarTime = choice(
+  seq(timeDesignator, timeSpec, [timeZone], [calendar]),
+  seq(timeSpec, [timeZone], calendar),
+  seq(timeSpecWithOptionalTimeZoneNotAmbiguous)
+);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');

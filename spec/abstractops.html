@@ -822,6 +822,50 @@
           MinuteSecond
           `60`
 
+      TimeHourNotValidMonth : one of
+          `00` `13` `14` `15` `16` `17` `18` `19` `20` `21` `23`
+
+      TimeHourNotThirtyOneDayMonth : one of
+          `02` `04` `06` `09` `11`
+
+      TimeHourTwoOnly :
+          `02`
+
+      TimeMinuteNotValidDay :
+          `00`
+          `32`
+          `33`
+          `34`
+          `35`
+          `36`
+          `37`
+          `38`
+          `39`
+          `4` DecimalDigit
+          `5` DecimalDigit
+          `60`
+
+      TimeMinuteThirtyOnly :
+          `30`
+
+      TimeMinuteThirtyOneOnly :
+          `31`
+
+      TimeSecondNotValidMonth :
+          `00`
+          `13`
+          `14`
+          `15`
+          `16`
+          `17`
+          `18`
+          `19`
+          `2` DecimalDigit
+          `3` DecimalDigit
+          `4` DecimalDigit
+          `5` DecimalDigit
+          `60`
+
       FractionalPart :
           DecimalDigit DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit?
 
@@ -859,6 +903,18 @@
       TimeZoneUTCOffset :
           TimeZoneNumericUTCOffset
           UTCDesignator
+
+      TimeZoneNumericUTCOffsetNotAmbiguous :
+          `+` TimeZoneUTCOffsetHour
+          U+2212 TimeZoneUTCOffsetHour
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+
+      TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour :
+          TimeZoneNumericUTCOffsetNotAmbiguous
+          `-` TimeHourNotValidMonth
 
       TimeZoneUTCOffsetName :
           Sign Hour
@@ -930,14 +986,35 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
+      TimeHourMinuteBasicFormatNotAmbiguous :
+          TimeHourNotValidMonth TimeMinute
+          TimeHour TimeMinuteNotValidDay
+          TimeHourNotThirtyOneDayMonth TimeMinuteThirtyOneOnly
+          TimeHourTwoOnly TimeMinuteThirtyOnly
+
+      TimeSpecWithOptionalTimeZoneNotAmbiguous :
+          TimeHour TimeZoneNumericUTCOffsetNotAmbiguous? TimeZoneBracketedAnnotation?
+          TimeHourNotValidMonth TimeZone
+          TimeHour `:` TimeMinute TimeZone?
+          TimeHourMinuteBasicFormatNotAmbiguous TimeZoneBracketedAnnotation?
+          TimeHour TimeMinute TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour TimeZoneBracketedAnnotation?
+          TimeHour `:` TimeMinute `:` TimeSecond TimeFraction? TimeZone?
+          TimeHour TimeMinute TimeSecondNotValidMonth TimeZone?
+          TimeHour TimeMinute TimeSecond TimeFraction TimeZone?
+
       TimeSpecSeparator :
           DateTimeSeparator TimeSpec
 
       DateTime :
           Date TimeSpecSeparator? TimeZone?
 
+      CalendarDate :
+          Date Calendar?
+
       CalendarTime :
-          TimeDesignator? TimeSpec TimeZone? Calendar?
+          TimeDesignator TimeSpec TimeZone? Calendar?
+          TimeSpec TimeZone? Calendar
+          TimeSpecWithOptionalTimeZoneNotAmbiguous
 
       CalendarDateTime:
           DateTime Calendar?
@@ -1071,7 +1148,11 @@
     <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
+      1. Let _year_, _month_, _day_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
+      1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
+      1. Let _hour_ be the part of _isoString_ produced by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| productions, or *undefined* if none of those are present.
+      1. Let _minute_ be the part of _isoString_ produced by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| productions, or *undefined* if none of those are present.
+      1. Let _second_ be the part of _isoString_ produced by the |TimeSecond| or |TimeSecondNotValidMonth| productions, or *undefined* if neither of those are present.
       1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
       1. Set _year_ to ! ToIntegerOrInfinity(_year_).
       1. If _month_ is *undefined*, then
@@ -1360,6 +1441,9 @@
       1. If _isoString_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
+      1. Assert: ParseText(! StringToCodePoints(_isoString_), |CalendarDate|) is a List of errors.
+      1. Assert: ParseText(! StringToCodePoints(_isoString_), |DateSpecYearMonth|) is a List of errors.
+      1. Assert: ParseText(! StringToCodePoints(_isoString_), |DateSpecMonthDay|) is a List of errors.
       1. Return the Record {
         [[Hour]]: _result_.[[Hour]],
         [[Minute]]: _result_.[[Minute]],

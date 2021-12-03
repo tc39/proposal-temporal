@@ -346,7 +346,25 @@ export const ES = ObjectAssign({}, ES2020, {
       }));
       if (z) throw new RangeError('Z designator not supported for PlainTime');
     }
-    return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
+    // if it's a date-time string, OK
+    if (/[tT ][0-9][0-9]/.test(isoString)) {
+      return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
+    }
+    // slow but non-grammar-dependent way to ensure that time-only strings that
+    // are also valid PlainMonthDay and PlainYearMonth throw. corresponds to
+    // assertion in spec text
+    try {
+      const { month, day } = ES.ParseTemporalMonthDayString(isoString);
+      ES.RejectISODate(1972, month, day);
+    } catch {
+      try {
+        const { year, month } = ES.ParseTemporalYearMonthString(isoString);
+        ES.RejectISODate(year, month, 1);
+      } catch {
+        return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
+      }
+    }
+    throw new RangeError(`invalid ISO 8601 time-only string ${isoString}; may need a T prefix`);
   },
   ParseTemporalYearMonthString: (isoString) => {
     const match = PARSE.yearmonth.exec(isoString);
