@@ -468,6 +468,8 @@
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _dateOptions_).
         1. Let _offsetString_ be ? Get(_value_, *"offset"*).
         1. Let _timeZone_ be ? Get(_value_, *"timeZone"*).
+        1. If _timeZone_ is not *undefined*, then
+          1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
         1. If _offsetString_ is *undefined*, then
           1. Set _offsetBehaviour_ to ~wall~.
       1. Else,
@@ -475,14 +477,20 @@
         1. Let _result_ be ? ParseTemporalRelativeToString(_string_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Let _offsetString_ be _result_.[[TimeZoneOffset]].
-        1. Let _timeZone_ be _result_.[[TimeZoneIANAName]].
+        1. Let _timeZoneName_ be _result_.[[TimeZoneIANAName]].
+        1. If _timeZoneName_ is not *undefined*, then
+          1. If ParseText(! StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is not a List of errors, then
+            1. If ! IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
+            1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
+          1. Let _timeZone_ be ! CreateTemporalTimeZone(_timeZoneName_).
+        1. Else,
+          1. Let _timeZone_ be *undefined*.
         1. If _result_.[[TimeZoneZ]] is *true*, then
           1. Set _offsetBehaviour_ to ~exact~.
         1. Else if _offsetString_ is *undefined*, then
           1. Set _offsetBehaviour_ to ~wall~.
         1. Set _matchBehaviour_ to ~match minutes~.
       1. If _timeZone_ is not *undefined*, then
-        1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetString_ to ? ToString(_offsetString_).
           1. Let _offsetNs_ be ? ParseTimeZoneOffsetString(_offsetString_).
@@ -1490,9 +1498,6 @@
           1. Let _nanoseconds_ be 0.
         1. Let _offsetNanoseconds_ be _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).
         1. Let _offsetString_ be ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
-      1. If _name_ is not *undefined*, then
-        1. If ! IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
-        1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
       1. Return the Record {
         [[Z]]: *false*,
         [[OffsetString]]: _offsetString_,
