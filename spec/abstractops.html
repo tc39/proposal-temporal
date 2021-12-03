@@ -1107,7 +1107,6 @@
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFractionalPart|, and |CalendarName| productions, or *undefined* if not present.
-      1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
       1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
       1. Set _year_ to ! ToIntegerOrInfinity(_year_).
       1. If _month_ is *undefined*, then
