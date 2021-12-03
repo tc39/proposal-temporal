@@ -295,6 +295,35 @@ describe('Duration', () => {
       equal(d2.toString(options), 'PT15H23M30.0000000S');
       equal(d3.toString(options), 'PT15H23M30.5432000S');
     });
+    it('pads correctly in edge cases', () => {
+      const d4 = Duration.from({ years: 3 });
+      equal(d4.toString(), 'P3Y');
+      equal(d4.toString({ fractionalSecondDigits: 0 }), 'P3YT0S');
+      equal(d4.toString({ smallestUnit: 'seconds' }), 'P3YT0S');
+      equal(d4.toString({ smallestUnit: 'milliseconds' }), 'P3YT0.000S');
+      equal(d4.toString({ fractionalSecondDigits: 5 }), 'P3YT0.00000S');
+
+      const d5 = Duration.from({ minutes: 30 });
+      equal(d5.toString(), 'PT30M');
+      equal(d5.toString({ fractionalSecondDigits: 0 }), 'PT30M0S');
+      equal(d5.toString({ smallestUnit: 'seconds' }), 'PT30M0S');
+      equal(d5.toString({ smallestUnit: 'milliseconds' }), 'PT30M0.000S');
+      equal(d5.toString({ fractionalSecondDigits: 5 }), 'PT30M0.00000S');
+
+      const d6 = Duration.from({ milliseconds: 100 });
+      equal(d6.toString(), 'PT0.1S');
+      equal(d6.toString({ fractionalSecondDigits: 0 }), 'PT0S');
+      equal(d6.toString({ smallestUnit: 'seconds' }), 'PT0S');
+      equal(d6.toString({ smallestUnit: 'milliseconds' }), 'PT0.100S');
+      equal(d6.toString({ fractionalSecondDigits: 5 }), 'PT0.10000S');
+
+      const zero = new Duration();
+      equal(zero.toString(), 'PT0S');
+      equal(zero.toString({ fractionalSecondDigits: 0 }), 'PT0S');
+      equal(zero.toString({ smallestUnit: 'seconds' }), 'PT0S');
+      equal(zero.toString({ smallestUnit: 'milliseconds' }), 'PT0.000S');
+      equal(zero.toString({ fractionalSecondDigits: 5 }), 'PT0.00000S');
+    });
     it('auto is the default', () => {
       [d1, d2, d3].forEach((d) => equal(d.toString({ fractionalSecondDigits: 'auto' }), d.toString()));
     });

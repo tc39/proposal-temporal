@@ -1496,7 +1496,7 @@
           1. Set _timePart_ to the string concatenation of abs(_hours_) formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
         1. If _minutes_ is not 0, then
           1. Set _timePart_ to the string concatenation of _timePart_, abs(_minutes_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
-        1. If any of _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are not 0; or _years_, _months_, _weeks_, _days_, _hours_, and _minutes_ are all 0, then
+        1. If any of _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are not 0; or _years_, _months_, _weeks_, _days_, _hours_, and _minutes_ are all 0; or _precision_ is not *"auto"*; then
           1. Let _fraction_ be abs(_milliseconds_) × 10<sup>6</sup> + abs(_microseconds_) × 10<sup>3</sup> + abs(_nanoseconds_).
           1. Let _decimalPart_ be _fraction_ formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
           1. If _precision_ is *"auto"*, then
