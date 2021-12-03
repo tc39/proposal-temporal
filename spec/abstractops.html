@@ -825,11 +825,8 @@
       FractionalPart :
           DecimalDigit DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit?
 
-      TimeFractionalPart :
-          FractionalPart
-
       Fraction :
-          DecimalSeparator TimeFractionalPart
+          DecimalSeparator FractionalPart
 
       TimeFraction :
           Fraction
@@ -1071,7 +1068,7 @@
     <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFractionalPart|, and |CalendarName| productions, or *undefined* if not present.
+      1. Let _year_, _month_, _day_, _hour_, _minute_, _second_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
       1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
       1. Set _year_ to ! ToIntegerOrInfinity(_year_).
       1. If _month_ is *undefined*, then
@@ -1089,11 +1086,11 @@
         1. Set _second_ to 59.
       1. If _fraction_ is not *undefined*, then
         1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-        1. Let _millisecond_ be the String value equal to the substring of _fraction_ from 0 to 3.
+        1. Let _millisecond_ be the String value equal to the substring of _fraction_ from 1 to 4.
         1. Set _millisecond_ to ! ToIntegerOrInfinity(_millisecond_).
-        1. Let _microsecond_ be the String value equal to the substring of _fraction_ from 3 to 6.
+        1. Let _microsecond_ be the String value equal to the substring of _fraction_ from 4 to 7.
         1. Set _microsecond_ to ! ToIntegerOrInfinity(_microsecond_).
-        1. Let _nanosecond_ be the String value equal to the substring of _fraction_ from 6 to 9.
+        1. Let _nanosecond_ be the String value equal to the substring of _fraction_ from 7 to 10.
         1. Set _nanosecond_ to ! ToIntegerOrInfinity(_nanosecond_).
       1. Else,
         1. Let _millisecond_ be 0.
