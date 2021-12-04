@@ -1030,8 +1030,11 @@
         1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _oneMonth_ be ! CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _oneWeek_ be ! CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
-        1. Set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
-        1. Let _calendar_ be _relativeTo_.[[Calendar]].
+        1. If _relativeTo_ is not *undefined*, then
+          1. Set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
+          1. Let _calendar_ be _relativeTo_.[[Calendar]].
+        1. Else,
+          1. Let _calendar_ be *undefined*.
         1. If _largestUnit_ is *"year"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
@@ -1254,6 +1257,8 @@
           1. Else,
             1. Assert: _relativeTo_ has an [[InitializedTemporalDate]] internal slot.
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
+        1. Else,
+          1. Let _calendar_ be *undefined*.
         1. If _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _nanoseconds_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
           1. Let _intermediate_ be *undefined*.
