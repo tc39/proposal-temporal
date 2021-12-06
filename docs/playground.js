@@ -8610,34 +8610,22 @@
       return result;
     },
     GetFormatterParts: function GetFormatterParts(timeZone, epochMilliseconds) {
-      var formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone); // FIXME: can this use formatToParts instead?
+      var formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone); // Using `format` instead of `formatToParts` for compatibility with older clients
 
       var datetime = formatter.format(new Date(epochMilliseconds));
 
-      var _datetime$split = datetime.split(/,\s+/),
-          _datetime$split2 = _slicedToArray(_datetime$split, 3),
-          date = _datetime$split2[0],
-          fullYear = _datetime$split2[1],
-          time = _datetime$split2[2];
-
-      var _date$split = date.split(' '),
-          _date$split2 = _slicedToArray(_date$split, 2),
-          month = _date$split2[0],
-          day = _date$split2[1];
-
-      var _fullYear$split = fullYear.split(' '),
-          _fullYear$split2 = _slicedToArray(_fullYear$split, 2),
-          year = _fullYear$split2[0],
-          era = _fullYear$split2[1];
-
-      var _time$split = time.split(':'),
-          _time$split2 = _slicedToArray(_time$split, 3),
-          hour = _time$split2[0],
-          minute = _time$split2[1],
-          second = _time$split2[2];
+      var _datetime$split = datetime.split(/[^\w]+/),
+          _datetime$split2 = _slicedToArray(_datetime$split, 7),
+          month = _datetime$split2[0],
+          day = _datetime$split2[1],
+          year = _datetime$split2[2],
+          era = _datetime$split2[3],
+          hour = _datetime$split2[4],
+          minute = _datetime$split2[5],
+          second = _datetime$split2[6];
 
       return {
-        year: era === 'BC' ? -year + 1 : +year,
+        year: era.toUpperCase().startsWith('B') ? -year + 1 : +year,
         month: +month,
         day: +day,
         hour: hour === '24' ? 0 : +hour,
