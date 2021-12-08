@@ -631,20 +631,20 @@ export namespace Temporal {
     day(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainMonthDay | PlainDateLike | string): number;
     era(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): string | undefined;
     eraYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number | undefined;
-    dayOfWeek?(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
-    dayOfYear?(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
-    weekOfYear?(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
-    daysInWeek?(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
-    daysInMonth?(
+    dayOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    dayOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    weekOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    daysInWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    daysInMonth(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): number;
-    daysInYear?(
+    daysInYear(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): number;
-    monthsInYear?(
+    monthsInYear(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): number;
-    inLeapYear?(
+    inLeapYear(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): boolean;
     dateFromFields(
@@ -659,12 +659,12 @@ export namespace Temporal {
       fields: EitherMonthCodeOrMonthAndYear & { day: number },
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
-    dateAdd?(
+    dateAdd(
       date: Temporal.PlainDate | PlainDateLike | string,
       duration: Temporal.Duration | DurationLike | string,
       options?: ArithmeticOptions
     ): Temporal.PlainDate;
-    dateUntil?(
+    dateUntil(
       one: Temporal.PlainDate | PlainDateLike | string,
       two: Temporal.PlainDate | PlainDateLike | string,
       options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
