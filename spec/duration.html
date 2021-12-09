@@ -1042,7 +1042,7 @@
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneYearDays_ to _moveResult_.[[Days]].
-          1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
+          1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) ≥ abs(_oneMonthDays_),
