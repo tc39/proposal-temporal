@@ -3897,12 +3897,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (relativeTo) {
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
         zdtRelative = relativeTo;
-        const pdt = ES.BuiltinTimeZoneGetPlainDateTimeFor(
-          GetSlot(relativeTo, TIME_ZONE),
-          GetSlot(relativeTo, INSTANT),
-          GetSlot(relativeTo, CALENDAR)
-        );
-        relativeTo = ES.TemporalDateTimeToDate(pdt);
+        relativeTo = ES.ToTemporalDate(relativeTo);
       } else if (!ES.IsTemporalDate(relativeTo)) {
         throw new TypeError('starting point must be PlainDate or ZonedDateTime');
       }
