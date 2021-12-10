@@ -1247,13 +1247,13 @@
         1. Let _zonedRelativeTo_ be *undefined*.
         1. If _relativeTo_ is not *undefined*, then
           1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _instant_ be ! CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
             1. Set _zonedRelativeTo_ to _relativeTo_.
-            1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _instant_, _relativeTo_.[[Calendar]]).
-            1. Set _relativeTo_ to ! CreateTemporalDate(_plainDateTime_.[[ISOYear]], _plainDateTime_.[[ISOMonth]], _plainDateTime_.[[ISODay]], _relativeTo_.[[Calendar]]).
+            1. Set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
           1. Else,
             1. Assert: _relativeTo_ has an [[InitializedTemporalDate]] internal slot.
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
+        1. Else,
+          1. NOTE: _calendar_ will not be used below.
         1. If _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _nanoseconds_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
           1. Let _intermediate_ be *undefined*.
