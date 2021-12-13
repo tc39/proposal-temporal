@@ -239,7 +239,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
     if (ianaName) return ianaName;
     if (z) return 'UTC';
-    return offset;
+    return offset; // if !ianaName && !z then offset must be present
   },
   FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
@@ -853,26 +853,27 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return value;
   },
-  ToPartialRecord: (bag, fields, callerCast) => {
+  ToPartialRecord: (bag, fields) => {
     if (ES.Type(bag) !== 'Object') return false;
-    let any;
+    let any = false;
+    let result = {};
     for (const property of fields) {
       const value = bag[property];
       if (value !== undefined) {
-        any = any || {};
-        if (callerCast === undefined && BUILTIN_CASTS.has(property)) {
-          any[property] = BUILTIN_CASTS.get(property)(value);
-        } else if (callerCast !== undefined) {
-          any[property] = callerCast(value);
+        any = true;
+        if (BUILTIN_CASTS.has(property)) {
+          result[property] = BUILTIN_CASTS.get(property)(value);
         } else {
-          any[property] = value;
+          result[property] = value;
         }
       }
     }
-    return any ? any : false;
+    return any ? result : false;
   },
   PrepareTemporalFields: (bag, fields) => {
-    if (ES.Type(bag) !== 'Object') return false;
+    if (ES.Type(bag) !== 'Object') {
+      throw new TypeError('bag parameter must be Object');
+    }
     const result = {};
     let any = false;
     for (const fieldRecord of fields) {
@@ -1926,6 +1927,7 @@ export const ES = ObjectAssign({}, ES2020, {
         throw new RangeError('no such instant found');
       }
     }
+    throw new Error(`assertion failed: invalid disambiguation value ${disambiguation}`);
   },
   GetPossibleInstantsFor: (timeZone, dateTime) => {
     let getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
