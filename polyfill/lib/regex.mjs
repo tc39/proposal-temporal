@@ -18,12 +18,8 @@ export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5
 const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[(${timeZoneID.source})\\])?`);
 const calendar = new RegExp(`\\[u-ca=(${calendarID.source})\\]`);
 
-export const instant = new RegExp(
+export const zoneddatetime = new RegExp(
   `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}(?:${calendar.source})?$`,
-  'i'
-);
-export const datetime = new RegExp(
-  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?(?:${zonesplit.source})?(?:${calendar.source})?$`,
   'i'
 );
 

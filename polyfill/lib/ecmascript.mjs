@@ -246,9 +246,9 @@ export const ES = ObjectAssign({}, ES2020, {
     if (showCalendar === 'auto' && id === 'iso8601') return '';
     return `[u-ca=${id}]`;
   },
-  ParseISODateTime: (isoString, { zoneRequired }) => {
-    const regex = zoneRequired ? PARSE.instant : PARSE.datetime;
-    const match = regex.exec(isoString);
+  ParseISODateTime: (isoString) => {
+    // ZDT is the superset of fields for every other Temporal type
+    const match = PARSE.zoneddatetime.exec(isoString);
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     let yearString = match[1];
     if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
@@ -310,16 +310,20 @@ export const ES = ObjectAssign({}, ES2020, {
     };
   },
   ParseTemporalInstantString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: true });
+    const result = ES.ParseISODateTime(isoString);
+    if (!result.z && !result.offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+    return result;
   },
   ParseTemporalZonedDateTimeString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: true });
+    const result = ES.ParseISODateTime(isoString);
+    if (!result.ianaName) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
+    return result;
   },
   ParseTemporalDateTimeString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+    return ES.ParseISODateTime(isoString);
   },
   ParseTemporalDateString: (isoString) => {
-    return ES.ParseISODateTime(isoString, { zoneRequired: false });
+    return ES.ParseISODateTime(isoString);
   },
   ParseTemporalTimeString: (isoString) => {
     const match = PARSE.time.exec(isoString);
@@ -336,9 +340,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = match[15];
     } else {
       let z;
-      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } = ES.ParseISODateTime(isoString, {
-        zoneRequired: false
-      }));
+      ({ hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } = ES.ParseISODateTime(isoString));
       if (z) throw new RangeError('Z designator not supported for PlainTime');
     }
     return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
@@ -354,7 +356,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = match[3];
     } else {
       let z;
-      ({ year, month, calendar, day: referenceISODay, z } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ year, month, calendar, day: referenceISODay, z } = ES.ParseISODateTime(isoString));
       if (z) throw new RangeError('Z designator not supported for PlainYearMonth');
     }
     return { year, month, calendar, referenceISODay };
@@ -367,7 +369,7 @@ export const ES = ObjectAssign({}, ES2020, {
       day = ES.ToInteger(match[2]);
     } else {
       let z;
-      ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString, { zoneRequired: false }));
+      ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString));
       if (z) throw new RangeError('Z designator not supported for PlainMonthDay');
     }
     return { month, day, calendar, referenceISOYear };
@@ -385,10 +387,14 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     try {
       // Try parsing ISO string instead
-      return ES.ParseISODateTime(stringIdent, { zoneRequired: true });
+      const result = ES.ParseISODateTime(stringIdent);
+      if (result.z || result.offset || result.ianaName) {
+        return result;
+      }
     } catch {
-      throw new RangeError(`Invalid time zone: ${stringIdent}`);
+      // fall through
     }
+    throw new RangeError(`Invalid time zone: ${stringIdent}`);
   },
   ParseTemporalDurationString: (isoString) => {
     const match = PARSE.duration.exec(isoString);
@@ -441,7 +447,6 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     );
     if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-    if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
     const offsetNs = z ? 0 : ES.ParseOffsetString(offset);
     return epochNs.subtract(offsetNs);
   },
@@ -773,7 +778,7 @@ export const ES = ObjectAssign({}, ES2020, {
     } else {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset, z } =
-        ES.ParseISODateTime(ES.ToString(relativeTo), { zoneRequired: false }));
+        ES.ParseISODateTime(ES.ToString(relativeTo)));
       if (ianaName) timeZone = ianaName;
       if (z) {
         offsetBehaviour = 'exact';
@@ -1360,7 +1365,6 @@ export const ES = ObjectAssign({}, ES2020, {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, ianaName, offset, z, calendar } =
         ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
-      if (!ianaName) throw new RangeError('time zone ID required in brackets');
       if (z) {
         offsetBehaviour = 'exact';
       } else if (!offset) {
@@ -1663,7 +1667,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (IsBuiltinCalendar(identifier)) return new TemporalCalendar(identifier);
     let calendar;
     try {
-      ({ calendar } = ES.ParseISODateTime(identifier, { zoneRequired: false }));
+      ({ calendar } = ES.ParseISODateTime(identifier));
     } catch {
       throw new RangeError(`Invalid calendar: ${identifier}`);
     }
