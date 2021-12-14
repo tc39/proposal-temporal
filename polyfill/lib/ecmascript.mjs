@@ -854,7 +854,6 @@ export const ES = ObjectAssign({}, ES2020, {
     return value;
   },
   ToPartialRecord: (bag, fields) => {
-    if (ES.Type(bag) !== 'Object') return false;
     let any = false;
     let result = {};
     for (const property of fields) {
@@ -871,9 +870,6 @@ export const ES = ObjectAssign({}, ES2020, {
     return any ? result : false;
   },
   PrepareTemporalFields: (bag, fields) => {
-    if (ES.Type(bag) !== 'Object') {
-      throw new TypeError('bag parameter must be Object');
-    }
     const result = {};
     let any = false;
     for (const fieldRecord of fields) {
