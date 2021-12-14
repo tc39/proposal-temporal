@@ -10889,7 +10889,7 @@
   var LOCALE = Symbol('locale');
   var OPTIONS = Symbol('options');
 
-  var descriptor = function descriptor(value) {
+  var descriptor$1 = function descriptor(value) {
     return {
       value: value,
       enumerable: true,
@@ -10977,20 +10977,25 @@
   };
 
   var properties = {
-    resolvedOptions: descriptor(resolvedOptions),
-    format: descriptor(format),
-    formatRange: descriptor(formatRange)
+    resolvedOptions: descriptor$1(resolvedOptions),
+    format: descriptor$1(format),
+    formatRange: descriptor$1(formatRange)
   };
 
   if ('formatToParts' in IntlDateTimeFormat.prototype) {
-    properties.formatToParts = descriptor(formatToParts);
+    properties.formatToParts = descriptor$1(formatToParts);
   }
 
   if ('formatRangeToParts' in IntlDateTimeFormat.prototype) {
-    properties.formatRangeToParts = descriptor(formatRangeToParts);
+    properties.formatRangeToParts = descriptor$1(formatRangeToParts);
   }
 
   DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
+  Object.defineProperty(DateTimeFormat, 'prototype', {
+    writable: false,
+    enumerable: false,
+    configurable: false
+  });
 
   function resolvedOptions() {
     return this[ORIGINAL].resolvedOptions();
@@ -15408,6 +15413,22 @@
       _iterator.e(err);
     } finally {
       _iterator.f();
+    }
+  } // Work around https://github.com/babel/babel/issues/2025.
+
+
+  var types = [globalThis.Temporal.Instant, globalThis.Temporal.Calendar, globalThis.Temporal.PlainDate, globalThis.Temporal.PlainDateTime, globalThis.Temporal.Duration, globalThis.Temporal.PlainMonthDay, // globalThis.Temporal.Now, // plain object (not a constructor), so no `prototype`
+  globalThis.Temporal.PlainTime, globalThis.Temporal.TimeZone, globalThis.Temporal.PlainYearMonth, globalThis.Temporal.ZonedDateTime];
+
+  for (var _i = 0, _types = types; _i < _types.length; _i++) {
+    var type = _types[_i];
+    var descriptor = Object.getOwnPropertyDescriptor(type, 'prototype');
+
+    if (descriptor.configurable || descriptor.enumerable || descriptor.writable) {
+      descriptor.configurable = false;
+      descriptor.enumerable = false;
+      descriptor.writable = false;
+      Object.defineProperty(type, 'prototype', descriptor);
     }
   }
 
