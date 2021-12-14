@@ -127,6 +127,12 @@ if ('formatRangeToParts' in IntlDateTimeFormat.prototype) {
 
 DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
 
+Object.defineProperty(DateTimeFormat, 'prototype', {
+  writable: false,
+  enumerable: false,
+  configurable: false
+});
+
 function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
 }
