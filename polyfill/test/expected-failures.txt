@@ -1,2 +1,0 @@
-# Waiting on submitting tests for https://github.com/tc39/proposal-temporal/pull/1874
-built-ins/Temporal/PlainMonthDay/from/fields-string.js
