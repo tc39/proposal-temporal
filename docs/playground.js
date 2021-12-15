@@ -3078,6 +3078,7 @@
   var ArrayIncludes = Array.prototype.includes;
   var ArrayPrototypePush$2 = Array.prototype.push;
   var IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
+  var ArraySort = Array.prototype.sort;
   var MathAbs$1 = Math.abs;
   var MathFloor$1 = Math.floor;
   var ObjectAssign$3 = Object.assign;
@@ -3575,7 +3576,7 @@
       this.misses = 0;
 
       if (cacheToClone !== undefined) {
-        var i = cacheToClone.length;
+        var i = 0;
 
         var _iterator4 = _createForOfIteratorHelper(cacheToClone.map.entries()),
             _step4;
@@ -3801,7 +3802,7 @@
         result.eraYear = eraYear;
       }
 
-      if (this.checkIcuBugs) this.checkIcuBugs(result, isoDate);
+      if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
       var calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
       if (calendarDate.year === undefined) throw new RangeError("Missing year converting ".concat(JSON.stringify(isoDate)));
       if (calendarDate.month === undefined) throw new RangeError("Missing month converting ".concat(JSON.stringify(isoDate)));
@@ -4855,7 +4856,7 @@
     vulnerableToBceBug: new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', {
       timeZone: 'UTC'
     }) !== '10/11/-79 Saka',
-    checkIcuBugs: function checkIcuBugs(calendarDate, isoDate) {
+    checkIcuBugs: function checkIcuBugs(isoDate) {
       if (this.vulnerableToBceBug && isoDate.year < 1) {
         throw new RangeError("calendar '".concat(this.id, "' is broken for ISO dates before 0001-01-01") + ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
       }
@@ -4963,7 +4964,7 @@
     // match eras in index order, with the last era getting the remaining older
     // years. Any reverse-signed era must be at the end.
 
-    eras.sort(function (e1, e2) {
+    ArraySort.call(eras, function (e1, e2) {
       if (e1.reverseOf) return 1;
       if (e2.reverseOf) return -1;
       return e2.isoEpoch.year - e1.isoEpoch.year;
@@ -5154,7 +5155,7 @@
         timeZone: 'UTC'
       }).startsWith('12'),
       calendarIsVulnerableToJulianBug: false,
-      checkIcuBugs: function checkIcuBugs(calendarDate, isoDate) {
+      checkIcuBugs: function checkIcuBugs(isoDate) {
         if (this.calendarIsVulnerableToJulianBug && this.v8IsVulnerableToJulianBug) {
           var beforeJulianSwitch = ES.CompareISODate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
 
@@ -5604,7 +5605,7 @@
           var _monthInfo = _months[numberPart];
           month = _monthInfo && _monthInfo.monthIndex; // If this leap month isn't present in this year, constrain down to the last day of the previous month.
 
-          if (month === undefined && monthCode.endsWith('L') && !['M01L', 'M12L', 'M13L'].includes(monthCode) && overflow === 'constrain') {
+          if (month === undefined && monthCode.endsWith('L') && !ArrayIncludes.call(['M01L', 'M12L', 'M13L'], monthCode) && overflow === 'constrain') {
             var withoutML = monthCode.slice(1, -1);
             if (withoutML[0] === '0') withoutML = withoutML.slice(1);
             _monthInfo = _months[withoutML];
@@ -5741,7 +5742,7 @@
       return result;
     },
     fields: function fields(_fields6) {
-      if (_fields6.includes('year')) _fields6 = [].concat(_toConsumableArray(_fields6), ['era', 'eraYear']);
+      if (ArrayIncludes.call(_fields6, 'year')) _fields6 = [].concat(_toConsumableArray(_fields6), ['era', 'eraYear']);
       return _fields6;
     },
     mergeFields: function mergeFields(fields, additionalFields) {
