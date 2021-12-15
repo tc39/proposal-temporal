@@ -2493,6 +2493,7 @@ describe('ZonedDateTime', () => {
     });
     it('hoursInDay works with non-half-hour DST change', () => {
       const zdt = ZonedDateTime.from('1933-01-01T12:00[Asia/Singapore]');
+      // eslint-disable-next-line no-loss-of-precision,@typescript-eslint/no-loss-of-precision
       assert(Math.abs(zdt.hoursInDay - 23.6666666666666666) < Number.EPSILON);
     });
     it('hoursInDay works when day starts at 1:00 due to DST start at midnight', () => {

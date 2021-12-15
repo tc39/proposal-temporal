@@ -108,7 +108,7 @@ async function render(markdownFile, head, tail) {
   markdownText = lines.join('\n');
 
   const renderer = new CustomRenderer();
-  let htmlText = head + marked(markdownText, { renderer }) + tail;
+  let htmlText = head + marked.parse(markdownText, { renderer }) + tail;
   htmlText = htmlText.replace(/^<!-- toc -->$/m, () => renderer.renderTOC());
 
   const htmlFile = path.resolve('../out/docs', markdownFile.replace(/\.md$/, '') + '.html');

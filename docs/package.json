@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "devDependencies": {
-    "marked": "^2.0.0",
+    "marked": "^4.0.7",
     "mkdirp": "^1.0.4",
-    "prismjs": "^1.21.0"
+    "prismjs": "^1.25.0"
   }
 }
