@@ -5957,8 +5957,7 @@
   var offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
   var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[(").concat(timeZoneID.source, ")\\])?"));
   var calendar = new RegExp("\\[u-ca=(".concat(calendarID.source, ")\\]"));
-  var instant$1 = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
-  var datetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i');
+  var zoneddatetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
   var time = new RegExp("^".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i'); // The short forms of YearMonth and MonthDay are only for the ISO calendar.
   // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
   // with the reference fields.
@@ -6140,10 +6139,9 @@
       if (showCalendar === 'auto' && id === 'iso8601') return '';
       return "[u-ca=".concat(id, "]");
     },
-    ParseISODateTime: function ParseISODateTime(isoString, _ref) {
-      var zoneRequired = _ref.zoneRequired;
-      var regex = zoneRequired ? instant$1 : datetime;
-      var match = regex.exec(isoString);
+    ParseISODateTime: function ParseISODateTime(isoString) {
+      // ZDT is the superset of fields for every other Temporal type
+      var match = zoneddatetime.exec(isoString);
       if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
       var yearString = match[1];
       if (yearString[0] === "\u2212") yearString = "-".concat(yearString.slice(1));
@@ -6213,24 +6211,20 @@
       };
     },
     ParseTemporalInstantString: function ParseTemporalInstantString(isoString) {
-      return ES.ParseISODateTime(isoString, {
-        zoneRequired: true
-      });
+      var result = ES.ParseISODateTime(isoString);
+      if (!result.z && !result.offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+      return result;
     },
     ParseTemporalZonedDateTimeString: function ParseTemporalZonedDateTimeString(isoString) {
-      return ES.ParseISODateTime(isoString, {
-        zoneRequired: true
-      });
+      var result = ES.ParseISODateTime(isoString);
+      if (!result.ianaName) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
+      return result;
     },
     ParseTemporalDateTimeString: function ParseTemporalDateTimeString(isoString) {
-      return ES.ParseISODateTime(isoString, {
-        zoneRequired: false
-      });
+      return ES.ParseISODateTime(isoString);
     },
     ParseTemporalDateString: function ParseTemporalDateString(isoString) {
-      return ES.ParseISODateTime(isoString, {
-        zoneRequired: false
-      });
+      return ES.ParseISODateTime(isoString);
     },
     ParseTemporalTimeString: function ParseTemporalTimeString(isoString) {
       var match = time.exec(isoString);
@@ -6249,9 +6243,7 @@
       } else {
         var z;
 
-        var _ES$ParseISODateTime = ES.ParseISODateTime(isoString, {
-          zoneRequired: false
-        });
+        var _ES$ParseISODateTime = ES.ParseISODateTime(isoString);
 
         hour = _ES$ParseISODateTime.hour;
         minute = _ES$ParseISODateTime.minute;
@@ -6287,9 +6279,7 @@
       } else {
         var z;
 
-        var _ES$ParseISODateTime2 = ES.ParseISODateTime(isoString, {
-          zoneRequired: false
-        });
+        var _ES$ParseISODateTime2 = ES.ParseISODateTime(isoString);
 
         year = _ES$ParseISODateTime2.year;
         month = _ES$ParseISODateTime2.month;
@@ -6316,9 +6306,7 @@
       } else {
         var z;
 
-        var _ES$ParseISODateTime3 = ES.ParseISODateTime(isoString, {
-          zoneRequired: false
-        });
+        var _ES$ParseISODateTime3 = ES.ParseISODateTime(isoString);
 
         month = _ES$ParseISODateTime3.month;
         day = _ES$ParseISODateTime3.day;
@@ -6353,12 +6341,15 @@
 
       try {
         // Try parsing ISO string instead
-        return ES.ParseISODateTime(stringIdent, {
-          zoneRequired: true
-        });
-      } catch (_unused3) {
-        throw new RangeError("Invalid time zone: ".concat(stringIdent));
+        var result = ES.ParseISODateTime(stringIdent);
+
+        if (result.z || result.offset || result.ianaName) {
+          return result;
+        }
+      } catch (_unused3) {// fall through
       }
+
+      throw new RangeError("Invalid time zone: ".concat(stringIdent));
     },
     ParseTemporalDurationString: function ParseTemporalDurationString(isoString) {
       var match = duration.exec(isoString);
@@ -6423,7 +6414,6 @@
 
       var epochNs = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-      if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
       var offsetNs = z ? 0 : ES.ParseOffsetString(offset);
       return epochNs.subtract(offsetNs);
     },
@@ -6829,9 +6819,9 @@
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       var autoValue = arguments.length > 3 ? arguments[3] : undefined;
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref2) {
-        var _ref3 = _slicedToArray(_ref2, 2),
-            sing = _ref3[1];
+      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            sing = _ref2[1];
 
         return !disallowedStrings.includes(sing);
       }));
@@ -6858,9 +6848,9 @@
     },
     ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref4) {
-        var _ref5 = _slicedToArray(_ref4, 2),
-            sing = _ref5[1];
+      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            sing = _ref4[1];
 
         return !disallowedStrings.includes(sing);
       }));
@@ -6927,9 +6917,7 @@
       } else {
         var ianaName, z;
 
-        var _ES$ParseISODateTime4 = ES.ParseISODateTime(ES.ToString(relativeTo), {
-          zoneRequired: false
-        });
+        var _ES$ParseISODateTime4 = ES.ParseISODateTime(ES.ToString(relativeTo));
 
         year = _ES$ParseISODateTime4.year;
         month = _ES$ParseISODateTime4.month;
@@ -7100,9 +7088,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref6) {
-          var _ref7 = _slicedToArray(_ref6, 1),
-              name = _ref7[0];
+        if (!entries.some(function (_ref5) {
+          var _ref6 = _slicedToArray(_ref5, 1),
+              name = _ref6[0];
 
           return name === fieldName;
         })) {
@@ -7115,9 +7103,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref8) {
-          var _ref9 = _slicedToArray(_ref8, 1),
-              name = _ref9[0];
+        if (!entries.some(function (_ref7) {
+          var _ref8 = _slicedToArray(_ref7, 1),
+              name = _ref8[0];
 
           return name === fieldName;
         })) {
@@ -7130,9 +7118,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref10) {
-          var _ref11 = _slicedToArray(_ref10, 1),
-              name = _ref11[0];
+        if (!entries.some(function (_ref9) {
+          var _ref10 = _slicedToArray(_ref9, 1),
+              name = _ref10[0];
 
           return name === fieldName;
         })) {
@@ -7148,9 +7136,9 @@
       var entries = [['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref12) {
-          var _ref13 = _slicedToArray(_ref12, 1),
-              name = _ref13[0];
+        if (!entries.some(function (_ref11) {
+          var _ref12 = _slicedToArray(_ref11, 1),
+              name = _ref12[0];
 
           return name === fieldName;
         })) {
@@ -7163,9 +7151,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset', undefined], ['timeZone']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref14) {
-          var _ref15 = _slicedToArray(_ref14, 1),
-              name = _ref15[0];
+        if (!entries.some(function (_ref13) {
+          var _ref14 = _slicedToArray(_ref13, 1),
+              name = _ref14[0];
 
           return name === fieldName;
         })) {
@@ -7599,7 +7587,6 @@
         offset = _ES$ParseTemporalZone.offset;
         z = _ES$ParseTemporalZone.z;
         calendar = _ES$ParseTemporalZone.calendar;
-        if (!ianaName) throw new RangeError('time zone ID required in brackets');
 
         if (z) {
           offsetBehaviour = 'exact';
@@ -7915,9 +7902,7 @@
       var calendar;
 
       try {
-        var _ES$ParseISODateTime5 = ES.ParseISODateTime(identifier, {
-          zoneRequired: false
-        });
+        var _ES$ParseISODateTime5 = ES.ParseISODateTime(identifier);
 
         calendar = _ES$ParseISODateTime5.calendar;
       } catch (_unused4) {
