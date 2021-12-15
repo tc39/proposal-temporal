@@ -509,7 +509,7 @@ const nonIsoHelperBase = {
     return this.formatter;
   },
   isoToCalendarDate(isoDate, cache) {
-    let { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
+    const { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
     const key = JSON.stringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
@@ -597,7 +597,7 @@ const nonIsoHelperBase = {
     return calendarDate;
   },
   validateCalendarDate(calendarDate) {
-    let { era, month, year, day, eraYear, monthCode, monthExtra } = calendarDate;
+    const { era, month, year, day, eraYear, monthCode, monthExtra } = calendarDate;
     // When there's a suffix (e.g. "5bis" for a leap month in Chinese calendar)
     // the derived class must deal with it.
     if (monthExtra !== undefined) throw new RangeError('Unexpected `monthExtra` value');
@@ -1831,7 +1831,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         const months = this.getMonthList(year, cache);
         let numberPart = monthCode.replace('L', 'bis').slice(1);
         if (numberPart[0] === '0') numberPart = numberPart.slice(1);
-        let monthInfo = months[numberPart];
+        const monthInfo = months[numberPart];
         if (!monthInfo) throw new RangeError(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
         if (month !== monthInfo.monthIndex) {
           throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`);
