@@ -1298,10 +1298,8 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
  * eras. Note that it mutates and normalizes the original era objects, which is
  * OK because this is non-observable, internal-only metadata.
  *
- * The result is an array of eras with this shape:
- * ```
- * interface Era {
- *   // name of the era
+ *  interface Era {
+ *   /** name of the era
  *   name: string;
  *
  *   // alternate name of the era used in old versions of ICU data
@@ -1309,25 +1307,29 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
  *   // with the oldest era being 0.
  *   genericName: string;
  *
- *   // Signed calendar year where this era begins. Will be
- *   // 1 (or 0 for zero-based eras) for the anchor era assuming that `year`
- *   // numbering starts at the beginning of the anchor era, which is true
- *   // for all ICU calendars except Japanese. If an era starts mid-year
- *   // then a calendar month and day are included. Otherwise
- *   // `{ month: 1, day: 1 }` is assumed.
- *   anchorEpoch:  { year: number } | { year: number, month: number, day: number }
+ *   // Signed calendar year where this era begins. Will be 1 (or 0 for zero-based
+ *   // eras) for the anchor era assuming that `year` numbering starts at the
+ *   // beginning of the anchor era, which is true for all ICU calendars except
+ *   // Japanese. For input, the month and day are optional. If an era starts
+ *   // mid-year then a calendar month and day are included.
+ *   // Otherwise `{ month: 1, day: 1 }` is assumed.
+ *   anchorEpoch: { year: number; month: number; day: number };
  *
  *   // ISO date of the first day of this era
- *   isoEpoch: { year: number, month: number, day: number}
+ *   isoEpoch: { year: number; month: number; day: number };
  *
  *   // If present, then this era counts years backwards like BC
  *   // and this property points to the forward era. This must be
  *   // the last (oldest) era in the array.
- *   reverseOf: Era;
+ *   reverseOf?: Era;
  *
  *   // If true, the era's years are 0-based. If omitted or false,
  *   // then the era's years are 1-based.
- *   hasYearZero: boolean = false;
+ *   hasYearZero?: boolean;
+ *
+ *   // Override if this era is the anchor. Not normally used because
+ *   // anchor eras are inferred.
+ *   isAnchor?: boolean;
  * }
  * ```
  * */
