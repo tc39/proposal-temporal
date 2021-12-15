@@ -223,7 +223,7 @@ export class ZonedDateTime {
     fields = ES.PrepareTemporalFields(fields, entries);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
-    const offsetNs = ES.ParseOffsetString(fields.offset);
+    const offsetNs = ES.ParseTimeZoneOffsetString(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,

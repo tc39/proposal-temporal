@@ -687,6 +687,15 @@ describe('Duration', () => {
       throws(() => oneDay.add(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
       throws(() => oneDay.add(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
+    it('throws with invalid offset in relativeTo', () => {
+      throws(
+        () =>
+          Temporal.Duration.from('P2D').add('P1M', {
+            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
+          }),
+        RangeError
+      );
+    });
   });
   describe('Duration.subtract()', () => {
     const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
@@ -929,6 +938,15 @@ describe('Duration', () => {
       equal(zero2.milliseconds, 0);
       equal(zero2.microseconds, 0);
       equal(zero2.nanoseconds, 0);
+    });
+    it('throws with invalid offset in relativeTo', () => {
+      throws(
+        () =>
+          Temporal.Duration.from('P2D').subtract('P1M', {
+            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
+          }),
+        RangeError
+      );
     });
   });
   describe('Duration.abs()', () => {
@@ -1514,6 +1532,16 @@ describe('Duration', () => {
       equal(`${yearAndHalf.round({ relativeTo: '2020-01-01', smallestUnit: 'years' })}`, 'P1Y');
       equal(`${yearAndHalf.round({ relativeTo: '2020-07-01', smallestUnit: 'years' })}`, 'P2Y');
     });
+    it('throws with invalid offset in relativeTo', () => {
+      throws(
+        () =>
+          Temporal.Duration.from('P1M280D').round({
+            smallestUnit: 'month',
+            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
+          }),
+        RangeError
+      );
+    });
   });
   describe('Duration.total()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
@@ -1853,6 +1881,16 @@ describe('Duration', () => {
       equal(d.total({ unit: 'microsecond', relativeTo }), d.total({ unit: 'microseconds', relativeTo }));
       equal(d.total({ unit: 'nanosecond', relativeTo }), d.total({ unit: 'nanoseconds', relativeTo }));
     });
+    it('throws with invalid offset in relativeTo', () => {
+      throws(
+        () =>
+          Temporal.Duration.from('P1M280D').total({
+            unit: 'month',
+            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
+          }),
+        RangeError
+      );
+    });
   });
   describe('Duration.compare', () => {
     describe('time units only', () => {
@@ -1948,6 +1986,15 @@ describe('Duration', () => {
     });
     it('does not lose precision when totaling everything down to nanoseconds', () => {
       notEqual(Duration.compare({ days: 200 }, { days: 200, nanoseconds: 1 }), 0);
+    });
+    it('throws with invalid offset in relativeTo', () => {
+      throws(() => {
+        const d1 = Temporal.Duration.from('P1M280D');
+        const d2 = Temporal.Duration.from('P1M281D');
+        Temporal.Duration.compare(d1, d2, {
+          relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
+        });
+      }, RangeError);
     });
   });
 });

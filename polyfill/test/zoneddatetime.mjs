@@ -589,6 +589,23 @@ describe('ZonedDateTime', () => {
       });
       equal(`${zdt}`, '1976-11-18T00:00:00-10:30[-10:30]');
     });
+    it('throws with invalid offset', () => {
+      const offsets = ['use', 'prefer', 'ignore', 'reject'];
+      offsets.forEach((offset) => {
+        throws(() => {
+          Temporal.ZonedDateTime.from(
+            {
+              year: 2021,
+              month: 11,
+              day: 26,
+              offset: '+099:00',
+              timeZone: 'Europe/London'
+            },
+            { offset }
+          );
+        }, RangeError);
+      });
+    });
     describe('Overflow option', () => {
       const bad = { year: 2019, month: 1, day: 32, timeZone: lagos };
       it('reject', () => throws(() => ZonedDateTime.from(bad, { overflow: 'reject' }), RangeError));
@@ -1024,6 +1041,14 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.with('1976-11-18'), TypeError);
       throws(() => zdt.with('12:00'), TypeError);
       throws(() => zdt.with('invalid'), TypeError);
+    });
+    it('throws with invalid offset', () => {
+      const offsets = ['use', 'prefer', 'ignore', 'reject'];
+      offsets.forEach((offset) => {
+        throws(() => {
+          Temporal.ZonedDateTime.from('2022-11-26[Europe/London]').with({ offset: '+088:00' }, { offset });
+        }, RangeError);
+      });
     });
   });
 
@@ -1617,6 +1642,18 @@ describe('ZonedDateTime', () => {
       equal(`${dt1.until(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P2Y');
       equal(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P1Y');
     });
+    it('throws with invalid offset', () => {
+      throws(() => {
+        const zdt = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
+        zdt.until({
+          year: 2021,
+          month: 11,
+          day: 26,
+          offset: '+099:00',
+          timeZone: 'Europe/London'
+        });
+      }, RangeError);
+    });
   });
   describe('ZonedDateTime.since()', () => {
     const zdt = ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
@@ -1948,6 +1985,18 @@ describe('ZonedDateTime', () => {
       equal(`${dt2.since(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P1Y');
       equal(`${dt1.since(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P2Y');
     });
+    it('throws with invalid offset', () => {
+      throws(() => {
+        const zdt = ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
+        zdt.since({
+          year: 2021,
+          month: 11,
+          day: 26,
+          offset: '+099:00',
+          timeZone: 'Europe/London'
+        });
+      }, RangeError);
+    });
   });
 
   describe('ZonedDateTime.round()', () => {
@@ -2187,6 +2236,17 @@ describe('ZonedDateTime', () => {
         () => zdt.equals({ years: 1969, months: 12, days: 31, timeZone: 'America/New_York', calendarName: 'gregory' }),
         TypeError
       );
+    });
+    it('throws with invalid offset', () => {
+      throws(() => {
+        zdt.equals({
+          year: 2021,
+          month: 11,
+          day: 26,
+          offset: '+099:00',
+          timeZone: 'Europe/London'
+        });
+      }, RangeError);
     });
   });
   describe('ZonedDateTime.toString()', () => {
@@ -2894,6 +2954,17 @@ describe('ZonedDateTime', () => {
       const clockAfter = ZonedDateTime.from('2000-01-01T01:30-04:00[America/Halifax]');
       equal(ZonedDateTime.compare(clockBefore, clockAfter), 1);
       equal(Temporal.PlainDateTime.compare(clockBefore.toPlainDateTime(), clockAfter.toPlainDateTime()), -1);
+    });
+    it('throws with invalid offset', () => {
+      throws(() => {
+        Temporal.ZonedDateTime.compare(zdt1, {
+          year: 2021,
+          month: 11,
+          day: 26,
+          offset: '+099:00',
+          timeZone: 'Europe/London'
+        });
+      }, RangeError);
     });
   });
 });
