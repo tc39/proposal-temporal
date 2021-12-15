@@ -48,8 +48,9 @@ export class TimeZone {
     instant = ES.ToTemporalInstant(instant);
     const id = GetSlot(this, TIMEZONE_ID);
 
-    const offsetNs = ES.ParseOffsetString(id);
-    if (offsetNs !== null) return offsetNs;
+    if (ES.TestTimeZoneOffsetString(id)) {
+      return ES.ParseTimeZoneOffsetString(id);
+    }
 
     return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
   }
@@ -76,8 +77,7 @@ export class TimeZone {
     const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    const offsetNs = ES.ParseOffsetString(id);
-    if (offsetNs !== null) {
+    if (ES.TestTimeZoneOffsetString(id)) {
       const epochNs = ES.GetEpochFromISOParts(
         GetSlot(dateTime, ISO_YEAR),
         GetSlot(dateTime, ISO_MONTH),
@@ -90,6 +90,7 @@ export class TimeZone {
         GetSlot(dateTime, ISO_NANOSECOND)
       );
       if (epochNs === null) throw new RangeError('DateTime outside of supported range');
+      const offsetNs = ES.ParseTimeZoneOffsetString(id);
       return [new Instant(epochNs.minus(offsetNs))];
     }
 
@@ -113,7 +114,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
+    if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
       return null;
     }
 
@@ -128,7 +129,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
+    if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
       return null;
     }
 

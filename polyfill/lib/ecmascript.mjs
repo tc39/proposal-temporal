@@ -379,7 +379,7 @@ export const ES = ObjectAssign({}, ES2020, {
       let canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
       if (canonicalIdent) {
         canonicalIdent = canonicalIdent.toString();
-        if (ES.ParseOffsetString(canonicalIdent) !== null) return { offset: canonicalIdent };
+        if (ES.TestTimeZoneOffsetString(canonicalIdent)) return { offset: canonicalIdent };
         return { ianaName: canonicalIdent };
       }
     } catch {
@@ -447,7 +447,8 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     );
     if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-    const offsetNs = z ? 0 : ES.ParseOffsetString(offset);
+    if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+    const offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
     return epochNs.subtract(offsetNs);
   },
   RegulateISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
@@ -792,7 +793,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (timeZone) {
       timeZone = ES.ToTemporalTimeZone(timeZone);
       let offsetNs = 0;
-      if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(ES.ToString(offset));
+      if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
       const epochNanoseconds = ES.InterpretISODateTimeOffset(
         year,
         month,
@@ -1373,7 +1374,7 @@ export const ES = ObjectAssign({}, ES2020, {
       matchMinute = true; // ISO strings may specify offset with less precision
     }
     let offsetNs = 0;
-    if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(offset);
+    if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(offset);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const offsetOpt = ES.ToTemporalOffset(options, 'reject');
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
@@ -2177,9 +2178,14 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
 
-  ParseOffsetString: (string) => {
+  TestTimeZoneOffsetString: (string) => {
+    return OFFSET.test(String(string));
+  },
+  ParseTimeZoneOffsetString: (string) => {
     const match = OFFSET.exec(String(string));
-    if (!match) return null;
+    if (!match) {
+      throw new RangeError(`invalid time zone offset: ${string}`);
+    }
     const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
     const hours = +match[2];
     const minutes = +(match[3] || 0);
@@ -2188,8 +2194,10 @@ export const ES = ObjectAssign({}, ES2020, {
     return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   },
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
-    const offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
-    if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
+    if (ES.TestTimeZoneOffsetString(timeZoneIdentifier)) {
+      const offsetNs = ES.ParseTimeZoneOffsetString(timeZoneIdentifier);
+      return ES.FormatTimeZoneOffsetString(offsetNs);
+    }
     const formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
     return formatter.resolvedOptions().timeZone;
   },
