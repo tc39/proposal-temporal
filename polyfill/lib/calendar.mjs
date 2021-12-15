@@ -26,6 +26,7 @@ import {
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
+const ArraySort = Array.prototype.sort;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
@@ -1384,7 +1385,7 @@ function adjustEras(eras) {
   // Ensure that the latest epoch is first in the array. This lets us try to
   // match eras in index order, with the last era getting the remaining older
   // years. Any reverse-signed era must be at the end.
-  eras.sort((e1, e2) => {
+  ArraySort.call(eras, (e1, e2) => {
     if (e1.reverseOf) return 1;
     if (e2.reverseOf) return -1;
     return e2.isoEpoch.year - e1.isoEpoch.year;
@@ -1793,7 +1794,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (
           month === undefined &&
           monthCode.endsWith('L') &&
-          !['M01L', 'M12L', 'M13L'].includes(monthCode) &&
+          !ArrayIncludes.call(['M01L', 'M12L', 'M13L'], monthCode) &&
           overflow === 'constrain'
         ) {
           let withoutML = monthCode.slice(1, -1);
@@ -1909,7 +1910,7 @@ const nonIsoGeneralImpl = {
     return result;
   },
   fields(fields) {
-    if (fields.includes('year')) fields = [...fields, 'era', 'eraYear'];
+    if (ArrayIncludes.call(fields, 'year')) fields = [...fields, 'era', 'eraYear'];
     return fields;
   },
   mergeFields(fields, additionalFields) {
