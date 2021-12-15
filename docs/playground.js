@@ -6329,7 +6329,7 @@
 
         if (canonicalIdent) {
           canonicalIdent = canonicalIdent.toString();
-          if (ES.ParseOffsetString(canonicalIdent) !== null) return {
+          if (ES.TestTimeZoneOffsetString(canonicalIdent)) return {
             offset: canonicalIdent
           };
           return {
@@ -6414,7 +6414,8 @@
 
       var epochNs = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-      var offsetNs = z ? 0 : ES.ParseOffsetString(offset);
+      if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+      var offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
       return epochNs.subtract(offsetNs);
     },
     RegulateISODateTime: function RegulateISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
@@ -6948,7 +6949,7 @@
       if (timeZone) {
         timeZone = ES.ToTemporalTimeZone(timeZone);
         var offsetNs = 0;
-        if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(ES.ToString(offset));
+        if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
         var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
         return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
       }
@@ -7602,7 +7603,7 @@
       }
 
       var offsetNs = 0;
-      if (offsetBehaviour === 'option') offsetNs = ES.ParseOffsetString(offset);
+      if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(offset);
       var disambiguation = ES.ToTemporalDisambiguation(options);
       var offsetOpt = ES.ToTemporalOffset(options, 'reject');
       var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute);
@@ -8398,9 +8399,16 @@
       result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
       return result;
     },
-    ParseOffsetString: function ParseOffsetString(string) {
+    TestTimeZoneOffsetString: function TestTimeZoneOffsetString(string) {
+      return OFFSET.test(String(string));
+    },
+    ParseTimeZoneOffsetString: function ParseTimeZoneOffsetString(string) {
       var match = OFFSET.exec(String(string));
-      if (!match) return null;
+
+      if (!match) {
+        throw new RangeError("invalid time zone offset: ".concat(string));
+      }
+
       var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : +1;
       var hours = +match[2];
       var minutes = +(match[3] || 0);
@@ -8409,8 +8417,11 @@
       return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
     },
     GetCanonicalTimeZoneIdentifier: function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
-      var offsetNs = ES.ParseOffsetString(timeZoneIdentifier);
-      if (offsetNs !== null) return ES.FormatTimeZoneOffsetString(offsetNs);
+      if (ES.TestTimeZoneOffsetString(timeZoneIdentifier)) {
+        var offsetNs = ES.ParseTimeZoneOffsetString(timeZoneIdentifier);
+        return ES.FormatTimeZoneOffsetString(offsetNs);
+      }
+
       var formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
       return formatter.resolvedOptions().timeZone;
     },
@@ -10756,8 +10767,11 @@
         if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         instant = ES.ToTemporalInstant(instant);
         var id = GetSlot(this, TIMEZONE_ID);
-        var offsetNs = ES.ParseOffsetString(id);
-        if (offsetNs !== null) return offsetNs;
+
+        if (ES.TestTimeZoneOffsetString(id)) {
+          return ES.ParseTimeZoneOffsetString(id);
+        }
+
         return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
       }
     }, {
@@ -10792,11 +10806,11 @@
         dateTime = ES.ToTemporalDateTime(dateTime);
         var Instant = GetIntrinsic('%Temporal.Instant%');
         var id = GetSlot(this, TIMEZONE_ID);
-        var offsetNs = ES.ParseOffsetString(id);
 
-        if (offsetNs !== null) {
+        if (ES.TestTimeZoneOffsetString(id)) {
           var epochNs = ES.GetEpochFromISOParts(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, ISO_HOUR), GetSlot(dateTime, ISO_MINUTE), GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND));
           if (epochNs === null) throw new RangeError('DateTime outside of supported range');
+          var offsetNs = ES.ParseTimeZoneOffsetString(id);
           return [new Instant(epochNs.minus(offsetNs))];
         }
 
@@ -10812,7 +10826,7 @@
         startingPoint = ES.ToTemporalInstant(startingPoint);
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
-        if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
+        if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
           return null;
         }
 
@@ -10828,7 +10842,7 @@
         startingPoint = ES.ToTemporalInstant(startingPoint);
         var id = GetSlot(this, TIMEZONE_ID); // Offset time zones or UTC have no transitions
 
-        if (ES.ParseOffsetString(id) !== null || id === 'UTC') {
+        if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
           return null;
         }
 
@@ -14769,7 +14783,7 @@
             microsecond = _ES$InterpretTemporal.microsecond,
             nanosecond = _ES$InterpretTemporal.nanosecond;
 
-        var offsetNs = ES.ParseOffsetString(fields.offset);
+        var offsetNs = ES.ParseTimeZoneOffsetString(fields.offset);
         var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, disambiguation, offset,
         /* matchMinute = */
         false);
