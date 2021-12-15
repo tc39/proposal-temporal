@@ -419,7 +419,7 @@ class OneObjectCache {
     this.hits = 0;
     this.misses = 0;
     if (cacheToClone !== undefined) {
-      let i = cacheToClone.length;
+      let i = 0;
       for (const entry of cacheToClone.map.entries()) {
         if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
         this.map.set(...entry);
