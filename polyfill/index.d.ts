@@ -603,8 +603,9 @@ export namespace Temporal {
     readonly [Symbol.toStringTag]: 'Temporal.Instant';
   }
 
-  type EitherYearOrEraAndEraYear = { era: string; eraYear: number } | { year: number };
-  type EitherMonthCodeOrMonthAndYear = (EitherYearOrEraAndEraYear & { month: number }) | { monthCode: string };
+  type YearOrEraAndEraYear = { era: string; eraYear: number } | { year: number };
+  type MonthCodeOrMonthAndYear = (YearOrEraAndEraYear & { month: number }) | { monthCode: string };
+  type MonthOrMonthCode = { month: number } | { monthCode: string };
 
   export interface CalendarProtocol {
     id?: string;
@@ -648,15 +649,15 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): boolean;
     dateFromFields(
-      fields: EitherMonthCodeOrMonthAndYear & { day: number },
+      fields: YearOrEraAndEraYear & MonthOrMonthCode & { day: number },
       options?: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: EitherYearOrEraAndEraYear & ({ month: number } | { monthCode: string }),
+      fields: YearOrEraAndEraYear & MonthOrMonthCode,
       options?: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
-      fields: EitherMonthCodeOrMonthAndYear & { day: number },
+      fields: MonthCodeOrMonthAndYear & { day: number },
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd(
@@ -726,15 +727,15 @@ export namespace Temporal {
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
     ): boolean;
     dateFromFields(
-      fields: EitherMonthCodeOrMonthAndYear & { day: number },
+      fields: YearOrEraAndEraYear & MonthOrMonthCode & { day: number },
       options?: AssignmentOptions
     ): Temporal.PlainDate;
     yearMonthFromFields(
-      fields: EitherYearOrEraAndEraYear & ({ month: number } | { monthCode: string }),
+      fields: YearOrEraAndEraYear & MonthOrMonthCode,
       options?: AssignmentOptions
     ): Temporal.PlainYearMonth;
     monthDayFromFields(
-      fields: EitherMonthCodeOrMonthAndYear & { day: number },
+      fields: MonthCodeOrMonthAndYear & { day: number },
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
     dateAdd(
