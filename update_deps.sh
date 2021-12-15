@@ -1,5 +1,4 @@
 # root folder dependencies
-# remove "-x ecmarkup" when https://github.com/tc39/ecmarkup/issues/394 is resolved
 npx npm-check-updates -u
 
 # polyfill dependencies
