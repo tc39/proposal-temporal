@@ -1389,6 +1389,7 @@ function adjustEras(eras) {
   ArraySort.call(eras, (e1, e2) => {
     if (e1.reverseOf) return 1;
     if (e2.reverseOf) return -1;
+    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
     return e2.isoEpoch.year - e1.isoEpoch.year;
   });
 
