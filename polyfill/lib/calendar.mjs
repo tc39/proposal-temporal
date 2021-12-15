@@ -1146,10 +1146,10 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
       } else {
         if (overflow === 'reject') {
           ES.RejectToRange(month, 1, this.monthsInYear({ year }));
-          ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
+          ES.RejectToRange(day, 1, this.maximumMonthLength({ year, month }));
         } else {
           month = ES.ConstrainToRange(month, 1, this.monthsInYear({ year }));
-          day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ ...calendarDate, month }));
+          day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ year, month }));
         }
         if (monthCode === undefined) {
           monthCode = this.getMonthCode(year, month);
