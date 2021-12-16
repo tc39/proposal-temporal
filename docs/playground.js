@@ -3871,25 +3871,25 @@
     /*, fromLegacyDate = false */
     ) {
       if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
-      this.validateCalendarDate(calendarDate);
-      var largestMonth = this.monthsInYear(calendarDate, cache);
-      var _calendarDate = calendarDate,
-          month = _calendarDate.month,
-          year = _calendarDate.year,
-          eraYear = _calendarDate.eraYear,
-          monthCode = _calendarDate.monthCode; // For calendars that always use the same era, set it here so that derived
+      this.validateCalendarDate(calendarDate); // For calendars that always use the same era, set it here so that derived
       // calendars won't need to implement this method simply to set the era.
 
       if (this.constantEra) {
         // year and eraYear always match when there's only one possible era
-        if (year === undefined) year = eraYear;
-        if (eraYear === undefined) eraYear = year;
+        var _calendarDate = calendarDate,
+            year = _calendarDate.year,
+            eraYear = _calendarDate.eraYear;
         calendarDate = _objectSpread2(_objectSpread2({}, calendarDate), {}, {
           era: this.constantEra,
-          year: year,
-          eraYear: eraYear
+          year: year !== undefined ? year : eraYear,
+          eraYear: eraYear !== undefined ? eraYear : year
         });
       }
+
+      var largestMonth = this.monthsInYear(calendarDate, cache);
+      var _calendarDate2 = calendarDate,
+          month = _calendarDate2.month,
+          monthCode = _calendarDate2.monthCode;
 
       var _resolveNonLunisolarM = resolveNonLunisolarMonth(calendarDate, overflow, largestMonth);
 
@@ -4126,12 +4126,12 @@
       return addedCalendar;
     },
     addMonthsCalendar: function addMonthsCalendar(calendarDate, months, overflow, cache) {
-      var _calendarDate2 = calendarDate,
-          day = _calendarDate2.day;
+      var _calendarDate3 = calendarDate,
+          day = _calendarDate3.day;
 
       for (var i = 0, absMonths = MathAbs$1(months); i < absMonths; i++) {
-        var _calendarDate3 = calendarDate,
-            month = _calendarDate3.month;
+        var _calendarDate4 = calendarDate,
+            month = _calendarDate4.month;
         var oldCalendarDate = calendarDate;
         var days = months < 0 ? -Math.max(day, this.daysInPreviousMonth(calendarDate, cache)) : this.daysInMonth(calendarDate, cache);
         var isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
@@ -4626,14 +4626,18 @@
             ES.RejectToRange(month, 1, this.monthsInYear({
               year: year
             }));
-            ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
+            ES.RejectToRange(day, 1, this.maximumMonthLength({
+              year: year,
+              month: month
+            }));
           } else {
             month = ES.ConstrainToRange(month, 1, this.monthsInYear({
               year: year
             }));
-            day = ES.ConstrainToRange(day, 1, this.maximumMonthLength(_objectSpread2(_objectSpread2({}, calendarDate), {}, {
+            day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({
+              year: year,
               month: month
-            })));
+            }));
           }
 
           if (monthCode === undefined) {
@@ -4867,10 +4871,8 @@
    * eras. Note that it mutates and normalizes the original era objects, which is
    * OK because this is non-observable, internal-only metadata.
    *
-   * The result is an array of eras with this shape:
-   * ```
-   * interface Era {
-   *   // name of the era
+   *  interface Era {
+   *   /** name of the era
    *   name: string;
    *
    *   // alternate name of the era used in old versions of ICU data
@@ -4878,25 +4880,29 @@
    *   // with the oldest era being 0.
    *   genericName: string;
    *
-   *   // Signed calendar year where this era begins. Will be
-   *   // 1 (or 0 for zero-based eras) for the anchor era assuming that `year`
-   *   // numbering starts at the beginning of the anchor era, which is true
-   *   // for all ICU calendars except Japanese. If an era starts mid-year
-   *   // then a calendar month and day are included. Otherwise
-   *   // `{ month: 1, day: 1 }` is assumed.
-   *   anchorEpoch:  { year: number } | { year: number, month: number, day: number }
+   *   // Signed calendar year where this era begins. Will be 1 (or 0 for zero-based
+   *   // eras) for the anchor era assuming that `year` numbering starts at the
+   *   // beginning of the anchor era, which is true for all ICU calendars except
+   *   // Japanese. For input, the month and day are optional. If an era starts
+   *   // mid-year then a calendar month and day are included.
+   *   // Otherwise `{ month: 1, day: 1 }` is assumed.
+   *   anchorEpoch: { year: number; month: number; day: number };
    *
    *   // ISO date of the first day of this era
-   *   isoEpoch: { year: number, month: number, day: number}
+   *   isoEpoch: { year: number; month: number; day: number };
    *
    *   // If present, then this era counts years backwards like BC
    *   // and this property points to the forward era. This must be
    *   // the last (oldest) era in the array.
-   *   reverseOf: Era;
+   *   reverseOf?: Era;
    *
    *   // If true, the era's years are 0-based. If omitted or false,
    *   // then the era's years are 1-based.
-   *   hasYearZero: boolean = false;
+   *   hasYearZero?: boolean;
+   *
+   *   // Override if this era is the anchor. Not normally used because
+   *   // anchor eras are inferred.
+   *   isAnchor?: boolean;
    * }
    * ```
    * */
@@ -4967,6 +4973,7 @@
     ArraySort.call(eras, function (e1, e2) {
       if (e1.reverseOf) return 1;
       if (e2.reverseOf) return -1;
+      if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
       return e2.isoEpoch.year - e1.isoEpoch.year;
     }); // If there's a reversed era, then the one before it must be the era that's
     // being reversed.
@@ -5127,9 +5134,9 @@
       /*, fromLegacyDate = false */
       ) {
         // Because this is not a lunisolar calendar, it's safe to convert monthCode to a number
-        var _calendarDate4 = calendarDate,
-            month = _calendarDate4.month,
-            monthCode = _calendarDate4.monthCode;
+        var _calendarDate5 = calendarDate,
+            month = _calendarDate5.month,
+            monthCode = _calendarDate5.monthCode;
         if (month === undefined) calendarDate = _objectSpread2(_objectSpread2({}, calendarDate), {}, {
           month: monthCodeNumberPart(monthCode)
         });
@@ -5140,10 +5147,10 @@
       },
       estimateIsoDate: function estimateIsoDate(calendarDate) {
         calendarDate = this.adjustCalendarDate(calendarDate);
-        var _calendarDate5 = calendarDate,
-            year = _calendarDate5.year,
-            month = _calendarDate5.month,
-            day = _calendarDate5.day;
+        var _calendarDate6 = calendarDate,
+            year = _calendarDate6.year,
+            month = _calendarDate6.month,
+            day = _calendarDate6.day;
         var anchorEra = this.anchorEra;
         var isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
         return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain');
