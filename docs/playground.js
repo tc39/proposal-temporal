@@ -8280,7 +8280,7 @@
       }
 
       if (decimalPart) secondParts.unshift('.', decimalPart);
-      if (!seconds.isZero() || secondParts.length) secondParts.unshift(seconds.abs().toString());
+      if (!seconds.isZero() || secondParts.length || precision !== 'auto') secondParts.unshift(seconds.abs().toString());
       if (secondParts.length) timeParts.push("".concat(secondParts.join(''), "S"));
       if (timeParts.length) timeParts.unshift('T');
       if (!dateParts.length && !timeParts.length) return 'PT0S';
