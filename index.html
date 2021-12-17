@@ -6916,7 +6916,7 @@ li.menu-search-result-term:before {
         <code>Temporal.TimeZone.prototype.id</code> is an <emu-xref href="#sec-object-type"><a href="https://tc39.es/ecma262/#sec-object-type">accessor property</a></emu-xref> whose set accessor function is <emu-val>undefined</emu-val>.
         Its get accessor function performs the following steps:
       </p>
-      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1483"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>timeZone</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>timeZone</var>, [[InitializedTemporalTimeZone]]).</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1483"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>timeZone</var>).</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getoffsetnanosecondsfor">
@@ -6946,7 +6946,7 @@ li.menu-search-result-term:before {
         The <code>getPlainDateTimeFor</code> method takes two arguments, <var>instant</var> and <var>calendarLike</var>.
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Set <var>instant</var> to ?&nbsp;<emu-xref aoid="ToTemporalInstant" id="_ref_1488"><a href="#sec-temporal-totemporalinstant">ToTemporalInstant</a></emu-xref>(<var>instant</var>).</li><li>Let <var>calendar</var> be ?&nbsp;<emu-xref aoid="ToTemporalCalendarWithISODefault" id="_ref_1489"><a href="#sec-temporal-totemporalcalendarwithisodefault">ToTemporalCalendarWithISODefault</a></emu-xref>(<var>calendarLike</var>).</li><li>Return ?&nbsp;<emu-xref aoid="BuiltinTimeZoneGetPlainDateTimeFor" id="_ref_1490"><a href="#sec-temporal-builtintimezonegetplaindatetimefor">BuiltinTimeZoneGetPlainDateTimeFor</a></emu-xref>(<var>timeZone</var>, <var>instant</var>, <var>calendar</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>timeZone</var>, [[InitializedTemporalTimeZone]]).</li><li>Set <var>instant</var> to ?&nbsp;<emu-xref aoid="ToTemporalInstant" id="_ref_1488"><a href="#sec-temporal-totemporalinstant">ToTemporalInstant</a></emu-xref>(<var>instant</var>).</li><li>Let <var>calendar</var> be ?&nbsp;<emu-xref aoid="ToTemporalCalendarWithISODefault" id="_ref_1489"><a href="#sec-temporal-totemporalcalendarwithisodefault">ToTemporalCalendarWithISODefault</a></emu-xref>(<var>calendarLike</var>).</li><li>Return ?&nbsp;<emu-xref aoid="BuiltinTimeZoneGetPlainDateTimeFor" id="_ref_1490"><a href="#sec-temporal-builtintimezonegetplaindatetimefor">BuiltinTimeZoneGetPlainDateTimeFor</a></emu-xref>(<var>timeZone</var>, <var>instant</var>, <var>calendar</var>).</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.getinstantfor">
@@ -7001,7 +7001,7 @@ li.menu-search-result-term:before {
       <p>
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1508"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>timeZone</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>timeZone</var>, [[InitializedTemporalTimeZone]]).</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1508"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>timeZone</var>).</li></ol></emu-alg>
     </emu-clause>
   </emu-clause>
 
@@ -7630,7 +7630,7 @@ li.menu-search-result-term:before {
         <code>Temporal.Calendar.prototype.id</code> is an <emu-xref href="#sec-object-type"><a href="https://tc39.es/ecma262/#sec-object-type">accessor property</a></emu-xref> whose set accessor function is <emu-val>undefined</emu-val>.
         Its get accessor function performs the following steps:
       </p>
-      <emu-alg><ol><li>Let <var>calendar</var> be the <emu-val>this</emu-val> value.</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1687"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>calendar</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>calendar</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>calendar</var>, [[InitializedTemporalCalendar]]).</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1687"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>calendar</var>).</li></ol></emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.datefromfields">
@@ -7889,7 +7889,7 @@ li.menu-search-result-term:before {
       <p>
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>calendar</var> be the <emu-val>this</emu-val> value.</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1757"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>calendar</var>).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>calendar</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>calendar</var>, [[InitializedTemporalCalendar]]).</li><li>Return ?&nbsp;<emu-xref aoid="ToString" id="_ref_1757"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>calendar</var>).</li></ol></emu-alg>
     </emu-clause>
   </emu-clause>
 
