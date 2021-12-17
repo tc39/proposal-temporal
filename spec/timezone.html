@@ -202,6 +202,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Return ? ToString(_timeZone_).
       </emu-alg>
     </emu-clause>
@@ -246,6 +247,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
         1. Return ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
@@ -347,6 +349,7 @@
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Return ? ToString(_timeZone_).
       </emu-alg>
     </emu-clause>

@@ -715,6 +715,7 @@
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Return ? ToString(_calendar_).
       </emu-alg>
     </emu-clause>
@@ -1137,6 +1138,7 @@
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Return ? ToString(_calendar_).
       </emu-alg>
     </emu-clause>
