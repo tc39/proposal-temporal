@@ -1014,9 +1014,16 @@ describe('Time', () => {
     it('optional parts', () => {
       equal(`${PlainTime.from('15')}`, '15:00:00');
     });
+    it('date-only formats not allowed', () => {
+      throws(() => PlainTime.from('2020-12-01'), RangeError);
+      throws(() => PlainTime.from('20201201'), RangeError);
+    });
     it('time designator prefix', () => {
       equal(`${PlainTime.from('T15:23:30')}`, '15:23:30');
       equal(`${PlainTime.from('t152330')}`, '15:23:30');
+    });
+    it('space not accepted as time designator prefix', () => {
+      throws(() => PlainTime.from(' 15:23:30'), RangeError);
     });
     it('time designator required for ambiguous strings', () => {
       // YYYY-MM or HHMM-UU
