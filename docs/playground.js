@@ -6149,10 +6149,6 @@
       return "[u-ca=".concat(id, "]");
     },
     ParseISODateTime: function ParseISODateTime(isoString) {
-      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref$timeRequired = _ref.timeRequired,
-          timeRequired = _ref$timeRequired === void 0 ? false : _ref$timeRequired;
-
       // ZDT is the superset of fields for every other Temporal type
       var match = zoneddatetime.exec(isoString);
       if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
@@ -6161,7 +6157,7 @@
       var year = ES.ToInteger(yearString);
       var month = ES.ToInteger(match[2] || match[4]);
       var day = ES.ToInteger(match[3] || match[5]);
-      if (timeRequired && match[6] === undefined) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
+      var hasTime = match[6] !== undefined;
       var hour = ES.ToInteger(match[6]);
       var minute = ES.ToInteger(match[7] || match[10]);
       var second = ES.ToInteger(match[8] || match[11]);
@@ -6212,6 +6208,7 @@
         year: year,
         month: month,
         day: day,
+        hasTime: hasTime,
         hour: hour,
         minute: minute,
         second: second,
@@ -6255,12 +6252,11 @@
         nanosecond = ES.ToInteger(fraction.slice(6, 9));
         calendar = match[15];
       } else {
-        var z;
+        var z, hasTime;
 
-        var _ES$ParseISODateTime = ES.ParseISODateTime(isoString, {
-          timeRequired: true
-        });
+        var _ES$ParseISODateTime = ES.ParseISODateTime(isoString);
 
+        hasTime = _ES$ParseISODateTime.hasTime;
         hour = _ES$ParseISODateTime.hour;
         minute = _ES$ParseISODateTime.minute;
         second = _ES$ParseISODateTime.second;
@@ -6269,6 +6265,7 @@
         nanosecond = _ES$ParseISODateTime.nanosecond;
         calendar = _ES$ParseISODateTime.calendar;
         z = _ES$ParseISODateTime.z;
+        if (!hasTime) throw new RangeError("time is missing in string: ".concat(isoString));
         if (z) throw new RangeError('Z designator not supported for PlainTime');
       } // if it's a date-time string, OK
 
@@ -6870,9 +6867,9 @@
     ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       var autoValue = arguments.length > 3 ? arguments[3] : undefined;
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref2) {
-        var _ref3 = _slicedToArray(_ref2, 2),
-            sing = _ref3[1];
+      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            sing = _ref2[1];
 
         return !disallowedStrings.includes(sing);
       }));
@@ -6899,9 +6896,9 @@
     },
     ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options, fallback) {
       var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref4) {
-        var _ref5 = _slicedToArray(_ref4, 2),
-            sing = _ref5[1];
+      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            sing = _ref4[1];
 
         return !disallowedStrings.includes(sing);
       }));
@@ -7139,9 +7136,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref6) {
-          var _ref7 = _slicedToArray(_ref6, 1),
-              name = _ref7[0];
+        if (!entries.some(function (_ref5) {
+          var _ref6 = _slicedToArray(_ref5, 1),
+              name = _ref6[0];
 
           return name === fieldName;
         })) {
@@ -7154,9 +7151,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref8) {
-          var _ref9 = _slicedToArray(_ref8, 1),
-              name = _ref9[0];
+        if (!entries.some(function (_ref7) {
+          var _ref8 = _slicedToArray(_ref7, 1),
+              name = _ref8[0];
 
           return name === fieldName;
         })) {
@@ -7169,9 +7166,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref10) {
-          var _ref11 = _slicedToArray(_ref10, 1),
-              name = _ref11[0];
+        if (!entries.some(function (_ref9) {
+          var _ref10 = _slicedToArray(_ref9, 1),
+              name = _ref10[0];
 
           return name === fieldName;
         })) {
@@ -7187,9 +7184,9 @@
       var entries = [['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref12) {
-          var _ref13 = _slicedToArray(_ref12, 1),
-              name = _ref13[0];
+        if (!entries.some(function (_ref11) {
+          var _ref12 = _slicedToArray(_ref11, 1),
+              name = _ref12[0];
 
           return name === fieldName;
         })) {
@@ -7202,9 +7199,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset', undefined], ['timeZone']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref14) {
-          var _ref15 = _slicedToArray(_ref14, 1),
-              name = _ref15[0];
+        if (!entries.some(function (_ref13) {
+          var _ref14 = _slicedToArray(_ref13, 1),
+              name = _ref14[0];
 
           return name === fieldName;
         })) {
