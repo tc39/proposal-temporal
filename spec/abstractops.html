@@ -1149,7 +1149,6 @@
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. Let _year_, _month_, _day_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
-      1. Let _year_ be the part of _isoString_ produced by the |DateYear| production.
       1. Let _hour_ be the part of _isoString_ produced by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| productions, or *undefined* if none of those are present.
       1. Let _minute_ be the part of _isoString_ produced by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| productions, or *undefined* if none of those are present.
       1. Let _second_ be the part of _isoString_ produced by the |TimeSecond| or |TimeSecondNotValidMonth| productions, or *undefined* if neither of those are present.
