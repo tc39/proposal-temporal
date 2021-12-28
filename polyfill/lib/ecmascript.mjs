@@ -252,6 +252,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     let yearString = match[1];
     if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
+    if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const year = ES.ToInteger(yearString);
     const month = ES.ToInteger(match[2] || match[4]);
     const day = ES.ToInteger(match[3] || match[5]);
