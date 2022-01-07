@@ -41,6 +41,7 @@ export class TimeZone {
     }
   }
   get id() {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return ES.ToString(this);
   }
   getOffsetNanosecondsFor(instant) {
@@ -60,6 +61,7 @@ export class TimeZone {
     return ES.BuiltinTimeZoneGetOffsetStringFor(this, instant);
   }
   getPlainDateTimeFor(instant, calendar = ES.GetISO8601Calendar()) {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     instant = ES.ToTemporalInstant(instant);
     calendar = ES.ToTemporalCalendar(calendar);
     return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
@@ -143,6 +145,7 @@ export class TimeZone {
     return String(GetSlot(this, TIMEZONE_ID));
   }
   toJSON() {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return ES.ToString(this);
   }
   static from(item) {
