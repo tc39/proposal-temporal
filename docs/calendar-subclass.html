@@ -164,8 +164,8 @@
 
         <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> k <span class="token keyword">of</span> <span class="token punctuation">[</span><span class="token string">"era"</span><span class="token punctuation">,</span> <span class="token string">"year"</span><span class="token punctuation">,</span> <span class="token string">"month"</span><span class="token punctuation">,</span> <span class="token string">"day"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             Object<span class="token punctuation">.</span><span class="token function">defineProperty</span><span class="token punctuation">(</span>retval<span class="token punctuation">,</span> k<span class="token punctuation">,</span> <span class="token punctuation">{</span>
-                value<span class="token operator">:</span> Temporal<span class="token punctuation">.</span><span class="token class-name">PlainDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span>
-                enumerable<span class="token operator">:</span> <span class="token boolean">true</span>
+                <span class="token literal-property property">value</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span><span class="token class-name">PlainDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">enumerable</span><span class="token operator">:</span> <span class="token boolean">true</span>
             <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 

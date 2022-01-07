@@ -169,27 +169,27 @@ However, we have taken a future-proof approach so that if a use case presents it
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Calendar</span> <span class="token punctuation">{</span>
     <span class="token comment">/** Constructs a Temporal.PlainDate from a free-form option bag */</span>
     <span class="token function">dateFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token literal-property property">fields</span><span class="token operator">:</span> object<span class="token punctuation">,</span>
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.PlainYearMonth from a free-form option bag */</span>
     <span class="token function">yearMonthFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token literal-property property">fields</span><span class="token operator">:</span> object<span class="token punctuation">,</span>
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">;</span>
 
     <span class="token comment">/** Constructs a Temporal.PlainMonthDay from a free-form option bag */</span>
     <span class="token function">monthDayFromFields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> object<span class="token punctuation">,</span>
+        <span class="token literal-property property">fields</span><span class="token operator">:</span> object<span class="token punctuation">,</span>
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">;</span>
 
     <span class="token comment">/** A string identifier for this calendar */</span>
-    id <span class="token operator">:</span> string<span class="token punctuation">;</span>
+    <span class="token literal-property property">id</span> <span class="token operator">:</span> string<span class="token punctuation">;</span>
 
     <span class="token function">fields</span><span class="token punctuation">(</span>
-        fields<span class="token operator">:</span> array<span class="token operator">&lt;</span>string<span class="token operator">></span>
+        <span class="token literal-property property">fields</span><span class="token operator">:</span> array<span class="token operator">&lt;</span>string<span class="token operator">></span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> array<span class="token operator">&lt;</span>string<span class="token operator">></span><span class="token punctuation">;</span>
 
     <span class="token comment">//////////////////</span>
@@ -198,25 +198,25 @@ However, we have taken a future-proof approach so that if a use case presents it
 
     <span class="token comment">/** Returns input plus duration according to the calendar rules. */</span>
     <span class="token function">dateAdd</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
-        duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
-        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
+        <span class="token literal-property property">duration</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
+        <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns input minus duration according to the calendar rules. */</span>
     <span class="token function">dateSubtract</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
-        duration<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
-        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
+        <span class="token literal-property property">duration</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span>
+        <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token comment">/* options bag */</span><span class="token punctuation">,</span>
         <span class="token function-variable function">constructor</span><span class="token operator">:</span> <span class="token keyword">function</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">;</span>
 
     <span class="token comment">/** Returns larger minus smaller, which are dates in the same calendar. */</span>
     <span class="token function">dateUntil</span><span class="token punctuation">(</span>
-        smaller<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
-        larger<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
-        options<span class="token operator">:</span> <span class="token comment">/* options bag */</span>
+        <span class="token literal-property property">smaller</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
+        <span class="token literal-property property">larger</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">,</span>
+        <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token comment">/* options bag */</span>
     <span class="token punctuation">)</span> <span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Duration<span class="token punctuation">;</span>
 
     <span class="token comment">////////////////////////////////////</span>
@@ -225,35 +225,35 @@ However, we have taken a future-proof approach so that if a use case presents it
     <span class="token comment">////////////////////////////////////</span>
 
     <span class="token function">year</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">month</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">day</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">dayOfWeek</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">weekOfYear</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">daysInMonth</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">daysInYear</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> number<span class="token punctuation">;</span>
 
     <span class="token function">inLeapYear</span><span class="token punctuation">(</span>
-        input<span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
+        <span class="token literal-property property">input</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate
     <span class="token punctuation">)</span> <span class="token operator">:</span> boolean<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre><p>The corresponding fields on Temporal.PlainDate.prototype should forward requests to the calendar as discussed in <a href="https://github.com/tc39/proposal-temporal/issues/291">#291</a>:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">get</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token parameter"><span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -279,7 +279,7 @@ We are not aware of this being necessary for any built-in calendars.</p>
 <p><strong>As of October 2020, the Temporal champions chose to adopt Option 6 as the best balance between i18n correctness and ergonomics.</strong></p>
 <h3 id="partial-iso-calendar-option-3"><a class="heading-link" href="#partial-iso-calendar-option-3"></a>Partial ISO Calendar (Option 3)</h3><p>A partial ISO calendar would be one implemented as follows:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> PartialIsoCalendar <span class="token operator">=</span> <span class="token punctuation">{</span>
-    id<span class="token operator">:</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">id</span><span class="token operator">:</span> <span class="token string">"iso"</span><span class="token punctuation">,</span>
 
     <span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token parameter">fields<span class="token punctuation">,</span> constructor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">const</span> <span class="token punctuation">{</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> fields<span class="token punctuation">;</span>
@@ -487,8 +487,8 @@ console<span class="token punctuation">.</span><span class="token function">log<
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>
   <span class="token string">'Today is:'</span><span class="token punctuation">,</span>
   today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-    month<span class="token operator">:</span> <span class="token string">'long'</span><span class="token punctuation">,</span>
-    day<span class="token operator">:</span> <span class="token string">'numeric'</span>
+    <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token string">'long'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token string">'numeric'</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h4 id="get-this-date-next-month">Get this date next month</h4>
 <p>Buggy output:</p>
@@ -501,21 +501,21 @@ Next month is: Shawwal 24, 1441 AH</code></pre><p>Code:</p>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Today is:'</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// OPTION 1 BUG:</span>
 <span class="token comment">// Arithmetic in months must take place in the user calendar</span>
-<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">months</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Next month is: '</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">/// Options 2 and 6: calendar in factory method</span>
 <span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Today is:'</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">months</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Next month is: '</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">/// Options 3 and 5: calendar only when needed</span>
 <span class="token keyword">const</span> today <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Today is:'</span><span class="token punctuation">,</span> today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> calendar <span class="token operator">=</span> navigator<span class="token punctuation">.</span>locales<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getLikelyCalendar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> months<span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> nextMonth <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">months</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Next month is: '</span><span class="token punctuation">,</span> nextMonth<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h4 id="get-a-month-and-a-day">Get a month and a day</h4>
 <p>Buggy output:</p>
 <pre><code>Today is: Ramadan 24, 1441 AH
@@ -639,7 +639,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <p>*<em>See <a href="https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669">https://github.com/tc39/proposal-temporal/issues/240#issuecomment-557726669</a></em></p>
 <h2 id="temporalplaindate-api-changes">Temporal.PlainDate API changes</h2>
 <h3 id="new-temporalplaindate-instance-methods"><a class="heading-link" href="#new-temporalplaindate-instance-methods"></a>New Temporal.PlainDate instance methods</h3><p>Temporal.PlainDate.prototype.with does <em>not</em> modify the calendar. A new method is added for that:</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">PlainDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">newCalendar<span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate <span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span><span class="token class-name">PlainDate</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">withCalendar</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">newCalendar</span><span class="token operator">:</span> Calendar</span><span class="token punctuation">)</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>PlainDate <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">{</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// note: call intrinsic version</span>
   <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span>year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> newCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -682,7 +682,7 @@ Temporal<span class="token punctuation">.</span>Calendar<span class="token punct
 
 Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-12-03[c=foo]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// 2019-12-03 projected into the foo calendar</span></code></pre><h3 id="new-behavior-of-temporalplaindatefrom"><a class="heading-link" href="#new-behavior-of-temporalplaindatefrom"></a>New behavior of Temporal.PlainDate.from</h3><p>The exact behavior of this method depends on a few open discussions, but some logic will be passed to the Calendar object in order to project the date into the correct calendar system.</p>
-<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">thing<span class="token operator">:</span> string <span class="token operator">|</span> object<span class="token punctuation">,</span> options<span class="token operator">:</span> object</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function-variable function">from</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">thing</span><span class="token operator">:</span> string <span class="token operator">|</span> object<span class="token punctuation">,</span> <span class="token literal-property property">options</span><span class="token operator">:</span> object</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> thing <span class="token operator">===</span> <span class="token string">"string"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">let</span> object <span class="token operator">=</span> <span class="token comment">// components of string</span>
         <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span>iso<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
