@@ -58,6 +58,7 @@ export class Calendar {
     }
   }
   get id() {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return ES.ToString(this);
   }
   dateFromFields(fields, options = undefined) {
@@ -222,6 +223,7 @@ export class Calendar {
     return GetSlot(this, CALENDAR_ID);
   }
   toJSON() {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return ES.ToString(this);
   }
   static from(item) {
