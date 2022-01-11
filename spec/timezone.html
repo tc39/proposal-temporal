@@ -49,7 +49,10 @@
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
       </p>
       <p>
-        Once IsValidTimeZoneName has returned *true* for a particular value of _timeZone_, for the lifetime of the surrounding agent, it may no longer return *false* for that value of _timeZone_, or for the value of CanonicalizeTimeZoneName(_timeZone_).
+        Once IsValidTimeZoneName(_timeZone_) has returned *true*, for the lifetime of the surrounding agent, IsValidTimeZoneName(_variant_) must return *true* if _variant_ is an ASCII-case-insensitive match for either _timeZone_ or CanonicalizeTimeZoneName(_timeZone_).
+      </p>
+      <p>
+        In the descriptions below, String value _A_ is an ASCII-case-insensitive match for String value _B_ if the String value derived from _A_ by replacing each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) with the corresponding uppercase ASCII letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units is exactly the same sequence of code units as the String value that is derived from _B_ in the same way.
       </p>
       <p>The minimum implementation of IsValidTimeZoneName, supporting only the *"UTC"* time zone, performs the following steps when called:
       </p>
