@@ -34,15 +34,19 @@
       Other implementations are encouraged to do the same.
     </p>
 
-    <emu-clause id="sec-isvalidtimezonename" aoid="IsValidTimeZoneName">
-      <h1>IsValidTimeZoneName ( _timeZone_ )</h1>
-
+    <emu-clause id="sec-isvalidtimezonename" type="abstract operation">
+      <h1>
+        IsValidTimeZoneName (
+          _timeZone_: a String value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns *true* if _timeZone_ is an ASCII-case-insensitive match for a built-in time zone name and *false* otherwise.</dd>
+      </dl>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the IsValidTimeZoneName abstract operation as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
-      </p>
-      <p>
-        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value. It returns *true* if _timeZone_ is an ASCII case-insensitive match for a built-in time zone name and *false* otherwise.
       </p>
       <p>
         Once IsValidTimeZoneName has returned *true* for a particular value of _timeZone_, for the lifetime of the surrounding agent, it may no longer return *false* for that value of _timeZone_, or for the value of CanonicalizeTimeZoneName(_timeZone_).
@@ -80,15 +84,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-defaulttimezone" aoid="DefaultTimeZone">
-      <h1>DefaultTimeZone ( )</h1>
+    <emu-clause id="sec-defaulttimezone" type="abstract operation">
+      <h1>
+        DefaultTimeZone (
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a String value representing the host environment's current time zone, which is either a valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name, or an offset conforming to the syntax of a |TimeZoneNumericUTCOffset|.</dd>
+      </dl>
 
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the DefaultTimeZone abstract operation is used.
-      </p>
-      <p>
-        The DefaultTimeZone abstract operation returns a String value representing the host environment's current time zone, which is either a valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name, or an offset conforming to the syntax of a |TimeZoneNumericUTCOffset|.
       </p>
       <p>
         The minimum implementation of DefaultTimeZone, supporting only the *"UTC"* time zone, performs the following steps when called:
