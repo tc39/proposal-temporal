@@ -30,7 +30,7 @@
       When called with any other string, it will throw a *RangeError* exception.
     </p>
     <p>
-      An ECMAScript implementation that includes the ECMA-402 Internationalization API must define built-in named time zones in correspondence with the Zone and Link names of the IANA Time Zone Database (and <strong>only</strong> such names) and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
+      An ECMAScript implementation that includes the ECMA-402 Internationalization API must define built-in named time zones in correspondence with the Zone and Link names of the IANA Time Zone Database (and <strong>only</strong> such names, particularly excluding offset time zones) and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
       Other implementations are encouraged to do the same.
     </p>
 
@@ -98,7 +98,7 @@
       </dl>
 
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification, which does not permit returning an offset conforming to the syntax of a |TimeZoneNumericUTCOffset|.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the DefaultTimeZone abstract operation is used.
       </p>
       <p>
