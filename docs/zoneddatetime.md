@@ -113,7 +113,7 @@ For example, `Etc/GMT+8` would be used for cases where the UTC offset is always 
 If a non-whole-hour single-offset time zone is needed, the offset can be used as the time zone ID of an offset time zone.
 
 ```javascript
-Temporal.Instant.from('2020-08-05T20:06:13+05:45[+05:45]');
+Temporal.ZonedDateTime.from('2020-08-05T20:06:13+05:45[+05:45]');
 // OR
 Temporal.Instant.from('2020-08-05T20:06:13+05:45').toZonedDateTimeISO('+05:45');
 // => 2020-08-05T20:06:13+05:45[+05:45]
