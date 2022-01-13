@@ -284,6 +284,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. Set _duration_ to ! CreateNegatedTemporalDuration(_duration_).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
@@ -295,7 +296,7 @@
         1. Else,
           1. Let _day_ be 1.
         1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
-        1. Let _durationToAdd_ be ! CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
         1. For each element _nextEntry_ of _entries_, do
