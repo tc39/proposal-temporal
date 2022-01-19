@@ -444,11 +444,6 @@ describe('Date', () => {
       equal(date.month, 6);
       equal(date.day, 30);
     });
-    it('Date.from(1976-11-18) is not the same object', () => {
-      const orig = new PlainDate(1976, 11, 18);
-      const actual = PlainDate.from(orig);
-      notEqual(actual, orig);
-    });
     it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('can be constructed with month and without monthCode', () =>
