@@ -35,9 +35,6 @@ describe('Date', () => {
     it('date.add(durationObj)', () => {
       equal(`${date.add(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
     });
-    it('casts argument', () => {
-      equal(`${date.add('P43Y')}`, '2019-11-18');
-    });
     it('constrain when overflowing result', () => {
       const jan31 = PlainDate.from('2020-01-31');
       equal(`${jan31.add({ months: 1 })}`, '2020-02-29');
@@ -108,9 +105,6 @@ describe('Date', () => {
     });
     it('Date.subtract(durationObj)', () => {
       equal(`${date.subtract(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
-    });
-    it('casts argument', () => {
-      equal(`${date.subtract('P43Y')}`, '1976-11-18');
     });
     it('constrain when overflowing result', () => {
       const mar31 = PlainDate.from('2020-03-31');
