@@ -1394,32 +1394,6 @@ describe('ZonedDateTime', () => {
     });
     const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'nonsense'].forEach((smallestUnit) => {
-        throws(() => earlier.until(later, { smallestUnit }), RangeError);
-      });
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = [
-        'years',
-        'months',
-        'weeks',
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('assumes a different default for largestUnit if smallestUnit is larger than hours', () => {
       equal(`${earlier.until(later, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
       equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
@@ -1738,32 +1712,6 @@ describe('ZonedDateTime', () => {
     });
     const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'nonsense'].forEach((smallestUnit) => {
-        throws(() => later.since(earlier, { smallestUnit }), RangeError);
-      });
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = [
-        'years',
-        'months',
-        'weeks',
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-        'milliseconds',
-        'microseconds',
-        'nanoseconds'
-      ];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('assumes a different default for largestUnit if smallestUnit is larger than days', () => {
       equal(`${later.since(earlier, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P3Y');
       equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');

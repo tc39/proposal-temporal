@@ -47,12 +47,6 @@ describe('Time', () => {
       equal(`${time1.until(time2, { largestUnit: 'auto' })}`, 'PT6H52M42S');
       equal(`${time1.until(time2, { largestUnit: 'hours' })}`, 'PT6H52M42S');
     });
-    it('higher units are not allowed', () => {
-      throws(() => time1.until(time2, { largestUnit: 'days' }), RangeError);
-      throws(() => time1.until(time2, { largestUnit: 'weeks' }), RangeError);
-      throws(() => time1.until(time2, { largestUnit: 'months' }), RangeError);
-      throws(() => time1.until(time2, { largestUnit: 'years' }), RangeError);
-    });
     it('can return lower units', () => {
       equal(`${time1.until(time2, { largestUnit: 'minutes' })}`, 'PT412M42S');
       equal(`${time1.until(time2, { largestUnit: 'seconds' })}`, 'PT24762S');
@@ -83,23 +77,6 @@ describe('Time', () => {
     });
     const earlier = PlainTime.from('08:22:36.123456789');
     const later = PlainTime.from('12:39:40.987654321');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'years', 'months', 'weeks', 'days', 'year', 'month', 'week', 'day', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => earlier.until(later, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('throws on invalid roundingMode', () => {
       throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
     });
@@ -351,23 +328,6 @@ describe('Time', () => {
     });
     const earlier = PlainTime.from('08:22:36.123456789');
     const later = PlainTime.from('12:39:40.987654321');
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'years', 'months', 'weeks', 'days', 'year', 'month', 'week', 'day', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => later.since(earlier, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
-    });
     it('throws on invalid roundingMode', () => {
       throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
     });
