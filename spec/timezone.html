@@ -412,12 +412,14 @@
       <emu-alg>
         1. If _newTarget_ is not present, set it to %Temporal.TimeZone%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]], [[OffsetNanoseconds]] »).
-        1. Set _object_.[[Identifier]] to _identifier_.
-        1. If _identifier_ satisfies the syntax of a |TimeZoneNumericUTCOffset| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-          1. Set _object_.[[OffsetNanoseconds]] to ! ParseTimeZoneOffsetString(_identifier_).
-        1. Else,
+        1. Let _offsetNanosecondsResult_ be ParseTimeZoneOffsetString(_identifier_).
+        1. If _offsetNanosecondsResult_ is an abrupt completion, then
           1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
+          1. Set _object_.[[Identifier]] to _identifier_.
           1. Set _object_.[[OffsetNanoseconds]] to *undefined*.
+        1. Else,
+          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_identifier_).
+          1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.[[Value]].
         1. Return _object_.
       </emu-alg>
     </emu-clause>
