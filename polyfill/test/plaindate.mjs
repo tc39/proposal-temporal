@@ -68,23 +68,6 @@ describe('Date', () => {
       equal(`${date.add({ microseconds: 86400_000_000 })}`, '1976-11-19');
       equal(`${date.add({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
     });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => date.add({ months: 1 }, { overflow }), RangeError)
-      );
-    });
-    it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => date.add({ months: 1, days: -30 }, { overflow }), RangeError)
-      );
-    });
-    it('options may only be an object or undefined', () => {
-      [{}, () => {}, undefined].forEach((options) => equal(`${date.add({ months: 1 }, options)}`, '1976-12-18'));
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => date.add({}), TypeError);
-      throws(() => date.add({ month: 12 }), TypeError);
-    });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${date.add({ month: 1, days: 1 })}`, '1976-11-19');
     });
@@ -138,23 +121,6 @@ describe('Date', () => {
       equal(`${date.subtract({ milliseconds: 86400_000 })}`, '2019-11-17');
       equal(`${date.subtract({ microseconds: 86400_000_000 })}`, '2019-11-17');
       equal(`${date.subtract({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
-    });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => date.subtract({ months: 1 }, { overflow }), RangeError)
-      );
-    });
-    it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => date.subtract({ months: 1, days: -30 }, { overflow }), RangeError)
-      );
-    });
-    it('options may only be an object or undefined', () => {
-      [{}, () => {}, undefined].forEach((options) => equal(`${date.subtract({ months: 1 }, options)}`, '2019-10-18'));
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => date.subtract({}), TypeError);
-      throws(() => date.subtract({ month: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${date.subtract({ month: 1, days: 1 })}`, '2019-11-17');
