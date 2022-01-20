@@ -351,34 +351,11 @@ describe('Instant', () => {
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
-    it('cannot return days, weeks, months, and years', () => {
-      throws(() => feb21.since(feb20, { largestUnit: 'days' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'weeks' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'months' }), RangeError);
-      throws(() => feb21.since(feb20, { largestUnit: 'years' }), RangeError);
-    });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => feb21.since(feb20, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'PT31622400S'));
-    });
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => later.since(earlier, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
       equal(`${later.since(earlier, { smallestUnit: 'hours', roundingMode: 'halfExpand' })}`, 'PT376435H');
@@ -606,34 +583,11 @@ describe('Instant', () => {
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
-    it('cannot return days, weeks, months, and years', () => {
-      throws(() => feb20.until(feb21, { largestUnit: 'days' }), RangeError);
-      throws(() => feb20.until(feb21, { largestUnit: 'weeks' }), RangeError);
-      throws(() => feb20.until(feb21, { largestUnit: 'months' }), RangeError);
-      throws(() => feb20.until(feb21, { largestUnit: 'years' }), RangeError);
-    });
     it('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => feb20.until(feb21, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${feb20.until(feb21, options)}`, 'PT31622400S'));
-    });
-    it('throws on disallowed or invalid smallestUnit', () => {
-      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => earlier.until(later, { smallestUnit }), RangeError);
-        }
-      );
-    });
-    it('throws if smallestUnit is larger than largestUnit', () => {
-      const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
-      for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
-        for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
-          const largestUnit = units[largestIdx];
-          const smallestUnit = units[smallestIdx];
-          throws(() => earlier.until(later, { largestUnit, smallestUnit }), RangeError);
-        }
-      }
     });
     it('assumes a different default for largestUnit if smallestUnit is larger than seconds', () => {
       equal(`${earlier.until(later, { smallestUnit: 'hours', roundingMode: 'halfExpand' })}`, 'PT440610H');
