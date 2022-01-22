@@ -418,7 +418,7 @@
           1. Set _object_.[[Identifier]] to _identifier_.
           1. Set _object_.[[OffsetNanoseconds]] to *undefined*.
         1. Else,
-          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_identifier_).
+          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_offsetNanosecondsResult_.[[Value]]).
           1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.[[Value]].
         1. Return _object_.
       </emu-alg>
