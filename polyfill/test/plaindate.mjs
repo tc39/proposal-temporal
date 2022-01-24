@@ -12,7 +12,7 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, throws } = assert;
+const { equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { PlainDate } = Temporal;
@@ -39,10 +39,6 @@ describe('Date', () => {
       const jan31 = PlainDate.from('2020-01-31');
       equal(`${jan31.add({ months: 1 })}`, '2020-02-29');
       equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
-    });
-    it('throw when overflowing result with reject', () => {
-      const jan31 = PlainDate.from('2020-01-31');
-      throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${PlainDate.from('2019-11-18').add({ years: -43 })}`, '1976-11-18');
@@ -75,10 +71,6 @@ describe('Date', () => {
       const mar31 = PlainDate.from('2020-03-31');
       equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29');
       equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
-    });
-    it('throw when overflowing result with reject', () => {
-      const mar31 = PlainDate.from('2020-03-31');
-      throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${PlainDate.from('1976-11-18').subtract({ years: -43 })}`, '2019-11-18');
