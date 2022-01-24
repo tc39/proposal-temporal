@@ -35,11 +35,6 @@ describe('Date', () => {
     it('date.add(durationObj)', () => {
       equal(`${date.add(Temporal.Duration.from('P43Y'))}`, '2019-11-18');
     });
-    it('constrain when overflowing result', () => {
-      const jan31 = PlainDate.from('2020-01-31');
-      equal(`${jan31.add({ months: 1 })}`, '2020-02-29');
-      equal(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
-    });
     it('symmetrical with regard to negative durations', () => {
       equal(`${PlainDate.from('2019-11-18').add({ years: -43 })}`, '1976-11-18');
       equal(`${PlainDate.from('1977-02-18').add({ months: -3 })}`, '1976-11-18');
@@ -66,11 +61,6 @@ describe('Date', () => {
     });
     it('Date.subtract(durationObj)', () => {
       equal(`${date.subtract(Temporal.Duration.from('P43Y'))}`, '1976-11-18');
-    });
-    it('constrain when overflowing result', () => {
-      const mar31 = PlainDate.from('2020-03-31');
-      equal(`${mar31.subtract({ months: 1 })}`, '2020-02-29');
-      equal(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`, '2020-02-29');
     });
     it('symmetrical with regard to negative durations', () => {
       equal(`${PlainDate.from('1976-11-18').subtract({ years: -43 })}`, '2019-11-18');
