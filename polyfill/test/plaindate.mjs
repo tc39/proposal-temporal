@@ -50,24 +50,6 @@ describe('Date', () => {
       equal(`${PlainDate.from('1976-12-08').add({ days: -20 })}`, '1976-11-18');
       equal(`${PlainDate.from('2019-02-28').add({ months: -1 })}`, '2019-01-28');
     });
-    it("ignores lower units that don't balance up to a day", () => {
-      equal(`${date.add({ hours: 1 })}`, '1976-11-18');
-      equal(`${date.add({ minutes: 1 })}`, '1976-11-18');
-      equal(`${date.add({ seconds: 1 })}`, '1976-11-18');
-      equal(`${date.add({ milliseconds: 1 })}`, '1976-11-18');
-      equal(`${date.add({ microseconds: 1 })}`, '1976-11-18');
-      equal(`${date.add({ nanoseconds: 1 })}`, '1976-11-18');
-    });
-    it('adds lower units that balance up to a day or more', () => {
-      equal(`${date.add({ hours: 24 })}`, '1976-11-19');
-      equal(`${date.add({ hours: 36 })}`, '1976-11-19');
-      equal(`${date.add({ hours: 48 })}`, '1976-11-20');
-      equal(`${date.add({ minutes: 1440 })}`, '1976-11-19');
-      equal(`${date.add({ seconds: 86400 })}`, '1976-11-19');
-      equal(`${date.add({ milliseconds: 86400_000 })}`, '1976-11-19');
-      equal(`${date.add({ microseconds: 86400_000_000 })}`, '1976-11-19');
-      equal(`${date.add({ nanoseconds: 86400_000_000_000 })}`, '1976-11-19');
-    });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${date.add({ month: 1, days: 1 })}`, '1976-11-19');
     });
@@ -103,24 +85,6 @@ describe('Date', () => {
       equal(`${PlainDate.from('2018-12-18').subtract({ months: -11 })}`, '2019-11-18');
       equal(`${PlainDate.from('2019-10-29').subtract({ days: -20 })}`, '2019-11-18');
       equal(`${PlainDate.from('2019-01-28').subtract({ months: -1 })}`, '2019-02-28');
-    });
-    it("ignores lower units that don't balance up to a day", () => {
-      equal(`${date.subtract({ hours: 1 })}`, '2019-11-18');
-      equal(`${date.subtract({ minutes: 1 })}`, '2019-11-18');
-      equal(`${date.subtract({ seconds: 1 })}`, '2019-11-18');
-      equal(`${date.subtract({ milliseconds: 1 })}`, '2019-11-18');
-      equal(`${date.subtract({ microseconds: 1 })}`, '2019-11-18');
-      equal(`${date.subtract({ nanoseconds: 1 })}`, '2019-11-18');
-    });
-    it('subtracts lower units that balance up to a day or more', () => {
-      equal(`${date.subtract({ hours: 24 })}`, '2019-11-17');
-      equal(`${date.subtract({ hours: 36 })}`, '2019-11-17');
-      equal(`${date.subtract({ hours: 48 })}`, '2019-11-16');
-      equal(`${date.subtract({ minutes: 1440 })}`, '2019-11-17');
-      equal(`${date.subtract({ seconds: 86400 })}`, '2019-11-17');
-      equal(`${date.subtract({ milliseconds: 86400_000 })}`, '2019-11-17');
-      equal(`${date.subtract({ microseconds: 86400_000_000 })}`, '2019-11-17');
-      equal(`${date.subtract({ nanoseconds: 86400_000_000_000 })}`, '2019-11-17');
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${date.subtract({ month: 1, days: 1 })}`, '2019-11-17');
