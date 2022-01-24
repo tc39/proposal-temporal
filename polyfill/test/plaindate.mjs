@@ -41,9 +41,6 @@ describe('Date', () => {
       equal(`${PlainDate.from('1976-12-08').add({ days: -20 })}`, '1976-11-18');
       equal(`${PlainDate.from('2019-02-28').add({ months: -1 })}`, '2019-01-28');
     });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${date.add({ month: 1, days: 1 })}`, '1976-11-19');
-    });
   });
   describe('date.subtract() works', () => {
     const date = PlainDate.from('2019-11-18');
@@ -67,9 +64,6 @@ describe('Date', () => {
       equal(`${PlainDate.from('2018-12-18').subtract({ months: -11 })}`, '2019-11-18');
       equal(`${PlainDate.from('2019-10-29').subtract({ days: -20 })}`, '2019-11-18');
       equal(`${PlainDate.from('2019-01-28').subtract({ months: -1 })}`, '2019-02-28');
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${date.subtract({ month: 1, days: 1 })}`, '2019-11-17');
     });
   });
 });
