@@ -542,6 +542,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;
+    valueOf(): never;
     readonly [Symbol.toStringTag]: 'Temporal.Duration';
   }
 
