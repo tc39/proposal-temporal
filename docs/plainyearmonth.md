@@ -96,7 +96,6 @@ Example usage:
 ym = Temporal.PlainYearMonth.from('2019-06'); // => 2019-06
 ym = Temporal.PlainYearMonth.from('2019-06-24'); // => 2019-06
 ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27'); // => 2019-06
-ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27Z'); // => 2019-06
 ym = Temporal.PlainYearMonth.from('2019-06-24T15:43:27+01:00[Europe/Brussels]');
   // => 2019-06
 ym === Temporal.PlainYearMonth.from(ym); // => false
