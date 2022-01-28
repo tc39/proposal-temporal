@@ -94,7 +94,6 @@ Example usage:
 ```javascript
 date = Temporal.PlainDate.from('2006-08-24'); // => 2006-08-24
 date = Temporal.PlainDate.from('2006-08-24T15:43:27'); // => 2006-08-24
-date = Temporal.PlainDate.from('2006-08-24T15:43:27Z'); // => 2006-08-24
 date = Temporal.PlainDate.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');
   // => 2006-08-24
 date === Temporal.PlainDate.from(date); // => false

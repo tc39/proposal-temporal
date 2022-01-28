@@ -86,7 +86,6 @@ Example usage:
 ```javascript
 time = Temporal.PlainTime.from('03:24:30'); // => 03:24:30
 time = Temporal.PlainTime.from('1995-12-07T03:24:30'); // => 03:24:30
-time = Temporal.PlainTime.from('1995-12-07T03:24:30Z'); // => 03:24:30
 time = Temporal.PlainTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
   // => 03:24:30
   // (same as above; time zone is ignored)
