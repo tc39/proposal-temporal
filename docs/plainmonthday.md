@@ -285,7 +285,7 @@ This is because it's not possible to convert a Temporal.PlainMonthDay from one c
 In order to ensure that the output always matches `monthDay`'s internal calendar, you must either explicitly construct `monthDay` with the locale's calendar, or explicitly specify the calendar in the `options` parameter:
 
 ```js
-monthDay.toLocaleString(locales, { calendar: monthDay.calendar });
+monthDay.toLocaleString(locales, { calendar: monthDay.calendar.id });
 
 // OR
 
