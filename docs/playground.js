@@ -6154,6 +6154,7 @@
       if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
       var yearString = match[1];
       if (yearString[0] === "\u2212") yearString = "-".concat(yearString.slice(1));
+      if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
       var year = ES.ToInteger(yearString);
       var month = ES.ToInteger(match[2] || match[4]);
       var day = ES.ToInteger(match[3] || match[5]);
@@ -6320,6 +6321,7 @@
       if (match) {
         var yearString = match[1];
         if (yearString[0] === "\u2212") yearString = "-".concat(yearString.slice(1));
+        if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
         year = ES.ToInteger(yearString);
         month = ES.ToInteger(match[2]);
         calendar = match[3];
