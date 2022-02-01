@@ -5,101 +5,12 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { throws, equal, notEqual } = assert;
+const { throws, equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { PlainYearMonth } = Temporal;
 
 describe('YearMonth', () => {
-  describe('Construction', () => {
-    describe('.with()', () => {
-      const ym = PlainYearMonth.from('2019-10');
-      it('with(2020)', () => equal(`${ym.with({ year: 2020 })}`, '2020-10'));
-      it('with(09)', () => equal(`${ym.with({ month: 9 })}`, '2019-09'));
-      it('with(monthCode)', () => equal(`${ym.with({ monthCode: 'M09' })}`, '2019-09'));
-      it('month and monthCode must agree', () => throws(() => ym.with({ month: 9, monthCode: 'M10' }), RangeError));
-    });
-  });
-  describe('YearMonth.with() works', () => {
-    const ym = PlainYearMonth.from('2019-10');
-    it('throws with calendar property', () => {
-      throws(() => ym.with({ year: 2021, calendar: 'iso8601' }), TypeError);
-    });
-    it('throws with timeZone property', () => {
-      throws(() => ym.with({ year: 2021, timeZone: 'UTC' }), TypeError);
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => ym.with({ year: 2020 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${ym.with({ year: 2020 }, options)}`, '2020-10'));
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => ym.with({}), TypeError);
-      throws(() => ym.with({ months: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${ym.with({ month: 1, years: 2020 })}`, '2019-01');
-    });
-    it('day is ignored when determining ISO reference day', () => {
-      equal(ym.with({ year: ym.year, day: 31 }).getISOFields().isoDay, ym.getISOFields().isoDay);
-    });
-  });
-  describe('YearMonth.compare() works', () => {
-    const nov94 = PlainYearMonth.from('1994-11');
-    const jun13 = PlainYearMonth.from('2013-06');
-    it('equal', () => equal(PlainYearMonth.compare(nov94, nov94), 0));
-    it('smaller/larger', () => equal(PlainYearMonth.compare(nov94, jun13), -1));
-    it('larger/smaller', () => equal(PlainYearMonth.compare(jun13, nov94), 1));
-    it('casts first argument', () => {
-      equal(PlainYearMonth.compare({ year: 1994, month: 11 }, jun13), -1);
-      equal(PlainYearMonth.compare('1994-11', jun13), -1);
-    });
-    it('casts second argument', () => {
-      equal(PlainYearMonth.compare(nov94, { year: 2013, month: 6 }), -1);
-      equal(PlainYearMonth.compare(nov94, '2013-06'), -1);
-    });
-    it('object must contain at least the required properties', () => {
-      throws(() => PlainYearMonth.compare({ year: 1994 }, jun13), TypeError);
-      throws(() => PlainYearMonth.compare(nov94, { year: 2013 }), TypeError);
-    });
-    it('takes [[ISODay]] into account', () => {
-      const iso = Temporal.Calendar.from('iso8601');
-      const ym1 = new PlainYearMonth(2000, 1, iso, 1);
-      const ym2 = new PlainYearMonth(2000, 1, iso, 2);
-      equal(PlainYearMonth.compare(ym1, ym2), -1);
-    });
-  });
-  describe('YearMonth.equals() works', () => {
-    const nov94 = PlainYearMonth.from('1994-11');
-    const jun13 = PlainYearMonth.from('2013-06');
-    it('equal', () => assert(nov94.equals(nov94)));
-    it('unequal', () => assert(!nov94.equals(jun13)));
-    it('casts argument', () => {
-      assert(nov94.equals({ year: 1994, month: 11 }));
-      assert(nov94.equals('1994-11'));
-    });
-    it('object must contain at least the required properties', () => {
-      throws(() => nov94.equals({ year: 1994 }), TypeError);
-    });
-    it('takes [[ISODay]] into account', () => {
-      const iso = Temporal.Calendar.from('iso8601');
-      const ym1 = new PlainYearMonth(2000, 1, iso, 1);
-      const ym2 = new PlainYearMonth(2000, 1, iso, 2);
-      assert(!ym1.equals(ym2));
-    });
-  });
-  describe("Comparison operators don't work", () => {
-    const ym1 = PlainYearMonth.from('1963-02');
-    const ym1again = PlainYearMonth.from('1963-02');
-    const ym2 = PlainYearMonth.from('1976-11');
-    it('=== is object equality', () => equal(ym1, ym1));
-    it('!== is object equality', () => notEqual(ym1, ym1again));
-    it('<', () => throws(() => ym1 < ym2));
-    it('>', () => throws(() => ym1 > ym2));
-    it('<=', () => throws(() => ym1 <= ym2));
-    it('>=', () => throws(() => ym1 >= ym2));
-  });
   describe('YearMonth.until() works', () => {
     const nov94 = PlainYearMonth.from('1994-11');
     const jun13 = PlainYearMonth.from('2013-06');
@@ -459,6 +370,12 @@ describe('YearMonth', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${ym.add({ month: 1, years: 1 })}`, '2020-11');
     });
+    it('adding and subtracting beyond limit', () => {
+      const max = PlainYearMonth.from('+275760-09');
+      ['reject', 'constrain'].forEach((overflow) => {
+        throws(() => max.add({ months: 1 }, { overflow }), RangeError);
+      });
+    });
   });
   describe('YearMonth.subtract() works', () => {
     const ym = PlainYearMonth.from('2019-11');
@@ -534,113 +451,11 @@ describe('YearMonth', () => {
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${ym.subtract({ month: 1, years: 1 })}`, '2018-11');
     });
-  });
-  describe('Min/max range', () => {
-    it('constructing from numbers', () => {
-      throws(() => new PlainYearMonth(-271821, 3), RangeError);
-      throws(() => new PlainYearMonth(275760, 10), RangeError);
-      equal(`${new PlainYearMonth(-271821, 4)}`, '-271821-04');
-      equal(`${new PlainYearMonth(275760, 9)}`, '+275760-09');
-    });
-    it('constructing from property bag', () => {
-      const tooEarly = { year: -271821, month: 3 };
-      const tooLate = { year: 275760, month: 10 };
-      ['reject', 'constrain'].forEach((overflow) => {
-        [tooEarly, tooLate].forEach((props) => {
-          throws(() => PlainYearMonth.from(props, { overflow }), RangeError);
-        });
-      });
-      equal(`${PlainYearMonth.from({ year: -271821, month: 4 })}`, '-271821-04');
-      equal(`${PlainYearMonth.from({ year: 275760, month: 9 })}`, '+275760-09');
-    });
-    it('constructing from ISO string', () => {
-      ['reject', 'constrain'].forEach((overflow) => {
-        ['-271821-03', '+275760-10'].forEach((str) => {
-          throws(() => PlainYearMonth.from(str, { overflow }), RangeError);
-        });
-      });
-      equal(`${PlainYearMonth.from('-271821-04')}`, '-271821-04');
-      equal(`${PlainYearMonth.from('+275760-09')}`, '+275760-09');
-    });
-    it('converting from Date', () => {
-      const min = Temporal.PlainDate.from('-271821-04-19');
-      const max = Temporal.PlainDate.from('+275760-09-13');
-      equal(`${min.toPlainYearMonth()}`, '-271821-04');
-      equal(`${max.toPlainYearMonth()}`, '+275760-09');
-    });
     it('adding and subtracting beyond limit', () => {
       const min = PlainYearMonth.from('-271821-04');
-      const max = PlainYearMonth.from('+275760-09');
       ['reject', 'constrain'].forEach((overflow) => {
         throws(() => min.subtract({ months: 1 }, { overflow }), RangeError);
-        throws(() => max.add({ months: 1 }, { overflow }), RangeError);
       });
-    });
-  });
-  describe('YearMonth.with()', () => {
-    it('throws on bad overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => PlainYearMonth.from({ year: 2019, month: 1 }).with({ month: 2 }, { overflow }), RangeError)
-      );
-    });
-  });
-  describe('YearMonth.toPlainDate()', () => {
-    const ym = PlainYearMonth.from('2002-01');
-    it("doesn't take a primitive argument", () => {
-      [22, '22', false, 22n, Symbol('22'), null].forEach((bad) => {
-        throws(() => ym.toPlainDate(bad), TypeError);
-      });
-    });
-    it('takes an object argument with day property', () => {
-      equal(`${ym.toPlainDate({ day: 22 })}`, '2002-01-22');
-    });
-    it('needs at least a day property on the object in the ISO calendar', () => {
-      throws(() => ym.toPlainDate({ something: 'nothing' }), TypeError);
-    });
-  });
-  describe('YearMonth.toString()', () => {
-    const ym1 = PlainYearMonth.from('1976-11');
-    const ym2 = PlainYearMonth.from({ year: 1976, month: 11, calendar: 'gregory' });
-    it('shows only non-ISO calendar if calendarName = auto', () => {
-      equal(ym1.toString({ calendarName: 'auto' }), '1976-11');
-      equal(ym2.toString({ calendarName: 'auto' }), '1976-11-01[u-ca=gregory]');
-    });
-    it('shows ISO calendar if calendarName = always', () => {
-      equal(ym1.toString({ calendarName: 'always' }), '1976-11[u-ca=iso8601]');
-    });
-    it('omits non-ISO calendar, but not day, if calendarName = never', () => {
-      equal(ym1.toString({ calendarName: 'never' }), '1976-11');
-      equal(ym2.toString({ calendarName: 'never' }), '1976-11-01');
-    });
-    it('default is calendar = auto', () => {
-      equal(ym1.toString(), '1976-11');
-      equal(ym2.toString(), '1976-11-01[u-ca=gregory]');
-    });
-    it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
-        throws(() => ym1.toString({ calendarName }), RangeError);
-      });
-    });
-  });
-  describe('yearMonth.getISOFields() works', () => {
-    const ym1 = PlainYearMonth.from('1976-11');
-    const fields = ym1.getISOFields();
-    it('fields', () => {
-      equal(fields.isoYear, 1976);
-      equal(fields.isoMonth, 11);
-      equal(fields.calendar.id, 'iso8601');
-      equal(typeof fields.isoDay, 'number');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.isoYear, 1976);
-      equal(fields2.isoMonth, 11);
-      equal(fields2.calendar, fields.calendar);
-      equal(typeof fields2.isoDay, 'number');
-    });
-    it('as input to constructor', () => {
-      const ym2 = new PlainYearMonth(fields.isoYear, fields.isoMonth, fields.calendar, fields.isoDay);
-      assert(ym2.equals(ym1));
     });
   });
 });
