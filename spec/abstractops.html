@@ -1507,7 +1507,6 @@
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalYearMonthString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
-      1. If ! SameValue(_isoString_, *"-000000"*) is *true*, throw a *RangeError* exception.
       1. If _isoString_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
