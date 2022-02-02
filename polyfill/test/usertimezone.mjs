@@ -95,13 +95,6 @@ describe('Userland time zone', () => {
 
     const inst = Temporal.Instant.fromEpochNanoseconds(0n);
 
-    it('converts to DateTime', () => {
-      equal(`${Temporal.TimeZone.prototype.getPlainDateTimeFor.call(obj, inst)}`, '1970-01-01T00:00:00');
-      equal(
-        `${Temporal.TimeZone.prototype.getPlainDateTimeFor.call(obj, inst, 'gregory')}`,
-        '1970-01-01T00:00:00[u-ca=gregory]'
-      );
-    });
     it('offset prints in instant.toString', () => equal(inst.toString({ timeZone: obj }), '1970-01-01T00:00:00+00:00'));
     it('prints in zdt.toString', () => {
       const zdt = new Temporal.ZonedDateTime(0n, obj);
