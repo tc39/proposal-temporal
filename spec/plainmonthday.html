@@ -345,7 +345,8 @@
         The abstract operation ToTemporalMonthDay returns its argument _item_ if it is already a Temporal.PlainMonthDay instance, converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _referenceISOYear_ be 1972 (the first leap year after the Unix epoch).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
@@ -375,8 +376,8 @@
         1. If _result_.[[Year]] is *undefined*, then
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
-        1. Let _canonicalMonthDayOptions_ be OrdinaryObjectCreate(*null*).
-        1. Return ? MonthDayFromFields(_calendar_, _result_, _canonicalMonthDayOptions_).
+        1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
+        1. Return ? MonthDayFromFields(_calendar_, _result_).
       </emu-alg>
     </emu-clause>
 

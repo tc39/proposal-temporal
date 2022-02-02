@@ -674,8 +674,8 @@
         The abstract operation ToTemporalDate returns its argument _item_ if it is already a Temporal.PlainDate instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
-        1. Assert: Type(_options_) is Object.
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _item_.

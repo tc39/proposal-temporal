@@ -1300,8 +1300,7 @@
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _dateUntil_ be ? GetMethod(_calendar_, *"dateUntil"*).
           1. Repeat, while _years_ ≠ 0,
-            1. Let _addOptions_ be OrdinaryObjectCreate(*null*).
-            1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
+            1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
             1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
             1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Let _untilResult_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
@@ -1391,8 +1390,7 @@
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
-          1. Let _addOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
+          1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
           1. Let _dateUntil_ be ? GetMethod(_calendar_, *"dateUntil"*).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
@@ -1402,8 +1400,7 @@
             1. Set _months_ to _months_ − _oneYearMonths_.
             1. Set _years_ to _years_ + _sign_.
             1. Set _relativeTo_ to _newRelativeTo_.
-            1. Set _addOptions_ to OrdinaryObjectCreate(*null*).
-            1. Set _newRelativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
+            1. Set _newRelativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
             1. Set _untilOptions_ to OrdinaryObjectCreate(*null*).
             1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
             1. Set _untilResult_ to ? CalendarDateUntil(_calendar_, _relativeTo_, _newRelativeTo_, _untilOptions_, _dateUntil_).
@@ -1477,10 +1474,8 @@
           1. Let _dateDuration1_ be ! CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
           1. Let _dateDuration2_ be ! CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
-          1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _intermediate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _dateDuration1_, _firstAddOptions_, _dateAdd_).
-          1. Let _secondAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _end_ be ? CalendarDateAdd(_calendar_, _intermediate_, _dateDuration2_, _secondAddOptions_, _dateAdd_).
+          1. Let _intermediate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _dateDuration1_, *undefined*, _dateAdd_).
+          1. Let _end_ be ? CalendarDateAdd(_calendar_, _intermediate_, _dateDuration2_, *undefined*, _dateAdd_).
           1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
           1. Let _differenceOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_differenceOptions_, *"largestUnit"*, _dateLargestUnit_).
@@ -1535,8 +1530,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _options_ be OrdinaryObjectCreate(*null*).
-        1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, _options_).
+        1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_).
         1. Let _days_ be ! DaysUntil(_relativeTo_, _newDate_).
         1. Return the Record {
             [[RelativeTo]]: _newDate_,
@@ -1616,17 +1610,14 @@
         1. If _unit_ is *"year"*, then
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
-          1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _yearsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _firstAddOptions_, _dateAdd_).
+          1. Let _yearsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _secondAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
+          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
           1. Let _monthsWeeksInDays_ be ! DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_.
           1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
-          1. Let _thirdAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, _thirdAddOptions_, _dateAdd_).
+          1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, *undefined*, _dateAdd_).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"year"*).
           1. Let _timePassed_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _daysLater_, _untilOptions_).
@@ -1634,8 +1625,7 @@
           1. Set _years_ to _years_ + _yearsPassed_.
           1. Let _oldRelativeTo_ be _relativeTo_.
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _fourthAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _fourthAddOptions_, _dateAdd_).
+          1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
           1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
           1. If _days_ &lt; 0, let _sign_ be −1; else, let _sign_ be 1.
@@ -1649,11 +1639,9 @@
         1. Else if _unit_ is *"month"*, then
           1. Let _yearsMonths_ be ! CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
-          1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _yearsMonthsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonths_, _firstAddOptions_, _dateAdd_).
+          1. Let _yearsMonthsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonths_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _secondAddOptions_ be OrdinaryObjectCreate(*null*).
-          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
+          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
           1. Let _weeksInDays_ be ! DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.

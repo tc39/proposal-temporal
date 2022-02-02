@@ -76,9 +76,11 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateadd" aoid="CalendarDateAdd">
-      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_, _options_ [ , _dateAdd_ ] )</h1>
+      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_ [ , _options_ [ , _dateAdd_ ] ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
         1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
@@ -282,10 +284,12 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-datefromfields" aoid="DateFromFields">
-      <h1>DateFromFields ( _calendar_, _fields_, _options_ )</h1>
+      <h1>DateFromFields ( _calendar_, _fields_ [ , _options_ ] )</h1>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
@@ -297,10 +301,8 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. If _options_ is not present, then
-          1. Set _options_ to *undefined*.
-        1. Else,
-          1. Assert: Type(_options_) is Object.
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
@@ -312,10 +314,8 @@
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
         1. Assert: Type(_fields_) is Object.
-        1. If _options_ is not present, then
-          1. Set _options_ to *undefined*.
-        1. Else,
-          1. Assert: Type(_options_) is Object.
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.
