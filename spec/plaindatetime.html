@@ -903,7 +903,8 @@
         The abstract operation ToTemporalDateTime returns its argument _item_ if it is already a Temporal.PlainDateTime instance, converts _item_ to a new Temporal.PlainDateTime instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return _item_.
@@ -1109,7 +1110,8 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _timeDifference_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
         1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).

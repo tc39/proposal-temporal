@@ -1121,7 +1121,8 @@
         The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match exactly~.
         1. If Type(_item_) is Object, then
@@ -1246,7 +1247,8 @@
       </dl>
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. Assert: Type(_options_) is Object or Undefined.
         1. If all of _years_, _months_, _weeks_, and _days_ are 0, then
           1. Return ! AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).

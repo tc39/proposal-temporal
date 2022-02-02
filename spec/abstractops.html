@@ -95,16 +95,18 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaloverflow" aoid="ToTemporalOverflow">
-    <h1>ToTemporalOverflow ( _normalizedOptions_ )</h1>
+    <h1>ToTemporalOverflow ( _options_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"overflow"*, « String », « *"constrain"*, *"reject"* », *"constrain"*).
+      1. If _options_ is *undefined*, return *"constrain"*.
+      1. Return ? GetOption(_options_, *"overflow"*, « String », « *"constrain"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaldisambiguation" aoid="ToTemporalDisambiguation">
-    <h1>ToTemporalDisambiguation ( _normalizedOptions_ )</h1>
+    <h1>ToTemporalDisambiguation ( _options_ )</h1>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"disambiguation"*, « String », « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. If _options_ is *undefined*, return *"compatible"*.
+      1. Return ? GetOption(_options_, *"disambiguation"*, « String », « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
 
@@ -142,13 +144,14 @@
   </emu-clause>
 
   <emu-clause id="sec-temporal-totemporaloffset" aoid="ToTemporalOffset">
-    <h1>ToTemporalOffset ( _normalizedOptions_, _fallback_ )</h1>
+    <h1>ToTemporalOffset ( _options_, _fallback_ )</h1>
     <p>
-      The abstract operation ToTemporalOffset extracts the value of the property named *"offset"* from _normalizedOptions_ and makes sure it is a valid value for the option.
+      The abstract operation ToTemporalOffset extracts the value of the property named *"offset"* from _options_ and makes sure it is a valid value for the option.
       The value _fallback_ is returned if the property is not present.
     </p>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"offset"*, « String », « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
+      1. If _options_ is *undefined*, return _fallback_.
+      1. Return ? GetOption(_options_, *"offset"*, « String », « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
