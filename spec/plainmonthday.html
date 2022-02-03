@@ -359,7 +359,7 @@
               1. Let _calendarAbsent_ be *true*.
             1. Else,
               1. Let _calendarAbsent_ be *false*.
-            1. Let _calendar_ to ? ToTemporalCalendarWithISODefault(_calendarLike_).
+            1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Let _month_ be ? Get(_fields_, *"month"*).
