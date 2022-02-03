@@ -276,8 +276,8 @@
       <emu-alg>
         1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
-        1. Let _calendar_ be ? Get(_item_, *"calendar"*).
-        1. Return ? ToTemporalCalendarWithISODefault(_calendar_).
+        1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
+        1. Return ? ToTemporalCalendarWithISODefault(_calendarLike_).
       </emu-alg>
     </emu-clause>
 
@@ -671,13 +671,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.from">
-      <h1>Temporal.Calendar.from ( _item_ )</h1>
+      <h1>Temporal.Calendar.from ( _calendarLike_ )</h1>
       <p>
-        The `from` method takes one argument _item_.
+        The `from` method takes one argument _calendarLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? ToTemporalCalendar(_item_).
+        1. Return ? ToTemporalCalendar(_calendarLike_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

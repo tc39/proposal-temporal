@@ -430,15 +430,15 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.withcalendar">
-      <h1>Temporal.PlainDateTime.prototype.withCalendar ( _calendar_ )</h1>
+      <h1>Temporal.PlainDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
       <p>
-        The `withCalendar` method takes one argument _calendar_.
+        The `withCalendar` method takes one argument _calendarLike_.
         The following steps are taken:
       </p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _calendar_ be ? ToTemporalCalendar(_calendar_).
+        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
         1. Return ? CreateTemporalDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
