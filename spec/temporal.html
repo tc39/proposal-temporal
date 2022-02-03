@@ -112,13 +112,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.plaindatetime">
-      <h1>Temporal.Now.plainDateTime ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.Now.plainDateTime ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `plainDateTime` method takes two arguments, _calendar_ and _temporalTimeZoneLike_.
+        The `plainDateTime` method takes two arguments, _calendarLike_ and _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
+        1. Return ? SystemDateTime(_temporalTimeZoneLike_, _calendarLike_).
       </emu-alg>
     </emu-clause>
 
@@ -135,13 +135,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.zoneddatetime">
-      <h1>Temporal.Now.zonedDateTime ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.Now.zonedDateTime ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `zonedDateTime` method takes two arguments, _calendar_ and _temporalTimeZoneLike_.
+        The `zonedDateTime` method takes two arguments, _calendarLike_ and _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, _calendar_).
+        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, _calendarLike_).
       </emu-alg>
     </emu-clause>
 
@@ -158,13 +158,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.now.plaindate">
-      <h1>Temporal.Now.plainDate ( _calendar_ [ , _temporalTimeZoneLike_ ] )</h1>
+      <h1>Temporal.Now.plainDate ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
       <p>
-        The `plainDate` method takes two arguments, _calendar_ and _temporalTimeZoneLike_.
+        The `plainDate` method takes two arguments, _calendarLike_ and _temporalTimeZoneLike_.
         The following steps are taken:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendar_).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendarLike_).
         1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
