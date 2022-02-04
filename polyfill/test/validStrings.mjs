@@ -63,6 +63,37 @@ function withCode(productionLike, func) {
   return new FromFunction(func, productionLike);
 }
 
+// Return a productionLike that defers to another productionLike for generation
+// but filters out any result that a validator function
+// rejects with SyntaxError.
+function withSyntaxConstraints(productionLike, validatorFunc) {
+  return { generate: filtered };
+
+  function filtered(data) {
+    let dataClone = { ...data };
+    let result = productionLike.generate(dataClone);
+    try {
+      validatorFunc(result);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        // Generated result violated a constraint; try again
+        // (but allow crashing if the call stack gets too deep).
+        return filtered(data);
+      } else {
+        // Propagate any other error.
+        throw e;
+      }
+    }
+
+    // Copy properties that were modified on the cloned input data.
+    for (let key of Reflect.ownKeys(dataClone)) {
+      data[key] = dataClone[key];
+    }
+
+    return result;
+  }
+}
+
 class Literal {
   constructor(str) {
     this.str = str;
@@ -195,7 +226,12 @@ const timeFractionalPart = between(1, 9, digit());
 const fraction = seq(decimalSeparator, timeFractionalPart);
 
 const dateFourDigitYear = repeat(4, digit());
-const dateExtendedYear = seq(sign, repeat(6, digit()));
+
+const dateExtendedYear = withSyntaxConstraints(seq(sign, repeat(6, digit())), (result) => {
+  if (result === '-000000' || result === '−000000') {
+    throw new SyntaxError('Negative zero extended year');
+  }
+});
 const dateYear = withCode(
   choice(dateFourDigitYear, dateExtendedYear),
   (data, result) => (data.year = +result.replace('\u2212', '-'))
