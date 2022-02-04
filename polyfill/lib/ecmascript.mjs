@@ -636,9 +636,6 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return record;
   },
-  ToTemporalDurationOverflow: (options) => {
-    return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
-  },
   ToTemporalOverflow: (options) => {
     return ES.GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
   },
