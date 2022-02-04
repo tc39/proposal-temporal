@@ -5,79 +5,101 @@ on:
     branches:
       - main
 jobs:
+  test-polyfill-node17:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: use node.js v17.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17.x
+      - run: npm ci
+      - run: npm run codecov:tests
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   test-polyfill-node16:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v16.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16.x
-    - run: npm ci
-    - run: npm run codecov:tests
-      env:
-        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+      - name: use node.js v16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: npm run codecov:tests
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   test-polyfill-node14:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v14.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
-    - run: npm ci
-    - run: npm run test-demitasse
+      - uses: actions/checkout@v2
+      - name: use node.js v14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: npm run test-demitasse
   test-polyfill-node12:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - run: npm ci
-    - run: npm run test-demitasse
+      - uses: actions/checkout@v2
+      - name: use node.js v12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm ci
+      - run: npm run test-demitasse
   test-test262:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: use node.js v16.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16.x
-    - run: npm ci
-    - run: npm run codecov:test262
-      env:
-        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: use node.js v17.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17.x
+      - run: npm ci
+      - run: npm run codecov:test262
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  test-cookbook-node17:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: use node.js v17.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17.x
+      - run: npm ci
+      - run: npm run test-cookbook
   test-cookbook-node16:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v16.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 16.x
-    - run: npm ci
-    - run: npm run test-cookbook
+      - uses: actions/checkout@v2
+      - name: use node.js v16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: npm run test-cookbook
   test-cookbook-node14:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v14.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
-    - run: npm ci
-    - run: npm run test-cookbook
+      - uses: actions/checkout@v2
+      - name: use node.js v14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: npm run test-cookbook
   test-cookbook-node12:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: use node.js v12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - run: npm ci
-    - run: npm run test-cookbook
+      - uses: actions/checkout@v2
+      - name: use node.js v12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm ci
+      - run: npm run test-cookbook
