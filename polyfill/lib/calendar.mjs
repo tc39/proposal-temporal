@@ -528,9 +528,17 @@ const nonIsoHelperBase = {
       if (type === 'year') result.eraYear = +value;
       if (type === 'relatedYear') result.eraYear = +value;
       if (type === 'month') {
-        const matches = /^([-0-9.]+)(.*?)$/.exec(value);
-        if (!matches || matches.length != 3) throw new RangeError(`Unexpected month: ${value}`);
-        result.month = +matches[1];
+        const matches = /^([0-9]*)(.*?)$/.exec(value);
+        if (!matches || matches.length != 3 || (!matches[1] && !matches[2])) {
+          throw new RangeError(`Unexpected month: ${value}`);
+        }
+        // If the month has no numeric part (should only see this for the Hebrew
+        // calendar with newer FF / Chromium versions; see
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1751833) then set a
+        // placeholder month index of `1` and rely on the derived class to
+        // calculate the correct month index from the month name stored in
+        // `monthExtra`.
+        result.month = matches[1] ? +matches[1] : 1;
         if (result.month < 1) {
           throw new RangeError(
             `Invalid month ${value} from ${isoString}[u-ca-${this.id}]` +
@@ -543,6 +551,11 @@ const nonIsoHelperBase = {
               ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
           );
         }
+
+        // The ICU formats for the Hebrew calendar no longer support a numeric
+        // month format. So we'll rely on the derived class to interpret it.
+        // `monthExtra` is also used on the Chinese calendar to handle a suffix
+        // "bis" indicating a leap month.
         if (matches[2]) result.monthExtra = matches[2];
       }
       if (type === 'day') result.day = +value;
