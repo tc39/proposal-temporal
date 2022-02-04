@@ -2093,7 +2093,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let resultString = `${month}-${day}`;
     const calendar = GetSlot(monthDay, CALENDAR);
     const calendarID = ES.ToString(calendar);
-    if (calendarID !== 'iso8601') {
+    if (showCalendar === 'always' || calendarID !== 'iso8601') {
       const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
       resultString = `${year}-${resultString}`;
     }
@@ -2107,7 +2107,7 @@ export const ES = ObjectAssign({}, ES2020, {
     let resultString = `${year}-${month}`;
     const calendar = GetSlot(yearMonth, CALENDAR);
     const calendarID = ES.ToString(calendar);
-    if (calendarID !== 'iso8601') {
+    if (showCalendar === 'always' || calendarID !== 'iso8601') {
       const day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
       resultString += `-${day}`;
     }
