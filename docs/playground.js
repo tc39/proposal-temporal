@@ -6707,9 +6707,6 @@
 
       return record;
     },
-    ToTemporalDurationOverflow: function ToTemporalDurationOverflow(options) {
-      return ES.GetOption(options, 'overflow', ['constrain', 'balance'], 'constrain');
-    },
     ToTemporalOverflow: function ToTemporalOverflow(options) {
       return ES.GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
     },
