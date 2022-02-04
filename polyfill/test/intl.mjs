@@ -324,9 +324,29 @@ describe('Intl', () => {
           'islamicc: 9/24/1420 AH\n' +
           'japanese: 1/1/12 H\n' +
           'persian: 10/11/1378 AP\n' +
+          'roc: 1/1/89 Minguo',
+        node17:
+          'iso8601: 1/1/2000\n' +
+          'buddhist: 1/1/2543 BE\n' +
+          'chinese: 11/25/1999\n' +
+          'coptic: 4/22/1716 ERA1\n' +
+          'dangi: 11/25/1999\n' +
+          'ethioaa: 4/22/7492 ERA0\n' +
+          'ethiopic: 4/22/1992 ERA1\n' +
+          'gregory: 1/1/2000\n' +
+          'hebrew: 23 Tevet 5760\n' +
+          'indian: 10/11/1921 Saka\n' +
+          'islamic: 9/25/1420 AH\n' +
+          'islamic-umalqura: 9/24/1420 AH\n' +
+          'islamic-tbla: 9/25/1420 AH\n' +
+          'islamic-civil: 9/24/1420 AH\n' +
+          'islamic-rgsa: 9/25/1420 AH\n' +
+          'islamicc: 9/24/1420 AH\n' +
+          'japanese: 1/1/12 H\n' +
+          'persian: 10/11/1378 AP\n' +
           'roc: 1/1/89 Minguo'
       };
-      year2000Snapshots.other = year2000Snapshots.node16;
+      year2000Snapshots.other = year2000Snapshots.node17;
       equal(year2000Content, year2000Snapshots[`node${nodeVersion}`] || year2000Snapshots.other);
 
       const year1Snapshots = {
@@ -389,9 +409,29 @@ describe('Intl', () => {
           'islamicc: 5/18/-640 AH\n' +
           'japanese: 1/3/-643 Taika (645–650)\n' +
           'persian: 10/11/-621 AP\n' +
-          'roc: 1/3/1911 Before R.O.C.'
+          'roc: 1/3/1911 Before R.O.C.',
+        node17:
+          'iso8601: 1/1/1\n' +
+          'buddhist: 1/3/544 BE\n' +
+          'chinese: 11/21/0\n' +
+          'coptic: 5/8/284 ERA0\n' +
+          'dangi: 11/21/0\n' +
+          'ethioaa: 5/8/5493 ERA0\n' +
+          'ethiopic: 5/8/5493 ERA0\n' +
+          'gregory: 1/1/1\n' +
+          'hebrew: 18 Tevet 3761\n' +
+          'indian: 10/11/-78 Saka\n' +
+          'islamic: 5/20/-640 AH\n' +
+          'islamic-umalqura: 5/18/-640 AH\n' +
+          'islamic-tbla: 5/19/-640 AH\n' +
+          'islamic-civil: 5/18/-640 AH\n' +
+          'islamic-rgsa: 5/20/-640 AH\n' +
+          'islamicc: 5/18/-640 AH\n' +
+          'japanese: 1/3/-643 Taika (645–650)\n' +
+          'persian: 10/11/-621 AP\n' +
+          'roc: 1/3/1911 B.R.O.C.'
       };
-      year1Snapshots.other = year1Snapshots.node16;
+      year1Snapshots.other = year1Snapshots.node17;
       equal(year1Content, year1Snapshots[`node${nodeVersion}`] || year1Snapshots.other);
     });
 
