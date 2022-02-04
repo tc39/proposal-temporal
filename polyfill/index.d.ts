@@ -1,6 +1,6 @@
 export namespace Temporal {
   export type ComparisonResult = -1 | 0 | 1;
-  type RoundingMode = 'halfExpand' | 'ceil' | 'trunc' | 'floor';
+  export type RoundingMode = 'halfExpand' | 'ceil' | 'trunc' | 'floor';
 
   /**
    * Options for assigning fields using `with()` or entire objects with
@@ -189,7 +189,7 @@ export namespace Temporal {
 
   export type InstantToStringOptions = Partial<
     ToStringPrecisionOptions & {
-      timeZone: TimeZoneProtocol | string;
+      timeZone: TimeZoneLike;
     }
   >;
 
@@ -542,6 +542,7 @@ export namespace Temporal {
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: ToStringPrecisionOptions): string;
+    valueOf(): never;
     readonly [Symbol.toStringTag]: 'Temporal.Duration';
   }
 
@@ -589,13 +590,8 @@ export namespace Temporal {
     round(
       roundTo: RoundTo<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.Instant;
-    toZonedDateTime(calendarAndTimeZone: {
-      timeZone: TimeZoneProtocol | string;
-      calendar: CalendarProtocol | string;
-    }): Temporal.ZonedDateTime;
-    toZonedDateTimeISO(
-      tzLike: TimeZoneProtocol | string | { timeZone: TimeZoneProtocol | string }
-    ): Temporal.ZonedDateTime;
+    toZonedDateTime(calendarAndTimeZone: { timeZone: TimeZoneLike; calendar: CalendarLike }): Temporal.ZonedDateTime;
+    toZonedDateTimeISO(tzLike: TimeZoneLike): Temporal.ZonedDateTime;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
     toString(options?: InstantToStringOptions): string;
@@ -676,6 +672,8 @@ export namespace Temporal {
     toJSON?(): string;
   }
 
+  export type CalendarLike = CalendarProtocol | string | { calendar: CalendarProtocol | string };
+
   /**
    * A `Temporal.Calendar` is a representation of a calendar system. It includes
    * information about how many days are in each year, how many months are in
@@ -685,7 +683,7 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
    */
   export class Calendar implements Omit<Required<CalendarProtocol>, 'calendar'> {
-    static from(item: CalendarProtocol | string): Temporal.Calendar | CalendarProtocol;
+    static from(item: CalendarLike): Temporal.Calendar | CalendarProtocol;
     constructor(calendarIdentifier: string);
     readonly id: string;
     year(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string): number;
@@ -762,7 +760,7 @@ export namespace Temporal {
     month?: number;
     monthCode?: string;
     day?: number;
-    calendar?: CalendarProtocol | string;
+    calendar?: CalendarLike;
   };
 
   type PlainDateISOFields = {
@@ -787,7 +785,7 @@ export namespace Temporal {
       one: Temporal.PlainDate | PlainDateLike | string,
       two: Temporal.PlainDate | PlainDateLike | string
     ): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarProtocol | string);
+    constructor(isoYear: number, isoMonth: number, isoDay: number, calendar?: CalendarLike);
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
     readonly year: number;
@@ -805,7 +803,7 @@ export namespace Temporal {
     readonly inLeapYear: boolean;
     equals(other: Temporal.PlainDate | PlainDateLike | string): boolean;
     with(dateLike: PlainDateLike, options?: AssignmentOptions): Temporal.PlainDate;
-    withCalendar(calendar: CalendarProtocol | string): Temporal.PlainDate;
+    withCalendar(calendar: CalendarLike): Temporal.PlainDate;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
     subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
     until(
@@ -822,7 +820,7 @@ export namespace Temporal {
         | TimeZoneProtocol
         | string
         | {
-            timeZone: TimeZoneProtocol | string;
+            timeZone: TimeZoneLike;
             plainTime?: Temporal.PlainTime | PlainTimeLike | string;
           }
     ): Temporal.ZonedDateTime;
@@ -849,7 +847,7 @@ export namespace Temporal {
     millisecond?: number;
     microsecond?: number;
     nanosecond?: number;
-    calendar?: CalendarProtocol | string;
+    calendar?: CalendarLike;
   };
 
   type PlainDateTimeISOFields = {
@@ -894,7 +892,7 @@ export namespace Temporal {
       millisecond?: number,
       microsecond?: number,
       nanosecond?: number,
-      calendar?: CalendarProtocol | string
+      calendar?: CalendarLike
     );
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
@@ -921,7 +919,7 @@ export namespace Temporal {
     with(dateTimeLike: PlainDateTimeLike, options?: AssignmentOptions): Temporal.PlainDateTime;
     withPlainTime(timeLike?: Temporal.PlainTime | PlainTimeLike | string): Temporal.PlainDateTime;
     withPlainDate(dateLike: Temporal.PlainDate | PlainDateLike | string): Temporal.PlainDateTime;
-    withCalendar(calendar: CalendarProtocol | string): Temporal.PlainDateTime;
+    withCalendar(calendar: CalendarLike): Temporal.PlainDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDateTime;
     subtract(
       durationLike: Temporal.Duration | DurationLike | string,
@@ -942,7 +940,7 @@ export namespace Temporal {
     round(
       roundTo: RoundTo<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.PlainDateTime;
-    toZonedDateTime(tzLike: TimeZoneProtocol | string, options?: ToInstantOptions): Temporal.ZonedDateTime;
+    toZonedDateTime(tzLike: TimeZoneLike, options?: ToInstantOptions): Temporal.ZonedDateTime;
     toPlainDate(): Temporal.PlainDate;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
@@ -962,7 +960,7 @@ export namespace Temporal {
     month?: number;
     monthCode?: string;
     day?: number;
-    calendar?: CalendarProtocol | string;
+    calendar?: CalendarLike;
   };
 
   /**
@@ -977,7 +975,7 @@ export namespace Temporal {
       item: Temporal.PlainMonthDay | PlainMonthDayLike | string,
       options?: AssignmentOptions
     ): Temporal.PlainMonthDay;
-    constructor(isoMonth: number, isoDay: number, calendar?: CalendarProtocol | string, referenceISOYear?: number);
+    constructor(isoMonth: number, isoDay: number, calendar?: CalendarLike, referenceISOYear?: number);
     readonly monthCode: string;
     readonly day: number;
     readonly calendar: CalendarProtocol;
@@ -1074,7 +1072,7 @@ export namespace Temporal {
     ): Temporal.PlainTime;
     toPlainDateTime(temporalDate: Temporal.PlainDate | PlainDateLike | string): Temporal.PlainDateTime;
     toZonedDateTime(timeZoneAndDate: {
-      timeZone: TimeZoneProtocol | string;
+      timeZone: TimeZoneLike;
       plainDate: Temporal.PlainDate | PlainDateLike | string;
     }): Temporal.ZonedDateTime;
     getISOFields(): PlainTimeISOFields;
@@ -1093,10 +1091,7 @@ export namespace Temporal {
     timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor?(instant: Temporal.Instant | string): string;
-    getPlainDateTimeFor?(
-      instant: Temporal.Instant | string,
-      calendar?: CalendarProtocol | string
-    ): Temporal.PlainDateTime;
+    getPlainDateTimeFor?(instant: Temporal.Instant | string, calendar?: CalendarLike): Temporal.PlainDateTime;
     getInstantFor?(
       dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string,
       options?: ToInstantOptions
@@ -1107,6 +1102,8 @@ export namespace Temporal {
     toString(): string;
     toJSON?(): string;
   }
+
+  export type TimeZoneLike = TimeZoneProtocol | string | { timeZone: TimeZoneProtocol | string };
 
   /**
    * A `Temporal.TimeZone` is a representation of a time zone: either an
@@ -1122,15 +1119,12 @@ export namespace Temporal {
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
   export class TimeZone implements Omit<Required<TimeZoneProtocol>, 'timeZone'> {
-    static from(timeZone: TimeZoneProtocol | string): Temporal.TimeZone | TimeZoneProtocol;
+    static from(timeZone: TimeZoneLike): Temporal.TimeZone | TimeZoneProtocol;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor(instant: Temporal.Instant | string): string;
-    getPlainDateTimeFor(
-      instant: Temporal.Instant | string,
-      calendar?: CalendarProtocol | string
-    ): Temporal.PlainDateTime;
+    getPlainDateTimeFor(instant: Temporal.Instant | string, calendar?: CalendarLike): Temporal.PlainDateTime;
     getInstantFor(
       dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string,
       options?: ToInstantOptions
@@ -1149,7 +1143,7 @@ export namespace Temporal {
     year?: number;
     month?: number;
     monthCode?: string;
-    calendar?: CalendarProtocol | string;
+    calendar?: CalendarLike;
   };
 
   /**
@@ -1168,7 +1162,7 @@ export namespace Temporal {
       one: Temporal.PlainYearMonth | PlainYearMonthLike | string,
       two: Temporal.PlainYearMonth | PlainYearMonthLike | string
     ): ComparisonResult;
-    constructor(isoYear: number, isoMonth: number, calendar?: CalendarProtocol | string, referenceISODay?: number);
+    constructor(isoYear: number, isoMonth: number, calendar?: CalendarLike, referenceISODay?: number);
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
     readonly year: number;
@@ -1217,8 +1211,8 @@ export namespace Temporal {
     microsecond?: number;
     nanosecond?: number;
     offset?: string;
-    timeZone?: TimeZoneProtocol | string;
-    calendar?: CalendarProtocol | string;
+    timeZone?: TimeZoneLike;
+    calendar?: CalendarLike;
   };
 
   type ZonedDateTimeISOFields = {
@@ -1245,7 +1239,7 @@ export namespace Temporal {
       one: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
       two: Temporal.ZonedDateTime | ZonedDateTimeLike | string
     ): ComparisonResult;
-    constructor(epochNanoseconds: bigint, timeZone: TimeZoneProtocol | string, calendar?: CalendarProtocol | string);
+    constructor(epochNanoseconds: bigint, timeZone: TimeZoneLike, calendar?: CalendarLike);
     readonly era: string | undefined;
     readonly eraYear: number | undefined;
     readonly year: number;
@@ -1258,7 +1252,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    readonly timeZone: Temporal.TimeZoneProtocol;
+    readonly timeZone: TimeZoneProtocol;
     readonly calendar: CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
@@ -1279,8 +1273,8 @@ export namespace Temporal {
     with(zonedDateTimeLike: ZonedDateTimeLike, options?: ZonedDateTimeAssignmentOptions): Temporal.ZonedDateTime;
     withPlainTime(timeLike?: Temporal.PlainTime | PlainTimeLike | string): Temporal.ZonedDateTime;
     withPlainDate(dateLike: Temporal.PlainDate | PlainDateLike | string): Temporal.ZonedDateTime;
-    withCalendar(calendar: CalendarProtocol | string): Temporal.ZonedDateTime;
-    withTimeZone(timeZone: TimeZoneProtocol | string): Temporal.ZonedDateTime;
+    withCalendar(calendar: CalendarLike): Temporal.ZonedDateTime;
+    withTimeZone(timeZone: TimeZoneLike): Temporal.ZonedDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
     subtract(
       durationLike: Temporal.Duration | DurationLike | string,
@@ -1349,25 +1343,25 @@ export namespace Temporal {
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
      * protocol.
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    zonedDateTime: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.ZonedDateTime;
+    zonedDateTime: (calendar: CalendarLike, tzLike?: TimeZoneLike) => Temporal.ZonedDateTime;
 
     /**
      * Get the current calendar date and clock time in a specific time zone,
      * using the ISO 8601 calendar.
      *
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    zonedDateTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.ZonedDateTime;
+    zonedDateTimeISO: (tzLike?: TimeZoneLike) => Temporal.ZonedDateTime;
 
     /**
      * Get the current calendar date and clock time in a specific calendar and
@@ -1386,13 +1380,13 @@ export namespace Temporal {
      * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
      * protocol.
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    plainDateTime: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.PlainDateTime;
+    plainDateTime: (calendar: CalendarLike, tzLike?: TimeZoneLike) => Temporal.PlainDateTime;
 
     /**
      * Get the current date and clock time in a specific time zone, using the
@@ -1403,13 +1397,13 @@ export namespace Temporal {
      * cases. Therefore, it's usually recommended to use
      * `Temporal.Now.zonedDateTimeISO` instead of this function.
      *
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    plainDateTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainDateTime;
+    plainDateTimeISO: (tzLike?: TimeZoneLike) => Temporal.PlainDateTime;
 
     /**
      * Get the current calendar date in a specific calendar and time zone.
@@ -1418,39 +1412,39 @@ export namespace Temporal {
      * don't understand the need for or implications of a calendar, then a more
      * ergonomic alternative to this method is `Temporal.Now.plainDateISO`.
      *
-     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * @param {CalendarLike} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
      * protocol.
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted,
      * the environment's current time zone will be used.
      */
-    plainDate: (calendar: CalendarProtocol | string, tzLike?: TimeZoneProtocol | string) => Temporal.PlainDate;
+    plainDate: (calendar: CalendarLike, tzLike?: TimeZoneLike) => Temporal.PlainDate;
 
     /**
      * Get the current date in a specific time zone, using the ISO 8601
      * calendar.
      *
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    plainDateISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainDate;
+    plainDateISO: (tzLike?: TimeZoneLike) => Temporal.PlainDate;
 
     /**
      * Get the current clock time in a specific time zone, using the ISO 8601 calendar.
      *
-     * @param {TimeZoneProtocol | string} [tzLike] -
+     * @param {TimeZoneLike} [tzLike] -
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone identifier}
      * string (e.g. `'Europe/London'`), `Temporal.TimeZone` instance, or an
      * object implementing the time zone protocol. If omitted, the environment's
      * current time zone will be used.
      */
-    plainTimeISO: (tzLike?: TimeZoneProtocol | string) => Temporal.PlainTime;
+    plainTimeISO: (tzLike?: TimeZoneLike) => Temporal.PlainTime;
 
     /**
      * Get the environment's current time zone.
@@ -1520,7 +1514,8 @@ declare namespace Intl {
     formatRangeToParts(startDate: Date | number, endDate: Date | number): DateTimeFormatRangePart[];
   }
 
-  export interface DateTimeFormatOptions extends Omit<globalThis.Intl.DateTimeFormatOptions, 'timeZone'> {
+  export interface DateTimeFormatOptions extends Omit<globalThis.Intl.DateTimeFormatOptions, 'timeZone' | 'calendar'> {
+    calendar?: string | Temporal.CalendarProtocol;
     timeZone?: string | Temporal.TimeZoneProtocol;
     // TODO: remove the props below after TS lib declarations are updated
     dayPeriod?: 'narrow' | 'short' | 'long';
