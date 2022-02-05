@@ -515,6 +515,9 @@ These behave as in the `Temporal.Duration.round()` method, but increments of day
 Because rounding to calendar units requires a reference point, `date` is used as the starting point.
 The default is to do no rounding.
 
+For rounding purposes, a `Temporal.PlainDate` instance will be treated the same as a `Temporal.PlainDateTime` instance with the time set to midnight.
+Therefore when rounding using the `'halfExpand'` rounding mode, dates at the exact midpoint of the `smallestUnit` will be rounded down.
+
 Unlike other Temporal types, hours and lower are not allowed for either `largestUnit` or `smallestUnit`, because the data model of `Temporal.PlainDate` doesn't have that accuracy.
 
 Computing the difference between two dates in different calendar systems is not supported.
@@ -537,6 +540,14 @@ later.until(earlier, { largestUnit: 'year' }); // => -P12Y5M7D
 noon = Temporal.PlainTime.from('12:00');
 earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 'hour' });
   // => PT109032H
+
+newyear = Temporal.PlainDate.from('2020-01-01');
+newyear.until('2020-01-15', { smallestUnit: 'month', roundingMode: 'halfExpand' });
+  // => PT0S 
+newyear.until('2020-01-16', { smallestUnit: 'month', roundingMode: 'halfExpand' });
+  // => PT0S (mid-month dates rounded down to match `Temporal.PlainDateTime` behavior)
+newyear.until('2020-01-17', { smallestUnit: 'month', roundingMode: 'halfExpand' });
+  // => PT1M 
 ```
 <!-- prettier-ignore-end -->
 
