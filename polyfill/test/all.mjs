@@ -22,7 +22,6 @@ import './zoneddatetime.mjs';
 import './plaintime.mjs';
 import './plaindatetime.mjs';
 import './duration.mjs';
-import './plainyearmonth.mjs';
 import './intl.mjs';
 
 // tests of userland objects
