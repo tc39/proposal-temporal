@@ -3113,6 +3113,7 @@
     _createClass(Calendar, [{
       key: "id",
       get: function get() {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         return ES.ToString(this);
       }
     }, {
@@ -3316,6 +3317,7 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
         return ES.ToString(this);
       }
     }], [{
@@ -10823,6 +10825,7 @@
     _createClass(TimeZone, [{
       key: "id",
       get: function get() {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         return ES.ToString(this);
       }
     }, {
@@ -10849,6 +10852,7 @@
       key: "getPlainDateTimeFor",
       value: function getPlainDateTimeFor(instant) {
         var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ES.GetISO8601Calendar();
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         instant = ES.ToTemporalInstant(instant);
         calendar = ES.ToTemporalCalendar(calendar);
         return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
@@ -10924,6 +10928,7 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
+        if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         return ES.ToString(this);
       }
     }], [{
