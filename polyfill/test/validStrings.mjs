@@ -190,7 +190,6 @@ const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
   data.z = 'Z';
-  data.offset = '+00:00';
 });
 const timeFractionalPart = between(1, 9, digit());
 const fraction = seq(decimalSeparator, timeFractionalPart);
