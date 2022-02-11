@@ -450,29 +450,34 @@ const comparisonItems = {
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
-const mode = 'Instant';
-
-for (let count = 0; count < 1000; count++) {
-  let generatedData, fuzzed;
-  do {
-    generatedData = {};
-    fuzzed = goals[mode].generate(generatedData);
-  } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
-  try {
-    const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
-    for (let prop of comparisonItems[mode]) {
-      let expected = generatedData[prop];
-      if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
-      assert.equal(parsed[prop], expected);
+function fuzzMode(mode) {
+  console.log('// starting to fuzz ' + mode);
+  for (let count = 0; count < 1000; count++) {
+    let generatedData, fuzzed;
+    do {
+      generatedData = {};
+      fuzzed = goals[mode].generate(generatedData);
+    } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
+    try {
+      const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
+      for (let prop of comparisonItems[mode]) {
+        let expected = generatedData[prop];
+        if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
+        assert.equal(parsed[prop], expected);
+      }
+      console.log(`${fuzzed} => ok`);
+    } catch (e) {
+      if (e instanceof assert.AssertionError) {
+        console.log(`${fuzzed} => parsed wrong: expected`, e.expected, 'actual', e.actual);
+        console.log('generated data:', generatedData);
+      } else {
+        console.log(`${fuzzed} failed!`, e);
+      }
+      return 0;
     }
-    console.log(`${fuzzed} => ok`);
-  } catch (e) {
-    if (e instanceof assert.AssertionError) {
-      console.log(`${fuzzed} => parsed wrong: expected`, e.expected, 'actual', e.actual);
-      console.log('generated data:', generatedData);
-    } else {
-      console.log(`${fuzzed} failed!`, e);
-    }
-    break;
   }
+  console.log('// done fuzzing ' + mode);
+  return 1;
 }
+
+Object.keys(goals).every(fuzzMode);
