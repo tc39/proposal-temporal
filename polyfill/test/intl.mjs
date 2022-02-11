@@ -389,7 +389,7 @@ describe('Intl', () => {
           'islamicc: 5/18/-640 AH\n' +
           'japanese: 1/3/-643 Taika (645–650)\n' +
           'persian: 10/11/-621 AP\n' +
-          'roc: 1/3/1911 Before R.O.C.',
+          'roc: 1/3/1911 B.R.O.C.',
         node16:
           'iso8601: 1/1/1\n' +
           'buddhist: 1/3/544 BE\n' +
