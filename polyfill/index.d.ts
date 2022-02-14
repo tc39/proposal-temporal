@@ -746,7 +746,7 @@ export namespace Temporal {
       two: Temporal.PlainDate | PlainDateLike | string,
       options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
     ): Temporal.Duration;
-    fields(fields: Iterable<string>): Iterable<string>;
+    fields(fields: Iterable<string>): string[];
     mergeFields(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString(): string;
     toJSON(): string;
@@ -1340,7 +1340,7 @@ export namespace Temporal {
      * a more ergonomic alternative to this method is
      * `Temporal.Now.zonedDateTimeISO()`.
      *
-     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * @param {CalendarLike} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
      * protocol.
      * @param {TimeZoneLike} [tzLike] -
@@ -1377,7 +1377,7 @@ export namespace Temporal {
      * `Temporal.Now.zonedDateTimeISO` or `Temporal.Now.zonedDateTime` instead
      * of this function.
      *
-     * @param {Temporal.Calendar | string} [calendar] - calendar identifier, or
+     * @param {CalendarLike} [calendar] - calendar identifier, or
      * a `Temporal.Calendar` instance, or an object implementing the calendar
      * protocol.
      * @param {TimeZoneLike} [tzLike] -
