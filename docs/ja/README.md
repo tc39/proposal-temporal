@@ -80,7 +80,7 @@ const zonedDateTime = Temporal.ZonedDateTime.from({
 }); // => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]
 ```
 
-これは Tempral において最も多くの情報を持つタイプであり、`Temporal.TimeZone`、`Temporal.Instant`、`Temporal.PlainDateTime`（これには `Temporal.Calendar` が含まれます）の組み合わせとしてみなせます。
+これは Temporal において最も多くの情報を持つタイプであり、`Temporal.TimeZone`、`Temporal.Instant`、`Temporal.PlainDateTime`（これには `Temporal.Calendar` が含まれます）の組み合わせとしてみなせます。
 
 より詳しくは[Temporal.ZonedDateTime Documentation](../zoneddatetime.md)を参照してください。
 
@@ -224,7 +224,7 @@ date.daysInYear; // => 365
 
 ## 文字列による永続性
 
-すべての`Temporal`タイプは、永続性や相互運用性のために文字列による表現を持っています。各タイプと文字列表現の対応を以下に示します。Temporal で使用されている ISO 8601 や RFC 3339 に関する、より詳細な情報と標準化に向けた取り組みに関しては[ECMAScript 拡張の ISO-8601 と RFC 3339](./iso-string-ext.md)を参照してください。
+すべての`Temporal`タイプは、永続性や相互運用性のために文字列による表現を持っています。各タイプと文字列表現の対応を以下に示します。Temporal で使用されている ISO 8601 や RFC 3339 に関する、より詳細な情報と標準化に向けた取り組みに関しては[ECMAScript 拡張の ISO-8601 と RFC 3339](./strings.md)を参照してください。
 
 <img src="../persistence-model.svg">
 
@@ -234,5 +234,4 @@ date.daysInYear; // => 365
 
 - [曖昧性](./ambiguity.md) &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響
 - [バランシング](./balancing.md) &mdash; `Temporal.Duration`の単位が、いつ繰り上げされる（またはされない）のかについての説明
-- [ISO 文字列の拡張](./iso-string-ext.md) &mdash; `Temporal`で使用されている ISO 8601 および RFC 3339 の拡張に関する議論、IETF と連携した標準化への取り組み
 - [なぜ Temporal インスタンスはカレンダーの情報を持っているのか？](./calendar-review.md) &mdash; `Temporal.PlainDate`や`Temporal.PlainDate`がカレンダーシステムを保持している理由と背景

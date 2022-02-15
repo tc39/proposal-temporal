@@ -96,7 +96,7 @@ For example:
 If the string isn't valid, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
 Note that this string format (albeit limited to the ISO calendar system) is also used by `java.time` and some other time-zone-aware libraries.
-For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).
+For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
 
 The time zone ID is always required.
 `2020-08-05T20:06:13+09:00` and `2020-08-05T11:06:13Z` are not valid inputs to this method because they don't include a time zone ID in square brackets.
@@ -1280,13 +1280,13 @@ Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `zonedDateTime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
-For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
+For more information on the calendar annotation, see [ISO string extensions](./strings.md#calendar-systems).
 
 Likewise, passing `'never'` to the `timeZoneName` or `offset` options controls whether the time zone offset (`+01:00`) or name annotation (`[Europe/Paris]`) are shown.
 If the time zone offset is shown, it is always shown rounded to the nearest minute.
 
 The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output.
-For more information on `Temporal`'s extensions to the ISO string format and the progress towards becoming a published standard, see [ISO standard extensions](./iso-string-ext.md).
+For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
 
 Example usage:
 

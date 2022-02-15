@@ -517,7 +517,7 @@ The string can be passed to `Temporal.PlainYearMonth.from()` to create a new `Te
 
 Normally, a calendar annotation is shown when `yearMonth`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
-For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
+For more information on the calendar annotation, see [the `Temporal` string formats documentation](./strings.md#calendar-systems).
 
 Example usage:
 

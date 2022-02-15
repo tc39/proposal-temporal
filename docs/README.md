@@ -233,24 +233,21 @@ date.daysInYear; // => 365
 
 See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
-## Object Relationship
+## Object relationship
 
 <img src="object-model.svg">
 
-## String Persistence
+## String persistence, parsing, and formatting
 
 All `Temporal` types have a string representation for persistence and interoperability.
-The correspondence between types and strings is shown below.
-For more information about extensions to the ISO 8601 / RFC 3339 standards that are used by Temporal and which are intended to be put on a standards track, see [ISO string extensions](./iso-string-ext.md).
+The correspondence between types and machine-readable strings is shown below.
+For more information about string parsing, serialization, and formatting in `Temporal` (including how Temporal is using industry standards like ISO 8601 and RFC 3339), see [String Parsing, Serialization, and Formatting](./strings.md).
 
 <img src="persistence-model.svg">
 
-## Other Documentation
-
-### **Key Concepts**
+## Other documentation
 
 - [Ambiguity](./ambiguity.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
 - [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
-- [ISO String Extensions](./iso-string-ext.md) &mdash; Discussion of extensions to the ISO 8601 and/or RFC 3339 standards which are used by `Temporal`.
 - [Why do Temporal instances have a Calendar?](./calendar-review.md) &mdash; Background about why types like `Temporal.PlainDate` or `Temporal.PlainDate` contain a calendar.
   These extensions are being actively worked on with IETF to get them on a standards track.
