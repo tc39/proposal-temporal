@@ -237,7 +237,7 @@ instant<span class="token punctuation">.</span>epochMilliseconds<span class="tok
   <span class="token literal-property property">millisecond</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token literal-property property">microsecond</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
   <span class="token literal-property property">nanosecond</span><span class="token operator">:</span> <span class="token number">500</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]</span></code></pre><p>これは Tempral において最も多くの情報を持つタイプであり、<code>Temporal.TimeZone</code>、<code>Temporal.Instant</code>、<code>Temporal.PlainDateTime</code>（これには <code>Temporal.Calendar</code> が含まれます）の組み合わせとしてみなせます。</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]</span></code></pre><p>これは Temporal において最も多くの情報を持つタイプであり、<code>Temporal.TimeZone</code>、<code>Temporal.Instant</code>、<code>Temporal.PlainDateTime</code>（これには <code>Temporal.Calendar</code> が含まれます）の組み合わせとしてみなせます。</p>
 <p>より詳しくは<a href="../zoneddatetime.html">Temporal.ZonedDateTime Documentation</a>を参照してください。</p>
 <h3 id="Temporal-PlainDate"><a class="heading-link" href="#Temporal-PlainDate"></a><strong>Temporal.PlainDate</strong></h3><p>Temporal.PlainDate は、特定の時間やタイムゾーンに紐付かないカレンダー上の日付を表します。例：2006 年 8 月 24 日。</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2006</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24</span>
@@ -305,14 +305,13 @@ date<span class="token punctuation">.</span>daysInYear<span class="token punctua
 <img src="../object-model.svg">
 
 <h2 id="文字列による永続性">文字列による永続性</h2>
-<p>すべての<code>Temporal</code>タイプは、永続性や相互運用性のために文字列による表現を持っています。各タイプと文字列表現の対応を以下に示します。Temporal で使用されている ISO 8601 や RFC 3339 に関する、より詳細な情報と標準化に向けた取り組みに関しては<a href="./iso-string-ext.html">ECMAScript 拡張の ISO-8601 と RFC 3339</a>を参照してください。</p>
+<p>すべての<code>Temporal</code>タイプは、永続性や相互運用性のために文字列による表現を持っています。各タイプと文字列表現の対応を以下に示します。Temporal で使用されている ISO 8601 や RFC 3339 に関する、より詳細な情報と標準化に向けた取り組みに関しては<a href="./strings.html">ECMAScript 拡張の ISO-8601 と RFC 3339</a>を参照してください。</p>
 <img src="../persistence-model.svg">
 
 <h2 id="その他のドキュメント">その他のドキュメント</h2>
 <h3 id="-------"><a class="heading-link" href="#-------"></a><strong>キーコンセプト</strong></h3><ul>
 <li><a href="./ambiguity.html">曖昧性</a> &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響</li>
 <li><a href="./balancing.html">バランシング</a> &mdash; <code>Temporal.Duration</code>の単位が、いつ繰り上げされる（またはされない）のかについての説明</li>
-<li><a href="./iso-string-ext.html">ISO 文字列の拡張</a> &mdash; <code>Temporal</code>で使用されている ISO 8601 および RFC 3339 の拡張に関する議論、IETF と連携した標準化への取り組み</li>
 <li><a href="./calendar-review.html">なぜ Temporal インスタンスはカレンダーの情報を持っているのか？</a> &mdash; <code>Temporal.PlainDate</code>や<code>Temporal.PlainDate</code>がカレンダーシステムを保持している理由と背景</li>
 </ul>
     <footer>

@@ -178,15 +178,11 @@
 </li>
 </ul>
 </li>
-<li><a href="#object-relationship">Object Relationship</a>
+<li><a href="#object-relationship">Object relationship</a>
 </li>
-<li><a href="#string-persistence">String Persistence</a>
+<li><a href="#string-persistence-parsing-and-formatting">String persistence, parsing, and formatting</a>
 </li>
-<li><a href="#other-documentation">Other Documentation</a>
-<ul>
-<li><a href="#Key-Concepts">Key Concepts</a>
-</li>
-</ul>
+<li><a href="#other-documentation">Other documentation</a>
 </li>
 </ul>
 </details>
@@ -316,20 +312,19 @@ Under the hood, this math is done by methods on the calendars.</p>
 <span class="token keyword">const</span> date <span class="token operator">=</span> cal<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span>
 date<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 365</span></code></pre><p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for detailed documentation.</p>
-<h2 id="object-relationship">Object Relationship</h2>
+<h2 id="object-relationship">Object relationship</h2>
 <img src="object-model.svg">
 
-<h2 id="string-persistence">String Persistence</h2>
+<h2 id="string-persistence-parsing-and-formatting">String persistence, parsing, and formatting</h2>
 <p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
-The correspondence between types and strings is shown below.
-For more information about extensions to the ISO 8601 / RFC 3339 standards that are used by Temporal and which are intended to be put on a standards track, see <a href="./iso-string-ext.html">ISO string extensions</a>.</p>
+The correspondence between types and machine-readable strings is shown below.
+For more information about string parsing, serialization, and formatting in <code>Temporal</code> (including how Temporal is using industry standards like ISO 8601 and RFC 3339), see <a href="./strings.html">String Parsing, Serialization, and Formatting</a>.</p>
 <img src="persistence-model.svg">
 
-<h2 id="other-documentation">Other Documentation</h2>
-<h3 id="Key-Concepts"><a class="heading-link" href="#Key-Concepts"></a><strong>Key Concepts</strong></h3><ul>
+<h2 id="other-documentation">Other documentation</h2>
+<ul>
 <li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
 <li><a href="./balancing.html">Balancing</a> &mdash; Explanation of when <code>Temporal.Duration</code> units wrap around to 0 and when they don&#39;t.</li>
-<li><a href="./iso-string-ext.html">ISO String Extensions</a> &mdash; Discussion of extensions to the ISO 8601 and/or RFC 3339 standards which are used by <code>Temporal</code>.</li>
 <li><a href="./calendar-review.html">Why do Temporal instances have a Calendar?</a> &mdash; Background about why types like <code>Temporal.PlainDate</code> or <code>Temporal.PlainDate</code> contain a calendar.
 These extensions are being actively worked on with IETF to get them on a standards track.</li>
 </ul>
