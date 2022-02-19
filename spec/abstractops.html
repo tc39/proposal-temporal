@@ -1363,7 +1363,7 @@
         1. Let _factor_ be −1.
       1. Else,
         1. Let _factor_ be 1.
-      1. Return ? CreateDurationRecord(_yearsMV_ × _factor_, _monthsMV_ × _factor_, _weeksMV_ × _factor_, _daysMV_ × _factor_, _hoursMV_ × _factor_, floor(_minutesMV_) × _factor_, floor(_secondsMV_) × _factor_, floor(_millisecondsMV_) × _factor_, floor(_microsecondsMV_) × _factor_, floor(_nanosecondsMV_) × _factor_).
+      1. Return ? CreateDurationRecord(𝔽(_yearsMV_ × _factor_), 𝔽(_monthsMV_ × _factor_), 𝔽(_weeksMV_ × _factor_), 𝔽(_daysMV_ × _factor_), 𝔽(_hoursMV_ × _factor_), 𝔽(floor(_minutesMV_) × _factor_), 𝔽(floor(_secondsMV_) × _factor_), 𝔽(floor(_millisecondsMV_) × _factor_), 𝔽(floor(_microsecondsMV_) × _factor_), 𝔽(floor(_nanosecondsMV_) × _factor_)).
     </emu-alg>
   </emu-clause>
 

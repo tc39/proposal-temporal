@@ -49,7 +49,7 @@
         1. Let _ms_ be ? ToIntegerWithoutRounding(_milliseconds_).
         1. Let _mis_ be ? ToIntegerWithoutRounding(_microseconds_).
         1. Let _ns_ be ? ToIntegerWithoutRounding(_nanoseconds_).
-        1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
+        1. Return ? CreateTemporalDuration(𝔽(_y_), 𝔽(_mo_), 𝔽(_w_), 𝔽(_d_), 𝔽(_h_), 𝔽(_m_), 𝔽(_s_), 𝔽(_ms_), 𝔽(_mis_), 𝔽(_ns_), NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -570,6 +570,11 @@
       Temporal.Duration instances are ordinary objects that inherit properties from the %Temporal.Duration.prototype% intrinsic object.
       Temporal.Duration instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporalduration-instances"></emu-xref>.
     </p>
+    <emu-note>
+      It is a departure from the convention in this specification, for internal slots to store Number values, and to use Number values in arithmetic.
+      Temporal.Duration does this because the overflow-to-Infinity semantics of Number arithmetic are correct in this case.
+      Error accumulation, which is another reason why Number arithmetic is avoided, is not possible in the case of Temporal.Duration because arithmetic is only performed with integer Number values.
+    </emu-note>
     <emu-table id="table-internal-slots-of-temporalduration-instances" caption="Internal Slots of Temporal.Duration Instances">
       <table>
         <tbody>
@@ -942,7 +947,7 @@
           1. Let _prop_ be the Property Name value of the current row.
           1. Let _val_ be ? Get(_temporalDurationLike_, _prop_).
           1. If _val_ is *undefined*, then
-            1. Set _result_'s field whose name is the Field Name value of the current row to 0.
+            1. Set _result_'s field whose name is the Field Name value of the current row to *+0*<sub>𝔽</sub>.
           1. Else,
             1. Set _any_ to *true*.
             1. Let _val_ be 𝔽(? ToIntegerWithoutRounding(_val_)).
@@ -958,16 +963,16 @@
     <emu-clause id="sec-temporal-durationsign" type="abstract operation">
       <h1>
         DurationSign (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
         )
       </h1>
       <dl class="header">
@@ -976,8 +981,8 @@
       </dl>
       <emu-alg>
         1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
-          1. If _v_ &lt; 0, return −1.
-          1. If _v_ &gt; 0, return 1.
+          1. If _v_ &lt; *+0*<sub>𝔽</sub>, return −1.
+          1. If _v_ &gt; *+0*<sub>𝔽</sub>, return 1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
@@ -985,16 +990,16 @@
     <emu-clause id="sec-temporal-isvalidduration" type="abstract operation">
       <h1>
         IsValidDuration (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
         )
       </h1>
       <dl class="header">
@@ -1004,9 +1009,8 @@
       <emu-alg>
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
-          1. If _v_ is not finite, return *false*.
-          1. If _v_ &lt; 0 and _sign_ &gt; 0, return *false*.
-          1. If _v_ &gt; 0 and _sign_ &lt; 0, return *false*.
+          1. If _v_ &lt; *+0*<sub>𝔽</sub> and _sign_ &gt; 0, return *false*.
+          1. If _v_ &gt; *+0*<sub>𝔽</sub> and _sign_ &lt; 0, return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -1014,15 +1018,15 @@
     <emu-clause id="sec-temporal-defaulttemporallargestunit" type="abstract operation">
       <h1>
         DefaultTemporalLargestUnit (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
         )
       </h1>
       <dl class="header">
@@ -1030,15 +1034,15 @@
         <dd>It implements the logic used in the `Temporal.Duration.prototype.round()` method and elsewhere, where the `largestUnit` option, if not given explicitly, is set to the largest non-zero unit in the input Temporal.Duration.</dd>
       </dl>
       <emu-alg>
-        1. If _years_ is not zero, return *"year"*.
-        1. If _months_ is not zero, return *"month"*.
-        1. If _weeks_ is not zero, return *"week"*.
-        1. If _days_ is not zero, return *"day"*.
-        1. If _hours_ is not zero, return *"hour"*.
-        1. If _minutes_ is not zero, return *"minute"*.
-        1. If _seconds_ is not zero, return *"second"*.
-        1. If _milliseconds_ is not zero, return *"millisecond"*.
-        1. If _microseconds_ is not zero, return *"microsecond"*.
+        1. If _years_ ≠ *+0*<sub>𝔽</sub>, return *"year"*.
+        1. If _months_ ≠ *+0*<sub>𝔽</sub>, return *"month"*.
+        1. If _weeks_ ≠ *+0*<sub>𝔽</sub>, return *"week"*.
+        1. If _days_ ≠ *+0*<sub>𝔽</sub>, return *"day"*.
+        1. If _hours_ ≠ *+0*<sub>𝔽</sub>, return *"hour"*.
+        1. If _minutes_ ≠ *+0*<sub>𝔽</sub>, return *"minute"*.
+        1. If _seconds_ ≠ *+0*<sub>𝔽</sub>, return *"second"*.
+        1. If _milliseconds_ ≠ *+0*<sub>𝔽</sub>, return *"millisecond"*.
+        1. If _microseconds_ ≠ *+0*<sub>𝔽</sub>, return *"microsecond"*.
         1. Return *"nanosecond"*.
       </emu-alg>
     </emu-clause>
@@ -1074,16 +1078,16 @@
     <emu-clause id="sec-temporal-createtemporalduration" type="abstract operation">
       <h1>
         CreateTemporalDuration (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
           optional _newTarget_: a function object,
         )
       </h1>
@@ -1188,13 +1192,13 @@
     <emu-clause id="sec-temporal-balanceduration" type="abstract operation">
       <h1>
         BalanceDuration (
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
           _largestUnit_: a String,
           optional _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
         )
@@ -1206,7 +1210,7 @@
       <emu-alg>
         1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If Type(_relativeTo_) is Object and _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
           1. Set _nanoseconds_ to _endNs_ − _relativeTo_.[[Nanoseconds]].
         1. Else,
           1. Set _nanoseconds_ to ℤ(! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0)).
@@ -1264,10 +1268,10 @@
     <emu-clause id="sec-temporal-unbalancedurationrelative" type="abstract operation">
       <h1>
         UnbalanceDurationRelative (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
           _largestUnit_: a String,
           _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
         )
@@ -1279,11 +1283,11 @@
       <emu-alg>
         1. If _largestUnit_ is *"year"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
-        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
-        1. Assert: _sign_ ≠ 0.
-        1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _oneMonth_ be ! CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _oneWeek_ be ! CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
+        1. Let _sign_ be 𝔽(! DurationSign(_years_, _months_, _weeks_, _days_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>)).
+        1. Assert: _sign_ ≠ *+0*<sub>𝔽</sub>.
+        1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
+        1. Let _oneMonth_ be ! CreateTemporalDuration(*+0*<sub>𝔽</sub>, _sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
+        1. Let _oneWeek_ be ! CreateTemporalDuration(*+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
         1. If _relativeTo_ is not *undefined*, then
           1. Set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
@@ -1294,7 +1298,7 @@
             1. Throw a *RangeError* exception.
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _dateUntil_ be ? GetMethod(_calendar_, *"dateUntil"*).
-          1. Repeat, while _years_ ≠ 0,
+          1. Repeat, while _years_ ≠ *+0*<sub>𝔽</sub>,
             1. Let _addOptions_ be OrdinaryObjectCreate(*null*).
             1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, _addOptions_, _dateAdd_).
             1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
@@ -1307,31 +1311,31 @@
         1. Else if _largestUnit_ is *"week"*, then
           1. If _calendar_ is *undefined*, then
             1. Throw a *RangeError* exception.
-          1. Repeat, while _years_ ≠ 0,
+          1. Repeat, while _years_ ≠ *+0*<sub>𝔽</sub>,
             1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _days_ to _days_ + _moveResult_.[[Days]].
             1. Set _years_ to _years_ − _sign_.
-          1. Repeat, while _months_ ≠ 0,
+          1. Repeat, while _months_ ≠ *+0*<sub>𝔽</sub>,
             1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _days_ to _days_ + _moveResult_.[[Days]].
             1. Set _months_ to _months_ − _sign_.
         1. Else,
-          1. If any of _years_, _months_, and _weeks_ are not zero, then
+          1. If any of _years_, _months_, and _weeks_ are not *+0*<sub>𝔽</sub>, then
             1. If _calendar_ is *undefined*, then
               1. Throw a *RangeError* exception.
-            1. Repeat, while _years_ ≠ 0,
+            1. Repeat, while _years_ ≠ *+0*<sub>𝔽</sub>,
               1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
               1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
               1. Set _days_ to _days_ + _moveResult_.[[Days]].
               1. Set _years_ to _years_ − _sign_.
-            1. Repeat, while _months_ ≠ 0,
+            1. Repeat, while _months_ ≠ *+0*<sub>𝔽</sub>,
               1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
               1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
               1. Set _days_ to _days_ +_moveResult_.[[Days]].
               1. Set _months_ to _months_ − _sign_.
-            1. Repeat, while _weeks_ ≠ 0,
+            1. Repeat, while _weeks_ ≠ *+0*<sub>𝔽</sub>,
               1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
               1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
               1. Set _days_ to _days_ + _moveResult_.[[Days]].
@@ -1359,17 +1363,18 @@
         1. If _largestUnit_ is not one of *"year"*, *"month"*, or *"week"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
           1. [id="step-balance-duration-relative-early-return"] Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
         1. Assert: _relativeTo_ is not *undefined*, because callers of this operation ensure _relativeTo_ is required in conditions where this algorithm does not return in step <emu-xref href="#step-balance-duration-relative-early-return"></emu-xref>.
-        1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
-        1. Assert: _sign_ ≠ 0.
-        1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _oneMonth_ be ! CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _oneWeek_ be ! CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
+        1. Let _sign_ be 𝔽(! DurationSign(_years_, _months_, _weeks_, _days_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>)).
+        1. Assert: _sign_ ≠ *+0*<sub>𝔽</sub>.
+        1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
+        1. Let _oneMonth_ be ! CreateTemporalDuration(*+0*<sub>𝔽</sub>, _sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
+        1. Let _oneWeek_ be ! CreateTemporalDuration(*+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _sign_, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>).
         1. Set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
         1. Let _calendar_ be _relativeTo_.[[Calendar]].
         1. If _largestUnit_ is *"year"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
+          1. FIXME: abs(Number value) is not defined.
           1. Repeat, while abs(_days_) ≥ abs(_oneYearDays_),
             1. Set _days_ to _days_ − _oneYearDays_.
             1. Set _years_ to _years_ + _sign_.
@@ -1466,7 +1471,7 @@
           1. If _largestUnit_ is one of *"year"*, *"month"*, or *"week"*, then
             1. Throw a *RangeError* exception.
           1. Let _result_ be ! BalanceDuration(_d1_ + _d2_, _h1_ + _h2_, _min1_ + _min2_, _s1_ + _s2_, _ms1_ + _ms2_, _mus1_ + _mus2_, _ns1_ + _ns2_, _largestUnit_).
-          1. Return ? CreateDurationRecord(0, 0, 0, _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+          1. Return ? CreateDurationRecord(*+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. If _relativeTo_ has an [[InitializedTemporalDate]] internal slot, then
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
           1. Let _dateDuration1_ be ! CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
@@ -1489,8 +1494,8 @@
         1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, *"halfExpand"*).
-          1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
-          1. Return ? CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+          1. Let _result_ be ! BalanceDuration(*+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _diffNs_, _largestUnit_).
+          1. Return ? CreateDurationRecord(*+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, *+0*<sub>𝔽</sub>, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Return ? DifferenceZonedDateTime(_relativeTo_.[[Nanoseconds]], _endNs_, _timeZone_, _calendar_, _largestUnit_).
       </emu-alg>
     </emu-clause>
@@ -1504,7 +1509,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns the integer number of days elapsed between the calendar dates of two Temporal object instances _earlier_ and _later_.
+        <dd>It returns the integer Number value for the number of days elapsed between the calendar dates of two Temporal object instances _earlier_ and _later_.
         If _earlier_ is later than _later_, then the result is negative.</dd>
       </dl>
       <emu-alg>
@@ -1786,7 +1791,7 @@
         1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the Property Name value of the current row.
           1. Let _value_ be _duration_'s field whose name is the Field Name value of the current row.
-          1. If _value_ is not 0 and _disallowedFields_ contains _prop_, then
+          1. If _value_ is not *+0*<sub>𝔽</sub> and _disallowedFields_ contains _prop_, then
             1. Throw a *RangeError* exception.
         1. Return _duration_.
       </emu-alg>
