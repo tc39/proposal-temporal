@@ -676,6 +676,141 @@
   <emu-clause id="sec-temporal-duration-abstract-ops">
     <h1>Abstract Operations</h1>
 
+    <emu-clause id="sec-temporal-duration-records">
+      <h1>Duration Records</h1>
+      <p>
+        A <dfn variants="Duration Records">Duration Record</dfn> is a Record value used to represent a Temporal.Duration object.
+        Duration Records are produced by the ToTemporalDurationRecord abstract operation, among others.
+      </p>
+      <p>
+        Duration Records have the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
+      </p>
+      <emu-table id="table-temporal-duration-record-fields" caption="Duration Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Property Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Days]]</td>
+            <td>*"days"*</td>
+            <td>an integer</td>
+            <td>
+              The number of days in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Hours]]</td>
+            <td>*"hours"*</td>
+            <td>an integer</td>
+            <td>
+              The number of hours in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Microseconds]]</td>
+            <td>*"microseconds"*</td>
+            <td>an integer</td>
+            <td>
+              The number of microseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Milliseconds]]</td>
+            <td>*"milliseconds"*</td>
+            <td>an integer</td>
+            <td>
+              The number of milliseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Minutes]]</td>
+            <td>*"minutes"*</td>
+            <td>an integer</td>
+            <td>
+              The number of minutes in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Months]]</td>
+            <td>*"months"*</td>
+            <td>an integer</td>
+            <td>
+              The number of months in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Nanoseconds]]</td>
+            <td>*"nanoseconds"*</td>
+            <td>an integer</td>
+            <td>
+              The number of nanoseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Seconds]]</td>
+            <td>*"seconds"*</td>
+            <td>an integer</td>
+            <td>
+              The number of seconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Weeks]]</td>
+            <td>*"weeks"*</td>
+            <td>an integer</td>
+            <td>
+              The number of weeks in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Years]]</td>
+            <td>*"years"*</td>
+            <td>an integer</td>
+            <td>
+              The number of years in the duration.
+            </td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-date-duration-records">
+      <h1>Date Duration Records</h1>
+      <p>
+        A <dfn variants="Date Duration Records">Date Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with calendar date units.
+        Date Duration Records are produced by the abstract operations BalanceDurationRelative and UnbalanceDurationRelative.
+      </p>
+      <p>
+        Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Date Duration Records have [[Years]], [[Months]], [[Weeks]], and [[Days]].
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-time-duration-records">
+      <h1>Time Duration Records</h1>
+      <p>
+        A <dfn variants="Time Duration Records">Time Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with exact time units.
+        Time Duration Records are produced by the abstract operation BalanceDuration.
+      </p>
+      <p>
+        Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Date Duration Records have [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], and [[Nanoseconds]].
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-partial-duration-records">
+      <h1>Partial Duration Records</h1>
+      <p>
+        A <dfn variants="partial Duration Records">partial Duration Record</dfn> is a Record value used to represent a portion of a Temporal.Duration object, in which it is not required that all the fields be specified.
+        Partial Duration Records are produced by the abstract operation ToPartialTemporalDuration, among others.
+      </p>
+      <p>
+        Partial Duration Records have the same fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
+        Unlike Duration Records, each field of a partial Duration Record may also have the value *undefined* as long as there is at least one field that is not *undefined*.
+      </p>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporalduration" aoid="ToTemporalDuration">
       <h1>ToTemporalDuration ( _item_ )</h1>
       <p>
@@ -710,17 +845,17 @@
               [[Microseconds]]: _temporalDurationLike_.[[Microseconds]],
               [[Nanoseconds]]: _temporalDurationLike_.[[Nanoseconds]]
             }.
-        1. Let _result_ be a new Record with all the internal slots given in the Internal Slot column in <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>.
+        1. Let _result_ be a new Duration Record.
         1. Let _any_ be *false*.
-        1. For each row of <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>, except the header row, in table order, do
-          1. Let _prop_ be the Property value of the current row.
+        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
+          1. Let _prop_ be the Property Name value of the current row.
           1. Let _val_ be ? Get(_temporalDurationLike_, _prop_).
           1. If _val_ is *undefined*, then
-            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to 0.
+            1. Set _result_'s field whose name is the Field Name value of the current row to 0.
           1. Else,
             1. Set _any_ to *true*.
             1. Let _val_ be 𝔽(? ToIntegerWithoutRounding(_val_)).
-            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _val_.
+            1. Set _result_'s field whose name is the Field Name value of the current row to _val_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
         1. Return _result_.
@@ -776,26 +911,15 @@
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Let _result_ be the Record {
-            [[Years]]: *undefined*,
-            [[Months]]: *undefined*,
-            [[Weeks]]: *undefined*,
-            [[Days]]: *undefined*,
-            [[Hours]]: *undefined*,
-            [[Minutes]]: *undefined*,
-            [[Seconds]]: *undefined*,
-            [[Milliseconds]]: *undefined*,
-            [[Microseconds]]: *undefined*,
-            [[Nanoseconds]]: *undefined*
-          }.
+        1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
         1. Let _any_ be *false*.
-        1. For each row of <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>, except the header row, in table order, do
-          1. Let _property_ be the Property value of the current row.
+        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
+          1. Let _property_ be the Property Name value of the current row.
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. Set _value_ to 𝔽(? ToIntegerWithoutRounding(_value_)).
-            1. Set _result_'s internal slot whose name is the Internal Slot value of the current row to _value_.
+            1. Set _result_'s field whose name is the Field Name value of the current row to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
         1. Return _result_.
@@ -1458,9 +1582,9 @@
         1. Else,
           1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. If ! IsValidDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]) is *false*, throw a *RangeError* exception.
-        1. For each row of <emu-xref href="#table-temporal-temporaldurationlike-properties"></emu-xref>, except the header row, in table order, do
-          1. Let _prop_ be the Property value of the current row.
-          1. Let _value_ be _duration_'s internal slot whose name is the Internal Slot value of the current row.
+        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
+          1. Let _prop_ be the Property Name value of the current row.
+          1. Let _value_ be _duration_'s field whose name is the Field Name value of the current row.
           1. If _value_ is not 0 and _disallowedFields_ contains _prop_, then
             1. Throw a *RangeError* exception.
         1. Return _duration_.
@@ -1516,59 +1640,5 @@
         1. Return _result_.
       </emu-alg>
     </emu-clause>
-
-    <emu-table id="table-temporal-temporaldurationlike-properties">
-      <emu-caption>Properties of a TemporalDurationLike</emu-caption>
-      <table class="real-table">
-        <thead>
-          <tr>
-            <th>Internal Slot</th>
-            <th>Property</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>[[Days]]</td>
-            <td>*"days"*</td>
-          </tr>
-          <tr>
-            <td>[[Hours]]</td>
-            <td>*"hours"*</td>
-          </tr>
-          <tr>
-            <td>[[Microseconds]]</td>
-            <td>*"microseconds"*</td>
-          </tr>
-          <tr>
-            <td>[[Milliseconds]]</td>
-            <td>*"milliseconds"*</td>
-          </tr>
-          <tr>
-            <td>[[Minutes]]</td>
-            <td>*"minutes"*</td>
-          </tr>
-          <tr>
-            <td>[[Months]]</td>
-            <td>*"months"*</td>
-          </tr>
-          <tr>
-            <td>[[Nanoseconds]]</td>
-            <td>*"nanoseconds"*</td>
-          </tr>
-          <tr>
-            <td>[[Seconds]]</td>
-            <td>*"seconds"*</td>
-          </tr>
-          <tr>
-            <td>[[Weeks]]</td>
-            <td>*"weeks"*</td>
-          </tr>
-          <tr>
-            <td>[[Years]]</td>
-            <td>*"years"*</td>
-          </tr>
-        </tbody>
-      </table>
-    </emu-table>
   </emu-clause>
 </emu-clause>
