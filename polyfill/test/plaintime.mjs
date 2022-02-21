@@ -189,74 +189,11 @@ describe('Time', () => {
       });
     });
   });
-  describe('time.add() works', () => {
-    const time = new PlainTime(15, 23, 30, 123, 456, 789);
-    it(`(${time}).add({ hours: 16 })`, () => {
-      equal(`${time.add({ hours: 16 })}`, '07:23:30.123456789');
-    });
-    it(`(${time}).add({ minutes: 45 })`, () => {
-      equal(`${time.add({ minutes: 45 })}`, '16:08:30.123456789');
-    });
-    it(`(${time}).add({ nanoseconds: 300 })`, () => {
-      equal(`${time.add({ nanoseconds: 300 })}`, '15:23:30.123457089');
-    });
-    it('symmetric with regard to negative durations', () => {
-      equal(`${PlainTime.from('07:23:30.123456789').add({ hours: -16 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('16:08:30.123456789').add({ minutes: -45 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('15:23:30.123457089').add({ nanoseconds: -300 })}`, '15:23:30.123456789');
-    });
-    it('time.add(durationObj)', () => {
-      equal(`${time.add(Temporal.Duration.from('PT16H'))}`, '07:23:30.123456789');
-    });
-    it('ignores higher units', () => {
-      equal(`${time.add({ days: 1 })}`, '15:23:30.123456789');
-      equal(`${time.add({ months: 1 })}`, '15:23:30.123456789');
-      equal(`${time.add({ years: 1 })}`, '15:23:30.123456789');
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${time.add({ minute: 1, hours: 1 })}`, '16:23:30.123456789');
-    });
-  });
-  describe('time.subtract() works', () => {
-    const time = PlainTime.from('15:23:30.123456789');
-    it(`(${time}).subtract({ hours: 16 })`, () => equal(`${time.subtract({ hours: 16 })}`, '23:23:30.123456789'));
-    it(`(${time}).subtract({ minutes: 45 })`, () => equal(`${time.subtract({ minutes: 45 })}`, '14:38:30.123456789'));
-    it(`(${time}).subtract({ seconds: 45 })`, () => equal(`${time.subtract({ seconds: 45 })}`, '15:22:45.123456789'));
-    it(`(${time}).subtract({ milliseconds: 800 })`, () =>
-      equal(`${time.subtract({ milliseconds: 800 })}`, '15:23:29.323456789'));
-    it(`(${time}).subtract({ microseconds: 800 })`, () =>
-      equal(`${time.subtract({ microseconds: 800 })}`, '15:23:30.122656789'));
-    it(`(${time}).subtract({ nanoseconds: 800 })`, () =>
-      equal(`${time.subtract({ nanoseconds: 800 })}`, '15:23:30.123455989'));
-    it('symmetric with regard to negative durations', () => {
-      equal(`${PlainTime.from('23:23:30.123456789').subtract({ hours: -16 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('14:38:30.123456789').subtract({ minutes: -45 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('15:22:45.123456789').subtract({ seconds: -45 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('15:23:29.323456789').subtract({ milliseconds: -800 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('15:23:30.122656789').subtract({ microseconds: -800 })}`, '15:23:30.123456789');
-      equal(`${PlainTime.from('15:23:30.123455989').subtract({ nanoseconds: -800 })}`, '15:23:30.123456789');
-    });
-    it('time.subtract(durationObj)', () => {
-      equal(`${time.subtract(Temporal.Duration.from('PT16H'))}`, '23:23:30.123456789');
-    });
-    it('ignores higher units', () => {
-      equal(`${time.subtract({ days: 1 })}`, '15:23:30.123456789');
-      equal(`${time.subtract({ months: 1 })}`, '15:23:30.123456789');
-      equal(`${time.subtract({ years: 1 })}`, '15:23:30.123456789');
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${time.subtract({ minute: 1, hours: 1 })}`, '14:23:30.123456789');
-    });
-  });
   describe('Time.from() works', () => {
-    it('Time.from({ hour: 15, minute: 23 })', () => equal(`${PlainTime.from({ hour: 15, minute: 23 })}`, '15:23:00'));
-    it('Time.from({ minute: 30, microsecond: 555 })', () =>
-      equal(`${PlainTime.from({ minute: 30, microsecond: 555 })}`, '00:30:00.000555'));
     it('Time.from(ISO string leap second) is constrained', () => {
       equal(`${PlainTime.from('23:59:60')}`, '23:59:59');
       equal(`${PlainTime.from('23:59:60', { overflow: 'reject' })}`, '23:59:59');
     });
-    it('Time.from(number) is converted to string', () => equal(`${PlainTime.from(1523)}`, `${PlainTime.from('1523')}`));
     it('space not accepted as time designator prefix', () => {
       throws(() => PlainTime.from(' 15:23:30'), RangeError);
     });
