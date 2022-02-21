@@ -1545,13 +1545,16 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tointegerwithoutrounding" aoid="ToIntegerWithoutRounding">
-    <h1>ToIntegerWithoutRounding ( _argument_ )</h1>
-    <p>
-      The abstract operation ToIntegerWithoutRounding takes argument _argument_.
-      It converts _argument_ to an integer, throwing if doing so would require rounding.
-      It performs the following steps:
-    </p>
+  <emu-clause id="sec-temporal-tointegerwithoutrounding" type="abstract operation">
+    <h1>
+      ToIntegerWithoutRounding (
+        _argument_: an ECMAScript language value,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It converts _argument_ to an integer, throwing if doing so would require rounding.</dd>
+    </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
       1. If _number_ is *NaN*, *+0*<sub>𝔽</sub>, or *−0*<sub>𝔽</sub> return 0.

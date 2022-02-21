@@ -1216,11 +1216,32 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addzoneddatetime" aoid="AddZonedDateTime">
-      <h1>AddZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ [ , _options_ ] )</h1>
-      <p>
-        The abstract operation AddZonedDateTime adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the Unix epoch, subject to the rules of _timeZone_ and _calendar_.
-        As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
+    <emu-clause id="sec-temporal-addzoneddatetime" type="abstract operation">
+      <h1>
+        AddZonedDateTime (
+          _epochNanoseconds_: a BigInt value,
+          _timeZone_: an Object,
+          _calendar_: an Object,
+          _years_: an integer,
+          _months_: an integer,
+          _weeks_: an integer,
+          _days_: an integer,
+          _hours_: an integer,
+          _minutes_: an integer,
+          _seconds_: an integer,
+          _milliseconds_: an integer,
+          _microseconds_: an integer,
+          _nanoseconds_: an integer,
+          optional _options_: an Object,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the Unix epoch, subject to the rules of _timeZone_ and _calendar_, and returns the result as a BigInt value.
+          As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
+        </dd>
+      </dl>
       </p>
       <emu-alg>
         1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
@@ -1261,12 +1282,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-nanosecondstodays" aoid="NanosecondsToDays">
-      <h1>NanosecondsToDays ( _nanoseconds_, _relativeTo_ )</h1>
-      <p>
-        The abstract operation NanosecondsToDays takes a number of nanoseconds relative to a Temporal.ZonedDateTime _relativeTo_, and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _relativeTo_.
-        It also returns the length of the last day in nanoseconds, for rounding purposes.
-      </p>
+    <emu-clause id="sec-temporal-nanosecondstodays" type="abstract operation">
+      <h1>
+        NanosecondsToDays (
+          _nanoseconds_: a BigInt value,
+          _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It converts a number of _nanoseconds_ relative to a Temporal.ZonedDateTime _relativeTo_, and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _relativeTo_.
+          It also returns the length of the last day in nanoseconds, for rounding purposes.
+          The result is a Record with fields [[Days]] (an integer), [[Nanoseconds]] (an integer), and [[DayLength]] (an integer).
+        </dd>
+      </dl>
       <emu-alg>
         1. Assert: Type(_nanoseconds_) is BigInt.
         1. Set _nanoseconds_ to ℝ(_nanoseconds_).

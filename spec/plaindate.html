@@ -699,8 +699,25 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-differenceisodate" aoid="DifferenceISODate">
-      <h1>DifferenceISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_, _largestUnit_ )</h1>
+    <emu-clause id="sec-temporal-differenceisodate" type="abstract operation">
+      <h1>
+        DifferenceISODate (
+          _y1_: an integer,
+          _m1_: an integer,
+          _d1_: an integer,
+          _y2_: an integer,
+          _m2_: an integer,
+          _d2_: an integer,
+          _largestUnit_: a String,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns a Date Duration Record with the elapsed duration from a first date until a second date, according to the reckoning of the ISO 8601 calendar.
+          No fields larger than _largestUnit_ will be non-zero in the resulting Date Duration Record.
+        </dd>
+      </dl>
       <emu-alg>
         1. Assert: _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*.
         1. If _largestUnit_ is *"year"* or *"month"*, then
