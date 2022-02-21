@@ -559,13 +559,22 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addinstant" aoid="AddInstant">
-      <h1>AddInstant ( _epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+    <emu-clause id="sec-temporal-addinstant" type="abstract operation">
+      <h1>
+        AddInstant (
+          _epochNanoseconds_: a BigInt value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
+        )
+      </h1>
       <p>
-        The abstract operation AddInstant adds a duration in various time units to a number of nanoseconds since the Unix epoch.
+        The abstract operation AddInstant adds a duration in various time units to a number of nanoseconds since the Unix epoch, and returns the result as a BigInt value.
       </p>
       <emu-alg>
-        1. Assert: _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +
             ℤ(_microseconds_) × *1000*<sub>ℤ</sub> +
             ℤ(_milliseconds_) × *10<sup>6</sup>*<sub>ℤ</sub> +

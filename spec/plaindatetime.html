@@ -1048,15 +1048,41 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-differenceisodatetime" aoid="DifferenceISODateTime">
-      <h1>DifferenceISODateTime ( _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_ [ , _options_ ] )</h1>
-      <p>
-        The abstract operation DifferenceISODateTime returns a Record with the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given _calendar_.
-        The given date and time units are all in the ISO 8601 calendar.
-        The _largestUnit_ and _options_ arguments are used in _calendar_'s `dateUntil` method.
-      </p>
+    <emu-clause id="sec-temporal-differenceisodatetime" type="abstract operation">
+      <h1>
+        DifferenceISODateTime (
+          _y1_: an integer,
+          _mon1_: an integer,
+          _d1_: an integer,
+          _h1_: an integer,
+          _min1_: an integer,
+          _s1_: an integer,
+          _ms1_: an integer,
+          _mus1_: an integer,
+          _ns1_: an integer,
+          _y2_: an integer,
+          _mon2_: an integer,
+          _d2_: an integer,
+          _h2_: an integer,
+          _min2_: an integer,
+          _s2_: an integer,
+          _ms2_: an integer,
+          _mus2_: an integer,
+          _ns2_: an integer,
+          _calendar_: an Object,
+          _largestUnit_: a String,
+          optional _options_: an Object,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns a Duration Record with the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given _calendar_.
+          The given date and time units are all in the ISO 8601 calendar.
+          The _largestUnit_ and _options_ arguments are used in _calendar_'s `dateUntil` method.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
         1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
         1. Let _timeDifference_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
