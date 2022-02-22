@@ -1097,18 +1097,7 @@
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _dateLargestUnit_).
         1. Let _dateDifference_ be ? CalendarDateUntil(_calendar_, _date1_, _date2_, _untilOptions_).
         1. Let _balanceResult_ be ? BalanceDuration(_dateDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]], _largestUnit_).
-        1. Return the Record {
-            [[Years]]: _dateDifference_.[[Years]],
-            [[Months]]: _dateDifference_.[[Months]],
-            [[Weeks]]: _dateDifference_.[[Weeks]],
-            [[Days]]: _balanceResult_.[[Days]],
-            [[Hours]]: _balanceResult_.[[Hours]],
-            [[Minutes]]: _balanceResult_.[[Minutes]],
-            [[Seconds]]: _balanceResult_.[[Seconds]],
-            [[Milliseconds]]: _balanceResult_.[[Milliseconds]],
-            [[Microseconds]]: _balanceResult_.[[Microseconds]],
-            [[Nanoseconds]]: _balanceResult_.[[Nanoseconds]]
-          }.
+        1. Return ! CreateDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

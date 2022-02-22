@@ -722,15 +722,15 @@
         1. Assert: _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*.
         1. If _largestUnit_ is *"year"* or *"month"*, then
           1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
-          1. If _sign_ is 0, return the Record { [[Years]]: 0, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
+          1. If _sign_ is 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
           1. Let _start_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
           1. Let _end_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
           1. Let _years_ be _end_.[[Year]] − _start_.[[Year]].
           1. Let _mid_ be ! AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, 0, *"constrain"*).
           1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"year"*, return the Record { [[Years]]: _years_, [[Months]]: 0, [[Weeks]]: 0, [[Days]]: 0 }.
-            1. Return the Record { [[Years]]: 0, [[Months]]: _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
+            1. If _largestUnit_ is *"year"*, return ! CreateDurationRecord(_years_, 0, 0, 0).
+            1. Return ! CreateDateDurationRecord(0, _years_ × 12, 0, 0).
           1. Let _months_ be _end_.[[Month]] − _start_.[[Month]].
           1. If _midSign_ is not equal to _sign_, then
             1. Set _years_ to _years_ - _sign_.
@@ -738,8 +738,8 @@
           1. Set _mid_ to ! AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, 0, *"constrain"*).
           1. Set _midSign_ to -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"year"*, return the Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: 0 }.
-            1. Return the Record { [[Years]]: 0, [[Months]]: _months_ + _years_ × 12, [[Weeks]]: 0, [[Days]]: 0 }.
+            1. If _largestUnit_ is *"year"*, return ! CreateDateDurationRecord(_years_, _months_, 0, 0).
+            1. Return ! CreateDateDurationRecord(0, _months_ + _years_ × 12, 0, 0).
           1. If _midSign_ is not equal to _sign_, then
             1. Set _months_ to _months_ - _sign_.
             1. If _months_ is equal to -_sign_, then
@@ -756,7 +756,7 @@
           1. If _largestUnit_ is *"month"*, then
             1. Set _months_ to _months_ + _years_ × 12.
             1. Set _years_ to 0.
-          1. Return the Record { [[Years]]: _years_, [[Months]]: _months_, [[Weeks]]: 0, [[Days]]: _days_ }.
+          1. Return ! CreateDateDurationRecord(_years_, _months_, 0, _days_).
         1. If _largestUnit_ is *"day"* or *"week"*, then
           1. If ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_) &lt; 0, then
             1. Let _smaller_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
@@ -775,12 +775,7 @@
           1. If _largestUnit_ is *"week"*, then
             1. Set _weeks_ to floor(_days_ / 7).
             1. Set _days_ to _days_ modulo 7.
-          1. Return the Record {
-            [[Years]]: 0,
-            [[Months]]: 0,
-            [[Weeks]]: _weeks_ × _sign_,
-            [[Days]]: _days_ × _sign_
-          }.
+          1. Return ! CreateDateDurationRecord(0, 0, _weeks_ × _sign_, _days_ × _sign_).
       </emu-alg>
     </emu-clause>
 
