@@ -91,10 +91,11 @@ These representations are based on existing industry standards, with a few stand
 
 [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) and [RFC 3339](https://tools.ietf.org/html/rfc3339) are the industry standards for machine-readable serialization of dates and times.
 Temporal's string serialization is based on these existing standards, with exception of IANA Time Zones (like `Europe/Paris`) and non-Gregorian calendars like Hebrew or Chinese.
+These standard formats also match the [formats accepted by the HTML `<time>` element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement/dateTime).
 For IANA time zones and non-Gregorian calendars, a standards-track extension to RFC 3339 is being worked on as part of the [IETF SEDATE](https://datatracker.ietf.org/wg/sedate/about/) working group.
 
-Also, currently the default serialization for `Temporal.PlainMonthDay` (e.g. `12-25`) is also not covered by any current industry standard.
-This [may change soon](https://github.com/tc39/proposal-temporal/issues/2049) by switching to the `XXXX-12-25` format from [ISO 8601-2](<https://www.loc.gov/standards/datetime/#:~:text=Unspecified%20digit(s)%20from%20the%20right>).
+Because neither ISO 8601 nor RFC 3339 include a standardized month/day format (for birthdays, holidays, etc.), Temporal relies on the [HTML standard's yearless date format](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#parse-a-yearless-date-component) which accepts strings like `12-25` and `--12-25`.
+Using the HTML standard format also ensures that `Temporal.PlainMonthDay` can be used as input to the HTML `<time>` element.
 
 The sections below explain the proposed extensions to RFC 3339 for time zones and calendars.
 
@@ -351,7 +352,7 @@ Temporal.PlainTime.from(s); // => 11:06:00.092121729
 Temporal.PlainDate.from(s); // => 2022-02-28
 Temporal.PlainDateTime.from(s); // => 2022-02-28T11:06:00.092121729
 Temporal.PlainYearMonth.from(s); // => 2022-02
-Temporal.PlainMonthDay.from(s); // => 02-28 (note: may change to "XXXX-02-28")
+Temporal.PlainMonthDay.from(s); // => 02-28
 Temporal.Instant.from(s); // => 2022-02-28T03:06:00.092121729Z
 Temporal.TimeZone.from(s); // => Asia/Shanghai
 Temporal.Calendar.from(s); // => iso8601 (the default calendar when parsing strings)
