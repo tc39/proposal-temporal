@@ -623,7 +623,6 @@ dt<span class="token punctuation">.</span><span class="token function">withPlain
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>datetime</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainDateTime</code> object which is the date indicated by <code>datetime</code>, projected into <code>calendar</code>.</p>
-<p>This method is the same as <code>datetime.with({ calendar })</code>, but may be more efficient.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">dt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:30.000003500[u-ca=japanese]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 dt<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>datetime.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>

@@ -478,7 +478,6 @@ nextMonthDate<span class="token punctuation">.</span><span class="token function
 <li><code>calendar</code> (<code>Temporal.Calendar</code> or plain object or string): The calendar into which to project <code>date</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainDate</code> object which is the date indicated by <code>date</code>, projected into <code>calendar</code>.</p>
-<p>This method is the same as <code>date.with({ calendar })</code>, but may be more efficient.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24[u-ca=japanese]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24</span></code></pre><h3 id="add"><a class="heading-link" href="#add"></a>date.<strong>add</strong>(<em>duration</em>: Temporal.Duration | object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
