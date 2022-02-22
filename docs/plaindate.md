@@ -385,8 +385,6 @@ nextMonthDate.with({ day: nextMonthDate.daysInMonth }); // => 2006-02-28
 
 **Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date`, projected into `calendar`.
 
-This method is the same as `date.with({ calendar })`, but may be more efficient.
-
 Usage example:
 
 ```javascript
