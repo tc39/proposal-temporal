@@ -1360,18 +1360,7 @@
         1. Let _factor_ be −1.
       1. Else,
         1. Let _factor_ be 1.
-      1. Return the Record {
-        [[Years]]: _yearsMV_ × _factor_,
-        [[Months]]: _monthsMV_ × _factor_,
-        [[Weeks]]: _weeksMV_ × _factor_,
-        [[Days]]: _daysMV_ × _factor_,
-        [[Hours]]: _hoursMV_ × _factor_,
-        [[Minutes]]: floor(_minutesMV_) × _factor_,
-        [[Seconds]]: floor(_secondsMV_) × _factor_,
-        [[Milliseconds]]: floor(_millisecondsMV_) × _factor_,
-        [[Microseconds]]: floor(_microsecondsMV_) × _factor_,
-        [[Nanoseconds]]: floor(_nanosecondsMV_) × _factor_
-        }.
+      1. Return ! CreateDurationRecord(_yearsMV_ × _factor_, _monthsMV_ × _factor_, _weeksMV_ × _factor_, _daysMV_ × _factor_, _hoursMV_ × _factor_, floor(_minutesMV_) × _factor_, floor(_secondsMV_) × _factor_, floor(_millisecondsMV_) × _factor_, floor(_microsecondsMV_) × _factor_, floor(_nanosecondsMV_) × _factor_).
     </emu-alg>
   </emu-clause>
 

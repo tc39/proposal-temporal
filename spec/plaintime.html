@@ -597,15 +597,7 @@
         1. Let _nanoseconds_ be _ns2_ − _ns1_.
         1. Let _sign_ be ! DurationSign(0, 0, 0, 0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _bt_ be ! BalanceTime(_hours_ × _sign_, _minutes_ × _sign_, _seconds_ × _sign_, _milliseconds_ × _sign_, _microseconds_ × _sign_, _nanoseconds_ × _sign_).
-        1. Return the Record {
-          [[Days]]: _bt_.[[Days]] × _sign_,
-          [[Hours]]: _bt_.[[Hour]] × _sign_,
-          [[Minutes]]: _bt_.[[Minute]] × _sign_,
-          [[Seconds]]: _bt_.[[Second]] × _sign_,
-          [[Milliseconds]]: _bt_.[[Millisecond]] × _sign_,
-          [[Microseconds]]: _bt_.[[Microsecond]] × _sign_,
-          [[Nanoseconds]]: _bt_.[[Nanosecond]] × _sign_
-          }.
+        1. Return ! CreateTimeDurationRecord(_bt_.[[Days]] × _sign_, _bt_.[[Hour]] × _sign_, _bt_.[[Minute]] × _sign_, _bt_.[[Second]] × _sign_, _bt_.[[Millisecond]] × _sign_, _bt_.[[Microsecond]] × _sign_, _bt_.[[Nanosecond]] × _sign_).
       </emu-alg>
     </emu-clause>
 
