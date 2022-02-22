@@ -447,7 +447,7 @@
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_, _maximum_, *false*).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_roundTo_).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _largestUnit_, _relativeTo_).
-        1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
+        1. Let _roundResult_ be (? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_)).[[DurationRecord]].
         1. Let _adjustResult_ be ? AdjustRoundedDurationDays(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _roundResult_.[[Hours]], _roundResult_.[[Minutes]], _roundResult_.[[Seconds]], _roundResult_.[[Milliseconds]], _roundResult_.[[Microseconds]], _roundResult_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Let _balanceResult_ be ? BalanceDurationRelative(_adjustResult_.[[Years]], _adjustResult_.[[Months]], _adjustResult_.[[Weeks]], _adjustResult_.[[Days]], _largestUnit_, _relativeTo_).
         1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
@@ -480,7 +480,8 @@
         1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Set _intermediate_ to ? MoveRelativeZonedDateTime(_relativeTo_, _unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], 0).
         1. Let _balanceResult_ be ? BalanceDuration(_unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _unit_, _intermediate_).
-        1. Let _roundResult_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
+        1. Let _roundRecord_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
+        1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
         1. If _unit_ is *"year"*, then
           1. Let _whole_ be _roundResult_.[[Years]].
         1. Else if _unit_ is *"month"*, then
@@ -502,7 +503,7 @@
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _whole_ be _roundResult_.[[Nanoseconds]].
-        1. Return _whole_ + _roundResult_.[[Remainder]].
+        1. Return _whole_ + _roundRecord_.[[Remainder]].
       </emu-alg>
     </emu-clause>
 
@@ -1500,17 +1501,20 @@
           1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to ! RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ − _nanoseconds_.
+        1. Let _duration_ be Duration Record {
+            [[Years]]: _years_,
+            [[Months]]: _months_,
+            [[Weeks]]: _weeks_,
+            [[Days]]: _days_,
+            [[Hours]]: _hours_,
+            [[Minutes]]: _minutes_,
+            [[Seconds]]: _seconds_,
+            [[Milliseconds]]: _milliseconds_,
+            [[Microseconds]]: _microseconds_,
+            [[Nanoseconds]]: _nanoseconds_
+          }.
         1. Return the Record {
-          [[Years]]: _years_,
-          [[Months]]: _months_,
-          [[Weeks]]: _weeks_,
-          [[Days]]: _days_,
-          [[Hours]]: _hours_,
-          [[Minutes]]: _minutes_,
-          [[Seconds]]: _seconds_,
-          [[Milliseconds]]: _milliseconds_,
-          [[Microseconds]]: _microseconds_,
-          [[Nanoseconds]]: _nanoseconds_,
+          [[DurationRecord]]: _duration_,
           [[Remainder]]: _remainder_
           }.
       </emu-alg>

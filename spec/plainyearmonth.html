@@ -336,7 +336,7 @@
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_).
+        1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -372,7 +372,7 @@
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_).
+        1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
