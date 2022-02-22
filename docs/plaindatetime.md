@@ -548,8 +548,6 @@ dt.withPlainDate('2017-09-06[u-ca=japanese]'); // => 2017-09-06T03:24:30[u-ca=ja
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, projected into `calendar`.
 
-This method is the same as `datetime.with({ calendar })`, but may be more efficient.
-
 Usage example:
 
 ```javascript
