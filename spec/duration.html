@@ -110,9 +110,9 @@
           1. Let _days2_ be _two_.[[Days]].
         1. Let _ns1_ be ! TotalDurationNanoseconds(_days1_, _one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]], _shift1_).
         1. Let _ns2_ be ! TotalDurationNanoseconds(_days2_, _two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]], _shift2_).
-        1. If _ns1_ &gt; _ns2_, return 1.
-        1. If _ns1_ &lt; _ns2_, return −1.
-        1. Return 0.
+        1. If _ns1_ &gt; _ns2_, return *1*<sub>𝔽</sub>.
+        1. If _ns1_ &lt; _ns2_, return *−1*<sub>𝔽</sub>.
+        1. Return *+0*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -277,7 +277,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Return 𝔽(! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]])).
       </emu-alg>
     </emu-clause>
 
@@ -503,7 +503,7 @@
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _whole_ be _roundResult_.[[Nanoseconds]].
-        1. Return _whole_ + _roundRecord_.[[Remainder]].
+        1. Return 𝔽(_whole_ + _roundRecord_.[[Remainder]]).
       </emu-alg>
     </emu-clause>
 
