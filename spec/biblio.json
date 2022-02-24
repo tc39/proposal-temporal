@@ -1,6 +1,41 @@
 {
   "https://tc39.es/ecma262/": [
     {
+      "type": "clause",
+      "number": "Time Values and Time Range",
+      "id": "sec-time-values-and-time-range"
+    },
+    {
+      "type": "clause",
+      "number": "Year Number",
+      "id": "sec-year-number"
+    },
+    {
+      "type": "clause",
+      "number": "Month Number",
+      "id": "sec-month-number"
+    },
+    {
+      "type": "clause",
+      "number": "Date Number",
+      "id": "sec-date-number"
+    },
+    {
+      "type": "clause",
+      "number": "Week Day",
+      "id": "sec-week-day"
+    },
+    {
+      "type": "clause",
+      "number": "Hours, Minutes, Second, and Milliseconds",
+      "id": "sec-hours-minutes-second-and-milliseconds"
+    },
+    {
+      "type": "clause",
+      "number": "LocalTZA",
+      "id": "sec-local-time-zone-adjustment"
+    },
+    {
       "type": "op",
       "aoid": "CodePointsToString",
       "id": "sec-codepointstostring"
