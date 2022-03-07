@@ -386,7 +386,7 @@
         1. Assert: _isoMonth_, _isoDay_, and _referenceISOYear_ are integers.
         1. Assert: Type(_calendar_) is Object.
         1. If ! IsValidISODate(_referenceISOYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
-        1. If _newTarget_ is not present, set it to %Temporal.PlainMonthDay%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainMonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainMonthDay.prototype%"*, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]], [[Calendar]] »).
         1. Set _object_.[[ISOMonth]] to _isoMonth_.
         1. Set _object_.[[ISODay]] to _isoDay_.

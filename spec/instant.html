@@ -511,7 +511,7 @@
       <emu-alg>
         1. Assert: Type(_epochNanoseconds_) is BigInt.
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
-        1. If _newTarget_ is not present, set it to %Temporal.Instant%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.Instant%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Instant.prototype%"*, « [[InitializedTemporalInstant]], [[Nanoseconds]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
         1. Return _object_.

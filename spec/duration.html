@@ -1084,7 +1084,7 @@
       </dl>
       <emu-alg>
         1. If ! IsValidDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, throw a *RangeError* exception.
-        1. If _newTarget_ is not present, set it to %Temporal.Duration%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.Duration%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Duration.prototype%"*, « [[InitializedTemporalDuration]], [[Years]], [[Months]], [[Weeks]], [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], [[Nanoseconds]] »).
         1. Set _object_.[[Years]] to _years_.
         1. Set _object_.[[Months]] to _months_.
