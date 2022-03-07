@@ -1175,7 +1175,7 @@
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. Assert: Type(_timeZone_) is Object.
         1. Assert: Type(_calendar_) is Object.
-        1. If _newTarget_ is not present, set it to %Temporal.ZonedDateTime%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.ZonedDateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.ZonedDateTime.prototype%"*, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
         1. Set _object_.[[TimeZone]] to _timeZone_.
@@ -1191,9 +1191,9 @@
       </p>
       <emu-alg>
         1. Assert: Type(_zonedDateTime_) is Object and _zonedDateTime_ has an [[InitializedTemporalZonedDateTime]] internal slot.
-        1. If _increment_ is not present, set it to 1.
-        1. If _unit_ is not present, set it to *"nanosecond"*.
-        1. If _roundingMode_ is not present, set it to *"trunc"*.
+        1. If _increment_ is not present, set _increment_ to 1.
+        1. If _unit_ is not present, set _unit_ to *"nanosecond"*.
+        1. If _roundingMode_ is not present, set _roundingMode_ to *"trunc"*.
         1. Let _ns_ be ! RoundTemporalInstant(_zonedDateTime_.[[Nanoseconds]], _increment_, _unit_, _roundingMode_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_ns_).

@@ -410,7 +410,7 @@
     <emu-clause id="sec-temporal-createtemporaltimezone" aoid="CreateTemporalTimeZone">
       <h1>CreateTemporalTimeZone ( _identifier_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. If _newTarget_ is not present, set it to %Temporal.TimeZone%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.TimeZone%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]], [[OffsetNanoseconds]] »).
         1. Let _offsetNanosecondsResult_ be ParseTimeZoneOffsetString(_identifier_).
         1. If _offsetNanosecondsResult_ is an abrupt completion, then
