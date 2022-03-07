@@ -999,13 +999,39 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddatetime" aoid="AddDateTime">
-      <h1>AddDateTime ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _options_ )</h1>
-      <p>
-        The abstract operation AddDateTime adds a duration to a combined date and time, according to the reckoning of the given _calendar_.
-      </p>
+    <emu-clause id="sec-temporal-adddatetime" type="abstract operation">
+      <h1>
+        AddDateTime (
+          _year_: an integer,
+          _month_: an integer,
+          _day_: an integer,
+          _hour_: an integer,
+          _minute_: an integer,
+          _second_: an integer,
+          _millisecond_: an integer,
+          _microsecond_: an integer,
+          _nanosecond_: an integer,
+          _calendar_: an Object,
+          _years_: an integer Number value,
+          _months_: an integer Number value,
+          _weeks_: an integer Number value,
+          _days_: an integer Number value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
+          _options_: an Object or *undefined*,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It adds a duration to a combined date and time, according to the reckoning of the given _calendar_, and returns the result as a Record.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _timeResult_ be ! AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]], 0, 0, 0, 0, 0, 0).
