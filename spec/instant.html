@@ -571,9 +571,10 @@
           _nanoseconds_: an integer Number value,
         )
       </h1>
-      <p>
-        The abstract operation AddInstant adds a duration in various time units to a number of nanoseconds since the Unix epoch, and returns the result as a BigInt value.
-      </p>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds a duration in various time units to a number of nanoseconds since the Unix epoch, and returns the result as a BigInt value.</dd>
+      </dl>
       <emu-alg>
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +
             ℤ(_microseconds_) × *1000*<sub>ℤ</sub> +
