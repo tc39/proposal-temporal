@@ -1042,8 +1042,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-topartialduration" aoid="ToPartialDuration">
-      <h1>ToPartialDuration ( _temporalDurationLike_ )</h1>
+    <emu-clause id="sec-temporal-topartialduration" type="abstract operation">
+      <h1>
+        ToPartialDuration (
+          _temporalDurationLike_: an ECMAScript language value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a partial Duration Record with fields set according to the properties of _temporalDurationLike_.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
