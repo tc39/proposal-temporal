@@ -453,6 +453,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds,
       nanoseconds
     ));
+    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
@@ -615,6 +616,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds = 0,
       nanoseconds = 0
     } = props;
+    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
@@ -625,8 +627,6 @@ export const ES = ObjectAssign({}, ES2020, {
       const str = ES.ToString(item);
       record = ES.ParseTemporalDurationString(str);
     }
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = record;
-    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     for (const property of disallowedProperties) {
       if (record[property] !== 0) {
         throw new RangeError(
