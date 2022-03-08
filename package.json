@@ -8,6 +8,7 @@
   },
   "main": "polyfill/lib/index.mjs",
   "devDependencies": {
+    "@tc39/ecma262-biblio": "=1.0.2251",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "ecmarkup": "^10.0.2",
@@ -31,7 +32,7 @@
     "build:polyfill": "cd polyfill && npm install && npm run build",
     "build:docs": "cd docs && npm install && npm run build",
     "prebuild:spec": "mkdirp out",
-    "build:spec": "ecmarkup --lint-spec --strict spec.html out/index.html",
+    "build:spec": "ecmarkup --lint-spec --strict --load-biblio @tc39/ecma262-biblio spec.html out/index.html",
     "prebuild": "mkdirp out/docs/assets",
     "pretty": "eslint . --ext js,mjs,.d.ts --fix",
     "build": "npm run build:polyfill && npm run build:docs && npm run build:spec",
