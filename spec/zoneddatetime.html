@@ -1300,10 +1300,10 @@
       <emu-alg>
         1. Assert: Type(_nanoseconds_) is BigInt.
         1. Set _nanoseconds_ to ℝ(_nanoseconds_).
-        1. Let _sign_ be ! ℝ(Sign(𝔽(_nanoseconds_))).
         1. Let _dayLengthNs_ be 8.64 × 10<sup>13</sup>.
-        1. If _sign_ is 0, then
+        1. If _nanoseconds_ = 0, then
           1. Return the Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: _dayLengthNs_ }.
+        1. If _nanoseconds_ &lt; 0, let _sign_ be −1; else, let _sign_ be 1.
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the Record {
             [[Days]]: the integral part of _nanoseconds_ / _dayLengthNs_,
