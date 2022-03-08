@@ -622,7 +622,7 @@ export const ES = ObjectAssign({}, ES2020, {
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
+  ToLimitedTemporalDuration: (item, disallowedProperties) => {
     let record = ES.ToTemporalDurationRecord(item);
     for (const property of disallowedProperties) {
       if (record[property] !== 0) {

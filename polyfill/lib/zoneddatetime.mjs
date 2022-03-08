@@ -326,7 +326,7 @@ export class ZonedDateTime {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     options = ES.GetOptionsObject(options);
     const timeZone = GetSlot(this, TIME_ZONE);
@@ -351,7 +351,7 @@ export class ZonedDateTime {
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
     const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
     options = ES.GetOptionsObject(options);
     const timeZone = GetSlot(this, TIME_ZONE);
