@@ -577,6 +577,9 @@ export const ES = ObjectAssign({}, ES2020, {
     return { minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToTemporalDurationRecord: (item) => {
+    if (ES.Type(item) !== 'Object') {
+      return ES.ParseTemporalDurationString(ES.ToString(item));
+    }
     if (ES.IsTemporalDuration(item)) {
       return {
         years: GetSlot(item, YEARS),
@@ -620,13 +623,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToLimitedTemporalDuration: (item, disallowedProperties = []) => {
-    let record;
-    if (ES.Type(item) === 'Object') {
-      record = ES.ToTemporalDurationRecord(item);
-    } else {
-      const str = ES.ToString(item);
-      record = ES.ParseTemporalDurationString(str);
-    }
+    let record = ES.ToTemporalDurationRecord(item);
     for (const property of disallowedProperties) {
       if (record[property] !== 0) {
         throw new RangeError(
@@ -1136,15 +1133,9 @@ export const ES = ObjectAssign({}, ES2020, {
     );
   },
   ToTemporalDuration: (item) => {
-    let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-    if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalDuration(item)) return item;
-      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-        ES.ToTemporalDurationRecord(item));
-    } else {
-      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-        ES.ParseTemporalDurationString(ES.ToString(item)));
-    }
+    if (ES.IsTemporalDuration(item)) return item;
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToTemporalDurationRecord(item);
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     return new TemporalDuration(
       years,
