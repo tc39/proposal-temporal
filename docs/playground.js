@@ -6454,6 +6454,7 @@
       milliseconds = _ES$DurationHandleFra.milliseconds;
       microseconds = _ES$DurationHandleFra.microseconds;
       nanoseconds = _ES$DurationHandleFra.nanoseconds;
+      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
         months: months,
@@ -6634,6 +6635,10 @@
       };
     },
     ToTemporalDurationRecord: function ToTemporalDurationRecord(item) {
+      if (ES.Type(item) !== 'Object') {
+        return ES.ParseTemporalDurationString(ES.ToString(item));
+      }
+
       if (ES.IsTemporalDuration(item)) {
         return {
           years: GetSlot(item, YEARS),
@@ -6671,6 +6676,7 @@
           microseconds = _props$microseconds === void 0 ? 0 : _props$microseconds,
           _props$nanoseconds = props.nanoseconds,
           nanoseconds = _props$nanoseconds === void 0 ? 0 : _props$nanoseconds;
+      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
         months: months,
@@ -6684,29 +6690,8 @@
         nanoseconds: nanoseconds
       };
     },
-    ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item) {
-      var disallowedProperties = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var record;
-
-      if (ES.Type(item) === 'Object') {
-        record = ES.ToTemporalDurationRecord(item);
-      } else {
-        var str = ES.ToString(item);
-        record = ES.ParseTemporalDurationString(str);
-      }
-
-      var _record = record,
-          years = _record.years,
-          months = _record.months,
-          weeks = _record.weeks,
-          days = _record.days,
-          hours = _record.hours,
-          minutes = _record.minutes,
-          seconds = _record.seconds,
-          milliseconds = _record.milliseconds,
-          microseconds = _record.microseconds,
-          nanoseconds = _record.nanoseconds;
-      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item, disallowedProperties) {
+      var record = ES.ToTemporalDurationRecord(item);
 
       var _iterator = _createForOfIteratorHelper(disallowedProperties),
           _step;
@@ -7355,37 +7340,19 @@
       return ES.CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     },
     ToTemporalDuration: function ToTemporalDuration(item) {
-      var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+      if (ES.IsTemporalDuration(item)) return item;
 
-      if (ES.Type(item) === 'Object') {
-        if (ES.IsTemporalDuration(item)) return item;
-
-        var _ES$ToTemporalDuratio = ES.ToTemporalDurationRecord(item);
-
-        years = _ES$ToTemporalDuratio.years;
-        months = _ES$ToTemporalDuratio.months;
-        weeks = _ES$ToTemporalDuratio.weeks;
-        days = _ES$ToTemporalDuratio.days;
-        hours = _ES$ToTemporalDuratio.hours;
-        minutes = _ES$ToTemporalDuratio.minutes;
-        seconds = _ES$ToTemporalDuratio.seconds;
-        milliseconds = _ES$ToTemporalDuratio.milliseconds;
-        microseconds = _ES$ToTemporalDuratio.microseconds;
-        nanoseconds = _ES$ToTemporalDuratio.nanoseconds;
-      } else {
-        var _ES$ParseTemporalDura = ES.ParseTemporalDurationString(ES.ToString(item));
-
-        years = _ES$ParseTemporalDura.years;
-        months = _ES$ParseTemporalDura.months;
-        weeks = _ES$ParseTemporalDura.weeks;
-        days = _ES$ParseTemporalDura.days;
-        hours = _ES$ParseTemporalDura.hours;
-        minutes = _ES$ParseTemporalDura.minutes;
-        seconds = _ES$ParseTemporalDura.seconds;
-        milliseconds = _ES$ParseTemporalDura.milliseconds;
-        microseconds = _ES$ParseTemporalDura.microseconds;
-        nanoseconds = _ES$ParseTemporalDura.nanoseconds;
-      }
+      var _ES$ToTemporalDuratio = ES.ToTemporalDurationRecord(item),
+          years = _ES$ToTemporalDuratio.years,
+          months = _ES$ToTemporalDuratio.months,
+          weeks = _ES$ToTemporalDuratio.weeks,
+          days = _ES$ToTemporalDuratio.days,
+          hours = _ES$ToTemporalDuratio.hours,
+          minutes = _ES$ToTemporalDuratio.minutes,
+          seconds = _ES$ToTemporalDuratio.seconds,
+          milliseconds = _ES$ToTemporalDuratio.milliseconds,
+          microseconds = _ES$ToTemporalDuratio.microseconds,
+          nanoseconds = _ES$ToTemporalDuratio.nanoseconds;
 
       var TemporalDuration = GetIntrinsic('%Temporal.Duration%');
       return new TemporalDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -12508,7 +12475,7 @@
       value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -12540,7 +12507,7 @@
       value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -12914,15 +12881,7 @@
       milliseconds = ES.ToIntegerWithoutRounding(milliseconds);
       microseconds = ES.ToIntegerWithoutRounding(microseconds);
       nanoseconds = ES.ToIntegerWithoutRounding(nanoseconds);
-      var sign = ES.DurationSign(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-      for (var _i = 0, _arr = [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i < _arr.length; _i++) {
-        var prop = _arr[_i];
-        if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-        var propSign = Math.sign(prop);
-        if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
-      }
-
+      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       CreateSlots(this);
       SetSlot(this, YEARS, years);
       SetSlot(this, MONTHS, months);
@@ -13067,17 +13026,17 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal = ES.ToLimitedTemporalDuration(other),
-            years = _ES$ToLimitedTemporal.years,
-            months = _ES$ToLimitedTemporal.months,
-            weeks = _ES$ToLimitedTemporal.weeks,
-            days = _ES$ToLimitedTemporal.days,
-            hours = _ES$ToLimitedTemporal.hours,
-            minutes = _ES$ToLimitedTemporal.minutes,
-            seconds = _ES$ToLimitedTemporal.seconds,
-            milliseconds = _ES$ToLimitedTemporal.milliseconds,
-            microseconds = _ES$ToLimitedTemporal.microseconds,
-            nanoseconds = _ES$ToLimitedTemporal.nanoseconds;
+        var _ES$ToTemporalDuratio = ES.ToTemporalDurationRecord(other),
+            years = _ES$ToTemporalDuratio.years,
+            months = _ES$ToTemporalDuratio.months,
+            weeks = _ES$ToTemporalDuratio.weeks,
+            days = _ES$ToTemporalDuratio.days,
+            hours = _ES$ToTemporalDuratio.hours,
+            minutes = _ES$ToTemporalDuratio.minutes,
+            seconds = _ES$ToTemporalDuratio.seconds,
+            milliseconds = _ES$ToTemporalDuratio.milliseconds,
+            microseconds = _ES$ToTemporalDuratio.microseconds,
+            nanoseconds = _ES$ToTemporalDuratio.nanoseconds;
 
         options = ES.GetOptionsObject(options);
         var relativeTo = ES.ToRelativeTemporalObject(options);
@@ -13102,17 +13061,17 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 
-        var _ES$ToLimitedTemporal2 = ES.ToLimitedTemporalDuration(other),
-            years = _ES$ToLimitedTemporal2.years,
-            months = _ES$ToLimitedTemporal2.months,
-            weeks = _ES$ToLimitedTemporal2.weeks,
-            days = _ES$ToLimitedTemporal2.days,
-            hours = _ES$ToLimitedTemporal2.hours,
-            minutes = _ES$ToLimitedTemporal2.minutes,
-            seconds = _ES$ToLimitedTemporal2.seconds,
-            milliseconds = _ES$ToLimitedTemporal2.milliseconds,
-            microseconds = _ES$ToLimitedTemporal2.microseconds,
-            nanoseconds = _ES$ToLimitedTemporal2.nanoseconds;
+        var _ES$ToTemporalDuratio2 = ES.ToTemporalDurationRecord(other),
+            years = _ES$ToTemporalDuratio2.years,
+            months = _ES$ToTemporalDuratio2.months,
+            weeks = _ES$ToTemporalDuratio2.weeks,
+            days = _ES$ToTemporalDuratio2.days,
+            hours = _ES$ToTemporalDuratio2.hours,
+            minutes = _ES$ToTemporalDuratio2.minutes,
+            seconds = _ES$ToTemporalDuratio2.seconds,
+            milliseconds = _ES$ToTemporalDuratio2.milliseconds,
+            microseconds = _ES$ToTemporalDuratio2.microseconds,
+            nanoseconds = _ES$ToTemporalDuratio2.nanoseconds;
 
         options = ES.GetOptionsObject(options);
         var relativeTo = ES.ToRelativeTemporalObject(options);
@@ -13823,7 +13782,7 @@
       key: "add",
       value: function add(temporalDurationLike) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
@@ -13860,7 +13819,7 @@
       key: "subtract",
       value: function subtract(temporalDurationLike) {
         if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var hours = duration.hours,
             minutes = duration.minutes,
             seconds = duration.seconds,
@@ -14286,7 +14245,7 @@
       value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -14324,7 +14283,7 @@
       value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         duration = {
           years: -duration.years,
           months: -duration.months,
@@ -14924,7 +14883,7 @@
       value: function add(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
@@ -14946,7 +14905,7 @@
       value: function subtract(temporalDurationLike) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-        var duration = ES.ToLimitedTemporalDuration(temporalDurationLike);
+        var duration = ES.ToTemporalDurationRecord(temporalDurationLike);
         var years = duration.years,
             months = duration.months,
             weeks = duration.weeks,
