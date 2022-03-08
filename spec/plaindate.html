@@ -329,7 +329,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalDate_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_temporalDate_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_temporalDate_.[[ISOMonth]])).
@@ -675,7 +675,7 @@
         The abstract operation ToTemporalDate returns its argument _item_ if it is already a Temporal.PlainDate instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
         1. Assert: Type(_options_) is Object.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then

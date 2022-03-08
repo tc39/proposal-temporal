@@ -249,7 +249,7 @@
         1. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).
         1. Let _mergedFieldNames_ be the List containing all the elements of _receiverFieldNames_ followed by all the elements of _inputFieldNames_, with duplicate elements removed.
         1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _mergedFieldNames_, «»).
-        1. Let _options_ be ! OrdinaryObjectCreate(*null*).
+        1. Let _options_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
         1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_).
       </emu-alg>
@@ -263,7 +263,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _monthDay_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_monthDay_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_monthDay_.[[ISOMonth]])).
@@ -345,7 +345,7 @@
         The abstract operation ToTemporalMonthDay returns its argument _item_ if it is already a Temporal.PlainMonthDay instance, converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
         1. Let _referenceISOYear_ be 1972 (the first leap year after the Unix epoch).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
@@ -375,7 +375,7 @@
         1. If _result_.[[Year]] is *undefined*, then
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
-        1. Let _canonicalMonthDayOptions_ be ! OrdinaryObjectCreate(*null*).
+        1. Let _canonicalMonthDayOptions_ be OrdinaryObjectCreate(*null*).
         1. Return ? MonthDayFromFields(_calendar_, _result_, _canonicalMonthDayOptions_).
       </emu-alg>
     </emu-clause>

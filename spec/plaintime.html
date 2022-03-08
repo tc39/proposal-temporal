@@ -339,7 +339,7 @@
           1. Throw a *TypeError* exception.
         1. If Type(_roundTo_) is String, then
           1. Let _paramString_ be _roundTo_.
-          1. Set _roundTo_ to ! OrdinaryObjectCreate(*null*).
+          1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
@@ -428,7 +428,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalTime_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_temporalTime_.[[ISOHour]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_temporalTime_.[[ISOMicrosecond]])).
