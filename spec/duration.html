@@ -1633,8 +1633,7 @@
           1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _fourthAddOptions_, _dateAdd_).
           1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
-          1. Let _sign_ be ! Sign(_days_).
-          1. If _sign_ is 0, set _sign_ to 1.
+          1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
           1. Let _oneYear_ be ? CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
@@ -1653,8 +1652,7 @@
           1. Let _weeksInDays_ be ! DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.
-          1. Let _sign_ be ! Sign(_days_).
-          1. If _sign_ is 0, set _sign_ to 1.
+          1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
           1. Let _oneMonth_ be ? CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
@@ -1670,8 +1668,7 @@
           1. Set _remainder_ to _fractionalMonths_ - _months_.
           1. Set _weeks_ and _days_ to 0.
         1. Else if _unit_ is *"week"*, then
-          1. Let _sign_ be ! Sign(_days_).
-          1. If _sign_ is 0, set _sign_ to 1.
+          1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
           1. Let _oneWeek_ be ? CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
@@ -1758,7 +1755,9 @@
         1. If _relativeTo_ is not present; or Type(_relativeTo_) is not Object; or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _timeRemainderNs_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
-        1. Let _direction_ be ! ℝ(Sign(𝔽(_timeRemainderNs_))).
+        1. If _timeRemainderNs_ = 0, let _direction_ be 0.
+        1. Else if _timeRemainderNs_ < 0, let _direction_ be −1.
+        1. Else, let _direction_ be 1.
         1. Let _dayStart_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ − _dayStart_).
