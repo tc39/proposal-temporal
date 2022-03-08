@@ -383,7 +383,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
+        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _relativeTo_).
@@ -400,7 +400,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Set _other_ to ? ToLimitedTemporalDuration(_other_, « »).
+        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], −_other_.[[Years]], −_other_.[[Months]], −_other_.[[Weeks]], −_other_.[[Days]], −_other_.[[Hours]], −_other_.[[Minutes]], −_other_.[[Seconds]], −_other_.[[Milliseconds]], −_other_.[[Microseconds]], −_other_.[[Nanoseconds]], _relativeTo_).
@@ -913,13 +913,9 @@
         <dd>It returns its argument _item_ if it is already a Temporal.Duration instance, converts _item_ to a new Temporal.Duration instance if possible and returns that, and throws otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_item_) is Object, then
-          1. If _item_ has an [[InitializedTemporalDuration]] internal slot, then
-            1. Return _item_.
-          1. Let _result_ be ? ToTemporalDurationRecord(_item_).
-        1. Else,
-          1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalDurationString(_string_).
+        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
+          1. Return _item_.
+        1. Let _result_ be ? ToTemporalDurationRecord(_item_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
@@ -927,7 +923,7 @@
     <emu-clause id="sec-temporal-totemporaldurationrecord" type="abstract operation">
       <h1>
         ToTemporalDurationRecord (
-          _temporalDurationLike_: an Object,
+          _temporalDurationLike_: an ECMAScript language value,
         )
       </h1>
       <dl class="header">
@@ -935,6 +931,9 @@
         <dd>It converts _temporalDurationLike_ to a Duration Record and returns it.</dd>
       </dl>
       <emu-alg>
+        1. If Type(_temporalDurationLike_) is not Object, then
+          1. Let _string_ be ? ToString(_temporalDurationLike_).
+          1. Return ? ParseTemporalDurationString(_string_).
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
         1. Let _result_ be a new Duration Record.
@@ -1784,11 +1783,7 @@
         <dd>It converts _temporalDurationLike_ to a Duration Record, and returns it, ensuring that all of the fields listed in _disallowedFields_ are zero.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_temporalDurationLike_) is not Object, then
-          1. Let _str_ be ? ToString(_temporalDurationLike_).
-          1. Let _duration_ be ? ParseTemporalDurationString(_str_).
-        1. Else,
-          1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the Property Name value of the current row.
           1. Let _value_ be _duration_'s field whose name is the Field Name value of the current row.
