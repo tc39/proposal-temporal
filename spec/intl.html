@@ -101,7 +101,7 @@
         </p>
         <emu-alg>
           1. If _options_ is *undefined*, then
-            1. Return ! OrdinaryObjectCreate(*null*).
+            1. Return OrdinaryObjectCreate(*null*).
           1. If Type(_options_) is Object, then
             1. Return _options_.
           1. Throw a *TypeError* exception.
@@ -335,7 +335,7 @@
         1. Let _dtf_ be _F_.[[DateTimeFormat]].
         1. Assert: Type(_dtf_) is Object and _dtf_ has an [[InitializedDateTimeFormat]] internal slot.
         1. <del>If _date_ is not provided or is *undefined*, then</del>
-          1. <del>Let _x_ be Call(%Date.now%, *undefined*).</del>
+          1. <del>Let _x_ be ! Call(%Date.now%, *undefined*).</del>
         1. <del>Else,</del>
           1. <del>Let _x_ be ? ToNumber(_date_).</del>
         1. Return ? FormatDateTime(_dtf_, <del>_x_</del><ins>_date_</ins>).
@@ -482,7 +482,7 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
-        1. Let _result_ be ArrayCreate(0).
+        1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record _part_ in _parts_, do
           1. Let _O_ be ObjectCreate(%Object.prototype%).
@@ -605,7 +605,7 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
-        1. Let _result_ be ArrayCreate(0).
+        1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record _part_ in _parts_, do
           1. Let _O_ be ObjectCreate(%ObjectPrototype%).
@@ -1068,7 +1068,7 @@
         1. Let _dtf_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
         1. <del>If _date_ is *undefined*, then</del>
-          1. <del>Let _x_ be Call(%Date.now%, *undefined*).</del>
+          1. <del>Let _x_ be ! Call(%Date.now%, *undefined*).</del>
         1. <del>Else,</del>
           1. <del>Let _x_ be ? ToNumber(_date_).</del>
         1. Return ? FormatDateTimeToParts(_dtf_, <del>_x_</del><ins>_date_</ins>).
@@ -1757,7 +1757,7 @@
               1. Let _result_ be _fieldNames_.
             1. Else,
               1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and _calendar_.[[Identifier]].
-            1. Return ! CreateArrayFromList(_result_).
+            1. Return CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
 
@@ -1776,13 +1776,13 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return ? DefaultMergeFields(_fields_, _additionalFields_).
             1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
-            1. Let _fieldsCopied_ be ! OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _fieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
             1. For each element _key_ of _fieldsKeys_, do
               1. Let _propValue_ be ? Get(_fields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_fieldsCopied_, _key_, _propValue_).
             1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
-            1. Let _additionalFieldsCopied_ be ! OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _additionalFieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
             1. For each element _key_ of _additionalFieldsKeys_, do
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
@@ -2059,7 +2059,7 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-preparetemporalfields"></emu-xref>.</p>
         <emu-alg>
           1. Assert: Type(_fields_) is Object.
-          1. Let _result_ be ! OrdinaryObjectCreate(%Object.prototype%).
+          1. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
           1. For each value _property_ of _fieldNames_, do
             1. Let _value_ be ? Get(_fields_, _property_).
             1. If _value_ is *undefined*, then

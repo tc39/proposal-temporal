@@ -547,7 +547,7 @@
           1. Throw a *TypeError* exception.
         1. If Type(_roundTo_) is String, then
           1. Let _paramString_ be _roundTo_.
-          1. Set _roundTo_ to ! OrdinaryObjectCreate(*null*).
+          1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
@@ -711,7 +711,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _dateTime_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_dateTime_.[[ISOHour]])).
@@ -846,9 +846,9 @@
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Assert: ! IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Assert: ! IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. Let _date_ be ! MakeDay(𝔽(_year_), 𝔽(_month_ − 1), 𝔽(_day_)).
-        1. Let _time_ be ! MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
-        1. Let _ms_ be ! MakeDate(_date_, _time_).
+        1. Let _date_ be MakeDay(𝔽(_year_), 𝔽(_month_ − 1), 𝔽(_day_)).
+        1. Let _time_ be MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
+        1. Let _ms_ be MakeDate(_date_, _time_).
         1. Assert: _ms_ is finite.
         1. Return ℝ(_ms_) × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
       </emu-alg>
@@ -903,7 +903,7 @@
         The abstract operation ToTemporalDateTime returns its argument _item_ if it is already a Temporal.PlainDateTime instance, converts _item_ to a new Temporal.PlainDateTime instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return _item_.
@@ -1109,7 +1109,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
         1. Let _timeDifference_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
         1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
