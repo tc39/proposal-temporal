@@ -44,23 +44,7 @@ export class Duration {
     microseconds = ES.ToIntegerWithoutRounding(microseconds);
     nanoseconds = ES.ToIntegerWithoutRounding(nanoseconds);
 
-    const sign = ES.DurationSign(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    for (const prop of [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-      if (!Number.isFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
-      const propSign = Math.sign(prop);
-      if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
-    }
+    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
     CreateSlots(this);
     SetSlot(this, YEARS, years);
