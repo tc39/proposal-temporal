@@ -111,7 +111,7 @@ zdt = dateTime.toZonedDateTime('Asia/Tokyo');
 // Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.
 inst = zdt.toInstant();
 epochNano = inst.epochNanoseconds; // => 1576536480000000000n
-epochMicro = inst.epochMilliseconds; // => 1576536480000
+epochMilli = inst.epochMilliseconds; // => 1576536480000
 epochSecs = inst.epochSeconds; // => 1576536480
 ```
 <!-- prettier-ignore-end -->
