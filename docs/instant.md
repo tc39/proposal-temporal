@@ -126,7 +126,7 @@ instant = legacyDate.toTemporalInstant(); // recommended
 todayMs = Temporal.Instant.fromEpochMilliseconds(msReadFromFile);
 ```
 
-### Temporal.Instant.**fromEpochMicroseconds**(_epochMilliseconds_ : bigint) : Temporal.Instant
+### Temporal.Instant.**fromEpochMicroseconds**(_epochMicroseconds_ : bigint) : Temporal.Instant
 
 **Parameters:**
 
