@@ -1250,7 +1250,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _datePart_ be ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
-        1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _dateDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
         1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
         1. Let _intermediateInstant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
