@@ -1634,7 +1634,7 @@
           1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
           1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
-          1. Let _oneYear_ be ? CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
           1. Let _fractionalYears_ be _years_ + _days_ / abs(_oneYearDays_).
@@ -1653,7 +1653,7 @@
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.
           1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
-          1. Let _oneMonth_ be ? CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _oneMonth_ be ! CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
@@ -1669,7 +1669,7 @@
           1. Set _weeks_ and _days_ to 0.
         1. Else if _unit_ is *"week"*, then
           1. If _days_ < 0, let _sign_ be −1; else, let _sign_ be 1.
-          1. Let _oneWeek_ be ? CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _oneWeek_ be ! CreateTemporalDuration(0, 0, _sign_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneWeekDays_ be _moveResult_.[[Days]].
