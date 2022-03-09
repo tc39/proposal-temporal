@@ -254,7 +254,7 @@ zdt <span class="token operator">=</span> dateTime<span class="token punctuation
 <span class="token comment">// Get the exact time in seconds, milliseconds, or nanoseconds since the UNIX epoch.</span>
 inst <span class="token operator">=</span> zdt<span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 epochNano <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochNanoseconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480000000000n</span>
-epochMicro <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480000</span>
+epochMilli <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480000</span>
 epochSecs <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</h2>
