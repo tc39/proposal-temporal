@@ -387,7 +387,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _relativeTo_).
-        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -404,7 +404,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
         1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], −_other_.[[Years]], −_other_.[[Months]], −_other_.[[Weeks]], −_other_.[[Days]], −_other_.[[Hours]], −_other_.[[Minutes]], −_other_.[[Seconds]], −_other_.[[Milliseconds]], −_other_.[[Microseconds]], −_other_.[[Nanoseconds]], _relativeTo_).
-        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -453,7 +453,7 @@
         1. If _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Set _relativeTo_ to ? MoveRelativeZonedDateTime(_relativeTo_, _balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], 0).
         1. Let _result_ be ? BalanceDuration(_balanceResult_.[[Days]], _adjustResult_.[[Hours]], _adjustResult_.[[Minutes]], _adjustResult_.[[Seconds]], _adjustResult_.[[Milliseconds]], _adjustResult_.[[Microseconds]], _adjustResult_.[[Nanoseconds]], _largestUnit_, _relativeTo_).
-        1. Return ? CreateTemporalDuration(_balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(_balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
