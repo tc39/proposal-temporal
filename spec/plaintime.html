@@ -585,10 +585,28 @@
   <emu-clause id="sec-temporal-plaintime-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-differencetime" aoid="DifferenceTime">
-      <h1>DifferenceTime ( _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ )</h1>
+    <emu-clause id="sec-temporal-differencetime" type="abstract operation">
+      <h1>
+        DifferenceTime (
+          _h1_: an integer between 0 and 23 inclusive,
+          _min1_: an integer between 0 and 59 inclusive,
+          _s1_: an integer between 0 and 59 inclusive,
+          _ms1_: an integer between 0 and 999 inclusive,
+          _mus1_: an integer between 0 and 999 inclusive,
+          _ns1_: an integer between 0 and 999 inclusive,
+          _h2_: an integer between 0 and 23 inclusive,
+          _min2_: an integer between 0 and 59 inclusive,
+          _s2_: an integer between 0 and 59 inclusive,
+          _ms2_: an integer between 0 and 999 inclusive,
+          _mus2_: an integer between 0 and 999 inclusive,
+          _ns2_: an integer between 0 and 999 inclusive,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a Time Duration Record with the elapsed duration from a first wall-clock time, until a second wall-clock time.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
         1. Let _hours_ be _h2_ − _h1_.
         1. Let _minutes_ be _min2_ − _min1_.
         1. Let _seconds_ be _s2_ − _s1_.
