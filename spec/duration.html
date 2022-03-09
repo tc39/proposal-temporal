@@ -1469,8 +1469,8 @@
           1. Return ? CreateDurationRecord(0, 0, 0, _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. If _relativeTo_ has an [[InitializedTemporalDate]] internal slot, then
           1. Let _calendar_ be _relativeTo_.[[Calendar]].
-          1. Let _dateDuration1_ be ? CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
-          1. Let _dateDuration2_ be ? CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
+          1. Let _dateDuration1_ be ! CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
+          1. Let _dateDuration2_ be ! CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Let _intermediate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _dateDuration1_, _firstAddOptions_, _dateAdd_).
@@ -1609,11 +1609,11 @@
           1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>−9</sup> + _microseconds_ × 10<sup>−6</sup> + _milliseconds_ × 10<sup>−3</sup> + _seconds_.
         1. Let _remainder_ be *undefined*.
         1. If _unit_ is *"year"*, then
-          1. Let _yearsDuration_ be ? CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Let _yearsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _firstAddOptions_, _dateAdd_).
-          1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _secondAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
           1. Let _monthsWeeksInDays_ be ! DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
@@ -1628,7 +1628,7 @@
           1. Let _yearsPassed_ be _timePassed_.[[Years]].
           1. Set _years_ to _years_ + _yearsPassed_.
           1. Let _oldRelativeTo_ be _relativeTo_.
-          1. Let _yearsDuration_ be ? CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _yearsDuration_ be ! CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _fourthAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, _fourthAddOptions_, _dateAdd_).
           1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
@@ -1642,11 +1642,11 @@
           1. Set _remainder_ to _fractionalYears_ - _years_.
           1. Set _months_, _weeks_, and _days_ to 0.
         1. Else if _unit_ is *"month"*, then
-          1. Let _yearsMonths_ be ? CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _yearsMonths_ be ! CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _firstAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Let _yearsMonthsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonths_, _firstAddOptions_, _dateAdd_).
-          1. Let _yearsMonthsWeeks_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
+          1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _secondAddOptions_ be OrdinaryObjectCreate(*null*).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, _secondAddOptions_, _dateAdd_).
           1. Let _weeksInDays_ be ! DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
