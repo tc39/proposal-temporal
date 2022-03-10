@@ -848,6 +848,11 @@ describe('DateTime', () => {
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
+    it('XXX', () => {
+      const pdt = Temporal.PlainDateTime.from('2019-12-31T23:59:59.5');
+      const result = pdt.since('2020-01-01', {smallestUnit: 'seconds', roundingMode: 'halfExpand'});
+      equal(result.toString(), '-PT1S');
+    });
     const incrementOneCeil = [
       ['years', 'P3Y', '-P2Y'],
       ['months', 'P32M', '-P31M'],

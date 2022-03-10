@@ -56,18 +56,26 @@ describe('Duration', () => {
     it('rounds to nearest', () => {
       equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'halfExpand' }), 'PT15H23M31S');
       equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }), 'PT15H23M30.543S');
+      equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'halfExpand' }), '-PT15H23M31S');
+      equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }), '-PT15H23M30.543S');
     });
     it('rounds up', () => {
       equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'ceil' }), 'PT15H23M31S');
       equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), 'PT15H23M30.544S');
+      equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'ceil' }), '-PT15H23M30S');
+      equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), '-PT15H23M30.543S');
     });
     it('rounds down', () => {
+      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'floor' }), 'PT15H23M30S');
+      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'floor' }), 'PT15H23M30.543S');
       equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'floor' }), '-PT15H23M31S');
       equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'floor' }), '-PT15H23M30.544S');
     });
     it('truncates', () => {
       equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'trunc' }), 'PT15H23M30S');
       equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'trunc' }), 'PT15H23M30.543S');
+      equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'trunc' }), '-PT15H23M30S');
+      equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'trunc' }), '-PT15H23M30.543S');
     });
     it('rounding can affect units up to seconds', () => {
       const d4 = Duration.from('P1Y1M1W1DT23H59M59.999999999S');
