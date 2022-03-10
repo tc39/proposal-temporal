@@ -369,7 +369,7 @@
     <h1>ToTemporalDurationTotalUnit ( _normalizedOptions_ )</h1>
     <p>
       The abstract operation ToTemporalDurationTotalUnit consults the `unit` property of the Object _normalizedOptions_, and checks that it is a valid unit.
-      It returns *undefined* if the property is not present.
+      It throws if the property is not present.
     </p>
     <p>
       Both singular and plural unit names are accepted, but only the singular form is returned.
