@@ -35,7 +35,7 @@
       <h1>GetBuiltinCalendar ( _id_ )</h1>
       <emu-alg>
         1. If ! IsBuiltinCalendar(_id_) is *false*, throw a *RangeError* exception.
-        1. Return ? Construct(%Temporal.Calendar%, « _id_ »).
+        1. Return ! CreateTemporalCalendar(_id_).
       </emu-alg>
     </emu-clause>
 
