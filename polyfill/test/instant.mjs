@@ -912,6 +912,8 @@ describe('Instant', () => {
       throws(() => Instant.from('+275760-09-13T00:00:00.000000001Z'), RangeError);
       equal(`${Instant.from('-271821-04-20T00:00Z')}`, '-271821-04-20T00:00:00Z');
       equal(`${Instant.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00:00Z');
+      throws(() => Instant.from('-271821-04-20T00:00:00+00:01'), RangeError);
+      throws(() => Instant.from('+275760-09-13T00:00:00-00:01'), RangeError);
     });
     it('converting from DateTime', () => {
       const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');
