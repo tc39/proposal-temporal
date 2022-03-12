@@ -8,12 +8,12 @@ function bigIntAbs(n) {
 // number of digits.
 function formatExpandedYear(year) {
   let yearString;
-  if (year < 1000 || year > 9999) {
+  if (year < 0 || year > 9999) {
     let sign = year < 0 ? '-' : '+';
     let yearNumber = bigIntAbs(year);
     yearString = sign + `${yearNumber}`.padStart(10, '0');
   } else {
-    yearString = `${year}`;
+    yearString = `${year}`.padStart(4, '0');
   }
   return yearString;
 }

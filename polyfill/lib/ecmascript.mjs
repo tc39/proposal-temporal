@@ -1925,12 +1925,12 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   ISOYearString: (year) => {
     let yearString;
-    if (year < 1000 || year > 9999) {
+    if (year < 0 || year > 9999) {
       let sign = year < 0 ? '-' : '+';
       let yearNumber = MathAbs(year);
       yearString = sign + `000000${yearNumber}`.slice(-6);
     } else {
-      yearString = `${year}`;
+      yearString = `0000${year}`.slice(-4);
     }
     return yearString;
   },

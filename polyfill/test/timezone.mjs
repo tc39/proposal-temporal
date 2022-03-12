@@ -113,21 +113,27 @@ describe('TimeZone', () => {
       equal(`${tz.getInstantFor(dt)}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
-      const dt = Temporal.PlainDateTime.from('+000098-10-29T10:46:38.271986102');
+      let dt = Temporal.PlainDateTime.from('0098-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('+06:00');
-      equal(`${tz.getInstantFor(dt)}`, '+000098-10-29T04:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '0098-10-29T04:46:38.271986102Z');
+      dt = Temporal.PlainDateTime.from('+000098-10-29T10:46:38.271986102');
+      equal(`${tz.getInstantFor(dt)}`, '0098-10-29T04:46:38.271986102Z');
     });
     it('year < 1', () => {
-      let dt = Temporal.PlainDateTime.from('+000000-10-29T10:46:38.271986102');
+      let dt = Temporal.PlainDateTime.from('0000-10-29T10:46:38.271986102');
       const tz = Temporal.TimeZone.from('+06:00');
-      equal(`${tz.getInstantFor(dt)}`, '+000000-10-29T04:46:38.271986102Z');
+      equal(`${tz.getInstantFor(dt)}`, '0000-10-29T04:46:38.271986102Z');
+      dt = Temporal.PlainDateTime.from('+000000-10-29T10:46:38.271986102');
+      equal(`${tz.getInstantFor(dt)}`, '0000-10-29T04:46:38.271986102Z');
       dt = Temporal.PlainDateTime.from('-001000-10-29T10:46:38.271986102');
       equal(`${tz.getInstantFor(dt)}`, '-001000-10-29T04:46:38.271986102Z');
     });
     it('year 0 leap day', () => {
-      const dt = Temporal.PlainDateTime.from('+000000-02-29T00:00');
+      let dt = Temporal.PlainDateTime.from('0000-02-29T00:00');
       const tz = Temporal.TimeZone.from('Europe/London');
-      equal(`${tz.getInstantFor(dt)}`, '+000000-02-29T00:01:15Z');
+      equal(`${tz.getInstantFor(dt)}`, '0000-02-29T00:01:15Z');
+      dt = Temporal.PlainDateTime.from('+000000-02-29T00:00');
+      equal(`${tz.getInstantFor(dt)}`, '0000-02-29T00:01:15Z');
     });
     it('outside of Instant range', () => {
       const max = Temporal.PlainDateTime.from('+275760-09-13T23:59:59.999999999');

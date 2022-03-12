@@ -2386,18 +2386,24 @@ describe('ZonedDateTime', () => {
       equal(`${zdt.toInstant()}`, '2019-10-29T09:46:38.271986102Z');
     });
     it('year ≤ 99', () => {
-      const zdt = ZonedDateTime.from('+000098-10-29T10:46:38.271986102+00:00[UTC]');
-      equal(`${zdt.toInstant()}`, '+000098-10-29T10:46:38.271986102Z');
+      let zdt = ZonedDateTime.from('0098-10-29T10:46:38.271986102+00:00[UTC]');
+      equal(`${zdt.toInstant()}`, '0098-10-29T10:46:38.271986102Z');
+      zdt = ZonedDateTime.from('+000098-10-29T10:46:38.271986102+00:00[UTC]');
+      equal(`${zdt.toInstant()}`, '0098-10-29T10:46:38.271986102Z');
     });
     it('year < 1', () => {
-      let zdt = ZonedDateTime.from('+000000-10-29T10:46:38.271986102+00:00[UTC]');
-      equal(`${zdt.toInstant()}`, '+000000-10-29T10:46:38.271986102Z');
+      let zdt = ZonedDateTime.from('0000-10-29T10:46:38.271986102+00:00[UTC]');
+      equal(`${zdt.toInstant()}`, '0000-10-29T10:46:38.271986102Z');
+      zdt = ZonedDateTime.from('+000000-10-29T10:46:38.271986102+00:00[UTC]');
+      equal(`${zdt.toInstant()}`, '0000-10-29T10:46:38.271986102Z');
       zdt = ZonedDateTime.from('-001000-10-29T10:46:38.271986102+00:00[UTC]');
       equal(`${zdt.toInstant()}`, '-001000-10-29T10:46:38.271986102Z');
     });
     it('year 0 leap day', () => {
-      const zdt = ZonedDateTime.from('+000000-02-29T00:00-00:01:15[Europe/London]');
-      equal(`${zdt.toInstant()}`, '+000000-02-29T00:01:15Z');
+      let zdt = ZonedDateTime.from('0000-02-29T00:00-00:01:15[Europe/London]');
+      equal(`${zdt.toInstant()}`, '0000-02-29T00:01:15Z');
+      zdt = ZonedDateTime.from('+000000-02-29T00:00-00:01:15[Europe/London]');
+      equal(`${zdt.toInstant()}`, '0000-02-29T00:01:15Z');
     });
   });
   describe('ZonedDateTime.toPlainDate()', () => {
