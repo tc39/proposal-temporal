@@ -864,9 +864,9 @@
       <h1>PadISOYear ( _y_ )</h1>
       <emu-alg>
         1. Assert: _y_ is an integer.
-        1. If _y_ &gt; 999 and _y_ ≤ 9999, then
-          1. Return _y_ formatted as a four-digit decimal number.
-        1. If _y_ ≥ 0, let _yearSign_ be *"+"*; otherwise, let _yearSign_ be *"-"*.
+        1. If _y_ ≥ 0 and _y_ ≤ 9999, then
+          1. Return _y_ formatted as a four-digit decimal number, padded to the left with zeroes as necessary.
+        1. If _y_ &gt; 0, let _yearSign_ be *"+"*; otherwise, let _yearSign_ be *"-"*.
         1. Let _year_ be abs(_y_), formatted as a six-digit decimal number, padded to the left with zeroes as necessary.
         1. Return the string-concatenation of _yearSign_ and _year_.
       </emu-alg>
