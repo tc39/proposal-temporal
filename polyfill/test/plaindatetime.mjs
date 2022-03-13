@@ -18,29 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { PlainDateTime } = Temporal;
 
 describe('DateTime', () => {
-  describe('.withPlainTime manipulation', () => {
-    const dt = Temporal.PlainDateTime.from('2015-12-07T03:24:30.000003500');
-    it('datetime.withPlainTime({ hour: 10 }) works', () => {
-      equal(`${dt.withPlainTime({ hour: 10 })}`, '2015-12-07T10:00:00');
-    });
-    it('datetime.withPlainTime(time) works', () => {
-      const time = Temporal.PlainTime.from('11:22');
-      equal(`${dt.withPlainTime(time)}`, '2015-12-07T11:22:00');
-    });
-    it("datetime.withPlainTime('12:34') works", () => {
-      equal(`${dt.withPlainTime('12:34')}`, '2015-12-07T12:34:00');
-    });
-    it('datetime.withPlainTime() defaults to midnight', () => {
-      equal(`${dt.withPlainTime()}`, '2015-12-07T00:00:00');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => dt.withPlainTime({}), TypeError);
-      throws(() => dt.withPlainTime({ minutes: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${dt.withPlainTime({ hour: 10, seconds: 123 })}`, '2015-12-07T10:00:00');
-    });
-  });
   describe('.withPlainDate manipulation', () => {
     const dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
     it('datetime.withPlainDate({ year: 2000, month: 6, day: 1 }) works', () => {
