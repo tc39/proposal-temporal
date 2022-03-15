@@ -1319,14 +1319,18 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporaldurationstring" aoid="ParseTemporalDurationString">
-    <h1>ParseTemporalDurationString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalDurationString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.Duration instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporaldurationstring" type="abstract operation">
+    <h1>
+      ParseTemporalDurationString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses an ISO 8601 duration string and returns a Duration Record.</dd>
+    </dl>
     <emu-note>The value of ToIntegerOrInfinity(*""*) is 0.</emu-note>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
       1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node enclosed by _duration_, or an empty sequence of code points if not present.
