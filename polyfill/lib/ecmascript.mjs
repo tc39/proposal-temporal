@@ -476,27 +476,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
     return epochNs.subtract(offsetNs);
   },
-  RegulateISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, overflow) => {
-    switch (overflow) {
-      case 'reject':
-        ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-        break;
-      case 'constrain':
-        ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainISODateTime(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-          nanosecond
-        ));
-        break;
-    }
-    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
-  },
   RegulateISODate: (year, month, day, overflow) => {
     switch (overflow) {
       case 'reject':
@@ -870,12 +849,6 @@ export const ES = ObjectAssign({}, ES2020, {
   LargerOfTwoTemporalUnits: (unit1, unit2) => {
     if (ALLOWED_UNITS.indexOf(unit1) > ALLOWED_UNITS.indexOf(unit2)) return unit2;
     return unit1;
-  },
-  CastIfDefined: (value, cast) => {
-    if (value !== undefined) {
-      return cast(value);
-    }
-    return value;
   },
   ToPartialRecord: (bag, fields) => {
     let any = false;
@@ -1688,11 +1661,6 @@ export const ES = ObjectAssign({}, ES2020, {
     const { calendar } = item;
     if (calendar === undefined) return ES.GetISO8601Calendar();
     return ES.ToTemporalCalendar(calendar);
-  },
-  CalendarCompare: (one, two) => {
-    const cal1 = ES.ToString(one);
-    const cal2 = ES.ToString(two);
-    return cal1 < cal2 ? -1 : cal1 > cal2 ? 1 : 0;
   },
   CalendarEquals: (one, two) => {
     if (one === two) return true;
@@ -2944,18 +2912,6 @@ export const ES = ObjectAssign({}, ES2020, {
     nanosecond = ES.ConstrainToRange(nanosecond, 0, 999);
     return { hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  ConstrainISODateTime: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    ({ year, month, day } = ES.ConstrainISODate(year, month, day));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.ConstrainTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond
-    ));
-    return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
-  },
 
   RejectToRange: (value, min, max) => {
     if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
@@ -3364,16 +3320,6 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     ));
     return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
-  },
-  SubtractDate: (year, month, day, years, months, weeks, days, overflow) => {
-    days += 7 * weeks;
-    day -= days;
-    ({ year, month, day } = ES.BalanceISODate(year, month, day));
-    month -= months;
-    year -= years;
-    ({ year, month } = ES.BalanceISOYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
-    return { year, month, day };
   },
   AddDuration: (
     y1,
@@ -4147,10 +4093,6 @@ export const ES = ObjectAssign({}, ES2020, {
     return 0;
   },
 
-  AssertPositiveInteger: (num) => {
-    if (!NumberIsFinite(num) || MathAbs(num) !== num) throw new RangeError(`invalid positive integer: ${num}`);
-    return num;
-  },
   NonNegativeModulo: (x, y) => {
     let result = x % y;
     if (ObjectIs(result, -0)) return 0;
