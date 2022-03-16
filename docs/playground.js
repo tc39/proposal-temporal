@@ -9480,7 +9480,6 @@
               }
 
               mid = ES.AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
-              midSign = -ES.CompareISODate(y1, m1, d1, mid.year, mid.month, mid.day);
             }
 
             var days = 0; // If we get here, months and years are correct (no overflow), and `mid`
