@@ -796,12 +796,12 @@
       <h1>ConstrainTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
-        1. Set _hour_ to ! ConstrainToRange(_hour_, 0, 23).
-        1. Set _minute_ to ! ConstrainToRange(_minute_, 0, 59).
-        1. Set _second_ to ! ConstrainToRange(_second_, 0, 59).
-        1. Set _millisecond_ to ! ConstrainToRange(_millisecond_, 0, 999).
-        1. Set _microsecond_ to ! ConstrainToRange(_microsecond_, 0, 999).
-        1. Set _nanosecond_ to ! ConstrainToRange(_nanosecond_, 0, 999).
+        1. Set _hour_ to the result of clamping _hour_ between 0 and 23.
+        1. Set _minute_ to the result of clamping _minute_ between 0 and 59.
+        1. Set _second_ to the result of clamping _second_ between 0 and 59.
+        1. Set _millisecond_ to the result of clamping _millisecond_ between 0 and 999.
+        1. Set _microsecond_ to the result of clamping _microsecond_ between 0 and 999.
+        1. Set _nanosecond_ to the result of clamping _nanosecond_ between 0 and 999.
         1. Return the Record {
           [[Hour]]: _hour_,
           [[Minute]]: _minute_,
