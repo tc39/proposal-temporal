@@ -791,8 +791,9 @@
             [[Day]]: _day_
             }.
         1. If _overflow_ is *"constrain"*, then
-          1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
-          1. Set _day_ to ! ConstrainToRange(_day_, 1, ! ISODaysInMonth(_year_, _month_)).
+          1. Set _month_ to the result of clamping _month_ between 1 and 12.
+          1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
+          1. Set _day_ to the result of clamping _day_ between 1 and _daysInMonth_.
           1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_,

@@ -4,6 +4,11 @@
       "type": "term",
       "term": "%Date.now%",
       "id": "sec-date.now"
+    },
+    {
+      "type": "term",
+      "term": "clamping",
+      "id": "clamping"
     }
   ],
   "https://tc39.es/ecma402/": [
