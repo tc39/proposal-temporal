@@ -1357,7 +1357,7 @@
           <h1>
             CalendarDateToISO (
               _calendar_: a String,
-              _fields_: a Record,
+              _fields_: an Object with the own data properties listed in <emu-xref href="#table-temporal-field-requirements"></emu-xref>,
               _overflow_: an Object,
             )
           </h1>
@@ -1401,7 +1401,7 @@
           <h1>
             CalendarDateEra (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISOYear]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1414,7 +1414,7 @@
           <h1>
             CalendarDateEraYear (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISOYear]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1427,7 +1427,7 @@
           <h1>
             CalendarDateYear (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISOYear]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1442,7 +1442,7 @@
           <h1>
             CalendarDateMonth (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISOMonth]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1458,7 +1458,7 @@
           <h1>
             CalendarDateMonthCode (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISOMonth]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1471,7 +1471,7 @@
           <h1>
             CalendarDateDay (
               _calendar_: a String,
-              _datetime_: an Object with the [[ISODay]] internal slot,
+              _date_: an Object with the [[ISOYear]], [[ISOMonth]] and [[ISODay]] internal slots,
             )
           </h1>
           <dl class="header">
@@ -1727,7 +1727,7 @@
             1. Else,
               1. Let _result_ be ! CalendarDateDifference(_calendar_.[[Identifier]], _one_, _two_, _largestUnit_).
               1. Assert: ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
-            1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+            1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
           </emu-alg>
         </emu-clause>
 
@@ -1744,8 +1744,7 @@
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
-            1. Let _era_ be ! CalendarDateEra(_calendar_.[[Identifier]], _temporalDateLike_).
-            1. Return _era_.
+            1. Return ! CalendarDateEra(_calendar_.[[Identifier]], _temporalDateLike_).
           </emu-alg>
         </emu-clause>
 
