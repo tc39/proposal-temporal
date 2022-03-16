@@ -3021,7 +3021,6 @@ export const ES = ObjectAssign({}, ES2020, {
             months = 11 * sign;
           }
           mid = ES.AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
-          midSign = -ES.CompareISODate(y1, m1, d1, mid.year, mid.month, mid.day);
         }
 
         let days = 0;
