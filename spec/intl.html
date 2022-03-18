@@ -173,18 +173,18 @@
         1. <ins>Let _hc_ be _r_.[[hc]].</ins>
         1. <ins>If _hc_ is *null*, then</ins>
           1. <ins>Set _hc_ to _hcDefault_.</ins>
-        1. <ins>If _hour12_ is not *undefined*, then</ins>
-          1. <ins>If _hour12_ is *true*, then</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h11"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h12"*.</ins>
+        1. <ins>If _hour12_ is *true*, then</ins>
+          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+            1. <ins>Set _hc_ to *"h11"*.</ins>
           1. <ins>Else,</ins>
-            1. <ins>Assert: _hour12_ is *false*.</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h23"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h24"*.</ins>
+            1. <ins>Set _hc_ to *"h12"*.</ins>
+        1. <ins>Else if _hour12_ is *false*, then</ins>
+          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+            1. <ins>Set _hc_ to *"h23"*.</ins>
+          1. <ins>Else,</ins>
+            1. <ins>Set _hc_ to *"h24"*.</ins>
+        1. <ins>Else,</ins>
+          1. <ins>Assert: _hour12_ is *undefined*.</ins>
         1. Let _matcher_ be ? GetOption(_options_, *"formatMatcher"*, *"string"*, « *"basic"*, *"best fit"* », *"best fit"*).
         1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
