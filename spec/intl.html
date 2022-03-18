@@ -149,26 +149,8 @@
         1. Let _calendar_ be _r_.[[ca]].
         1. Set _dateTimeFormat_.[[Calendar]] to _calendar_.
         1. <del>Set _dateTimeFormat_.[[HourCycle]] to _r_.[[hc]].</del>
-        1. <ins>Let _dataLocale_ be _r_.[[dataLocale]].</ins>
-        1. <ins>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</ins>
-        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
-        1. <ins>Let _hc_ be _r_.[[hc]].</ins>
-        1. <ins>If _hc_ is *null*, then</ins>
-          1. <ins>Set _hc_ to _hcDefault_.</ins>
-        1. <ins>If _hour12_ is not *undefined*, then</ins>
-          1. <ins>If _hour12_ is *true*, then</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h11"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h12"*.</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Assert: _hour12_ is *false*.</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h23"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h24"*.</ins>
         1. Set _dateTimeFormat_.[[NumberingSystem]] to _r_.[[nu]].
-        1. <del>Let _dataLocale_ be _r_.[[dataLocale]].</del>
+        1. Let _dataLocale_ be _r_.[[dataLocale]].
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZone_ be DefaultTimeZone().
@@ -186,7 +168,23 @@
           1. Else,
             1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
-        1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
+        1. Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].
+        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
+        1. <ins>Let _hc_ be _r_.[[hc]].</ins>
+        1. <ins>If _hc_ is *null*, then</ins>
+          1. <ins>Set _hc_ to _hcDefault_.</ins>
+        1. <ins>If _hour12_ is not *undefined*, then</ins>
+          1. <ins>If _hour12_ is *true*, then</ins>
+            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+              1. <ins>Set _hc_ to *"h11"*.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Set _hc_ to *"h12"*.</ins>
+          1. <ins>Else,</ins>
+            1. <ins>Assert: _hour12_ is *false*.</ins>
+            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+              1. <ins>Set _hc_ to *"h23"*.</ins>
+            1. <ins>Else,</ins>
+              1. <ins>Set _hc_ to *"h24"*.</ins>
         1. Let _matcher_ be ? GetOption(_options_, *"formatMatcher"*, *"string"*, « *"basic"*, *"best fit"* », *"best fit"*).
         1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
