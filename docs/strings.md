@@ -73,7 +73,7 @@ zdt.withTimeZone('America/New_York')
   .toPlainDate()
   .subtract({ years: 3000 })
   .toLocaleString('en-US', { calendar: 'gregory', era: 'short', year: 'numeric', month: 'long', day: 'numeric' });
-  // "February 27, 979 BC"
+  // => "February 27, 979 BC"
 ```
 <!-- prettier-ignore-end -->
 
@@ -139,6 +139,7 @@ For example, when parsed, the following string would represent the date **28 Iya
 The syntax of the calendar suffix is currently on a standards track led by the [IETF SEDATE](https://datatracker.ietf.org/wg/sedate/about/) working group.
 
 The calendar identifiers [are defined by CLDR](http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier) as [a sequence of 3-8 character BCP47 subtags](http://unicode.org/reports/tr35/#unicode_locale_extensions).
+Usually there's only one subtag in the sequence, although some calendars may use more.
 The list of calendar identifiers currently supported by CLDR is:
 
 - `buddhist`
@@ -161,10 +162,11 @@ The list of calendar identifiers currently supported by CLDR is:
 - `roc`
 - `islamicc` (deprecated in favor of `islamic-civil`)
 
-Example of a maximal length string containing both an IANA time zone name and a calendar system:
+Note that extensions can more than double the size of a date/time string.
+For example, here's a long string containing both an IANA time zone name and a calendar system:
 
 ```
-2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis][u-ca=islamic-umalqura]
+2020-05-22T07:19:35.123456789-04:00[America/Indiana/Indianapolis][u-ca=islamic-umalqura]
 ```
 
 ### Calendar-dependent `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay`
@@ -181,9 +183,9 @@ function localizedDate(s) {
   calendar = Temporal.Calendar.from(s);
   return date.toLocaleString('en-US', { calendar, dateStyle: 'long' });
 }
-localizedDate('2020-04-25[u-ca=hebrew]'); // "1 Iyar 5780"
-localizedDate('2020-04-25[u-ca=islamic]'); // "Ramadan 2, 1441 AH"
-localizedDate('2020-04-25'); // "April 25, 2020" (ISO 8601 calendar is default)
+localizedDate('2020-04-25[u-ca=hebrew]'); // => "1 Iyar 5780"
+localizedDate('2020-04-25[u-ca=islamic]'); // => "Ramadan 2, 1441 AH"
+localizedDate('2020-04-25'); // => "April 25, 2020" (ISO 8601 calendar is default)
 ```
 
 In the ISO 8601 calendar, the string representation of `Temporal.PlainYearMonth` omits the day (e.g. `"2020-04"`) and the `Temporal.PlainMonthDay` representation omits the year (e.g. `"04-25"`).
@@ -197,9 +199,9 @@ function localizedMonthDay(s) {
   calendar = Temporal.Calendar.from(s);
   return monthDay.toLocaleString('en-US', { calendar, month: 'long', day: 'numeric' });
 }
-localizedMonthDay('2020-04-25[u-ca=hebrew]'); // "1 Iyar"
-localizedMonthDay('2020-04-25[u-ca=islamic]'); // "Ramadan 2"
-localizedMonthDay('04-25'); // "April 25"
+localizedMonthDay('2020-04-25[u-ca=hebrew]'); // => "1 Iyar"
+localizedMonthDay('2020-04-25[u-ca=islamic]'); // => "Ramadan 2"
+localizedMonthDay('04-25'); // => "April 25"
 ```
 
 ## String parsing and formatting FAQ
@@ -225,7 +227,7 @@ To determine the `Temporal` class that should be used to parse a string, it's im
   Its data model is an hour/minute/second, with seconds resolution down to 9 decimal digits (nanoseconds).
 - `Temporal.PlainDateTime` represents a local date and time without any reference to the time zone.
   Its data model is year/month/day/hour/minute/second and a calendar.
-  This type is rarely used, because the three types above cover most use cases.
+  This type is rarely used, because the types above cover most use cases.
   If you only care about the exact timestamp and don't care about time zones, then use `Temporal.Instant`.
   If you only care about the local date, then use `Temporal.PlainDate`.
   If you care about the exact time and the time zone, then use `Temporal.ZonedDateTime`.
