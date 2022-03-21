@@ -879,7 +879,7 @@
       <h1>HandleDateTimeOthers ( _dateTimeFormat_, _x_ )</h1>
 
       <p>
-        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be an ECMAScript value which IsTemporalObject(_x_) return *false* ). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be an ECMAScript value which IsTemporalObject(_x_) returns *false*). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
@@ -892,7 +892,7 @@
         1. Set _x_ to ? ToNumber(_x_).
       1. Set _x_ to TimeClip(_x_).
       1. If _x_ is *NaN*, throw a *RangeError* exception.
-      1. Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.
+      1. Let _epochNanoseconds_ be ℤ(_x_) × *10<sup>6</sup>*<sub>ℤ</sub>.
       1. Return the Record {
           [[pattern]]: _pattern_,
           [[rangePatterns]]: _rangePatterns_,
@@ -942,7 +942,7 @@
         1. If _calendar_ is *"gregory"*, then
           1. <del>Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.</del>
           1. <ins>Let _timeZoneOffset_ be ! GetIANATimeZoneOffsetNanoseconds(_t_, _timeZone_).</ins>
-          1. Let _tz_ be the time value _t_ + _timeZoneOffset_.
+          1. Let _tz_ be _t_ + _timeZoneOffset_.
           1. Return a record with fields calculated from _tz_ according to <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins>.
         1. Else,
           1. Return a record with the fields of Column 1 of <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins> calculated from _t_ for the given _calendar_ and _timeZone_. The calculations should use best available information about the specified _calendar_ and _timeZone_, including current and historical information about time zone offsets from UTC and daylight saving time rules. <ins>Given the same values of _t_, _calendar_, and _timeZone_, the result must be the same for the lifetime of the surrounding agent</ins>.
@@ -1287,8 +1287,9 @@
       <li><del>[[FractionalSecondDigits]] is either *undefined* or a positive, non-negative integer Number value indicating the fraction digits to be used for fractional seconds. Numbers will be rounded or padded with trailing zeroes if necessary.</del></li>
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
       <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
-      <li>[[Pattern]]<ins>, [[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+      <li>[[Pattern]] is a String value as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
       <li>[[RangePatterns]] is a Record as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+      <li><ins>[[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are records containing at least a [[pattern]] field as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</ins></li>
     </ul>
 
     <p>
