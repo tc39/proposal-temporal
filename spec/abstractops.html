@@ -722,6 +722,14 @@
           ASCIISign
           U+2212
 
+      UnpaddedHour :
+          DecimalDigit
+          `1` DecimalDigit
+          `20`
+          `21`
+          `22`
+          `23`
+
       Hour :
           `0` DecimalDigit
           `1` DecimalDigit
@@ -941,11 +949,11 @@
           TimeZoneIANANameComponent `/` TimeZoneIANANameTail
 
       TimeZoneIANAName :
-          TimeZoneIANANameTail
+          `Etc/GMT` ASCIISign UnpaddedHour
+          TimeZoneIANANameTail but not `Etc/GMT` ASCIISign UnpaddedHour
 
       TimeZoneBracketedName :
           TimeZoneIANAName
-          `Etc/GMT` ASCIISign Hour
           TimeZoneUTCOffsetName
 
       TimeZoneBracketedAnnotation :
