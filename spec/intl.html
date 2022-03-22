@@ -2,15 +2,15 @@
 <meta charset="utf8">
 
 <emu-clause id="sec-temporal-intl">
-  <h1>Amendments to the ECMAScript® 2021 Internationalization API Specification</h1>
+  <h1>Amendments to the ECMAScript® 2022 Internationalization API Specification</h1>
 
   <emu-note type="editor">
     <p>
-      This section lists amendments which must be made to <a href="https://tc39.es/ecma402/">ECMA-402, the ECMAScript® 2021 Internationalization API Specification</a>.
+      This section lists amendments which must be made to <a href="https://tc39.es/ecma402/">ECMA-402, the ECMAScript® 2022 Internationalization API Specification</a>.
       Text to be added is marked <ins>like this</ins>, and text to be deleted is marked <del>like this</del>.
     </p>
     <p>
-      This text is based on top of the ECMA-402 spec text from commit <a href="https://github.com/tc39/ecma402/commit/896ba11ec75334fcc5741dba1d19cc1faa016b7a">896ba11ec75334fcc5741dba1d19cc1faa016b7a</a>.
+      This text is based on top of the ECMA-402 spec text from commit <a href="https://github.com/tc39/ecma402/commit/6804096fd66d4b6530c7e5a8b844f2bdded1e41a">6804096fd66d4b6530c7e5a8b844f2bdded1e41a</a>.
     </p>
   </emu-note>
 
@@ -25,7 +25,7 @@
     </ins>
 
     <p>
-      The ECMAScript 2021 Internationalization API Specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database except as specifically overridden by CanonicalizeTimeZoneName.
+      The ECMAScript 2022 Internationalization API Specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database except as specifically overridden by CanonicalizeTimeZoneName.
     </p>
 
     <p>
@@ -160,31 +160,34 @@
             1. Throw a *RangeError* exception.
           1. Let _timeZone_ be CanonicalizeTimeZoneName(_timeZone_).
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
-        1. Let _opt_ be a new Record.
+        1. Let _formatOptions_ be a new Record.
         1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
           1. Let _prop_ be the name given in the Property column of the row.
           1. If _prop_ is *"fractionalSecondDigits"*, then
             1. Let _value_ be ? GetNumberOption(options, *"fractionalSecondDigits"*, 1, 3, *undefined*).
           1. Else,
             1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
-          1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
+          1. Set _formatOptions_.[[&lt;_prop_&gt;]] to _value_.
         1. Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].
-        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
+        1. Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].
+        1. <del>Let _hc_ be _dateTimeFormat_.[[HourCycle]].</del>
         1. <ins>Let _hc_ be _r_.[[hc]].</ins>
-        1. <ins>If _hc_ is *null*, then</ins>
-          1. <ins>Set _hc_ to _hcDefault_.</ins>
-        1. <ins>If _hour12_ is *true*, then</ins>
-          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-            1. <ins>Set _hc_ to *"h11"*.</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Set _hc_ to *"h12"*.</ins>
-        1. <ins>Else if _hour12_ is *false*, then</ins>
-          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-            1. <ins>Set _hc_ to *"h23"*.</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Set _hc_ to *"h24"*.</ins>
-        1. <ins>Else,</ins>
-          1. <ins>Assert: _hour12_ is *undefined*.</ins>
+        1. If _hc_ is *null*, then
+          1. Set _hc_ to _hcDefault_.
+        1. If _hour12_ is *true*, then
+          1. If _hcDefault_ is *"h11"* or *"h23"*, then
+            1. Set _hc_ to *"h11"*.
+          1. Else,
+            1. Set _hc_ to *"h12"*.
+        1. Else if _hour12_ is *false*, then
+          1. If _hcDefault_ is *"h11"* or *"h23"*, then
+            1. Set _hc_ to *"h23"*.
+          1. Else,
+            1. Set _hc_ to *"h24"*.
+        1. Else,
+          1. Assert: _hour12_ is *undefined*.
+        1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
+        1. <del>Set _formatOptions_.[[hourCycle]] to _hc_.</del>
         1. Let _matcher_ be ? GetOption(_options_, *"formatMatcher"*, *"string"*, « *"basic"*, *"best fit"* », *"best fit"*).
         1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
@@ -193,50 +196,31 @@
         1. <del>If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then</del>
           1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, do</del>
             1. <del>Let _prop_ be the name given in the Property column of the row.</del>
-            1. <del>Let _p_ be _opt_.[[&lt;_prop_&gt;]].</del>
+            1. <del>Let _p_ be _formatOptions_.[[&lt;_prop_&gt;]].</del>
             1. <del>If _p_ is not *undefined*, then</del>
               1. <del>Throw a *TypeError* exception.</del>
-          1. <del>Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).</del>
+          1. <del>Let _styles_ be _dataLocaleData_.[[styles]].[[&lt;_calendar_&gt;]].</del>
+          1. <del>Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).</del>
         1. <del>Else,</del>
           1. <del>Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].</del>
           1. <del>If _matcher_ is *"basic"*, then</del>
-            1. <del>Let _bestFormat_ be BasicFormatMatcher(_opt_, _formats_).</del>
+            1. <del>Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).</del>
           1. <del>Else,</del>
-            1. <del>Let _bestFormat_ be BestFitFormatMatcher(_opt_, _formats_).</del>
+            1. <del>Let _bestFormat_ be BestFitFormatMatcher(_formatOptions_, _formats_).</del>
         1. <del>For each row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do</del>
           1. <del>Let _prop_ be the name given in the Property column of the row.</del>
-          1. <del>Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].</del>
-          1. <del>If _p_ not *undefined*, then</del>
+          1. <del>If _bestFormat_ has a field [[&lt;_prop_&gt;]], then</del>
+            1. <del>Let _p_ be _bestFormat_.[[&lt;_prop_&gt;]].</del>
             1. <del>Set _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the row to _p_.</del>
         1. <del>If _dateTimeFormat_.[[Hour]] is *undefined*, then</del>
           1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
+        1. <del>If _dateTimeformat_.[[HourCycle]] is *"h11"* or *"h12"*, then</del>
+          1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
+          1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns12]].</del>
+        1. <del>Else,</del>
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
           1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
-        1. <del>Else,</del>
-          1. <del>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</del>
-          1. <del>Let _hc_ be _dateTimeFormat_.[[HourCycle]].</del>
-          1. <del>If _hc_ is *null*, then</del>
-            1. <del>Set _hc_ to _hcDefault_.</del>
-          1. <del>If _hour12_ is not *undefined*, then</del>
-            1. <del>If _hour12_ is *true*, then</del>
-              1. <del>If _hcDefault_ is *"h11"* or *"h23"*, then</del>
-                1. <del>Set _hc_ to *"h11"*.</del>
-              1. <del>Else,</del>
-                1. <del>Set _hc_ to *"h12"*.</del>
-            1. <del>Else,</del>
-              1. <del>Assert: _hour12_ is *false*.</del>
-              1. <del>If _hcDefault_ is *"h11"* or *"h23"*, then</del>
-                1. <del>Set _hc_ to *"h23"*.</del>
-              1. <del>Else,</del>
-                1. <del>Set _hc_ to *"h24"*.</del>
-          1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
-          1. <del>If _dateTimeformat_.[[HourCycle]] is *"h11"* or *"h12"*, then</del>
-            1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
-            1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns12]].</del>
-          1. <del>Else,</del>
-            1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
-            1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
-        1. <ins>Let _expandedOptions_ be a copy of _opt_.</ins>
+        1. <ins>Let _expandedOptions_ be a copy of _formatOptions_.</ins>
         1. <ins>Let _needDefaults_ be *true*.</ins>
         1. <ins>For each element _field_ of « *"weekday"*, *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* » in List order, do</ins>
           1. <ins>If _expandedOptions_.[[&lt;_field_&gt;]] is not *undefined*, then</ins>
@@ -251,10 +235,10 @@
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>Let _needDefaults_ be *true*.</ins>
           1. <ins>Let _fields_ be the list of fields in the Supported fields column of the row.</ins>
-          1. <ins>For each field _field_ of _opt_, do</ins>
+          1. <ins>For each field _field_ of _formatOptions_, do</ins>
             1. <ins>If _field_ is in _fields_, then</ins>
               1. <ins>Set _needDefaults_ to *false*.</ins>
-              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to _opt_.[[&lt;_field_&gt;]].</ins>
+              1. <ins>Set _limitedOptions_.[[&lt;_field_&gt;]] to _formatOptions_.[[&lt;_field_&gt;]].</ins>
           1. <ins>If _needDefaults_ is *true*, then</ins>
             1. <ins>Let _defaultFields_ be the list of fields in the Default fields column of the row.</ins>
             1. <ins>For each _field_ of _defaultFields_, do</ins>
@@ -348,30 +332,29 @@
       <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ )</h1>
 
       <p>
-      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which is a Record of the type contained by the %DateTimeFormat%.[[LocaleData]].[[<_locale_>]].[[formats]].[[<_calendar_>]] List as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a <del>Number</del><ins>BigInt</ins> value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
+      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which is a Record of the type contained by the %DateTimeFormat%.[[LocaleData]].[[<_locale_>]].[[formats]].[[<_calendar_>]] List as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a <del>Number</del><ins>BigInt</ins> value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2022, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
       </p>
 
       <emu-alg>
         1. <del>Let _x_ be TimeClip(_x_).</del>
         1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
-        1. Let _nfOptions_ be ObjectCreate(*null*).
+        1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
-        1. Let _nf_ be ? Construct(%NumberFormat%, « _locale_, _nfOptions_ »).
-        1. Let _nf2Options_ be ObjectCreate(*null*).
+        1. Let _nf_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nfOptions_ &raquo;).
+        1. Let _nf2Options_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, 2).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
-        1. Let _nf2_ be ? Construct(%NumberFormat%, « _locale_, _nf2Options_ »).
+        1. Let _nf2_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nf2Options_ &raquo;).
         1. Let _fractionalSecondDigits_ be _dateTimeFormat_.[[FractionalSecondDigits]].
         1. If _fractionalSecondDigits_ is not *undefined*, then
-          1. Let _nf3Options_ be ObjectCreate(*null*).
+          1. Let _nf3Options_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
-          1. Let _nf3_ be ? Construct(%NumberFormat%, « _locale_, _nf3Options_ »).
+          1. Let _nf3_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nf3Options_ &raquo;).
         1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. Let _result_ be a new empty List.
-        1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_pattern_</ins>).
-        1. For each element _patternPart_ of _patternParts_, in List order, do
+        1. For each Record { [[Type]], [[Value]] } _patternPart_ in _patternParts_, do
           1. Let _p_ be _patternPart_.[[Type]].
           1. If _p_ is *"literal"*, then
             1. Append a new Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } as the last element of the list _result_.
@@ -380,6 +363,15 @@
             1. Let _v_ be floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
             1. Let _fv_ be FormatNumeric(_nf3_, _v_).
             1. Append a new Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } as the last element of _result_.
+          1. Else if _p_ is equal to *"dayPeriod"*, then
+            1. Let _f_ be the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row.
+            1. Let _fv_ be a String value representing the day period of _tm_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_.
+            1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
+          1. Else if _p_ is equal to *"timeZoneName"*, then
+            1. Let _f_ be _dateTimeFormat_.[[TimeZoneName]].
+            1. Let _v_ be _dateTimeFormat_.[[TimeZone]].
+            1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_. The String value may also depend on the value of the [[InDST]] field of _tm_ if _f_ is *"short"*, *"long"*, *"shortOffset"*, or *"longOffset"*. If the implementation does not have a localized representation of _f_, then use the String value of _v_ itself.
+            1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
             1. If _rangeFormatOptions_ is not *undefined*, let _f_ be the value of _rangeFormatOptions_'s field whose name matches _p_.
             1. Else, let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
@@ -416,7 +408,8 @@
             1. Append a new Record { [[Type]]: *"relatedYear"*, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else if _p_ is equal to *"yearName"*, then
             1. Let _v_ be _tm_.[[YearName]].
-            1. Append a new Record { [[Type]]: *"yearName"*, [[Value]]: _v_ } as the last element of the list _result_.
+            1. Let _fv_ be an implementation and locale dependent String value representing _v_.
+            1. Append a new Record { [[Type]]: *"yearName"*, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else,
             1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on <del>_x_</del><ins>_epochNanoseconds_</ins> and _p_.
             1. Append a new Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } as the last element of _result_.
@@ -436,7 +429,7 @@
       <h1>PartitionDateTimePattern ( _dateTimeFormat_, _x_ )</h1>
 
       <p>
-        The PartitionDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ as a time value as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
+        The PartitionDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ as a time value as specified in ES2022, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
       </p>
 
       <emu-alg>
@@ -496,7 +489,7 @@
       <h1>PartitionDateTimeRangePattern ( _dateTimeFormat_, _x_, _y_ )</h1>
 
       <p>
-        The PartitionDateTimeRangePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value) and _y_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ and _y_ as time values as specified in ES2021, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
+        The PartitionDateTimeRangePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), _x_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value) and _y_ (which must be <del>a Number</del><ins>an ECMAScript</ins> value), <del>interprets _x_ and _y_ as time values as specified in ES2022, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>,</del> and creates the corresponding parts according to the effective locale and the formatting options of _dateTimeFormat_. The following steps are taken:
       </p>
       <emu-alg>
         1. <del>Let _x_ be TimeClip(_x_).</del>
@@ -588,8 +581,8 @@
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
         1. Let _result_ be the empty String.
-        1. For each Record _part_ in _parts_, do
-          1. Set _result_ to a String value produced by concatenating _result_ and _part_.[[Value]].
+        1. For each Record { [[Type]], [[Value]], [[Source]] } _part_ in _parts_, do
+          1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -603,10 +596,10 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
-        1. Let _result_ be ! ArrayCreate(0).
+        1. Let _result_ be ArrayCreate(0).
         1. Let _n_ be 0.
-        1. For each Record _part_ in _parts_, do
-          1. Let _O_ be ObjectCreate(%ObjectPrototype%).
+        1. For each Record { [[Type]], [[Value]], [[Source]] } _part_ in _parts_, do
+          1. Let _O_ be OrdinaryObjectCreate(%ObjectPrototype%).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"type"*, _part_.[[Type]]).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"value"*, _part_.[[Value]]).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"source"*, _part_.[[Source]]).
@@ -670,7 +663,8 @@
             1. Let _p_ be _opt_.[[&lt;_prop_&gt;]].
             1. If _p_ is not *undefined*, then
               1. Throw a *TypeError* exception.
-          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _dataLocaleData_).
+          1. Let _styles_ be _dataLocaleData_.[[styles]].[[&lt;_calendar_&gt;]].
+          1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
         1. Else,
           1. Let _formats_ be _dataLocaleData_.[[formats]].[[&lt;_calendar_&gt;]].
           1. If _matcher_ is *"basic"*, then
@@ -960,21 +954,21 @@
           <tr>
             <td>[[Weekday]]</td>
             <td>
-              <del>`WeekDay(tz)` specified in ES2021's <emu-xref href="#sec-week-day">Week Day</emu-xref></del>
+              <del>`WeekDay(tz)` specified in ES2022's <emu-xref href="#sec-week-day">Week Day</emu-xref></del>
               <ins>! WeekDay(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Era]]</td>
             <td>
-              <del>Let `year` be `YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</del>
+              <del>Let `year` be `YearFromTime(tz)` specified in ES2022's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</del>
               <ins>Let _year_ be ! YearFromTime(_tz_ / 10<sup>6</sup>). If _year_ is less than 0, return *"BC"*, else, return *"AD"*.</ins>
             </td>
           </tr>
           <tr>
             <td>[[Year]]</td>
             <td>
-              <del>`YearFromTime(tz)` specified in ES2021's <emu-xref href="#sec-year-number">Year Number</emu-xref></del>
+              <del>`YearFromTime(tz)` specified in ES2022's <emu-xref href="#sec-year-number">Year Number</emu-xref></del>
               <ins>! YearFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
@@ -989,42 +983,42 @@
           <tr>
             <td>[[Month]]</td>
             <td>
-              <del>`MonthFromTime(tz)` specified in ES2021's <emu-xref href="#sec-month-number">Month Number</emu-xref></del>
+              <del>`MonthFromTime(tz)` specified in ES2022's <emu-xref href="#sec-month-number">Month Number</emu-xref></del>
               <ins>! MonthFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Day]]</td>
             <td>
-              <del>`DateFromTime(tz)` specified in ES2021's <emu-xref href="#sec-date-number">Date Number</emu-xref></del>
+              <del>`DateFromTime(tz)` specified in ES2022's <emu-xref href="#sec-date-number">Date Number</emu-xref></del>
               <ins>! DateFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Hour]]</td>
             <td>
-              <del>`HourFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <del>`HourFromTime(tz)` specified in ES2022's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
               <ins>! HourFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Minute]]</td>
             <td>
-              <del>`MinFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <del>`MinFromTime(tz)` specified in ES2022's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
               <ins>! MinFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Second]]</td>
             <td>
-              <del>`SecFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <del>`SecFromTime(tz)` specified in ES2022's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
               <ins>! SecFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
           <tr>
             <td>[[Millisecond]]</td>
             <td>
-              <del>`msFromTime(tz)` specified in ES2021's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
+              <del>`msFromTime(tz)` specified in ES2022's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
               <ins>! msFromTime(_tz_ / 10<sup>6</sup>)</ins>
             </td>
           </tr>
@@ -1116,9 +1110,10 @@
 
       <emu-alg>
         1. Let _dtf_ be the *this* value.
-        1. If Type(_dtf_) is not Object, throw a *TypeError* exception.
-        1. Let _dtf_ be ? UnwrapDateTimeFormat(_dtf_).
-        1. Let _options_ be ! ObjectCreate(%Object.prototype%).
+        1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
+          1. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
+        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. For each row of <emu-xref href="#table-datetimeformat-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
           1. If _p_ is *"hour12"*, then
@@ -1254,7 +1249,7 @@
       </p>
 
       <emu-note>
-        In this version of the ECMAScript 2021 Internationalization API, the *"timeZone"* property will be the name of the default time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
+        In this version of the ECMAScript 2022 Internationalization API, the *"timeZone"* property will be the name of the default time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
       </emu-note>
 
       <emu-note>
