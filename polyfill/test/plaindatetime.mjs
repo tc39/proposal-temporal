@@ -19,7 +19,6 @@ const { PlainDateTime } = Temporal;
 
 describe('DateTime', () => {
   describe('DateTime.until()', () => {
-    const dt = PlainDateTime.from('1976-11-18T15:23:30.123456789');
     const feb20 = PlainDateTime.from('2020-02-01T00:00');
     const feb21 = PlainDateTime.from('2021-02-01T00:00');
     it('options may only be an object or undefined', () => {
