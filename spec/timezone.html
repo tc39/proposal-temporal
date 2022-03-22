@@ -424,22 +424,27 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getisopartsfromepoch" aoid="GetISOPartsFromEpoch">
-      <h1>GetISOPartsFromEpoch ( _epochNanoseconds_ )</h1>
-      <p>
-        The abstract operation GetISOPartsFromEpoch returns the components of a date corresponding to the given number of nanoseconds since the Unix epoch in UTC.
-      </p>
+    <emu-clause id="sec-temporal-getisopartsfromepoch" type="abstract operation">
+      <h1>
+        GetISOPartsFromEpoch (
+          _epochNanoseconds_: an integer,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns the components of a date corresponding to the given number of nanoseconds since the Unix epoch in UTC.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _epochNanoseconds_ is an integer.
+        1. Assert: ! IsValidEpochNanoseconds(ℤ(_epochNanoseconds_)) is *true*.
         1. Let _remainderNs_ be _epochNanoseconds_ modulo 10<sup>6</sup>.
-        1. Let _epochMilliseconds_ be (_epochNanoseconds_ − _remainderNs_) / 10<sup>6</sup>.
-        1. Let _year_ be ! YearFromTime(_epochMilliseconds_).
-        1. Let _month_ be ! MonthFromTime(_epochMilliseconds_) + 1.
-        1. Let _day_ be ! DateFromTime(_epochMilliseconds_).
-        1. Let _hour_ be ! HourFromTime(_epochMilliseconds_).
-        1. Let _minute_ be ! MinFromTime(_epochMilliseconds_).
-        1. Let _second_ be ! SecFromTime(_epochMilliseconds_).
-        1. Let _millisecond_ be ! msFromTime(_epochMilliseconds_).
+        1. Let _epochMilliseconds_ be 𝔽((_epochNanoseconds_ − _remainderNs_) / 10<sup>6</sup>).
+        1. Let _year_ be ℝ(! YearFromTime(_epochMilliseconds_)).
+        1. Let _month_ be ℝ(! MonthFromTime(_epochMilliseconds_)) + 1.
+        1. Let _day_ be ℝ(! DateFromTime(_epochMilliseconds_)).
+        1. Let _hour_ be ℝ(! HourFromTime(_epochMilliseconds_)).
+        1. Let _minute_ be ℝ(! MinFromTime(_epochMilliseconds_)).
+        1. Let _second_ be ℝ(! SecFromTime(_epochMilliseconds_)).
+        1. Let _millisecond_ be ℝ(! msFromTime(_epochMilliseconds_)).
         1. Let _microsecond_ be floor(_remainderNs_ / 1000) modulo 1000.
         1. Let _nanosecond_ be _remainderNs_ modulo 1000.
         1. Return the Record {
