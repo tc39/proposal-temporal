@@ -3,7 +3,7 @@
 
 <emu-clause id="sec-temporal-plainyearmonth-objects">
   <h1>Temporal.PlainYearMonth Objects</h1>
-  <p>A Temporal.PlainYearMonth object is an Object that contains Number values corresponding to a particular year and month.</p>
+  <p>A Temporal.PlainYearMonth object is an Object that contains integers corresponding to a particular year and month in a particular calendar.</p>
 
   <emu-clause id="sec-temporal-plainyearmonth-constructor">
     <h1>The Temporal.PlainYearMonth Constructor</h1>
@@ -251,7 +251,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
@@ -264,7 +264,7 @@
           1. Let _day_ be 1.
         1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
         1. For each element _nextEntry_ of _entries_, do
           1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _nextEntry_[0], _nextEntry_[1]).
@@ -283,7 +283,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « »).
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
@@ -296,7 +296,7 @@
           1. Let _day_ be 1.
         1. Let _date_ be ? CreateTemporalDate(_yearMonth_.[[ISOYear]], _yearMonth_.[[ISOMonth]], _day_, _calendar_).
         1. Let _durationToAdd_ be ! CreateTemporalDuration(−_duration_.[[Years]], −_duration_.[[Months]], −_duration_.[[Weeks]], −_balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
         1. For each element _nextEntry_ of _entries_, do
           1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _nextEntry_[0], _nextEntry_[1]).
@@ -336,7 +336,7 @@
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_).
+        1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -372,7 +372,7 @@
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _result_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_).
+        1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -466,7 +466,7 @@
         1. Let _mergedFields_ be ? CalendarMergeFields(_calendar_, _fields_, _inputFields_).
         1. Let _mergedFieldNames_ be the List containing all the elements of _receiverFieldNames_ followed by all the elements of _inputFieldNames_, with duplicate elements removed.
         1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _mergedFieldNames_, «»).
-        1. Let _options_ be ! OrdinaryObjectCreate(*null*).
+        1. Let _options_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
         1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_).
       </emu-alg>
@@ -480,7 +480,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _fields_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _yearMonth_.[[Calendar]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_yearMonth_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_yearMonth_.[[ISOMonth]])).
@@ -562,7 +562,7 @@
         The abstract operation ToTemporalYearMonth returns its argument _item_ if it is already a Temporal.PlainYearMonth instance, converts _item_ to a new Temporal.PlainYearMonth instance if possible, and throws otherwise.
       </p>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to ! OrdinaryObjectCreate(*null*).
+        1. If _options_ is not present, set _options_ to OrdinaryObjectCreate(*null*).
         1. Assert: Type(_options_) is Object.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
@@ -576,7 +576,7 @@
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
-        1. Let _canonicalYearMonthOptions_ be ! OrdinaryObjectCreate(*null*).
+        1. Let _canonicalYearMonthOptions_ be OrdinaryObjectCreate(*null*).
         1. Return ? YearMonthFromFields(_calendar_, _result_, _canonicalYearMonthOptions_).
       </emu-alg>
     </emu-clause>
@@ -650,7 +650,7 @@
       <h1>ConstrainISOYearMonth ( _year_, _month_ )</h1>
       <emu-alg>
         1. Assert: _year_ and _month_ are integers.
-        1. Set _month_ to ! ConstrainToRange(_month_, 1, 12).
+        1. Set _month_ to the result of clamping _month_ between 1 and 12.
         1. Return the Record {
           [[Year]]: _year_,
           [[Month]]: _month_
@@ -665,7 +665,7 @@
         1. Assert: Type(_calendar_) is Object.
         1. If ! IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
         1. If ! ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
-        1. If _newTarget_ is not present, set it to %Temporal.PlainYearMonth%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
         1. Set _object_.[[ISOMonth]] to _isoMonth_.

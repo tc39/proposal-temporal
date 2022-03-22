@@ -1,72 +1,14 @@
 {
   "https://tc39.es/ecma262/": [
     {
-      "type": "op",
-      "aoid": "CodePointsToString",
-      "id": "sec-codepointstostring"
-    },
-    {
-      "type": "op",
-      "aoid": "IsIntegralNumber",
-      "id": "sec-isintegralnumber"
-    },
-    {
-      "type": "op",
-      "aoid": "NumberToBigInt",
-      "id": "sec-numbertobigint"
-    },
-    {
-      "type": "op",
-      "aoid": "OrdinaryObjectCreate",
-      "id": "sec-ordinaryobjectcreate"
-    },
-    {
-      "type": "op",
-      "aoid": "RequireInternalSlot",
-      "id": "sec-requireinternalslot"
-    },
-    {
-      "type": "op",
-      "aoid": "StringToCodePoints",
-      "id": "sec-stringtocodepoints"
-    },
-    {
-      "type": "op",
-      "aoid": "ToBigInt",
-      "id": "sec-tobigint"
-    },
-    {
-      "type": "op",
-      "aoid": "ToIntegerOrInfinity",
-      "id": "sec-tointegerorinfinity"
-    },
-    {
-      "type": "production",
-      "name": "DecimalDigit",
-      "key": "DecimalDigit",
-      "id": "prod-DecimalDigit"
-    },
-    {
-      "type": "production",
-      "name": "DecimalDigits",
-      "key": "DecimalDigits",
-      "id": "prod-DecimalDigits"
-    },
-    {
-      "type": "production",
-      "name": "NonZeroDigit",
-      "key": "NonZeroDigit",
-      "id": "prod-NonZeroDigit"
-    },
-    {
       "type": "term",
       "term": "%Date.now%",
       "id": "sec-date.now"
     },
     {
       "type": "term",
-      "term": "%Object.prototype%",
-      "id": "sec-properties-of-the-object-prototype-object"
+      "term": "clamping",
+      "id": "clamping"
     }
   ],
   "https://tc39.es/ecma402/": [

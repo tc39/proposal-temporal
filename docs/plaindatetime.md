@@ -548,8 +548,6 @@ dt.withPlainDate('2017-09-06[u-ca=japanese]'); // => 2017-09-06T03:24:30[u-ca=ja
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, projected into `calendar`.
 
-This method is the same as `datetime.with({ calendar })`, but may be more efficient.
-
 Usage example:
 
 ```javascript
@@ -875,7 +873,7 @@ Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `datetime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
-For more information on the calendar annotation, see [ISO string extensions](./iso-string-ext.md#calendar-systems).
+For more information on the calendar annotation, see [the `Temporal` string formats documentation](./strings.md#calendar-systems).
 
 Example usage:
 

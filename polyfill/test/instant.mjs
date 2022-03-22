@@ -234,16 +234,6 @@ describe('Instant', () => {
       it(`(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
       it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
-    it('inst.add(durationObj)', () => {
-      const later = inst.add(Temporal.Duration.from('PT240H0.000000800S'));
-      equal(`${later}`, '1970-01-04T12:23:45.678902034Z');
-    });
-    it('invalid to add years, months, weeks, or days', () => {
-      throws(() => inst.add({ years: 1 }), RangeError);
-      throws(() => inst.add({ months: 1 }), RangeError);
-      throws(() => inst.add({ weeks: 1 }), RangeError);
-      throws(() => inst.add({ days: 1 }), RangeError);
-    });
     it('mixed positive and negative values always throw', () => {
       throws(() => inst.add({ hours: 1, minutes: -30 }), RangeError);
     });
@@ -257,16 +247,6 @@ describe('Instant', () => {
   });
   describe('Instant.subtract works', () => {
     const inst = Instant.from('1969-12-25T12:23:45.678901234Z');
-    it('inst.subtract(durationObj)', () => {
-      const earlier = inst.subtract(Temporal.Duration.from('PT240H0.000000800S'));
-      equal(`${earlier}`, '1969-12-15T12:23:45.678900434Z');
-    });
-    it('invalid to subtract years, months, weeks, or days', () => {
-      throws(() => inst.subtract({ years: 1 }), RangeError);
-      throws(() => inst.subtract({ months: 1 }), RangeError);
-      throws(() => inst.subtract({ weeks: 1 }), RangeError);
-      throws(() => inst.subtract({ days: 1 }), RangeError);
-    });
     it('mixed positive and negative values always throw', () => {
       throws(() => inst.subtract({ hours: 1, minutes: -30 }), RangeError);
     });
@@ -912,6 +892,8 @@ describe('Instant', () => {
       throws(() => Instant.from('+275760-09-13T00:00:00.000000001Z'), RangeError);
       equal(`${Instant.from('-271821-04-20T00:00Z')}`, '-271821-04-20T00:00:00Z');
       equal(`${Instant.from('+275760-09-13T00:00Z')}`, '+275760-09-13T00:00:00Z');
+      throws(() => Instant.from('-271821-04-20T00:00:00+00:01'), RangeError);
+      throws(() => Instant.from('+275760-09-13T00:00:00-00:01'), RangeError);
     });
     it('converting from DateTime', () => {
       const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');

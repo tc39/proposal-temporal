@@ -234,7 +234,7 @@ date.daysInYear; // => 365
 ## 字符串持久化
 
 为了持久性和互操作性，所有的 `Temporal` 类型都有一个字符串表示。类型和字符串之间的对应关系如下所示。
-关于 Temporal 中使用的 ISO 8601 和 RFC 3339 的更多信息和标准化工作，请参考 [ISO 字符串扩展](../iso-string-ext.md)。
+关于 Temporal 中使用的 ISO 8601 和 RFC 3339 的更多信息和标准化工作，请参考 [ISO 字符串扩展](../strings.md)。
 
 <img src="../persistence-model.svg">
 
@@ -244,5 +244,4 @@ date.daysInYear; // => 365
 
 - [Ambiguity](../ambiguity.md) &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。
 - [Balancing](../balancing.md) &mdash; 解释什么时候 `Temporal.Duration` 的单位会自然转换，什么时候不会。
-- [ISO String Extensions](../iso-string-ext.md) &mdash; 对 `Temporal` 使用的 ISO 8601 和/或 RFC 3339 标准的扩展讨论。
 - [Why do Temporal instances have a Calendar?](../calendar-review.md) &mdash; 关于为什么像 `Temporal.PlainDate` 或 `Temporal.PlainDate` 类型包含日历系统。这些扩展正在与 IETF 积极合作以使其进入标准化流程。

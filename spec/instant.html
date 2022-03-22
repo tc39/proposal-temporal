@@ -266,8 +266,9 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. Let _roundedNs_ be ! DifferenceInstant(_instant_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_roundedNs_) ≤ 1.728 × 10<sup>22</sup>.
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
-        1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -290,8 +291,9 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. Let _roundedNs_ be ! DifferenceInstant(_other_.[[Nanoseconds]], _instant_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_roundedNs_) ≤ 1.728 × 10<sup>22</sup>.
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
-        1. Return ? CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -308,7 +310,7 @@
           1. Throw a *TypeError* exception.
         1. If Type(_roundTo_) is String, then
           1. Let _paramString_ be _roundTo_.
-          1. Set _roundTo_ to ! OrdinaryObjectCreate(*null*).
+          1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
@@ -511,7 +513,7 @@
       <emu-alg>
         1. Assert: Type(_epochNanoseconds_) is BigInt.
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
-        1. If _newTarget_ is not present, set it to %Temporal.Instant%.
+        1. If _newTarget_ is not present, set _newTarget_ to %Temporal.Instant%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Instant.prototype%"*, « [[InitializedTemporalInstant]], [[Nanoseconds]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
         1. Return _object_.
@@ -546,7 +548,10 @@
         1. If _utc_ &lt; −8.64 × 10<sup>21</sup> or _utc_ &gt; 8.64 × 10<sup>21</sup>, then
           1. Throw a *RangeError* exception.
         1. Let _offsetNanoseconds_ be ? ParseTimeZoneOffsetString(_offsetString_).
-        1. Return _utc_ − _offsetNanoseconds_.
+        1. Let _result_ be _utc_ − _offsetNanoseconds_.
+        1. If ! IsValidEpochNanoseconds(ℤ(_result_)) is *false*, then
+          1. Throw a *RangeError* exception.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
@@ -559,13 +564,23 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addinstant" aoid="AddInstant">
-      <h1>AddInstant ( _epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
-      <p>
-        The abstract operation AddInstant adds a duration in various time units to a number of nanoseconds since the Unix epoch.
-      </p>
+    <emu-clause id="sec-temporal-addinstant" type="abstract operation">
+      <h1>
+        AddInstant (
+          _epochNanoseconds_: a BigInt value,
+          _hours_: an integer Number value,
+          _minutes_: an integer Number value,
+          _seconds_: an integer Number value,
+          _milliseconds_: an integer Number value,
+          _microseconds_: an integer Number value,
+          _nanoseconds_: an integer Number value,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds a duration in various time units to a number of nanoseconds since the Unix epoch, and returns the result as a BigInt value.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integer Number values.
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +
             ℤ(_microseconds_) × *1000*<sub>ℤ</sub> +
             ℤ(_milliseconds_) × *10<sup>6</sup>*<sub>ℤ</sub> +

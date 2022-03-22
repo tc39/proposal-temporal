@@ -63,6 +63,37 @@ function withCode(productionLike, func) {
   return new FromFunction(func, productionLike);
 }
 
+// Return a productionLike that defers to another productionLike for generation
+// but filters out any result that a validator function
+// rejects with SyntaxError.
+function withSyntaxConstraints(productionLike, validatorFunc) {
+  return { generate: filtered };
+
+  function filtered(data) {
+    let dataClone = { ...data };
+    let result = productionLike.generate(dataClone);
+    try {
+      validatorFunc(result);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        // Generated result violated a constraint; try again
+        // (but allow crashing if the call stack gets too deep).
+        return filtered(data);
+      } else {
+        // Propagate any other error.
+        throw e;
+      }
+    }
+
+    // Copy properties that were modified on the cloned input data.
+    for (let key of Reflect.ownKeys(dataClone)) {
+      data[key] = dataClone[key];
+    }
+
+    return result;
+  }
+}
+
 class Literal {
   constructor(str) {
     this.str = str;
@@ -190,13 +221,17 @@ const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
   data.z = 'Z';
-  data.offset = '+00:00';
 });
 const timeFractionalPart = between(1, 9, digit());
 const fraction = seq(decimalSeparator, timeFractionalPart);
 
 const dateFourDigitYear = repeat(4, digit());
-const dateExtendedYear = seq(sign, repeat(6, digit()));
+
+const dateExtendedYear = withSyntaxConstraints(seq(sign, repeat(6, digit())), (result) => {
+  if (result === '-000000' || result === '−000000') {
+    throw new SyntaxError('Negative zero extended year');
+  }
+});
 const dateYear = withCode(
   choice(dateFourDigitYear, dateExtendedYear),
   (data, result) => (data.year = +result.replace('\u2212', '-'))
@@ -451,29 +486,34 @@ const comparisonItems = {
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
-const mode = 'Instant';
-
-for (let count = 0; count < 1000; count++) {
-  let generatedData, fuzzed;
-  do {
-    generatedData = {};
-    fuzzed = goals[mode].generate(generatedData);
-  } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
-  try {
-    const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
-    for (let prop of comparisonItems[mode]) {
-      let expected = generatedData[prop];
-      if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
-      assert.equal(parsed[prop], expected);
+function fuzzMode(mode) {
+  console.log('// starting to fuzz ' + mode);
+  for (let count = 0; count < 1000; count++) {
+    let generatedData, fuzzed;
+    do {
+      generatedData = {};
+      fuzzed = goals[mode].generate(generatedData);
+    } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
+    try {
+      const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
+      for (let prop of comparisonItems[mode]) {
+        let expected = generatedData[prop];
+        if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
+        assert.equal(parsed[prop], expected);
+      }
+      console.log(`${fuzzed} => ok`);
+    } catch (e) {
+      if (e instanceof assert.AssertionError) {
+        console.log(`${fuzzed} => parsed wrong: expected`, e.expected, 'actual', e.actual);
+        console.log('generated data:', generatedData);
+      } else {
+        console.log(`${fuzzed} failed!`, e);
+      }
+      return 0;
     }
-    console.log(`${fuzzed} => ok`);
-  } catch (e) {
-    if (e instanceof assert.AssertionError) {
-      console.log(`${fuzzed} => parsed wrong: expected`, e.expected, 'actual', e.actual);
-      console.log('generated data:', generatedData);
-    } else {
-      console.log(`${fuzzed} failed!`, e);
-    }
-    break;
   }
+  console.log('// done fuzzing ' + mode);
+  return 1;
 }
+
+Object.keys(goals).every(fuzzMode);

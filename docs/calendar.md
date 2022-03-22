@@ -368,13 +368,13 @@ Temporal.Calendar.from('chinese').dateUntil(
 ); // => P1M2D
 ```
 
-### calendar.**fields**(_fields_: Iterable&lt;string>) : Iterable&lt;string>
+### calendar.**fields**(_fields_: Iterable&lt;string>) : string[]
 
 **Parameters:**
 
 - `fields` (array of strings, or other iterable yielding strings): A list of field names.
 
-**Returns:** a new list of field names.
+**Returns:** a new array of field names.
 
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using the `from()` static methods and `with()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainMonthDay`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`, and a number of other methods.

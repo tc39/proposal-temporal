@@ -103,3 +103,16 @@ jobs:
           node-version: 12.x
       - run: npm ci
       - run: npm run test-cookbook
+  test-validstrings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: use node.js v16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: |
+          cd polyfill
+          npm install
+          node --experimental-modules --no-warnings --icu-data-dir ./node_modules/full-icu/ test/validStrings.mjs

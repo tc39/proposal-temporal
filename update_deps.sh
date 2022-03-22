@@ -1,5 +1,6 @@
 # root folder dependencies
 npx npm-check-updates -u
+npm install
 
 # polyfill dependencies
 # NOTE: we don't update demitasse because our tests aren't compatible with its latest version

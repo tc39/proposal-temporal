@@ -101,7 +101,7 @@
         </p>
         <emu-alg>
           1. If _options_ is *undefined*, then
-            1. Return ! OrdinaryObjectCreate(*null*).
+            1. Return OrdinaryObjectCreate(*null*).
           1. If Type(_options_) is Object, then
             1. Return _options_.
           1. Throw a *TypeError* exception.
@@ -149,26 +149,8 @@
         1. Let _calendar_ be _r_.[[ca]].
         1. Set _dateTimeFormat_.[[Calendar]] to _calendar_.
         1. <del>Set _dateTimeFormat_.[[HourCycle]] to _r_.[[hc]].</del>
-        1. <ins>Let _dataLocale_ be _r_.[[dataLocale]].</ins>
-        1. <ins>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</ins>
-        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
-        1. <ins>Let _hc_ be _r_.[[hc]].</ins>
-        1. <ins>If _hc_ is *null*, then</ins>
-          1. <ins>Set _hc_ to _hcDefault_.</ins>
-        1. <ins>If _hour12_ is not *undefined*, then</ins>
-          1. <ins>If _hour12_ is *true*, then</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h11"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h12"*.</ins>
-          1. <ins>Else,</ins>
-            1. <ins>Assert: _hour12_ is *false*.</ins>
-            1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
-              1. <ins>Set _hc_ to *"h23"*.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Set _hc_ to *"h24"*.</ins>
         1. Set _dateTimeFormat_.[[NumberingSystem]] to _r_.[[nu]].
-        1. <del>Let _dataLocale_ be _r_.[[dataLocale]].</del>
+        1. Let _dataLocale_ be _r_.[[dataLocale]].
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZone_ be DefaultTimeZone().
@@ -186,7 +168,23 @@
           1. Else,
             1. Let _value_ be ? GetOption(_options_, _prop_, *"string"*, « the strings given in the Values column of the row », *undefined*).
           1. Set _opt_.[[&lt;_prop_&gt;]] to _value_.
-        1. <del>Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].</del>
+        1. Let _dataLocaleData_ be _localeData_.[[&lt;_dataLocale_&gt;]].
+        1. <ins>Let _hcDefault_ be _dataLocaleData_.[[hourCycle]].</ins>
+        1. <ins>Let _hc_ be _r_.[[hc]].</ins>
+        1. <ins>If _hc_ is *null*, then</ins>
+          1. <ins>Set _hc_ to _hcDefault_.</ins>
+        1. <ins>If _hour12_ is *true*, then</ins>
+          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+            1. <ins>Set _hc_ to *"h11"*.</ins>
+          1. <ins>Else,</ins>
+            1. <ins>Set _hc_ to *"h12"*.</ins>
+        1. <ins>Else if _hour12_ is *false*, then</ins>
+          1. <ins>If _hcDefault_ is *"h11"* or *"h23"*, then</ins>
+            1. <ins>Set _hc_ to *"h23"*.</ins>
+          1. <ins>Else,</ins>
+            1. <ins>Set _hc_ to *"h24"*.</ins>
+        1. <ins>Else,</ins>
+          1. <ins>Assert: _hour12_ is *undefined*.</ins>
         1. Let _matcher_ be ? GetOption(_options_, *"formatMatcher"*, *"string"*, « *"basic"*, *"best fit"* », *"best fit"*).
         1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, *"string"*, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
@@ -335,7 +333,7 @@
         1. Let _dtf_ be _F_.[[DateTimeFormat]].
         1. Assert: Type(_dtf_) is Object and _dtf_ has an [[InitializedDateTimeFormat]] internal slot.
         1. <del>If _date_ is not provided or is *undefined*, then</del>
-          1. <del>Let _x_ be Call(%Date.now%, *undefined*).</del>
+          1. <del>Let _x_ be ! Call(%Date.now%, *undefined*).</del>
         1. <del>Else,</del>
           1. <del>Let _x_ be ? ToNumber(_date_).</del>
         1. Return ? FormatDateTime(_dtf_, <del>_x_</del><ins>_date_</ins>).
@@ -482,7 +480,7 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimePattern(_dateTimeFormat_, _x_).
-        1. Let _result_ be ArrayCreate(0).
+        1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record _part_ in _parts_, do
           1. Let _O_ be ObjectCreate(%Object.prototype%).
@@ -605,7 +603,7 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
-        1. Let _result_ be ArrayCreate(0).
+        1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record _part_ in _parts_, do
           1. Let _O_ be ObjectCreate(%ObjectPrototype%).
@@ -881,7 +879,7 @@
       <h1>HandleDateTimeOthers ( _dateTimeFormat_, _x_ )</h1>
 
       <p>
-        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be an ECMAScript value which IsTemporalObject(_x_) return *false* ). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be an ECMAScript value which IsTemporalObject(_x_) returns *false*). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
@@ -894,7 +892,7 @@
         1. Set _x_ to ? ToNumber(_x_).
       1. Set _x_ to TimeClip(_x_).
       1. If _x_ is *NaN*, throw a *RangeError* exception.
-      1. Let _epochNanoseconds_ be ℤ(_x_) × 10<sup>6</sup>.
+      1. Let _epochNanoseconds_ be ℤ(_x_) × *10<sup>6</sup>*<sub>ℤ</sub>.
       1. Return the Record {
           [[pattern]]: _pattern_,
           [[rangePatterns]]: _rangePatterns_,
@@ -914,20 +912,20 @@
       <emu-alg>
       1. If ! IsTemporalObject(_x_) is *true*, then
         1. If _x_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Return ! HandleDateTimeTemporalDate( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalDate(_dateTimeFormat_, _x_).
         1. If _x_ has an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Return ! HandleDateTimeTemporalYearMonth( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalYearMonth(_dateTimeFormat_, _x_).
         1. If _x_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Return ! HandleDateTimeTemporalMonthDay( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalMonthDay(_dateTimeFormat_, _x_).
         1. If _x_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Return ! HandleDateTimeTemporalTime( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalTime(_dateTimeFormat_, _x_).
         1. If _x_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Return ! HandleDateTimeTemporalDateTime( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalDateTime(_dateTimeFormat_, _x_).
         1. If _x_ has an [[InitializedTemporalInstant]] internal slot, then
-          1. Return ! HandleDateTimeTemporalInstant( _dateTimeFormat_, _x_ ).
+          1. Return ! HandleDateTimeTemporalInstant(_dateTimeFormat_, _x_).
         1. Assert: _x_ has an [[InitializedTemporalZonedDateTime]] internal slot.
-        1. Return ! HandleDateTimeTemporalZonedDateTime( _dateTimeFormat_, _x_ ).
-      1. Return ! HandleDateTimeOthers( _dateTimeFormat_, _x_ ).
+        1. Return ! HandleDateTimeTemporalZonedDateTime(_dateTimeFormat_, _x_).
+      1. Return ! HandleDateTimeOthers(_dateTimeFormat_, _x_).
       </emu-alg>
     </emu-clause>
     </ins>
@@ -944,7 +942,7 @@
         1. If _calendar_ is *"gregory"*, then
           1. <del>Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.</del>
           1. <ins>Let _timeZoneOffset_ be ! GetIANATimeZoneOffsetNanoseconds(_t_, _timeZone_).</ins>
-          1. Let _tz_ be the time value _t_ + _timeZoneOffset_.
+          1. Let _tz_ be _t_ + _timeZoneOffset_.
           1. Return a record with fields calculated from _tz_ according to <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins>.
         1. Else,
           1. Return a record with the fields of Column 1 of <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins> calculated from _t_ for the given _calendar_ and _timeZone_. The calculations should use best available information about the specified _calendar_ and _timeZone_, including current and historical information about time zone offsets from UTC and daylight saving time rules. <ins>Given the same values of _t_, _calendar_, and _timeZone_, the result must be the same for the lifetime of the surrounding agent</ins>.
@@ -1068,7 +1066,7 @@
         1. Let _dtf_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
         1. <del>If _date_ is *undefined*, then</del>
-          1. <del>Let _x_ be Call(%Date.now%, *undefined*).</del>
+          1. <del>Let _x_ be ! Call(%Date.now%, *undefined*).</del>
         1. <del>Else,</del>
           1. <del>Let _x_ be ? ToNumber(_date_).</del>
         1. Return ? FormatDateTimeToParts(_dtf_, <del>_x_</del><ins>_date_</ins>).
@@ -1289,8 +1287,9 @@
       <li><del>[[FractionalSecondDigits]] is either *undefined* or a positive, non-negative integer Number value indicating the fraction digits to be used for fractional seconds. Numbers will be rounded or padded with trailing zeroes if necessary.</del></li>
       <li><del>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24. [[HourCycle]] is only used when [[Hour]] is not *undefined*.</del></li>
       <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
-      <li>[[Pattern]]<ins>, [[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are</ins> <del>is a String value</del><ins>records containing at least a [[pattern]] field</ins> as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+      <li>[[Pattern]] is a String value as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
       <li>[[RangePatterns]] is a Record as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</li>
+      <li><ins>[[TemporalPlainDatePattern]], [[TemporalPlainYearMonthPattern]], [[TemporalPlainMonthDayPattern]], [[TemporalPlainTimePattern]], [[TemporalPlainDateTimePattern]], [[TemporalInstantPattern]], and [[TemporalZonedDateTimePattern]] are records containing at least a [[pattern]] field as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.</ins></li>
     </ul>
 
     <p>
@@ -1447,8 +1446,9 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be ! DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
-              1. Let _result_ be a Record with [[Years]], [[Months]], [[Weeks]], and [[Days]] fields, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and _calendar_.[[Identifier]].
-            1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+              1. Let _result_ be a Date Duration Record, that is the result of implementation-defined processing of _one_, _two_, _largestUnit_, and _calendar_.[[Identifier]].
+              1. Assert: ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
+            1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
           </emu-alg>
         </emu-clause>
 
@@ -1757,7 +1757,7 @@
               1. Let _result_ be _fieldNames_.
             1. Else,
               1. Let _result_ be the result of implementation-defined processing of _fieldNames_ and _calendar_.[[Identifier]].
-            1. Return ! CreateArrayFromList(_result_).
+            1. Return CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
 
@@ -1776,13 +1776,13 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return ? DefaultMergeFields(_fields_, _additionalFields_).
             1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
-            1. Let _fieldsCopied_ be ! OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _fieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
             1. For each element _key_ of _fieldsKeys_, do
               1. Let _propValue_ be ? Get(_fields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_fieldsCopied_, _key_, _propValue_).
             1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
-            1. Let _additionalFieldsCopied_ be ! OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _additionalFieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
             1. For each element _key_ of _additionalFieldsKeys_, do
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
@@ -2059,7 +2059,7 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-preparetemporalfields"></emu-xref>.</p>
         <emu-alg>
           1. Assert: Type(_fields_) is Object.
-          1. Let _result_ be ! OrdinaryObjectCreate(%Object.prototype%).
+          1. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
           1. For each value _property_ of _fieldNames_, do
             1. Let _value_ be ? Get(_fields_, _property_).
             1. If _value_ is *undefined*, then
