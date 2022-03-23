@@ -13,6 +13,10 @@
   ],
   "https://tc39.es/ecma402/": [
     {
+      "type": "note",
+      "id": "legacy-constructor"
+    },
+    {
       "type": "op",
       "aoid": "BasicFormatMatcher",
       "id": "sec-basicformatmatcher"
@@ -31,6 +35,11 @@
       "type": "op",
       "aoid": "FormatNumeric",
       "id": "sec-formatnumber"
+    },
+    {
+      "type": "op",
+      "aoid": "GetNumberOption",
+      "id": "sec-getnumberoption"
     },
     {
       "type": "op",
@@ -74,12 +83,12 @@
     },
     {
       "type": "clause",
-      "number": "Table 4",
+      "number": "Table 6",
       "id": "table-datetimeformat-components"
     },
     {
       "type": "clause",
-      "number": "Table 5",
+      "number": "Table 7",
       "id": "table-datetimeformat-tolocaltime-record"
     },
     {
