@@ -596,7 +596,7 @@
 
       <emu-alg>
         1. Let _parts_ be ? PartitionDateTimeRangePattern(_dateTimeFormat_, _x_, _y_).
-        1. Let _result_ be ArrayCreate(0).
+        1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record { [[Type]], [[Value]], [[Source]] } _part_ in _parts_, do
           1. Let _O_ be OrdinaryObjectCreate(%ObjectPrototype%).
@@ -1113,7 +1113,7 @@
         1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
           1. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
         1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
-        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
         1. For each row of <emu-xref href="#table-datetimeformat-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
           1. If _p_ is *"hour12"*, then
