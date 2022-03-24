@@ -402,38 +402,41 @@ const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) =
   data.nanoseconds = +fraction.slice(6, 9) * data.factor;
 });
 const durationFraction = seq(decimalSeparator, durationFractionalPart);
+const digitsNotInfinite = withSyntaxConstraints(oneOrMore(digit()), (result) => {
+  if (!Number.isFinite(+result)) throw new SyntaxError('try again on infinity');
+});
 const durationSeconds = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.seconds = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.seconds = +result * data.factor)),
   [durationFraction],
   secondsDesignator
 );
 const durationMinutes = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.minutes = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.minutes = +result * data.factor)),
   minutesDesignator,
   [durationSeconds]
 );
 const durationHours = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.hours = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.hours = +result * data.factor)),
   hoursDesignator,
   [choice(durationMinutes, durationSeconds)]
 );
 const durationTime = seq(timeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.days = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.days = +result * data.factor)),
   daysDesignator
 );
 const durationWeeks = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.weeks = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.weeks = +result * data.factor)),
   weeksDesignator,
   [durationDays]
 );
 const durationMonths = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.months = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.months = +result * data.factor)),
   monthsDesignator,
   [choice(durationWeeks, durationDays)]
 );
 const durationYears = seq(
-  withCode(oneOrMore(digit()), (data, result) => (data.years = +result * data.factor)),
+  withCode(digitsNotInfinite, (data, result) => (data.years = +result * data.factor)),
   yearsDesignator,
   [choice(durationMonths, durationWeeks, durationDays)]
 );
