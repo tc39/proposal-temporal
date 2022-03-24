@@ -519,4 +519,4 @@ function fuzzMode(mode) {
   return 1;
 }
 
-Object.keys(goals).every(fuzzMode);
+process.exit(Object.keys(goals).every(fuzzMode) ? 0 : 1);
