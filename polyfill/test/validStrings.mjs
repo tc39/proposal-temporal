@@ -73,7 +73,7 @@ function withSyntaxConstraints(productionLike, validatorFunc) {
     let dataClone = { ...data };
     let result = productionLike.generate(dataClone);
     try {
-      validatorFunc(result);
+      validatorFunc(result, dataClone);
     } catch (e) {
       if (e instanceof SyntaxError) {
         // Generated result violated a constraint; try again
@@ -383,9 +383,15 @@ const timeSpecWithOptionalTimeZoneNotAmbiguous = choice(
 );
 const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 
-const dateSpecMonthDay = seq(['--'], dateMonth, ['-'], dateDay);
+function validateDayOfMonth(result, { year, month, day }) {
+  if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
+}
+const dateSpecMonthDay = withSyntaxConstraints(seq(['--'], dateMonth, ['-'], dateDay), validateDayOfMonth);
 const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
-const date = choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay));
+const date = withSyntaxConstraints(
+  choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
+  validateDayOfMonth
+);
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
 const calendarDateTime = seq(dateTime, [calendar]);
 const calendarDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [calendar]);
