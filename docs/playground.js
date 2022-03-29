@@ -2281,13 +2281,7 @@
   var IsPropertyKey$2 = IsPropertyKey$3;
   var ToObject = ToObject$1;
 
-  /**
-   * 7.3.2 GetV (V, P)
-   * 1. Assert: IsPropertyKey(P) is true.
-   * 2. Let O be ToObject(V).
-   * 3. ReturnIfAbrupt(O).
-   * 4. Return O.[[Get]](P, V).
-   */
+  // https://ecma-international.org/ecma-262/6.0/#sec-getv
 
   var GetV$1 = function GetV(V, P) {
   	// 7.3.2.1
@@ -2387,15 +2381,7 @@
   var IsCallable = IsCallable$1;
   var IsPropertyKey$1 = IsPropertyKey$3;
 
-  /**
-   * 7.3.9 - https://ecma-international.org/ecma-262/6.0/#sec-getmethod
-   * 1. Assert: IsPropertyKey(P) is true.
-   * 2. Let func be GetV(O, P).
-   * 3. ReturnIfAbrupt(func).
-   * 4. If func is either undefined or null, return undefined.
-   * 5. If IsCallable(func) is false, throw a TypeError exception.
-   * 6. Return func.
-   */
+  // https://ecma-international.org/ecma-262/6.0/#sec-getmethod
 
   var GetMethod$1 = function GetMethod(O, P) {
   	// 7.3.9.1
