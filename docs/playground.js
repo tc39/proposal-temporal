@@ -13219,8 +13219,8 @@
         var ms2 = GetSlot(two, MILLISECONDS);
         var µs2 = GetSlot(two, MICROSECONDS);
         var ns2 = GetSlot(two, NANOSECONDS);
-        var shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
-        var shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
+        var shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
+        var shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
 
         if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
           var _ES$UnbalanceDuration3 = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'day', relativeTo);
