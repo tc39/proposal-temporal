@@ -8311,7 +8311,7 @@
       var calendar = GetSlot(monthDay, CALENDAR);
       var calendarID = ES.ToString(calendar);
 
-      if (calendarID !== 'iso8601') {
+      if (showCalendar === 'always' || calendarID !== 'iso8601') {
         var year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
         resultString = "".concat(year, "-").concat(resultString);
       }
@@ -8328,7 +8328,7 @@
       var calendar = GetSlot(yearMonth, CALENDAR);
       var calendarID = ES.ToString(calendar);
 
-      if (calendarID !== 'iso8601') {
+      if (showCalendar === 'always' || calendarID !== 'iso8601') {
         var day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
         resultString += "-".concat(day);
       }
