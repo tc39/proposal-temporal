@@ -8115,12 +8115,12 @@
     ISOYearString: function ISOYearString(year) {
       var yearString;
 
-      if (year < 1000 || year > 9999) {
+      if (year < 0 || year > 9999) {
         var sign = year < 0 ? '-' : '+';
         var yearNumber = MathAbs(year);
         yearString = sign + "000000".concat(yearNumber).slice(-6);
       } else {
-        yearString = "".concat(year);
+        yearString = "0000".concat(year).slice(-4);
       }
 
       return yearString;
