@@ -49,17 +49,17 @@
       </emu-alg>
     </emu-clause>
 
-    <!-- Remove the zero-width space when merging into ecma402; this is in order
-         to prevent ecmarkup from complaining about duplicate-named AOs -->
     <emu-clause id="sup-canonicalizetimezonename" type="abstract operation">
       <h1>
-        CanonicalizeTimeZoneName&ZeroWidthSpace; (
+        CanonicalizeTimeZoneName (
           _timeZone_: a String value that is a valid time zone name as verified by IsValidTimeZoneName,
         )
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>It returns the canonical and case-regularized form of _timeZone_.</dd>
+        <dt>redefinition</dt>
+        <dd>true</dd>
       </dl>
 
       <emu-alg>
