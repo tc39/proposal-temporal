@@ -1,119 +1,116 @@
-{
-  "https://tc39.es/ecma262/": [
-    {
-      "type": "term",
-      "term": "%Date.now%",
-      "id": "sec-date.now"
-    },
-    {
-      "type": "term",
-      "term": "clamping",
-      "id": "clamping"
-    }
-  ],
-  "https://tc39.es/ecma402/": [
-    {
-      "type": "note",
-      "id": "legacy-constructor"
-    },
-    {
-      "type": "op",
-      "aoid": "BasicFormatMatcher",
-      "id": "sec-basicformatmatcher"
-    },
-    {
-      "type": "op",
-      "aoid": "BestFitFormatMatcher",
-      "id": "sec-bestfitformatmatcher"
-    },
-    {
-      "type": "op",
-      "aoid": "CanonicalizeLocaleList",
-      "id": "sec-canonicalizelocalelist"
-    },
-    {
-      "type": "op",
-      "aoid": "FormatNumeric",
-      "id": "sec-formatnumber"
-    },
-    {
-      "type": "op",
-      "aoid": "GetNumberOption",
-      "id": "sec-getnumberoption"
-    },
-    {
-      "type": "op",
-      "aoid": "ToDateTimeOptions",
-      "id": "sec-todatetimeoptions"
-    },
-    {
-      "type": "op",
-      "aoid": "ToLocalTime",
-      "id": "sec-tolocaltime"
-    },
-    {
-      "type": "op",
-      "aoid": "UnwrapDateTimeFormat",
-      "id": "sec-unwrapdatetimeformat"
-    },
-    {
-      "type": "clause",
-      "number": "Internal slots",
-      "id": "sec-intl.datetimeformat-internal-slots"
-    },
-    {
-      "type": "clause",
-      "number": "get Intl.DateTimeFormat.prototype.format",
-      "id": "sec-intl.datetimeformat.prototype.format"
-    },
-    {
-      "type": "clause",
-      "number": "6.1",
-      "id": "sec-case-sensitivity-and-case-mapping"
-    },
-    {
-      "type": "term",
-      "term": "%DateTimeFormat%",
-      "id": "sec-intl-datetimeformat-constructor"
-    },
-    {
-      "type": "term",
-      "term": "%NumberFormat%",
-      "id": "sec-intl-numberformat-constructor"
-    },
-    {
-      "type": "clause",
-      "number": "Table 6",
-      "id": "table-datetimeformat-components"
-    },
-    {
-      "type": "clause",
-      "number": "Table 7",
-      "id": "table-datetimeformat-tolocaltime-record"
-    },
-    {
-      "type": "op",
-      "aoid": "DateTimeStyleFormat",
-      "id": "sec-date-time-style-format"
-    },
-    {
-      "type": "op",
-      "aoid": "PartitionPattern",
-      "id": "sec-partitionpattern"
-    }
-  ],
-  "https://tc39.es/proposal-intl-duration-format/": [
-    {
-      "type": "op",
-      "aoid": "PartitionDurationFormatPattern",
-      "id": "sec-partitiondurationformatpattern"
-    }
-  ],
-  "https://tc39.es/proposal-intl-DateTimeFormat-formatRange/": [
-    {
-      "type": "clause",
-      "number": 3,
-      "id": "table-datetimeformat-rangepatternfields"
-    }
-  ]
-}
+[
+  {
+    "location": "https://tc39.es/ecma402/",
+    "entries": [
+      {
+        "type": "note",
+        "id": "legacy-constructor"
+      },
+      {
+        "type": "op",
+        "aoid": "BasicFormatMatcher",
+        "id": "sec-basicformatmatcher"
+      },
+      {
+        "type": "op",
+        "aoid": "BestFitFormatMatcher",
+        "id": "sec-bestfitformatmatcher"
+      },
+      {
+        "type": "op",
+        "aoid": "CanonicalizeLocaleList",
+        "id": "sec-canonicalizelocalelist"
+      },
+      {
+        "type": "op",
+        "aoid": "FormatNumeric",
+        "id": "sec-formatnumber"
+      },
+      {
+        "type": "op",
+        "aoid": "GetNumberOption",
+        "id": "sec-getnumberoption"
+      },
+      {
+        "type": "op",
+        "aoid": "ToDateTimeOptions",
+        "id": "sec-todatetimeoptions"
+      },
+      {
+        "type": "op",
+        "aoid": "ToLocalTime",
+        "id": "sec-tolocaltime"
+      },
+      {
+        "type": "op",
+        "aoid": "UnwrapDateTimeFormat",
+        "id": "sec-unwrapdatetimeformat"
+      },
+      {
+        "type": "clause",
+        "number": "Internal slots",
+        "id": "sec-intl.datetimeformat-internal-slots"
+      },
+      {
+        "type": "clause",
+        "number": "get Intl.DateTimeFormat.prototype.format",
+        "id": "sec-intl.datetimeformat.prototype.format"
+      },
+      {
+        "type": "clause",
+        "number": "6.1",
+        "id": "sec-case-sensitivity-and-case-mapping"
+      },
+      {
+        "type": "term",
+        "term": "%DateTimeFormat%",
+        "id": "sec-intl-datetimeformat-constructor"
+      },
+      {
+        "type": "term",
+        "term": "%NumberFormat%",
+        "id": "sec-intl-numberformat-constructor"
+      },
+      {
+        "type": "clause",
+        "number": "Table 6",
+        "id": "table-datetimeformat-components"
+      },
+      {
+        "type": "clause",
+        "number": "Table 7",
+        "id": "table-datetimeformat-tolocaltime-record"
+      },
+      {
+        "type": "op",
+        "aoid": "DateTimeStyleFormat",
+        "id": "sec-date-time-style-format"
+      },
+      {
+        "type": "op",
+        "aoid": "PartitionPattern",
+        "id": "sec-partitionpattern"
+      }
+    ]
+  },
+  {
+    "location": "https://tc39.es/proposal-intl-duration-format/",
+    "entries": [
+      {
+        "type": "op",
+        "aoid": "PartitionDurationFormatPattern",
+        "id": "sec-partitiondurationformatpattern"
+      }
+    ]
+  },
+  {
+    "location": "https://tc39.es/proposal-intl-DateTimeFormat-formatRange/",
+    "entries": [
+      {
+        "type": "clause",
+        "number": 3,
+        "id": "table-datetimeformat-rangepatternfields"
+      }
+    ]
+  }
+]
