@@ -234,4 +234,4 @@ date.daysInYear; // => 365
 
 - [曖昧性](./ambiguity.md) &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響
 - [バランシング](./balancing.md) &mdash; `Temporal.Duration`の単位が、いつ繰り上げされる（またはされない）のかについての説明
-- [なぜ Temporal インスタンスはカレンダーの情報を持っているのか？](./calendar-review.md) &mdash; `Temporal.PlainDate`や`Temporal.PlainDate`がカレンダーシステムを保持している理由と背景
+- [なぜ Temporal インスタンスはカレンダーの情報を持っているのか？](./calendar-review.md) &mdash; `Temporal.PlainDate`や`Temporal.ZonedDateTime`がカレンダーシステムを保持している理由と背景
