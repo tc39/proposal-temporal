@@ -14,7 +14,7 @@ However, a `Temporal.Instant` can be created from any of several expressions tha
 
 If you have a legacy `Date` instance, you can use its `toTemporalInstant()` method to convert to a `Temporal.Instant`.
 
-Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.PlainDateTime` (and from there into any of the other `Temporal` objects.)
+Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.ZonedDateTime` or `Temporal.PlainDateTime` (and from there into any of the other `Temporal` objects.)
 
 Like Unix time, `Temporal.Instant` ignores leap seconds.
 
