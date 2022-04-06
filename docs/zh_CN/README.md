@@ -244,4 +244,4 @@ date.daysInYear; // => 365
 
 - [Ambiguity](../ambiguity.md) &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。
 - [Balancing](../balancing.md) &mdash; 解释什么时候 `Temporal.Duration` 的单位会自然转换，什么时候不会。
-- [Why do Temporal instances have a Calendar?](../calendar-review.md) &mdash; 关于为什么像 `Temporal.PlainDate` 或 `Temporal.PlainDate` 类型包含日历系统。这些扩展正在与 IETF 积极合作以使其进入标准化流程。
+- [Why do Temporal instances have a Calendar?](../calendar-review.md) &mdash; 关于为什么像 `Temporal.PlainDate` 或 `Temporal.ZonedDateTime` 类型包含日历系统。这些扩展正在与 IETF 积极合作以使其进入标准化流程。
