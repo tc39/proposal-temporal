@@ -215,7 +215,7 @@ As such <code>Temporal.Instant</code> has no concept of days, months or even hou
 <p>For convenience of interoperability, it internally uses nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> (midnight UTC on January 1, 1970).
 However, a <code>Temporal.Instant</code> can be created from any of several expressions that refer to an exact time, including an ISO 8601 string with a time zone such as <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code>.</p>
 <p>If you have a legacy <code>Date</code> instance, you can use its <code>toTemporalInstant()</code> method to convert to a <code>Temporal.Instant</code>.</p>
-<p>Since <code>Temporal.Instant</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.PlainDateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
+<p>Since <code>Temporal.Instant</code> doesn&#39;t contain any information about time zones, a <code>Temporal.TimeZone</code> is needed in order to convert it into a <code>Temporal.ZonedDateTime</code> or <code>Temporal.PlainDateTime</code> (and from there into any of the other <code>Temporal</code> objects.)</p>
 <p>Like Unix time, <code>Temporal.Instant</code> ignores leap seconds.</p>
 <h2 id="constructor">Constructor</h2>
 <h3 id="new-Temporal-Instant"><a class="heading-link" href="#new-Temporal-Instant"></a><strong>new Temporal.Instant</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
