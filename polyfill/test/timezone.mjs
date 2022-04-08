@@ -144,13 +144,6 @@ describe('TimeZone', () => {
       const namedTz = Temporal.TimeZone.from('America/Godthab');
       throws(() => namedTz.getInstantFor(max), RangeError);
     });
-    it('options may only be an object or undefined', () => {
-      const dt = Temporal.PlainDateTime.from('2019-10-29T10:46:38.271986102');
-      const tz = Temporal.TimeZone.from('America/Sao_Paulo');
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => tz.getInstantFor(dt, badOptions), TypeError)
-      );
-    });
     it('casts argument', () => {
       const tz = Temporal.TimeZone.from('Europe/Amsterdam');
       equal(`${tz.getInstantFor('2019-10-29T10:46:38.271986102')}`, '2019-10-29T09:46:38.271986102Z');

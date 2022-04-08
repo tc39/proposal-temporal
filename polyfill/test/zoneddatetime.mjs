@@ -549,15 +549,10 @@ describe('ZonedDateTime', () => {
         () => ZonedDateTime.from({ year: 1976, month: undefined, monthCode: undefined, day: 18, timeZone: lagos }),
         TypeError
       ));
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: lagos }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(
-          `${ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: lagos }, options)}`,
-          '1976-11-18T00:00:00+01:00[Africa/Lagos]'
-        )
+    it('options may be a function object', () => {
+      equal(
+        `${ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: lagos }, () => {})}`,
+        '1976-11-18T00:00:00+01:00[Africa/Lagos]'
       );
     });
     it('object must contain at least the required correctly-spelled properties', () => {
@@ -1005,13 +1000,8 @@ describe('ZonedDateTime', () => {
         );
       });
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => zdt.with({ day: 5 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${zdt.with({ day: 5 }, options)}`, '1976-11-05T15:23:30.123456789+00:00[UTC]')
-      );
+    it('options may be a function object', () => {
+      equal(`${zdt.with({ day: 5 }, () => {})}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => zdt.with({}), TypeError);
@@ -1244,13 +1234,8 @@ describe('ZonedDateTime', () => {
         throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => zdt.add({ years: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${zdt.add({ years: 1 }, options)}`, '1970-12-25T12:23:45.678901234+00:00[UTC]')
-      );
+    it('options may be a function object', () => {
+      equal(`${zdt.add({ years: 1 }, () => {})}`, '1970-12-25T12:23:45.678901234+00:00[UTC]');
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => zdt.add({}), TypeError);
@@ -1294,13 +1279,8 @@ describe('ZonedDateTime', () => {
         throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => zdt.subtract({ years: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${zdt.subtract({ years: 1 }, options)}`, '1968-12-25T12:23:45.678901234+00:00[UTC]')
-      );
+    it('options may be a function object', () => {
+      equal(`${zdt.subtract({ years: 1 }, () => {})}`, '1968-12-25T12:23:45.678901234+00:00[UTC]');
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => zdt.subtract({}), TypeError);
@@ -1386,11 +1366,8 @@ describe('ZonedDateTime', () => {
       const zdt2 = new ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
       throws(() => zdt1.until(zdt2), RangeError);
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb20.until(feb21, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb20.until(feb21, options)}`, 'PT8784H'));
+    it('options may be a function object', () => {
+      equal(`${feb20.until(feb21, () => {})}`, 'PT8784H');
     });
     const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
@@ -1704,11 +1681,8 @@ describe('ZonedDateTime', () => {
       const zdt2 = new ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
       throws(() => zdt1.since(zdt2), RangeError);
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb21.since(feb20, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'PT8784H'));
+    it('options may be a function object', () => {
+      equal(`${feb21.since(feb20, () => {})}`, 'PT8784H');
     });
     const earlier = ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
@@ -1956,11 +1930,6 @@ describe('ZonedDateTime', () => {
       throws(() => zdt.round({}), RangeError);
       throws(() => zdt.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    it('throws on disallowed or invalid smallestUnit (object param)', () => {
-      ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
-        throws(() => zdt.round({ smallestUnit }), RangeError);
-      });
-    });
     it('throws on disallowed or invalid smallestUnit (string param)', () => {
       ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
         throws(() => zdt.round(smallestUnit), RangeError);
@@ -2012,22 +1981,6 @@ describe('ZonedDateTime', () => {
     it('halfExpand is the default', () => {
       equal(`${zdt.round({ smallestUnit: 'minute' })}`, '1976-11-18T15:24:00+01:00[Europe/Vienna]');
       equal(`${zdt.round({ smallestUnit: 'second' })}`, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
-    });
-    it('rounding down is towards the Big Bang, not towards the epoch', () => {
-      const zdt2 = ZonedDateTime.from('1969-12-15T12:00:00.5+00:00[UTC]');
-      const smallestUnit = 'second';
-      equal(`${zdt2.round({ smallestUnit, roundingMode: 'ceil' })}`, '1969-12-15T12:00:01+00:00[UTC]');
-      equal(`${zdt2.round({ smallestUnit, roundingMode: 'floor' })}`, '1969-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt2.round({ smallestUnit, roundingMode: 'trunc' })}`, '1969-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt2.round({ smallestUnit, roundingMode: 'halfExpand' })}`, '1969-12-15T12:00:01+00:00[UTC]');
-    });
-    it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
-      const zdt3 = ZonedDateTime.from('-000099-12-15T12:00:00.5+00:00[UTC]');
-      const smallestUnit = 'second';
-      equal(`${zdt3.round({ smallestUnit, roundingMode: 'ceil' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
-      equal(`${zdt3.round({ smallestUnit, roundingMode: 'floor' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt3.round({ smallestUnit, roundingMode: 'trunc' })}`, '-000099-12-15T12:00:00+00:00[UTC]');
-      equal(`${zdt3.round({ smallestUnit, roundingMode: 'halfExpand' })}`, '-000099-12-15T12:00:01+00:00[UTC]');
     });
     it('rounds to an increment of hours', () => {
       equal(`${zdt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00+01:00[Europe/Vienna]');
@@ -2199,13 +2152,6 @@ describe('ZonedDateTime', () => {
   });
   describe('ZonedDateTime.toString()', () => {
     const zdt1 = ZonedDateTime.from('1976-11-18T15:23+01:00[Europe/Vienna]');
-    const zdt2 = ZonedDateTime.from('1976-11-18T15:23:30+01:00[Europe/Vienna]');
-    const zdt3 = ZonedDateTime.from('1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
-    it('default is to emit seconds and drop trailing zeros after the decimal', () => {
-      equal(zdt1.toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
-      equal(zdt2.toString(), '1976-11-18T15:23:30+01:00[Europe/Vienna]');
-      equal(zdt3.toString(), '1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
-    });
     it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(zdt1.toString({ calendarName: 'auto' }), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
       equal(
@@ -2250,112 +2196,12 @@ describe('ZonedDateTime', () => {
       equal(zdt.toString({ offset: 'never', timeZoneName: 'never' }), '1976-11-18T15:23:00[u-ca=gregory]');
       equal(zdt.toString({ offset: 'never', timeZoneName: 'never', calendarName: 'never' }), '1976-11-18T15:23:00');
     });
-    it('truncates to minute', () => {
-      [zdt1, zdt2, zdt3].forEach((zdt) =>
-        equal(zdt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23+01:00[Europe/Vienna]')
-      );
-    });
-    it('other smallestUnits are aliases for fractional digits', () => {
-      equal(zdt3.toString({ smallestUnit: 'second' }), zdt3.toString({ fractionalSecondDigits: 0 }));
-      equal(zdt3.toString({ smallestUnit: 'millisecond' }), zdt3.toString({ fractionalSecondDigits: 3 }));
-      equal(zdt3.toString({ smallestUnit: 'microsecond' }), zdt3.toString({ fractionalSecondDigits: 6 }));
-      equal(zdt3.toString({ smallestUnit: 'nanosecond' }), zdt3.toString({ fractionalSecondDigits: 9 }));
-    });
-    it('throws on invalid or disallowed smallestUnit', () => {
-      ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
-        throws(() => zdt1.toString({ smallestUnit }), RangeError)
-      );
-    });
-    it('accepts plural units', () => {
-      equal(zdt3.toString({ smallestUnit: 'minutes' }), zdt3.toString({ smallestUnit: 'minute' }));
-      equal(zdt3.toString({ smallestUnit: 'seconds' }), zdt3.toString({ smallestUnit: 'second' }));
-      equal(zdt3.toString({ smallestUnit: 'milliseconds' }), zdt3.toString({ smallestUnit: 'millisecond' }));
-      equal(zdt3.toString({ smallestUnit: 'microseconds' }), zdt3.toString({ smallestUnit: 'microsecond' }));
-      equal(zdt3.toString({ smallestUnit: 'nanoseconds' }), zdt3.toString({ smallestUnit: 'nanosecond' }));
-    });
-    it('truncates or pads to 2 places', () => {
-      const options = { fractionalSecondDigits: 2 };
-      equal(zdt1.toString(options), '1976-11-18T15:23:00.00+01:00[Europe/Vienna]');
-      equal(zdt2.toString(options), '1976-11-18T15:23:30.00+01:00[Europe/Vienna]');
-      equal(zdt3.toString(options), '1976-11-18T15:23:30.12+01:00[Europe/Vienna]');
-    });
-    it('pads to 7 places', () => {
-      const options = { fractionalSecondDigits: 7 };
-      equal(zdt1.toString(options), '1976-11-18T15:23:00.0000000+01:00[Europe/Vienna]');
-      equal(zdt2.toString(options), '1976-11-18T15:23:30.0000000+01:00[Europe/Vienna]');
-      equal(zdt3.toString(options), '1976-11-18T15:23:30.1234000+01:00[Europe/Vienna]');
-    });
-    it('auto is the default', () => {
-      [zdt1, zdt2, zdt3].forEach((zdt) => equal(zdt.toString({ fractionalSecondDigits: 'auto' }), zdt.toString()));
-    });
-    it('throws on out of range or invalid fractionalSecondDigits', () => {
-      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
-        throws(() => zdt1.toString({ fractionalSecondDigits }), RangeError)
-      );
-    });
-    it('accepts and truncates fractional fractionalSecondDigits', () => {
-      equal(zdt3.toString({ fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340+01:00[Europe/Vienna]');
-    });
-    it('smallestUnit overrides fractionalSecondDigits', () => {
-      equal(
-        zdt3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }),
-        '1976-11-18T15:23+01:00[Europe/Vienna]'
-      );
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => zdt1.toString({ roundingMode: 'cile' }), RangeError);
-    });
-    it('rounds to nearest', () => {
-      equal(
-        zdt2.toString({ smallestUnit: 'minute', roundingMode: 'halfExpand' }),
-        '1976-11-18T15:24+01:00[Europe/Vienna]'
-      );
-      equal(
-        zdt3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }),
-        '1976-11-18T15:23:30.123+01:00[Europe/Vienna]'
-      );
-    });
-    it('rounds up', () => {
-      equal(zdt2.toString({ smallestUnit: 'minute', roundingMode: 'ceil' }), '1976-11-18T15:24+01:00[Europe/Vienna]');
-      equal(
-        zdt3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }),
-        '1976-11-18T15:23:30.124+01:00[Europe/Vienna]'
-      );
-    });
-    it('rounds down', () => {
-      ['floor', 'trunc'].forEach((roundingMode) => {
-        equal(zdt2.toString({ smallestUnit: 'minute', roundingMode }), '1976-11-18T15:23+01:00[Europe/Vienna]');
-        equal(
-          zdt3.toString({ fractionalSecondDigits: 3, roundingMode }),
-          '1976-11-18T15:23:30.123+01:00[Europe/Vienna]'
-        );
-      });
-    });
-    it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
-      const zdt4 = ZonedDateTime.from('-000099-12-15T12:00:00.5+00:00[UTC]');
-      equal(zdt4.toString({ smallestUnit: 'second', roundingMode: 'floor' }), '-000099-12-15T12:00:00+00:00[UTC]');
-    });
-    it('rounding can affect all units', () => {
-      const zdt5 = ZonedDateTime.from('1999-12-31T23:59:59.999999999+01:00[Europe/Berlin]');
-      equal(
-        zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }),
-        '2000-01-01T00:00:00.00000000+01:00[Europe/Berlin]'
-      );
-    });
     it('rounding up to a nonexistent wall-clock time', () => {
       const zdt5 = ZonedDateTime.from('2018-11-03T23:59:59.999999999-03:00[America/Sao_Paulo]');
       const roundedString = zdt5.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
       equal(roundedString, '2018-11-04T01:00:00.00000000-02:00[America/Sao_Paulo]');
       const zdt6 = ZonedDateTime.from(roundedString);
       equal(zdt6.epochNanoseconds - zdt5.epochNanoseconds, 1n);
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => zdt1.toString(badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(zdt1.toString(options), '1976-11-18T15:23:00+01:00[Europe/Vienna]')
-      );
     });
   });
   describe('ZonedDateTime.toJSON()', () => {
