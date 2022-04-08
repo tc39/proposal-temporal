@@ -23,61 +23,9 @@ describe('Duration', () => {
       const d = Duration.from({ milliseconds: Number.MAX_SAFE_INTEGER, microseconds: Number.MAX_SAFE_INTEGER });
       equal(`${d}`, 'PT9016206453995.731991S');
     });
-    const d1 = new Duration(0, 0, 0, 0, 15, 23);
-    const d2 = new Duration(0, 0, 0, 0, 15, 23, 30);
-    const d3 = new Duration(0, 0, 0, 0, 15, 23, 30, 543, 200);
-    it('smallestUnits are aliases for fractional digits', () => {
-      equal(d3.toString({ smallestUnit: 'seconds' }), d3.toString({ fractionalSecondDigits: 0 }));
-      equal(d3.toString({ smallestUnit: 'milliseconds' }), d3.toString({ fractionalSecondDigits: 3 }));
-      equal(d3.toString({ smallestUnit: 'microseconds' }), d3.toString({ fractionalSecondDigits: 6 }));
-      equal(d3.toString({ smallestUnit: 'nanoseconds' }), d3.toString({ fractionalSecondDigits: 9 }));
-    });
-    it('truncates or pads to 2 places', () => {
-      const options = { fractionalSecondDigits: 2 };
-      equal(d1.toString(options), 'PT15H23M0.00S');
-      equal(d2.toString(options), 'PT15H23M30.00S');
-      equal(d3.toString(options), 'PT15H23M30.54S');
-    });
-    it('pads to 7 places', () => {
-      const options = { fractionalSecondDigits: 7 };
-      equal(d1.toString(options), 'PT15H23M0.0000000S');
-      equal(d2.toString(options), 'PT15H23M30.0000000S');
-      equal(d3.toString(options), 'PT15H23M30.5432000S');
-    });
-    it('auto is the default', () => {
-      [d1, d2, d3].forEach((d) => equal(d.toString({ fractionalSecondDigits: 'auto' }), d.toString()));
-    });
-    it('accepts and truncates fractional fractionalSecondDigits', () => {
-      equal(d3.toString({ fractionalSecondDigits: 5.5 }), 'PT15H23M30.54320S');
-    });
-    it('smallestUnit overrides fractionalSecondDigits', () => {
-      equal(d3.toString({ smallestUnit: 'seconds', fractionalSecondDigits: 9 }), 'PT15H23M30S');
-    });
-    it('rounds to nearest', () => {
-      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'halfExpand' }), 'PT15H23M31S');
-      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }), 'PT15H23M30.543S');
-    });
-    it('rounds up', () => {
-      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'ceil' }), 'PT15H23M31S');
-      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), 'PT15H23M30.544S');
-    });
-    it('rounds down', () => {
-      equal(d3.negated().toString({ smallestUnit: 'seconds', roundingMode: 'floor' }), '-PT15H23M31S');
-      equal(d3.negated().toString({ fractionalSecondDigits: 3, roundingMode: 'floor' }), '-PT15H23M30.544S');
-    });
-    it('truncates', () => {
-      equal(d3.toString({ smallestUnit: 'seconds', roundingMode: 'trunc' }), 'PT15H23M30S');
-      equal(d3.toString({ fractionalSecondDigits: 3, roundingMode: 'trunc' }), 'PT15H23M30.543S');
-    });
     it('rounding can affect units up to seconds', () => {
       const d4 = Duration.from('P1Y1M1W1DT23H59M59.999999999S');
       equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }), 'P1Y1M1W1DT23H59M60.00000000S');
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => d1.toString(badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(d1.toString(options), 'PT15H23M'));
     });
   });
   describe('toJSON()', () => {
@@ -284,11 +232,8 @@ describe('Duration', () => {
       equal(`${dm.add(d, { relativeTo })}`, 'P1MT1H');
       equal(`${dw.add(d, { relativeTo })}`, 'P1WT1H');
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => duration.add({ hours: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(duration.add({ hours: 1 }, options).hours, 1));
+    it('options may be an object', () => {
+      [{}, () => {}].forEach((options) => equal(duration.add({ hours: 1 }, options).hours, 1));
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => duration.add({}), TypeError);
@@ -520,11 +465,8 @@ describe('Duration', () => {
       equal(`${dm.subtract(d, { relativeTo })}`, 'P1M');
       equal(`${dw.subtract(d, { relativeTo })}`, 'P1W');
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => duration.subtract({ hours: 1 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(duration.subtract({ hours: 1 }, options).hours, 0));
+    it('options may be an object', () => {
+      [{}, () => {}].forEach((options) => equal(duration.subtract({ hours: 1 }, options).hours, 0));
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => duration.subtract({}), TypeError);
@@ -749,11 +691,6 @@ describe('Duration', () => {
     });
     it("succeeds with largestUnit: 'auto'", () => {
       equal(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
-    });
-    it('throws on disallowed or invalid smallestUnit (object param)', () => {
-      ['era', 'nonsense'].forEach((smallestUnit) => {
-        throws(() => d.round({ smallestUnit }), RangeError);
-      });
     });
     it('throws on disallowed or invalid smallestUnit (string param)', () => {
       ['era', 'nonsense'].forEach((smallestUnit) => {

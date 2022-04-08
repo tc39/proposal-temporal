@@ -21,11 +21,8 @@ describe('DateTime', () => {
   describe('DateTime.until()', () => {
     const feb20 = PlainDateTime.from('2020-02-01T00:00');
     const feb21 = PlainDateTime.from('2021-02-01T00:00');
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb20.until(feb21, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb20.until(feb21, options)}`, 'P366D'));
+    it('options may be a function object', () => {
+      equal(`${feb20.until(feb21, () => {})}`, 'P366D');
     });
     const earlier = PlainDateTime.from('2019-01-08T08:22:36.123456789');
     const later = PlainDateTime.from('2021-09-07T12:39:40.987654321');
@@ -316,11 +313,8 @@ describe('DateTime', () => {
       const dt2 = new PlainDateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0, Temporal.Calendar.from('japanese'));
       throws(() => dt1.since(dt2), RangeError);
     });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => feb21.since(feb20, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'P366D'));
+    it('options may be a function object', () => {
+      equal(`${feb21.since(feb20, () => {})}`, 'P366D');
     });
     const earlier = PlainDateTime.from('2019-01-08T08:22:36.123456789');
     const later = PlainDateTime.from('2021-09-07T12:39:40.987654321');
@@ -657,13 +651,8 @@ describe('DateTime', () => {
       throws(() => PlainDateTime.from('1976-11-18T15:23:30.123456789junk'), RangeError));
     it('ignores if a timezone is specified', () =>
       equal(`${PlainDateTime.from('2020-01-01T01:23:45[Asia/Kolkata]')}`, '2020-01-01T01:23:45'));
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => PlainDateTime.from({ year: 1976, month: 11, day: 18 }, badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(`${PlainDateTime.from({ year: 1976, month: 11, day: 18 }, options)}`, '1976-11-18T00:00:00')
-      );
+    it('options may be a function object', () => {
+      equal(`${PlainDateTime.from({ year: 1976, month: 11, day: 18 }, () => {})}`, '1976-11-18T00:00:00');
     });
     it('object must contain at least the required correctly-spelled properties', () => {
       throws(() => PlainDateTime.from({}), TypeError);
@@ -727,16 +716,11 @@ describe('DateTime', () => {
         throws(() => PlainDateTime.from('2019-10-29T10:46').toZonedDateTime('UTC', { disambiguation }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
+    it('options may be a function object', () => {
       const dt = PlainDateTime.from('2019-10-29T10:46:38.271986102');
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => dt.toZonedDateTime('America/Sao_Paulo', badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) =>
-        equal(
-          `${dt.toZonedDateTime('America/Sao_Paulo', options)}`,
-          '2019-10-29T10:46:38.271986102-03:00[America/Sao_Paulo]'
-        )
+      equal(
+        `${dt.toZonedDateTime('America/Sao_Paulo', () => {})}`,
+        '2019-10-29T10:46:38.271986102-03:00[America/Sao_Paulo]'
       );
     });
   });
@@ -877,13 +861,6 @@ describe('DateTime', () => {
   });
   describe('dateTime.toString()', () => {
     const dt1 = PlainDateTime.from('1976-11-18T15:23');
-    const dt2 = PlainDateTime.from('1976-11-18T15:23:30');
-    const dt3 = PlainDateTime.from('1976-11-18T15:23:30.1234');
-    it('default is to emit seconds and drop trailing zeros after the decimal', () => {
-      equal(dt1.toString(), '1976-11-18T15:23:00');
-      equal(dt2.toString(), '1976-11-18T15:23:30');
-      equal(dt3.toString(), '1976-11-18T15:23:30.1234');
-    });
     it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(dt1.toString({ calendarName: 'auto' }), '1976-11-18T15:23:00');
       equal(dt1.withCalendar('gregory').toString({ calendarName: 'auto' }), '1976-11-18T15:23:00[u-ca=gregory]');
@@ -902,84 +879,6 @@ describe('DateTime', () => {
       ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
         throws(() => dt1.toString({ calendarName }), RangeError);
       });
-    });
-    it('truncates to minute', () => {
-      [dt1, dt2, dt3].forEach((dt) => equal(dt.toString({ smallestUnit: 'minute' }), '1976-11-18T15:23'));
-    });
-    it('other smallestUnits are aliases for fractional digits', () => {
-      equal(dt3.toString({ smallestUnit: 'second' }), dt3.toString({ fractionalSecondDigits: 0 }));
-      equal(dt3.toString({ smallestUnit: 'millisecond' }), dt3.toString({ fractionalSecondDigits: 3 }));
-      equal(dt3.toString({ smallestUnit: 'microsecond' }), dt3.toString({ fractionalSecondDigits: 6 }));
-      equal(dt3.toString({ smallestUnit: 'nanosecond' }), dt3.toString({ fractionalSecondDigits: 9 }));
-    });
-    it('throws on invalid or disallowed smallestUnit', () => {
-      ['era', 'year', 'month', 'day', 'hour', 'nonsense'].forEach((smallestUnit) =>
-        throws(() => dt1.toString({ smallestUnit }), RangeError)
-      );
-    });
-    it('accepts plural units', () => {
-      equal(dt3.toString({ smallestUnit: 'minutes' }), dt3.toString({ smallestUnit: 'minute' }));
-      equal(dt3.toString({ smallestUnit: 'seconds' }), dt3.toString({ smallestUnit: 'second' }));
-      equal(dt3.toString({ smallestUnit: 'milliseconds' }), dt3.toString({ smallestUnit: 'millisecond' }));
-      equal(dt3.toString({ smallestUnit: 'microseconds' }), dt3.toString({ smallestUnit: 'microsecond' }));
-      equal(dt3.toString({ smallestUnit: 'nanoseconds' }), dt3.toString({ smallestUnit: 'nanosecond' }));
-    });
-    it('truncates or pads to 2 places', () => {
-      const options = { fractionalSecondDigits: 2 };
-      equal(dt1.toString(options), '1976-11-18T15:23:00.00');
-      equal(dt2.toString(options), '1976-11-18T15:23:30.00');
-      equal(dt3.toString(options), '1976-11-18T15:23:30.12');
-    });
-    it('pads to 7 places', () => {
-      const options = { fractionalSecondDigits: 7 };
-      equal(dt1.toString(options), '1976-11-18T15:23:00.0000000');
-      equal(dt2.toString(options), '1976-11-18T15:23:30.0000000');
-      equal(dt3.toString(options), '1976-11-18T15:23:30.1234000');
-    });
-    it('auto is the default', () => {
-      [dt1, dt2, dt3].forEach((dt) => equal(dt.toString({ fractionalSecondDigits: 'auto' }), dt.toString()));
-    });
-    it('throws on out of range or invalid fractionalSecondDigits', () => {
-      [-1, 10, Infinity, NaN, 'not-auto'].forEach((fractionalSecondDigits) =>
-        throws(() => dt1.toString({ fractionalSecondDigits }), RangeError)
-      );
-    });
-    it('accepts and truncates fractional fractionalSecondDigits', () => {
-      equal(dt3.toString({ fractionalSecondDigits: 5.5 }), '1976-11-18T15:23:30.12340');
-    });
-    it('smallestUnit overrides fractionalSecondDigits', () => {
-      equal(dt3.toString({ smallestUnit: 'minute', fractionalSecondDigits: 9 }), '1976-11-18T15:23');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => dt1.toString({ roundingMode: 'cile' }), RangeError);
-    });
-    it('rounds to nearest', () => {
-      equal(dt2.toString({ smallestUnit: 'minute', roundingMode: 'halfExpand' }), '1976-11-18T15:24');
-      equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode: 'halfExpand' }), '1976-11-18T15:23:30.123');
-    });
-    it('rounds up', () => {
-      equal(dt2.toString({ smallestUnit: 'minute', roundingMode: 'ceil' }), '1976-11-18T15:24');
-      equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode: 'ceil' }), '1976-11-18T15:23:30.124');
-    });
-    it('rounds down', () => {
-      ['floor', 'trunc'].forEach((roundingMode) => {
-        equal(dt2.toString({ smallestUnit: 'minute', roundingMode }), '1976-11-18T15:23');
-        equal(dt3.toString({ fractionalSecondDigits: 3, roundingMode }), '1976-11-18T15:23:30.123');
-      });
-    });
-    it('rounding down is towards the Big Bang, not towards 1 BCE', () => {
-      const dt4 = PlainDateTime.from('-000099-12-15T12:00:00.5');
-      equal(dt4.toString({ smallestUnit: 'second', roundingMode: 'floor' }), '-000099-12-15T12:00:00');
-    });
-    it('rounding can affect all units', () => {
-      const dt5 = PlainDateTime.from('1999-12-31T23:59:59.999999999');
-      equal(dt5.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }), '2000-01-01T00:00:00.00000000');
-    });
-    it('options may only be an object or undefined', () => {
-      [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-        throws(() => dt1.toString(badOptions), TypeError)
-      );
-      [{}, () => {}, undefined].forEach((options) => equal(dt1.toString(options), '1976-11-18T15:23:00'));
     });
   });
 });
