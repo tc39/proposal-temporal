@@ -7,14 +7,46 @@
 
 A `Temporal.Instant` is a single point in time (called **"exact time"**), with a precision in nanoseconds.
 No time zone or calendar information is present.
-As such `Temporal.Instant` has no concept of days, months or even hours.
+To obtain local date/time units like year, month, day, or hour, a `Temporal.Instant` must be combined with a `Temporal.TimeZone` instance or a time zone string.
 
-For convenience of interoperability, it internally uses nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (midnight UTC on January 1, 1970).
-However, a `Temporal.Instant` can be created from any of several expressions that refer to an exact time, including an ISO 8601 string with a time zone such as `'2020-01-23T17:04:36.491865121-08:00'`.
+<!-- prettier-ignore-start -->
+```javascript
+instant = Temporal.Instant.from('2020-01-01T00:00+05:30'); // => 2019-12-31T18:30:00Z
+instant.epochNanoseconds; // => 1577817000000000000n
 
-If you have a legacy `Date` instance, you can use its `toTemporalInstant()` method to convert to a `Temporal.Instant`.
+// `Temporal.Instant` lacks properties that depend on time zone or calendar
+instant.year; // => undefined
 
-Since `Temporal.Instant` doesn't contain any information about time zones, a `Temporal.TimeZone` is needed in order to convert it into a `Temporal.ZonedDateTime` or `Temporal.PlainDateTime` (and from there into any of the other `Temporal` objects.)
+zdtTokyo = instant.toZonedDateTimeISO('Asia/Tokyo'); // => 2020-01-01T03:30:00+09:00[Asia/Tokyo]
+zdtTokyo.year; // => 2020
+zdtTokyo.toPlainDate(); // => 2020-01-01
+
+tzLA = Temporal.TimeZone.from('America/Los_Angeles');
+zdtLA = instant.toZonedDateTimeISO(tzLA); // => 2019-12-31T10:30:00-08:00[America/Los_Angeles]
+zdtLA.year; // => 2019
+zdtLA.toPlainDate(); // => 2019-12-31
+```
+<!-- prettier-ignore-end -->
+
+`Temporal.Instant` stores a count of integer nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time): midnight UTC on January 1, 1970.
+For interoperability with `Date` (which uses millisecond precision) or other APIs, `Temporal.Instant` also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
+A `Temporal.Instant` can also be created from an ISO 8601 / RFC 3339 string like `'2020-01-24T01:04Z'` or `'2020-01-23T17:04:36.491865121-08:00'`.
+
+<!-- prettier-ignore-start -->
+```javascript
+// New Year's in India
+instant = Temporal.Instant.from('2020-01-01T00:00+05:30'); // => 2019-12-31T18:30:00Z
+date = new Date(instant.epochMilliseconds); 
+  // => Tue Dec 31 2019 10:30:00 GMT-0800 (Pacific Standard Time)
+  // The time zone shown above is the time zone of the caller, not the `Date` object.
+  // `Date`, like `Temporal.Instant`, only stores a count of time since epoch.
+
+// All three lines below convert `Date` to `Temporal.Instant`
+instant2 = date.toTemporalInstant();                       // => 2019-12-31T18:30:00Z
+instant3 = Temporal.Instant.fromEpochMilliseconds(date);   // => 2019-12-31T18:30:00Z
+instant4 = Temporal.Instant.from(date.toISOString());      // => 2019-12-31T18:30:00Z
+```
+<!-- prettier-ignore-end -->
 
 Like Unix time, `Temporal.Instant` ignores leap seconds.
 
@@ -116,13 +148,12 @@ The number of milliseconds since the Unix epoch is also returned from the `getTi
 However, for conversion from legacy `Date` to `Temporal.Instant`, use `Date.prototype.toTemporalInstant`:
 
 ```js
-legacyDate = new Date('December 17, 1995 03:24:00 GMT');
+legacyDate = new Date('1995-12-17T03:24Z');
 instant = Temporal.Instant.fromEpochMilliseconds(legacyDate.getTime()); // => 1995-12-17T03:24:00Z
-instant = Temporal.Instant.fromEpochMilliseconds(+legacyDate); // valueOf() called implicitly
+instant = Temporal.Instant.fromEpochMilliseconds(legacyDate); // valueOf() called implicitly
 instant = legacyDate.toTemporalInstant(); // recommended
 
-// Use fromEpochMilliseconds, for example, if you have epoch millisecond
-// data stored in a file:
+// Use fromEpochMilliseconds, for example, if you have epoch millisecond data stored in a file
 todayMs = Temporal.Instant.fromEpochMilliseconds(msReadFromFile);
 ```
 
