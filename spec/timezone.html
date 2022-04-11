@@ -537,11 +537,11 @@
         1. Let _seconds_ be floor(_offsetNanoseconds_ / 10<sup>9</sup>) modulo 60.
         1. Let _minutes_ be floor(_offsetNanoseconds_ / (6 × 10<sup>10</sup>)) modulo 60.
         1. Let _hours_ be floor(_offsetNanoseconds_ / (3.6 × 10<sup>12</sup>)).
-        1. Let _h_ be _hours_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _m_ be _minutes_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _s_ be _seconds_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _h_ be ToZeroPaddedDecimalString(_hours_, 2).
+        1. Let _m_ be ToZeroPaddedDecimalString(_minutes_, 2).
+        1. Let _s_ be ToZeroPaddedDecimalString(_seconds_, 2).
         1. If _nanoseconds_ ≠ 0, then
-          1. Let _fraction_ be _nanoseconds_, formatted as a nine-digit decimal number, padded to the left with zeroes if necessary.
+          1. Let _fraction_ be ToZeroPaddedDecimalString(_nanoseconds_, 9).
           1. Set _fraction_ to the longest possible substring of _fraction_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
           1. Let _post_ be the string-concatenation of the code unit 0x003A (COLON), _s_, the code unit 0x002E (FULL STOP), and _fraction_.
         1. Else if seconds ≠ 0, then
@@ -564,8 +564,8 @@
         1. Set _offsetNanoseconds_ to abs(_offsetNanoseconds_).
         1. Let _minutes_ be _offsetNanoseconds_ / (60 × 10<sup>9</sup>) modulo 60.
         1. Let _hours_ be floor(_offsetNanoseconds_ / (3600 × 10<sup>9</sup>)).
-        1. Let _h_ be _hours_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _m_ be _minutes_, formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _h_ be ToZeroPaddedDecimalString(_hours_, 2).
+        1. Let _m_ be ToZeroPaddedDecimalString(_minutes_, 2).
         1. Return the string-concatenation of _sign_, _h_, the code unit 0x003A (COLON), and _m_.
       </emu-alg>
     </emu-clause>

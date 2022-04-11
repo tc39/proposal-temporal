@@ -978,10 +978,10 @@
       <emu-alg>
         1. Assert: _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _year_ be ! PadISOYear(_isoYear_).
-        1. Let _month_ be _isoMonth_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _day_ be _isoDay_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _hour_ be _hour_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _minute_ be _minute_ formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _month_ be ToZeroPaddedDecimalString(_isoMonth_, 2).
+        1. Let _day_ be ToZeroPaddedDecimalString(_isoDay_, 2).
+        1. Let _hour_ be ToZeroPaddedDecimalString(_hour_, 2).
+        1. Let _minute_ be ToZeroPaddedDecimalString(_minute_, 2).
         1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
         1. Let _calendarID_ be ? ToString(_calendar_).
         1. Let _calendarString_ be ! FormatCalendarAnnotation(_calendarID_, _showCalendar_).
