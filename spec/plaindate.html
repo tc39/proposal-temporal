@@ -865,9 +865,9 @@
       <emu-alg>
         1. Assert: _y_ is an integer.
         1. If _y_ ≥ 0 and _y_ ≤ 9999, then
-          1. Return _y_ formatted as a four-digit decimal number, padded to the left with zeroes as necessary.
+          1. Return ToZeroPaddedDecimalString(_y_, 4).
         1. If _y_ &gt; 0, let _yearSign_ be *"+"*; otherwise, let _yearSign_ be *"-"*.
-        1. Let _year_ be abs(_y_), formatted as a six-digit decimal number, padded to the left with zeroes as necessary.
+        1. Let _year_ be ToZeroPaddedDecimalString(abs(_y_), 6).
         1. Return the string-concatenation of _yearSign_ and _year_.
       </emu-alg>
     </emu-clause>
@@ -878,8 +878,8 @@
         1. Assert: Type(_temporalDate_) is Object.
         1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
         1. Let _year_ be ! PadISOYear(_temporalDate_.[[ISOYear]]).
-        1. Let _month_ be _temporalDate_.[[ISOMonth]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
-        1. Let _day_ be _temporalDate_.[[ISODay]] formatted as a two-digit decimal number, padded to the left with a zero if necessary.
+        1. Let _month_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISOMonth]], 2).
+        1. Let _day_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISODay]], 2).
         1. Let _calendarID_ be ? ToString(_temporalDate_.[[Calendar]]).
         1. Let _calendar_ be ! FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, and _calendar_.
