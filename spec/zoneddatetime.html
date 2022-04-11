@@ -1078,18 +1078,40 @@
   <emu-clause id="sec-temporal-zoneddatetime-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-interpretisodatetimeoffset" aoid="InterpretISODateTimeOffset">
-      <h1>InterpretISODateTimeOffset ( _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_ )</h1>
-      <p>
-        The abstract operation InterpretISODateTimeOffset determines the exact time in _timeZone_ corresponding to the given calendar date and time, and the given UTC offset in nanoseconds.
-        In the case of more than one possible exact time, or no possible exact time, an answer is determined using _offsetBehaviour_ (one of ~option~, ~exact~, or ~wall~), _disambiguation_ (one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*) and _offsetOption_ (one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*).
-      </p>
-      <p>
-        As a special case when parsing ISO 8601 strings which are only required to specify time zone offsets to minutes precision, if _matchBehaviour_ is ~match minutes~, then a value for _offsetNanoseconds_ that is rounded to the nearest minute will be accepted in those cases where _offsetNanoseconds_ is compared against _timeZone_'s offset.
-        If _matchBehaviour_ is ~match exactly~, then this does not happen.
-      </p>
+    <emu-clause id="sec-temporal-interpretisodatetimeoffset" type="abstract operation">
+      <h1>
+        InterpretISODateTimeOffset (
+          _year_: an integer,
+          _month_: an integer,
+          _day_: an integer,
+          _hour_: an integer,
+          _minute_: an integer,
+          _second_: an integer,
+          _millisecond_: an integer,
+          _microsecond_: an integer,
+          _nanosecond_: an integer,
+          _offsetBehaviour_: one of ~option~, ~exact~, or ~wall~,
+          _offsetNanoseconds_: an integer,
+          _timeZone_: an Object,
+          _disambiguation_: one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*,
+          _offsetOption_: one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*,
+          _matchBehaviour_: one of ~match exactly~ or ~match minutes~,
+        ): either a normal completion containing a BigInt or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          <p>
+            It determines the exact time in _timeZone_ corresponding to the given calendar date and time, and the given UTC offset in nanoseconds.
+            In the case of more than one possible exact time, or no possible exact time, an answer is determined using _offsetBehaviour_, _disambiguation_ and _offsetOption_.
+          </p>
+          <p>
+            As a special case when parsing ISO 8601 strings which are only required to specify time zone offsets to minutes precision, if _matchBehaviour_ is ~match minutes~, then a value for _offsetNanoseconds_ that is rounded to the nearest minute will be accepted in those cases where _offsetNanoseconds_ is compared against _timeZone_'s offset.
+            If _matchBehaviour_ is ~match exactly~, then this does not happen.
+          </p>
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _offsetNanoseconds_ is an integer.
         1. Let _calendar_ be ! GetISO8601Calendar().
         1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetOption_ is *"ignore"*, then
@@ -1115,11 +1137,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporalzoneddatetime" aoid="ToTemporalZonedDateTime">
-      <h1>ToTemporalZonedDateTime ( _item_ [ , _options_ ] )</h1>
-      <p>
-        The abstract operation ToTemporalZonedDateTime returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
-      </p>
+    <emu-clause id="sec-temporal-totemporalzoneddatetime" type="abstract operation">
+      <h1>
+        ToTemporalZonedDateTime (
+          _item_: an ECMAScript language value,
+          optional _options_: an Object,
+        ): either a normal completion containing a `Temporal.ZonedDateTime` or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.ZonedDateTime instance if possible, and throws otherwise.
+        </dd>
+      </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
@@ -1168,16 +1198,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createtemporalzoneddatetime" aoid="CreateTemporalZonedDateTime">
-      <h1>CreateTemporalZonedDateTime ( _epochNanoseconds_, _timeZone_, _calendar_ [ , _newTarget_ ] )</h1>
-      <p>
-        The abstract operation CreateTemporalZonedDateTime is used to specify the creation of a new `Temporal.ZonedDateTime` object.
-      </p>
+    <emu-clause id="sec-temporal-createtemporalzoneddatetime" type="abstract operation">
+      <h1>
+        CreateTemporalZonedDateTime (
+          _epochNanoseconds_: a BigInt,
+          _timeZone_: an Object,
+          _calendar_: an Object,
+          optional _newTarget_: a function object,
+        ): either a normal completion containing a `Temporal.ZonedDateTime` or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It is used to specify the creation of a new `Temporal.ZonedDateTime` object.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_epochNanoseconds_) is BigInt.
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
-        1. Assert: Type(_timeZone_) is Object.
-        1. Assert: Type(_calendar_) is Object.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.ZonedDateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.ZonedDateTime.prototype%"*, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
@@ -1187,13 +1222,26 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporalzoneddatetimetostring" aoid="TemporalZonedDateTimeToString">
-      <h1>TemporalZonedDateTimeToString ( _zonedDateTime_, _precision_, _showCalendar_, _showTimeZone_, _showOffset_ [ , _increment_, _unit_, _roundingMode_ ] )</h1>
-      <p>
-        The abstract operation TemporalZonedDateTimeToString returns an ISO 8601 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
-      </p>
+    <emu-clause id="sec-temporal-temporalzoneddatetimetostring" type="abstract operation">
+      <h1>
+        TemporalZonedDateTimeToString (
+          _zonedDateTime_: a Temporal.ZonedDateTime,
+          _precision_: one of *"auto"*, *"minute"*, or an integer between 0 and 9 inclusive,
+          _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
+          _showTimeZone_: one of *"auto"* or *"never"*,
+          _showOffset_: one of *"auto"* or *"never"*,
+          optional _increment_: an integer,
+          optional _unit_: one of *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
+          optional _roundingMode_: one of *"ceil"*, *"floor"*, *"trunc"*, or *"halfExpand"*,
+        ): either a normal completion containing a String or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns an ISO 8601 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_zonedDateTime_) is Object and _zonedDateTime_ has an [[InitializedTemporalZonedDateTime]] internal slot.
         1. If _increment_ is not present, set _increment_ to 1.
         1. If _unit_ is not present, set _unit_ to *"nanosecond"*.
         1. If _roundingMode_ is not present, set _roundingMode_ to *"trunc"*.
@@ -1222,7 +1270,7 @@
     <emu-clause id="sec-temporal-addzoneddatetime" type="abstract operation">
       <h1>
         AddZonedDateTime (
-          _epochNanoseconds_: a BigInt value,
+          _epochNanoseconds_: a BigInt,
           _timeZone_: an Object,
           _calendar_: an Object,
           _years_: an integer,
@@ -1236,7 +1284,7 @@
           _microseconds_: an integer,
           _nanoseconds_: an integer,
           optional _options_: an Object,
-        )
+        ): either a normal completion containing a BigInt or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1245,7 +1293,6 @@
           As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
         </dd>
       </dl>
-      </p>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
@@ -1262,14 +1309,24 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-differencezoneddatetime" aoid="DifferenceZonedDateTime">
-      <h1>DifferenceZonedDateTime ( _ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_ [ , _options_ ] )</h1>
-      <p>
-        The abstract operation DifferenceZonedDateTime computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and balances the result so that there is no non-zero unit larger than _largestUnit_ in the result, taking calendar reckoning and time zone offset changes into account.
-      </p>
+    <emu-clause id="sec-temporal-differencezoneddatetime" type="abstract operation">
+      <h1>
+        DifferenceZonedDateTime (
+          _ns1_: a BigInt,
+          _ns2_: a BigInt,
+          _timeZone_: an Object,
+          _calendar_: an Object,
+          _largestUnit_: a String,
+          optional _options_: an Object,
+        ): either a normal completion containing a Duration Record or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and balances the result so that there is no non-zero unit larger than _largestUnit_ in the result, taking calendar reckoning and time zone offset changes into account.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_ns1_) is BigInt.
-        1. Assert: Type(_ns2_) is BigInt.
         1. If _ns1_ is _ns2_, then
           1. Return ! CreateDurationRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _startInstant_ be ! CreateTemporalInstant(_ns1_).
@@ -1291,14 +1348,13 @@
         NanosecondsToDays (
           _nanoseconds_: an integer,
           _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
-        )
+        ): either a normal completion containing a Record with fields [[Days]] (an integer), [[Nanoseconds]] (an integer), and [[DayLength]] (an integer), or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It converts a number of _nanoseconds_ relative to a Temporal.ZonedDateTime _relativeTo_, and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _relativeTo_.
           It also returns the length of the last day in nanoseconds, for rounding purposes.
-          The result is a Record with fields [[Days]] (an integer), [[Nanoseconds]] (an integer), and [[DayLength]] (an integer).
         </dd>
       </dl>
       <emu-alg>
