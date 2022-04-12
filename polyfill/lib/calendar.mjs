@@ -266,6 +266,93 @@ for (const prop of intrinsicPrototypeMethods) {
 }
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 
+// All of BuiltinCalendar's methods shadow the methods on Calendar.prototype,
+// and call the underlying intrinsics
+class BuiltinCalendar extends Calendar {
+  get id() {
+    return GetIntrinsic('%Temporal.Calendar.prototype.id%').call(this);
+  }
+  dateFromFields(fields, options = undefined) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.dateFromFields%').call(this, fields, options);
+  }
+  yearMonthFromFields(fields, options = undefined) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.yearMonthFromFields%').call(this, fields, options);
+  }
+  monthDayFromFields(fields, options = undefined) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.monthDayFromFields%').call(this, fields, options);
+  }
+  fields(fields) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.fields%').call(this, fields);
+  }
+  mergeFields(fields, additionalFields) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.mergeFields%').call(this, fields, additionalFields);
+  }
+  dateAdd(date, duration, options = undefined) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.dateAdd%').call(this, date, duration, options);
+  }
+  dateUntil(one, two, options = undefined) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.dateUntil%').call(this, one, two, options);
+  }
+  year(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.year%').call(this, date);
+  }
+  month(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.month%').call(this, date);
+  }
+  monthCode(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.monthCode%').call(this, date);
+  }
+  day(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.day%').call(this, date);
+  }
+  era(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.era%').call(this, date);
+  }
+  eraYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.eraYear%').call(this, date);
+  }
+  dayOfWeek(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.dayOfWeek%').call(this, date);
+  }
+  dayOfYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.dayOfYear%').call(this, date);
+  }
+  weekOfYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.weekOfYear%').call(this, date);
+  }
+  daysInWeek(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.daysInWeek%').call(this, date);
+  }
+  daysInMonth(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.daysInMonth%').call(this, date);
+  }
+  daysInYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.daysInYear%').call(this, date);
+  }
+  monthsInYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.monthsInYear%').call(this, date);
+  }
+  inLeapYear(date) {
+    return GetIntrinsic('%Temporal.Calendar.prototype.inLeapYear%').call(this, date);
+  }
+  toString() {
+    return GetIntrinsic('%Temporal.Calendar.prototype.toString%').call(this);
+  }
+  toJSON() {
+    return GetIntrinsic('%Temporal.Calendar.prototype.toJSON%').call(this);
+  }
+}
+
+// Freeze the BuiltinCalendar class, its prototype, and all its methods, so that
+// engines can optimize assuming they are unchanged, and they cannot be used as
+// communication channels
+ObjectFreeze(ObjectGetOwnPropertyDescriptor(BuiltinCalendar.prototype, 'id').get);
+for (const prop of intrinsicPrototypeMethods) {
+  ObjectFreeze(BuiltinCalendar.prototype[prop]);
+}
+ObjectFreeze(BuiltinCalendar.prototype);
+ObjectFreeze(BuiltinCalendar);
+
 impl['iso8601'] = {
   dateFromFields(fields, options, calendar) {
     const overflow = ES.ToTemporalOverflow(options);
@@ -2127,94 +2214,8 @@ const BUILTIN_CALENDARS = {};
 export function GetBuiltinCalendar(id) {
   if (id in BUILTIN_CALENDARS) return BUILTIN_CALENDARS[id];
 
-  const builtin = new Calendar(id);
-
-  // Create own properties on the singleton builtin calendar, that shadow the
-  // methods on Calendar.prototype, and call the underlying intrinsics
-  const idGetter = function id() {
-    return GetIntrinsic('%Temporal.Calendar.prototype.id%').call(this);
-  };
-  ObjectDefineProperty(builtin, 'id', {
-    get: idGetter
-  });
-
-  builtin.dateFromFields = function dateFromFields(fields, options = undefined) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.dateFromFields%').call(builtin, fields, options);
-  };
-  builtin.yearMonthFromFields = function yearMonthFromFields(fields, options = undefined) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.yearMonthFromFields%').call(builtin, fields, options);
-  };
-  builtin.monthDayFromFields = function monthDayFromFields(fields, options = undefined) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.monthDayFromFields%').call(builtin, fields, options);
-  };
-  builtin.fields = function fields(fields) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.fields%').call(builtin, fields);
-  };
-  builtin.mergeFields = function mergeFields(fields, additionalFields) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.mergeFields%').call(builtin, fields, additionalFields);
-  };
-  builtin.dateAdd = function dateAdd(date, duration, options = undefined) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.dateAdd%').call(builtin, date, duration, options);
-  };
-  builtin.dateUntil = function dateUntil(one, two, options = undefined) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.dateUntil%').call(builtin, one, two, options);
-  };
-  builtin.year = function year(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.year%').call(builtin, date);
-  };
-  builtin.month = function month(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.month%').call(builtin, date);
-  };
-  builtin.monthCode = function monthCode(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.monthCode%').call(builtin, date);
-  };
-  builtin.day = function day(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.day%').call(builtin, date);
-  };
-  builtin.era = function era(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.era%').call(builtin, date);
-  };
-  builtin.eraYear = function eraYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.eraYear%').call(builtin, date);
-  };
-  builtin.dayOfWeek = function dayOfWeek(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.dayOfWeek%').call(builtin, date);
-  };
-  builtin.dayOfYear = function dayOfYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.dayOfYear%').call(builtin, date);
-  };
-  builtin.weekOfYear = function weekOfYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.weekOfYear%').call(builtin, date);
-  };
-  builtin.daysInWeek = function daysInWeek(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.daysInWeek%').call(builtin, date);
-  };
-  builtin.daysInMonth = function daysInMonth(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.daysInMonth%').call(builtin, date);
-  };
-  builtin.daysInYear = function daysInYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.daysInYear%').call(builtin, date);
-  };
-  builtin.monthsInYear = function monthsInYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.monthsInYear%').call(builtin, date);
-  };
-  builtin.inLeapYear = function inLeapYear(date) {
-    return GetIntrinsic('%Temporal.Calendar.prototype.inLeapYear%').call(builtin, date);
-  };
-  builtin.toString = function toString() {
-    return GetIntrinsic('%Temporal.Calendar.prototype.toString%').call(builtin);
-  };
-  builtin.toJSON = function toJSON() {
-    return GetIntrinsic('%Temporal.Calendar.prototype.toJSON%').call(builtin);
-  };
-
-  // Freeze all the methods and the singleton itself, so that engines can
-  // optimize assuming they are unchanged, and they cannot be used as
-  // communication channels
-  ObjectFreeze(idGetter);
-  for (const prop of intrinsicPrototypeMethods) {
-    ObjectFreeze(builtin[prop]);
-  }
+  const builtin = new BuiltinCalendar(id);
+  // Freeze the singleton (everything on BuiltinCalendar is already frozen)
   ObjectFreeze(builtin);
 
   BUILTIN_CALENDARS[id] = builtin;

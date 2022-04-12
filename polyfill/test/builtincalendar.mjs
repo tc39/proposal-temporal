@@ -15,9 +15,9 @@ const { equal, notEqual, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('Built-in calendars', () => {
-  it('have Calendar.prototype as their prototype', () => {
+  it('do not have Calendar.prototype as their prototype', () => {
     const cal = Temporal.Calendar.from('iso8601');
-    equal(Object.getPrototypeOf(cal), Temporal.Calendar.prototype);
+    notEqual(Object.getPrototypeOf(cal), Temporal.Calendar.prototype);
   });
 
   describe('sharedness', () => {
@@ -64,13 +64,24 @@ describe('Built-in calendars', () => {
     it('the built-in calendar methods are frozen', () => {
       assert(Object.isFrozen(cal.dateFromFields));
     });
+
+    it('the built-in calendar prototype is frozen', () => {
+      const proto = Object.getPrototypeOf(cal);
+      assert(Object.isFrozen(proto));
+    });
+
+    it('the built-in calendar constructor is frozen', () => {
+      const ctor = cal.constructor;
+      assert(Object.isFrozen(ctor));
+    });
   });
 
   describe('built-in calendar methods', () => {
     const cal = Temporal.Calendar.from('iso8601');
 
-    it('are own properties', () => {
-      assert(Object.hasOwn(cal, 'dateFromFields'));
+    it('come from the built-in calendar prototype', () => {
+      const proto = Object.getPrototypeOf(cal);
+      equal(cal.dateFromFields, proto.dateFromFields);
     });
 
     it('are not the same objects as Calendar.prototype methods', () => {
