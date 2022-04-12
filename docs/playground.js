@@ -2141,7 +2141,7 @@
   	return value;
   };
 
-  var callBind$2 = {exports: {}};
+  var callBind$1 = {exports: {}};
 
   (function (module) {
 
@@ -2190,28 +2190,28 @@
   } else {
   	module.exports.apply = applyBind;
   }
-  }(callBind$2));
+  }(callBind$1));
 
-  var GetIntrinsic$f = getIntrinsic;
+  var GetIntrinsic$e = getIntrinsic;
 
-  var callBind$1 = callBind$2.exports;
+  var callBind = callBind$1.exports;
 
-  var $indexOf = callBind$1(GetIntrinsic$f('String.prototype.indexOf'));
+  var $indexOf = callBind(GetIntrinsic$e('String.prototype.indexOf'));
 
-  var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
-  	var intrinsic = GetIntrinsic$f(name, !!allowMissing);
+  var callBound$3 = function callBoundIntrinsic(name, allowMissing) {
+  	var intrinsic = GetIntrinsic$e(name, !!allowMissing);
   	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
-  		return callBind$1(intrinsic);
+  		return callBind(intrinsic);
   	}
   	return intrinsic;
   };
 
-  var GetIntrinsic$e = getIntrinsic;
+  var GetIntrinsic$d = getIntrinsic;
 
-  var $Array = GetIntrinsic$e('%Array%');
+  var $Array = GetIntrinsic$d('%Array%');
 
   // eslint-disable-next-line global-require
-  var toStr$4 = !$Array.isArray && callBound$2('Object.prototype.toString');
+  var toStr$4 = !$Array.isArray && callBound$3('Object.prototype.toString');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-isarray
 
@@ -2219,14 +2219,14 @@
   	return toStr$4(argument) === '[object Array]';
   };
 
-  var GetIntrinsic$d = getIntrinsic;
-  var callBound$1 = callBound$2;
+  var GetIntrinsic$c = getIntrinsic;
+  var callBound$2 = callBound$3;
 
-  var $TypeError$6 = GetIntrinsic$d('%TypeError%');
+  var $TypeError$6 = GetIntrinsic$c('%TypeError%');
 
   var IsArray = IsArray$1;
 
-  var $apply = GetIntrinsic$d('%Reflect.apply%', true) || callBound$1('%Function.prototype.apply%');
+  var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$2('%Function.prototype.apply%');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-call
 
@@ -2246,9 +2246,9 @@
   	return typeof argument === 'string' || typeof argument === 'symbol';
   };
 
-  var GetIntrinsic$c = getIntrinsic;
+  var GetIntrinsic$b = getIntrinsic;
 
-  var $TypeError$5 = GetIntrinsic$c('%TypeError%');
+  var $TypeError$5 = GetIntrinsic$b('%TypeError%');
 
   // http://262.ecma-international.org/5.1/#sec-9.10
 
@@ -2261,9 +2261,9 @@
 
   var RequireObjectCoercible$1 = CheckObjectCoercible;
 
-  var GetIntrinsic$b = getIntrinsic;
+  var GetIntrinsic$a = getIntrinsic;
 
-  var $Object = GetIntrinsic$b('%Object%');
+  var $Object = GetIntrinsic$a('%Object%');
 
   var RequireObjectCoercible = RequireObjectCoercible$1;
 
@@ -2274,9 +2274,9 @@
   	return $Object(value);
   };
 
-  var GetIntrinsic$a = getIntrinsic;
+  var GetIntrinsic$9 = getIntrinsic;
 
-  var $TypeError$4 = GetIntrinsic$a('%TypeError%');
+  var $TypeError$4 = GetIntrinsic$9('%TypeError%');
 
   var IsPropertyKey$2 = IsPropertyKey$3;
   var ToObject = ToObject$1;
@@ -2373,9 +2373,9 @@
 
   var IsCallable$1 = isCallable$2;
 
-  var GetIntrinsic$9 = getIntrinsic;
+  var GetIntrinsic$8 = getIntrinsic;
 
-  var $TypeError$3 = GetIntrinsic$9('%TypeError%');
+  var $TypeError$3 = GetIntrinsic$8('%TypeError%');
 
   var GetV = GetV$1;
   var IsCallable = IsCallable$1;
@@ -2408,9 +2408,9 @@
 
   var GetMethod$2 = GetMethod$1;
 
-  var GetIntrinsic$8 = getIntrinsic;
+  var GetIntrinsic$7 = getIntrinsic;
 
-  var $abs$1 = GetIntrinsic$8('%Math.abs%');
+  var $abs$1 = GetIntrinsic$7('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -2454,9 +2454,9 @@
 
   var IsInteger$1 = IsInteger;
 
-  var GetIntrinsic$7 = getIntrinsic;
+  var GetIntrinsic$6 = getIntrinsic;
 
-  var $abs = GetIntrinsic$7('%Math.abs%');
+  var $abs = GetIntrinsic$6('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -2566,14 +2566,12 @@
   	return $sign(number) * floor(abs(number));
   };
 
-  var GetIntrinsic$6 = getIntrinsic;
+  var callBound$1 = callBound$3;
 
-  var $test = GetIntrinsic$6('RegExp.prototype.test');
-
-  var callBind = callBind$2.exports;
+  var $exec = callBound$1('RegExp.prototype.exec');
 
   var regexTester$1 = function regexTester(regex) {
-  	return callBind($test, regex);
+  	return function test(s) { return $exec(regex, s) !== null; };
   };
 
   var isPrimitive$2 = function isPrimitive(value) {
@@ -2737,7 +2735,7 @@
   var $RegExp = GetIntrinsic$5('%RegExp%');
   var $parseInteger = GetIntrinsic$5('%parseInt%');
 
-  var callBound = callBound$2;
+  var callBound = callBound$3;
   var regexTester = regexTester$1;
   var isPrimitive = isPrimitive$2;
 
