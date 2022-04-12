@@ -5,7 +5,10 @@
 <!-- toc -->
 </details>
 
-A `Temporal.TimeZone` is a representation of a time zone: either an [IANA time zone](https://www.iana.org/time-zones), including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.
+A `Temporal.TimeZone` is a representation of a time zone:
+
+- either an [IANA time zone](https://www.iana.org/time-zones), including information about the time zone, such as the offset between the local time and UTC at a particular time, daylight saving time (DST) and other political UTC offset changes like a country having permanently changed its offset;
+- or simply a particular UTC offset with no offset transitions.
 
 Since `Temporal.Instant` and `Temporal.PlainDateTime` do not contain any time zone information, a `Temporal.TimeZone` object is required to convert between the two.
 
@@ -66,10 +69,10 @@ tz = new Temporal.TimeZone('+0645');
 /* WRONG */ tz = new Temporal.TimeZone('local'); // => throws, not a time zone
 ```
 
-#### Difference between IANA time zones and UTC offsets
+#### Difference between IANA time zones and simple UTC offsets
 
-The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. `Europe/Berlin`) is given, or a UTC offset (e.g. `+01:00`).
-IANA time zones may have DST transitions, and UTC offsets do not.
+The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g., `Europe/Berlin`) is given, or a UTC offset (e.g., `+01:00`).
+IANA time zones may have UTC offset transitions (e.g., because of DST), while the other kind never changes its offset.
 For example:
 
 ```javascript
@@ -146,10 +149,10 @@ When subclassing `Temporal.TimeZone`, this property doesn't need to be overridde
 
 **Returns:** The UTC offset at the given time, in nanoseconds.
 
-Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.
+Since the UTC offset can change throughout the year in time zones that employ DST as well as because of special political decisions, this method queries the UTC offset at a particular time.
 
-Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
-If `timeZone` is a UTC offset time zone, the return value of this method is always the same regardless of `instant`.
+Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have UTC offset transitions; those constructed from a UTC offset are fixed.
+If `timeZone` is a fixed-offset time zone, the return value of this method is always the same regardless of `instant`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
@@ -184,7 +187,7 @@ tz.getOffsetNanosecondsFor('2020-11-06T01:00Z'); // => 0
 
 This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
 
-If `timeZone` is a UTC offset time zone, the return value of this method is effectively the same as `timeZone.id`.
+If `timeZone` is a time zone constructed from a fixed UTC offset, the return value of this method is effectively the same as `timeZone.id`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
@@ -217,7 +220,7 @@ This method is one way to convert a `Temporal.Instant` to a `Temporal.PlainDateT
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
-When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation creates a `Temporal.PlainDateTime` from `instant` using a UTC offset which is the result of calling `timeZone.getOffsetNanosecondsFor()`.
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden, because the default implementation creates a `Temporal.PlainDateTime` from `instant` using a UTC offset which is the result of calling `timeZone.getOffsetNanosecondsFor()`.
 
 Example usage:
 
@@ -258,17 +261,17 @@ In the case of ambiguity, the `disambiguation` option controls what instant to r
 - `'later'`: The later of two possible times.
 - `'reject'`: Throw a `RangeError` instead.
 
-When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
+When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like Moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
-During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
+During "skipped" clock time, like the hour after DST starts in the spring, or when a country permanently changed its UTC offset to one closer to positive infinity, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used, or the post-transition time zone offset if `'earlier'` is used.
 This behavior avoids exceptions when converting non-existent `Temporal.PlainDateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 
-When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden because the default implementation calls `timeZone.getPossibleInstantsFor()`, and if there is more than one possible instant, uses `disambiguation` to pick which one to return.
+When subclassing `Temporal.TimeZone`, this method doesn't need to be overridden, because the default implementation calls `timeZone.getPossibleInstantsFor()`, and, if there is more than one possible instant, uses `disambiguation` to pick which one to return.
 
 ### timeZone.**getPossibleInstantsFor**(_dateTime_: Temporal.PlainDateTime | object | string) : array&lt;Temporal.Instant&gt;
 
@@ -282,23 +285,23 @@ This method returns an array of all the possible exact times that could correspo
 
 If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
-Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other political change, a wall-clock time may not exist, or the same wall-clock hour sequence may exist twice in a row (for DST usually just one double-hour).
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
 Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
-During "skipped" clock time like the hour after DST starts in the Spring, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.PlainDateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
+During "skipped" clock time like the hour after DST starts in the spring or certain political changes, `Temporal.TimeZone.prototype.getInstantFor()` returns a `Temporal.Instant` (by default interpreting the `Temporal.PlainDateTime` using the pre-transition time zone offset), while this method returns zero results during those skipped periods.
 
 ### timeZone.**getNextTransition**(_startingPoint_: Temporal.Instant | string) : Temporal.Instant
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Instant` or value convertible to one): Time after which to find the next DST transition.
+- `startingPoint` (`Temporal.Instant` or value convertible to one): Time after which to find the next UTC offset transition.
 
-**Returns:** A `Temporal.Instant` object representing the next DST transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
+**Returns:** A `Temporal.Instant` object representing the next UTC offset transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
-This method is used to calculate future DST transitions after `startingPoint` for this time zone.
+This method is used to calculate a possible future UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
 
-Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+Note that if the time zone was constructed from a UTC offset, there will be no offset transitions.
 In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
@@ -309,7 +312,7 @@ Single-offset time zones can use the default implementation which returns `null`
 Example usage:
 
 ```javascript
-// How long until the next DST change from now, in the current location?
+// How long until the next offset change from now, in the current location?
 tz = Temporal.Now.timeZone();
 now = Temporal.Now.instant();
 nextTransition = tz.getNextTransition(now);
@@ -321,13 +324,13 @@ duration.toLocaleString(); // output will vary
 
 **Parameters:**
 
-- `startingPoint` (`Temporal.Instant` or value convertible to one): Time before which to find the previous DST transition.
+- `startingPoint` (`Temporal.Instant` or value convertible to one): Time before which to find the previous UTC offset transition.
 
-**Returns:** A `Temporal.Instant` object representing the previous DST transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
+**Returns:** A `Temporal.Instant` object representing the previous UTC offset transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
 
-This method is used to calculate past DST transitions before `startingPoint` for this time zone.
+This method is used to calculate a possible past UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
 
-Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+Note that if the time zone was constructed from a UTC offset, there will be no offset transitions.
 In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
@@ -338,7 +341,7 @@ Single-offset time zones can use the default implementation which returns `null`
 Example usage:
 
 ```javascript
-// How long until the previous DST change from now, in the current location?
+// How long until the previous offset change from now, in the current location?
 tz = Temporal.Now.timeZone();
 now = Temporal.Now.instant();
 previousTransition = tz.getPreviousTransition(now);
