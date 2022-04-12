@@ -33,6 +33,11 @@
       },
       {
         "type": "op",
+        "aoid": "ResolveLocale",
+        "id": "sec-resolvelocale"
+      },
+      {
+        "type": "op",
         "aoid": "ToDateTimeOptions",
         "id": "sec-todatetimeoptions"
       },
@@ -59,6 +64,11 @@
       {
         "type": "clause",
         "number": "6.1",
+        "id": "sec-case-sensitivity-and-case-mapping"
+      },
+      {
+        "type": "term",
+        "term": "ASCII-case-insensitive match",
         "id": "sec-case-sensitivity-and-case-mapping"
       },
       {
