@@ -15,6 +15,11 @@ const { equal, notEqual, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('Built-in calendars', () => {
+  it('have Calendar.prototype as their prototype', () => {
+    const cal = Temporal.Calendar.from('iso8601');
+    equal(Object.getPrototypeOf(cal), Temporal.Calendar.prototype);
+  });
+
   describe('sharedness', () => {
     it('is shared between instances of the same Temporal type', () => {
       const cal1 = Temporal.Now.plainDateISO().calendar;
@@ -63,6 +68,10 @@ describe('Built-in calendars', () => {
 
   describe('built-in calendar methods', () => {
     const cal = Temporal.Calendar.from('iso8601');
+
+    it('are own properties', () => {
+      assert(Object.hasOwn(cal, 'dateFromFields'));
+    });
 
     it('are not the same objects as Calendar.prototype methods', () => {
       notEqual(cal.dateFromFields, Temporal.Calendar.prototype.dateFromFields);

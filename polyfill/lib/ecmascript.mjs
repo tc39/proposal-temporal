@@ -64,7 +64,7 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
-import { IsBuiltinCalendar } from './calendar.mjs';
+import { GetBuiltinCalendar, IsBuiltinCalendar } from './calendar.mjs';
 
 const DAY_SECONDS = 86400;
 const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
@@ -1522,8 +1522,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   GetISO8601Calendar: () => {
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    return new TemporalCalendar('iso8601');
+    return GetBuiltinCalendar('iso8601');
   },
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
@@ -1647,16 +1646,16 @@ export const ES = ObjectAssign({}, ES2020, {
       if (ES.Type(calendarLike) === 'Object' && !('calendar' in calendarLike)) return calendarLike;
     }
     const identifier = ES.ToString(calendarLike);
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    if (IsBuiltinCalendar(identifier)) return new TemporalCalendar(identifier);
+    if (IsBuiltinCalendar(identifier)) return GetBuiltinCalendar(identifier);
     let calendar;
     try {
       ({ calendar } = ES.ParseISODateTime(identifier));
     } catch {
       throw new RangeError(`Invalid calendar: ${identifier}`);
     }
-    if (!calendar) calendar = 'iso8601';
-    return new TemporalCalendar(calendar);
+    if (!calendar) return ES.GetISO8601Calendar();
+    if (IsBuiltinCalendar(calendar)) return GetBuiltinCalendar(calendar);
+    throw new RangeError(`Invalid calendar: ${identifier}`);
   },
   GetTemporalCalendarWithISODefault: (item) => {
     if (HasSlot(item, CALENDAR)) return GetSlot(item, CALENDAR);
