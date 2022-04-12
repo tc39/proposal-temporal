@@ -27,6 +27,10 @@ import './intl.mjs';
 import './usertimezone.mjs';
 import './usercalendar.mjs';
 
+// tests of builtin objects
+import './builtintimezone.mjs';
+import './builtincalendar.mjs';
+
 Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);
