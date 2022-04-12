@@ -29,26 +29,57 @@ zdtLA.toPlainDate(); // => 2019-12-31
 <!-- prettier-ignore-end -->
 
 `Temporal.Instant` stores a count of integer nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time): midnight UTC on January 1, 1970.
-For interoperability with `Date` (which uses millisecond precision) or other APIs, `Temporal.Instant` also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
-A `Temporal.Instant` can also be created from an ISO 8601 / RFC 3339 string like `'2020-01-24T01:04Z'` or `'2020-01-23T17:04:36.491865121-08:00'`.
+For interoperability with `Date` and other APIs, `Temporal.Instant` also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
+A `Temporal.Instant` can also be created from an ISO 8601 / RFC 3339 string like `'2020-01-23T17:04:36.491865121-08:00'` or `'2020-01-24T01:04Z'`.
+
+Like Unix time, `Temporal.Instant` ignores leap seconds.
+
+## Interoperability with `Date`
+
+`Temporal.Instant` is the easiest way to interoperate between `Temporal` objects and code using `Date`.
+Because `Date` and `Temporal.Instant` both use a time-since-epoch data model, conversions between them are zero-parameter method calls that are lossless (except sub-millisecond precision is truncated when converting to `Date`).
 
 <!-- prettier-ignore-start -->
 ```javascript
-// New Year's in India
-instant = Temporal.Instant.from('2020-01-01T00:00+05:30'); // => 2019-12-31T18:30:00Z
-date = new Date(instant.epochMilliseconds); 
-  // => Tue Dec 31 2019 10:30:00 GMT-0800 (Pacific Standard Time)
-  // The time zone shown above is the time zone of the caller, not the `Date` object.
-  // `Date`, like `Temporal.Instant`, only stores a count of time since epoch.
+// Convert from `Temporal.Instant` to `Date` (which uses millisecond precision)
+instant = Temporal.Instant.from('2020-01-01T00:00:00.123456789+05:30');
+                                                           // => 2019-12-31T18:30:00.123456789Z
+date = new Date(instant.epochMilliseconds);
+date.toISOString();                                        // => 2019-12-31T18:30:00.123Z
 
-// All three lines below convert `Date` to `Temporal.Instant`
-instant2 = date.toTemporalInstant();                       // => 2019-12-31T18:30:00Z
-instant3 = Temporal.Instant.fromEpochMilliseconds(date);   // => 2019-12-31T18:30:00Z
-instant4 = Temporal.Instant.from(date.toISOString());      // => 2019-12-31T18:30:00Z
+// `Date`, like `Temporal.Instant`, only stores an integer count of time since epoch.
+// It does not store a time zone nor an offset. The time zone & offset shown below
+// are fetched (from the caller's time zone) at runtime by `Date.prototype.toString`.
+date.toString(); // => Tue Dec 31 2019 10:30:00 GMT-0800 (Pacific Standard Time)
+
+// All three lines below convert `Date` to `Temporal.Instant`, but `toTemporalInstant` is recommended.
+instant2 = date.toTemporalInstant();                       // => 2019-12-31T18:30:00.123Z
+instant3 = Temporal.Instant.fromEpochMilliseconds(date);   // => 2019-12-31T18:30:00.123Z
+instant4 = Temporal.Instant.from(date.toISOString());      // => 2019-12-31T18:30:00.123Z
 ```
 <!-- prettier-ignore-end -->
 
-Like Unix time, `Temporal.Instant` ignores leap seconds.
+After a `Date` has been converted to a `Temporal.Instant`, it's easy to convert to other `Temporal` types.
+Just make sure to use the correct time zone when converting between `Temporal.Instant` and other `Temporal` types.
+
+<!-- prettier-ignore-start -->
+```javascript
+// Convert a year/month/day `Date` to a `Temporal.PlainDate`. Uses the caller's time zone.
+date = new Date(2000, 0, 1); // => Sat Jan 01 2000 00:00:00 GMT-0800 (Pacific Standard Time)
+plainDate = date
+  .toTemporalInstant()                         // => 2000-01-01T08:00:00Z
+  .toZonedDateTimeISO(Temporal.Now.timeZone()) // => 2000-01-01T00:00:00-08:00[America/Los_Angeles]
+  .toPlainDate();                              // => 2000-01-01
+
+// Convert a year/month/day `Date` to a `Temporal.PlainDate`. Uses UTC.
+date = new Date(Date.UTC(2000, 0, 1)); // => Fri Dec 31 1999 16:00:00 GMT-0800 (Pacific Standard Time)
+date = new Date('2000-01-01T00:00Z');  // => Fri Dec 31 1999 16:00:00 GMT-0800 (Pacific Standard Time)
+plainDate = date
+  .toTemporalInstant()       // => 2000-01-01T00:00:00Z
+  .toZonedDateTimeISO('UTC') // => 2000-01-01T00:00:00+00:00[UTC]
+  .toPlainDate();            // => 2000-01-01
+```
+<!-- prettier-ignore-end -->
 
 ## Constructor
 
@@ -107,7 +138,7 @@ instant === Temporal.Instant.from(instant); // => false
 
 // Not enough information to denote an exact time:
 /* WRONG */ instant = Temporal.Instant.from('2019-03-30'); // => throws, no time
-/* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // => throws, no time zone
+/* WRONG */ instant = Temporal.Instant.from('2019-03-30T01:45'); // => throws, no UTC offset
 ```
 <!-- prettier-ignore-end -->
 
@@ -333,7 +364,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes an addition with those units ambiguous.
-If you need to do this, convert the `Temporal.Instant` to a `Temporal.PlainDateTime` by specifying the desired calendar and time zone, add the duration, and then convert it back.
+To add those units, convert the `Temporal.Instant` to a `Temporal.ZonedDateTime` by specifying the desired calendar and time zone, add the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -364,7 +395,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
 `Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
 This makes a subtraction with those units ambiguous.
-If you need to do this, convert the `Temporal.Instant` to a `Temporal.PlainDateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
+To subtract those units, convert the `Temporal.Instant` to a `Temporal.ZonedDateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
@@ -412,17 +443,17 @@ However, a difference of 30 seconds will still be 30 seconds even if `largestUni
 A value of `'auto'` means `'second'`, unless `smallestUnit` is `'hour'` or `'minute'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is seconds.
-Weeks, months, years, and days are not allowed, unlike the difference methods of the other Temporal types.
+Weeks, months, years, and days are not allowed, unlike the difference methods of other Temporal types.
 This is because months and years can be different lengths depending on which month is meant, and whether the year is a leap year, which all depends on the start and end date of the difference.
 You cannot determine the start and end date of a difference between `Temporal.Instant`s, because `Temporal.Instant` has no time zone or calendar.
 In addition, weeks can be different lengths in different calendars, and days can be different lengths when the time zone has a daylight saving transition.
 
+To calculate the difference in days or larger units between two `Temporal.Instant`s, first convert both (using the `toZonedDateTimeISO` or `toZonedDateTime` methods) to `Temporal.ZonedDateTime` objects in the same time zone and calendar.
+For example, you might decide to base the calculation on your user's current time zone, or on UTC, in the Gregorian calendar.
+
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method.
 The default is to do no rounding.
-
-If you do need to calculate the difference between two `Temporal.Instant`s in years, months, weeks, or days, then you can make an explicit choice on how to eliminate this ambiguity, choosing your starting point by converting to a `Temporal.PlainDateTime`.
-For example, you might decide to base the calculation on your user's current time zone, or on UTC, in the Gregorian calendar.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
 For some durations, the resulting value may overflow `Number.MAX_SAFE_INTEGER` and lose precision in its least significant digit(s).
@@ -617,10 +648,11 @@ The string can be passed to `Temporal.Instant.from()` to create a new `Temporal.
 The output precision can be controlled with the `fractionalSecondDigits` or `smallestUnit` option.
 If no options are given, the default is `fractionalSecondDigits: 'auto'`, which omits trailing zeroes after the decimal point.
 
-The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.PlainDateTime.round()`.
+The value is truncated to fit the requested precision, unless a different rounding mode is given with the `roundingMode` option, as in `Temporal.ZonedDateTime.round()`.
 Note that rounding may change the value of other units as well.
 
-If the `timeZone` option is given, then the string will express the time in the given time zone, and contain the time zone's UTC offset, rounded to the nearest minute.
+If the `timeZone` option is not provided or is `undefined`, then the string will express the date and time in UTC and the `Z` offset designator will be appended.
+However, if the `timeZone` option is given, then the string will express the date and time in the given time zone, and contain the time zone's numeric UTC offset, rounded to the nearest minute.
 
 Example usage:
 
