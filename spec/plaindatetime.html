@@ -672,7 +672,7 @@
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, «»).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_).
+        1. Return ? CalendarYearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -687,7 +687,7 @@
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, «»).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_).
+        1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -881,7 +881,7 @@
       <emu-alg>
         1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Let _temporalDate_ be ? DateFromFields(_calendar_, _fields_, _options_).
+        1. Let _temporalDate_ be ? CalendarDateFromFields(_calendar_, _fields_, _options_).
         1. Let _timeResult_ be ? RegulateTime(_timeResult_.[[Hour]], _timeResult_.[[Minute]], _timeResult_.[[Second]], _timeResult_.[[Millisecond]], _timeResult_.[[Microsecond]], _timeResult_.[[Nanosecond]], _overflow_).
         1. Return the Record {
           [[Year]]: _temporalDate_.[[ISOYear]],

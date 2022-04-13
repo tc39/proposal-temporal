@@ -968,7 +968,7 @@
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_).
+        1. Return ? CalendarYearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -986,7 +986,7 @@
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_).
+        1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 

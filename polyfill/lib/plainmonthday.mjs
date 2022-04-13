@@ -54,7 +54,7 @@ export class PlainMonthDay {
     fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
 
     options = ES.GetOptionsObject(options);
-    return ES.MonthDayFromFields(calendar, fields, options);
+    return ES.CalendarMonthDayFromFields(calendar, fields, options);
   }
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
@@ -112,7 +112,7 @@ export class PlainMonthDay {
     mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
     const options = ObjectCreate(null);
     options.overflow = 'reject';
-    return ES.DateFromFields(calendar, mergedFields, options);
+    return ES.CalendarDateFromFields(calendar, mergedFields, options);
   }
   getISOFields() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
