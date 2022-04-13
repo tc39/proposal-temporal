@@ -156,7 +156,7 @@
         1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _fieldNames_, «»).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
+        1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -251,7 +251,7 @@
         1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _mergedFieldNames_, «»).
         1. Let _options_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"reject"*).
-        1. Return ? DateFromFields(_calendar_, _mergedFields_, _options_).
+        1. Return ? CalendarDateFromFields(_calendar_, _mergedFields_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -368,7 +368,7 @@
           1. Let _year_ be ? Get(_fields_, *"year"*).
           1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, 𝔽(_referenceISOYear_)).
-          1. Return ? MonthDayFromFields(_calendar_, _fields_, _options_).
+          1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalMonthDayString(_string_).
@@ -377,7 +377,7 @@
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
-        1. Return ? MonthDayFromFields(_calendar_, _result_).
+        1. Return ? CalendarMonthDayFromFields(_calendar_, _result_).
       </emu-alg>
     </emu-clause>
 

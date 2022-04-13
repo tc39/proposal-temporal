@@ -302,7 +302,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
-        1. Return ? YearMonthFromFields(_calendar_, _fields_).
+        1. Return ? CalendarYearMonthFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -317,7 +317,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"monthCode"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
-        1. Return ? MonthDayFromFields(_calendar_, _fields_).
+        1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_).
       </emu-alg>
     </emu-clause>
 
@@ -388,7 +388,7 @@
         1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialDate_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
-        1. Return ? DateFromFields(_calendar_, _fields_, _options_).
+        1. Return ? CalendarDateFromFields(_calendar_, _fields_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -688,7 +688,7 @@
           1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
-          1. Return ? DateFromFields(_calendar_, _fields_, _options_).
+          1. Return ? CalendarDateFromFields(_calendar_, _fields_, _options_).
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalDateString(_string_).

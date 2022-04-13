@@ -1018,7 +1018,7 @@ export const ES = ObjectAssign({}, ES2020, {
       const calendar = ES.GetTemporalCalendarWithISODefault(item);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
       const fields = ES.ToTemporalDateFields(item, fieldNames);
-      return ES.DateFromFields(calendar, fields, options);
+      return ES.CalendarDateFromFields(calendar, fields, options);
     }
     ES.ToTemporalOverflow(options); // validate and ignore
     let { year, month, day, calendar, z } = ES.ParseTemporalDateString(ES.ToString(item));
@@ -1029,7 +1029,7 @@ export const ES = ObjectAssign({}, ES2020, {
   InterpretTemporalDateTimeFields: (calendar, fields, options) => {
     let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.ToTemporalTimeRecord(fields);
     const overflow = ES.ToTemporalOverflow(options);
-    const date = ES.DateFromFields(calendar, fields, options);
+    const date = ES.CalendarDateFromFields(calendar, fields, options);
     const year = GetSlot(date, ISO_YEAR);
     const month = GetSlot(date, ISO_MONTH);
     const day = GetSlot(date, ISO_DAY);
@@ -1158,7 +1158,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined && fields.year === undefined) {
         fields.year = 1972;
       }
-      return ES.MonthDayFromFields(calendar, fields, options);
+      return ES.CalendarMonthDayFromFields(calendar, fields, options);
     }
 
     ES.ToTemporalOverflow(options); // validate and ignore
@@ -1171,7 +1171,7 @@ export const ES = ObjectAssign({}, ES2020, {
       return ES.CreateTemporalMonthDay(month, day, calendar);
     }
     const result = ES.CreateTemporalMonthDay(month, day, calendar, referenceISOYear);
-    return ES.MonthDayFromFields(calendar, result);
+    return ES.CalendarMonthDayFromFields(calendar, result);
   },
   ToTemporalTime: (item, overflow = 'constrain') => {
     let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
@@ -1227,7 +1227,7 @@ export const ES = ObjectAssign({}, ES2020, {
       const calendar = ES.GetTemporalCalendarWithISODefault(item);
       const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
       const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
-      return ES.YearMonthFromFields(calendar, fields, options);
+      return ES.CalendarYearMonthFromFields(calendar, fields, options);
     }
 
     ES.ToTemporalOverflow(options); // validate and ignore
@@ -1240,7 +1240,7 @@ export const ES = ObjectAssign({}, ES2020, {
       return ES.CreateTemporalYearMonth(year, month, calendar);
     }
     const result = ES.CreateTemporalYearMonth(year, month, calendar, referenceISODay);
-    return ES.YearMonthFromFields(calendar, result);
+    return ES.CalendarYearMonthFromFields(calendar, result);
   },
   InterpretISODateTimeOffset: (
     year,
@@ -1682,19 +1682,19 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError('irreconcilable calendars');
     }
   },
-  DateFromFields: (calendar, fields, options) => {
+  CalendarDateFromFields: (calendar, fields, options) => {
     const dateFromFields = ES.GetMethod(calendar, 'dateFromFields');
     const result = ES.Call(dateFromFields, calendar, [fields, options]);
     if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
     return result;
   },
-  YearMonthFromFields: (calendar, fields, options) => {
+  CalendarYearMonthFromFields: (calendar, fields, options) => {
     const yearMonthFromFields = ES.GetMethod(calendar, 'yearMonthFromFields');
     const result = ES.Call(yearMonthFromFields, calendar, [fields, options]);
     if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
     return result;
   },
-  MonthDayFromFields: (calendar, fields, options) => {
+  CalendarMonthDayFromFields: (calendar, fields, options) => {
     const monthDayFromFields = ES.GetMethod(calendar, 'monthDayFromFields');
     const result = ES.Call(monthDayFromFields, calendar, [fields, options]);
     if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
