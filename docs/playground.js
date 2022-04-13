@@ -7178,7 +7178,7 @@
 
         var fieldNames = ES.CalendarFields(_calendar, ['day', 'month', 'monthCode', 'year']);
         var fields = ES.ToTemporalDateFields(item, fieldNames);
-        return ES.DateFromFields(_calendar, fields, options);
+        return ES.CalendarDateFromFields(_calendar, fields, options);
       }
 
       ES.ToTemporalOverflow(options); // validate and ignore
@@ -7204,7 +7204,7 @@
           nanosecond = _ES$ToTemporalTimeRec.nanosecond;
 
       var overflow = ES.ToTemporalOverflow(options);
-      var date = ES.DateFromFields(calendar, fields, options);
+      var date = ES.CalendarDateFromFields(calendar, fields, options);
       var year = GetSlot(date, ISO_YEAR);
       var month = GetSlot(date, ISO_MONTH);
       var day = GetSlot(date, ISO_DAY);
@@ -7340,7 +7340,7 @@
           fields.year = 1972;
         }
 
-        return ES.MonthDayFromFields(_calendar2, fields, options);
+        return ES.CalendarMonthDayFromFields(_calendar2, fields, options);
       }
 
       ES.ToTemporalOverflow(options); // validate and ignore
@@ -7360,7 +7360,7 @@
       }
 
       var result = ES.CreateTemporalMonthDay(month, day, calendar, referenceISOYear);
-      return ES.MonthDayFromFields(calendar, result);
+      return ES.CalendarMonthDayFromFields(calendar, result);
     },
     ToTemporalTime: function ToTemporalTime(item) {
       var overflow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'constrain';
@@ -7430,7 +7430,7 @@
 
         var fieldNames = ES.CalendarFields(_calendar3, ['month', 'monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(item, fieldNames);
-        return ES.YearMonthFromFields(_calendar3, fields, options);
+        return ES.CalendarYearMonthFromFields(_calendar3, fields, options);
       }
 
       ES.ToTemporalOverflow(options); // validate and ignore
@@ -7450,7 +7450,7 @@
       }
 
       var result = ES.CreateTemporalYearMonth(year, month, calendar, referenceISODay);
-      return ES.YearMonthFromFields(calendar, result);
+      return ES.CalendarYearMonthFromFields(calendar, result);
     },
     InterpretISODateTimeOffset: function InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute) {
       var DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
@@ -7909,19 +7909,19 @@
         throw new RangeError('irreconcilable calendars');
       }
     },
-    DateFromFields: function DateFromFields(calendar, fields, options) {
+    CalendarDateFromFields: function CalendarDateFromFields(calendar, fields, options) {
       var dateFromFields = ES.GetMethod(calendar, 'dateFromFields');
       var result = ES.Call(dateFromFields, calendar, [fields, options]);
       if (!ES.IsTemporalDate(result)) throw new TypeError('invalid result');
       return result;
     },
-    YearMonthFromFields: function YearMonthFromFields(calendar, fields, options) {
+    CalendarYearMonthFromFields: function CalendarYearMonthFromFields(calendar, fields, options) {
       var yearMonthFromFields = ES.GetMethod(calendar, 'yearMonthFromFields');
       var result = ES.Call(yearMonthFromFields, calendar, [fields, options]);
       if (!ES.IsTemporalYearMonth(result)) throw new TypeError('invalid result');
       return result;
     },
-    MonthDayFromFields: function MonthDayFromFields(calendar, fields, options) {
+    CalendarMonthDayFromFields: function CalendarMonthDayFromFields(calendar, fields, options) {
       var monthDayFromFields = ES.GetMethod(calendar, 'monthDayFromFields');
       var result = ES.Call(monthDayFromFields, calendar, [fields, options]);
       if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
@@ -11805,7 +11805,7 @@
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalDateFields(fields, fieldNames);
         options = ES.GetOptionsObject(options);
-        return ES.DateFromFields(calendar, fields, options);
+        return ES.CalendarDateFromFields(calendar, fields, options);
       }
     }, {
       key: "withCalendar",
@@ -12035,7 +12035,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        return ES.YearMonthFromFields(calendar, fields);
+        return ES.CalendarYearMonthFromFields(calendar, fields);
       }
     }, {
       key: "toPlainMonthDay",
@@ -12044,7 +12044,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        return ES.MonthDayFromFields(calendar, fields);
+        return ES.CalendarMonthDayFromFields(calendar, fields);
       }
     }, {
       key: "getISOFields",
@@ -12641,7 +12641,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        return ES.YearMonthFromFields(calendar, fields);
+        return ES.CalendarYearMonthFromFields(calendar, fields);
       }
     }, {
       key: "toPlainMonthDay",
@@ -12650,7 +12650,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        return ES.MonthDayFromFields(calendar, fields);
+        return ES.CalendarMonthDayFromFields(calendar, fields);
       }
     }, {
       key: "toPlainTime",
@@ -13279,7 +13279,7 @@
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalMonthDayFields(fields, fieldNames);
         options = ES.GetOptionsObject(options);
-        return ES.MonthDayFromFields(calendar, fields, options);
+        return ES.CalendarMonthDayFromFields(calendar, fields, options);
       }
     }, {
       key: "equals",
@@ -13364,7 +13364,7 @@
         mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
         var options = ObjectCreate$3(null);
         options.overflow = 'reject';
-        return ES.DateFromFields(calendar, mergedFields, options);
+        return ES.CalendarDateFromFields(calendar, mergedFields, options);
       }
     }, {
       key: "getISOFields",
@@ -14093,7 +14093,7 @@
         fields = ES.CalendarMergeFields(calendar, fields, props);
         fields = ES.ToTemporalYearMonthFields(fields, fieldNames);
         options = ES.GetOptionsObject(options);
-        return ES.YearMonthFromFields(calendar, fields, options);
+        return ES.CalendarYearMonthFromFields(calendar, fields, options);
       }
     }, {
       key: "add",
@@ -14121,7 +14121,7 @@
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
-        var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
+        var startDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }));
 
@@ -14131,7 +14131,7 @@
           days: days
         }), options);
         var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-        return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
+        return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
       }
     }, {
       key: "subtract",
@@ -14172,7 +14172,7 @@
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
         var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
         var day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
-        var startDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
+        var startDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
           day: day
         }));
 
@@ -14182,7 +14182,7 @@
           days: days
         }), options);
         var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-        return ES.YearMonthFromFields(calendar, addedDateFields, optionsCopy);
+        return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
       }
     }, {
       key: "until",
@@ -14208,10 +14208,10 @@
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        var otherDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
+        var otherDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
           day: 1
         }));
-        var thisDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
+        var thisDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
         }));
 
@@ -14255,10 +14255,10 @@
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
         var thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        var otherDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
+        var otherDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
           day: 1
         }));
-        var thisDate = ES.DateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
+        var thisDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
           day: 1
         }));
 
@@ -14365,7 +14365,7 @@
         mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
         var options = ObjectCreate$1(null);
         options.overflow = 'reject';
-        return ES.DateFromFields(calendar, mergedFields, options);
+        return ES.CalendarDateFromFields(calendar, mergedFields, options);
       }
     }, {
       key: "getISOFields",
@@ -15150,7 +15150,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
         var fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-        return ES.YearMonthFromFields(calendar, fields);
+        return ES.CalendarYearMonthFromFields(calendar, fields);
       }
     }, {
       key: "toPlainMonthDay",
@@ -15159,7 +15159,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
         var fields = ES.ToTemporalMonthDayFields(this, fieldNames);
-        return ES.MonthDayFromFields(calendar, fields);
+        return ES.CalendarMonthDayFromFields(calendar, fields);
       }
     }, {
       key: "getISOFields",
