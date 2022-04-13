@@ -81,6 +81,8 @@ plainDate = date
 ```
 <!-- prettier-ignore-end -->
 
+For detailed how-to information about interoperating with `Date`, see [Converting between `Temporal` types and legacy `Date`](cookbook.md#converting-between-temporal-types-and-legacy-date).
+
 ## Constructor
 
 ### **new Temporal.Instant**(_epochNanoseconds_ : bigint) : Temporal.Instant
