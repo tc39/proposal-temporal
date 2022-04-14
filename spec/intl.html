@@ -32,22 +32,21 @@
       A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names), and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
     </p>
 
-    <emu-clause id="sup-isvalidtimezonename">
-      <h1><a href="https://tc39.es/ecma402/#sec-isvalidtimezonename">IsValidTimeZoneName</a> ( _timeZone_ )</h1>
+    <del class="block">
+      <emu-clause id="sup-isvalidtimezonename">
+        <h1><a href="https://tc39.es/ecma402/#sec-isvalidtimezonename">IsValidTimeZoneName</a> ( _timeZone_ )</h1>
 
-      <ins class="block">
-        <p>This definition supersedes the definition provided in <emu-xref href="#sec-isvalidtimezonename"></emu-xref>.</p>
-      </ins>
-      <p>
-        The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value, and verifies that it represents a valid Zone or Link name of the IANA Time Zone Database.
-      </p>
+        <p>
+          The abstract operation IsValidTimeZoneName takes argument _timeZone_, a String value, and verifies that it represents a valid Zone or Link name of the IANA Time Zone Database.
+        </p>
 
-      <emu-alg>
-        1. If one of the Zone or Link names of the IANA Time Zone Database is an ASCII-case-insensitive match of _timeZone_, return *true*.
-        1. If _timeZone_ is an ASCII-case-insensitive match of *"UTC"*, return *true*.
-        1. Return *false*.
-      </emu-alg>
-    </emu-clause>
+        <emu-alg>
+          1. If one of the Zone or Link names of the IANA Time Zone Database is an ASCII-case-insensitive match of _timeZone_, return *true*.
+          1. If _timeZone_ is an ASCII-case-insensitive match of *"UTC"*, return *true*.
+          1. Return *false*.
+        </emu-alg>
+      </emu-clause>
+    </del>
 
     <emu-clause id="sup-canonicalizetimezonename" type="abstract operation">
       <h1>
@@ -73,6 +72,30 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-canonicalizetimezonename"></emu-xref>.</p>
       </ins>
     </emu-clause>
+
+    <ins class="block">
+      <emu-clause id="sup-availabletimezones" type="implementation-defined abstract operation">
+        <h1>
+          AvailableTimeZones (
+          ): a List of Strings
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>The returned List is a sorted List of supported Zone and Link names in the IANA Time Zone Database.</dd>
+          <dt>redefinition</dt>
+          <dd>true</dd>
+        </dl>
+        <emu-alg>
+          1. Let _timeZones_ be a List containing the String value of each Zone or Link name in the IANA Time Zone Database that is supported by the implementation.
+          1. Assert: _timeZones_ contains *"UTC"*.
+          1. Assert: _timeZones_ does not contain any element that does not identify a Zone or Link name in the IANA Time Zone Database.
+          1. Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+          1. Return _timeZones_.
+        </emu-alg>
+
+        <p>This definition supersedes the definition provided in <emu-xref href="#sec-availabletimezones"></emu-xref>.</p>
+      </emu-clause>
+    </ins>
   </emu-clause>
 
   <emu-clause id="sec-abstract-operations">
@@ -193,7 +216,7 @@
           1. Set _timeZone_ to DefaultTimeZone().
         1. Else,
           1. Set _timeZone_ to ? ToString(_timeZone_).
-          1. If the result of ! IsValidTimeZoneName(_timeZone_) is *false*, then
+          1. If the result of IsValidTimeZoneName(_timeZone_) is *false*, then
             1. Throw a *RangeError* exception.
           1. Set _timeZone_ to ! CanonicalizeTimeZoneName(_timeZone_).
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
