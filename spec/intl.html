@@ -110,6 +110,32 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-availabletimezones"></emu-xref>.</p>
       </emu-clause>
     </ins>
+
+    <ins class="block">
+      <emu-clause id="sup-calendar-types">
+        <h1>Calendar Types</h1>
+
+        <p>
+          The ECMAScript 2022 Internationalization API Specification identifies calendars using a <em>calendar type</em> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>. Their canonical form is a string containing all lower case letters with zero or more hyphens.
+        </p>
+
+        <emu-clause id="sup-availablecalendars" type="abstract operation">
+          <h1>
+            AvailableCalendars (
+            ): a List of Strings
+          </h1>
+          <dl class="header">
+            <dt>description</dt>
+            <dd>The returned List is ordered as if an Array of the same values had been sorted using %Array.prototype.sort% using *undefined* as _comparefn_, and contains unique calendar types identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects.
+            The list must include *"gregory"* and *"iso8601"*.</dd>
+            <dt>redefinition</dt>
+            <dd>true</dd>
+          </dl>
+
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-availablecalendars"></emu-xref>.</p>
+        </emu-clause>
+      </emu-clause>
+    </ins>
   </emu-clause>
 
   <emu-clause id="sec-abstract-operations">
@@ -1326,16 +1352,6 @@
     <ins class="block">
       <emu-clause id="sup-temporal-calendar-abstract-ops">
         <h1>Abstract Operations for Temporal.Calendar Objects</h1>
-
-        <emu-clause id="sup-temporal-isbuiltincalendar" aoid="IsBuiltinCalendar402">
-          <h1>IsBuiltinCalendar ( _id_ )</h1>
-          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-isbuiltincalendar"></emu-xref>.</p>
-          <emu-alg>
-            1. Let _builtinCalendars_ be a List of Unicode BCP 47 calendar identifiers identifying the calendars for which the implementation provides the functionality of the constructed `Temporal.Calendar` objects. The list must include *"iso8601"*. The ordering is irrelevant.
-            1. If _builtinCalendars_ contains _id_, return *true*.
-            1. Return *false*.
-          </emu-alg>
-        </emu-clause>
 
         <emu-clause id="sec-temporal-calendarera" aoid="CalendarEra">
           <h1>CalendarEra ( _calendar_, _dateLike_ )</h1>
