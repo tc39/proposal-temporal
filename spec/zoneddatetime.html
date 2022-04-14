@@ -1178,7 +1178,7 @@
           1. Let _timeZoneName_ be _result_.[[TimeZoneName]].
           1. Assert: _timeZoneName_ is not *undefined*.
           1. If ParseText(StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is a List of errors, then
-            1. If ! IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
+            1. If IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
             1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
           1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
           1. If _result_.[[TimeZoneZ]] is *true*, then

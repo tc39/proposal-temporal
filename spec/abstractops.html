@@ -497,7 +497,7 @@
         1. Let _timeZoneName_ be _result_.[[TimeZoneIANAName]].
         1. If _timeZoneName_ is not *undefined*, then
           1. If ParseText(StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is a List of errors, then
-            1. If ! IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
+            1. If IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
             1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
           1. Let _timeZone_ be ! CreateTemporalTimeZone(_timeZoneName_).
         1. Else,
