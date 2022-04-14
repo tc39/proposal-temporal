@@ -114,6 +114,10 @@ overrides:
       prettier/prettier: 'off'
       quotes: 'off'
   - files:
+      - docs/cookbook/fromLegacyDateOnly.mjs
+    rules:
+      prettier/prettier: 'off'
+  - files:
       - polyfill/test/helpers/temporalHelpers.js
     rules:
       no-unused-vars: 'off'

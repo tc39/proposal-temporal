@@ -1,4 +1,4 @@
-# Temporal Cookbook
+# `Temporal` Cookbook
 
 ## Overview
 
@@ -10,8 +10,8 @@ Running cookbook files: see instructions in [../polyfill/README.md](https://gith
 
 ## Frequently Asked Questions
 
-These are some of the most common tasks that people ask questions about on StackOverflow with legacy Date.
-Here's how they would look using Temporal.
+These are some of the most common tasks that people ask questions about on StackOverflow with legacy `Date`.
+Here's how they would look using `Temporal`.
 
 ### Current date and time
 
@@ -36,11 +36,11 @@ How to get a Unix timestamp?
 ```
 <!-- prettier-ignore-end -->
 
-## Converting between Temporal types and legacy Date
+## Converting between `Temporal` types and legacy `Date`
 
-### Temporal types from legacy Date
+### Legacy `Date` => `Temporal.Instant` and/or `Temporal.ZonedDateTime`
 
-Here's how to convert legacy ECMAScript Date into a Temporal.Instant or Temporal.ZonedDateTime instance corresponding to the same instant in exact time.
+Here's how to convert legacy ECMAScript `Date` into a `Temporal.Instant` or `Temporal.ZonedDateTime` instance corresponding to the same instant in exact time.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -48,9 +48,31 @@ Here's how to convert legacy ECMAScript Date into a Temporal.Instant or Temporal
 ```
 <!-- prettier-ignore-end -->
 
-### Legacy Date from Temporal types
+### Date-only values: legacy `Date` => `Temporal.PlainDate`
 
-Legacy Date represents an exact time, so it's straightforward to convert a Temporal.Instant or Temporal.ZonedDateTime instance into a legacy Date instance that corresponds to it.
+A common bug arises from a simple question: what date (year, month, and day) is represented by this `Date`?
+The problem: the answer depends on the time zone.
+The same `Date` can be December 31 in San Francisco but January 1 in London or Tokyo.
+
+Therefore, it's critical to interpret the `Date` in context of the correct time zone _before_ trying to extract the year, month, or day, or before doing calculations like "did this happen yesterday?" involving date units.
+For this reason, `Temporal.Instant` (which is the `Temporal` equivalent of `Date`) does not have `year`, `month`, `day` properties.
+To access date or time units in `Temporal`, a time zone must be provided, as described in the code example above.
+
+Another bug-prone case is when `Date` is (ab)used to store a date-only value, like a user's date of birth.
+With `Date` these values are typically stored with midnight times, but to read back the date correctly you need to know which time zone's midnight was used to create the `Date`.
+For example, `new Date(2000, 0, 1)` uses the caller's time zone, while `new Date('2000-01-01')` uses UTC.
+
+To correctly convert a date-only `Date` to a `Temporal.PlainDate` without being vulnerable to off-by-one-day bugs, you must determine which time zone's midnight was used to construct the `Date`, and then use that same time zone when converting from `Temporal.Instant` to `Temporal.PlainDate`.
+
+<!-- prettier-ignore-start -->
+```javascript
+{{cookbook/fromLegacyDateOnly.mjs}}
+```
+<!-- prettier-ignore-end -->
+
+### `Temporal` types => legacy `Date`
+
+Legacy `Date` represents an exact time, so it's straightforward to convert a `Temporal.Instant` or `Temporal.ZonedDateTime` instance into a legacy `Date` instance that corresponds to it.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -72,7 +94,7 @@ Legacy Date represents an exact time, so it's straightforward to convert a Tempo
 
 ### Calendar input element
 
-You can use Temporal objects to set properties on a calendar control.
+You can use `Temporal` objects to set properties on a calendar control.
 Here is an example using an HTML `<input type="date">` element with any day beyond “today” disabled and not selectable.
 
 <input type="date" id="calendar-input">
@@ -115,13 +137,13 @@ An example of combining a day on the calendar (`Temporal.PlainMonthDay`) and a y
 
 ### Zoned instant from instant and time zone
 
-To serialize an exact-time Temporal.Instant into a string, use `toString()`.
+To serialize an exact-time `Temporal.Instant` into a string, use `toString()`.
 Without any arguments, this gives you a string in UTC time.
 
 If you need your string to include a UTC offset, then use the `timeZone` option of `Temporal.Instant.prototype.toString()` which will return a string serialization of the wall-clock time in that time zone corresponding to the exact time.
 
 This loses the information about which time zone the string was in, because it only preserves the UTC offset from the time zone at that particular exact time.
-If you need your string to include the time zone name, use Temporal.ZonedDateTime instead, which retains this information.
+If you need your string to include the time zone name, use `Temporal.ZonedDateTime` instead, which retains this information.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -131,12 +153,12 @@ If you need your string to include the time zone name, use Temporal.ZonedDateTim
 
 ## Sorting
 
-Each Temporal type has a `compare()` static method, which can be passed to `Array.prototype.sort()` as the compare function in order to sort an array of Temporal types.
+Each `Temporal` type has a `compare()` static method, which can be passed to `Array.prototype.sort()` as the compare function in order to sort an array of `Temporal` types.
 
-### Sort DateTimes
+### Sort PlainDateTime values
 
 Sort a list of `Temporal.PlainDateTime`s, for example in order to get a conference schedule in the correct order.
-Sorting other Temporal types would work exactly the same way as this.
+Sorting other `Temporal` types would work exactly the same way.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -158,7 +180,7 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 
 ### Round a time down to whole hours
 
-Use the `round()` method of each Temporal type if you want to round the time fields.
+Use the `round()` method of each `Temporal` type if you want to round the time fields.
 Here's an example of rounding a time _down_ to the previously occurring whole hour:
 
 <!-- prettier-ignore-start -->
@@ -187,7 +209,7 @@ See also [Push back a launch date](#push-back-a-launch-date) for an easier way t
 ### Preserving local time
 
 Map a zoneless date and time of day into a `Temporal.Instant` instance at which the local date and time of day in a specified time zone matches it.
-This is easily done with `dateTime.toZonedDateTime(timeZone).toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to Temporal.
+This is easily done with `dateTime.toZonedDateTime(timeZone).toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to `Temporal`.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -262,7 +284,7 @@ Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal
 
 ### Dealing with dates and times in a fixed location
 
-Here is an example of Temporal used in a graph, showing fictitious activity for a storage tank in a fixed location (Stockholm, Sweden).
+Here is an example of `Temporal` used in a graph, showing fictitious activity for a storage tank in a fixed location (Stockholm, Sweden).
 The graph always starts at midnight in the tank's location, but the graph labels are in the viewer's time zone.
 
 <!-- prettier-ignore-start -->
@@ -397,7 +419,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
 
 ### Unit-constrained duration between now and a past/future zoned event
 
-Take the difference between two Temporal.Instant instances as a Temporal.Duration instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
+Take the difference between two `Temporal.Instant` instances as a `Temporal.Duration` instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -407,7 +429,7 @@ Take the difference between two Temporal.Instant instances as a Temporal.Duratio
 
 ### Nearest offset transition in a time zone
 
-Map a Temporal.Instant instance and a Temporal.TimeZone object into a Temporal.Instant instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
+Map a `Temporal.Instant` instance and a `Temporal.TimeZone` object into a `Temporal.Instant` instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -539,12 +561,12 @@ The following example calculates this.
 
 ## Advanced use cases
 
-These are not expected to be part of the normal usage of Temporal, but show some unusual things that can be done with Temporal.
+These are not expected to be part of the normal usage of `Temporal`, but show some unusual things that can be done with `Temporal`.
 Since they are generally larger than these cookbook recipes, they're on their own pages.
 
 ### Extra-expanded years
 
-Extend Temporal to support arbitrarily-large years (e.g., **+635427810-02-02**) for astronomical purposes.
+Extend `Temporal` to support arbitrarily-large years (e.g., **+635427810-02-02**) for astronomical purposes.
 
 → [Extra-expanded years](cookbook-expandedyears.md)
 

@@ -13,7 +13,7 @@ assert.equal(instant.toString(), '1970-01-01T00:00:01Z');
 // whether you want that exact time interpreted as a UTC value
 // (using methods containing "UTC" in their names) or in the
 // current system time zone (using other methods). This is
-// confusing, so Temporal has a more explict way to do this.
+// confusing, so Temporal has a more explicit way to do this.
 
 // To use the system's local time zone, which corresponds to using
 // legacy Date's getFullYear(), getMonth(), etc. methods, pass

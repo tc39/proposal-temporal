@@ -5,6 +5,7 @@ import './bridgePublicHolidays.mjs';
 import './calculateDailyOccurrence.mjs';
 import './countPrecedingWeeklyDaysInMonth.mjs';
 import './fromLegacyDate.mjs';
+import './fromLegacyDateOnly.mjs';
 import './getBusinessOpenStateText.mjs';
 import './getCurrentDate.mjs';
 import './getElapsedDurationSinceInstant.mjs';
