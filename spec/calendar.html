@@ -5,13 +5,72 @@
   <h1>Temporal.Calendar Objects</h1>
   <p>A Temporal.Calendar object is an Object representing a calendar.</p>
 
+  <emu-clause id="sec-calendar-types">
+    <h1>Calendar Types</h1>
+
+    <emu-note type="editor">
+      <p>
+        This section shares some text with the <a href="https://tc39.es/proposal-intl-enumeration/">Intl.Enumeration proposal</a>.
+      </p>
+    </emu-note>
+
+    <p>
+      At a minimum, ECMAScript implementations must support a built-in calendar named *"iso8601"*, representing the ISO 8601 calendar.
+      In addition, implementations may support any number of other built-in calendars.
+    </p>
+    <p>
+      ECMAScript implementations identify built-in calendars using a <dfn variants="calendar types">calendar type</dfn> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>.
+      Their canonical form is a string containing all lower case letters with zero or more hyphens.
+    </p>
+    <p>
+      <emu-xref href="#sec-temporal-calendar-constructor">The `Temporal.Calendar` constructor</emu-xref>, when called with the name of a built-in calendar as the argument, will return a valid `Temporal.Calendar` object.
+      When called with any other string, it will throw a *RangeError* exception.
+    </p>
+
+    <emu-clause id="sec-temporal-isbuiltincalendar" type="abstract operation">
+      <h1>
+        IsBuiltinCalendar (
+          _id_: a String,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned value is *true* if _id_ is a calendar type denoting a built-in calendar, and *false* otherwise.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _calendars_ be AvailableCalendars().
+        1. If _calendars_ contains _id_, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-availablecalendars" type="abstract operation">
+      <h1>
+        AvailableCalendars (
+        ): a List of Strings
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List contains a single calendar type, *"iso8601"*.</dd>
+      </dl>
+
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the AvailableCalendars abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the AvailableCalendars abstract operation is used.
+      </p>
+      <emu-alg>
+        1. Return « *"iso8601"* ».
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations for Temporal.Calendar Objects</h1>
 
     <emu-clause id="sec-temporal-createtemporalcalendar" aoid="CreateTemporalCalendar">
       <h1>CreateTemporalCalendar ( _identifier_ [ , _newTarget_ ] )</h1>
       <emu-alg>
-        1. Assert: ! IsBuiltinCalendar(_identifier_) is *true*.
+        1. Assert: IsBuiltinCalendar(_identifier_) is *true*.
         1. If _newTarget_ is not provided, set _newTarget_ to %Temporal.Calendar%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Calendar.prototype%"*, « [[InitializedTemporalCalendar]], [[Identifier]] »).
         1. Set _object_.[[Identifier]] to _identifier_.
@@ -19,22 +78,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isbuiltincalendar" aoid="IsBuiltinCalendar">
-      <h1>IsBuiltinCalendar ( _id_ )</h1>
-      <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the *IsBuiltinCalendar* abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the *IsBuiltinCalendar* abstract operation is used.
-      </p>
-      <emu-alg>
-        1. If _id_ is not *"iso8601"*, return *false*.
-        1. Return *true*.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-getbuiltincalendar" aoid="GetBuiltinCalendar">
       <h1>GetBuiltinCalendar ( _id_ )</h1>
       <emu-alg>
-        1. If ! IsBuiltinCalendar(_id_) is *false*, throw a *RangeError* exception.
+        1. If IsBuiltinCalendar(_id_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalCalendar(_id_).
       </emu-alg>
     </emu-clause>
@@ -249,9 +296,9 @@
           1. Set _temporalCalendarLike_ to ? Get(_temporalCalendarLike_, *"calendar"*).
           1. If Type(_temporalCalendarLike_) is Object and ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
         1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
-        1. If ! IsBuiltinCalendar(_identifier_) is *false*, then
+        1. If IsBuiltinCalendar(_identifier_) is *false*, then
           1. Set _identifier_ to ? ParseTemporalCalendarString(_identifier_).
-          1. If ! IsBuiltinCalendar(_identifier_) is *false*, throw a *RangeError* exception.
+          1. If IsBuiltinCalendar(_identifier_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalCalendar(_identifier_).
       </emu-alg>
     </emu-clause>
@@ -671,7 +718,7 @@
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. Set _id_ to ? ToString(_id_).
-        1. If ! IsBuiltinCalendar(_id_) is *false*, then
+        1. If IsBuiltinCalendar(_id_) is *false*, then
           1. Throw a *RangeError* exception.
         1. Return ? CreateTemporalCalendar(_id_, NewTarget).
       </emu-alg>
