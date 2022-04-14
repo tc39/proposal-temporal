@@ -47,41 +47,31 @@ instant = Temporal.Instant.from('2020-01-01T00:00:00.123456789+05:30');
 date = new Date(instant.epochMilliseconds);
 date.toISOString();                                        // => 2019-12-31T18:30:00.123Z
 
-// `Date`, like `Temporal.Instant`, only stores an integer count of time since epoch.
-// It does not store a time zone nor an offset. The time zone & offset shown below
-// are fetched (from the caller's time zone) at runtime by `Date.prototype.toString`.
-date.toString(); // => Tue Dec 31 2019 10:30:00 GMT-0800 (Pacific Standard Time)
-
-// All three lines below convert `Date` to `Temporal.Instant`, but `toTemporalInstant` is recommended.
-instant2 = date.toTemporalInstant();                       // => 2019-12-31T18:30:00.123Z
-instant3 = Temporal.Instant.fromEpochMilliseconds(date);   // => 2019-12-31T18:30:00.123Z
-instant4 = Temporal.Instant.from(date.toISOString());      // => 2019-12-31T18:30:00.123Z
+// Convert from `Date` to `Temporal.Instant`
+sameInstant = date.toTemporalInstant();                    // => 2019-12-31T18:30:00.123Z
 ```
 <!-- prettier-ignore-end -->
 
-After a `Date` has been converted to a `Temporal.Instant`, it's easy to convert to other `Temporal` types.
-Just make sure to use the correct time zone when converting between `Temporal.Instant` and other `Temporal` types.
+A `Date` that's been converted to a `Temporal.Instant` can be easily converted to a `Temporal.ZonedDateTime` object by providing a time zone.
+From there, calendar and clock properties like `day` or `hour` are available.
+Conversions to narrower types like `Temporal.PlainDate` or `Temporal.PlainTime` are also provided.
 
 <!-- prettier-ignore-start -->
 ```javascript
-// Convert a year/month/day `Date` to a `Temporal.PlainDate`. Uses the caller's time zone.
-date = new Date(2000, 0, 1); // => Sat Jan 01 2000 00:00:00 GMT-0800 (Pacific Standard Time)
-plainDate = date
-  .toTemporalInstant()                         // => 2000-01-01T08:00:00Z
-  .toZonedDateTimeISO(Temporal.Now.timeZone()) // => 2000-01-01T00:00:00-08:00[America/Los_Angeles]
-  .toPlainDate();                              // => 2000-01-01
-
-// Convert a year/month/day `Date` to a `Temporal.PlainDate`. Uses UTC.
-date = new Date(Date.UTC(2000, 0, 1)); // => Fri Dec 31 1999 16:00:00 GMT-0800 (Pacific Standard Time)
-date = new Date('2000-01-01T00:00Z');  // => Fri Dec 31 1999 16:00:00 GMT-0800 (Pacific Standard Time)
-plainDate = date
-  .toTemporalInstant()       // => 2000-01-01T00:00:00Z
-  .toZonedDateTimeISO('UTC') // => 2000-01-01T00:00:00+00:00[UTC]
-  .toPlainDate();            // => 2000-01-01
+date = new Date(2019, 11, 31, 18, 30);  // => Tue Dec 31 2019 18:30:00 GMT-0800 (Pacific Standard Time)
+instant = date.toTemporalInstant();     // => 2020-01-01T02:30:00Z
+zonedDateTime = instant.toZonedDateTimeISO(Temporal.Now.timeZone());
+                                        // => 2019-12-31T18:30:00-08:00[America/Los_Angeles]
+zonedDateTime.day;                      // => 31
+dateOnly = zonedDateTime.toPlainDate(); // => 2019-12-31
 ```
 <!-- prettier-ignore-end -->
 
-For detailed how-to information about interoperating with `Date`, see [Converting between `Temporal` types and legacy `Date`](cookbook.md#converting-between-temporal-types-and-legacy-date).
+Bugs in `Date`=>`Temporal` conversions can be caused by picking the wrong time zone when converting from `Temporal.Instant` to `Temporal.ZonedDateTime`.
+For example, the example above constructs the `Date` using local-timezone parameters, so it uses the system time zone: `Temporal.Now.timeZone()`.
+But if the `Date` had been initialized with a string like `'2019-12-31'`, then getting the same date back in a `Temporal.PlainDate` would require using the `'UTC'` time zone instead.
+
+For discussion and code examples about picking the correct time zone, and also about `Date`<=>`Temporal` interoperability in general, see [Converting between `Temporal` types and legacy `Date`](cookbook.md#converting-between-temporal-types-and-legacy-date) in the documentation cookbook.
 
 ## Constructor
 
