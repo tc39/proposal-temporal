@@ -69,9 +69,9 @@ tz = new Temporal.TimeZone('+0645');
 /* WRONG */ tz = new Temporal.TimeZone('local'); // => throws, not a time zone
 ```
 
-#### Difference between IANA time zones and simple UTC offsets
+#### Difference between IANA time zones and numeric UTC offsets
 
-The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g., `Europe/Berlin`) is given, or a UTC offset (e.g., `+01:00`).
+The returned time zone object behaves slightly differently, depending on whether an IANA time zone name is given (e.g., `Europe/Berlin`), or a numeric UTC offset (e.g., `+01:00`).
 IANA time zones may have UTC offset transitions (e.g., because of DST), while the other kind never changes its offset.
 For example:
 
@@ -151,8 +151,8 @@ When subclassing `Temporal.TimeZone`, this property doesn't need to be overridde
 
 Since the UTC offset can change throughout the year in time zones that employ DST as well as because of special political decisions, this method queries the UTC offset at a particular time.
 
-Note that only `Temporal.TimeZone` objects constructed from an IANA time zone name may have UTC offset transitions; those constructed from a UTC offset are fixed.
-If `timeZone` is a fixed-offset time zone, the return value of this method is always the same regardless of `instant`.
+Note that `Temporal.TimeZone` objects constructed from an IANA time zone name may change offsets, depending on `instant`.
+However, other time zones (some IANA time zones like `Etc/GMT+5` and all time zones constructed from numeric UTC offsets) have fixed offsets that never change, regardless of `instant`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
@@ -187,7 +187,7 @@ tz.getOffsetNanosecondsFor('2020-11-06T01:00Z'); // => 0
 
 This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
 
-If `timeZone` is a time zone constructed from a fixed UTC offset, the return value of this method is effectively the same as `timeZone.id`.
+If `timeZone` is a time zone constructed from a numeric UTC offset, the return value of this method is effectively the same as `timeZone.id`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
 
@@ -264,7 +264,7 @@ In the case of ambiguity, the `disambiguation` option controls what instant to r
 When interoperating with existing code or services, `'compatible'` mode matches the behavior of legacy `Date` as well as libraries like Moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
-During "skipped" clock time, like the hour after DST starts in the spring, or when a country permanently changed its UTC offset to one closer to positive infinity, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used, or the post-transition time zone offset if `'earlier'` is used.
+During "skipped" clock time like, e.g., the hour after DST starts in the spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used, or the post-transition time zone offset if `'earlier'` is used.
 This behavior avoids exceptions when converting non-existent `Temporal.PlainDateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
@@ -285,7 +285,7 @@ This method returns an array of all the possible exact times that could correspo
 
 If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
-Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other political change, a wall-clock time may not exist, or the same wall-clock hour sequence may exist twice in a row (for DST usually just one double-hour).
+Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other political change, wall-clock times may not exist, or the same sequence of wall-clock hours may exist twice in a row (like [<code>22, 23, ***00, 01, 00, 01,*** 02, 03</code>](https://en.wikipedia.org/wiki/Time_in_Norway#IANA_time_zone_database); but for DST most often just one double-hour).
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
 Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
@@ -301,7 +301,8 @@ During "skipped" clock time like the hour after DST starts in the spring or cert
 
 This method is used to calculate a possible future UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
 
-Note that if the time zone was constructed from a UTC offset, there will be no offset transitions.
+Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
+Also note that some IANA time zones (e.g., `Etc/GMT+5`) have no offset transitions either.
 In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
@@ -330,7 +331,8 @@ duration.toLocaleString(); // output will vary
 
 This method is used to calculate a possible past UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
 
-Note that if the time zone was constructed from a UTC offset, there will be no offset transitions.
+Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
+Also note that some IANA time zones (e.g., `Etc/GMT+5`) have no offset transitions either.
 In that case, this method will return `null`.
 
 If `instant` is not a `Temporal.Instant` object, then it will be converted to one as if it were passed to `Temporal.Instant.from()`.
