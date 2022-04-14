@@ -38,26 +38,23 @@
       <h1>
         IsValidTimeZoneName (
           _timeZone_: a String,
-        )
+        ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns *true* if _timeZone_ is an ASCII-case-insensitive match for a built-in time zone name and *false* otherwise.</dd>
+        <dd>The returned value is *true* if _timeZone_ is an ASCII-case-insensitive match for a supported time zone name, and *false* otherwise.</dd>
       </dl>
-      <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the IsValidTimeZoneName abstract operation as specified in the ECMA-402 specification.
-      </p>
       <p>
         Once IsValidTimeZoneName(_timeZone_) has returned *true*, for the lifetime of the surrounding agent, IsValidTimeZoneName(_variant_) must return *true* if _variant_ is an ASCII-case-insensitive match for either _timeZone_ or CanonicalizeTimeZoneName(_timeZone_).
       </p>
       <p>
         For the purposes of this section, a String value _A_ is an ASCII-case-insensitive match for String value _B_ if the String value derived from _A_ by replacing each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) with the corresponding uppercase ASCII letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units is exactly the same sequence of code units as the String value that is derived from _B_ in the same way.
       </p>
-      <p>The minimum implementation of IsValidTimeZoneName for ECMAScript implementations that do not include the ECMA-402 API, supporting only the *"UTC"* time zone, performs the following steps when called:
-      </p>
 
       <emu-alg>
-        1. If _timeZone_ is an ASCII-case-insensitive match for *"UTC"*, return *true*.
+        1. Let _timeZones_ be AvailableTimeZones().
+        1. For each String _candidate_ in _timeZones_, do
+          1. If _timeZone_ is an ASCII-case-insensitive match for _candidate_, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -83,6 +80,31 @@
       <emu-alg>
         1. Return *"UTC"*.
       </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-availabletimezones" type="implementation-defined abstract operation">
+      <h1>
+        AvailableTimeZones (
+        ): a List of Strings
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned List is a sorted List of identifiers for time zones for which the implementation includes local political rules, and aliases for those identifiers.</dd>
+      </dl>
+
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the AvailableTimeZones abstract operation as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the AvailableTimeZones abstract operation is used.
+      </p>
+      <emu-alg>
+        1. Let _timeZones_ be the List of String values representing time zones supported by the implementation.
+        1. Assert: _timeZones_ contains *"UTC"*.
+        1. Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+        1. Return _timeZones_.
+      </emu-alg>
+      <emu-note><p>
+        For example, an ECMAScript implementation that does not include local political rules for any time zone could return a List with the single String *"UTC"* here.
+      </p></emu-note>
     </emu-clause>
   </emu-clause>
 
@@ -114,7 +136,7 @@
           1. Throw a *TypeError* exception.
         1. Set _identifier_ to ? ToString(_identifier_).
         1. If IsTimeZoneOffsetString(_identifier_) is *false*, then
-          1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
+          1. If IsValidTimeZoneName(_identifier_) is *false*, then
             1. Throw a *RangeError* exception.
           1. Set _identifier_ to ! CanonicalizeTimeZoneName(_identifier_).
         1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
@@ -515,7 +537,7 @@
         1. If _parseResult_.[[Name]] is not *undefined*, then
           1. Let _name_ be _parseResult_.[[Name]].
           1. If IsTimeZoneOffsetString(_name_) is *false*, then
-            1. If ! IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
+            1. If IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
             1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
           1. Return ! CreateTemporalTimeZone(_name_).
         1. If _parseResult_.[[Z]] is *true*, return ! CreateTemporalTimeZone(*"UTC"*).
