@@ -314,6 +314,8 @@ export const ES = ObjectAssign({}, ES2020, {
     };
   },
   ParseTemporalInstantString: (isoString) => {
+    const match = PARSE.instant.exec(isoString);
+    if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     const result = ES.ParseISODateTime(isoString);
     if (!result.z && !result.offset) throw new RangeError('Temporal.Instant requires a time zone offset');
     return result;
