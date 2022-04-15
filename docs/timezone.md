@@ -285,7 +285,7 @@ This method returns an array of all the possible exact times that could correspo
 
 If `dateTime` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
-Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other political change, wall-clock times may not exist, or the same sequence of wall-clock hours may exist twice in a row (like [<code>22, 23, ***00, 01, 00, 01,*** 02, 03</code>](https://en.wikipedia.org/wiki/Time_in_Norway#IANA_time_zone_database); but for DST most often just one double-hour).
+Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other offset change, a wall-clock time may not exist, or the same wall-clock time may exist twice.
 See [Resolving ambiguity](./ambiguity.md) for usage examples and a more complete explanation.
 
 Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won't have to use this method; `Temporal.TimeZone.prototype.getInstantFor()` will be more convenient for most use cases.
