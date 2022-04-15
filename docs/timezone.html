@@ -150,7 +150,7 @@
 <ul>
 <li><a href="#new-Temporal-TimeZone">new Temporal.TimeZone</a>
 <ul>
-<li><a href="#difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</a>
+<li><a href="#difference-between-iana-time-zones-and-numeric-utc-offsets">Difference between IANA time zones and numeric UTC offsets</a>
 </li>
 </ul>
 </li>
@@ -193,7 +193,11 @@
 </ul>
 </details>
 
-<p>A <code>Temporal.TimeZone</code> is a representation of a time zone: either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone such as the offset between the local time and UTC at a particular time, and daylight saving time (DST) changes; or simply a particular UTC offset with no DST.</p>
+<p>A <code>Temporal.TimeZone</code> is a representation of a time zone:</p>
+<ul>
+<li>either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone, such as the offset between the local time and UTC at a particular time, daylight saving time (DST) and other political UTC offset changes like a country having permanently changed its offset;</li>
+<li>or simply a particular UTC offset with no offset transitions.</li>
+</ul>
 <p>Since <code>Temporal.Instant</code> and <code>Temporal.PlainDateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
 <h2 id="custom-time-zones">Custom time zones</h2>
 <p>For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
@@ -235,9 +239,9 @@ tz <span class="token operator">=</span> <span class="token keyword">new</span> 
 tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'Asia/Katmandu'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// alias of Asia/Kathmandu</span>
 tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-04:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'+0645'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'local'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws, not a time zone</span></code></pre><h4 id="difference-between-iana-time-zones-and-utc-offsets">Difference between IANA time zones and UTC offsets</h4>
-<p>The returned time zone object behaves slightly differently depending on whether an IANA time zone name (e.g. <code>Europe/Berlin</code>) is given, or a UTC offset (e.g. <code>+01:00</code>).
-IANA time zones may have DST transitions, and UTC offsets do not.
+<span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'local'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws, not a time zone</span></code></pre><h4 id="difference-between-iana-time-zones-and-numeric-utc-offsets">Difference between IANA time zones and numeric UTC offsets</h4>
+<p>The returned time zone object behaves slightly differently, depending on whether an IANA time zone name is given (e.g., <code>Europe/Berlin</code>), or a numeric UTC offset (e.g., <code>+01:00</code>).
+IANA time zones may have UTC offset transitions (e.g., because of DST), while the other kind never changes its offset.
 For example:</p>
 <pre class="language-javascript"><code class="language-javascript">tz1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span><span class="token punctuation">(</span><span class="token string">'America/Vancouver'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -288,9 +292,9 @@ Effectively, this is the canonicalized version of whatever <code>timeZoneIdentif
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): The time for which to compute the time zone&#39;s UTC offset.</li>
 </ul>
 <p><strong>Returns:</strong> The UTC offset at the given time, in nanoseconds.</p>
-<p>Since the UTC offset can change throughout the year in time zones that employ DST, this method queries the UTC offset at a particular time.</p>
-<p>Note that only <code>Temporal.TimeZone</code> objects constructed from an IANA time zone name may have DST transitions; those constructed from a UTC offset do not.
-If <code>timeZone</code> is a UTC offset time zone, the return value of this method is always the same regardless of <code>instant</code>.</p>
+<p>Since the UTC offset can change throughout the year in time zones that employ DST as well as because of special political decisions, this method queries the UTC offset at a particular time.</p>
+<p>Note that <code>Temporal.TimeZone</code> objects constructed from an IANA time zone name may change offsets, depending on <code>instant</code>.
+However, other time zones (some IANA time zones like <code>Etc/GMT+5</code> and all time zones constructed from numeric UTC offsets) have fixed offsets that never change, regardless of <code>instant</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Getting the UTC offset for a time zone at a particular time</span>
@@ -314,7 +318,7 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 </ul>
 <p><strong>Returns</strong>: a string indicating the UTC offset at the given time.</p>
 <p>This method is similar to <code>timeZone.getOffsetNanosecondsFor()</code>, but returns the offset formatted as a string, with sign, hours, and minutes.</p>
-<p>If <code>timeZone</code> is a UTC offset time zone, the return value of this method is effectively the same as <code>timeZone.id</code>.</p>
+<p>If <code>timeZone</code> is a time zone constructed from a numeric UTC offset, the return value of this method is effectively the same as <code>timeZone.id</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates an offset string using the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
@@ -334,7 +338,7 @@ The default is to use the ISO 8601 calendar.</li>
 <p><strong>Returns:</strong> A <code>Temporal.PlainDateTime</code> object indicating the calendar date and wall-clock time in <code>timeZone</code>, according to the reckoning of <code>calendar</code>, at the exact time indicated by <code>instant</code>.</p>
 <p>This method is one way to convert a <code>Temporal.Instant</code> to a <code>Temporal.PlainDateTime</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
-<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates a <code>Temporal.PlainDateTime</code> from <code>instant</code> using a UTC offset which is the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden, because the default implementation creates a <code>Temporal.PlainDateTime</code> from <code>instant</code> using a UTC offset which is the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Converting an exact time to a calendar date / wall-clock time</span>
 timestamp <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1553993100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -366,13 +370,13 @@ The result is identical to <code>dateTime.toZonedDateTime(timeZone, { disambigua
 <li><code>&#39;later&#39;</code>: The later of two possible times.</li>
 <li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> instead.</li>
 </ul>
-<p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
+<p>When interoperating with existing code or services, <code>&#39;compatible&#39;</code> mode matches the behavior of legacy <code>Date</code> as well as libraries like Moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
-<p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
+<p>During &quot;skipped&quot; clock time like, e.g., the hour after DST starts in the spring, this method interprets invalid times using the pre-transition time zone offset if <code>&#39;compatible&#39;</code> or <code>&#39;later&#39;</code> is used, or the post-transition time zone offset if <code>&#39;earlier&#39;</code> is used.
 This behavior avoids exceptions when converting non-existent <code>Temporal.PlainDateTime</code> values to <code>Temporal.Instant</code>, but it also means that values during these periods will result in a different <code>Temporal.PlainDateTime</code> in &quot;round-trip&quot; conversions to <code>Temporal.Instant</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is earlier or later than the range that <code>Temporal.Instant</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown, no matter the value of <code>disambiguation</code>.</p>
-<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation calls <code>timeZone.getPossibleInstantsFor()</code>, and if there is more than one possible instant, uses <code>disambiguation</code> to pick which one to return.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden, because the default implementation calls <code>timeZone.getPossibleInstantsFor()</code>, and, if there is more than one possible instant, uses <code>disambiguation</code> to pick which one to return.</p>
 <h3 id="getPossibleInstantsFor"><a class="heading-link" href="#getPossibleInstantsFor"></a>timeZone.<strong>getPossibleInstantsFor</strong>(<em>dateTime</em>: Temporal.PlainDateTime | object | string) : array&lt;Temporal.Instant&gt;</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateTime</code> (<code>Temporal.PlainDateTime</code> or value convertible to one): A calendar date and wall-clock time to convert.</li>
@@ -380,40 +384,42 @@ This behavior avoids exceptions when converting non-existent <code>Temporal.Plai
 <p><strong>Returns:</strong> An array of <code>Temporal.Instant</code> objects, which may be empty.</p>
 <p>This method returns an array of all the possible exact times that could correspond to the calendar date and wall-clock time indicated by <code>dateTime</code>.</p>
 <p>If <code>dateTime</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
-<p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving change, a wall-clock time may not exist, or the same wall-clock time may exist twice in a row.
+<p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other offset change, a wall-clock time may not exist, or the same wall-clock time may exist twice.
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
 <p>Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
-During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.PlainDateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
+During &quot;skipped&quot; clock time like the hour after DST starts in the spring or certain political changes, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.PlainDateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
 <h3 id="getNextTransition"><a class="heading-link" href="#getNextTransition"></a>timeZone.<strong>getNextTransition</strong>(<em>startingPoint</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time after which to find the next DST transition.</li>
+<li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time after which to find the next UTC offset transition.</li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the next DST transition in this time zone, or <code>null</code> if no transitions later than <code>startingPoint</code> could be found.</p>
-<p>This method is used to calculate future DST transitions after <code>startingPoint</code> for this time zone.</p>
-<p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the next UTC offset transition in this time zone, or <code>null</code> if no transitions later than <code>startingPoint</code> could be found.</p>
+<p>This method is used to calculate a possible future UTC offset transition after <code>startingPoint</code> for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.</p>
+<p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
+Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
 In that case, this method will return <code>null</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
 Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
 <p>Example usage:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the next DST change from now, in the current location?</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the next offset change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 nextTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration <span class="token operator">=</span> nextTransition<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// output will vary</span></code></pre><h3 id="getPreviousTransition"><a class="heading-link" href="#getPreviousTransition"></a>timeZone.<strong>getPreviousTransition</strong>(<em>startingPoint</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time before which to find the previous DST transition.</li>
+<li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time before which to find the previous UTC offset transition.</li>
 </ul>
-<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the previous DST transition in this time zone, or <code>null</code> if no transitions earlier than <code>startingPoint</code> could be found.</p>
-<p>This method is used to calculate past DST transitions before <code>startingPoint</code> for this time zone.</p>
-<p>Note that if the time zone was constructed from a UTC offset, there will be no DST transitions.
+<p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the previous UTC offset transition in this time zone, or <code>null</code> if no transitions earlier than <code>startingPoint</code> could be found.</p>
+<p>This method is used to calculate a possible past UTC offset transition after <code>startingPoint</code> for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.</p>
+<p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
+Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
 In that case, this method will return <code>null</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
 Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
 <p>Example usage:</p>
-<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the previous DST change from now, in the current location?</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// How long until the previous offset change from now, in the current location?</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 previousTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
