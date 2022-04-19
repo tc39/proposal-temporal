@@ -28,18 +28,6 @@ describe('Duration', () => {
       equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }), 'P1Y1M1W1DT23H59M60.00000000S');
     });
   });
-  describe('toJSON()', () => {
-    it('is like toString but always with auto precision', () => {
-      const d = Duration.from({ hours: 1 });
-      equal(d.toJSON(), d.toString({ fractionalSecondDigits: 'auto' }));
-    });
-  });
-  describe('toLocaleString()', () => {
-    it('produces an implementation-defined string', () => {
-      const duration = Duration.from({ hours: 12, minutes: 30 });
-      equal(typeof duration.toLocaleString(), 'string');
-    });
-  });
   describe('min/max values', () => {
     const units = [
       'years',
@@ -118,65 +106,6 @@ describe('Duration', () => {
       test(9, 'PT', 'S', '.');
     });
   });
-  describe('Duration.with()', () => {
-    const duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
-    it('duration.with({ years: 1 } works', () => {
-      equal(`${duration.with({ years: 1 })}`, 'P1Y5M5W5DT5H5M5.005005005S');
-    });
-    it('duration.with({ months: 1 } works', () => {
-      equal(`${duration.with({ months: 1 })}`, 'P5Y1M5W5DT5H5M5.005005005S');
-    });
-    it('duration.with({ weeks: 1 } works', () => {
-      equal(`${duration.with({ weeks: 1 })}`, 'P5Y5M1W5DT5H5M5.005005005S');
-    });
-    it('duration.with({ days: 1 } works', () => {
-      equal(`${duration.with({ days: 1 })}`, 'P5Y5M5W1DT5H5M5.005005005S');
-    });
-    it('duration.with({ hours: 1 } works', () => {
-      equal(`${duration.with({ hours: 1 })}`, 'P5Y5M5W5DT1H5M5.005005005S');
-    });
-    it('duration.with({ minutes: 1 } works', () => {
-      equal(`${duration.with({ minutes: 1 })}`, 'P5Y5M5W5DT5H1M5.005005005S');
-    });
-    it('duration.with({ seconds: 1 } works', () => {
-      equal(`${duration.with({ seconds: 1 })}`, 'P5Y5M5W5DT5H5M1.005005005S');
-    });
-    it('duration.with({ milliseconds: 1 } works', () => {
-      equal(`${duration.with({ milliseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.001005005S');
-    });
-    it('duration.with({ microseconds: 1 } works', () => {
-      equal(`${duration.with({ microseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.005001005S');
-    });
-    it('duration.with({ nanoseconds: 1 } works', () => {
-      equal(`${duration.with({ nanoseconds: 1 })}`, 'P5Y5M5W5DT5H5M5.005005001S');
-    });
-    it('duration.with({ months: 1, seconds: 15 } works', () => {
-      equal(`${duration.with({ months: 1, seconds: 15 })}`, 'P5Y1M5W5DT5H5M15.005005005S');
-    });
-    it('mixed positive and negative values throw', () => {
-      throws(() => duration.with({ hours: 1, minutes: -1 }), RangeError);
-    });
-    it('can reverse the sign if all the fields are replaced', () => {
-      const d = Duration.from({ years: 5, days: 1 });
-      const d2 = d.with({ years: -1, days: -1, minutes: 0 });
-      equal(`${d2}`, '-P1Y1D');
-      notEqual(d.sign, d2.sign);
-    });
-    it('throws if new fields have a different sign from the old fields', () => {
-      const d = Duration.from({ years: 5, days: 1 });
-      throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
-    });
-    it('sign cannot be manipulated independently', () => {
-      throws(() => duration.with({ sign: -1 }), TypeError);
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => duration.with({}), TypeError);
-      throws(() => duration.with({ month: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${duration.with({ month: 1, days: 1 })}`, 'P5Y5M5W1DT5H5M5.005005005S');
-    });
-  });
   describe('Duration.add()', () => {
     const duration = Duration.from({ days: 1, minutes: 5 });
     it('adds same units', () => {
@@ -231,9 +160,6 @@ describe('Duration', () => {
       equal(`${dy.add(d, { relativeTo })}`, 'P1YT1H');
       equal(`${dm.add(d, { relativeTo })}`, 'P1MT1H');
       equal(`${dw.add(d, { relativeTo })}`, 'P1WT1H');
-    });
-    it('options may be an object', () => {
-      [{}, () => {}].forEach((options) => equal(duration.add({ hours: 1 }, options).hours, 1));
     });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => duration.add({}), TypeError);
@@ -465,9 +391,6 @@ describe('Duration', () => {
       equal(`${dm.subtract(d, { relativeTo })}`, 'P1M');
       equal(`${dw.subtract(d, { relativeTo })}`, 'P1W');
     });
-    it('options may be an object', () => {
-      [{}, () => {}].forEach((options) => equal(duration.subtract({ hours: 1 }, options).hours, 0));
-    });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => duration.subtract({}), TypeError);
       throws(() => duration.subtract({ month: 12 }), TypeError);
@@ -580,48 +503,6 @@ describe('Duration', () => {
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
-  });
-  describe("Comparison operators don't work", () => {
-    const d1 = Duration.from('P3DT1H');
-    const d1again = Duration.from('P3DT1H');
-    const d2 = Duration.from('PT2H20M30S');
-    it('=== is object equality', () => equal(d1, d1));
-    it('!== is object equality', () => notEqual(d1, d1again));
-    it('<', () => throws(() => d1 < d2));
-    it('>', () => throws(() => d1 > d2));
-    it('<=', () => throws(() => d1 <= d2));
-    it('>=', () => throws(() => d1 >= d2));
-  });
-  describe('Duration.negated()', () => {
-    it('makes a positive duration negative', () => {
-      const pos = Duration.from('P3DT1H');
-      const neg = pos.negated();
-      equal(`${neg}`, '-P3DT1H');
-      equal(neg.sign, -1);
-    });
-    it('makes a negative duration positive', () => {
-      const neg = Duration.from('-PT2H20M30S');
-      const pos = neg.negated();
-      equal(`${pos}`, 'PT2H20M30S');
-      equal(pos.sign, 1);
-    });
-    it('makes a copy of a zero duration', () => {
-      const zero = Duration.from('PT0S');
-      const zero2 = zero.negated();
-      equal(`${zero}`, `${zero2}`);
-      notEqual(zero, zero2);
-      equal(zero2.sign, 0);
-      equal(zero2.years, 0);
-      equal(zero2.months, 0);
-      equal(zero2.weeks, 0);
-      equal(zero2.days, 0);
-      equal(zero2.hours, 0);
-      equal(zero2.minutes, 0);
-      equal(zero2.seconds, 0);
-      equal(zero2.milliseconds, 0);
-      equal(zero2.microseconds, 0);
-      equal(zero2.nanoseconds, 0);
-    });
     it('throws with invalid offset in relativeTo', () => {
       throws(
         () =>
@@ -632,57 +513,10 @@ describe('Duration', () => {
       );
     });
   });
-  describe('Duration.abs()', () => {
-    it('makes a copy of a positive duration', () => {
-      const pos = Duration.from('P3DT1H');
-      const pos2 = pos.abs();
-      equal(`${pos}`, `${pos2}`);
-      notEqual(pos, pos2);
-      equal(pos2.sign, 1);
-    });
-    it('makes a negative duration positive', () => {
-      const neg = Duration.from('-PT2H20M30S');
-      const pos = neg.abs();
-      equal(`${pos}`, 'PT2H20M30S');
-      equal(pos.sign, 1);
-    });
-    it('makes a copy of a zero duration', () => {
-      const zero = Duration.from('PT0S');
-      const zero2 = zero.abs();
-      equal(`${zero}`, `${zero2}`);
-      notEqual(zero, zero2);
-      equal(zero2.sign, 0);
-    });
-  });
-  describe('Duration.blank', () => {
-    it('works', () => {
-      assert(!Duration.from('P3DT1H').blank);
-      assert(!Duration.from('-PT2H20M30S').blank);
-      assert(Duration.from('PT0S').blank);
-    });
-    it('zero regardless of how many fields are in the duration', () => {
-      const zero = Duration.from({
-        years: 0,
-        months: 0,
-        weeks: 0,
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-        microseconds: 0,
-        nanoseconds: 0
-      });
-      assert(zero.blank);
-    });
-  });
   describe('Duration.round()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDate.from('2020-01-01');
-    it('parameter may only be an object or string', () => {
-      [null, 1, true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
-    });
     it('throws without parameter', () => {
       throws(() => d.round(), TypeError);
     });
@@ -691,11 +525,6 @@ describe('Duration', () => {
     });
     it("succeeds with largestUnit: 'auto'", () => {
       equal(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
-    });
-    it('throws on disallowed or invalid smallestUnit (string param)', () => {
-      ['era', 'nonsense'].forEach((smallestUnit) => {
-        throws(() => d.round(smallestUnit), RangeError);
-      });
     });
     it('throws if smallestUnit is larger than largestUnit', () => {
       const units = [
@@ -1530,18 +1359,6 @@ describe('Duration', () => {
     it('balances days up to both years and months (negative)', () => {
       const twoYears = Duration.from({ months: -11, days: -396 });
       equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), -2);
-    });
-    it('accepts singular units', () => {
-      equal(d.total({ unit: 'year', relativeTo }), d.total({ unit: 'years', relativeTo }));
-      equal(d.total({ unit: 'month', relativeTo }), d.total({ unit: 'months', relativeTo }));
-      equal(d.total({ unit: 'day', relativeTo }), d.total({ unit: 'days', relativeTo }));
-      equal(d.total({ unit: 'hour', relativeTo }), d.total({ unit: 'hours', relativeTo }));
-      equal(d.total({ unit: 'minute', relativeTo }), d.total({ unit: 'minutes', relativeTo }));
-      equal(d.total({ unit: 'second', relativeTo }), d.total({ unit: 'seconds', relativeTo }));
-      equal(d.total({ unit: 'second', relativeTo }), d.total({ unit: 'seconds', relativeTo }));
-      equal(d.total({ unit: 'millisecond', relativeTo }), d.total({ unit: 'milliseconds', relativeTo }));
-      equal(d.total({ unit: 'microsecond', relativeTo }), d.total({ unit: 'microseconds', relativeTo }));
-      equal(d.total({ unit: 'nanosecond', relativeTo }), d.total({ unit: 'nanoseconds', relativeTo }));
     });
     it('throws with invalid offset in relativeTo', () => {
       throws(
