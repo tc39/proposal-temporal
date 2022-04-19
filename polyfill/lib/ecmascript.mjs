@@ -791,7 +791,7 @@ export const ES = ObjectAssign({}, ES2020, {
       calendar = ES.ToTemporalCalendar(calendar);
       matchMinutes = true;
     }
-    if (timeZone) {
+    if (timeZone !== undefined) {
       timeZone = ES.ToTemporalTimeZone(timeZone);
       let offsetNs = 0;
       if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
