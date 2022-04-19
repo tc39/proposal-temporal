@@ -6952,7 +6952,7 @@
         matchMinutes = true;
       }
 
-      if (timeZone) {
+      if (timeZone !== undefined) {
         timeZone = ES.ToTemporalTimeZone(timeZone);
         var offsetNs = 0;
         if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
@@ -14701,7 +14701,7 @@
         var temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         var PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-        temporalTime = temporalTime == undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
+        temporalTime = temporalTime === undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
         var thisDt = dateTime(this);
         var year = GetSlot(thisDt, ISO_YEAR);
         var month = GetSlot(thisDt, ISO_MONTH);
