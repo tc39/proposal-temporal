@@ -19,82 +19,6 @@ const { Instant } = Temporal;
 
 describe('Instant', () => {
   describe('Instant.from() works', () => {
-    it('1976-11-18T15:23Z', () => {
-      equal(Instant.from('1976-11-18T15:23Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23));
-    });
-    it('1976-11-18T15:23:30Z', () => {
-      equal(Instant.from('1976-11-18T15:23:30Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30));
-    });
-    it('1976-11-18T15:23:30.123Z', () => {
-      equal(Instant.from('1976-11-18T15:23:30.123Z').epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30, 123));
-    });
-    it('1976-11-18T15:23:30.123456Z', () => {
-      equal(
-        Instant.from('1976-11-18T15:23:30.123456Z').epochMicroseconds,
-        BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e3) + BigInt(456)
-      );
-    });
-    it('1976-11-18T15:23:30.123456789Z', () => {
-      equal(
-        Instant.from('1976-11-18T15:23:30.123456789Z').epochNanoseconds,
-        BigInt(Date.UTC(1976, 10, 18, 15, 23, 30, 123)) * BigInt(1e6) + BigInt(456789)
-      );
-    });
-    it('2020-02-12T11:42-08:00', () => {
-      equal(
-        Instant.from('2020-02-12T11:42-08:00').epochNanoseconds,
-        BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
-      );
-    });
-    it('2020-02-12T11:42-08:00[America/Vancouver]', () => {
-      equal(
-        Instant.from('2020-02-12T11:42-08:00[America/Vancouver]').epochNanoseconds,
-        BigInt(Date.UTC(2020, 1, 12, 19, 42)) * BigInt(1e6)
-      );
-    });
-    it('2020-02-12T11:42+01:00', () => {
-      equal(
-        Instant.from('2020-02-12T11:42+01:00').epochNanoseconds,
-        BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
-      );
-    });
-    it('2020-02-12T11:42+01:00[Europe/Amsterdam]', () => {
-      equal(
-        Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]').epochNanoseconds,
-        BigInt(Date.UTC(2020, 1, 12, 10, 42)) * BigInt(1e6)
-      );
-    });
-    it('2019-02-16T23:45-02:00[America/Sao_Paulo]', () => {
-      equal(
-        Instant.from('2019-02-16T23:45-02:00[America/Sao_Paulo]').epochNanoseconds,
-        BigInt(Date.UTC(2019, 1, 17, 1, 45)) * BigInt(1e6)
-      );
-    });
-    it('2019-02-16T23:45-03:00[America/Sao_Paulo]', () => {
-      equal(
-        Instant.from('2019-02-16T23:45-03:00[America/Sao_Paulo]').epochNanoseconds,
-        BigInt(Date.UTC(2019, 1, 17, 2, 45)) * BigInt(1e6)
-      );
-    });
-    it('sub-minute offset', () => {
-      equal(
-        Instant.from('1900-01-01T12:19:32+00:19:32[Europe/Amsterdam]').epochNanoseconds,
-        BigInt(Date.UTC(1900, 0, 1, 12)) * BigInt(1e6)
-      );
-    });
-    it('Instant.from(string-convertible) converts to string', () => {
-      const obj = {
-        toString() {
-          return '2020-02-12T11:42+01:00[Europe/Amsterdam]';
-        }
-      };
-      equal(`${Instant.from(obj)}`, '2020-02-12T10:42:00Z');
-    });
-    it('Instant.from(1) throws', () => throws(() => Instant.from(1), RangeError));
-    it('Instant.from(-1) throws', () => throws(() => Instant.from(-1), RangeError));
-    it('Instant.from(1n) throws', () => throws(() => Instant.from(1n), RangeError));
-    it('Instant.from(-1n) throws', () => throws(() => Instant.from(-1n), RangeError));
-    it('Instant.from({}) throws', () => throws(() => Instant.from({}), RangeError));
     it('Instant.from(instant) is not the same object', () => {
       const inst = Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
       notEqual(Instant.from(inst), inst);
@@ -198,10 +122,6 @@ describe('Instant', () => {
     it('cross epoch larger/smaller', () => equal(Instant.compare(i2, i1), 1));
     it('epoch smaller/larger', () => equal(Instant.compare(i2, i3), -1));
     it('epoch larger/smaller', () => equal(Instant.compare(i3, i2), 1));
-    it('only casts from a string', () => {
-      throws(() => Instant.compare(i2.epochNanoseconds, i2), RangeError);
-      throws(() => Instant.compare({}, i2), RangeError);
-    });
   });
   describe('Instant.equals works', () => {
     const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
@@ -233,10 +153,6 @@ describe('Instant', () => {
       equal(`${earlier.until(later)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    it('only casts from a string', () => {
-      throws(() => later.since(earlier.epochNanoseconds), RangeError);
-      throws(() => earlier.since({}), RangeError);
-    });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');
     it('can return minutes and hours', () => {
@@ -462,10 +378,6 @@ describe('Instant', () => {
       equal(`${later.since(earlier)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    it('only casts from a string', () => {
-      throws(() => earlier.until(later.epochNanoseconds), RangeError);
-      throws(() => earlier.until({}), RangeError);
-    });
     const feb20 = Instant.from('2020-02-01T00:00Z');
     const feb21 = Instant.from('2021-02-01T00:00Z');
     it('can return minutes and hours', () => {

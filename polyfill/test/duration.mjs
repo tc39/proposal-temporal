@@ -851,19 +851,11 @@ describe('Duration', () => {
       equal(`${hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'P1DT1H');
     });
     it('accepts datetime string equivalents or fields for relativeTo', () => {
-      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
+      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
           equal(`${d.round({ smallestUnit: 'seconds', relativeTo })}`, 'P5Y5M5W5DT5H5M5S');
         }
       );
-    });
-    it("throws on relativeTo that can't be converted to datetime string", () => {
-      throws(() => d.round({ smallestUnit: 'seconds', relativeTo: Symbol('foo') }), TypeError);
-    });
-    it('throws on relativeTo that converts to an invalid datetime string', () => {
-      [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
-        throws(() => d.round({ smallestUnit: 'seconds', relativeTo }), RangeError);
-      });
     });
     it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
       throws(
@@ -1252,7 +1244,7 @@ describe('Duration', () => {
       equal(s, 0.002031);
     });
     it('accepts datetime string equivalents or fields for relativeTo', () => {
-      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101, 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
+      ['2020-01-01', '2020-01-01T00:00:00.000000000', 20200101n, { year: 2020, month: 1, day: 1 }].forEach(
         (relativeTo) => {
           const daysPastJuly1 = 5 * 7 + 5 - 30; // 5 weeks + 5 days - 30 days in June
           const partialDayNanos =
@@ -1269,14 +1261,6 @@ describe('Duration', () => {
           equal(total.toPrecision(15), totalMonths.toPrecision(15)); // 66.32930780242619
         }
       );
-    });
-    it("throws on relativeTo that can't be converted to datetime string", () => {
-      throws(() => d.total({ unit: 'months', relativeTo: Symbol('foo') }), TypeError);
-    });
-    it('throws on relativeTo that converts to an invalid datetime string', () => {
-      [3.14, true, null, 'hello', 1n].forEach((relativeTo) => {
-        throws(() => d.total({ unit: 'months', relativeTo }), RangeError);
-      });
     });
     it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
       throws(() => d.total({ unit: 'months', relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }), RangeError);
