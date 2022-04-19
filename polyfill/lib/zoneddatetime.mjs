@@ -283,7 +283,7 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 
     const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-    temporalTime = temporalTime == undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
+    temporalTime = temporalTime === undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
 
     const thisDt = dateTime(this);
     const year = GetSlot(thisDt, ISO_YEAR);
