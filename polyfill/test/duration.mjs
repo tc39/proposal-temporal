@@ -224,7 +224,7 @@ describe('Duration', () => {
       throws(() => dy.add(d), RangeError);
       throws(() => dm.add(d), RangeError);
       throws(() => dw.add(d), RangeError);
-      const relativeTo = Temporal.PlainDateTime.from('2000-01-01');
+      const relativeTo = Temporal.PlainDate.from('2000-01-01');
       equal(`${d.add(dy, { relativeTo })}`, 'P1YT1H');
       equal(`${d.add(dm, { relativeTo })}`, 'P1MT1H');
       equal(`${d.add(dw, { relativeTo })}`, 'P1WT1H');
@@ -249,26 +249,26 @@ describe('Duration', () => {
     it('relativeTo affects year length', () => {
       const oneYear = new Duration(1);
       const days365 = new Duration(0, 0, 0, 365);
-      equal(`${oneYear.add(days365, { relativeTo: Temporal.PlainDateTime.from('2016-01-01') })}`, 'P2Y');
-      equal(`${oneYear.add(days365, { relativeTo: Temporal.PlainDateTime.from('2015-01-01') })}`, 'P1Y11M30D');
+      equal(`${oneYear.add(days365, { relativeTo: Temporal.PlainDate.from('2016-01-01') })}`, 'P2Y');
+      equal(`${oneYear.add(days365, { relativeTo: Temporal.PlainDate.from('2015-01-01') })}`, 'P1Y11M30D');
     });
     it('relativeTo affects month length', () => {
       const oneMonth = new Duration(0, 1);
       const days30 = new Duration(0, 0, 0, 30);
-      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDateTime.from('2018-01-01') })}`, 'P2M2D');
-      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDateTime.from('2018-02-01') })}`, 'P1M30D');
-      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDateTime.from('2018-03-01') })}`, 'P2M');
+      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDate.from('2018-01-01') })}`, 'P2M2D');
+      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDate.from('2018-02-01') })}`, 'P1M30D');
+      equal(`${oneMonth.add(days30, { relativeTo: Temporal.PlainDate.from('2018-03-01') })}`, 'P2M');
     });
     it('first this is resolved against relativeTo, then the argument against relativeTo + this', () => {
       const d1 = new Duration(0, 1, 0, 1);
       const d2 = new Duration(0, 1, 0, 1);
-      const relativeTo = new Temporal.PlainDateTime(2000, 1, 1);
+      const relativeTo = new Temporal.PlainDate(2000, 1, 1);
       equal(`${d1.add(d2, { relativeTo })}`, 'P2M2D');
     });
     const oneDay = new Duration(0, 0, 0, 1);
     const hours24 = new Duration(0, 0, 0, 0, 24);
-    it('relativeTo does not affect days if PlainDateTime', () => {
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    it('relativeTo does not affect days if PlainDate', () => {
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(`${oneDay.add(hours24, { relativeTo })}`, 'P2D');
     });
     it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
@@ -349,8 +349,8 @@ describe('Duration', () => {
         'P1DT24H'
       );
     });
-    it('casts relativeTo to PlainDateTime if possible', () => {
-      equal(`${oneDay.add(hours24, { relativeTo: '2019-11-02T00:00' })}`, 'P2D');
+    it('casts relativeTo to PlainDate if possible', () => {
+      equal(`${oneDay.add(hours24, { relativeTo: '2019-11-02' })}`, 'P2D');
       equal(`${oneDay.add(hours24, { relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'P2D');
     });
     it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
@@ -457,7 +457,7 @@ describe('Duration', () => {
       throws(() => dy.subtract(d), RangeError);
       throws(() => dm.subtract(d), RangeError);
       throws(() => dw.subtract(d), RangeError);
-      const relativeTo = Temporal.PlainDateTime.from('2000-01-01');
+      const relativeTo = Temporal.PlainDate.from('2000-01-01');
       equal(`${d.subtract(dy, { relativeTo })}`, '-P1Y');
       equal(`${d.subtract(dm, { relativeTo })}`, '-P1M');
       equal(`${d.subtract(dw, { relativeTo })}`, '-P1W');
@@ -482,26 +482,26 @@ describe('Duration', () => {
     it('relativeTo affects year length', () => {
       const oneYear = new Duration(1);
       const days365 = new Duration(0, 0, 0, 365);
-      equal(`${oneYear.subtract(days365, { relativeTo: Temporal.PlainDateTime.from('2017-01-01') })}`, 'PT0S');
-      equal(`${oneYear.subtract(days365, { relativeTo: Temporal.PlainDateTime.from('2016-01-01') })}`, 'P1D');
+      equal(`${oneYear.subtract(days365, { relativeTo: Temporal.PlainDate.from('2017-01-01') })}`, 'PT0S');
+      equal(`${oneYear.subtract(days365, { relativeTo: Temporal.PlainDate.from('2016-01-01') })}`, 'P1D');
     });
     it('relativeTo affects month length', () => {
       const oneMonth = new Duration(0, 1);
       const days30 = new Duration(0, 0, 0, 30);
-      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDateTime.from('2018-02-01') })}`, '-P2D');
-      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDateTime.from('2018-03-01') })}`, 'P1D');
-      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDateTime.from('2018-04-01') })}`, 'PT0S');
+      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDate.from('2018-02-01') })}`, '-P2D');
+      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDate.from('2018-03-01') })}`, 'P1D');
+      equal(`${oneMonth.subtract(days30, { relativeTo: Temporal.PlainDate.from('2018-04-01') })}`, 'PT0S');
     });
     it('first this is resolved against relativeTo, then the argument against relativeTo + this', () => {
       const d1 = new Duration(0, 2, 1, 4);
       const d2 = new Duration(0, 1, 1, 1);
-      const relativeTo = new Temporal.PlainDateTime(2000, 1, 1);
+      const relativeTo = new Temporal.PlainDate(2000, 1, 1);
       equal(`${d1.subtract(d2, { relativeTo })}`, 'P1M3D');
     });
     const oneDay = new Duration(0, 0, 0, 1);
     const hours24 = new Duration(0, 0, 0, 0, 24);
-    it('relativeTo does not affect days if PlainDateTime', () => {
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    it('relativeTo does not affect days if PlainDate', () => {
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(`${oneDay.subtract(hours24, { relativeTo })}`, 'PT0S');
     });
     it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
@@ -556,8 +556,8 @@ describe('Duration', () => {
         'PT1H'
       );
     });
-    it('casts relativeTo to PlainDateTime if possible', () => {
-      equal(`${oneDay.subtract(hours24, { relativeTo: '2019-11-02T00:00' })}`, 'PT0S');
+    it('casts relativeTo to PlainDate if possible', () => {
+      equal(`${oneDay.subtract(hours24, { relativeTo: '2019-11-02' })}`, 'PT0S');
       equal(`${oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'PT0S');
     });
     it('throws on wrong offset for ZonedDateTime relativeTo string', () => {
@@ -679,7 +679,7 @@ describe('Duration', () => {
   describe('Duration.round()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
-    const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
+    const relativeTo = Temporal.PlainDate.from('2020-01-01');
     it('parameter may only be an object or string', () => {
       [null, 1, true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.round(badOptions), TypeError));
     });
@@ -760,8 +760,8 @@ describe('Duration', () => {
     it('days are 24 hours if relativeTo not given', () => {
       equal(`${hours25.round({ largestUnit: 'days' })}`, 'P1DT1H');
     });
-    it('days are 24 hours if relativeTo is PlainDateTime', () => {
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    it('days are 24 hours if relativeTo is PlainDate', () => {
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P1DT1H');
     });
     it('days are 24 hours if relativeTo is ZonedDateTime, and duration encompasses no DST change', () => {
@@ -846,8 +846,8 @@ describe('Duration', () => {
         'P1D'
       );
     });
-    it('casts relativeTo to PlainDateTime if possible', () => {
-      equal(`${hours25.round({ largestUnit: 'days', relativeTo: '2019-11-02T00:00' })}`, 'P1DT1H');
+    it('casts relativeTo to PlainDate if possible', () => {
+      equal(`${hours25.round({ largestUnit: 'days', relativeTo: '2019-11-02' })}`, 'P1DT1H');
       equal(`${hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'P1DT1H');
     });
     it('accepts datetime string equivalents or fields for relativeTo', () => {
@@ -1224,7 +1224,7 @@ describe('Duration', () => {
   describe('Duration.total()', () => {
     const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
     const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
-    const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');
+    const relativeTo = Temporal.PlainDate.from('2020-01-01');
     it('parameter may only be an object or string', () => {
       [null, 1, true, Symbol('foo'), 1n].forEach((badOptions) => throws(() => d.total(badOptions), TypeError));
     });
@@ -1377,7 +1377,7 @@ describe('Duration', () => {
       equal(negativeD2.total({ unit: 'nanoseconds' }), -totalD2.nanoseconds);
     });
 
-    const endpoint = relativeTo.add(d);
+    const endpoint = relativeTo.toPlainDateTime().add(d);
     const options = (unit) => ({ largestUnit: unit, smallestUnit: unit, roundingMode: 'trunc' });
     const fullYears = 5;
     const fullDays = endpoint.since(relativeTo, options('days')).days;
@@ -1435,8 +1435,8 @@ describe('Duration', () => {
       );
     });
     const oneDay = new Duration(0, 0, 0, 1);
-    it('relativeTo does not affect days if PlainDateTime', () => {
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    it('relativeTo does not affect days if PlainDate', () => {
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
     });
     it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
@@ -1586,7 +1586,7 @@ describe('Duration', () => {
     describe('date units', () => {
       const d1 = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
       const d2 = new Duration(5, 5, 5, 5, 5, 4, 5, 5, 5, 5);
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       it('relativeTo is required', () => throws(() => Duration.compare(d1, d2)), RangeError);
       it('equal', () => equal(Duration.compare(d1, d1, { relativeTo }), 0));
       it('smaller/larger', () => equal(Duration.compare(d2, d1, { relativeTo }), -1));
@@ -1617,23 +1617,23 @@ describe('Duration', () => {
     it('relativeTo affects year length', () => {
       const oneYear = new Duration(1);
       const days365 = new Duration(0, 0, 0, 365);
-      equal(Duration.compare(oneYear, days365, { relativeTo: Temporal.PlainDateTime.from('2017-01-01') }), 0);
-      equal(Duration.compare(oneYear, days365, { relativeTo: Temporal.PlainDateTime.from('2016-01-01') }), 1);
+      equal(Duration.compare(oneYear, days365, { relativeTo: Temporal.PlainDate.from('2017-01-01') }), 0);
+      equal(Duration.compare(oneYear, days365, { relativeTo: Temporal.PlainDate.from('2016-01-01') }), 1);
     });
     it('relativeTo affects month length', () => {
       const oneMonth = new Duration(0, 1);
       const days30 = new Duration(0, 0, 0, 30);
-      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDateTime.from('2018-04-01') }), 0);
-      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDateTime.from('2018-03-01') }), 1);
-      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDateTime.from('2018-02-01') }), -1);
+      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDate.from('2018-04-01') }), 0);
+      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDate.from('2018-03-01') }), 1);
+      equal(Duration.compare(oneMonth, days30, { relativeTo: Temporal.PlainDate.from('2018-02-01') }), -1);
     });
     const oneDay = new Duration(0, 0, 0, 1);
     const hours24 = new Duration(0, 0, 0, 0, 24);
     it('relativeTo not required for days', () => {
       equal(Duration.compare(oneDay, hours24), 0);
     });
-    it('relativeTo does not affect days if PlainDateTime', () => {
-      const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    it('relativeTo does not affect days if PlainDate', () => {
+      const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(Duration.compare(oneDay, hours24, { relativeTo }), 0);
     });
     it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
@@ -1653,8 +1653,8 @@ describe('Duration', () => {
         1
       );
     });
-    it('casts relativeTo to PlainDateTime if possible', () => {
-      equal(Duration.compare(oneDay, hours24, { relativeTo: '2019-11-03T00:00' }), 0);
+    it('casts relativeTo to PlainDate if possible', () => {
+      equal(Duration.compare(oneDay, hours24, { relativeTo: '2019-11-03' }), 0);
       equal(Duration.compare(oneDay, hours24, { relativeTo: { year: 2019, month: 11, day: 3 } }), 0);
     });
     it('at least the required properties must be present in relativeTo', () => {
