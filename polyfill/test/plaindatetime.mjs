@@ -161,50 +161,6 @@ describe('DateTime', () => {
       });
     });
   });
-  describe('dateTime.getISOFields() works', () => {
-    const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-    const fields = dt1.getISOFields();
-    it('fields', () => {
-      equal(fields.isoYear, 1976);
-      equal(fields.isoMonth, 11);
-      equal(fields.isoDay, 18);
-      equal(fields.isoHour, 15);
-      equal(fields.isoMinute, 23);
-      equal(fields.isoSecond, 30);
-      equal(fields.isoMillisecond, 123);
-      equal(fields.isoMicrosecond, 456);
-      equal(fields.isoNanosecond, 789);
-      equal(fields.calendar.id, 'iso8601');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.isoYear, 1976);
-      equal(fields2.isoMonth, 11);
-      equal(fields2.isoDay, 18);
-      equal(fields2.isoHour, 15);
-      equal(fields2.isoMinute, 23);
-      equal(fields2.isoSecond, 30);
-      equal(fields2.isoMillisecond, 123);
-      equal(fields2.isoMicrosecond, 456);
-      equal(fields2.isoNanosecond, 789);
-      equal(fields2.calendar, fields.calendar);
-    });
-    it('as input to constructor', () => {
-      const dt2 = new PlainDateTime(
-        fields.isoYear,
-        fields.isoMonth,
-        fields.isoDay,
-        fields.isoHour,
-        fields.isoMinute,
-        fields.isoSecond,
-        fields.isoMillisecond,
-        fields.isoMicrosecond,
-        fields.isoNanosecond,
-        fields.calendar
-      );
-      assert(dt2.equals(dt1));
-    });
-  });
   describe('dateTime.withCalendar()', () => {
     const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
     it('works', () => {
