@@ -366,7 +366,7 @@ The above read-only properties return the integer number of full seconds, millis
 
 These properties are equivalent to `zonedDateTime.toInstant().epochSeconds`, `zonedDateTime.toInstant().epochMilliseconds`, `zonedDateTime.toInstant().epochMicroseconds`, `zonedDateTime.toInstant().epochNanoseconds`, respectively.
 Any fractional remainders are truncated towards zero.
-The time zone is irrelevant to these properties because time because there is only one epoch, not one per time zone.
+The time zone is irrelevant to these properties, because there is only one epoch, not one per time zone.
 
 Note that the `epochSeconds` and `epochMilliseconds` properties are of type `number` (although only integers are returned) while the `epochMicroseconds` and `epochNanoseconds` are of type `bigint`.
 
@@ -433,7 +433,7 @@ To change the time zone while keeping the exact time constant, use `.withTimeZon
 The time zone is a required property when creating `Temporal.ZonedDateTime` instances.
 If you don't know the time zone of your underlying data, please use `Temporal.Instant` and/or `Temporal.PlainDateTime`, neither of which have awareness of time zones.
 
-Although this property is a `Temporal.TimeZoneProtocol` object (which is usually a `Temporal.TimeZone` except custom timezones), it will be automatically coerced to its string form (e.g. `"Europe/Paris"`) when displayed by `console.log`, `JSON.stringify`, `${zonedDateTime.timeZone}`, or other similar APIs.
+Although this property is a `Temporal.TimeZoneProtocol` object (which is usually a `Temporal.TimeZone` except custom timezones), it will be automatically coerced to its string form (e.g. `"Europe/Paris"`) when displayed by `console.log()`, `JSON.stringify()`, `` `${zonedDateTime.timeZone}` ``, or other similar APIs.
 
 Usage example:
 
