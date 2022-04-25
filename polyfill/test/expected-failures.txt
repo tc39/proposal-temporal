@@ -1,2 +1,0 @@
-# https://github.com/tc39/test262/pull/3502
-built-ins/Temporal/PlainDateTime/prototype/toZonedDateTime/basic.js
