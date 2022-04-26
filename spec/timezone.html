@@ -217,7 +217,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return 𝔽(_timeZone_.[[OffsetNanoseconds]]).
-        1. Return ! GetIANATimeZoneOffsetNanoseconds(_instant_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Return 𝔽(! GetIANATimeZoneOffsetNanoseconds(_instant_.[[Nanoseconds]], _timeZone_.[[Identifier]])).
       </emu-alg>
       <p>
         This function is the <dfn>%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%</dfn> intrinsic object.
