@@ -636,10 +636,17 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-roundtowardszero" aoid="RoundTowardsZero">
-    <h1>RoundTowardsZero ( _x_ )</h1>
+  <emu-clause id="sec-temporal-roundtowardszero" type="abstract operation">
+    <h1>
+      RoundTowardsZero (
+        _x_: a mathematical value,
+      ): an integer
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>The returned integer is the integral part of _x_, with any fractional part removed.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: _x_ is a mathematical value.
       1. Return the mathematical value that is the same sign as _x_ and whose magnitude is floor(abs(_x_)).
     </emu-alg>
   </emu-clause>
@@ -673,7 +680,7 @@
       1. Else if _roundingMode_ is *"floor"*, then
         1. Let _rounded_ be floor(_quotient_).
       1. Else if _roundingMode_ is *"trunc"*, then
-        1. Let _rounded_ be the integral part of _quotient_, removing any fractional digits.
+        1. Let _rounded_ be RoundTowardsZero(_quotient_).
       1. Else,
         1. Let _rounded_ be ! RoundHalfAwayFromZero(_quotient_).
       1. Return _rounded_ × _increment_.
