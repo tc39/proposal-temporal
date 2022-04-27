@@ -6814,8 +6814,8 @@ li.menu-search-result-term:before {
       In addition, implementations may support any number of other built-in time zones.
     </p>
     <p>
-      Built-in time zones may be <dfn>named time zones</dfn>, represented by Strings for which <emu-xref aoid="IsValidTimeZoneName" id="_ref_1348"><a href="#sec-isvalidtimezonename">IsValidTimeZoneName</a></emu-xref> returns <emu-val>true</emu-val>.
-      They may also be <dfn>offset time zones</dfn>, represented by Strings that conform to the syntax of <emu-nt id="_ref_1730"><a href="#prod-TimeZoneNumericUTCOffset">TimeZoneNumericUTCOffset</a></emu-nt>.
+      Built-in time zones may be <dfn variants="named time zone">named time zones</dfn>, represented by Strings for which <emu-xref aoid="IsValidTimeZoneName" id="_ref_1348"><a href="#sec-isvalidtimezonename">IsValidTimeZoneName</a></emu-xref> returns <emu-val>true</emu-val>.
+      They may also be <dfn variants="offset time zone">offset time zones</dfn>, represented by Strings that conform to the syntax of <emu-nt id="_ref_1730"><a href="#prod-TimeZoneNumericUTCOffset">TimeZoneNumericUTCOffset</a></emu-nt>.
     </p>
     <p>
       <emu-xref href="#sec-temporal-timezone-constructor" id="_ref_28"><a href="#sec-temporal-timezone-constructor">The <code>Temporal.TimeZone</code> constructor</a></emu-xref>, when called with the name of a built-in time zone as the argument, will return a valid <code>Temporal.TimeZone</code> object.
@@ -6831,7 +6831,6 @@ li.menu-search-result-term:before {
       <p>The abstract operation IsValidTimeZoneName takes argument <var>timeZone</var> (a String). It returns <emu-val>true</emu-val> if <var>timeZone</var> is an ASCII-case-insensitive match for a built-in time zone name and <emu-val>false</emu-val> otherwise.</p>
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the IsValidTimeZoneName abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the IsValidTimeZoneName abstract operation is used.
       </p>
       <p>
         Once IsValidTimeZoneName(<var>timeZone</var>) has returned <emu-val>true</emu-val>, for the lifetime of the <emu-xref href="#surrounding-agent"><a href="https://tc39.es/ecma262/#surrounding-agent">surrounding agent</a></emu-xref>, IsValidTimeZoneName(<var>variant</var>) must return <emu-val>true</emu-val> if <var>variant</var> is an ASCII-case-insensitive match for either <var>timeZone</var> or <emu-xref aoid="CanonicalizeTimeZoneName" id="_ref_1349"><a href="#sec-canonicalizetimezonename">CanonicalizeTimeZoneName</a></emu-xref>(<var>timeZone</var>).
@@ -6839,7 +6838,7 @@ li.menu-search-result-term:before {
       <p>
         For the purposes of this section, a String value <var>A</var> is an ASCII-case-insensitive match for String value <var>B</var> if the String value derived from <var>A</var> by replacing each occurrence of a lowercase ASCII letter code unit (0x0061 through 0x007A, inclusive) with the corresponding uppercase ASCII letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units is exactly the same sequence of code units as the String value that is derived from <var>B</var> in the same way.
       </p>
-      <p>The minimum implementation of IsValidTimeZoneName, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
+      <p>The minimum implementation of IsValidTimeZoneName for ECMAScript implementations that do not include the ECMA-402 API, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
       </p>
 
       <emu-alg><ol><li>If <var>timeZone</var> is an ASCII-case-insensitive match for <emu-val>"UTC"</emu-val>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.</li></ol></emu-alg>
@@ -6851,10 +6850,9 @@ li.menu-search-result-term:before {
 
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the CanonicalizeTimeZoneName abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the CanonicalizeTimeZoneName abstract operation is used.
       </p>
       <p>
-        The minimum implementation of CanonicalizeTimeZoneName, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
+        The minimum implementation of CanonicalizeTimeZoneName for ECMAScript implementations that do not include the ECMA-402 API, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
       </p>
 
       <emu-alg><ol><li>Return <emu-val>"UTC"</emu-val>.</li></ol></emu-alg>
@@ -6866,10 +6864,9 @@ li.menu-search-result-term:before {
 
       <p>
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the DefaultTimeZone abstract operation is used.
       </p>
       <p>
-        The minimum implementation of DefaultTimeZone, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
+        The minimum implementation of DefaultTimeZone for ECMAScript implementations that do not include the ECMA-402 API, supporting only the <emu-val>"UTC"</emu-val> time zone, performs the following steps when called:
       </p>
 
       <emu-alg><ol><li>Return <emu-val>"UTC"</emu-val>.</li></ol></emu-alg>
@@ -6964,7 +6961,7 @@ li.menu-search-result-term:before {
         The <code>getOffsetNanosecondsFor</code> method takes one argument <var>instant</var>.
         The following steps are taken:
       </p>
-      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>timeZone</var>, [[InitializedTemporalTimeZone]]).</li><li>Set <var>instant</var> to ?&nbsp;<emu-xref aoid="ToTemporalInstant" id="_ref_1355"><a href="#sec-temporal-totemporalinstant" class="e-user-code">ToTemporalInstant</a></emu-xref>(<var>instant</var>).</li><li>If <var>timeZone</var>.[[OffsetNanoseconds]] is not <emu-val>undefined</emu-val>, return <emu-xref href="#𝔽"><a href="https://tc39.es/ecma262/#𝔽">𝔽</a></emu-xref>(<var>timeZone</var>.[[OffsetNanoseconds]]).</li><li>Return !&nbsp;<emu-xref aoid="GetIANATimeZoneOffsetNanoseconds" id="_ref_1356"><a href="#sec-temporal-getianatimezoneoffsetnanoseconds">GetIANATimeZoneOffsetNanoseconds</a></emu-xref>(<var>instant</var>.[[Nanoseconds]], <var>timeZone</var>.[[Identifier]]).</li></ol></emu-alg>
+      <emu-alg><ol><li>Let <var>timeZone</var> be the <emu-val>this</emu-val> value.</li><li>Perform ?&nbsp;<emu-xref aoid="RequireInternalSlot"><a href="https://tc39.es/ecma262/#sec-requireinternalslot">RequireInternalSlot</a></emu-xref>(<var>timeZone</var>, [[InitializedTemporalTimeZone]]).</li><li>Set <var>instant</var> to ?&nbsp;<emu-xref aoid="ToTemporalInstant" id="_ref_1355"><a href="#sec-temporal-totemporalinstant" class="e-user-code">ToTemporalInstant</a></emu-xref>(<var>instant</var>).</li><li>If <var>timeZone</var>.[[OffsetNanoseconds]] is not <emu-val>undefined</emu-val>, return <emu-xref href="#𝔽"><a href="https://tc39.es/ecma262/#𝔽">𝔽</a></emu-xref>(<var>timeZone</var>.[[OffsetNanoseconds]]).</li><li>Return <emu-xref href="#𝔽"><a href="https://tc39.es/ecma262/#𝔽">𝔽</a></emu-xref>(! <emu-xref aoid="GetIANATimeZoneOffsetNanoseconds" id="_ref_1356"><a href="#sec-temporal-getianatimezoneoffsetnanoseconds">GetIANATimeZoneOffsetNanoseconds</a></emu-xref>(<var>instant</var>.[[Nanoseconds]], <var>timeZone</var>.[[Identifier]])).</li></ol></emu-alg>
       <p>
         This function is the <dfn>%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%</dfn> intrinsic object.
       </p>
