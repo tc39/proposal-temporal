@@ -108,62 +108,9 @@ describe('Duration', () => {
   });
   describe('Duration.add()', () => {
     const duration = Duration.from({ days: 1, minutes: 5 });
-    it('adds same units', () => {
-      equal(`${duration.add({ days: 2, minutes: 5 })}`, 'P3DT10M');
-    });
-    it('adds different units', () => {
-      equal(`${duration.add({ hours: 12, seconds: 30 })}`, 'P1DT12H5M30S');
-    });
-    it('symmetric with regard to negative durations', () => {
-      equal(`${Duration.from('P3DT10M').add({ days: -2, minutes: -5 })}`, 'P1DT5M');
-      equal(`${Duration.from('P1DT12H5M30S').add({ hours: -12, seconds: -30 })}`, 'P1DT5M');
-    });
-    it('balances time units even if both operands are positive', () => {
-      const d = Duration.from('P50DT50H50M50.500500500S');
-      const result = d.add(d);
-      equal(result.days, 104);
-      equal(result.hours, 5);
-      equal(result.minutes, 41);
-      equal(result.seconds, 41);
-      equal(result.milliseconds, 1);
-      equal(result.microseconds, 1);
-      equal(result.nanoseconds, 0);
-    });
-    it('balances correctly if adding different units flips the overall sign', () => {
-      const d1 = Duration.from({ hours: -1, seconds: -60 });
-      equal(`${d1.add({ minutes: 122 })}`, 'PT1H1M');
-      const d2 = Duration.from({ hours: -1, seconds: -3721 });
-      equal(`${d2.add({ minutes: 61, nanoseconds: 3722000000001 })}`, 'PT1M1.000000001S');
-    });
     const max = new Duration(0, 0, 0, ...Array(7).fill(Number.MAX_VALUE));
     it('always throws when addition overflows', () => {
       throws(() => max.add(max), RangeError);
-    });
-    it('mixed positive and negative values always throw', () => {
-      throws(() => duration.add({ hours: 1, minutes: -30 }), RangeError);
-    });
-    it('relativeTo required for years, months, and weeks', () => {
-      const d = Duration.from({ hours: 1 });
-      const dy = Duration.from({ years: 1 });
-      const dm = Duration.from({ months: 1 });
-      const dw = Duration.from({ weeks: 1 });
-      throws(() => d.add(dy), RangeError);
-      throws(() => d.add(dm), RangeError);
-      throws(() => d.add(dw), RangeError);
-      throws(() => dy.add(d), RangeError);
-      throws(() => dm.add(d), RangeError);
-      throws(() => dw.add(d), RangeError);
-      const relativeTo = Temporal.PlainDate.from('2000-01-01');
-      equal(`${d.add(dy, { relativeTo })}`, 'P1YT1H');
-      equal(`${d.add(dm, { relativeTo })}`, 'P1MT1H');
-      equal(`${d.add(dw, { relativeTo })}`, 'P1WT1H');
-      equal(`${dy.add(d, { relativeTo })}`, 'P1YT1H');
-      equal(`${dm.add(d, { relativeTo })}`, 'P1MT1H');
-      equal(`${dw.add(d, { relativeTo })}`, 'P1WT1H');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => duration.add({}), TypeError);
-      throws(() => duration.add({ month: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${duration.add({ month: 1, days: 1 })}`, 'P2DT5M');
@@ -311,90 +258,6 @@ describe('Duration', () => {
   });
   describe('Duration.subtract()', () => {
     const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
-    it('subtracts same units with positive result', () => {
-      equal(`${duration.subtract({ days: 1, minutes: 5 })}`, 'P2DT1H5M');
-    });
-    it('subtracts same units with zero result', () => {
-      equal(`${duration.subtract(duration)}`, 'PT0S');
-      equal(`${duration.subtract({ days: 3 })}`, 'PT1H10M');
-      equal(`${duration.subtract({ minutes: 10 })}`, 'P3DT1H');
-    });
-    it('balances when subtracting same units with negative result', () => {
-      equal(`${duration.subtract({ minutes: 15 })}`, 'P3DT55M');
-    });
-    it('balances when subtracting different units', () => {
-      equal(`${duration.subtract({ seconds: 30 })}`, 'P3DT1H9M30S');
-    });
-    it('symmetric with regard to negative durations', () => {
-      equal(`${Duration.from('P2DT1H5M').subtract({ days: -1, minutes: -5 })}`, 'P3DT1H10M');
-      equal(`${new Duration().subtract({ days: -3, hours: -1, minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('PT1H10M').subtract({ days: -3 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H').subtract({ minutes: -10 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT55M').subtract({ minutes: -15 })}`, 'P3DT1H10M');
-      equal(`${Duration.from('P3DT1H9M30S').subtract({ seconds: -30 })}`, 'P3DT1H10M');
-    });
-    it('balances positive units up to the largest nonzero unit', () => {
-      const d = Duration.from({
-        minutes: 100,
-        seconds: 100,
-        milliseconds: 2000,
-        microseconds: 2000,
-        nanoseconds: 2000
-      });
-      const less = Duration.from({
-        minutes: 10,
-        seconds: 10,
-        milliseconds: 500,
-        microseconds: 500,
-        nanoseconds: 500
-      });
-      const result = d.subtract(less);
-      equal(result.minutes, 91);
-      equal(result.seconds, 31);
-      equal(result.milliseconds, 501);
-      equal(result.microseconds, 501);
-      equal(result.nanoseconds, 500);
-    });
-    const tenDays = Duration.from('P10D');
-    const tenMinutes = Duration.from('PT10M');
-    it('has correct negative result', () => {
-      let result = tenDays.subtract({ days: 15 });
-      equal(result.days, -5);
-      result = tenMinutes.subtract({ minutes: 15 });
-      equal(result.minutes, -5);
-    });
-    it('balances correctly if subtracting different units flips the overall sign', () => {
-      const d1 = Duration.from({ hours: 1, seconds: 60 });
-      equal(`${d1.subtract({ minutes: 122 })}`, '-PT1H1M');
-      const d2 = Duration.from({ hours: 1, seconds: 3721 });
-      equal(`${d2.subtract({ minutes: 61, nanoseconds: 3722000000001 })}`, '-PT1M1.000000001S');
-    });
-    it('mixed positive and negative values always throw', () => {
-      throws(() => duration.subtract({ hours: 1, minutes: -30 }), RangeError);
-    });
-    it('relativeTo required for years, months, and weeks', () => {
-      const d = Duration.from({ hours: 1 });
-      const dy = Duration.from({ years: 1, hours: 1 });
-      const dm = Duration.from({ months: 1, hours: 1 });
-      const dw = Duration.from({ weeks: 1, hours: 1 });
-      throws(() => d.subtract(dy), RangeError);
-      throws(() => d.subtract(dm), RangeError);
-      throws(() => d.subtract(dw), RangeError);
-      throws(() => dy.subtract(d), RangeError);
-      throws(() => dm.subtract(d), RangeError);
-      throws(() => dw.subtract(d), RangeError);
-      const relativeTo = Temporal.PlainDate.from('2000-01-01');
-      equal(`${d.subtract(dy, { relativeTo })}`, '-P1Y');
-      equal(`${d.subtract(dm, { relativeTo })}`, '-P1M');
-      equal(`${d.subtract(dw, { relativeTo })}`, '-P1W');
-      equal(`${dy.subtract(d, { relativeTo })}`, 'P1Y');
-      equal(`${dm.subtract(d, { relativeTo })}`, 'P1M');
-      equal(`${dw.subtract(d, { relativeTo })}`, 'P1W');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => duration.subtract({}), TypeError);
-      throws(() => duration.subtract({ month: 12 }), TypeError);
-    });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${duration.subtract({ month: 1, days: 1 })}`, 'P2DT1H10M');
     });
