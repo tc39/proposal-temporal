@@ -376,9 +376,9 @@
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is *"month"* and _roundingIncrement_ = 1, then
-          1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Return ! CreateTemporalDuration(-_result_.[[Years]], -_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
+        1. Return ! CreateTemporalDuration(-_result_.[[Years]], -_result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -628,9 +628,9 @@
       </emu-note>
       <emu-alg>
         1. Assert: _year_ and _month_ are integers.
-        1. If _year_ &lt; −271821 or _year_ &gt; 275760, then
+        1. If _year_ &lt; -271821 or _year_ &gt; 275760, then
           1. Return *false*.
-        1. If _year_ is −271821 and _month_ &lt; 4, then
+        1. If _year_ is -271821 and _month_ &lt; 4, then
           1. Return *false*.
         1. If _year_ is 275760 and _month_ &gt; 9, then
           1. Return *false*.
@@ -643,7 +643,7 @@
       <emu-alg>
         1. Assert: _year_ and _month_ are integers.
         1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
-        1. Set _month_ to (_month_ − 1) modulo 12 + 1.
+        1. Set _month_ to (_month_ - 1) modulo 12 + 1.
         1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_

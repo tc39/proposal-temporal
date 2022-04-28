@@ -457,7 +457,7 @@
         1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
         1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ ≠ 1, then
           1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(−_result_.[[Years]], −_result_.[[Months]], −_result_.[[Weeks]], −_result_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Return ! CreateTemporalDuration(-_result_.[[Years]], -_result_.[[Months]], -_result_.[[Weeks]], -_result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
 
@@ -724,13 +724,13 @@
           1. If _sign_ is 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
           1. Let _start_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
           1. Let _end_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
-          1. Let _years_ be _end_.[[Year]] − _start_.[[Year]].
+          1. Let _years_ be _end_.[[Year]] - _start_.[[Year]].
           1. Let _mid_ be ! AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, 0, *"constrain"*).
           1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
           1. If _midSign_ is 0, then
             1. If _largestUnit_ is *"year"*, return ! CreateDateDurationRecord(_years_, 0, 0, 0).
             1. Return ! CreateDateDurationRecord(0, _years_ × 12, 0, 0).
-          1. Let _months_ be _end_.[[Month]] − _start_.[[Month]].
+          1. Let _months_ be _end_.[[Month]] - _start_.[[Month]].
           1. If _midSign_ is not equal to _sign_, then
             1. Set _years_ to _years_ - _sign_.
             1. Set _months_ to _months_ + _sign_ × 12.
@@ -763,8 +763,8 @@
           1. Else,
             1. Let _smaller_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
             1. Let _greater_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
-            1. Let _sign_ be −1.
-          1. Let _days_ be ! ToISODayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) − ! ToISODayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
+            1. Let _sign_ be -1.
+          1. Let _days_ be ! ToISODayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) - ! ToISODayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
           1. Let _year_ be _smaller_.[[Year]].
           1. Repeat, while _year_ &lt; _greater_.[[Year]],
             1. Set _days_ to _days_ + ! ISODaysInYear(_year_).
@@ -834,30 +834,30 @@
         1. Let _balancedYearMonth_ be ! BalanceISOYearMonth(_year_, _month_).
         1. Set _month_ to _balancedYearMonth_.[[Month]].
         1. Set _year_ to _balancedYearMonth_.[[Year]].
-        1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than −366 or −365.
+        1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than -366 or -365.
         1. If _month_ &gt; 2, then
           1. Let _testYear_ be _year_.
         1. Else,
-          1. Let _testYear_ be _year_ − 1.
-        1. Repeat, while _day_ &lt; −1 × ! ISODaysInYear(_testYear_),
+          1. Let _testYear_ be _year_ - 1.
+        1. Repeat, while _day_ &lt; -1 × ! ISODaysInYear(_testYear_),
           1. Set _day_ to _day_ + ! ISODaysInYear(_testYear_).
-          1. Set _year_ to _year_ − 1.
-          1. Set _testYear_ to _testYear_ − 1.
+          1. Set _year_ to _year_ - 1.
+          1. Set _testYear_ to _testYear_ - 1.
         1. NOTE: To deal with numbers of days greater than the number of days in a year, the following section adds years and subtracts days until the number of days is less than 366 or 365.
         1. Set _testYear_ to _testYear_ + 1.
         1. Repeat, while _day_ &gt; ! ISODaysInYear(_testYear_),
-          1. Set _day_ to _day_ − ! ISODaysInYear(_testYear_).
+          1. Set _day_ to _day_ - ! ISODaysInYear(_testYear_).
           1. Set _year_ to _year_ + 1.
           1. Set _testYear_ to _testYear_ + 1.
         1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in the current month, the following section subtracts months and adds days until the number of days is greater than 0.
         1. Repeat, while _day_ &lt; 1,
-          1. Set _balancedYearMonth_ to ! BalanceISOYearMonth(_year_, _month_ − 1).
+          1. Set _balancedYearMonth_ to ! BalanceISOYearMonth(_year_, _month_ - 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
           1. Set _day_ to _day_ + ! ISODaysInMonth(_year_, _month_).
         1. NOTE: To deal with numbers of days greater than the number of days in the current month, the following section adds months and subtracts days until the number of days is less than the number of days in the month.
         1. Repeat, while _day_ &gt; ! ISODaysInMonth(_year_, _month_),
-          1. Set _day_ to _day_ − ! ISODaysInMonth(_year_, _month_).
+          1. Set _day_ to _day_ - ! ISODaysInMonth(_year_, _month_).
           1. Set _balancedYearMonth_ to ! BalanceISOYearMonth(_year_, _month_ + 1).
           1. Set _year_ to _balancedYearMonth_.[[Year]].
           1. Set _month_ to _balancedYearMonth_.[[Month]].
