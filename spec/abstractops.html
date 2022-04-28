@@ -214,7 +214,7 @@
     </dl>
     <emu-alg>
       1. If _dividend_ is *undefined*, then
-        1. Let _maximum_ be *+∞*<sub>𝔽</sub>.
+        1. Let _maximum_ be *+&infin;*<sub>𝔽</sub>.
       1. Else if _inclusive_ is *true*, then
         1. Let _maximum_ be 𝔽(_dividend_).
       1. Else if _dividend_ is more than 1, then
@@ -1552,7 +1552,7 @@
     </p>
     <emu-alg>
       1. Let _integer_ be ? ToIntegerOrInfinity(_argument_).
-      1. If _integer_ is -∞ or +∞ , then
+      1. If _integer_ is -&infin; or +&infin;, then
         1. Throw a *RangeError* exception.
       1. Return _integer_.
     </emu-alg>
