@@ -569,7 +569,7 @@
       <h1>FormatTimeZoneOffsetString ( _offsetNanoseconds_ )</h1>
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer.
-        1. If _offsetNanoseconds_ ≥ 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
+        1. If _offsetNanoseconds_ &ge; 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
         1. Let _offsetNanoseconds_ be abs(_offsetNanoseconds_).
         1. Let _nanoseconds_ be _offsetNanoseconds_ modulo 10<sup>9</sup>.
         1. Let _seconds_ be floor(_offsetNanoseconds_ / 10<sup>9</sup>) modulo 60.
@@ -598,7 +598,7 @@
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer.
         1. Set _offsetNanoseconds_ to ! RoundNumberToIncrement(_offsetNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
-        1. If _offsetNanoseconds_ ≥ 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
+        1. If _offsetNanoseconds_ &ge; 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
         1. Set _offsetNanoseconds_ to abs(_offsetNanoseconds_).
         1. Let _minutes_ be _offsetNanoseconds_ / (60 &times; 10<sup>9</sup>) modulo 60.
         1. Let _hours_ be floor(_offsetNanoseconds_ / (3600 &times; 10<sup>9</sup>)).

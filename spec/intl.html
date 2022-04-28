@@ -403,7 +403,7 @@
             1. If _rangeFormatOptions_ is not *undefined*, let _f_ be the value of _rangeFormatOptions_'s field whose name matches _p_.
             1. Else, let _f_ be <del>the value of _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the matching row</del><ins>_pattern_.[[&lt;_p_&gt;]]</ins>.
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
-            1. If _p_ is *"year"* and _v_ ≤ 0, let _v_ be 1 - _v_.
+            1. If _p_ is *"year"* and _v_ &le; 0, let _v_ be 1 - _v_.
             1. If _p_ is *"month"*, increase _v_ by 1.
             1. If _p_ is *"hour"* and <del>_dateTimeFormat_.[[HourCycle]]</del><ins>_pattern_.[[hourCycle]]</ins> is *"h11"* or *"h12"*, then
               1. Let _v_ be _v_ modulo 12.
