@@ -218,7 +218,7 @@
       1. Else if _inclusive_ is *true*, then
         1. Let _maximum_ be 𝔽(_dividend_).
       1. Else if _dividend_ is more than 1, then
-        1. Let _maximum_ be 𝔽(_dividend_ − 1).
+        1. Let _maximum_ be 𝔽(_dividend_ - 1).
       1. Else,
         1. Let _maximum_ be *1*<sub>𝔽</sub>.
       1. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, « Number », ~empty~, *1*<sub>𝔽</sub>).
@@ -305,19 +305,19 @@
         1. Return the Record {
             [[Precision]]: _digits_,
             [[Unit]]: *"millisecond"*,
-            [[Increment]]: 10<sup>3 − _digits_</sup>
+            [[Increment]]: 10<sup>3 - _digits_</sup>
           }.
       1. If _digits_ is 4, 5, or 6, then
         1. Return the Record {
             [[Precision]]: _digits_,
             [[Unit]]: *"microsecond"*,
-            [[Increment]]: 10<sup>6 − _digits_</sup>
+            [[Increment]]: 10<sup>6 - _digits_</sup>
           }.
       1. Assert: _digits_ is 7, 8, or 9.
       1. Return the Record {
           [[Precision]]: _digits_,
           [[Unit]]: *"nanosecond"*,
-          [[Increment]]: 10<sup>9 − _digits_</sup>
+          [[Increment]]: 10<sup>9 - _digits_</sup>
         }.
     </emu-alg>
   </emu-clause>
@@ -676,7 +676,7 @@
       1. Assert: _roundingMode_ is *"ceil"*, *"floor"*, *"trunc"*, or *"halfExpand"*.
       1. Let _quotient_ be _x_ / _increment_.
       1. If _roundingMode_ is *"ceil"*, then
-        1. Let _rounded_ be −floor(−_quotient_).
+        1. Let _rounded_ be -floor(-_quotient_).
       1. Else if _roundingMode_ is *"floor"*, then
         1. Let _rounded_ be floor(_quotient_).
       1. Else if _roundingMode_ is *"trunc"*, then
@@ -1381,7 +1381,7 @@
       1. Let _microsecondsMV_ be remainder(_millisecondsMV_, 1) × 1000.
       1. Let _nanosecondsMV_ be remainder(_microsecondsMV_, 1) × 1000.
       1. If _sign_ contains the code point 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
-        1. Let _factor_ be −1.
+        1. Let _factor_ be -1.
       1. Else,
         1. Let _factor_ be 1.
       1. Return ? CreateDurationRecord(_yearsMV_ × _factor_, _monthsMV_ × _factor_, _weeksMV_ × _factor_, _daysMV_ × _factor_, _hoursMV_ × _factor_, floor(_minutesMV_) × _factor_, floor(_secondsMV_) × _factor_, floor(_millisecondsMV_) × _factor_, floor(_microsecondsMV_) × _factor_, floor(_nanosecondsMV_) × _factor_).
@@ -1552,7 +1552,7 @@
     </p>
     <emu-alg>
       1. Let _integer_ be ? ToIntegerOrInfinity(_argument_).
-      1. If _integer_ is −∞ or +∞ , then
+      1. If _integer_ is -∞ or +∞ , then
         1. Throw a *RangeError* exception.
       1. Return _integer_.
     </emu-alg>
@@ -1570,7 +1570,7 @@
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
-      1. If _number_ is *NaN*, *+0*<sub>𝔽</sub>, or *−0*<sub>𝔽</sub> return 0.
+      1. If _number_ is *NaN*, *+0*<sub>𝔽</sub>, or *-0*<sub>𝔽</sub> return 0.
       1. If IsIntegralNumber(_number_) is *false*, throw a *RangeError* exception.
       1. Return ℝ(_number_).
     </emu-alg>
