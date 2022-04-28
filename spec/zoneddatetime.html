@@ -815,7 +815,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
-        1. If _zonedDateTime_.[[Nanoseconds]] ≠ _other_.[[Nanoseconds]], return *false*.
+        1. If _zonedDateTime_.[[Nanoseconds]] &ne; _other_.[[Nanoseconds]], return *false*.
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, return *false*.
         1. Return ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>

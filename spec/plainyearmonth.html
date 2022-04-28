@@ -392,9 +392,9 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
-        1. If _yearMonth_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
-        1. If _yearMonth_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
-        1. If _yearMonth_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
+        1. If _yearMonth_.[[ISOYear]] &ne; _other_.[[ISOYear]], return *false*.
+        1. If _yearMonth_.[[ISOMonth]] &ne; _other_.[[ISOMonth]], return *false*.
+        1. If _yearMonth_.[[ISODay]] &ne; _other_.[[ISODay]], return *false*.
         1. Return ? CalendarEquals(_yearMonth_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>

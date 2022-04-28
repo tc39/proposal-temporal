@@ -427,7 +427,7 @@
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
         1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
-        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ ≠ 1, then
+        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ &ne; 1, then
           1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
@@ -455,7 +455,7 @@
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
         1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
-        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ ≠ 1, then
+        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ &ne; 1, then
           1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
         1. Return ! CreateTemporalDuration(-_result_.[[Years]], -_result_.[[Months]], -_result_.[[Weeks]], -_result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
@@ -471,9 +471,9 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Set _other_ to ? ToTemporalDate(_other_).
-        1. If _temporalDate_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
-        1. If _temporalDate_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
-        1. If _temporalDate_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
+        1. If _temporalDate_.[[ISOYear]] &ne; _other_.[[ISOYear]], return *false*.
+        1. If _temporalDate_.[[ISOMonth]] &ne; _other_.[[ISOMonth]], return *false*.
+        1. If _temporalDate_.[[ISODay]] &ne; _other_.[[ISODay]], return *false*.
         1. Return ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
