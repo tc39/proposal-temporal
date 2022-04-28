@@ -474,6 +474,9 @@
         When the input represents a skipped local time at a positive time zone transition (e.g. when the daylight saving time starts or the time zone offset is increased due to a time zone rule change), the returned List will be empty.
         Otherwise, the returned List will have one element.
       </p>
+      <p>
+        It is an error to call GetIANATimeZoneEpochValue with arguments such that IsValidISODate(_year_, _month_, _day_) is *false*.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporalgetianatimezoneoffsetnanoseconds" type="implementation-defined abstract operation">

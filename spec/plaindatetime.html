@@ -842,6 +842,7 @@
         </p>
       </emu-note>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _ns_ be ℝ(GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)).
         1. If _ns_ &le; nsMinInstant - nsPerDay, then
           1. Return *false*.
