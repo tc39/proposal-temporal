@@ -614,8 +614,8 @@
         1. Let _microseconds_ be _mus2_ - _mus1_.
         1. Let _nanoseconds_ be _ns2_ - _ns1_.
         1. Let _sign_ be ! DurationSign(0, 0, 0, 0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Let _bt_ be ! BalanceTime(_hours_ × _sign_, _minutes_ × _sign_, _seconds_ × _sign_, _milliseconds_ × _sign_, _microseconds_ × _sign_, _nanoseconds_ × _sign_).
-        1. Return ! CreateTimeDurationRecord(_bt_.[[Days]] × _sign_, _bt_.[[Hour]] × _sign_, _bt_.[[Minute]] × _sign_, _bt_.[[Second]] × _sign_, _bt_.[[Millisecond]] × _sign_, _bt_.[[Microsecond]] × _sign_, _bt_.[[Nanosecond]] × _sign_).
+        1. Let _bt_ be ! BalanceTime(_hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
+        1. Return ! CreateTimeDurationRecord(_bt_.[[Days]] &times; _sign_, _bt_.[[Hour]] &times; _sign_, _bt_.[[Minute]] &times; _sign_, _bt_.[[Second]] &times; _sign_, _bt_.[[Millisecond]] &times; _sign_, _bt_.[[Microsecond]] &times; _sign_, _bt_.[[Nanosecond]] &times; _sign_).
       </emu-alg>
     </emu-clause>
 
@@ -921,10 +921,10 @@
       </p>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
-        1. Let _fractionalSecond_ be _nanosecond_ × 10<sup>-9</sup> + _microsecond_ × 10<sup>-6</sup> + _millisecond_ × 10<sup>-3</sup> + _second_.
+        1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
         1. If _unit_ is *"day"*, then
-          1. If _dayLengthNs_ is not present, set _dayLengthNs_ to 8.64 × 10<sup>13</sup>.
-          1. Let _quantity_ be (((((_hour_ × 60 + _minute_) × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_) / _dayLengthNs_.
+          1. If _dayLengthNs_ is not present, set _dayLengthNs_ to 8.64 &times; 10<sup>13</sup>.
+          1. Let _quantity_ be (((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_) / _dayLengthNs_.
         1. Else if _unit_ is *"hour"*, then
           1. Let _quantity_ be (_fractionalSecond_ / 60 + _minute_) / 60 + _hour_.
         1. Else if _unit_ is *"minute"*, then
@@ -932,9 +932,9 @@
         1. Else if _unit_ is *"second"*, then
           1. Let _quantity_ be _fractionalSecond_.
         1. Else if _unit_ is *"millisecond"*, then
-          1. Let _quantity_ be _nanosecond_ × 10<sup>-6</sup> + _microsecond_ × 10<sup>-3</sup> + _millisecond_.
+          1. Let _quantity_ be _nanosecond_ &times; 10<sup>-6</sup> + _microsecond_ &times; 10<sup>-3</sup> + _millisecond_.
         1. Else if _unit_ is *"microsecond"*, then
-          1. Let _quantity_ be _nanosecond_ × 10<sup>-3</sup> + _microsecond_.
+          1. Let _quantity_ be _nanosecond_ &times; 10<sup>-3</sup> + _microsecond_.
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _quantity_ be _nanosecond_.
