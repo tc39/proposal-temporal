@@ -1703,7 +1703,8 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
             1. Else,
-              1. Let _result_ be ! CalendarDateAddition(_calendar_, _date_, _balanceResult_, _overflow_).
+              1. Let _balanceDuration_ be a new Record { [[Years]]: _duration_.[[Years]], [[Months]]: _duration_.[[Months]], [[Weeks]]: _duration_.[[Weeks]], [[Days]]: _balanceResult_.[[Days]], [[Hours]]: _balanceResult_.[[Hours]], [[Minutes]]: _balanceResult_.[[Minutes]], [[Seconds]]: _balanceResult_.[[Seconds]], [[Milliseconds]]: _balanceResult_.[[Milliseconds]], [[Microseconds]]: _balanceResult_.[[Microseconds]], [[Nanoseconds]]: _balanceResult_.[[Nanoseconds]] }.
+              1. Let _result_ be ! CalendarDateAddition(_calendar_, _date_, _balanceDuration_, _overflow_).
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
@@ -1762,6 +1763,8 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return *undefined*.
             1. Let _eraYear_ be ! CalendarDateEraYear(_calendar_.[[Identifier]], _temporalDateLike_).
+            1. If _eraYear_ is *undefined*, then
+              1. Return *undefined*.
             1. Return 𝔽(_eraYear_).
           </emu-alg>
         </emu-clause>
