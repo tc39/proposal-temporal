@@ -1118,7 +1118,7 @@
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
           1. Return _instant_.[[Nanoseconds]].
         1. If _offsetBehaviour_ is ~exact~, or _offsetOption_ is *"use"*, then
-          1. Let _epochNanoseconds_ be ! GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. Let _epochNanoseconds_ be GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
           1. Return _epochNanoseconds_ − _offsetNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
