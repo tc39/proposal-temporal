@@ -1182,12 +1182,12 @@
       <emu-alg>
         1. If _days_ ≠ 0, then
           1. Set _nanoseconds_ to _nanoseconds_ - _offsetShift_.
-        1. Set _hours_ to _hours_ + _days_ × 24.
-        1. Set _minutes_ to _minutes_ + _hours_ × 60.
-        1. Set _seconds_ to _seconds_ + _minutes_ × 60.
-        1. Set _milliseconds_ to _milliseconds_ + _seconds_ × 1000.
-        1. Set _microseconds_ to _microseconds_ + _milliseconds_ × 1000.
-        1. Return _nanoseconds_ + _microseconds_ × 1000.
+        1. Set _hours_ to _hours_ + _days_ &times; 24.
+        1. Set _minutes_ to _minutes_ + _hours_ &times; 60.
+        1. Set _seconds_ to _seconds_ + _minutes_ &times; 60.
+        1. Set _milliseconds_ to _milliseconds_ + _seconds_ &times; 1000.
+        1. Set _microseconds_ to _microseconds_ + _milliseconds_ &times; 1000.
+        1. Return _nanoseconds_ + _microseconds_ &times; 1000.
       </emu-alg>
     </emu-clause>
 
@@ -1262,7 +1262,7 @@
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
         1. Else,
           1. Assert: _largestUnit_ is *"nanosecond"*.
-        1. Return ? CreateTimeDurationRecord(_days_, _hours_ × _sign_, _minutes_ × _sign_, _seconds_ × _sign_, _milliseconds_ × _sign_, _microseconds_ × _sign_, _nanoseconds_ × _sign_).
+        1. Return ? CreateTimeDurationRecord(_days_, _hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
       </emu-alg>
     </emu-clause>
 
@@ -1489,7 +1489,7 @@
         1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, *"halfExpand"*).
-          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_diffNs_) ≤ 1.728 × 10<sup>22</sup>.
+          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_diffNs_) ≤ 1.728 &times; 10<sup>22</sup>.
           1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
           1. Return ! CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Return ? DifferenceZonedDateTime(_relativeTo_.[[Nanoseconds]], _endNs_, _timeZone_, _calendar_, _largestUnit_).
@@ -1605,7 +1605,7 @@
           1. Set _days_ to _days_ + _result_.[[Days]] + _result_.[[Nanoseconds]] / _result_.[[DayLength]].
           1. Set _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else,
-          1. Let _fractionalSeconds_ be _nanoseconds_ × 10<sup>-9</sup> + _microseconds_ × 10<sup>-6</sup> + _milliseconds_ × 10<sup>-3</sup> + _seconds_.
+          1. Let _fractionalSeconds_ be _nanoseconds_ &times; 10<sup>-9</sup> + _microseconds_ &times; 10<sup>-6</sup> + _milliseconds_ &times; 10<sup>-3</sup> + _seconds_.
         1. Let _remainder_ be *undefined*.
         1. If _unit_ is *"year"*, then
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
@@ -1695,12 +1695,12 @@
           1. Set _remainder_ to _fractionalSeconds_ - _seconds_.
           1. Set _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"millisecond"*, then
-          1. Let _fractionalMilliseconds_ be _nanoseconds_ × 10<sup>-6</sup> + _microseconds_ × 10<sup>-3</sup> + _milliseconds_.
+          1. Let _fractionalMilliseconds_ be _nanoseconds_ &times; 10<sup>-6</sup> + _microseconds_ &times; 10<sup>-3</sup> + _milliseconds_.
           1. Set _milliseconds_ to ! RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMilliseconds_ - _milliseconds_.
           1. Set _microseconds_ and _nanoseconds_ to 0.
         1. Else if _unit_ is *"microsecond"*, then
-          1. Let _fractionalMicroseconds_ be _nanoseconds_ × 10<sup>-3</sup> + _microseconds_.
+          1. Let _fractionalMicroseconds_ be _nanoseconds_ &times; 10<sup>-3</sup> + _microseconds_.
           1. Set _microseconds_ to ! RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMicroseconds_ - _microseconds_.
           1. Set _nanoseconds_ to 0.
@@ -1754,7 +1754,7 @@
         1. Let _dayStart_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ - _dayStart_).
-        1. If (_timeRemainderNs_ - _dayLengthNs_) × _direction_ &lt; 0, then
+        1. If (_timeRemainderNs_ - _dayLengthNs_) &times; _direction_ &lt; 0, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _timeRemainderNs_ to ! RoundTemporalInstant(ℤ(_timeRemainderNs_ - _dayLengthNs_), _increment_, _unit_, _roundingMode_).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
@@ -1828,7 +1828,7 @@
         1. If _minutes_ is not 0, then
           1. Set _timePart_ to the string concatenation of _timePart_, abs(_minutes_) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
         1. If any of _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are not 0; or _years_, _months_, _weeks_, _days_, _hours_, and _minutes_ are all 0; or _precision_ is not *"auto"*, then
-          1. Let _fraction_ be abs(_milliseconds_) × 10<sup>6</sup> + abs(_microseconds_) × 10<sup>3</sup> + abs(_nanoseconds_).
+          1. Let _fraction_ be abs(_milliseconds_) &times; 10<sup>6</sup> + abs(_microseconds_) &times; 10<sup>3</sup> + abs(_nanoseconds_).
           1. Let _decimalPart_ be ToZeroPaddedDecimalString(_fraction_, 9).
           1. If _precision_ is *"auto"*, then
             1. Set _decimalPart_ to the longest possible substring of _decimalPart_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).

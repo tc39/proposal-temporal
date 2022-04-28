@@ -379,7 +379,7 @@
             1. Append a new Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } as the last element of the list _result_.
           1. Else if _p_ is equal to *"fractionalSecondDigits"*, then
             1. Let _v_ be _tm_.[[Millisecond]].
-            1. Let _v_ be floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Let _v_ be floor(_v_ &times; 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
             1. Let _fv_ be FormatNumeric(_nf3_, _v_).
             1. Append a new Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } as the last element of _result_.
           1. Else if _p_ is equal to *"dayPeriod"*, then
@@ -549,8 +549,8 @@
                 1. Set _fractionalSecondDigits_ to 3.
               1. Let _v1_ be _tm1_.[[Millisecond]].
               1. Let _v2_ be _tm2_.[[Millisecond]].
-              1. Let _v1_ be floor(_v1_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
-              1. Let _v2_ be floor(_v2_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+              1. Let _v1_ be floor(_v1_ &times; 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+              1. Let _v2_ be floor(_v2_ &times; 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
               1. If _v1_ is not equal to _v2_, then
                 1. Set _dateFieldsPracticallyEqual_ to *false*.
               1. Let _rangePattern_ be _rp_.
@@ -903,7 +903,7 @@
         1. Set _x_ to ? ToNumber(_x_).
       1. Set _x_ to TimeClip(_x_).
       1. If _x_ is *NaN*, throw a *RangeError* exception.
-      1. Let _epochNanoseconds_ be ℤ(_x_) × *10<sup>6</sup>*<sub>ℤ</sub>.
+      1. Let _epochNanoseconds_ be ℤ(_x_) &times; *10<sup>6</sup>*<sub>ℤ</sub>.
       1. Return the Record {
           [[pattern]]: _pattern_,
           [[rangePatterns]]: _rangePatterns_,
