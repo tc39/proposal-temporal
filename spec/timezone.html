@@ -217,7 +217,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return 𝔽(_timeZone_.[[OffsetNanoseconds]]).
-        1. Return 𝔽(! GetIANATimeZoneOffsetNanoseconds(_instant_.[[Nanoseconds]], _timeZone_.[[Identifier]])).
+        1. Return 𝔽(GetIANATimeZoneOffsetNanoseconds(_instant_.[[Nanoseconds]], _timeZone_.[[Identifier]])).
       </emu-alg>
       <p>
         This function is the <dfn>%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%</dfn> intrinsic object.
@@ -280,10 +280,10 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimezone]]).
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, then
-          1. Let _epochNanoseconds_ be ! GetEpochFromISOParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+          1. Let _epochNanoseconds_ be GetEpochFromISOParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
           1. Let _instant_ be ! CreateTemporalInstant(ℤ(_epochNanoseconds_ − _timeZone_.[[OffsetNanoseconds]])).
           1. Return CreateArrayFromList(« _instant_ »).
-        1. Let _possibleEpochNanoseconds_ be ? GetIANATimeZoneEpochValue(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+        1. Let _possibleEpochNanoseconds_ be GetIANATimeZoneEpochValue(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
         1. Let _possibleInstants_ be a new empty List.
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
@@ -306,7 +306,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return *null*.
-        1. Let _transition_ be ? GetIANATimeZoneNextTransition(_startingPoint_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Let _transition_ be GetIANATimeZoneNextTransition(_startingPoint_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalInstant(_transition_).
       </emu-alg>
@@ -323,7 +323,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return *null*.
-        1. Let _transition_ be ? GetIANATimeZonePreviousTransition(_startingPoint_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Let _transition_ be GetIANATimeZonePreviousTransition(_startingPoint_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalInstant(_transition_).
       </emu-alg>
@@ -458,40 +458,75 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getianatimezoneepochvalue" aoid="GetIANATimeZoneEpochValue">
-      <h1>GetIANATimeZoneEpochValue ( _timeZoneIdentifier_, _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+    <emu-clause id="sec-temporal-getianatimezoneepochvalue" type="implementation-defined abstract operation">
+      <h1>
+        GetIANATimeZoneEpochValue (
+          _timeZoneIdentifier_: a String,
+          _year_: an integer,
+          _month_: an integer between 1 and 12 inclusive,
+          _day_: an integer between 1 and 31 inclusive,
+          _hour_: an integer between 0 and 23 inclusive,
+          _minute_: an integer between 0 and 59 inclusive,
+          _second_: an integer between 0 and 59 inclusive,
+          _millisecond_: an integer between 0 and 999 inclusive,
+          _microsecond_: an integer between 0 and 999 inclusive,
+          _nanosecond_: an integer between 0 and 999 inclusive,
+        ): a List of BigInts
+      </h1>
+      <dl class="header">
+      </dl>
       <p>
-        The abstract operation GetIANATimeZoneEpochValue is an implementation-defined algorithm that returns a List of integers.
-        Each integer in the List represents a number of nanoseconds since the Unix epoch in UTC that may correspond to the given calendar date and wall-clock time in the IANA time zone identified by _timeZoneIdentifier_.
+        Each value in the returned List represents a number of nanoseconds since the Unix epoch in UTC that corresponds to the given ISO 8601 calendar date and wall-clock time in the IANA time zone identified by _timeZoneIdentifier_.
       </p>
       <p>
-        When the input represents a local time repeating multiple times at a negative time zone transition (e.g. when the daylight saving time ends or the time zone offset is decreased due to a time zone rule change), the returned List will have more than one element.
+        When the input represents a local time repeating multiple times at a negative time zone transition (e.g. when the daylight saving time ends or the time zone offset is decreased due to a time zone rule change), the returned List will have more than one element. The elements are sorted in numerical order.
         When the input represents a skipped local time at a positive time zone transition (e.g. when the daylight saving time starts or the time zone offset is increased due to a time zone rule change), the returned List will be empty.
         Otherwise, the returned List will have one element.
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getianatimezoneoffsetnanoseconds" aoid="GetIANATimeZoneOffsetNanoseconds">
-      <h1>GetIANATimeZoneOffsetNanoseconds ( _epochNanoseconds_, _timeZoneIdentifier_ )</h1>
+    <emu-clause id="sec-temporalgetianatimezoneoffsetnanoseconds" type="implementation-defined abstract operation">
+      <h1>
+        GetIANATimeZoneOffsetNanoseconds (
+          _epochNanoseconds_: a BigInt,
+          _timeZoneIdentifier_: a String,
+        ): an integer
+      </h1>
+      <dl class="header">
+      </dl>
       <p>
-        The abstract operation GetIANATimeZoneOffsetNanoseconds is an implementation-defined algorithm that returns an integer representing the offset of the IANA time zone identified by _timeZoneIdentifier_ from UTC, at the instant corresponding to _epochNanoseconds_.
+        The returned integer represents the offset of the IANA time zone identified by _timeZoneIdentifier_ from UTC, at the instant corresponding to _epochNanoseconds_.
       </p>
       <p>
         Given the same values of _epochNanoseconds_ and _timeZoneIdentifier_, the result must be the same for the lifetime of the surrounding agent.
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getianatimezonenexttransition" aoid="GetIANATimeZoneNextTransition">
-      <h1>GetIANATimeZoneNextTransition ( _epochNanoseconds_, _timeZoneIdentifier_ )</h1>
+    <emu-clause id="sec-temporal-getianatimezonenexttransition" type="implementation-defined abstract operation">
+      <h1>
+        GetIANATimeZoneNextTransition (
+          _epochNanoseconds_: a BigInt,
+          _timeZoneIdentifier_: a String,
+        ): a BigInt or *null*
+      </h1>
+      <dl class="header">
+      </dl>
       <p>
-        The abstract operation GetIANATimeZoneNextTransition is an implementation-defined algorithm that returns an integer representing the number of nanoseconds since the Unix epoch in UTC that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_ or *null* if no such transition exists.
+        The returned value represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_, or *null* if no such transition exists.
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getianatimezoneprevioustransition" aoid="GetIANATimeZonePreviousTransition">
-      <h1>GetIANATimeZonePreviousTransition ( _epochNanoseconds_, _timeZoneIdentifier_ )</h1>
+    <emu-clause id="sec-temporal-getianatimezoneprevioustransition" type="implementation-defined abstract operation">
+      <h1>
+        GetIANATimeZonePreviousTransition (
+          _epochNanoseconds_: a BigInt,
+          _timeZoneIdentifier_: a String,
+        ): a BigInt or *null*
+      </h1>
+      <dl class="header">
+      </dl>
       <p>
-        The abstract operation GetIANATimeZonePreviousTransition is an implementation-defined algorithm that returns an integer representing the number of nanoseconds since the Unix epoch in UTC that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_ or *null* if no such transition exists.
+        The returned value represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_, or *null* if no such transition exists.
       </p>
     </emu-clause>
 
@@ -662,7 +697,7 @@
         1. Assert: _n_ = 0.
         1. If _disambiguation_ is *"reject"*, then
           1. Throw a *RangeError* exception.
-        1. Let _epochNanoseconds_ be ! GetEpochFromISOParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+        1. Let _epochNanoseconds_ be GetEpochFromISOParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
         1. Let _dayBefore_ be ! CreateTemporalInstant(_epochNanoseconds_ − 8.64 × 10<sup>13</sup>).
         1. Let _dayAfter_ be ! CreateTemporalInstant(_epochNanoseconds_ + 8.64 × 10<sup>13</sup>).
         1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_timeZone_, _dayBefore_).

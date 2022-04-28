@@ -668,7 +668,7 @@
       <emu-alg>
         1. Assert: _isoYear_, _isoMonth_, and _referenceISODay_ are integers.
         1. Assert: Type(_calendar_) is Object.
-        1. If ! IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
+        1. If IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
         1. If ! ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).

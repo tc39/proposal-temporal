@@ -963,7 +963,7 @@
         1. Assert: Type(_t_) is <del>Number</del><ins>BigInt</ins>.
         1. If _calendar_ is *"gregory"*, then
           1. <del>Let _timeZoneOffset_ be the value calculated according to <emu-xref href="#sec-local-time-zone-adjustment">LocalTZA(_t_, *true*)</emu-xref> where the local time zone is replaced with timezone _timeZone_.</del>
-          1. <ins>Let _timeZoneOffset_ be ! GetIANATimeZoneOffsetNanoseconds(_t_, _timeZone_).</ins>
+          1. <ins>Let _timeZoneOffset_ be GetIANATimeZoneOffsetNanoseconds(_t_, _timeZone_).</ins>
           1. Let _tz_ be <del>_t_</del><ins>ℝ(_t_)</ins> + _timeZoneOffset_.
           1. Return a record with fields calculated from _tz_ according to <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins>.
         1. Else,
