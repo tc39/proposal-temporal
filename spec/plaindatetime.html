@@ -864,7 +864,7 @@
         1. Let _time_ be MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
         1. Let _ms_ be MakeDate(_date_, _time_).
         1. Assert: _ms_ is finite.
-        1. Return ℝ(_ms_) × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
+        1. Return ℤ(ℝ(_ms_) × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_).
       </emu-alg>
     </emu-clause>
 
@@ -893,7 +893,7 @@
         </p>
       </emu-note>
       <emu-alg>
-        1. Let _ns_ be GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _ns_ be ℝ(GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)).
         1. If _ns_ ≤ -8.64 × 10<sup>21</sup> - 8.64 × 10<sup>13</sup>, then
           1. Return *false*.
         1. If _ns_ ≥ 8.64 × 10<sup>21</sup> + 8.64 × 10<sup>13</sup>, then
