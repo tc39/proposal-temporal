@@ -716,7 +716,7 @@
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _differenceNs_ be ! DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_differenceNs_) ≤ 1.728 &times; 10<sup>22</sup>.
+          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_differenceNs_) &le; 1.728 &times; 10<sup>22</sup>.
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
@@ -752,7 +752,7 @@
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _differenceNs_ be ! DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_differenceNs_) ≤ 1.728 &times; 10<sup>22</sup>.
+          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_differenceNs_) &le; 1.728 &times; 10<sup>22</sup>.
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _largestUnit_).
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, -_balanceResult_.[[Hours]], -_balanceResult_.[[Minutes]], -_balanceResult_.[[Seconds]], -_balanceResult_.[[Milliseconds]], -_balanceResult_.[[Microseconds]], -_balanceResult_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
@@ -1386,7 +1386,7 @@
         1. Repeat, while _done_ is *false*,
           1. Let _oneDayFartherNs_ be ℝ(? AddZonedDateTime(ℤ(_intermediateNs_), _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _sign_, 0, 0, 0, 0, 0, 0)).
           1. Set _dayLengthNs_ to _oneDayFartherNs_ - _intermediateNs_.
-          1. If (_nanoseconds_ - _dayLengthNs_) &times; _sign_ ≥ 0, then
+          1. If (_nanoseconds_ - _dayLengthNs_) &times; _sign_ &ge; 0, then
             1. Set _nanoseconds_ to _nanoseconds_ - _dayLengthNs_.
             1. Set _intermediateNs_ to _oneDayFartherNs_.
             1. Set _days_ to _days_ + _sign_.
