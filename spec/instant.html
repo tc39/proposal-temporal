@@ -643,7 +643,7 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
         1. Let _roundedNs_ be ! DifferenceInstant(_first_.[[Nanoseconds]], _second_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-        1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_roundedNs_) ≤ 1.728 × 10<sup>22</sup>.
+        1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_roundedNs_) &le; 1.728 &times; 10<sup>22</sup>.
         1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _roundedNs_, _largestUnit_).
         1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
