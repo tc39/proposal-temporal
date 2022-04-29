@@ -383,11 +383,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
-        1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _other_.[[Years]], _other_.[[Months]], _other_.[[Weeks]], _other_.[[Days]], _other_.[[Hours]], _other_.[[Minutes]], _other_.[[Seconds]], _other_.[[Milliseconds]], _other_.[[Microseconds]], _other_.[[Nanoseconds]], _relativeTo_).
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! AddTemporalDuration(1, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -400,11 +396,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
-        1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], -_other_.[[Years]], -_other_.[[Months]], -_other_.[[Weeks]], -_other_.[[Days]], -_other_.[[Hours]], -_other_.[[Minutes]], -_other_.[[Seconds]], -_other_.[[Milliseconds]], -_other_.[[Microseconds]], -_other_.[[Nanoseconds]], _relativeTo_).
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ! AddTemporalDuration(-1, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1845,6 +1837,24 @@
         1. If _timePart_ is not *""*, then
           1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), and _timePart_.
         1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-addtemporalduration" aoid="AddTemporalDuration">
+      <h1>
+        AddTemporalDuration (
+          _sign_: 1 or -1,
+          _duration_: a Temporal.Duration,
+          _other_: an ECMAScript language value,
+          _options_: an Object or *undefined*,
+        ): a Temporal.Duration
+      </h1>
+      <emu-alg>
+        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
+        1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _sign_ &times; _other_.[[Years]], _sign_ &times; _other_.[[Months]], _sign_ &times; _other_.[[Weeks]], _sign_ &times; _other_.[[Days]], _sign_ &times; _other_.[[Hours]], _sign_ &times; _other_.[[Minutes]], _sign_ &times; _other_.[[Seconds]], _sign_ &times; _other_.[[Milliseconds]], _sign_ &times; _other_.[[Microseconds]], _sign_ &times; _other_.[[Nanoseconds]], _relativeTo_).
+        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

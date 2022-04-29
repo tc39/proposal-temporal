@@ -226,9 +226,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
-        1. Let _ns_ be ? AddInstant(_instant_.[[Nanoseconds]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Return ! CreateTemporalInstant(_ns_).
+        1. Return ! AddTemporalInstant(1, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -241,9 +239,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
-        1. Let _ns_ be ? AddInstant(_instant_.[[Nanoseconds]], -_duration_.[[Hours]], -_duration_.[[Minutes]], -_duration_.[[Seconds]], -_duration_.[[Milliseconds]], -_duration_.[[Microseconds]], -_duration_.[[Nanoseconds]]).
-        1. Return ! CreateTemporalInstant(_ns_).
+        1. Return ! AddTemporalInstant(-1, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -645,6 +641,20 @@
           1. Let _offsetNs_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
           1. Let _timeZoneString_ be ! FormatISOTimeZoneOffsetString(_offsetNs_).
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
+      </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-addtemporalinstant" aoid="AddTemporalInstant">
+     <h1>
+        AddTemporalInstant (
+          _sign_: 1 or -1,
+          _instant_: a Temporal.Instant,
+          _temporalDurationLike_: an ECMAScript language value,
+        ): a Temporal.Instant
+      </h1>
+      <emu-alg>
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
+        1. Let _ns_ be ? AddInstant(_instant_.[[Nanoseconds]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalInstant(_ns_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

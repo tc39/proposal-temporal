@@ -251,28 +251,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
-        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. If _sign_ &lt; 0, then
-          1. Let _dayFromCalendar_ be ? CalendarDaysInMonth(_calendar_, _yearMonth_).
-          1. Let _day_ be ? ToPositiveInteger(_dayFromCalendar_).
-        1. Else,
-          1. Let _day_ be 1.
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _day_).
-        1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_, *undefined*).
-        1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
-        1. For each element _nextEntry_ of _entries_, do
-          1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _nextEntry_[0], _nextEntry_[1]).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_).
-        1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
-        1. Return ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _optionsCopy_).
+        1. Return ? AddTemporalPlainYearMonth(1, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -285,29 +264,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Set _duration_ to ! CreateNegatedTemporalDuration(_duration_).
-        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
-        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. If _sign_ &lt; 0, then
-          1. Let _dayFromCalendar_ be ? CalendarDaysInMonth(_calendar_, _yearMonth_).
-          1. Let _day_ be ? ToPositiveInteger(_dayFromCalendar_).
-        1. Else,
-          1. Let _day_ be 1.
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _day_).
-        1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_, *undefined*).
-        1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
-        1. For each element _nextEntry_ of _entries_, do
-          1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _nextEntry_[0], _nextEntry_[1]).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_).
-        1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
-        1. Return ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _optionsCopy_).
+        1. Return ? AddTemporalPlainYearMonth(-1, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -695,6 +652,42 @@
         1. Let _calendarString_ be ! FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. Set _result_ to the string-concatenation of _result_ and _calendarString_.
         1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-addtemporalplainyearmonth" aoid="AddTemporalPlainYearMonth">
+     <h1>
+        AddTemporalPlainYearMonth (
+          _sign_: an integer, 1 or -1,
+          _yearMonth_: a Temporal.PlainYearMonth,
+          _temporalDurationLike_: an ECMAScript language value,
+          _options_: an Object or *undefined*,
+        )
+      </h1>
+      <emu-alg>
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. If _sign_ &lt; 0, then
+          1. Set _duration_ to ! CreateNegatedTemporalDuration(_duration_).
+        1. Let _balanceResult_ be ? BalanceDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
+        1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
+        1. Set _sign_ to ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. If _sign_ &lt; 0, then
+          1. Let _dayFromCalendar_ be ? CalendarDaysInMonth(_calendar_, _yearMonth_).
+          1. Let _day_ be ? ToPositiveInteger(_dayFromCalendar_).
+        1. Else,
+          1. Let _day_ be 1.
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _day_).
+        1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_, *undefined*).
+        1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
+        1. For each element _nextEntry_ of _entries_, do
+          1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _nextEntry_[0], _nextEntry_[1]).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_).
+        1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
+        1. Return ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _optionsCopy_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
