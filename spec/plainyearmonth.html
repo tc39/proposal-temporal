@@ -657,11 +657,11 @@
     <emu-clause id="sec-temporal-addtemporalplainyearmonth" aoid="AddTemporalPlainYearMonth">
      <h1>
         AddTemporalPlainYearMonth (
-          _sign_: an integer, 1 or -1,
+          _sign_: 1 or -1,
           _yearMonth_: a Temporal.PlainYearMonth,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an Object or *undefined*,
-        )
+        ): a Temporal.PlainYearMonth
       </h1>
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
