@@ -383,7 +383,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! AddTemporalDuration(1, _duration_, _other_, _options_).
+        1. Return ? AddTemporalDuration(1, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -396,7 +396,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ! AddTemporalDuration(-1, _duration_, _other_, _options_).
+        1. Return ? AddTemporalDuration(-1, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 

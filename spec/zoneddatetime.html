@@ -667,7 +667,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ! AddTemporalZonedDateTime(1, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddTemporalZonedDateTime(1, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -680,7 +680,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ! AddTemporalZonedDateTime(-1, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddTemporalZonedDateTime(-1, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
