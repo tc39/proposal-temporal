@@ -415,21 +415,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Set _other_ to ? ToTemporalDate(_other_).
-        1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"day"*).
-        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _smallestUnit_).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, _defaultLargestUnit_).
-        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
-        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ &ne; 1, then
-          1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Return ? DifferenceTemporalPlainDate(1, _temporalDate_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -442,22 +428,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Set _other_ to ? ToTemporalDate(_other_).
-        1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"day"*).
-        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _smallestUnit_).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, _defaultLargestUnit_).
-        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
-        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
-        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ &ne; 1, then
-          1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(-_result_.[[Years]], -_result_.[[Months]], -_result_.[[Weeks]], -_result_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Return ? DifferenceTemporalPlainDate(-1, _temporalDate_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -920,6 +891,35 @@
         1. If _d1_ &gt; _d2_, return 1.
         1. If _d1_ &lt; _d2_, return -1.
         1. Return 0.
+      </emu-alg>
+      </emu-clause>
+      <emu-clause id="sec-temporal-differencetemporalplaindate" aoid="DifferenceTemporalPlainDate">
+      <h1>
+        DifferenceTemporalPlainDate (
+          _direction_: an integer, 1 or -1,
+          _temporalDate_: a Temporal.PlainDate,
+          _other_: an ECMAScript language value,
+          _options_: an Object or *undefined*,
+        )
+      </h1>
+      <emu-alg>
+        1. Set _other_ to ? ToTemporalDate(_other_).
+        1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _disallowedUnits_ be « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"day"*).
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _smallestUnit_).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, _defaultLargestUnit_).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. If _direction_ &lt; 0, then
+          1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
+        1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _largestUnit_).
+        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _untilOptions_).
+        1. If _smallestUnit_ is not *"day"* or _roundingIncrement_ ≠ 1, then
+          1. Set _result_ to (? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _temporalDate_)).[[DurationRecord]].
+        1. Return ! CreateTemporalDuration(_direction_ × _result_.[[Years]], _direction_ × _result_.[[Months]], _direction_ × _result_.[[Weeks]], _direction_ × _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
   </emu-clause>
