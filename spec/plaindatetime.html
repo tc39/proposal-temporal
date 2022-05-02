@@ -1147,7 +1147,7 @@
         1. Return ! CreateDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaindatetime" aoid="AddDurationToOrSubtractDurationFromPlainDateTime" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaindatetime" type="abstract operation">
       <h1>
         AddDurationToOrSubtractDurationFromPlainDateTime (
           _operation_: ~add~ or ~subtract~,
@@ -1158,7 +1158,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds/subtracts _temporalDurationLike_ to/from _dateTime_, returning a point in time that is in the future/past relative to _datetime_.
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _dateTime_, returning a point in time that is in the future/past relative to _datetime_.</dd>
       </dl>
       <emu-alg>
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.

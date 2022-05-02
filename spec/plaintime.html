@@ -957,7 +957,7 @@
         1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaintime" aoid="AddDurationToOrSubtractDurationFromPlainTime" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaintime" type="abstract operation">
       <h1>
         AddDurationToOrSubtractDurationFromPlainTime (
           _operation_: ~add~ or ~subtract~,
@@ -967,7 +967,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds/subtracts _temporalDurationLike_ to/from _temporalTime_, returning a point in time that is in the future/past relative to _temporalTime_.
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _temporalTime_, returning a point in time that is in the future/past relative to _temporalTime_.</dd>
       </dl>
       <emu-alg>
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
