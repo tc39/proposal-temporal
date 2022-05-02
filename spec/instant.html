@@ -226,7 +226,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return ? AddTemporalInstant(1, _instant_, _temporalDurationLike_).
+        1. Return ? AddDurationToOrSubtractDurationFromInstant(~add~, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -239,7 +239,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return ? AddTemporalInstant(-1, _instant_, _temporalDurationLike_).
+        1. Return ? AddDurationToOrSubtractDurationFromInstant(~subtract~, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -643,15 +643,20 @@
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-addtemporalinstant" aoid="AddTemporalInstant">
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfrominstant" aoid="AddDurationToOrSubtractDurationFromInstant" type="abstract operation">
      <h1>
-        AddTemporalInstant (
-          _sign_: 1 or -1,
+        AddDurationToOrSubtractDurationFromInstant (
+          _operation_: ~add~ or ~subtract~,
           _instant_: a Temporal.Instant,
           _temporalDurationLike_: an ECMAScript language value,
-        ): a Temporal.Instant
+        ): either a normal completion containing a Temporal.Instant or an abrupt completion
       </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _instant_.</dd>
+      </dl>
       <emu-alg>
+        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
         1. Let _ns_ be ? AddInstant(_instant_.[[Nanoseconds]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
         1. Return ! CreateTemporalInstant(_ns_).

@@ -667,7 +667,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddTemporalZonedDateTime(1, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~add~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -680,7 +680,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddTemporalZonedDateTime(-1, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~subtract~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1389,16 +1389,21 @@
           }.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-addtemporalzoneddatetime" aoid="AddTemporalZonedDateTime">
+    <emu-clause id="sec-temporal-adddurationtoOrsubtractdurationfromzoneddatetime" aoid="AddDurationToOrSubtractDurationFromZonedDateTime" type="abstract operation">
      <h1>
-        AddTemporalZonedDateTime (
-          _sign_: 1 or -1,
+        AddDurationToOrSubtractDurationFromZonedDateTime (
+          _operation_: ~add~ or ~subtract~,
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an Object or *undefined*,
-        ): a Temporal.ZonedDateTime
+        ): either a normal completion containing a Temporal.ZonedDateTime or an abrupt completion
       </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _zonedDateTime_.</dd>
+      </dl>
       <emu-alg>
+        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].

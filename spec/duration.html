@@ -383,7 +383,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? AddTemporalDuration(1, _duration_, _other_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromDuration(~add~, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -396,7 +396,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? AddTemporalDuration(-1, _duration_, _other_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromDuration(~subtract~, _duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1840,16 +1840,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addtemporalduration" aoid="AddTemporalDuration">
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromduration" aoid="AddDurationToOrSubtractDurationFromDuration" type="abstract operation">
       <h1>
-        AddTemporalDuration (
-          _sign_: 1 or -1,
+        AddDurationToOrSubtractDurationFromDuration (
+          _operation_: ~add~ or ~subtract~,
           _duration_: a Temporal.Duration,
           _other_: an ECMAScript language value,
           _options_: an Object or *undefined*,
-        ): a Temporal.Duration
+        ): either a normal completion containing a Temporal.Duration or an abrupt completion
       </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds/subtracts _other_ to/from _duration_, resulting in a longer/shorter duration.</dd>
+      </dl>
       <emu-alg>
+        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalDurationRecord(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
