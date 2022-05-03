@@ -256,8 +256,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Set _other_ to ? ToTemporalInstant(_other_).
-        1. Return ? DifferenceTemporalInstant(_instant_, _other_, _options_).
+        1. Return ? DifferenceTemporalInstant(~until~, _instant_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -270,8 +269,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Set _other_ to ? ToTemporalInstant(_other_).
-        1. Return ? DifferenceTemporalInstant(_other_, _instant_, _options_).
+        1. Return ? DifferenceTemporalInstant(~since~, _instant_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -625,15 +623,27 @@
         1. Return the string-concatenation of _dateTimeString_ and _timeZoneString_.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-differencetemporalinstant" aoid="DifferenceTemporalInstant">
+    <emu-clause id="sec-temporal-differencetemporalinstant" type="abstract operation">
       <h1>
         DifferenceTemporalInstant (
-          _first_: a Temporal.Instant,
-          _second_: a Temporal.Instant,
+          _operation_: ~since~ or ~until~,
+          _instant_: a Temporal.Instant,
+          _other_: an ECMAScript language value,
           _options_: an Object or *undefined*,
-        ): a Temporal.Duration
+        ): either a normal completion containing a Temporal.Duration or an abrupt completion
       </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It computes the difference between the two times represented by _instant_ and _other_, optionally rounds it, and returns it as a Temporal.Duration object.</dd>
+      </dl>
       <emu-alg>
+        1. Set _other_ to ? ToTemporalInstant(_other_).
+        1. If _operation_ is ~until~, then,
+          1. Let _first_ be _instant_.
+          1. Let _second_ be _other__.
+        else.
+          1. Let _first_ be _other_.
+          1. Let _second_ be _instant__.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"second"*, _smallestUnit_).

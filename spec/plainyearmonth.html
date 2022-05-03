@@ -320,7 +320,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? DifferenceTemporalPlainYearMonth(1, _yearMonth_, _other_, _options_).
+        1. Return ? DifferenceTemporalPlainYearMonth(~until~, _yearMonth_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -333,7 +333,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? DifferenceTemporalPlainYearMonth(-1, _yearMonth_, _other_, _options_).
+        1. Return ? DifferenceTemporalPlainYearMonth(~since~, _yearMonth_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -652,16 +652,22 @@
         1. Return _result_.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-differencetemporalplainyearmonth" aoid="DifferenceTemporalPlainYearMonth">
+    <emu-clause id="sec-temporal-differencetemporalplainyearmonth" type="abstract operation">
       <h1>
         DifferenceTemporalPlainYearMonth (
-          _direction_: 1 or -1,
+          _operation_: ~since~ or ~until~,
           _yearMonth_: a Temporal.PlainYearMonth,
           _other_: an ECMAScript language value,
           _options_: an Object or *undefined*,
-        ): a Temporal.Duration
+        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It computes the difference between the two times represented by _yearMonth_ and _other_, optionally rounds it, and returns it as a Temporal.Duration object.</dd>
+      </dl>
       </h1>
       <emu-alg>
+        1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
@@ -671,7 +677,7 @@
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, _disallowedUnits_, *"auto"*, *"year"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. If _direction_ &lt; 0, then
+        1. If _operation_ is ~since~, then
           1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, *undefined*, *false*).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
@@ -685,7 +691,7 @@
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
         1. If _smallestUnit_ is not *"month"* or _roundingIncrement_ &ne; 1, then
           1. Let _result_ be (? RoundDuration(_result_.[[Years]], _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0, _roundingIncrement_, _smallestUnit_, _roundingMode_, _thisDate_)).[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(_direction_ &times; _result_.[[Years]], _direction_ &times; _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
+        1. Return ! CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
   </emu-clause>
