@@ -962,7 +962,7 @@
         1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"auto"*, *"hour"*).
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. If _operation_ is _since_, then
+        1. If _operation_ is ~since~, then
           1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
