@@ -258,7 +258,7 @@ epochMilli <span class="token operator">=</span> inst<span class="token punctuat
 epochSecs <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
 
 <h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</h2>
-<p>Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be <strong>time ambiguity</strong> where it&#39;s not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible clock times for one UTC time.</p>
+<p>Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be <strong>time ambiguity</strong> where it&#39;s not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible UTC times for one clock time.</p>
 <ul>
 <li>When offsets change in a backward direction, the same clock time will be repeated.
 For example, 1:30AM happened twice on Sunday, 4 November 2018 in California.
