@@ -363,9 +363,9 @@
             1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
-          1. Let _month_ be ? Get(_fields_, *"month"*).
-          1. Let _monthCode_ be ? Get(_fields_, *"monthCode"*).
-          1. Let _year_ be ? Get(_fields_, *"year"*).
+          1. Let _month_ be ! Get(_fields_, *"month"*).
+          1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
+          1. Let _year_ be ! Get(_fields_, *"year"*).
           1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, 𝔽(_referenceISOYear_)).
           1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_, _options_).
