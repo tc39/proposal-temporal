@@ -19,13 +19,6 @@ const { Instant } = Temporal;
 
 describe('Instant', () => {
   describe('Instant.from() works', () => {
-    it('Instant.from(instant) is not the same object', () => {
-      const inst = Instant.from('2020-02-12T11:42+01:00[Europe/Amsterdam]');
-      notEqual(Instant.from(inst), inst);
-    });
-    it('Instant.from(ISO string leap second) is constrained', () => {
-      equal(`${Instant.from('2016-12-31T23:59:60Z')}`, '2016-12-31T23:59:59Z');
-    });
     it('variant time separators', () => {
       equal(`${Instant.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23:00Z');
       equal(`${Instant.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23:00Z');
