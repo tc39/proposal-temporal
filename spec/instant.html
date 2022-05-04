@@ -641,9 +641,9 @@
         1. If _operation_ is ~until~, then,
           1. Let _first_ be _instant_.
           1. Let _second_ be _other_.
-        else.
+        1. Else,
           1. Let _first_ be _other_.
-          1. Let _second_ be _instant__.
+          1. Let _second_ be _instant_.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"second"*, _smallestUnit_).
