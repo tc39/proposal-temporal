@@ -460,6 +460,13 @@
       <p>
         Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.
       </p>
+      <p>
+        The minimum implementation of GetNamedTimeZoneNextTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Assert: _timeZoneIdentifier_ is *"UTC"*.
+        1. Return *null*.
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-getianatimezoneprevioustransition" type="implementation-defined abstract operation">
@@ -478,6 +485,13 @@
       <p>
         Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.
       </p>
+      <p>
+        The minimum implementation of GetNamedTimeZonePreviousTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Assert: _timeZoneIdentifier_ is *"UTC"*.
+        1. Return *null*.
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-formattimezoneoffsetstring" aoid="FormatTimeZoneOffsetString">
