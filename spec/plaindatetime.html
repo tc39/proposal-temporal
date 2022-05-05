@@ -884,9 +884,9 @@
       </emu-note>
       <emu-alg>
         1. Let _ns_ be ℝ(GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)).
-        1. If _ns_ &le; -8.64 &times; 10<sup>21</sup> - 8.64 &times; 10<sup>13</sup>, then
+        1. If _ns_ &le; nsMinInstant - nsPerDay, then
           1. Return *false*.
-        1. If _ns_ &ge; 8.64 &times; 10<sup>21</sup> + 8.64 &times; 10<sup>13</sup>, then
+        1. If _ns_ &ge; nsMaxInstant + nsPerDay, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -1077,7 +1077,7 @@
       </p>
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
-        1. If _dayLength_ is not present, set _dayLength_ to 8.64 &times; 10<sup>13</sup>.
+        1. If _dayLength_ is not present, set _dayLength_ to nsPerDay.
         1. Let _roundedTime_ be ! RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
         1. Let _balanceResult_ be ! BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the Record {
