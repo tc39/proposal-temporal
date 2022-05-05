@@ -74,10 +74,11 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the CanonicalizeTimeZoneName abstract operation as specified in the ECMA-402 specification.
       </p>
       <p>
-        The minimum implementation of CanonicalizeTimeZoneName for ECMAScript implementations that do not include the ECMA-402 API, supporting only the *"UTC"* time zone, performs the following steps when called:
+        The minimum implementation of CanonicalizeTimeZoneName for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:
       </p>
 
       <emu-alg>
+        1. Assert: _timeZone_ is an ASCII-case-insensitive match for *"UTC"*.
         1. Return *"UTC"*.
       </emu-alg>
     </emu-clause>
