@@ -251,7 +251,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddTemporalPlainYearMonth(1, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddTemporalPlainYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -264,7 +264,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddTemporalPlainYearMonth(-1, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddTemporalPlainYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
