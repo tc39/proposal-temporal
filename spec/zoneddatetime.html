@@ -667,12 +667,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _options_).
-        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
+        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~add~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -685,12 +680,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, -_duration_.[[Years]], -_duration_.[[Months]], -_duration_.[[Weeks]], -_duration_.[[Days]], -_duration_.[[Hours]], -_duration_.[[Minutes]], -_duration_.[[Seconds]], -_duration_.[[Milliseconds]], -_duration_.[[Microseconds]], -_duration_.[[Nanoseconds]], _options_).
-        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
+        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~subtract~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1397,6 +1387,29 @@
           [[Nanoseconds]]: _nanoseconds_,
           [[DayLength]]: abs(_dayLengthNs_)
           }.
+      </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-adddurationtoOrsubtractdurationfromzoneddatetime" type="abstract operation">
+     <h1>
+        AddDurationToOrSubtractDurationFromZonedDateTime (
+          _operation_: ~add~ or ~subtract~,
+          _zonedDateTime_: a Temporal.ZonedDateTime,
+          _temporalDurationLike_: an ECMAScript language value,
+          _options_: an ECMAScript language value,
+        ): either a normal completion containing a Temporal.ZonedDateTime or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _zonedDateTime_.</dd>
+      </dl>
+      <emu-alg>
+        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _sign_ &times; _duration_.[[Years]], _sign_ &times; _duration_.[[Months]], _sign_ &times; _duration_.[[Weeks]], _sign_ &times; _duration_.[[Days]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]], _options_).
+        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
