@@ -54,7 +54,7 @@
         <p>The following steps are performed:</p>
         <emu-alg>
           1. Let _t_ be ? thisTimeValue(*this* value).
-          1. Let _ns_ be ? NumberToBigInt(_t_) &times; 10<sup>6</sup>.
+          1. Let _ns_ be ? NumberToBigInt(_t_) &times; ℤ(10<sup>6</sup>).
           1. Return ! CreateTemporalInstant(_ns_).
         </emu-alg>
       </emu-clause>
