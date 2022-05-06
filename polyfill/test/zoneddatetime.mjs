@@ -189,10 +189,6 @@ describe('ZonedDateTime', () => {
       equal(zdt.toInstant().epochSeconds, Math.floor(Date.UTC(1976, 10, 18, 15, 23, 30, 123) / 1e3), 'epochSeconds');
       equal(zdt.toInstant().epochMilliseconds, Date.UTC(1976, 10, 18, 15, 23, 30, 123), 'epochMilliseconds');
     });
-    it('Temporal.ZonedDateTime.from(zonedDateTime) is not the same object)', () => {
-      const zdt = new ZonedDateTime(epochNanos, tz);
-      notEqual(ZonedDateTime.from(zdt), zdt);
-    });
 
     describe('ZonedDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)', () => {
       const zdt = new ZonedDateTime(epochNanos, new Temporal.TimeZone('UTC'));
@@ -310,12 +306,6 @@ describe('ZonedDateTime', () => {
     it('"Z" means preserve the exact time in the given IANA time zone', () => {
       const zdt = ZonedDateTime.from('2020-03-08T09:00:00Z[America/Los_Angeles]');
       equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-    });
-    it('ZonedDateTime.from(ISO string leap second) is constrained', () => {
-      equal(
-        `${ZonedDateTime.from('2016-12-31T23:59:60-08:00[America/Vancouver]')}`,
-        '2016-12-31T23:59:59-08:00[America/Vancouver]'
-      );
     });
     it('variant time separators', () => {
       ['1976-11-18t15:23-08:00[America/Los_Angeles]', '1976-11-18 15:23-08:00[America/Los_Angeles]'].forEach((input) =>
@@ -613,10 +603,6 @@ describe('ZonedDateTime', () => {
           throws(() => ZonedDateTime.from({ year: 2019, month: 1, day: 1, timeZone: lagos }, { overflow }), RangeError);
         });
       });
-      const leap = { year: 2016, month: 12, day: 31, hour: 23, minute: 59, second: 60, timeZone: lagos };
-      it('reject leap second', () => throws(() => ZonedDateTime.from(leap, { overflow: 'reject' }), RangeError));
-      it('constrain leap second', () =>
-        equal(`${ZonedDateTime.from(leap)}`, '2016-12-31T23:59:59+01:00[Africa/Lagos]'));
     });
     describe('Offset option', () => {
       it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {

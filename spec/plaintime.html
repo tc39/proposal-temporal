@@ -210,10 +210,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _result_ be ! AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ? AddDurationToOrSubtractDurationFromPlainTime(~add~, _temporalTime_, _temporalTime_).
       </emu-alg>
     </emu-clause>
 
@@ -226,10 +223,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _result_ be ! AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], -_duration_.[[Hours]], -_duration_.[[Minutes]], -_duration_.[[Seconds]], -_duration_.[[Milliseconds]], -_duration_.[[Microseconds]], -_duration_.[[Nanoseconds]]).
-        1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ? AddDurationToOrSubtractDurationFromPlainTime(~subtract~, _temporalTime_, _temporalTime_).
       </emu-alg>
     </emu-clause>
 
@@ -900,7 +894,7 @@
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
         1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
         1. If _unit_ is *"day"*, then
-          1. If _dayLengthNs_ is not present, set _dayLengthNs_ to 8.64 &times; 10<sup>13</sup>.
+          1. If _dayLengthNs_ is not present, set _dayLengthNs_ to nsPerDay.
           1. Let _quantity_ be (((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_) / _dayLengthNs_.
         1. Else if _unit_ is *"hour"*, then
           1. Let _quantity_ be (_fractionalSecond_ / 60 + _minute_) / 60 + _hour_.
@@ -969,6 +963,26 @@
         1. Set _result_ to (? RoundDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_)).[[DurationRecord]].
         1. Set _result_ to ? BalanceDuration(0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]], _largestUnit_).
         1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaintime" type="abstract operation">
+      <h1>
+        AddDurationToOrSubtractDurationFromPlainTime (
+          _operation_: ~add~ or ~subtract~,
+          _temporalTime_: a Temporal.PlainTime,
+          _temporalDurationLike_: an ECMAScript language value,
+        ): either a normal completion containing a Temporal.PlainTime or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It adds/subtracts _temporalDurationLike_ to/from _temporalTime_, returning a point in time that is in the future/past relative to _temporalTime_.</dd>
+      </dl>
+      <emu-alg>
+        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
+        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. Let _result_ be ! AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
+        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

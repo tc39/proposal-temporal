@@ -118,7 +118,7 @@ epochSecs = inst.epochSeconds; // => 1576536480
 
 ## Ambiguity Due to DST or Other Time Zone Offset Changes
 
-Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be **time ambiguity** where it's not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible clock times for one UTC time.
+Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be **time ambiguity** where it's not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible UTC times for one clock time.
 
 - When offsets change in a backward direction, the same clock time will be repeated.
   For example, 1:30AM happened twice on Sunday, 4 November 2018 in California.
