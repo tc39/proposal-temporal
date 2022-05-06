@@ -1713,7 +1713,7 @@
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* », *"auto"*, *"day"*).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _result_ be ! DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+              1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
               1. Let _result_ be ! CalendarDateDifference(_calendar_.[[Identifier]], _one_, _two_, _largestUnit_).
               1. Assert: ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
@@ -1852,9 +1852,12 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _dayOfWeek_ be ! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
-            1. Else,
-              1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
+              1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
+              1. Assert: _epochDays_ is finite.
+              1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+              1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return *7*<sub>𝔽</sub>.
+              1. Return _dayOfWeek_.
+            1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfWeek_).
           </emu-alg>
         </emu-clause>
@@ -1871,9 +1874,10 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _dayOfYear_ be ! ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
-            1. Else,
-              1. Let _dayOfYear_ be ! CalendarDateDayOfYear(_calendar_.[[Identifier]], _temporalDate_).
+              1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
+              1. Assert: _epochDays_ is finite.
+              1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+            1. Let _dayOfYear_ be ! CalendarDateDayOfYear(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfYear_).
           </emu-alg>
         </emu-clause>
@@ -1949,9 +1953,8 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _daysInYear_ be ! ISODaysInYear(_temporalDateLike_.[[ISOYear]]).
-            1. Else,
-              1. Let _daysInYear_ be ! CalendarDateDaysInYear(_calendar_.[[Identifier]], _temporalDateLike_).
+              1. Return DaysInYear(𝔽(_temporalDateLike_.[[ISOYear]])).
+            1. Let _daysInYear_ be ! CalendarDateDaysInYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_daysInYear_).
           </emu-alg>
         </emu-clause>
@@ -1989,7 +1992,10 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _inLeapYear_ be ! IsISOLeapYear(_temporalDateLike_.[[ISOYear]]).
+              1. If InLeapYear(TimeFromYear(𝔽(_temporalDateLike_.[[ISOYear]]))) is *1*<sub>𝔽</sub>, then
+                1. Let _inLeapYear_ be *true*.
+              1. Else,
+                1. Let _inLeapYear_ be *false*.
             1. Else,
               1. Let _inLeapYear_ be ! CalendarDateInLeapYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return _inLeapYear_.

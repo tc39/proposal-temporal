@@ -678,18 +678,17 @@
           _y2_: an integer,
           _m2_: an integer,
           _d2_: an integer,
-          _largestUnit_: a String,
-        )
+          _largestUnit_: *"year"*, *"month"*, *"week"*, or *"day"*,
+        ): a Date Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It returns a Date Duration Record with the elapsed duration from a first date until a second date, according to the reckoning of the ISO 8601 calendar.
+          The return value is the elapsed duration from a first date until a second date, according to the reckoning of the ISO 8601 calendar.
           No fields larger than _largestUnit_ will be non-zero in the resulting Date Duration Record.
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*.
         1. If _largestUnit_ is *"year"* or *"month"*, then
           1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
           1. If _sign_ is 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
@@ -727,24 +726,16 @@
             1. Set _years_ to 0.
           1. Return ! CreateDateDurationRecord(_years_, _months_, 0, _days_).
         1. If _largestUnit_ is *"day"* or *"week"*, then
-          1. If ! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_) &lt; 0, then
-            1. Let _smaller_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
-            1. Let _greater_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
-            1. Let _sign_ be 1.
-          1. Else,
-            1. Let _smaller_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
-            1. Let _greater_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
-            1. Let _sign_ be -1.
-          1. Let _days_ be ! ToISODayOfYear(_greater_.[[Year]], _greater_.[[Month]], _greater_.[[Day]]) - ! ToISODayOfYear(_smaller_.[[Year]], _smaller_.[[Month]], _smaller_.[[Day]]).
-          1. Let _year_ be _smaller_.[[Year]].
-          1. Repeat, while _year_ &lt; _greater_.[[Year]],
-            1. Set _days_ to _days_ + ! ISODaysInYear(_year_).
-            1. Set _year_ to _year_ + 1.
+          1. Let _epochDays1_ be MakeDay(𝔽(_y1_), 𝔽(_m1_ - 1), 𝔽(_d1_)).
+          1. Assert: _epochDays1_ is finite.
+          1. Let _epochDays2_ be MakeDay(𝔽(_y2_), 𝔽(_m2_ - 1), 𝔽(_d2_)).
+          1. Assert: _epochDays2_ is finite.
+          1. Let _days_ be ℝ(_epochDays2_) - ℝ(_epochDays1_).
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is *"week"*, then
-            1. Set _weeks_ to floor(_days_ / 7).
-            1. Set _days_ to _days_ modulo 7.
-          1. Return ! CreateDateDurationRecord(0, 0, _weeks_ &times; _sign_, _days_ &times; _sign_).
+            1. Set _weeks_ to RoundTowardsZero(_days_ / 7).
+            1. Set _days_ to remainder(_days_, 7).
+          1. Return ! CreateDateDurationRecord(0, 0, _weeks_, _days_).
       </emu-alg>
     </emu-clause>
 
@@ -788,7 +779,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integers.
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
         1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
@@ -798,44 +788,27 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceisodate" aoid="BalanceISODate">
-      <h1>BalanceISODate ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-balanceisodate" type="abstract operation">
+      <h1>BalanceISODate (
+        _year_: an integer,
+        _month_: an integer,
+        _day_: an integer,
+      ): a Record with fields [[Year]] (an integer), [[Month]] (an integer between 1 and 12 inclusive), and [[Day]] (an integer between 1 and 31 inclusive)</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It converts the given _year_, _month_, and _day_ into a valid calendar date in the ISO 8601 calendar as given by IsValidISODate, by overflowing out-of-range _month_ or _day_ values into the next-highest unit.
+          This date may be outside the range given by ISODateTimeWithinLimits.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integers.
-        1. Let _balancedYearMonth_ be ! BalanceISOYearMonth(_year_, _month_).
-        1. Set _month_ to _balancedYearMonth_.[[Month]].
-        1. Set _year_ to _balancedYearMonth_.[[Year]].
-        1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in a year, the following section subtracts years and adds days until the number of days is greater than -366 or -365.
-        1. If _month_ &gt; 2, then
-          1. Let _testYear_ be _year_.
-        1. Else,
-          1. Let _testYear_ be _year_ - 1.
-        1. Repeat, while _day_ &lt; -1 &times; ! ISODaysInYear(_testYear_),
-          1. Set _day_ to _day_ + ! ISODaysInYear(_testYear_).
-          1. Set _year_ to _year_ - 1.
-          1. Set _testYear_ to _testYear_ - 1.
-        1. NOTE: To deal with numbers of days greater than the number of days in a year, the following section adds years and subtracts days until the number of days is less than 366 or 365.
-        1. Set _testYear_ to _testYear_ + 1.
-        1. Repeat, while _day_ &gt; ! ISODaysInYear(_testYear_),
-          1. Set _day_ to _day_ - ! ISODaysInYear(_testYear_).
-          1. Set _year_ to _year_ + 1.
-          1. Set _testYear_ to _testYear_ + 1.
-        1. NOTE: To deal with negative numbers of days whose absolute value is greater than the number of days in the current month, the following section subtracts months and adds days until the number of days is greater than 0.
-        1. Repeat, while _day_ &lt; 1,
-          1. Set _balancedYearMonth_ to ! BalanceISOYearMonth(_year_, _month_ - 1).
-          1. Set _year_ to _balancedYearMonth_.[[Year]].
-          1. Set _month_ to _balancedYearMonth_.[[Month]].
-          1. Set _day_ to _day_ + ! ISODaysInMonth(_year_, _month_).
-        1. NOTE: To deal with numbers of days greater than the number of days in the current month, the following section adds months and subtracts days until the number of days is less than the number of days in the month.
-        1. Repeat, while _day_ &gt; ! ISODaysInMonth(_year_, _month_),
-          1. Set _day_ to _day_ - ! ISODaysInMonth(_year_, _month_).
-          1. Set _balancedYearMonth_ to ! BalanceISOYearMonth(_year_, _month_ + 1).
-          1. Set _year_ to _balancedYearMonth_.[[Year]].
-          1. Set _month_ to _balancedYearMonth_.[[Month]].
+        1. Let _epochDays_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
+        1. Assert: _epochDays_ is finite.
+        1. Let _ms_ be MakeDate(_epochDays_, *+0*<sub>𝔽</sub>).
         1. Return the Record {
-          [[Year]]: _year_,
-          [[Month]]: _month_,
-          [[Day]]: _day_
+            [[Year]]: ℝ(YearFromTime(_ms_)),
+            [[Month]]: ℝ(MonthFromTime(_ms_)) + 1,
+            [[Day]]: ℝ(DateFromTime(_ms_))
           }.
       </emu-alg>
     </emu-clause>
@@ -875,7 +848,7 @@
         1. Let _intermediate_ be ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Let _intermediate_ be ! BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+        1. Let _intermediate_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
         1. Return ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _overflow_).
       </emu-alg>
     </emu-clause>

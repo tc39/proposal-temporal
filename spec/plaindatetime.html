@@ -923,7 +923,7 @@
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Let _balancedTime_ be ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Let _balancedDate_ be ! BalanceISODate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
+        1. Let _balancedDate_ be BalanceISODate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
         1. Return the Record {
             [[Year]]: _balancedDate_.[[Year]],
             [[Month]]: _balancedDate_.[[Month]],
@@ -1050,7 +1050,7 @@
         1. Assert: _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. If _dayLength_ is not present, set _dayLength_ to nsPerDay.
         1. Let _roundedTime_ be ! RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
-        1. Let _balanceResult_ be ! BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
+        1. Let _balanceResult_ be BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the Record {
             [[Year]]: _balanceResult_.[[Year]],
             [[Month]]: _balanceResult_.[[Month]],
@@ -1105,9 +1105,9 @@
         1. Let _timeDifference_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
         1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
-        1. Let _adjustedDate_ be ! BalanceISODate(_y1_, _mon1_, _d1_ + _timeDifference_.[[Days]]).
+        1. Let _adjustedDate_ be BalanceISODate(_y1_, _mon1_, _d1_ + _timeDifference_.[[Days]]).
         1. If _timeSign_ is -_dateSign_, then
-          1. Set _adjustedDate_ to ! BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] - _timeSign_).
+          1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] - _timeSign_).
           1. Set _timeDifference_ to ? BalanceDuration(-_timeSign_, _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]], _largestUnit_).
         1. Let _date1_ be ? CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendar_).
         1. Let _date2_ be ? CreateTemporalDate(_y2_, _mon2_, _d2_, _calendar_).
