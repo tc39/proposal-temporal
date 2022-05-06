@@ -1493,16 +1493,19 @@
         DaysUntil (
           _earlier_: a Temporal.PlainDate,
           _later_: a Temporal.PlainDate,
-        )
+        ): an integer
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns the integer number of days elapsed between the calendar dates of two Temporal object instances _earlier_ and _later_.
+        <dd>The returned value is the number of days elapsed between the calendar dates of two Temporal.PlainDate instances _earlier_ and _later_.
         If _earlier_ is later than _later_, then the result is negative.</dd>
       </dl>
       <emu-alg>
-        1. Let _difference_ be ! DifferenceISODate(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]], _earlier_.[[ISODay]], _later_.[[ISOYear]], _later_.[[ISOMonth]], _later_.[[ISODay]], *"day"*).
-        1. Return _difference_.[[Days]].
+        1. Let _epochDays1_ be MakeDay(𝔽(_earlier_.[[ISOYear]]), 𝔽(_earlier_.[[ISOMonth]] - 1), 𝔽(_earlier_.[[ISODay]])).
+        1. Assert: _epochDays1_ is finite.
+        1. Let _epochDays2_ be MakeDay(𝔽(_later_.[[ISOYear]]), 𝔽(_later_.[[ISOMonth]] - 1), 𝔽(_later_.[[ISODay]])).
+        1. Assert: _epochDays2_ is finite.
+        1. Return ℝ(_epochDays2_) - ℝ(_epochDays1_).
       </emu-alg>
     </emu-clause>
 
@@ -1523,7 +1526,7 @@
       </dl>
       <emu-alg>
         1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_).
-        1. Let _days_ be ! DaysUntil(_relativeTo_, _newDate_).
+        1. Let _days_ be DaysUntil(_relativeTo_, _newDate_).
         1. Return the Record {
             [[RelativeTo]]: _newDate_,
             [[Days]]: _days_
@@ -1605,7 +1608,7 @@
           1. Let _yearsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
-          1. Let _monthsWeeksInDays_ be ! DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
+          1. Let _monthsWeeksInDays_ be DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_.
           1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
@@ -1618,7 +1621,7 @@
           1. Let _oldRelativeTo_ be _relativeTo_.
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_yearsPassed_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Set _relativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
-          1. Let _daysPassed_ be ! DaysUntil(_oldRelativeTo_, _relativeTo_).
+          1. Let _daysPassed_ be DaysUntil(_oldRelativeTo_, _relativeTo_).
           1. Set _days_ to _days_ - _daysPassed_.
           1. If _days_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
           1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
@@ -1634,7 +1637,7 @@
           1. Let _yearsMonthsLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonths_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
           1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
-          1. Let _weeksInDays_ be ! DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
+          1. Let _weeksInDays_ be DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsMonthsLater_.
           1. Let _days_ be _days_ + _weeksInDays_.
           1. If _days_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
