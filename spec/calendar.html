@@ -452,18 +452,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toisodayofweek" aoid="ToISODayOfWeek">
-      <h1>ToISODayOfWeek ( _year_, _month_, _day_ )</h1>
-      <emu-alg>
-        1. Assert: _year_ is an integer.
-        1. Assert: _month_ is an integer.
-        1. Assert: _day_ is an integer.
-        1. Let _date_ be the date given by _year_, _month_, and _day_.
-        1. Return _date_'s day of the week according to ISO-8601 as an integer.
-      </emu-alg>
-      <emu-note>Monday is 1 and Sunday is 7.</emu-note>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-toisoweekofyear" aoid="ToISOWeekOfYear">
       <h1>ToISOWeekOfYear ( _year_, _month_, _day_ )</h1>
       <emu-alg>
@@ -959,7 +947,11 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
+        1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
+        1. Assert: _epochDays_ is finite.
+        1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+        1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return *7*<sub>𝔽</sub>.
+        1. Return _dayOfWeek_.
       </emu-alg>
     </emu-clause>
 

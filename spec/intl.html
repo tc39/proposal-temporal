@@ -1852,9 +1852,12 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _dayOfWeek_ be ! ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
-            1. Else,
-              1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
+              1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
+              1. Assert: _epochDays_ is finite.
+              1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+              1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return *7*<sub>𝔽</sub>.
+              1. Return _dayOfWeek_.
+            1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfWeek_).
           </emu-alg>
         </emu-clause>
