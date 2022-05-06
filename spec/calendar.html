@@ -452,16 +452,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isodaysinyear" aoid="ISODaysInYear">
-      <h1>ISODaysInYear ( _year_ )</h1>
-      <emu-alg>
-        1. Assert: _year_ is an integer.
-        1. If ! IsISOLeapYear(_year_) is *true*, then
-          1. Return 366.
-        1. Return 365.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-isodaysinmonth" aoid="ISODaysInMonth">
       <h1>ISODaysInMonth ( _year_, _month_ )</h1>
       <emu-alg>
@@ -1089,7 +1079,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]] or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(! ISODaysInYear(_temporalDateLike_.[[ISOYear]])).
+        1. Return DaysInYear(𝔽(_temporalDateLike_.[[ISOYear]])).
       </emu-alg>
     </emu-clause>
 
