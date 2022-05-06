@@ -972,7 +972,7 @@
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
         1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
         1. Assert: _epochDays_ is finite.
-        1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+        1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)) + *1*<sub>𝔽</sub>.
       </emu-alg>
     </emu-clause>
 
