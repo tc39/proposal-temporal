@@ -251,7 +251,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddTemporalPlainYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -264,7 +264,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddTemporalPlainYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -654,10 +654,10 @@
         1. Return _result_.
       </emu-alg>
     </emu-clause>
-    <emu-clause id="sec-temporal-addtemporalplainyearmonth" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplainyearmonth" type="abstract operation">
      <h1>
-        AddTemporalPlainYearMonth (
-          _operation_: ~add~ or ~subtract_,
+        AddDurationToOrSubtractDurationFromPlainYearMonth (
+          _operation_: ~add~ or ~subtract~,
           _yearMonth_: a Temporal.PlainYearMonth,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,
