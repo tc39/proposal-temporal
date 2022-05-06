@@ -280,18 +280,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Set _other_ to ? ToTemporalTime(_other_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"auto"*, *"hour"*).
-        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
-        1. Let _result_ be ! DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
-        1. Set _result_ to (? RoundDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_)).[[DurationRecord]].
-        1. Set _result_ to ? BalanceDuration(0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]], _largestUnit_).
-        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ? DifferenceTemporalPlainTime(~since~, _temporalTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -304,19 +293,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Set _other_ to ? ToTemporalTime(_other_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"auto"*, *"hour"*).
-        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
-        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
-        1. Let _result_ be ! DifferenceTime(_other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]]).
-        1. Set _result_ to (? RoundDuration(0, 0, 0, 0, -_result_.[[Hours]], -_result_.[[Minutes]], -_result_.[[Seconds]], -_result_.[[Milliseconds]], -_result_.[[Microseconds]], -_result_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_)).[[DurationRecord]].
-        1. Set _result_ to ? BalanceDuration(0, -_result_.[[Hours]], -_result_.[[Minutes]], -_result_.[[Seconds]], -_result_.[[Milliseconds]], -_result_.[[Microseconds]], -_result_.[[Nanoseconds]], _largestUnit_).
-        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ? DifferenceTemporalPlainTime(~until~, _temporalTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -955,6 +932,37 @@
           1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _result_, 0).
         1. Assert: _unit_ is *"nanosecond"*.
         1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
+      </emu-alg>
+    </emu-clause>
+    <emu-clause id="sec-temporal-differencetemporalplaintime" type="abstract operation">
+      <h1>
+        DifferenceTemporalPlainTime (
+          _operation_: ~since~ or ~until~,
+          _temporalTime_: a Temporal.PlainTime,
+          _other_: an ECMAScript language value,
+          _options_: an ECMAScript language value,
+        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It computes the difference between the two times represented by _temporalTime_ and _other_, optionally rounds it, and returns it as a Temporal.Duration object.</dd>
+      </dl>
+      <emu-alg>
+        1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
+        1. Set _other_ to ? ToTemporalTime(_other_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
+        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"auto"*, *"hour"*).
+        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+        1. If _operation_ is ~since~, then
+          1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+        1. Let _result_ be ! DifferenceTime(_other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]]).
+        1. Set _result_ to (? RoundDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_)).[[DurationRecord]].
+        1. Set _result_ to ? BalanceDuration(0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]], _largestUnit_).
+        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
     <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaintime" type="abstract operation">
