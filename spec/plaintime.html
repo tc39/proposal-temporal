@@ -280,7 +280,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? DifferenceTemporalPlainTime(~since~, _temporalTime_, _other_, _options_).
+        1. Return ? DifferenceTemporalPlainTime(~until~, _temporalTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -293,7 +293,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? DifferenceTemporalPlainTime(~until~, _temporalTime_, _other_, _options_).
+        1. Return ? DifferenceTemporalPlainTime(~since~, _temporalTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
