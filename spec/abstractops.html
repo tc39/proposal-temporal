@@ -1155,9 +1155,6 @@
           CalendarTime
           DateSpecYearMonth
           DateSpecMonthDay
-
-      TemporalRelativeToString :
-          TemporalDateTimeString
     </emu-grammar>
     <ul>
       <li>
@@ -1169,7 +1166,7 @@
   <emu-clause id="sec-temporal-parseisodatetime" aoid="ParseISODateTime">
     <h1>ParseISODateTime ( _isoString_ )</h1>
     <p>
-      The ParseISODateTime abstract operation examines any ISO 8601 string that adheres to the syntax of the |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalRelativeToString|, |TemporalTimeString|, |TemporalYearMonthString|, or |TemporalZonedDateTimeString| productions of the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
+      The ParseISODateTime abstract operation examines any ISO 8601 string that adheres to the syntax of the |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, or |TemporalZonedDateTimeString| productions of the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
     </p>
     <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
@@ -1412,7 +1409,7 @@
     </p>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalRelativeToString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+      1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. If _isoString_ satisfies the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
