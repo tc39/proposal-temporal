@@ -1032,9 +1032,6 @@
       DateTime :
           Date TimeSpecSeparator? TimeZone?
 
-      CalendarDate :
-          Date Calendar?
-
       CalendarTime :
           TimeDesignator TimeSpec TimeZone? Calendar?
           TimeSpec TimeZone? Calendar
@@ -1446,14 +1443,12 @@
     </p>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeString|).
+      1. If _parseResult_ is a List of errors, then
         1. Throw a *RangeError* exception.
-      1. If _isoString_ contains a |UTCDesignator|, then
+      1. If _parseResult_ contains a |UTCDesignator|, then
         1. Throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. Assert: ParseText(StringToCodePoints(_isoString_), |CalendarDate|) is a List of errors.
-      1. Assert: ParseText(StringToCodePoints(_isoString_), |DateSpecYearMonth|) is a List of errors.
-      1. Assert: ParseText(StringToCodePoints(_isoString_), |DateSpecMonthDay|) is a List of errors.
       1. Return the Record {
         [[Hour]]: _result_.[[Hour]],
         [[Minute]]: _result_.[[Minute]],
