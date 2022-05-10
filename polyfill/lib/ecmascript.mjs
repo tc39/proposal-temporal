@@ -482,9 +482,22 @@ export const ES = ObjectAssign({}, ES2020, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offset, z } =
+    let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offset, z } =
       ES.ParseTemporalInstantString(isoString);
 
+    if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+    const offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
+    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.BalanceISODateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond - offsetNs
+    ));
     const epochNs = ES.GetEpochFromISOParts(
       year,
       month,
@@ -497,9 +510,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond
     );
     if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-    if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
-    const offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
-    return epochNs.subtract(offsetNs);
+    return epochNs;
   },
   RegulateISODate: (year, month, day, overflow) => {
     switch (overflow) {
