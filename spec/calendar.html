@@ -61,6 +61,12 @@
       <p>
         Calendar types are constrained to those in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>. All implementations are required to support *"iso8601"*.
       </p>
+      <emu-alg>
+        1. Let _calendars_ be the List of String values representing calendar types supported by the implementation.
+        1. Assert: _calendars_ contains *"iso8601"*.
+        1. Assert: _calendars_ does not contain any element that does not identify a calendar type in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
+        1. Return _calendars_.
+      </emu-alg>
     </emu-clause>
   </emu-clause>
 
