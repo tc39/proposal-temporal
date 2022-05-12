@@ -16,7 +16,7 @@
 
     <p>
       At a minimum, ECMAScript implementations must support a built-in calendar named *"iso8601"*, representing the ISO 8601 calendar.
-      In addition, implementations may support any number of other built-in calendars.
+      In addition, implementations may support any number of other built-in calendars corresponding with those of the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
     </p>
     <p>
       ECMAScript implementations identify built-in calendars using a <dfn variants="calendar types">calendar type</dfn> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>.
@@ -58,9 +58,9 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the AvailableCalendars abstract operation as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the AvailableCalendars abstract operation is used.
       </p>
-      <emu-alg>
-        1. Return « *"iso8601"* ».
-      </emu-alg>
+      <p>
+        This function returns a List of String values representing calendar types supported by the implementation. The contents of the List are implementation-defined, but must contain *"iso8601"* and must not contain any String value that does not identify a calendar type in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
+      </p>
     </emu-clause>
   </emu-clause>
 
