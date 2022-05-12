@@ -44,14 +44,14 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-availablecalendars" type="abstract operation">
+    <emu-clause id="sec-temporal-availablecalendars" type="implementation-defined abstract operation">
       <h1>
         AvailableCalendars (
         ): a List of Strings
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>The returned List contains a single calendar type, *"iso8601"*.</dd>
+        <dd>Each element in the returned List represents a calendar type supported by the implementation.</dd>
       </dl>
 
       <p>
@@ -59,7 +59,7 @@
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the AvailableCalendars abstract operation is used.
       </p>
       <p>
-        This function returns a List of String values representing calendar types supported by the implementation. The contents of the List are implementation-defined, but must contain *"iso8601"* and must not contain any String value that does not identify a calendar type in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
+        Calendar types are constrained to those in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>. All implementations are required to support *"iso8601"*.
       </p>
     </emu-clause>
   </emu-clause>
