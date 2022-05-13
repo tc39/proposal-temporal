@@ -588,8 +588,7 @@ zdt.monthsInYear; // => 12
 The `inLeapYear` read-only property tells whether the year of this `Temporal.ZonedDateTime` is a leap year.
 Its value is `true` if the year is a leap year, and `false` if not.
 
-For the ISO calendar, leap years are years evenly divisible by 4, except years evenly divisible by 100 but not evenly divisible by 400.
-Other calendar systems may calculate leap years differently.
+NOTE: A "leap year" is a year that contains more days than other years (for solar or lunar calendars) or more months than other years (for lunisolar calendars like Hebrew or Chinese). In the ISO 8601 calendar, a year is a leap year (and has exactly one extra day, February 29) if it is evenly divisible by 4 but not 100 or if it is evenly divisible by 400.
 
 Usage example:
 
