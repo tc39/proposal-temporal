@@ -1342,17 +1342,21 @@
           </emu-alg>
         </emu-clause>
 
-        <emu-clause id="sec-temporal-calendardatetoiso" type="abstract operation">
+        <emu-clause id="sec-temporal-calendardatetoiso" type="implementation-defined abstract operation">
           <h1>
             CalendarDateToISO (
               _calendar_: a String,
-              _fields_: an ordinary Object with the own data properties listed in <emu-xref href="#table-temporal-field-requirements"></emu-xref>,
+              _fields_: an ordinary Object with one or more of the own data properties listed in <emu-xref href="#table-temporal-field-requirements"></emu-xref>,
               _overflow_: a String,
-            )
+            ): either a normal completion containing an ISO Date Record, or an abrupt completion
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by the string _calendar_ to the ISO calendar and returns the corresponding day, month and year values as an ISO Date Record.</dd>
+            <dd>
+              It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by the string _calendar_ to the ISO calendar and returns the corresponding day, month and year values as an ISO Date Record.
+              It may throw a *TypeError* exception if the own data properties present on _fields_ are insufficient to calculate an ISO date in _calendar_.
+              It may throw a *RangeError* exception if the values of the own data properties of _fields_ are out of range for _calendar_ and _overflow_ is *"reject"*, or if the date described by _fields_ forms a date outside the range allowed by ISODateTimeWithinLimits.
+            </dd>
           </dl>
         </emu-clause>
 
@@ -1627,7 +1631,7 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
-              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+              1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
@@ -1648,7 +1652,7 @@
             1. Else,
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « »).
-              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+              1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
               1. Set _result_.[[ReferenceISODay]] to _result_.[[Day]].
             1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
           </emu-alg>
@@ -1670,7 +1674,7 @@
             1. Else,
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"era"*, *"eraYear"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-              1. Let _result_ be ! CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+              1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
               1. Set _result_.[[ReferenceISOYear]] to _result_.[[Year]].
             1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
           </emu-alg>
