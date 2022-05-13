@@ -1360,18 +1360,21 @@
           </dl>
         </emu-clause>
 
-        <emu-clause id="sec-temporal-calendardateaddition" type="abstract operation">
+        <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
           <h1>
             CalendarDateAddition (
               _calendar_: a String,
               _date_: a Temporal.PlainDate,
               _duration_: a Date Duration Record,
               _overflow_: a String,
-            )
+            ): either a normal completion containing an ISO Date Record, or an abrupt completion
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by the string _calendar_ and returns the corresponding day, month and year of the result in the ISO calendar values as an ISO Date Record.</dd>
+            <dd>
+              It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by the string _calendar_ and returns the corresponding day, month and year of the result in the ISO calendar values as an ISO Date Record.
+              It may throw a *RangeError* exception if _overflow_ is *"reject"* and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
+            </dd>
           </dl>
         </emu-clause>
 
@@ -1698,7 +1701,7 @@
               1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], _overflow_).
             1. Else,
               1. Let _balanceDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]]).
-              1. Let _result_ be ! CalendarDateAddition(_calendar_, _date_, _balanceDuration_, _overflow_).
+              1. Let _result_ be ? CalendarDateAddition(_calendar_, _date_, _balanceDuration_, _overflow_).
             1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
           </emu-alg>
         </emu-clause>
