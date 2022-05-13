@@ -617,6 +617,65 @@
   <emu-clause id="sec-temporal-plaindate-abstract-ops">
     <h1>Abstract Operations for Temporal.PlainDate Objects</h1>
 
+    <emu-clause id="sec-temporal-iso-date-records">
+      <h1>ISO Date Records</h1>
+      <p>
+        An <dfn variants="ISO Date Records">ISO Date Record</dfn> is a Record value used to represent a valid calendar date in the ISO 8601 calendar, although the year may be outside of the allowed range for Temporal.
+        ISO Date Records are produced by the abstract operation CreateISODateRecord.
+      </p>
+      <p>
+        ISO Date Records have the fields listed in <emu-xref href="#table-temporal-iso-date-record-fields"></emu-xref>.
+      </p>
+      <emu-table id="table-temporal-iso-date-record-fields" caption="ISO Date Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Year]]</td>
+            <td>an integer</td>
+            <td>
+              The year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Month]]</td>
+            <td>an integer between 1 and 12, inclusive</td>
+            <td>
+              The number of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Day]]</td>
+            <td>an integer between 1 and 31, inclusive</td>
+            <td>
+              The number of the day of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-create-iso-date-record" type="abstract operation">
+      <h1>
+        CreateISODateRecord (
+          _year_: an integer,
+          _month_: an integer between 1 and 12 inclusive,
+          _day_: an integer between 1 and 31 inclusive,
+        ): an ISO Date Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
+      <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
+        1. Return the Record { [[Year]]: _year_, [[Month]]: _month_, [[Day]]: _day_ }.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-createtemporaldate" aoid="CreateTemporalDate">
       <h1>CreateTemporalDate ( _isoYear_, _isoMonth_, _isoDay_, _calendar_ [ , _newTarget_ ] )</h1>
       <emu-alg>
@@ -739,27 +798,32 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulateisodate" aoid="RegulateISODate">
-      <h1>RegulateISODate ( _year_, _month_, _day_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-regulateisodate" type="abstract operation">
+      <h1>
+        RegulateISODate (
+          _year_: an integer,
+          _month_: an integer,
+          _day_: an integer,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing an ISO Date Record, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It performs the overflow correction given by _overflow_ on the values _year_, _month_, and _day_, in order to arrive at a valid date in the ISO 8601 calendar, as determined by IsValidISODate.
+          For *"reject"*, values that do not form a valid date cause an exception to be thrown.
+          For *"constrain"*, values that do not form a valid date are clamped to the correct range.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_, _month_, and _day_ are integers.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"reject"*, then
           1. If IsValidISODate(_year_, _month_, _day_) is *false*, throw a *RangeError* exception.
-          1. Return the Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_,
-            [[Day]]: _day_
-            }.
+          1. Return CreateISODateRecord(_year_, _month_, _day_).
         1. If _overflow_ is *"constrain"*, then
           1. Set _month_ to the result of clamping _month_ between 1 and 12.
           1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
           1. Set _day_ to the result of clamping _day_ between 1 and _daysInMonth_.
-          1. Return the Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_,
-            [[Day]]: _day_
-            }.
+          1. Return CreateISODateRecord(_year_, _month_, _day_).
       </emu-alg>
     </emu-clause>
 
@@ -793,7 +857,7 @@
         _year_: an integer,
         _month_: an integer,
         _day_: an integer,
-      ): a Record with fields [[Year]] (an integer), [[Month]] (an integer between 1 and 12 inclusive), and [[Day]] (an integer between 1 and 31 inclusive)</h1>
+      ): an ISO Date Record</h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
@@ -805,11 +869,7 @@
         1. Let _epochDays_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
         1. Assert: _epochDays_ is finite.
         1. Let _ms_ be MakeDate(_epochDays_, *+0*<sub>𝔽</sub>).
-        1. Return the Record {
-            [[Year]]: ℝ(YearFromTime(_ms_)),
-            [[Month]]: ℝ(MonthFromTime(_ms_)) + 1,
-            [[Day]]: ℝ(DateFromTime(_ms_))
-          }.
+        1. Return CreateISODateRecord(ℝ(YearFromTime(_ms_)), ℝ(MonthFromTime(_ms_)) + 1, ℝ(DateFromTime(_ms_))).
       </emu-alg>
     </emu-clause>
 
