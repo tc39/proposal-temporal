@@ -1633,7 +1633,7 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeZoneString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. Let each of _z_, _offsetString_, and _name_ be the source text matched by the respective |UTCDesignator|, |TimeZoneNumericUTCOffset|, and |TimeZoneIANAName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
+      1. Let each of _z_, _offsetString_, and _name_ be the source text matched by the respective |UTCDesignator|, |TimeZoneNumericUTCOffset|, and |TimeZoneIdentifier| Parse Nodes contained within _parseResult_, or an empty sequence of code points if not present.
       1. If _name_ is empty, then
         1. Set _name_ to *undefined*.
       1. Else,
