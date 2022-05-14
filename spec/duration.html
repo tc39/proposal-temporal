@@ -1353,8 +1353,9 @@
       </dl>
       <emu-alg>
         1. If _largestUnit_ is not one of *"year"*, *"month"*, or *"week"*, or _years_, _months_, _weeks_, and _days_ are all 0, then
-          1. [id="step-balance-duration-relative-early-return"] Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
-        1. Assert: _relativeTo_ is not *undefined*, because callers of this operation ensure _relativeTo_ is required in conditions where this algorithm does not return in step <emu-xref href="#step-balance-duration-relative-early-return"></emu-xref>.
+          1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
+        1. If _relativeTo_ is *undefined*, then
+          1. Throw a *RangeError* exception.
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Assert: _sign_ &ne; 0.
         1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
