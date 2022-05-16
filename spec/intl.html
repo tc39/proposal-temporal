@@ -1402,7 +1402,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a lowercase string identifier for calendars that have eras and *undefined* otherwise.</dd>
+            <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns a lowercase String value representing that era, or *undefined* for calendars that do not have eras.</dd>
           </dl>
         </emu-clause>
 
@@ -1415,7 +1415,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the year of the current era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be an integer for calendars that have eras and *undefined* otherwise.</dd>
+            <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the ordinal position of the year of _date_ in that era, or *undefined* for calendars that do not have eras.</dd>
           </dl>
         </emu-clause>
 
@@ -1443,7 +1443,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a 1-based integer.</dd>
+            <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the 1-based ordinal position of that month in the corresponding year of the calendar.</dd>
           </dl>
           <emu-note>
             The return value represents the ordinal index of the month in the current year. This means that for lunisolar calendars, the same month can return a different index depending on whether it's in a leap year.
@@ -1459,7 +1459,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the monthCode corresponding to the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a string identifier that starts with the literal grapheme *"M"* followed by two graphemes representing the zero-padded month number of the current month in a normal (non-leap) year and suffixed by an optional literal grapheme *"L"* if this is a leap month in a lunisolar calendar.</dd>
+            <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns its month code. The month code for a month that is not a leap month and whose 1-based ordinal position in a common year of the calendar (i.e., a year that is not a leap year) is _n_ should be the string-concatenation of *"M"* and ToZeroPaddedDecimalString(_n_, 2), and the month code for a month that is a leap month inserted after a month whose 1-based ordinal position in a common year of the calendar is _p_ should be the string-concatenation of *"M"*, ToZeroPaddedDecimalString(_p_, 2), and *"L"*.</dd>
           </dl>
         </emu-clause>
 
@@ -1472,7 +1472,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The return value should be 1-based.</dd>
+            <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the 1-based ordinal position of that day in the corresponding month.</dd>
           </dl>
         </emu-clause>
 
