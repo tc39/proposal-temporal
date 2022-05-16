@@ -1353,7 +1353,7 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by the string _calendar_ to the ISO calendar and returns the corresponding day, month and year values as an ISO Date Record.
+              It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by _calendar_ to the ISO calendar and returns the corresponding day, month and year values as an ISO Date Record.
               It may throw a *TypeError* exception if the own data properties present on _fields_ are insufficient to calculate an ISO date in _calendar_.
               It may throw a *RangeError* exception if the values of the own data properties of _fields_ are out of range for _calendar_ and _overflow_ is *"reject"*, or if the date described by _fields_ forms a date outside the range allowed by ISODateTimeWithinLimits.
             </dd>
@@ -1372,7 +1372,7 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by the string _calendar_ and returns the corresponding day, month and year of the result in the ISO calendar values as an ISO Date Record.
+              It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by _calendar_ and returns the corresponding day, month and year of the result in the ISO calendar values as an ISO Date Record.
               It may throw a *RangeError* exception if _overflow_ is *"reject"* and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
             </dd>
           </dl>
@@ -1389,7 +1389,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the difference between the two dates _one_ and _two_ in the context of the calendar represented by the string _calendar_ and returns the corresponding years, months, weeks and days as a Date Duration Record.</dd>
+            <dd>It performs implementation-defined processing to find the difference between the two dates _one_ and _two_ in the context of the calendar represented by _calendar_ and returns the corresponding years, months, weeks and days as a Date Duration Record.</dd>
           </dl>
         </emu-clause>
 
@@ -1402,7 +1402,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a lowercase string identifier for calendars that have eras and *undefined* otherwise.</dd>
+            <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a lowercase string identifier for calendars that have eras and *undefined* otherwise.</dd>
           </dl>
         </emu-clause>
 
@@ -1415,7 +1415,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the year of the current era for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be an integer for calendars that have eras and *undefined* otherwise.</dd>
+            <dd>It performs implementation-defined processing to find the year of the current era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be an integer for calendars that have eras and *undefined* otherwise.</dd>
           </dl>
         </emu-clause>
 
@@ -1428,7 +1428,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the year for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a signed integer relative to the first day of a calendar-specific "epoch year".</dd>
+            <dd>It performs implementation-defined processing to find the year for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a signed integer relative to the first day of a calendar-specific "epoch year".</dd>
           </dl>
 
           <emu-note>The year is relative to the first day of the calendar's epoch year, so if the epoch era starts in the middle of the year, the year will be the same value before and after the start date of the era.</emu-note>
@@ -1443,7 +1443,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a 1-based integer.</dd>
+            <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a 1-based integer.</dd>
           </dl>
           <emu-note>
             The return value represents the ordinal index of the month in the current year. This means that for lunisolar calendars, the same month can return a different index depending on whether it's in a leap year.
@@ -1459,7 +1459,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the monthCode corresponding to the month for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The value should be a string identifier that starts with the literal grapheme *"M"* followed by two graphemes representing the zero-padded month number of the current month in a normal (non-leap) year and suffixed by an optional literal grapheme *"L"* if this is a leap month in a lunisolar calendar.</dd>
+            <dd>It performs implementation-defined processing to find the monthCode corresponding to the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a string identifier that starts with the literal grapheme *"M"* followed by two graphemes representing the zero-padded month number of the current month in a normal (non-leap) year and suffixed by an optional literal grapheme *"L"* if this is a leap month in a lunisolar calendar.</dd>
           </dl>
         </emu-clause>
 
@@ -1472,7 +1472,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _date_ in the context of the calendar represented by the string _calendar_ and returns it. The return value should be 1-based.</dd>
+            <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The return value should be 1-based.</dd>
           </dl>
         </emu-clause>
 
