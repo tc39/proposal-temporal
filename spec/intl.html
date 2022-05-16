@@ -1446,7 +1446,7 @@
             <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the 1-based ordinal position of that month in the corresponding year of the calendar.</dd>
           </dl>
           <emu-note>
-            The return value represents the ordinal index of the month in the current year. This means that for lunisolar calendars, the same month can return a different index depending on whether it's in a leap year.
+            When the number of months in a year of the identified calendar is variable, a different value can be returned for dates that are part of the same month in different years. For example, in the Hebrew calendar, 1 Nisan 5781 is associated with value 7 while 1 Nisan 5782 is associated with value 8 because 5782 is a leap year and Nisan follows the insertion of Adar I.
           </emu-note>
         </emu-clause>
 
@@ -1461,6 +1461,9 @@
             <dt>description</dt>
             <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns its month code. The month code for a month that is not a leap month and whose 1-based ordinal position in a common year of the calendar (i.e., a year that is not a leap year) is _n_ should be the string-concatenation of *"M"* and ToZeroPaddedDecimalString(_n_, 2), and the month code for a month that is a leap month inserted after a month whose 1-based ordinal position in a common year of the calendar is _p_ should be the string-concatenation of *"M"*, ToZeroPaddedDecimalString(_p_, 2), and *"L"*.</dd>
           </dl>
+          <emu-note>
+            For example, in the Hebrew calendar, the month code of Adar (and Adar II, in leap years) is *"M06"* and the month code of Adar I (the leap month inserted before Adar II) is *"M05L"*. In a calendar with a leap month at the start of some years, the month code of that month would be *"M00L"*.
+          </emu-note>
         </emu-clause>
 
         <emu-clause id="sec-temporal-calendardateday" type="abstract operation">
