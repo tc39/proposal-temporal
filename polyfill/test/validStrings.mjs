@@ -270,33 +270,13 @@ const timeZoneUTCOffsetSign = withCode(
   sign,
   (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
 );
-function saveOffsetHour(data, result) {
-  data.offsetHour = +result;
-}
-const timeZoneUTCOffsetHour = withCode(hour, saveOffsetHour);
-const timeZoneUTCOffsetHourNotValidMonth = withCode(zeroPaddedInclusive(13, 23, 2), saveOffsetHour);
-const timeZoneUTCOffsetMinute = withCode(minuteSecond, (data, result) => (data.offsetMinute = +result));
-const timeZoneUTCOffsetSecond = withCode(minuteSecond, (data, result) => (data.offsetSecond = +result));
-const timeZoneUTCOffsetFraction = withCode(fraction, (data, result) => {
-  result = result.slice(1);
-  const fraction = result.padEnd(9, '0');
-  data.offsetFraction = +fraction;
-});
-function saveOffset(data) {
-  if (data.offsetSign !== undefined && data.offsetHour !== undefined) {
-    const h = `${data.offsetHour}`.padStart(2, '0');
-    const m = `${data.offsetMinute || 0}`.padStart(2, '0');
-    const s = `${data.offsetSecond || 0}`.padStart(2, '0');
-    data.offset = `${data.offsetSign}${h}:${m}`;
-    if (data.offsetFraction) {
-      let fraction = `${data.offsetFraction}`.padStart(9, '0');
-      while (fraction.endsWith('0')) fraction = fraction.slice(0, -1);
-      data.offset += `:${s}.${fraction}`;
-    } else if (data.offsetSecond) {
-      data.offset += `:${s}`;
-    }
-    if (data.offset === '-00:00') data.offset = '+00:00';
-  }
+const timeZoneUTCOffsetHour = hour;
+const timeZoneUTCOffsetHourNotValidMonth = zeroPaddedInclusive(13, 23, 2);
+const timeZoneUTCOffsetMinute = minuteSecond;
+const timeZoneUTCOffsetSecond = minuteSecond;
+const timeZoneUTCOffsetFraction = fraction;
+function saveOffset(data, result) {
+  data.offset = ES.GetCanonicalTimeZoneIdentifier(result).toString();
 }
 const timeZoneNumericUTCOffset = withCode(
   seq(
@@ -333,15 +313,12 @@ const timeZoneUTCOffsetName = seq(
   hour,
   choice([minuteSecond, [minuteSecond, [fraction]]], seq(':', minuteSecond, [':', minuteSecond, [fraction]]))
 );
-const timeZoneBracketedName = withCode(
-  choice(timeZoneUTCOffsetName, ...timezoneNames),
+const timeZoneIANAName = choice(...timezoneNames);
+const timeZoneIdentifier = withCode(
+  choice(timeZoneUTCOffsetName, timeZoneIANAName),
   (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
 );
-const timeZoneBracketedAnnotation = seq('[', timeZoneBracketedName, ']');
-const timeZoneIANAName = withCode(
-  choice(...timezoneNames),
-  (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
-);
+const timeZoneBracketedAnnotation = seq('[', timeZoneIdentifier, ']');
 const timeZoneOffsetRequired = withCode(seq(timeZoneUTCOffset, [timeZoneBracketedAnnotation]), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });
@@ -349,9 +326,6 @@ const timeZoneNameRequired = withCode(seq([timeZoneUTCOffset], timeZoneBracketed
   if (!('offset' in data)) data.offset = undefined;
 });
 const timeZone = choice(timeZoneOffsetRequired, timeZoneNameRequired);
-const temporalTimeZoneIdentifier = withCode(choice(timeZoneNumericUTCOffset, timeZoneIANAName), (data) => {
-  if (!('offset' in data)) data.offset = undefined;
-});
 const calendarName = withCode(choice(...calendarNames), (data, result) => (data.calendar = result));
 const calendar = seq('[u-ca=', calendarName, ']');
 const timeSpec = seq(
@@ -464,7 +438,7 @@ const goals = {
   Duration: duration,
   MonthDay: choice(dateSpecMonthDay, calendarDateTime),
   Time: choice(calendarTime, calendarDateTimeTimeRequired),
-  TimeZone: choice(temporalTimeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
+  TimeZone: choice(timeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
   YearMonth: choice(dateSpecYearMonth, calendarDateTime),
   ZonedDateTime: zonedDateTime
 };

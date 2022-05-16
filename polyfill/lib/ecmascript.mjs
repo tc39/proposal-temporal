@@ -402,11 +402,7 @@ export const ES = ObjectAssign({}, ES2020, {
   ParseTemporalTimeZoneString: (stringIdent) => {
     try {
       let canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) {
-        canonicalIdent = canonicalIdent.toString();
-        if (ES.TestTimeZoneOffsetString(canonicalIdent)) return { offset: canonicalIdent };
-        return { ianaName: canonicalIdent };
-      }
+      if (canonicalIdent) return { ianaName: canonicalIdent.toString() };
     } catch {
       // fall through
     }
