@@ -969,12 +969,12 @@
           `Etc/GMT` ASCIISign UnpaddedHour
           TimeZoneIANANameTail but not `Etc/GMT` ASCIISign UnpaddedHour
 
-      TimeZoneBracketedName :
+      TimeZoneIdentifier :
           TimeZoneIANAName
           TimeZoneUTCOffsetName
 
       TimeZoneBracketedAnnotation :
-          `[` TimeZoneBracketedName `]`
+          `[` TimeZoneIdentifier `]`
 
       TimeZoneOffsetRequired :
           TimeZoneUTCOffset TimeZoneBracketedAnnotation?
@@ -1130,12 +1130,8 @@
           CalendarTime
           CalendarDateTimeTimeRequired
 
-      TemporalTimeZoneIdentifier :
-          TimeZoneNumericUTCOffset
-          TimeZoneIANAName
-
       TemporalTimeZoneString :
-          TemporalTimeZoneIdentifier
+          TimeZoneIdentifier
           Date TimeSpecSeparator? TimeZone Calendar?
 
       TemporalYearMonthString :
