@@ -666,7 +666,7 @@
     <emu-clause id="sec-temporal.calendar">
       <h1>Temporal.Calendar ( _id_ )</h1>
       <p>
-        When the `Temporal.Calendar` function is called, the following steps are taken:
+        The `Temporal.Calendar` function performs the following steps when called:
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
@@ -696,8 +696,7 @@
     <emu-clause id="sec-temporal.calendar.from">
       <h1>Temporal.Calendar.from ( _calendarLike_ )</h1>
       <p>
-        The `from` method takes one argument _calendarLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.from` function performs the following steps when called:
       </p>
       <emu-alg>
         1. Return ? ToTemporalCalendar(_calendarLike_).
@@ -746,11 +745,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.datefromfields">
       <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dateFromFields` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dateFromFields` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateFromFields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.dateFromFields` method is used.
       </p>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.dateFromFields` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -766,11 +765,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.yearmonthfromfields">
       <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `yearMonthFromFields` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `yearMonthFromFields` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.yearMonthFromFields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.yearMonthFromFields` method is used.
       </p>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.yearMonthFromFields` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -786,11 +785,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.monthdayfromfields">
       <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `monthDayFromFields` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `monthDayFromFields` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthDayFromFields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.monthDayFromFields` method is used.
       </p>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.monthDayFromFields` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -806,11 +805,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.dateadd">
       <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dateAdd` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dateAdd` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateAdd` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.dateAdd` method is used.
       </p>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.dateAdd` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -829,12 +828,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.dateuntil">
       <h1>Temporal.Calendar.prototype.dateUntil ( _one_, _two_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dateUntil` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dateUntil` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateUntil` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.dateUntil` method is used.
       </p>
       <p>
-        The `dateUntil` method takes three arguments, _one_, _two_, and _options_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.dateUntil` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -852,12 +850,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.year">
       <h1>Temporal.Calendar.prototype.year ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `year` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `year` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.year` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.year` method is used.
       </p>
       <p>
-        The `year` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.year` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -872,12 +869,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.month">
       <h1>Temporal.Calendar.prototype.month ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `month` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `month` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.month` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.month` method is used.
       </p>
       <p>
-        The `month` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.month` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -894,12 +890,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.monthcode">
       <h1>Temporal.Calendar.prototype.monthCode ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `monthCode` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `monthCode` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthCode` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.monthCode` method is used.
       </p>
       <p>
-        The `monthCode` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.monthCode` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -914,12 +909,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.day">
       <h1>Temporal.Calendar.prototype.day ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `day` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `day` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.day` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.day` method is used.
       </p>
       <p>
-        The `day` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.day` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -934,12 +928,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.dayofweek">
       <h1>Temporal.Calendar.prototype.dayOfWeek ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dayOfWeek` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dayOfWeek` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dayOfWeek` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.dayOfWeek` method is used.
       </p>
       <p>
-        The `dayOfWeek` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.dayOfWeek` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -957,12 +950,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.dayofyear">
       <h1>Temporal.Calendar.prototype.dayOfYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `dayOfYear` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `dayOfYear` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dayOfYear` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.dayOfYear` method is used.
       </p>
       <p>
-        The `dayOfYear` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.dayOfYear` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -978,12 +970,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.weekofyear">
       <h1>Temporal.Calendar.prototype.weekOfYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `weekOfYear` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `weekOfYear` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.weekOfYear` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.weekOfYear` method is used.
       </p>
       <p>
-        The `weekOfYear` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.weekOfYear` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -997,12 +988,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.daysinweek">
       <h1>Temporal.Calendar.prototype.daysInWeek ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInWeek` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInWeek` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInWeek` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.daysInWeek` method is used.
       </p>
       <p>
-        The `daysInWeek` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.daysInWeek` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1016,12 +1006,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.daysinmonth">
       <h1>Temporal.Calendar.prototype.daysInMonth ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInMonth` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInMonth` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInMonth` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.daysInMonth` method is used.
       </p>
       <p>
-        The `daysInMonth` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.daysInMonth` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1036,12 +1025,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.daysinyear">
       <h1>Temporal.Calendar.prototype.daysInYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `daysInYear` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `daysInYear` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInYear` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.daysInYear` method is used.
       </p>
       <p>
-        The `daysInYear` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.daysInYear` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1056,12 +1044,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.monthsinyear">
       <h1>Temporal.Calendar.prototype.monthsInYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `monthsInYear` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `monthsInYear` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthsInYear` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.monthsInYear` method is used.
       </p>
       <p>
-        The `monthsInYear` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.monthsInYear` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1076,12 +1063,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.inleapyear">
       <h1>Temporal.Calendar.prototype.inLeapYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `inLeapYear` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `inLeapYear` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.inLeapYear` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.inLeapYear` method is used.
       </p>
       <p>
-        The `inLeapYear` method takes one argument _temporalDateLike_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.inLeapYear` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1097,12 +1083,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.fields">
       <h1>Temporal.Calendar.prototype.fields ( _fields_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `fields` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `fields` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.fields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.fields` method is used.
       </p>
       <p>
-        The `fields` method takes one argument _fields_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.fields` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1132,12 +1117,11 @@
     <emu-clause id="sec-temporal.calendar.prototype.mergefields">
       <h1>Temporal.Calendar.prototype.mergeFields ( _fields_, _additionalFields_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `mergeFields` method as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `mergeFields` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.mergeFields` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Calendar.prototype.mergeFields` method is used.
       </p>
       <p>
-        The `mergeFields` method takes two arguments, _fields_ and _additionalFields_.
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.mergeFields` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1152,7 +1136,7 @@
     <emu-clause id="sec-temporal.calendar.prototype.tostring">
       <h1>Temporal.Calendar.prototype.toString ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.toString` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1164,7 +1148,7 @@
     <emu-clause id="sec-temporal.calendar.prototype.tojson">
       <h1>Temporal.Calendar.prototype.toJSON ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Calendar.prototype.toJSON` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
