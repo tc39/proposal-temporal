@@ -909,7 +909,7 @@
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _quantity_ be _nanosecond_.
-        1. Let _result_ be ! RoundNumberToIncrement(_quantity_, _increment_, _roundingMode_).
+        1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_, _roundingMode_).
         1. If _unit_ is *"day"*, then
           1. Return the Record {
             [[Days]]: _result_,

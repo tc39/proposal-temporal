@@ -1621,7 +1621,7 @@
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
           1. Let _fractionalYears_ be _years_ + _days_ / abs(_oneYearDays_).
-          1. Set _years_ to ! RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
+          1. Set _years_ to RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalYears_ - _years_.
           1. Set _months_, _weeks_, and _days_ to 0.
         1. Else if _unit_ is *"month"*, then
@@ -1645,7 +1645,7 @@
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _fractionalMonths_ be _months_ + _days_ / abs(_oneMonthDays_).
-          1. Set _months_ to ! RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
+          1. Set _months_ to RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMonths_ - _months_.
           1. Set _weeks_ and _days_ to 0.
         1. Else if _unit_ is *"week"*, then
@@ -1661,41 +1661,41 @@
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneWeekDays_ to _moveResult_.[[Days]].
           1. Let _fractionalWeeks_ be _weeks_ + _days_ / abs(_oneWeekDays_).
-          1. Set _weeks_ to ! RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
+          1. Set _weeks_ to RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalWeeks_ - _weeks_.
           1. Set _days_ to 0.
         1. Else if _unit_ is *"day"*, then
           1. Let _fractionalDays_ be _days_.
-          1. Set _days_ to ! RoundNumberToIncrement(_days_, _increment_, _roundingMode_).
+          1. Set _days_ to RoundNumberToIncrement(_days_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalDays_ - _days_.
         1. Else if _unit_ is *"hour"*, then
           1. Let _fractionalHours_ be (_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_.
-          1. Set _hours_ to ! RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
+          1. Set _hours_ to RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalHours_ - _hours_.
           1. Set _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"minute"*, then
           1. Let _fractionalMinutes_ be _fractionalSeconds_ / 60 + _minutes_.
-          1. Set _minutes_ to ! RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
+          1. Set _minutes_ to RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMinutes_ - _minutes_.
           1. Set _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"second"*, then
-          1. Set _seconds_ to ! RoundNumberToIncrement(_fractionalSeconds_, _increment_, _roundingMode_).
+          1. Set _seconds_ to RoundNumberToIncrement(_fractionalSeconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalSeconds_ - _seconds_.
           1. Set _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"millisecond"*, then
           1. Let _fractionalMilliseconds_ be _nanoseconds_ &times; 10<sup>-6</sup> + _microseconds_ &times; 10<sup>-3</sup> + _milliseconds_.
-          1. Set _milliseconds_ to ! RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
+          1. Set _milliseconds_ to RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMilliseconds_ - _milliseconds_.
           1. Set _microseconds_ and _nanoseconds_ to 0.
         1. Else if _unit_ is *"microsecond"*, then
           1. Let _fractionalMicroseconds_ be _nanoseconds_ &times; 10<sup>-3</sup> + _microseconds_.
-          1. Set _microseconds_ to ! RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
+          1. Set _microseconds_ to RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _fractionalMicroseconds_ - _microseconds_.
           1. Set _nanoseconds_ to 0.
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Set _remainder_ to _nanoseconds_.
-          1. Set _nanoseconds_ to ! RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
+          1. Set _nanoseconds_ to RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ - _nanoseconds_.
         1. Let _duration_ be ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Return the Record {
