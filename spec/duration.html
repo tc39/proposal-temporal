@@ -33,7 +33,7 @@
     <emu-clause id="sec-temporal.duration">
       <h1>Temporal.Duration ( [ _years_ [ , _months_ [ , _weeks_ [ , _days_ [ , _hours_ [ , _minutes_ [ , _seconds_ [ , _milliseconds_ [ , _microseconds_ [ , _nanoseconds_ ] ] ] ] ] ] ] ] ] ] )</h1>
       <p>
-        When the `Temporal.Duration` function is called, the following steps are taken:
+        The `Temporal.Duration` function performs the following steps when called:
       </p>
       <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
@@ -77,8 +77,7 @@
     <emu-clause id="sec-temporal.duration.from">
       <h1>Temporal.Duration.from ( _item_ )</h1>
       <p>
-        The `from` method takes one argument _item_.
-        The following steps are taken:
+        The `Temporal.Duration.from` function performs the following steps when called:
       </p>
       <emu-alg>
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
@@ -90,8 +89,7 @@
     <emu-clause id="sec-temporal.duration.compare">
       <h1>Temporal.Duration.compare ( _one_, _two_ [ , _options_ ] )</h1>
       <p>
-        The `compare` method takes three arguments, _one_, _two_, and _options_.
-        The following steps are taken:
+        The `Temporal.Duration.compare` function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalDuration(_one_).
@@ -299,8 +297,7 @@
     <emu-clause id="sec-temporal.duration.prototype.with">
       <h1>Temporal.Duration.prototype.with ( _temporalDurationLike_ )</h1>
       <p>
-        The `with` method takes one argument _temporalDurationLike_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.with` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -353,7 +350,7 @@
     <emu-clause id="sec-temporal.duration.prototype.negated">
       <h1>Temporal.Duration.prototype.negated ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Duration.prototype.negated` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -365,7 +362,7 @@
     <emu-clause id="sec-temporal.duration.prototype.abs">
       <h1>Temporal.Duration.prototype.abs ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Duration.prototype.abs` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -377,8 +374,7 @@
     <emu-clause id="sec-temporal.duration.prototype.add">
       <h1>Temporal.Duration.prototype.add ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `add` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.add` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -390,8 +386,7 @@
     <emu-clause id="sec-temporal.duration.prototype.subtract">
       <h1>Temporal.Duration.prototype.subtract ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `subtract` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.subtract` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -403,8 +398,7 @@
     <emu-clause id="sec-temporal.duration.prototype.round">
       <h1>Temporal.Duration.prototype.round ( _roundTo_ )</h1>
       <p>
-        The `round` method takes one argument _roundTo_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.round` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -452,8 +446,7 @@
     <emu-clause id="sec-temporal.duration.prototype.total">
       <h1>Temporal.Duration.prototype.total ( _totalOf_ )</h1>
       <p>
-        The `total` method takes one argument _totalOf_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.total` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -502,8 +495,7 @@
     <emu-clause id="sec-temporal.duration.prototype.tostring">
       <h1>Temporal.Duration.prototype.toString ( [ _options_ ] )</h1>
       <p>
-        The `toString` method takes one argument _options_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.toString` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -520,7 +512,7 @@
     <emu-clause id="sec-temporal.duration.prototype.tojson">
       <h1>Temporal.Duration.prototype.toJSON ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Duration.prototype.toJSON` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -532,11 +524,11 @@
     <emu-clause id="sec-temporal.duration.prototype.tolocalestring">
       <h1>Temporal.Duration.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Duration.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Duration.prototype.toLocaleString` method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Duration.prototype.toLocaleString` method is used.
       </p>
       <p>
-        The `toLocaleString` method takes two arguments, _locales_ and _options_.
-        The following steps are taken:
+        The `Temporal.Duration.prototype.toLocaleString` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
@@ -548,7 +540,7 @@
     <emu-clause id="sec-temporal.duration.prototype.valueof">
       <h1>Temporal.Duration.prototype.valueOf ( )</h1>
       <p>
-        The following steps are taken:
+        The `Temporal.Duration.prototype.valueOf` method performs the following steps when called:
       </p>
       <emu-alg>
         1. Throw a *TypeError* exception.
