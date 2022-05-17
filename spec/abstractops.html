@@ -776,6 +776,37 @@
     </emu-note>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-roundnumbertoincrementasifpositive" type="abstract operation">
+    <h1>
+      RoundNumberToIncrementAsIfPositive (
+        _x_: a mathematical value,
+        _increment_: an integer,
+        _roundingMode_: *"ceil"*, *"floor"*, *"trunc"*, or *"halfExpand"*,
+      ): an integer
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It rounds _x_ to the nearest multiple of _increment_, up or down according to _roundingMode_, but always as if _x_ were positive.
+        For example, *"floor"* and *"trunc"* behave identically.
+        This is used when rounding exact times, where "rounding down" conceptually always means towards the beginning of time, even if the time is expressed as a negative amount of time relative to an epoch.
+      </dd>
+    </dl>
+    <emu-alg>
+      1. Let _quotient_ be _x_ / _increment_.
+      1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, *false*).
+      1. Let _r1_ be the largest integer such that _r1_ &leq; _quotient_.
+      1. Let _r2_ be the smallest integer such that _r2_ &gt; _quotient_.
+      1. Let _rounded_ be ApplyUnsignedRoundingMode(_quotient_, _r1_, _r2_, _unsignedRoundingMode_).
+      1. Return _rounded_ &times; _increment_.
+    </emu-alg>
+    <emu-note type="editor">
+      <p>
+        The rounding modes accepted by this abstract operation are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
+      </p>
+    </emu-note>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-iso8601grammar">
     <h1>ISO 8601 grammar</h1>
     <p>
