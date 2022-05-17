@@ -2213,11 +2213,12 @@
   // eslint-disable-next-line global-require
   var toStr$4 = !$Array.isArray && callBound$3('Object.prototype.toString');
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-isarray
-
-  var IsArray$1 = $Array.isArray || function IsArray(argument) {
+  var IsArray$2 = $Array.isArray || function IsArray(argument) {
   	return toStr$4(argument) === '[object Array]';
   };
+
+  // https://ecma-international.org/ecma-262/6.0/#sec-isarray
+  var IsArray$1 = IsArray$2;
 
   var GetIntrinsic$c = getIntrinsic;
   var callBound$2 = callBound$3;
@@ -6380,16 +6381,9 @@
     ParseTemporalTimeZoneString: function ParseTemporalTimeZoneString(stringIdent) {
       try {
         var canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-
-        if (canonicalIdent) {
-          canonicalIdent = canonicalIdent.toString();
-          if (ES.TestTimeZoneOffsetString(canonicalIdent)) return {
-            offset: canonicalIdent
-          };
-          return {
-            ianaName: canonicalIdent
-          };
-        }
+        if (canonicalIdent) return {
+          ianaName: canonicalIdent.toString()
+        };
       } catch (_unused4) {// fall through
       }
 
