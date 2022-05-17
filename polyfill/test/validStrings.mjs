@@ -359,7 +359,7 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired);
+const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired, [calendar]);
 const zonedDateTime = seq(date, [timeSpecSeparator], timeZoneNameRequired, [calendar]);
 
 // goal elements
