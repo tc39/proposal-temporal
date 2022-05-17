@@ -1108,9 +1108,9 @@
           1. Append *"timeZone"* to _fieldNames_.
           1. Append *"offset"* to _fieldNames_.
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
-          1. Let _timeZone_ be ? Get(_fields_, *"timeZone"*).
+          1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
-          1. Let _offsetString_ be ? Get(_fields_, *"offset"*).
+          1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
           1. If _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
           1. Else,
