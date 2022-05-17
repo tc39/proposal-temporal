@@ -1073,7 +1073,7 @@
           1. If _candidateNanoseconds_ = _offsetNanoseconds_, then
             1. Return _candidate_.[[Nanoseconds]].
           1. If _matchBehaviour_ is ~match minutes~, then
-            1. Let _roundedCandidateNanoseconds_ be ! RoundNumberToIncrement(_candidateNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
+            1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
             1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
               1. Return _candidate_.[[Nanoseconds]].
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.

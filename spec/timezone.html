@@ -597,7 +597,7 @@
       </p>
       <emu-alg>
         1. Assert: _offsetNanoseconds_ is an integer.
-        1. Set _offsetNanoseconds_ to ! RoundNumberToIncrement(_offsetNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
+        1. Set _offsetNanoseconds_ to RoundNumberToIncrement(_offsetNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
         1. If _offsetNanoseconds_ &ge; 0, let _sign_ be *"+"*; otherwise, let _sign_ be *"-"*.
         1. Set _offsetNanoseconds_ to abs(_offsetNanoseconds_).
         1. Let _minutes_ be _offsetNanoseconds_ / (60 &times; 10<sup>9</sup>) modulo 60.
