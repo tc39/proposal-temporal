@@ -513,7 +513,7 @@ All three date units (`year`, `month`, and `day`) are required.
 Both of those types have a `toPlainDate` method that can be used to obtain a `Temporal.PlainDate` which can in turn be used as input to `withPlainDate`.
 
 If `plainDate` contains a non-ISO 8601 calendar, then the result of `withPlainDate` will be the calendar of `plainDate`.
-However, if `datetime.calendar` is already a non-ISO 8601 calendar, then this method wil throw a `RangeError`.
+However, if `datetime.calendar` is already a non-ISO 8601 calendar, then this method will throw a `RangeError`.
 To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using `.withCalendar('iso8601')`.
 
 This method is similar to `with`, but with a few important differences:
