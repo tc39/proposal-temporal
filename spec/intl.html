@@ -1417,6 +1417,9 @@
             <dt>description</dt>
             <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the ordinal position of the year of _date_ in that era, or *undefined* for calendars that do not have eras.</dd>
           </dl>
+          <emu-note>
+            Era years are 1-indexed for many calendars, but not all (e.g., the eras of the Burmese calendar each start with a year 0). Years can also advance opposite the flow of time (as for BCE years in the Gregorian calendar).
+          </emu-note>
         </emu-clause>
 
         <emu-clause id="sec-temporal-calendardateyear" type="abstract operation">
