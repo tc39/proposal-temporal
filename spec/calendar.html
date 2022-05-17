@@ -529,9 +529,8 @@
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », «»).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
         1. Let _year_ be ! Get(_fields_, *"year"*).
-        1. If _year_ is *undefined*, throw a *TypeError* exception.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
         1. Let _result_ be ? RegulateISOYearMonth(_year_, _month_, _overflow_).
         1. Return the Record {
