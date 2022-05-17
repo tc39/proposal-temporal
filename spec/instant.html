@@ -26,7 +26,7 @@
     <emu-clause id="sec-temporal.instant">
       <h1>Temporal.Instant ( _epochNanoseconds_ )</h1>
       <p>
-        When the `Temporal.Instant` function is called, the following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
@@ -52,8 +52,7 @@
     <emu-clause id="sec-temporal.instant.from">
       <h1>Temporal.Instant.from ( _item_ )</h1>
       <p>
-        The `from` method takes one argument _item_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
@@ -65,8 +64,7 @@
     <emu-clause id="sec-temporal.instant.fromepochseconds">
       <h1>Temporal.Instant.fromEpochSeconds ( _epochSeconds_ )</h1>
       <p>
-        The `fromEpochSeconds` method takes one argument _epochSeconds_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _epochSeconds_ to ? ToNumber(_epochSeconds_).
@@ -80,8 +78,7 @@
     <emu-clause id="sec-temporal.instant.fromepochmilliseconds">
       <h1>Temporal.Instant.fromEpochMilliseconds ( _epochMilliseconds_ )</h1>
       <p>
-        The `fromEpochMilliseconds` method takes one argument _epochMilliseconds_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _epochMilliseconds_ to ? ToNumber(_epochMilliseconds_).
@@ -95,8 +92,7 @@
     <emu-clause id="sec-temporal.instant.fromepochmicroseconds">
       <h1>Temporal.Instant.fromEpochMicroseconds ( _epochMicroseconds_ )</h1>
       <p>
-        The `fromEpochMicroseconds` method takes one argument _epochMicroseconds_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _epochMicroseconds_ to ? ToBigInt(_epochMicroseconds_).
@@ -109,8 +105,7 @@
     <emu-clause id="sec-temporal.instant.fromepochnanoseconds">
       <h1>Temporal.Instant.fromEpochNanoseconds ( _epochNanoseconds_ )</h1>
       <p>
-        The `fromEpochNanoseconds` method takes one argument _epochNanoseconds_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
@@ -122,8 +117,7 @@
     <emu-clause id="sec-temporal.instant.compare">
       <h1>Temporal.Instant.compare ( _one_, _two_ )</h1>
       <p>
-        The `compare` method takes two arguments, _one_ and _two_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalInstant(_one_).
@@ -220,8 +214,7 @@
     <emu-clause id="sec-temporal.instant.prototype.add">
       <h1>Temporal.Instant.prototype.add ( _temporalDurationLike_ )</h1>
       <p>
-        The `add` method takes one argument _temporalDurationLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -233,8 +226,7 @@
     <emu-clause id="sec-temporal.instant.prototype.subtract">
       <h1>Temporal.Instant.prototype.subtract ( _temporalDurationLike_ )</h1>
       <p>
-        The `subtract` method takes one argument _temporalDurationLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -246,8 +238,7 @@
     <emu-clause id="sec-temporal.instant.prototype.until">
       <h1>Temporal.Instant.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `until` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -259,8 +250,7 @@
     <emu-clause id="sec-temporal.instant.prototype.since">
       <h1>Temporal.Instant.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `since` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -272,8 +262,7 @@
     <emu-clause id="sec-temporal.instant.prototype.round">
       <h1>Temporal.Instant.prototype.round ( _roundTo_ )</h1>
       <p>
-        The `round` method takes one argument _roundTo_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -310,8 +299,7 @@
     <emu-clause id="sec-temporal.instant.prototype.equals">
       <h1>Temporal.Instant.prototype.equals ( _other_ )</h1>
       <p>
-        The `equals` method takes one argument _other_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -325,8 +313,7 @@
     <emu-clause id="sec-temporal.instant.prototype.tostring">
       <h1>Temporal.Instant.prototype.toString ( [ _options_ ] )</h1>
       <p>
-        The `toString` method takes one argument _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -346,11 +333,14 @@
     <emu-clause id="sec-temporal.instant.prototype.tolocalestring">
       <h1>Temporal.Instant.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Instant.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
       <p>
-        The `toLocaleString` method takes two arguments, _locales_ and _options_.
-        The following steps are taken:
+        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
+      </p>
+      <p>
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -362,7 +352,7 @@
     <emu-clause id="sec-temporal.instant.prototype.tojson">
       <h1>Temporal.Instant.prototype.toJSON ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -374,7 +364,7 @@
     <emu-clause id="sec-temporal.instant.prototype.valueof">
       <h1>Temporal.Instant.prototype.valueOf ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Throw a *TypeError* exception.
@@ -384,8 +374,7 @@
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetime">
       <h1>Temporal.Instant.prototype.toZonedDateTime ( _item_ )</h1>
       <p>
-        The `toZonedDateTime` method takes one argument _item_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
@@ -407,8 +396,7 @@
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetimeiso">
       <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _item_ )</h1>
       <p>
-        The `toZonedDateTimeISO` method takes one argument _item_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
