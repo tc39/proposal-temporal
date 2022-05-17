@@ -147,7 +147,7 @@
 <p><code>Temporal.PlainDate</code> would become a base class. For example, a class like <code>HebrewDate</code> would extend <code>Temporal.PlainDate</code>.</p>
 <h2 id="comparison">Comparison</h2>
 <h3 id="built-in-calendars"><a class="heading-link" href="#built-in-calendars"></a>Built-In Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> All built-in calendars, including 402 calendars, are all instances of Temporal.Calendar</p>
-<p><strong>Temporal.PlainDate Subclassing Approach:</strong> Every built-in 402 calendar has a corresponding type heirarchy in the Intl namespace</p>
+<p><strong>Temporal.PlainDate Subclassing Approach:</strong> Every built-in 402 calendar has a corresponding type hierarchy in the Intl namespace</p>
 <h3 id="custom-calendars"><a class="heading-link" href="#custom-calendars"></a>Custom Calendars</h3><p><strong>Temporal.Calendar Approach:</strong> Write an implementation of Temporal.Calendar.</p>
 <p><strong>Temporal.PlainDate Subclassing Approach:</strong> Subclass Temporal.PlainDate or one of its subclasses.</p>
 <h3 id="enumerable-properties"><a class="heading-link" href="#enumerable-properties"></a>Enumerable Properties</h3><p>We tentatively decided in <a href="https://github.com/tc39/proposal-temporal/issues/403">#403</a> that data properties (like year, month, and day) should be enumerable.</p>
@@ -187,7 +187,7 @@
 <h3 id="julian-change-dates"><a class="heading-link" href="#julian-change-dates"></a>Julian Change Dates</h3><p>The Temporal.Calendar Approach has a more natural way to implement calendars that themselves have properties.</p>
 <p><strong>Temporal.Calendar Approach:</strong> An instance of Temporal.Calendar can be created to represent a particular change date, and that calendar can be passed around to all Temporal operations.</p>
 <p><strong>Temporal.PlainDate Subclassing Approach:</strong> Each change date would either need its own subclass (impractical, since there are many possible change dates), or a Gregorian Temporal.PlainDate subclass would need to add a stateful field representing the change date.</p>
-<h3 id="monthday"><a class="heading-link" href="#monthday"></a>MonthDay</h3><p>MonthDay is a type more naturaly represented by the subclassing approach.</p>
+<h3 id="monthday"><a class="heading-link" href="#monthday"></a>MonthDay</h3><p>MonthDay is a type more naturally represented by the subclassing approach.</p>
 <p><strong>Temporal.Calendar Approach:</strong> There are several imperfect solutions for the Temporal.PlainMonthDay data model, discussed in <a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>. The current workable proposed solution is to make the MonthDay data model the same as the Date data model.</p>
 <p><strong>Temporal.PlainDate Subclassing Approach:</strong> The calendar-specific type, like HebrewMonthDay, can represent data in its on form without risk of ambiguity.</p>
     <footer>

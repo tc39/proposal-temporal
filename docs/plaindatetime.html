@@ -597,7 +597,7 @@ dt<span class="token punctuation">.</span><span class="token function">add</span
 <code>Temporal.YearMonth</code> and <code>Temporal.MonthDay</code> are not valid input because they lack all date units.
 Both of those types have a <code>toPlainDate</code> method that can be used to obtain a <code>Temporal.PlainDate</code> which can in turn be used as input to <code>withPlainDate</code>.</p>
 <p>If <code>plainDate</code> contains a non-ISO 8601 calendar, then the result of <code>withPlainDate</code> will be the calendar of <code>plainDate</code>.
-However, if <code>datetime.calendar</code> is already a non-ISO 8601 calendar, then this method wil throw a <code>RangeError</code>.
+However, if <code>datetime.calendar</code> is already a non-ISO 8601 calendar, then this method will throw a <code>RangeError</code>.
 To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using <code>.withCalendar(&#39;iso8601&#39;)</code>.</p>
 <p>This method is similar to <code>with</code>, but with a few important differences:</p>
 <ul>
