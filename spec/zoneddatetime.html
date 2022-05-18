@@ -28,7 +28,7 @@
     <emu-clause id="sec-temporal.zoneddatetime">
       <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZoneLike_ [ , _calendarLike_ ] )</h1>
       <p>
-        When the `Temporal.ZonedDateTime` function is called, the following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
@@ -56,8 +56,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.from">
       <h1>Temporal.ZonedDateTime.from ( _item_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes two arguments, _item_ and _options_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
@@ -73,8 +72,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.compare">
       <h1>Temporal.ZonedDateTime.compare ( _one_, _two_ )</h1>
       <p>
-        The `compare` method takes two arguments, _one_ and _two_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalZonedDateTime(_one_).
@@ -557,8 +555,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.with">
       <h1>Temporal.ZonedDateTime.prototype.with ( _temporalZonedDateTimeLike_ [ , _options_ ] )</h1>
       <p>
-        The `with` method takes two arguments, _temporalZonedDateTimeLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -590,8 +587,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withplaintime">
       <h1>Temporal.ZonedDateTime.prototype.withPlainTime ( [ _plainTimeLike_ ] )</h1>
       <p>
-        The `withPlainTime` method takes one argument _plainTimeLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -613,8 +609,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withplaindate">
       <h1>Temporal.ZonedDateTime.prototype.withPlainDate ( _plainDateLike_ )</h1>
       <p>
-        The `withPlainDate` method takes one argument _plainDateLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -633,8 +628,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withtimezone">
       <h1>Temporal.ZonedDateTime.prototype.withTimeZone ( _timeZoneLike_ )</h1>
       <p>
-        The `withTimeZone` method takes one argument _timeZoneLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -647,8 +641,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withcalendar">
       <h1>Temporal.ZonedDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
       <p>
-        The `withCalendar` method takes one argument _calendarLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -661,8 +654,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.add">
       <h1>Temporal.ZonedDateTime.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
-        The `add` method takes two arguments, _temporalDurationLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -674,8 +666,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.subtract">
       <h1>Temporal.ZonedDateTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
-        The `subtract` method takes two arguments, _temporalDurationLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -687,8 +678,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.until">
       <h1>Temporal.ZonedDateTime.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `until` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -700,8 +690,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.since">
       <h1>Temporal.ZonedDateTime.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `since` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -713,8 +702,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.round">
       <h1>Temporal.ZonedDateTime.prototype.round ( _roundTo_ )</h1>
       <p>
-        The `round` method takes one argument _roundTo_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -752,8 +740,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.equals">
       <h1>Temporal.ZonedDateTime.prototype.equals ( _other_ )</h1>
       <p>
-        The `equals` method takes one argument _other_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -768,8 +755,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tostring">
       <h1>Temporal.ZonedDateTime.prototype.toString ( [ _options_ ] )</h1>
       <p>
-        The `toString` method takes one argument _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -787,11 +773,14 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tolocalestring">
       <h1>Temporal.ZonedDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.ZonedDateTime.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
       <p>
-        The `toLocaleString` method takes two arguments, _locales_ and _options_.
-        The following steps are taken:
+        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
+      </p>
+      <p>
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -803,7 +792,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tojson">
       <h1>Temporal.ZonedDateTime.prototype.toJSON ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -815,7 +804,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.valueof">
       <h1>Temporal.ZonedDateTime.prototype.valueOf ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Throw a *TypeError* exception.
@@ -825,7 +814,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.startofday">
       <h1>Temporal.ZonedDateTime.prototype.startOfDay ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -843,7 +832,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toinstant">
       <h1>Temporal.ZonedDateTime.prototype.toInstant ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -855,7 +844,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaindate">
       <h1>Temporal.ZonedDateTime.prototype.toPlainDate ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -871,7 +860,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaintime">
       <h1>Temporal.ZonedDateTime.prototype.toPlainTime ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -887,7 +876,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaindatetime">
       <h1>Temporal.ZonedDateTime.prototype.toPlainDateTime ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -901,7 +890,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplainyearmonth">
       <h1>Temporal.ZonedDateTime.prototype.toPlainYearMonth ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -919,7 +908,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplainmonthday">
       <h1>Temporal.ZonedDateTime.prototype.toPlainMonthDay ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
@@ -937,7 +926,7 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.getisofields">
       <h1>Temporal.ZonedDateTime.prototype.getISOFields ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
