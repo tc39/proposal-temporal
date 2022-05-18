@@ -28,7 +28,7 @@
     <emu-clause id="sec-temporal.plaindate">
       <h1>Temporal.PlainDate ( _isoYear_, _isoMonth_, _isoDay_ [ , _calendarLike_ ] )</h1>
       <p>
-        When the `Temporal.PlainDate` function is called, the following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
@@ -59,8 +59,7 @@
     <emu-clause id="sec-temporal.plaindate.from">
       <h1>Temporal.PlainDate.from ( _item_ [ , _options_ ] )</h1>
       <p>
-        The `from` method takes two arguments, _item_ and _options_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
@@ -74,8 +73,7 @@
     <emu-clause id="sec-temporal.plaindate.compare">
       <h1>Temporal.PlainDate.compare ( _one_, _two_ )</h1>
       <p>
-        The `compare` method takes two arguments, _one_ and _two_.
-        The following steps are taken:
+        This function performs the following steps when called:
       </p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalDate(_one_).
@@ -294,7 +292,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.toplainyearmonth">
       <h1>Temporal.PlainDate.prototype.toPlainYearMonth ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -309,7 +307,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.toplainmonthday">
       <h1>Temporal.PlainDate.prototype.toPlainMonthDay ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -324,7 +322,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.getisofields">
       <h1>Temporal.PlainDate.prototype.getISOFields ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -341,8 +339,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.add">
       <h1>Temporal.PlainDate.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
-        The `add` method takes two arguments, _temporalDurationLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -356,8 +353,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.subtract">
       <h1>Temporal.PlainDate.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
-        The `subtract` method takes two arguments, _temporalDurationLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -372,8 +368,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.with">
       <h1>Temporal.PlainDate.prototype.with ( _temporalDateLike_ [ , _options_ ] )</h1>
       <p>
-        The `with` method takes two arguments, _temporalDateLike_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -395,8 +390,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.withcalendar">
       <h1>Temporal.PlainDate.prototype.withCalendar ( _calendarLike_ )</h1>
       <p>
-        The `withCalendar` method takes one argument _calendarLike_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -409,8 +403,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.until">
       <h1>Temporal.PlainDate.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `until` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -422,8 +415,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.since">
       <h1>Temporal.PlainDate.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>
-        The `since` method takes two arguments, _other_ and _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -435,8 +427,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.equals">
       <h1>Temporal.PlainDate.prototype.equals ( _other_ )</h1>
       <p>
-        The `equals` method takes one argument _other_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -452,8 +443,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.toplaindatetime">
       <h1>Temporal.PlainDate.prototype.toPlainDateTime ( [ _temporalTime_ ] )</h1>
       <p>
-        The `toPlainDateTime` method takes one argument _temporalTime_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -471,8 +461,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.tozoneddatetime">
       <h1>Temporal.PlainDate.prototype.toZonedDateTime ( _item_ )</h1>
       <p>
-        The `toZonedDateTime` method takes one argument _item_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -501,8 +490,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.tostring">
       <h1>Temporal.PlainDate.prototype.toString ( [ _options_ ] )</h1>
       <p>
-        The `toString` method takes one argument _options_.
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -516,11 +504,14 @@
     <emu-clause id="sec-temporal.plaindate.prototype.tolocalestring">
       <h1>Temporal.PlainDate.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.PlainDate.prototype.toLocaleString` method as specified in the ECMA-402 specification. If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `toLocaleString` method is used.
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
       <p>
-        The `toLocaleString` method takes two arguments, _locales_ and _options_.
-        The following steps are taken:
+        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
+      </p>
+      <p>
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -532,7 +523,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.tojson">
       <h1>Temporal.PlainDate.prototype.toJSON ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
@@ -544,7 +535,7 @@
     <emu-clause id="sec-temporal.plaindate.prototype.valueof">
       <h1>Temporal.PlainDate.prototype.valueOf ( )</h1>
       <p>
-        The following steps are taken:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Throw a *TypeError* exception.
