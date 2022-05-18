@@ -567,7 +567,7 @@
       MergeLargestUnitOption (
         _options_: an Object or *undefined*,
         _largestUnit_: a String,
-      )
+      ): either a normal completion containing an Object, or an abrupt completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1709,16 +1709,22 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-preparetemporalfields" aoid="PrepareTemporalFields">
-    <h1>PrepareTemporalFields ( _fields_, _fieldNames_, _requiredFields_ )</h1>
-    <p>
-      The abstract operation PrepareTemporalFields reads the relevant properties of an Object _fields_; ensures all the required properties are present; and creates a new Object with all the properties converted to the correct type.
-      The relevant property names are given by the List of Strings _fieldNames_, and the required property names are given by the List of Strings _requiredFields_.
-      It performs the following steps:
-    </p>
-    <emu-note>The values of ? ToIntegerThrowOnInfinity(*undefined*) and ? ToPositiveInteger(*undefined*) are 0.</emu-note>
+  <emu-clause id="sec-temporal-preparetemporalfields" type="abstract operation">
+    <h1>
+      PrepareTemporalFields (
+        _fields_: an Object,
+        _fieldNames_: a List of property names,
+        _requiredFields_: a List of property names,
+      ): either a normal completion containing an Object, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It reads the relevant properties of _fields_ given by _fieldNames_, and throws if any of the required properties given by _requiredFields_ are absent or undefined.
+        The returned Object has an own data property named by each element of _fieldNames_, with corresponding value converted from the value of an identically-named property on _fields_ or replaced with a default value.
+      </dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_fields_) is Object.
       1. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
       1. For each value _property_ of _fieldNames_, do
         1. Let _value_ be ? Get(_fields_, _property_).
@@ -1734,6 +1740,7 @@
         1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
       1. Return _result_.
     </emu-alg>
+    <emu-note>The values of ! ToIntegerThrowOnInfinity(*undefined*) and ! ToPositiveInteger(*undefined*) are 0.</emu-note>
     <emu-table id="table-temporal-field-requirements">
       <emu-caption>Temporal field requirements</emu-caption>
       <table class="real-table">
@@ -1820,16 +1827,22 @@
     </emu-table>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-preparepartialtemporalfields" aoid="PreparePartialTemporalFields">
-    <h1>PreparePartialTemporalFields ( _fields_, _fieldNames_ )</h1>
-    <p>
-      The abstract operation PreparePartialTemporalFields reads the relevant properties of an Object _fields_ and creates a new Object with all the properties converted to the correct type.
-      The relevant property names are given by the List of Strings _fieldNames_.
-      It performs the following steps:
-    </p>
-    <emu-note>The values of ? ToIntegerThrowOnInfinity(*undefined*) and ? ToPositiveInteger(*undefined*) are 0.</emu-note>
+  <emu-clause id="sec-temporal-preparepartialtemporalfields" type="abstract operation">
+    <h1>
+      PreparePartialTemporalFields (
+        _fields_: an Object,
+        _fieldNames_: a List of property names,
+      ): either a normal completion containing an Object, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It reads the relevant properties of _fields_ given by _fieldNames_.
+        The returned Object has an own data property named by each element of _fieldNames_ for which _fields_ has an identically-named property with non-**undefined** value, converted as appropriate.
+        Unlike PrepareTemporalFields, properties that are absent or undefined on _fields_ are absent on the returned Object as well.
+      </dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_fields_) is Object.
       1. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
       1. Let _any_ be *false*.
       1. For each value _property_ of _fieldNames_, do
@@ -1844,5 +1857,6 @@
         1. Throw a *TypeError* exception.
       1. Return _result_.
     </emu-alg>
+    <emu-note>The values of ! ToIntegerThrowOnInfinity(*undefined*) and ! ToPositiveInteger(*undefined*) are 0.</emu-note>
   </emu-clause>
 </emu-clause>
