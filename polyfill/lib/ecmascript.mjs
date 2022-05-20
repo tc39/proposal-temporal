@@ -4002,6 +4002,187 @@ export const ES = ObjectAssign({}, ES2020, {
     const instantIntermediate = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   },
+  AddDurationToOrSubtractDurationFromDuration: (operation, duration, other, options) => {
+    const sign = operation === 'subtract' ? -1 : 1;
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToTemporalDurationRecord(other);
+    options = ES.GetOptionsObject(options);
+    const relativeTo = ES.ToRelativeTemporalObject(options);
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
+      GetSlot(duration, YEARS),
+      GetSlot(duration, MONTHS),
+      GetSlot(duration, WEEKS),
+      GetSlot(duration, DAYS),
+      GetSlot(duration, HOURS),
+      GetSlot(duration, MINUTES),
+      GetSlot(duration, SECONDS),
+      GetSlot(duration, MILLISECONDS),
+      GetSlot(duration, MICROSECONDS),
+      GetSlot(duration, NANOSECONDS),
+      sign * years,
+      sign * months,
+      sign * weeks,
+      sign * days,
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds,
+      relativeTo
+    ));
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  },
+  AddDurationToOrSubtractDurationFromInstant: (operation, instant, durationLike) => {
+    const sign = operation === 'subtract' ? -1 : 1;
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.ToLimitedTemporalDuration(
+      durationLike,
+      ['years', 'months', 'weeks', 'days']
+    );
+    const ns = ES.AddInstant(
+      GetSlot(instant, EPOCHNANOSECONDS),
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds
+    );
+    const Instant = GetIntrinsic('%Temporal.Instant%');
+    return new Instant(ns);
+  },
+  AddDurationToOrSubtractDurationFromPlainDateTime: (operation, dateTime, durationLike, options) => {
+    const sign = operation === 'subtract' ? -1 : 1;
+    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToTemporalDurationRecord(durationLike);
+    options = ES.GetOptionsObject(options);
+    const calendar = GetSlot(dateTime, CALENDAR);
+    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
+      GetSlot(dateTime, ISO_YEAR),
+      GetSlot(dateTime, ISO_MONTH),
+      GetSlot(dateTime, ISO_DAY),
+      GetSlot(dateTime, ISO_HOUR),
+      GetSlot(dateTime, ISO_MINUTE),
+      GetSlot(dateTime, ISO_SECOND),
+      GetSlot(dateTime, ISO_MILLISECOND),
+      GetSlot(dateTime, ISO_MICROSECOND),
+      GetSlot(dateTime, ISO_NANOSECOND),
+      calendar,
+      sign * years,
+      sign * months,
+      sign * weeks,
+      sign * days,
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds,
+      options
+    );
+    return ES.CreateTemporalDateTime(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      calendar
+    );
+  },
+  AddDurationToOrSubtractDurationFromPlainTime: (operation, temporalTime, durationLike) => {
+    const sign = operation === 'subtract' ? -1 : 1;
+    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToTemporalDurationRecord(durationLike);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
+      GetSlot(temporalTime, ISO_HOUR),
+      GetSlot(temporalTime, ISO_MINUTE),
+      GetSlot(temporalTime, ISO_SECOND),
+      GetSlot(temporalTime, ISO_MILLISECOND),
+      GetSlot(temporalTime, ISO_MICROSECOND),
+      GetSlot(temporalTime, ISO_NANOSECOND),
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds
+    );
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      'reject'
+    ));
+    const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
+    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  },
+  AddDurationToOrSubtractDurationFromPlainYearMonth: (operation, yearMonth, durationLike, options) => {
+    let duration = ES.ToTemporalDurationRecord(durationLike);
+    if (operation === 'subtract') {
+      duration = {
+        years: -duration.years,
+        months: -duration.months,
+        weeks: -duration.weeks,
+        days: -duration.days,
+        hours: -duration.hours,
+        minutes: -duration.minutes,
+        seconds: -duration.seconds,
+        milliseconds: -duration.milliseconds,
+        microseconds: -duration.microseconds,
+        nanoseconds: -duration.nanoseconds
+      };
+    }
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
+
+    options = ES.GetOptionsObject(options);
+
+    const calendar = GetSlot(yearMonth, CALENDAR);
+    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
+    const fields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
+    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
+    const startDate = ES.CalendarDateFromFields(calendar, { ...fields, day });
+    const optionsCopy = { ...options };
+    const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
+    const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
+
+    return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
+  },
+  AddDurationToOrSubtractDurationFromZonedDateTime: (operation, zonedDateTime, durationLike, options) => {
+    const sign = operation === 'subtract' ? -1 : 1;
+    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      ES.ToTemporalDurationRecord(durationLike);
+    options = ES.GetOptionsObject(options);
+    const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
+    const calendar = GetSlot(zonedDateTime, CALENDAR);
+    const epochNanoseconds = ES.AddZonedDateTime(
+      GetSlot(zonedDateTime, INSTANT),
+      timeZone,
+      calendar,
+      sign * years,
+      sign * months,
+      sign * weeks,
+      sign * days,
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds,
+      options
+    );
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+  },
+
   RoundNumberToIncrement: (quantity, increment, mode) => {
     if (increment === 1) return quantity;
     let { quotient, remainder } = quantity.divmod(increment);

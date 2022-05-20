@@ -55,37 +55,11 @@ export class Instant {
 
   add(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.ToLimitedTemporalDuration(
-      temporalDurationLike,
-      ['years', 'months', 'weeks', 'days']
-    );
-    const ns = ES.AddInstant(
-      GetSlot(this, EPOCHNANOSECONDS),
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    return new Instant(ns);
+    return ES.AddDurationToOrSubtractDurationFromInstant('add', this, temporalDurationLike);
   }
   subtract(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.ToLimitedTemporalDuration(
-      temporalDurationLike,
-      ['years', 'months', 'weeks', 'days']
-    );
-    const ns = ES.AddInstant(
-      GetSlot(this, EPOCHNANOSECONDS),
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds
-    );
-    return new Instant(ns);
+    return ES.AddDurationToOrSubtractDurationFromInstant('subtract', this, temporalDurationLike);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

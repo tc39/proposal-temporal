@@ -85,55 +85,11 @@ export class PlainYearMonth {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
-
-    options = ES.GetOptionsObject(options);
-
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
-    const startDate = ES.CalendarDateFromFields(calendar, { ...fields, day });
-    const optionsCopy = { ...options };
-    const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
-    const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-
-    return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
+    return ES.AddDurationToOrSubtractDurationFromPlainYearMonth('add', this, temporalDurationLike, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    let duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    duration = {
-      years: -duration.years,
-      months: -duration.months,
-      weeks: -duration.weeks,
-      days: -duration.days,
-      hours: -duration.hours,
-      minutes: -duration.minutes,
-      seconds: -duration.seconds,
-      milliseconds: -duration.milliseconds,
-      microseconds: -duration.microseconds,
-      nanoseconds: -duration.nanoseconds
-    };
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    ({ days } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
-
-    options = ES.GetOptionsObject(options);
-
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, this)) : 1;
-    const startDate = ES.CalendarDateFromFields(calendar, { ...fields, day });
-    const optionsCopy = { ...options };
-    const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
-    const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
-
-    return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
+    return ES.AddDurationToOrSubtractDurationFromPlainYearMonth('subtract', this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
