@@ -1154,6 +1154,16 @@ describe('Intl', () => {
       equal(date.monthCode, 'M05L');
       equal(date.day, 1);
     });
+    it('Creating dates in later months in a leap year', () => {
+      let date = Temporal.PlainDate.from({ year: 5779, month: 7, day: 1, calendar: 'hebrew' });
+      equal(date.month, 7);
+      equal(date.monthCode, 'M06');
+      equal(date.day, 1);
+      date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M06', day: 1, calendar: 'hebrew' });
+      equal(date.month, 7);
+      equal(date.monthCode, 'M06');
+      equal(date.day, 1);
+    });
     it('Invalid leap months: e.g. M02L', () => {
       for (let i = 1; i <= 12; i++) {
         if (i === 5) continue; // M05L is the only valid month (Adar I)
