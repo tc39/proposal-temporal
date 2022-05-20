@@ -1855,4 +1855,43 @@
       </table>
     </emu-table>
   </emu-clause>
+
+  <emu-clause id="sec-temporal-getdifferencesettings" type="abstract operation">
+    <h1>
+      GetDifferenceSettings (
+        _operation_: ~since~ or ~until~,
+        _options_: an ECMAScript language value,
+        _unitGroup_: ~date~, ~time~, or ~datetime~,
+        _disallowedUnits_: a List of Strings,
+        _fallbackSmallestUnit_: a String,
+        _smallestLargestDefaultUnit_: a String,
+      ): either a normal completion containing a Record or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It reads unit and rounding options needed by difference operations.</dd>
+    </dl>
+    <emu-alg>
+      1. Set _options_ to ? GetOptionsObject(_options_).
+      1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, _unitGroup_, _fallbackSmallestUnit_).
+      1. If _disallowedUnits_ contains _smallestUnit_, throw a *RangeError* exception.
+      1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(_smallestLargestDefaultUnit_, _smallestUnit_).
+      1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, _unitGroup_, *"auto"*).
+      1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
+      1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.
+      1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
+      1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+      1. If _operation_ is ~since~, then
+        1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
+      1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+      1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_, _maximum_, *false*).
+      1. Return the Record {
+            [[SmallestUnit]]: _smallestUnit_,
+            [[LargestUnit]]: _largestUnit_,
+            [[RoundingMode]]: _roundingMode_,
+            [[RoundingIncrement]]: _roundingIncrement_,
+            [[Options]]: _options_
+            }.
+    </emu-alg>
+  </emu-clause>
 </emu-clause>
