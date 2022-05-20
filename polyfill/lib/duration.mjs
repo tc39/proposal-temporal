@@ -191,65 +191,11 @@ export class Duration {
   }
   add(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-      ES.ToTemporalDurationRecord(other);
-    options = ES.GetOptionsObject(options);
-    const relativeTo = ES.ToRelativeTemporalObject(options);
-    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS),
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      relativeTo
-    ));
-    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return ES.AddDurationToOrSubtractDurationFromDuration('add', this, other, options);
   }
   subtract(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-      ES.ToTemporalDurationRecord(other);
-    options = ES.GetOptionsObject(options);
-    const relativeTo = ES.ToRelativeTemporalObject(options);
-    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.AddDuration(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS),
-      -years,
-      -months,
-      -weeks,
-      -days,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds,
-      relativeTo
-    ));
-    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return ES.AddDurationToOrSubtractDurationFromDuration('subtract', this, other, options);
   }
   round(roundTo) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

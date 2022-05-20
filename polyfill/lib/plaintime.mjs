@@ -147,73 +147,11 @@ export class PlainTime {
   }
   add(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    let hour = GetSlot(this, ISO_HOUR);
-    let minute = GetSlot(this, ISO_MINUTE);
-    let second = GetSlot(this, ISO_SECOND);
-    let millisecond = GetSlot(this, ISO_MILLISECOND);
-    let microsecond = GetSlot(this, ISO_MICROSECOND);
-    let nanosecond = GetSlot(this, ISO_NANOSECOND);
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      'reject'
-    ));
-    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    return ES.AddDurationToOrSubtractDurationFromPlainTime('add', this, temporalDurationLike);
   }
   subtract(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    let duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    let hour = GetSlot(this, ISO_HOUR);
-    let minute = GetSlot(this, ISO_MINUTE);
-    let second = GetSlot(this, ISO_SECOND);
-    let millisecond = GetSlot(this, ISO_MILLISECOND);
-    let microsecond = GetSlot(this, ISO_MICROSECOND);
-    let nanosecond = GetSlot(this, ISO_NANOSECOND);
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds
-    ));
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      'reject'
-    ));
-    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    return ES.AddDurationToOrSubtractDurationFromPlainTime('subtract', this, temporalDurationLike);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');

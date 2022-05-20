@@ -326,53 +326,11 @@ export class ZonedDateTime {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    options = ES.GetOptionsObject(options);
-    const timeZone = GetSlot(this, TIME_ZONE);
-    const calendar = GetSlot(this, CALENDAR);
-    const epochNanoseconds = ES.AddZonedDateTime(
-      GetSlot(this, INSTANT),
-      timeZone,
-      calendar,
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      options
-    );
-    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+    return ES.AddDurationToOrSubtractDurationFromZonedDateTime('add', this, temporalDurationLike, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    options = ES.GetOptionsObject(options);
-    const timeZone = GetSlot(this, TIME_ZONE);
-    const calendar = GetSlot(this, CALENDAR);
-    const epochNanoseconds = ES.AddZonedDateTime(
-      GetSlot(this, INSTANT),
-      timeZone,
-      calendar,
-      -years,
-      -months,
-      -weeks,
-      -days,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds,
-      options
-    );
-    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+    return ES.AddDurationToOrSubtractDurationFromZonedDateTime('subtract', this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

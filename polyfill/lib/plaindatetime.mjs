@@ -271,87 +271,11 @@ export class PlainDateTime {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    let duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    options = ES.GetOptionsObject(options);
-    const calendar = GetSlot(this, CALENDAR);
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      calendar,
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      options
-    );
-    return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    return ES.AddDurationToOrSubtractDurationFromPlainDateTime('add', this, temporalDurationLike, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    let duration = ES.ToTemporalDurationRecord(temporalDurationLike);
-    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-    options = ES.GetOptionsObject(options);
-    const calendar = GetSlot(this, CALENDAR);
-    const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.AddDateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      calendar,
-      -years,
-      -months,
-      -weeks,
-      -days,
-      -hours,
-      -minutes,
-      -seconds,
-      -milliseconds,
-      -microseconds,
-      -nanoseconds,
-      options
-    );
-    return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
+    return ES.AddDurationToOrSubtractDurationFromPlainDateTime('subtract', this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
