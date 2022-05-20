@@ -890,8 +890,9 @@ const nonIsoHelperBase = {
     return calendarDate;
   },
   addCalendar(calendarDate, { years = 0, months = 0, weeks = 0, days = 0 }, overflow, cache) {
-    const { year, month, day } = calendarDate;
-    const addedMonths = this.addMonthsCalendar({ year: year + years, month, day }, months, overflow, cache);
+    const { year, day, monthCode } = calendarDate;
+    const addedYears = this.adjustCalendarDate({ year: year + years, monthCode, day }, cache);
+    const addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
     days += weeks * 7;
     const addedDays = this.addDaysCalendar(addedMonths, days, cache);
     return addedDays;
@@ -988,7 +989,7 @@ const nonIsoHelperBase = {
     return lastDayOfPreviousMonthCalendar.day;
   },
   startOfCalendarYear(calendarDate) {
-    return { year: calendarDate.year, month: 1, day: 1 };
+    return { year: calendarDate.year, month: 1, monthCode: 'M01', day: 1 };
   },
   startOfCalendarMonth(calendarDate) {
     return { year: calendarDate.year, month: calendarDate.month, day: 1 };
