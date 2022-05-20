@@ -912,7 +912,7 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   MergeLargestUnitOption: (options, largestUnit) => {
     if (options === undefined) options = ObjectCreate(null);
-    return { ...options, largestUnit };
+    return ObjectAssign(ObjectCreate(null), options, { largestUnit });
   },
   PrepareTemporalFields: (
     bag,
@@ -920,7 +920,7 @@ export const ES = ObjectAssign({}, ES2020, {
     completeness = 'complete',
     { emptySourceErrorMessage = 'no supported properties found' } = {}
   ) => {
-    const result = {};
+    const result = ObjectCreate(null);
     let any = false;
     for (const fieldRecord of fields) {
       // Unlike the spec, this interface supports field defaults via [field, default] pairs.
@@ -3631,9 +3631,11 @@ export const ES = ObjectAssign({}, ES2020, {
 
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
+    otherFields.day = 1;
     const thisFields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
-    const otherDate = ES.CalendarDateFromFields(calendar, { ...otherFields, day: 1 });
-    const thisDate = ES.CalendarDateFromFields(calendar, { ...thisFields, day: 1 });
+    thisFields.day = 1;
+    const otherDate = ES.CalendarDateFromFields(calendar, otherFields);
+    const thisDate = ES.CalendarDateFromFields(calendar, thisFields);
 
     const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
@@ -4215,9 +4217,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
-    const startDate = ES.CalendarDateFromFields(calendar, { ...fields, day });
-    const optionsCopy = { ...options };
+    fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
+    const startDate = ES.CalendarDateFromFields(calendar, fields);
+    const optionsCopy = ObjectAssign(ObjectCreate(null), options);
     const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 

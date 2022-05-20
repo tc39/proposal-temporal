@@ -659,7 +659,7 @@
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_day_)).
         1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_).
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _optionsCopy_ be OrdinaryObjectCreate(*null*).
         1. Let _entries_ be ? EnumerableOwnPropertyNames(_options_, ~key+value~).
         1. For each element _entry_ of _entries_, do
           1. Perform ! CreateDataPropertyOrThrow(_optionsCopy_, _entry_[0], _entry_[1]).
