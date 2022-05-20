@@ -1,6 +1,6 @@
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   ISO_YEAR,
   ISO_MONTH,
@@ -15,8 +15,6 @@ import {
   EPOCHNANOSECONDS,
   GetSlot
 } from './slots.mjs';
-
-const DISALLOWED_UNITS = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
@@ -139,91 +137,11 @@ export class PlainDate {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalDate(other);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.ToString(calendar);
-    const otherCalendarId = ES.ToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
-    }
-
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'day', DISALLOWED_UNITS);
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-
-    const untilOptions = { ...options, largestUnit };
-    const result = ES.CalendarDateUntil(calendar, this, other, untilOptions);
-    if (smallestUnit === 'day' && roundingIncrement === 1) return result;
-
-    let { years, months, weeks, days } = result;
-    ({ years, months, weeks, days } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      this
-    ));
-
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    return ES.DifferenceTemporalPlainDate('until', this, other, options);
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalDate(other);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.ToString(calendar);
-    const otherCalendarId = ES.ToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
-    }
-
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'day', DISALLOWED_UNITS);
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-
-    const untilOptions = { ...options, largestUnit };
-    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, this, other, untilOptions);
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    if (smallestUnit === 'day' && roundingIncrement === 1) {
-      return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
-    }
-    ({ years, months, weeks, days } = ES.RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      roundingIncrement,
-      smallestUnit,
-      ES.NegateTemporalRoundingMode(roundingMode),
-      this
-    ));
-
-    return new Duration(-years, -months, -weeks, -days, 0, 0, 0, 0, 0, 0);
+    return ES.DifferenceTemporalPlainDate('since', this, other, options);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

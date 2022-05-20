@@ -1,11 +1,9 @@
 import { ES } from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_YEAR, ISO_MONTH, ISO_DAY, CALENDAR, GetSlot } from './slots.mjs';
 
 const ObjectCreate = Object.create;
-
-const DISALLOWED_UNITS = ['week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) {
@@ -139,103 +137,11 @@ export class PlainYearMonth {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalYearMonth(other);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarID = ES.ToString(calendar);
-    const otherCalendarID = ES.ToString(otherCalendar);
-    if (calendarID !== otherCalendarID) {
-      throw new RangeError(
-        `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
-      );
-    }
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
-    const thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    const otherDate = ES.CalendarDateFromFields(calendar, { ...otherFields, day: 1 });
-    const thisDate = ES.CalendarDateFromFields(calendar, { ...thisFields, day: 1 });
-
-    const untilOptions = { ...options, largestUnit };
-    const result = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
-    if (smallestUnit === 'month' && roundingIncrement === 1) return result;
-
-    let { years, months } = result;
-    ({ years, months } = ES.RoundDuration(
-      years,
-      months,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      thisDate
-    ));
-
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
+    return ES.DifferenceTemporalPlainYearMonth('until', this, other, options);
   }
   since(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    other = ES.ToTemporalYearMonth(other);
-    const calendar = GetSlot(this, CALENDAR);
-    const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarID = ES.ToString(calendar);
-    const otherCalendarID = ES.ToString(otherCalendar);
-    if (calendarID !== otherCalendarID) {
-      throw new RangeError(
-        `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
-      );
-    }
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
-
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
-    const thisFields = ES.ToTemporalYearMonthFields(this, fieldNames);
-    const otherDate = ES.CalendarDateFromFields(calendar, { ...otherFields, day: 1 });
-    const thisDate = ES.CalendarDateFromFields(calendar, { ...thisFields, day: 1 });
-
-    const untilOptions = { ...options, largestUnit };
-    let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
-    const Duration = GetIntrinsic('%Temporal.Duration%');
-    if (smallestUnit === 'month' && roundingIncrement === 1) {
-      return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
-    }
-    ({ years, months } = ES.RoundDuration(
-      years,
-      months,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      roundingIncrement,
-      smallestUnit,
-      ES.NegateTemporalRoundingMode(roundingMode),
-      thisDate
-    ));
-
-    return new Duration(-years, -months, 0, 0, 0, 0, 0, 0, 0, 0);
+    return ES.DifferenceTemporalPlainYearMonth('since', this, other, options);
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
