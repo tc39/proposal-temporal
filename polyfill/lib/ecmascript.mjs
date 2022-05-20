@@ -850,6 +850,10 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ALLOWED_UNITS.indexOf(unit1) > ALLOWED_UNITS.indexOf(unit2)) return unit2;
     return unit1;
   },
+  MergeLargestUnitOption: (options, largestUnit) => {
+    if (options === undefined) options = ObjectCreate(null);
+    return { ...options, largestUnit };
+  },
   ToPartialRecord: (bag, fields) => {
     let any = false;
     let result = {};
@@ -3194,7 +3198,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
-    const untilOptions = { ...options, largestUnit: dateLargestUnit };
+    const untilOptions = ES.MergeLargestUnitOption(options, dateLargestUnit);
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
     // Signs of date part and time part may not agree; balance them together
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
@@ -3342,7 +3346,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const untilOptions = { ...options, largestUnit };
+    const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions);
 
     if (smallestUnit !== 'day' || roundingIncrement !== 1) {
@@ -3553,7 +3557,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const otherDate = ES.CalendarDateFromFields(calendar, { ...otherFields, day: 1 });
     const thisDate = ES.CalendarDateFromFields(calendar, { ...thisFields, day: 1 });
 
-    const untilOptions = { ...options, largestUnit };
+    const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
 
     if (smallestUnit !== 'month' || roundingIncrement !== 1) {
@@ -3631,7 +3635,7 @@ export const ES = ObjectAssign({}, ES2020, {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
-      const untilOptions = { ...options, largestUnit };
+      const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
