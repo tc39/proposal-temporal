@@ -1242,19 +1242,28 @@ describe('Intl', () => {
       equal(added.monthCode, date.monthCode);
       equal(added.year, date.year + 2);
     });
-    it('Adding years across Chinese leap month', () => {
+    const testChineseData = new Date('2001-02-01T00:00Z').toLocaleString('en-US-u-ca-chinese', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      era: 'short',
+      timeZone: 'UTC'
+    });
+    const hasOutdatedChineseIcuData = !testChineseData.endsWith('2001');
+    const itOrSkip = hasOutdatedChineseIcuData ? it.skip : it;
+    itOrSkip('Adding years across Chinese leap month', () => {
       const date = Temporal.PlainDate.from({ year: 2000, monthCode: 'M08', day: 2, calendar: 'chinese' });
       const added = date.add({ years: 1 });
       equal(added.monthCode, date.monthCode);
       equal(added.year, date.year + 1);
     });
-    it('Adding months across Chinese leap month', () => {
+    itOrSkip('Adding months across Chinese leap month', () => {
       const date = Temporal.PlainDate.from({ year: 2000, monthCode: 'M08', day: 2, calendar: 'chinese' });
       const added = date.add({ months: 13 });
       equal(added.monthCode, date.monthCode);
       equal(added.year, date.year + 1);
     });
-    it('Adding months and years across Chinese leap month', () => {
+    itOrSkip('Adding months and years across Chinese leap month', () => {
       const date = Temporal.PlainDate.from({ year: 2001, monthCode: 'M08', day: 2, calendar: 'chinese' });
       const added = date.add({ years: 1, months: 12 });
       equal(added.monthCode, date.monthCode);
