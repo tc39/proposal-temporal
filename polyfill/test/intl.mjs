@@ -745,7 +745,7 @@ describe('Intl', () => {
       years: {
         duration: { years: 3, months: 6, days: 17 },
         results: addYearsMonthsDaysCases,
-        startDate: { year: 1997, month: 12, day: 1 }
+        startDate: { year: 1997, monthCode: 'M12', day: 1 }
       }
     };
     const calendars = Object.keys(addMonthsCases);
@@ -768,7 +768,33 @@ describe('Intl', () => {
           equal(`add ${unit} ${id} month: ${end.month}`, `add ${unit} ${id} month: ${values.month}`);
           equal(`add ${unit} ${id} monthCode: ${end.monthCode}`, `add ${unit} ${id} monthCode: ${values.monthCode}`);
           const calculatedStart = end.subtract(duration);
-          equal(`start ${calculatedStart.toString()}`, `start ${start.toString()}`);
+          // For lunisolar calendars, adding/subtracting years and months in the
+          // same duration may not be reversible because the number of months in
+          // a year can vary. To see why this is the case, let's use Chinese
+          // year 2001, which is a leap year with a leap month after the 4th
+          // normal month. Adding P1Y6M to the first day of Chinese year 2000
+          // will first add one year and then add six months, yielding a date
+          // that's the first day of the 7th ordinal month of 2001. But because
+          // that year is a leap year, the result's month code will be M06.
+          //
+          // Now let's look at subtracting the same duration from the result.
+          // First subtract one year, yielding the M06 month of the non-leap
+          // year 2000. Because M06 (unlike in the following leap year) is the
+          // 6th month ordinally, subtracting 6 months yields the M12 month of
+          // the Chinese year 1999. One month earlier than the original date!
+          //
+          // This is not a bug; it's an expected consequence of Temporal's
+          // largest-units-first order of operations that is aligned to the
+          // behavior standardized by RFC 5545.
+          //
+          // Note that this behavior is similar to all calendars' behavior when
+          // adding or subtracting months and days together. In those cases,
+          // addition and subtraction may not be reversible because months are
+          // different lengths.
+          const isLunisolar = ['chinese', 'dangi', 'hebrew'].includes(id);
+          const expectedCalculatedStart =
+            isLunisolar && duration.years !== 0 && !end.monthCode.endsWith('L') ? start.subtract({ months: 1 }) : start;
+          equal(`start ${calculatedStart.toString()}`, `start ${expectedCalculatedStart.toString()}`);
           const diff = start.until(end, { largestUnit: unit });
           equal(`diff ${unit} ${id}: ${diff}`, `diff ${unit} ${id}: ${duration}`);
 
@@ -1154,6 +1180,16 @@ describe('Intl', () => {
       equal(date.monthCode, 'M05L');
       equal(date.day, 1);
     });
+    it('Creating dates in later months in a leap year', () => {
+      let date = Temporal.PlainDate.from({ year: 5779, month: 7, day: 1, calendar: 'hebrew' });
+      equal(date.month, 7);
+      equal(date.monthCode, 'M06');
+      equal(date.day, 1);
+      date = Temporal.PlainDate.from({ year: 5779, monthCode: 'M06', day: 1, calendar: 'hebrew' });
+      equal(date.month, 7);
+      equal(date.monthCode, 'M06');
+      equal(date.day, 1);
+    });
     it('Invalid leap months: e.g. M02L', () => {
       for (let i = 1; i <= 12; i++) {
         if (i === 5) continue; // M05L is the only valid month (Adar I)
@@ -1184,6 +1220,54 @@ describe('Intl', () => {
       equal(date.month, 5);
       equal(date.monthCode, 'M05');
       equal(date.day, 30);
+    });
+  });
+
+  describe('Addition across lunisolar leap months', () => {
+    it('Adding years across Hebrew leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 5783, monthCode: 'M08', day: 2, calendar: 'hebrew' });
+      const added = date.add({ years: 1 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 1);
+    });
+    it('Adding months across Hebrew leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 5783, monthCode: 'M08', day: 2, calendar: 'hebrew' });
+      const added = date.add({ months: 13 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 1);
+    });
+    it('Adding months and years across Hebrew leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 5783, monthCode: 'M08', day: 2, calendar: 'hebrew' });
+      const added = date.add({ years: 1, months: 12 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 2);
+    });
+    const testChineseData = new Date('2001-02-01T00:00Z').toLocaleString('en-US-u-ca-chinese', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      era: 'short',
+      timeZone: 'UTC'
+    });
+    const hasOutdatedChineseIcuData = !testChineseData.endsWith('2001');
+    const itOrSkip = hasOutdatedChineseIcuData ? it.skip : it;
+    itOrSkip('Adding years across Chinese leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 2000, monthCode: 'M08', day: 2, calendar: 'chinese' });
+      const added = date.add({ years: 1 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 1);
+    });
+    itOrSkip('Adding months across Chinese leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 2000, monthCode: 'M08', day: 2, calendar: 'chinese' });
+      const added = date.add({ months: 13 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 1);
+    });
+    itOrSkip('Adding months and years across Chinese leap month', () => {
+      const date = Temporal.PlainDate.from({ year: 2001, monthCode: 'M08', day: 2, calendar: 'chinese' });
+      const added = date.add({ years: 1, months: 12 });
+      equal(added.monthCode, date.monthCode);
+      equal(added.year, date.year + 2);
     });
   });
 
