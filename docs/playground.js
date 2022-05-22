@@ -4176,13 +4176,14 @@
           _ref2$days = _ref2.days,
           days = _ref2$days === void 0 ? 0 : _ref2$days;
       var year = calendarDate.year,
-          month = calendarDate.month,
-          day = calendarDate.day;
-      var addedMonths = this.addMonthsCalendar({
+          day = calendarDate.day,
+          monthCode = calendarDate.monthCode;
+      var addedYears = this.adjustCalendarDate({
         year: year + years,
-        month: month,
+        monthCode: monthCode,
         day: day
-      }, months, overflow, cache);
+      }, cache);
+      var addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
       days += weeks * 7;
       var addedDays = this.addDaysCalendar(addedMonths, days, cache);
       return addedDays;
@@ -4307,6 +4308,7 @@
       return {
         year: calendarDate.year,
         month: 1,
+        monthCode: 'M01',
         day: 1
       };
     },
@@ -4616,7 +4618,7 @@
 
             if (this.inLeapYear({
               year: year
-            }) && month > 6) month++;
+            }) && month >= 6) month++;
             var largestMonth = this.monthsInYear({
               year: year
             });
