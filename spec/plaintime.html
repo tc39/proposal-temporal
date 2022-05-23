@@ -29,7 +29,7 @@
       <p>
         When the `Temporal.PlainTime` function is called, the following steps are taken:
       </p>
-      <emu-note>The value of ? ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -815,7 +815,7 @@
 
     <emu-clause id="sec-temporal-totemporaltimerecord" aoid="ToTemporalTimeRecord">
       <h1>ToTemporalTimeRecord ( _temporalTimeLike_ )</h1>
-      <emu-note>The value of ? ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. Assert: Type(_temporalTimeLike_) is Object.
         1. Let _result_ be the Record {
