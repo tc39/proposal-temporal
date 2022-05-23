@@ -44,7 +44,7 @@ export class Calendar {
     }
 
     id = ES.ToString(id);
-    if (!IsBuiltinCalendar(id)) throw new RangeError(`invalid calendar identifier ${id}`);
+    if (!ES.IsBuiltinCalendar(id)) throw new RangeError(`invalid calendar identifier ${id}`);
     CreateSlots(this);
     SetSlot(this, CALENDAR_ID, id);
 
@@ -2087,9 +2087,3 @@ impl['indian'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperIndian });
 impl['buddhist'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperBuddhist });
 impl['japanese'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperJapanese });
 impl['gregory'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperGregory });
-
-const BUILTIN_CALENDAR_IDS = Object.keys(impl);
-
-export function IsBuiltinCalendar(id) {
-  return ArrayIncludes.call(BUILTIN_CALENDAR_IDS, id);
-}
