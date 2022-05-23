@@ -19,10 +19,6 @@ const { Instant } = Temporal;
 
 describe('Instant', () => {
   describe('Instant.from() works', () => {
-    it('variant time separators', () => {
-      equal(`${Instant.from('1976-11-18t15:23Z')}`, '1976-11-18T15:23:00Z');
-      equal(`${Instant.from('1976-11-18 15:23Z')}`, '1976-11-18T15:23:00Z');
-    });
     it('variant UTC designator', () => {
       equal(`${Instant.from('1976-11-18T15:23z')}`, '1976-11-18T15:23:00Z');
     });

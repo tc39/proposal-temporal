@@ -143,9 +143,6 @@ describe('ZonedDateTime', () => {
       it('ZonedDateTime.prototype.toLocaleString is a Function', () => {
         equal(typeof ZonedDateTime.prototype.toLocaleString, 'function');
       });
-      it('ZonedDateTime.prototype.toJSON is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toJSON, 'function');
-      });
       it('ZonedDateTime.prototype.valueOf is a Function', () => {
         equal(typeof ZonedDateTime.prototype.valueOf, 'function');
       });
@@ -306,11 +303,6 @@ describe('ZonedDateTime', () => {
     it('"Z" means preserve the exact time in the given IANA time zone', () => {
       const zdt = ZonedDateTime.from('2020-03-08T09:00:00Z[America/Los_Angeles]');
       equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-    });
-    it('variant time separators', () => {
-      ['1976-11-18t15:23-08:00[America/Los_Angeles]', '1976-11-18 15:23-08:00[America/Los_Angeles]'].forEach((input) =>
-        equal(`${ZonedDateTime.from(input)}`, '1976-11-18T15:23:00-08:00[America/Los_Angeles]')
-      );
     });
     it('any number of decimal places', () => {
       equal(
@@ -2188,16 +2180,6 @@ describe('ZonedDateTime', () => {
       equal(roundedString, '2018-11-04T01:00:00.00000000-02:00[America/Sao_Paulo]');
       const zdt6 = ZonedDateTime.from(roundedString);
       equal(zdt6.epochNanoseconds - zdt5.epochNanoseconds, 1n);
-    });
-  });
-  describe('ZonedDateTime.toJSON()', () => {
-    it('does the default toString', () => {
-      const zdt1 = ZonedDateTime.from('1976-11-18T15:23+01:00[Europe/Vienna]');
-      const zdt2 = ZonedDateTime.from('1976-11-18T15:23:30+01:00[Europe/Vienna]');
-      const zdt3 = ZonedDateTime.from('1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
-      equal(zdt1.toJSON(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
-      equal(zdt2.toJSON(), '1976-11-18T15:23:30+01:00[Europe/Vienna]');
-      equal(zdt3.toJSON(), '1976-11-18T15:23:30.1234+01:00[Europe/Vienna]');
     });
   });
   describe("Comparison operators don't work", () => {

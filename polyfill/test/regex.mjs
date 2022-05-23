@@ -36,10 +36,6 @@ describe('fromString regex', () => {
     describe('valid', () => {
       // Without time component
       test('2020-01-01Z', [2020, 1, 1, 0, 0, 0]);
-      // Time separators
-      ['T', 't', ' '].forEach((timeSep) =>
-        generateTest(`1976-11-18${timeSep}15:23`, 'Z', [1976, 11, 18, 15, 23, 30, 123, 456, 789])
-      );
       // Time zone with bracketed name
       ['+01:00', '+01', '+0100', '+01:00:00', '+010000', '+01:00:00.000000000', '+010000.0'].forEach((zoneString) => {
         generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, [1976, 11, 18, 14, 23, 30, 123, 456, 789]);
@@ -118,8 +114,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
     describe('valid', () => {
-      // Time separators
-      ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
       // Various forms of time zone
       [
         '+0100[Europe/Vienna]',
@@ -199,8 +193,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components);
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     [
       '+0100[Europe/Vienna]',
@@ -265,8 +257,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components.slice(0, 3));
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     [
       '+0100[Europe/Vienna]',
@@ -327,8 +317,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components);
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     [
       '+0100[Europe/Vienna]',
@@ -400,8 +388,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, components);
       test(`${dateTimeString}:30.123456789${zoneString}`, components);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, ''));
     // Various forms of time zone
     [
       '+0100[Europe/Vienna]',
@@ -472,8 +458,6 @@ describe('fromString regex', () => {
       test(`${dateTimeString}:30${zoneString}`, expectedName);
       test(`${dateTimeString}:30.123456789${zoneString}`, expectedName);
     }
-    // Time separators
-    ['T', 't', ' '].forEach((timeSep) => generateTest(`1976-11-18${timeSep}15:23`, 'Z', 'UTC'));
     // Time zone with bracketed name
     ['+01:00', '+01', '+0100', '+01:00:00', '+010000', '+01:00:00.000000000', '+010000.0'].forEach((zoneString) => {
       generateTest('1976-11-18T15:23', `${zoneString}[Europe/Vienna]`, 'Europe/Vienna');
