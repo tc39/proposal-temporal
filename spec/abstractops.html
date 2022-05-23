@@ -1312,7 +1312,7 @@
     <p>
       The ParseISODateTime abstract operation examines any ISO 8601 string that adheres to the syntax of the |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, or |TemporalZonedDateTimeString| productions of the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
     </p>
-    <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
+    <emu-note>The value of ! ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. Let _year_, _month_, _day_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
@@ -1526,7 +1526,6 @@
     <p>
       The ParseTemporalMonthDayString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.PlainMonthDay instance.
     </p>
-    <emu-note>The value of ? ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Assert: Type(_isoString_) is String.
       1. If _isoString_ does not satisfy the syntax of a |TemporalMonthDayString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then

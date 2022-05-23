@@ -30,7 +30,7 @@
       <p>
         When the `Temporal.PlainDate` function is called, the following steps are taken:
       </p>
-      <emu-note>The value of ? ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Let _y_ be ? ToIntegerThrowOnInfinity(_isoYear_).
