@@ -1,5 +1,6 @@
 /* global __debug__ */
 
+const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathMin = Math.min;
@@ -64,7 +65,6 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
-import { IsBuiltinCalendar } from './calendar.mjs';
 
 const DAY_SECONDS = 86400;
 const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
@@ -73,6 +73,28 @@ const NS_MAX = bigInt(DAY_SECONDS).multiply(1e17);
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+
+const BUILTIN_CALENDAR_IDS = [
+  'iso8601',
+  'hebrew',
+  'islamic',
+  'islamic-umalqura',
+  'islamic-tbla',
+  'islamic-civil',
+  'islamic-rgsa',
+  'islamicc',
+  'persian',
+  'ethiopic',
+  'ethioaa',
+  'coptic',
+  'chinese',
+  'dangi',
+  'roc',
+  'indian',
+  'buddhist',
+  'japanese',
+  'gregory'
+];
 
 const ToIntegerThrowOnInfinity = (value) => {
   const integer = ES.ToInteger(value);
@@ -1644,7 +1666,7 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     const identifier = ES.ToString(calendarLike);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    if (IsBuiltinCalendar(identifier)) return new TemporalCalendar(identifier);
+    if (ES.IsBuiltinCalendar(identifier)) return new TemporalCalendar(identifier);
     let calendar;
     try {
       ({ calendar } = ES.ParseISODateTime(identifier));
@@ -4149,6 +4171,9 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
     }
     return MathFloor(value);
+  },
+  IsBuiltinCalendar: (id) => {
+    return ArrayIncludes.call(BUILTIN_CALENDAR_IDS, id);
   }
 });
 
