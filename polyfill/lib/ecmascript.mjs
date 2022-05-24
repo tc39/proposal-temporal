@@ -1200,13 +1200,16 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
-        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
-          GetSlot(item, TIME_ZONE),
-          GetSlot(item, INSTANT),
-          GetSlot(item, CALENDAR)
-        );
+        const calendar = GetSlot(item, CALENDAR);
+        if (ES.ToString(calendar) !== 'iso8601') {
+          throw new RangeError('PlainTime can only have iso8601 calendar');
+        }
+        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), calendar);
       }
       if (ES.IsTemporalDateTime(item)) {
+        if (ES.ToString(GetSlot(item, CALENDAR)) !== 'iso8601') {
+          throw new RangeError('PlainTime can only have iso8601 calendar');
+        }
         const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
         return new TemporalPlainTime(
           GetSlot(item, ISO_HOUR),

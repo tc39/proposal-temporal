@@ -602,10 +602,15 @@
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Let _calendar_ be _item_.[[Calendar]].
+            1. If ? ToString(_calendar_) is not *"iso8601"*, then
+              1. Throw a *RangeError* exception.
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Set _plainDateTime_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
+            1. Set _plainDateTime_ to ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _calendar_).
             1. Return ! CreateTemporalTime(_plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
+            1. If ? ToString(_item_.[[Calendar]]) is not *"iso8601"*, then
+              1. Throw a *RangeError* exception.
             1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
           1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
           1. If ? ToString(_calendar_) is not *"iso8601"*, then

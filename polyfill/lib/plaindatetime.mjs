@@ -414,6 +414,9 @@ export class PlainDateTime {
   }
   toPlainTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    if (ES.ToString(GetSlot(this, CALENDAR)) !== 'iso8601') {
+      throw new RangeError('PlainTime can only have iso8601 calendar');
+    }
     return ES.TemporalDateTimeToTime(this);
   }
   getISOFields() {
