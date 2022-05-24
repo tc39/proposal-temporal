@@ -887,9 +887,11 @@
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Perform ? ToTemporalOverflow(_options_).
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
             1. Return ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
+            1. Perform ? ToTemporalOverflow(_options_).
             1. Return ? CreateTemporalDateTime(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], 0, 0, 0, 0, 0, 0, _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).

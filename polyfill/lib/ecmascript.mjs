@@ -1057,6 +1057,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDate(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
+        ES.ToTemporalOverflow(options); // validate and ignore
         item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
           GetSlot(item, TIME_ZONE),
           GetSlot(item, INSTANT),
@@ -1064,6 +1065,7 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
       if (ES.IsTemporalDateTime(item)) {
+        ES.ToTemporalOverflow(options); // validate and ignore
         return ES.CreateTemporalDate(
           GetSlot(item, ISO_YEAR),
           GetSlot(item, ISO_MONTH),
@@ -1105,6 +1107,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalDateTime(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
+        ES.ToTemporalOverflow(options); // validate and ignore
         return ES.BuiltinTimeZoneGetPlainDateTimeFor(
           GetSlot(item, TIME_ZONE),
           GetSlot(item, INSTANT),
@@ -1112,6 +1115,7 @@ export const ES = ObjectAssign({}, ES2020, {
         );
       }
       if (ES.IsTemporalDate(item)) {
+        ES.ToTemporalOverflow(options); // validate and ignore
         return ES.CreateTemporalDateTime(
           GetSlot(item, ISO_YEAR),
           GetSlot(item, ISO_MONTH),
