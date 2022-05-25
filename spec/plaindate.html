@@ -402,7 +402,7 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
-        1. Return ? CreateTemporalDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _calendar_).
+        1. Return ! CreateTemporalDate(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _calendar_).
       </emu-alg>
     </emu-clause>
 
