@@ -75,25 +75,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-getstringornumberoption" aoid="GetStringOrNumberOption">
-    <h1>GetStringOrNumberOption ( _options_, _property_, _stringValues_, _minimum_, _maximum_, _fallback_ )</h1>
-    <p>
-      The abstract operation GetStringOrNumberOption extracts the value of the property named _property_ from the provided _options_ object.
-      If the value is a Number value, the operation checks whether it is in the allowed range.
-      Otherwise, the operation converts it to a string and checks whether it is one of a List of allowed _stringValues_, and fills in a _fallback_ value if necessary.
-    </p>
-    <emu-alg>
-      1. Assert: Type(_options_) is Object.
-      1. Let _value_ be ? GetOption(_options_, _property_, « Number, String », ~empty~, _fallback_).
-      1. If Type(_value_) is Number, then
-        1. If _value_ &lt; _minimum_ or _value_ &gt; _maximum_, throw a *RangeError* exception.
-        1. Return floor(ℝ(_value_)).
-      1. Assert: Type(_value_) is String.
-      1. If _stringValues_ does not contain _value_, throw a *RangeError* exception.
-      1. Return _value_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-totemporaloverflow" aoid="ToTemporalOverflow">
     <h1>ToTemporalOverflow ( _options_ )</h1>
     <emu-alg>
