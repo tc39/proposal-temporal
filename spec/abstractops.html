@@ -289,36 +289,36 @@
             [[Increment]]: 1
           }.
       1. Assert: _smallestUnit_ is *undefined*.
-      1. Let _digits_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
-      1. If _digits_ is *"auto"*, then
+      1. Let _fractionalDigitCount_ be ? GetStringOrNumberOption(_normalizedOptions_, *"fractionalSecondDigits"*, « *"auto"* », 0, 9, *"auto"*).
+      1. If _fractionalDigitCount_ is *"auto"*, then
         1. Return the Record {
             [[Precision]]: *"auto"*,
             [[Unit]]: *"nanosecond"*,
             [[Increment]]: 1
           }.
-      1. If _digits_ is 0, then
+      1. If _fractionalDigitCount_ is 0, then
         1. Return the Record {
             [[Precision]]: 0,
             [[Unit]]: *"second"*,
             [[Increment]]: 1
           }.
-      1. If _digits_ is 1, 2, or 3, then
+      1. If _fractionalDigitCount_ is 1, 2, or 3, then
         1. Return the Record {
-            [[Precision]]: _digits_,
+            [[Precision]]: _fractionalDigitCount_,
             [[Unit]]: *"millisecond"*,
-            [[Increment]]: 10<sup>3 - _digits_</sup>
+            [[Increment]]: 10<sup>3 - _fractionalDigitCount_</sup>
           }.
-      1. If _digits_ is 4, 5, or 6, then
+      1. If _fractionalDigitCount_ is 4, 5, or 6, then
         1. Return the Record {
-            [[Precision]]: _digits_,
+            [[Precision]]: _fractionalDigitCount_,
             [[Unit]]: *"microsecond"*,
-            [[Increment]]: 10<sup>6 - _digits_</sup>
+            [[Increment]]: 10<sup>6 - _fractionalDigitCount_</sup>
           }.
-      1. Assert: _digits_ is 7, 8, or 9.
+      1. Assert: _fractionalDigitCount_ is 7, 8, or 9.
       1. Return the Record {
-          [[Precision]]: _digits_,
+          [[Precision]]: _fractionalDigitCount_,
           [[Unit]]: *"nanosecond"*,
-          [[Increment]]: 10<sup>9 - _digits_</sup>
+          [[Increment]]: 10<sup>9 - _fractionalDigitCount_</sup>
         }.
     </emu-alg>
   </emu-clause>
