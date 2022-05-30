@@ -1307,71 +1307,87 @@
     </ul>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parseisodatetime" aoid="ParseISODateTime">
-    <h1>ParseISODateTime ( _isoString_ )</h1>
-    <p>
-      The ParseISODateTime abstract operation examines any ISO 8601 string that adheres to the syntax of the |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, or |TemporalZonedDateTimeString| productions of the grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref> and returns a record with all the date and time components found.
-    </p>
+  <emu-clause id="sec-temporal-parseisodatetime" type="abstract operation">
+    <h1>
+      ParseISODateTime (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component as a distinct field.</dd>
+    </dl>
     <emu-note>The value of ! ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. Let _year_, _month_, _day_, _fraction_, and _calendar_ be the parts of _isoString_ produced respectively by the |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| productions, or *undefined* if not present.
-      1. Let _hour_ be the part of _isoString_ produced by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| productions, or *undefined* if none of those are present.
-      1. Let _minute_ be the part of _isoString_ produced by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| productions, or *undefined* if none of those are present.
-      1. Let _second_ be the part of _isoString_ produced by the |TimeSecond| or |TimeSecondNotValidMonth| productions, or *undefined* if neither of those are present.
-      1. If the first code unit of _year_ is 0x2212 (MINUS SIGN), replace it with the code unit 0x002D (HYPHEN-MINUS).
-      1. Set _year_ to ! ToIntegerOrInfinity(_year_).
-      1. If _month_ is *undefined*, then
-        1. Set _month_ to 1.
+      1. Let _parseResult_ be ~empty~.
+      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, |TemporalZonedDateTimeString| &raquo;, do
+        1. If _parseResult_ is not a Parse Node, set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
+      1. Assert: _parseResult_ is a Parse Node.
+      1. Let each of _year_, _month_, _day_, _fSeconds_, and _calendar_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
+      1. Let _hour_ be the source text matched by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
+      1. Let _minute_ be the source text matched by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
+      1. Let _second_ be the source text matched by the |TimeSecond| or |TimeSecondNotValidMonth| Parse Node contained within _parseResult_, or an empty sequence of code points if neither of those are present.
+      1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace it with the code point U+002D (HYPHEN-MINUS).
+      1. Let _yearMV_ be ! ToIntegerOrInfinity(CodePointsToString(_year_)).
+      1. If _month_ is empty, then
+        1. Let _monthMV_ be 1.
       1. Else,
-        1. Set _month_ to ! ToIntegerOrInfinity(_month_).
-      1. If _day_ is *undefined*, then
-        1. Set _day_ to 1.
+        1. Let _monthMV_ be ! ToIntegerOrInfinity(CodePointsToString(_month_)).
+      1. If _day_ is empty, then
+        1. Let _dayMV_ be 1.
       1. Else,
-        1. Set _day_ to ! ToIntegerOrInfinity(_day_).
-      1. Set _hour_ to ! ToIntegerOrInfinity(_hour_).
-      1. Set _minute_ to ! ToIntegerOrInfinity(_minute_).
-      1. Set _second_ to ! ToIntegerOrInfinity(_second_).
-      1. If _second_ is 60, then
-        1. Set _second_ to 59.
-      1. If _fraction_ is not *undefined*, then
-        1. Set _fraction_ to the string-concatenation of the previous value of _fraction_ and the string *"000000000"*.
-        1. Let _millisecond_ be the String value equal to the substring of _fraction_ from 1 to 4.
-        1. Set _millisecond_ to ! ToIntegerOrInfinity(_millisecond_).
-        1. Let _microsecond_ be the String value equal to the substring of _fraction_ from 4 to 7.
-        1. Set _microsecond_ to ! ToIntegerOrInfinity(_microsecond_).
-        1. Let _nanosecond_ be the String value equal to the substring of _fraction_ from 7 to 10.
-        1. Set _nanosecond_ to ! ToIntegerOrInfinity(_nanosecond_).
+        1. Let _dayMV_ be ! ToIntegerOrInfinity(CodePointsToString(_day_)).
+      1. Let _hourMV_ be ! ToIntegerOrInfinity(CodePointsToString(_hour_)).
+      1. Let _minuteMV_ be ! ToIntegerOrInfinity(CodePointsToString(_minute_)).
+      1. Let _secondMV_ be ! ToIntegerOrInfinity(CodePointsToString(_second_)).
+      1. If _secondMV_ is 60, then
+        1. Set _secondMV_ to 59.
+      1. If _fSeconds_ is not empty, then
+        1. Let _fSecondsDigits_ be the substring of CodePointsToString(_fSeconds_) from 1.
+        1. Let _fSecondsDigitsExtended_ be the string-concatenation of _fSecondsDigits_ and *"000000000"*.
+        1. Let _millisecond_ be the substring of _fSecondsDigitsExtended_ from 1 to 4.
+        1. Let _microsecond_ be the substring of _fSecondsDigitsExtended_ from 4 to 7.
+        1. Let _nanosecond_ be the substring of _fSecondsDigitsExtended_ from 7 to 10.
+        1. Let _millisecondMV_ be ! ToIntegerOrInfinity(_millisecond_).
+        1. Let _microsecondMV_ be ! ToIntegerOrInfinity(_microsecond_).
+        1. Let _nanosecondMV_ be ! ToIntegerOrInfinity(_nanosecond_).
       1. Else,
-        1. Let _millisecond_ be 0.
-        1. Let _microsecond_ be 0.
-        1. Let _nanosecond_ be 0.
-      1. If IsValidISODate(_year_, _month_, _day_) is *false*, throw a *RangeError* exception.
-      1. If IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, throw a *RangeError* exception.
+        1. Let _millisecondMV_ be 0.
+        1. Let _microsecondMV_ be 0.
+        1. Let _nanosecondMV_ be 0.
+      1. If IsValidISODate(_yearMV_, _monthMV_, _dayMV_) is *false*, throw a *RangeError* exception.
+      1. If IsValidTime(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_) is *false*, throw a *RangeError* exception.
+      1. If _calendar_ is empty, then
+        1. Let _calendarVal_ be *undefined*.
+      1. Else,
+        1. Let _calendarVal_ be CodePointsToString(_calendar_).
       1. Return the Record {
-        [[Year]]: _year_,
-        [[Month]]: _month_,
-        [[Day]]: _day_,
-        [[Hour]]: _hour_,
-        [[Minute]]: _minute_,
-        [[Second]]: _second_,
-        [[Millisecond]]: _millisecond_,
-        [[Microsecond]]: _microsecond_,
-        [[Nanosecond]]: _nanosecond_,
-        [[Calendar]]: _calendar_
+        [[Year]]: _yearMV_,
+        [[Month]]: _monthMV_,
+        [[Day]]: _dayMV_,
+        [[Hour]]: _hourMV_,
+        [[Minute]]: _minuteMV_,
+        [[Second]]: _secondMV_,
+        [[Millisecond]]: _millisecondMV_,
+        [[Microsecond]]: _microsecondMV_,
+        [[Nanosecond]]: _nanosecondMV_,
+        [[Calendar]]: _calendarVal_,
         }.
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalinstantstring" aoid="ParseTemporalInstantString">
-    <h1>ParseTemporalInstantString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalInstantString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.Instant instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalinstantstring" type="abstract operation">
+    <h1>
+      ParseTemporalInstantString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.Instant instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalInstantString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
+      1. If ParseText(StringToCodePoints(_isoString_), |TemporalInstantString|) is a List of errors, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _timeZoneResult_ be ? ParseTemporalTimeZoneString(_isoString_).
       1. Let _offsetString_ be _timeZoneResult_.[[OffsetString]].
@@ -1393,15 +1409,18 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalzoneddatetimestring" aoid="ParseTemporalZonedDateTimeString">
-    <h1>ParseTemporalZonedDateTimeString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalZonedDateTimeString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.ZonedDateTime instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalzoneddatetimestring" type="abstract operation">
+    <h1>
+      ParseTemporalZonedDateTimeString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.ZonedDateTime instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
+      1. If ParseText(StringToCodePoints(_isoString_), |TemporalZonedDateTimeString|) is a List of errors, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _timeZoneResult_ be ? ParseTemporalTimeZoneString(_isoString_).
       1. Return the Record {
@@ -1422,27 +1441,36 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalcalendarstring" aoid="ParseTemporalCalendarString">
-    <h1>ParseTemporalCalendarString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalCalendarString abstract operation interprets an ISO 8601 string and retrieves the calendar identifier from it.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalcalendarstring" type="abstract operation">
+    <h1>
+      ParseTemporalCalendarString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns the calendar identifier, or *undefined* if there is none.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalCalendarString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
-      1. Let _id_ be the part of _isoString_ produced by the |CalendarName| production, or *undefined* if not present.
-      1. If _id_ is *undefined*, then
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalCalendarString|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. Let _id_ be the source text matched by the |CalendarName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
+      1. If _id_ is empty, then
         1. Return *"iso8601"*.
-      1. Return _id_.
+      1. Return CodePointsToString(_id_).
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporaldatestring" aoid="ParseTemporalDateString">
-    <h1>ParseTemporalDateString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalDateString abstract operation parses a full or partial ISO 8601 string and returns the information needed to construct a Temporal.PlainDate instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporaldatestring" type="abstract operation">
+    <h1>
+      ParseTemporalDateString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as a full or partial ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainDate instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
       1. Let _parts_ be ? ParseTemporalDateTimeString(_isoString_).
       1. Return the Record {
@@ -1454,17 +1482,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporaldatetimestring" aoid="ParseTemporalDateTimeString">
-    <h1>ParseTemporalDateTimeString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalDateTimeString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.PlainDateTime instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporaldatetimestring" type="abstract operation">
+    <h1>
+      ParseTemporalDateTimeString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainDateTime instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
-      1. If _isoString_ contains a |UTCDesignator|, then
-        1. Throw a *RangeError* exception.
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
@@ -1477,7 +1508,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It parses an ISO 8601 duration string and returns a Duration Record.</dd>
+      <dd>It parses the argument as an ISO 8601 duration string and returns a Duration Record.</dd>
     </dl>
     <emu-note>The value of ToIntegerOrInfinity(*""*) is 0.</emu-note>
     <emu-alg>
@@ -1513,7 +1544,7 @@
         1. Let _millisecondsMV_ be remainder(_secondsMV_, 1) &times; 1000.
       1. Let _microsecondsMV_ be remainder(_millisecondsMV_, 1) &times; 1000.
       1. Let _nanosecondsMV_ be remainder(_microsecondsMV_, 1) &times; 1000.
-      1. If _sign_ contains the code point 0x002D (HYPHEN-MINUS) or 0x2212 (MINUS SIGN), then
+      1. If _sign_ contains the code point U+002D (HYPHEN-MINUS) or U+2212 (MINUS SIGN), then
         1. Let _factor_ be -1.
       1. Else,
         1. Let _factor_ be 1.
@@ -1521,20 +1552,23 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalmonthdaystring" aoid="ParseTemporalMonthDayString">
-    <h1>ParseTemporalMonthDayString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalMonthDayString abstract operation parses an ISO 8601 string and returns the information needed to construct a Temporal.PlainMonthDay instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalmonthdaystring" type="abstract operation">
+    <h1>
+      ParseTemporalMonthDayString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainMonthDay instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalMonthDayString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
-      1. If _isoString_ contains a |UTCDesignator|, then
-        1. Throw a *RangeError* exception.
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalMonthDayString|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _year_ be _result_.[[Year]].
-      1. If no part of _isoString_ is produced by the |DateYear| production, then
+      1. If _parseResult_ does not contain a |DateYear| Parse Node, then
         1. Set _year_ to *undefined*.
       1. Return the Record {
         [[Year]]: _year_,
@@ -1545,17 +1579,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalrelativetostring" aoid="ParseTemporalRelativeToString">
-    <h1>ParseTemporalRelativeToString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalRelativeToString abstract operation parses an ISO 8601 string with or without a time zone, and returns the information needed to construct either a Temporal.ZonedDateTime or a Temporal.PlainDateTime instance, e.g. as the value of a `relativeTo` option.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalrelativetostring" type="abstract operation">
+    <h1>
+      ParseTemporalRelativeToString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns the information needed to construct either a Temporal.ZonedDateTime or a Temporal.PlainDateTime instance, e.g. as the value of a `relativeTo` option.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
+      1. If ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|) is a List of errors, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. If _isoString_ satisfies the syntax of a |TemporalZonedDateTimeString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
+      1. If ParseText(StringToCodePoints(_isoString_), |TemporalZonedDateTimeString|) is a Parse Node, then
         1. Let _timeZoneResult_ be ! ParseTemporalTimeZoneString(_isoString_).
         1. Let _z_ be _timeZoneResult_.[[Z]].
         1. Let _offsetString_ be _timeZoneResult_.[[OffsetString]].
@@ -1582,18 +1619,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporaltimestring" aoid="ParseTemporalTimeString">
-    <h1>ParseTemporalTimeString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalTimeString abstract operation parses an ISO 8601 string representing a wall-clock time and returns the information needed to construct a Temporal.PlainTime instance.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporaltimestring" type="abstract operation">
+    <h1>
+      ParseTemporalTimeString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 time of day and returns the information needed to construct a Temporal.PlainTime instance.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeString|).
-      1. If _parseResult_ is a List of errors, then
-        1. Throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator|, then
-        1. Throw a *RangeError* exception.
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
         [[Hour]]: _result_.[[Hour]],
@@ -1610,16 +1649,19 @@
     </emu-note>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporaltimezonestring" aoid="ParseTemporalTimeZoneString">
-    <h1>ParseTemporalTimeZoneString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalTimeZoneString abstract operation interprets an ISO 8601 string and retrieves the information about the time zone from it.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporaltimezonestring" type="abstract operation">
+    <h1>
+      ParseTemporalTimeZoneString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as an ISO 8601 string and returns a Record representing information about the time zone.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeZoneString|).
-      1. If _parseResult_ is a List of errors, then
-        1. Throw a *RangeError* exception.
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
       1. Let each of _z_, _offsetString_, and _name_ be the source text matched by the respective |UTCDesignator|, |TimeZoneNumericUTCOffset|, and |TimeZoneIANAName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
       1. If _name_ is empty, then
         1. Set _name_ to *undefined*.
@@ -1643,18 +1685,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-parsetemporalyearmonthstring" aoid="ParseTemporalYearMonthString">
-    <h1>ParseTemporalYearMonthString ( _isoString_ )</h1>
-    <p>
-      The ParseTemporalYearMonthString abstract operation parses a full or partial ISO 8601 string and returns the information needed to construct a Temporal.PlainYearMonth instance.
-      It returns a Record with four fields ([[Year]], [[Month]], [[Day]], and [[Calendar]]). [[Calendar]] is a String, and the others are integers.
-    </p>
+  <emu-clause id="sec-temporal-parsetemporalyearmonthstring" type="abstract operation">
+    <h1>
+      ParseTemporalYearMonthString (
+        _isoString_: a String,
+      )
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It parses the argument as a full or partial ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainYearMonth instance as a distinct field.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_isoString_) is String.
-      1. If _isoString_ does not satisfy the syntax of a |TemporalYearMonthString| (see <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>), then
-        1. Throw a *RangeError* exception.
-      1. If _isoString_ contains a |UTCDesignator|, then
-        1. Throw a *RangeError* exception.
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalYearMonthString|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
         [[Year]]: _result_.[[Year]],
