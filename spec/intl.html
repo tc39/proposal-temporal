@@ -2104,14 +2104,14 @@
             1. Set _additionalFields_ to ? ToObject(_additionalFields_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Return ? DefaultMergeCalendarFields(_fields_, _additionalFields_).
-            1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
             1. Let _fieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
             1. For each element _key_ of _fieldsKeys_, do
               1. Let _propValue_ be ? Get(_fields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_fieldsCopied_, _key_, _propValue_).
-            1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
             1. Let _additionalFieldsCopied_ be OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
             1. For each element _key_ of _additionalFieldsKeys_, do
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
