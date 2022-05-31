@@ -634,18 +634,18 @@
       </dl>
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _originalKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
-        1. For each element _nextKey_ of _originalKeys_, do
-          1. If _nextKey_ is not *"month"* or *"monthCode"*, then
-            1. Let _propValue_ be ? Get(_fields_, _nextKey_).
+        1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
+        1. For each element _key_ of _fieldsKeys_, do
+          1. If _key_ is not *"month"* or *"monthCode"*, then
+            1. Let _propValue_ be ? Get(_fields_, _key_).
             1. If _propValue_ is not *undefined*, then
-              1. Perform ! CreateDataPropertyOrThrow(_merged_, _nextKey_, _propValue_).
-        1. Let _newKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
-        1. For each element _nextKey_ of _newKeys_, do
-          1. Let _propValue_ be ? Get(_additionalFields_, _nextKey_).
+              1. Perform ! CreateDataPropertyOrThrow(_merged_, _key_, _propValue_).
+        1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
+        1. For each element _key_ of _additionalFieldsKeys_, do
+          1. Let _propValue_ be ? Get(_additionalFields_, _key_).
           1. If _propValue_ is not *undefined*, then
-            1. Perform ! CreateDataPropertyOrThrow(_merged_, _nextKey_, _propValue_).
-        1. If _newKeys_ does not contain either *"month"* or *"monthCode"*, then
+            1. Perform ! CreateDataPropertyOrThrow(_merged_, _key_, _propValue_).
+        1. If _additionalFieldsKeys_ does not contain either *"month"* or *"monthCode"*, then
           1. Let _month_ be ? Get(_fields_, *"month"*).
           1. If _month_ is not *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_merged_, *"month"*, _month_).
