@@ -1365,7 +1365,8 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « », *"nanosecond"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"hour"*, _smallestUnit_).
-        1. Let _largestUnit_ be ? ToLargestTemporalUnit(_options_, « », *"auto"*, _defaultLargestUnit_).
+        1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~datetime~, *"auto"*).
+        1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. If _operation_ is ~since~, then
