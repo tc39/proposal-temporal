@@ -413,7 +413,7 @@
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_roundTo_, « », *undefined*).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~datetime~, *undefined*).
         1. If _smallestUnit_ is *undefined*, then
           1. Set _smallestUnitPresent_ to *false*.
           1. Set _smallestUnit_ to *"nanosecond"*.

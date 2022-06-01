@@ -286,7 +286,7 @@
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_roundTo_, « *"year"*, *"month"*, *"week"*, *"day"* », *undefined*).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *undefined*, throw a *RangeError* exception.
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
         1. If _smallestUnit_ is *"hour"*, then
@@ -660,7 +660,7 @@
           1. Let _first_ be _other_.
           1. Let _second_ be _instant_.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, « *"year"*, *"month"*, *"week"*, *"day"* », *"nanosecond"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *"nanosecond"*).
         1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(*"second"*, _smallestUnit_).
         1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~time~, *"auto"*).
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.

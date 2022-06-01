@@ -628,10 +628,10 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disallowedUnits_ be « *"week"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"* ».
-        1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_options_, _disallowedUnits_, *"month"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~date~, *"month"*).
+        1. If _smallestUnit_ is *"week"* or *"day"*, throw a *RangeError* exception.
         1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~date~, *"auto"*).
-        1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
+        1. If _largestUnit_ is *"week"* or *"day"*, throw a *RangeError* exception.
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to *"year"*.
         1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
