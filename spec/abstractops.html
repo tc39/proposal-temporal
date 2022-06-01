@@ -348,25 +348,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporaldurationtotalunit" aoid="ToTemporalDurationTotalUnit">
-    <h1>ToTemporalDurationTotalUnit ( _normalizedOptions_ )</h1>
-    <p>
-      The abstract operation ToTemporalDurationTotalUnit consults the `unit` property of the Object _normalizedOptions_, and checks that it is a valid unit.
-      It throws if the property is not present.
-    </p>
-    <p>
-      Both singular and plural unit names are accepted, but only the singular form is returned.
-    </p>
-    <emu-alg>
-      1. Let _unit_ be ? GetOption(_normalizedOptions_, *"unit"*, « String », « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"*, *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* », *undefined*).
-      1. If _unit_ is *undefined*, then
-        1. Throw a *RangeError* exception.
-      1. If _unit_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _unit_ to the corresponding Singular value of the same row.
-      1. Return _unit_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-singular-and-plural-units">
     <h1>Singular and plural units</h1>
     <p>
