@@ -323,11 +323,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-gettemporalunit" aoid="GetTemporalUnit">
-    <h1>GetTemporalUnit ( _normalizedOptions_, _key_, _unitGroup_, _defaultValue_ [ , _extraValues_ ] )</h1>
-    <p>
-      The abstract operation GetTemporalUnit attempts to read from the specified property of the Object _normalizedOptions_ a Temporal unit that is covered by the union of _unitGroup_ (~date~, ~time~, or ~datetime~) and _extraValues_, substituting _defaultValue_ if the property value is *undefined*.
-    </p>
+  <emu-clause id="sec-temporal-gettemporalunit" type="abstract operation">
+    <h1>
+      GetTemporalUnit (
+        _normalizedOptions_: an Object,
+        _key_: a property key,
+        _unitGroup_: ~date~, ~time~, or ~datetime~,
+        _defaultValue_: an ECMAScript language value,
+        optional _extraValues_: a List of ECMAScript language values,
+      ): either a normal completion containing an ECMAScript language value, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It attempts to read from the specified property of _normalizedOptions_ a Temporal unit that is covered by the union of _unitGroup_ and _extraValues_, substituting _defaultValue_ if the property value is *undefined*.</dd>
+    </dl>
     <p>
       Both singular and plural unit names are accepted, but only the singular form is returned.
     </p>
