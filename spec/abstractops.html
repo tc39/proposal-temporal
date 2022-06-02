@@ -338,7 +338,7 @@
       <dd>It attempts to read from the specified property of _normalizedOptions_ a Temporal unit that is covered by the union of _unitGroup_ and _extraValues_, substituting _default_ if the property value is *undefined*.</dd>
     </dl>
     <p>
-      Both singular and plural unit names are accepted, but only the singular form is returned.
+      Both singular and plural unit names are accepted, but only the singular form is used internally.
     </p>
     <emu-alg>
       1. Let _allowedValues_ be a new empty List.
@@ -360,14 +360,6 @@
         1. Set _value_ to the corresponding Singular value of the same row.
       1. Return _value_.
     </emu-alg>
-  </emu-clause>
-
-  <emu-clause id="sec-temporal-singular-and-plural-units">
-    <h1>Singular and plural units</h1>
-    <p>
-      Where possible, the `smallestUnit`, `largestUnit`, and `unit` options accept both singular and plural forms.
-      Only the singular form is used internally.
-    </p>
     <emu-table id="table-temporal-singular-and-plural-units">
       <emu-caption>Singular and plural units</emu-caption>
       <table class="real-table">
