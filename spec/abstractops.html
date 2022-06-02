@@ -342,10 +342,13 @@
     </p>
     <emu-alg>
       1. Let _allowedValues_ be a new empty List.
-      1. If _unitGroup_ is ~date~ or ~datetime~, then
-        1. Set _allowedValues_ to the list-concatenation of _allowedValues_ and « *"year"*, *"years"*, *"month"*, *"months"*, *"week"*, *"weeks"*, *"day"*, *"days"* ».
-      1. If _unitGroup_ is ~time~ or ~datetime~, then
-        1. Set _allowedValues_ to the list-concatenation of _allowedValues_ and « *"hour"*, *"hours"*, *"minute"*, *"minutes"*, *"second"*, *"seconds"*, *"millisecond"*, *"milliseconds"*, *"microsecond"*, *"microseconds"*, *"nanosecond"*, *"nanoseconds"* ».
+      1. For each row of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row, in table order, do
+        1. Let _applicable_ be *false*.
+        1. If the Category column of the row is ~date~ and _unitGroup_ is ~date~ or ~datetime~, set _applicable_ to *true*.
+        1. Else if the Category column of the row is ~time~ and _unitGroup_ is ~time~ or ~datetime~, set _applicable_ to *true*.
+        1. If _applicable_ is *true*, then
+          1. Append the value in the Singular column of the row to _allowedValues_.
+          1. Append the value in the Plural column of the row to _allowedValues_.
       1. If _extraValues_ is present, then
         1. Set _allowedValues_ to the list-concatenation of _allowedValues_ and _extraValues_.
       1. If _default_ is ~required~, then
@@ -356,68 +359,79 @@
           1. Append _defaultValue_ to _allowedValues_.
       1. Let _value_ be ? GetOption(_normalizedOptions_, _key_, « String », _allowedValues_, _defaultValue_).
       1. If _value_ is *undefined* and _default_ is ~required~, throw a *RangeError* exception.
-      1. If _value_ is in the Plural column of <emu-xref href="#table-temporal-singular-and-plural-units"></emu-xref>, then
-        1. Set _value_ to the corresponding Singular value of the same row.
+      1. If _value_ is listed in the Plural column of <emu-xref href="#table-temporal-units"></emu-xref>, then
+        1. Set _value_ to the value in the Singular value of the corresponding row.
       1. Return _value_.
     </emu-alg>
-    <emu-table id="table-temporal-singular-and-plural-units">
-      <emu-caption>Singular and plural units</emu-caption>
+    <emu-table id="table-temporal-units">
+      <emu-caption>Temporal units</emu-caption>
       <table class="real-table">
         <thead>
           <tr>
             <th>Singular</th>
             <th>Plural</th>
+            <th>Category</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>*"year"*</td>
             <td>*"years"*</td>
+            <td>~date~</td>
           </tr>
 
           <tr>
             <td>*"month"*</td>
             <td>*"months"*</td>
+            <td>~date~</td>
           </tr>
 
           <tr>
             <td>*"week"*</td>
             <td>*"weeks"*</td>
+            <td>~date~</td>
           </tr>
 
           <tr>
             <td>*"day"*</td>
             <td>*"days"*</td>
+            <td>~date~</td>
           </tr>
 
           <tr>
             <td>*"hour"*</td>
             <td>*"hours"*</td>
+            <td>~time~</td>
           </tr>
 
           <tr>
             <td>*"minute"*</td>
             <td>*"minutes"*</td>
+            <td>~time~</td>
           </tr>
 
           <tr>
             <td>*"second"*</td>
             <td>*"seconds"*</td>
+            <td>~time~</td>
           </tr>
 
           <tr>
             <td>*"millisecond"*</td>
             <td>*"milliseconds"*</td>
+            <td>~time~</td>
           </tr>
 
           <tr>
             <td>*"microsecond"*</td>
             <td>*"microseconds"*</td>
+            <td>~time~</td>
           </tr>
 
           <tr>
             <td>*"nanosecond"*</td>
             <td>*"nanoseconds"*</td>
+            <td>~time~</td>
           </tr>
         </tbody>
       </table>
