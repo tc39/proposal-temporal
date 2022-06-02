@@ -335,28 +335,31 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It attempts to read from the specified property of _normalizedOptions_ a Temporal unit that is covered by the union of _unitGroup_ and _extraValues_, substituting _default_ if the property value is *undefined*.</dd>
+      <dd>It attempts to read from the specified property of _normalizedOptions_ a Temporal unit that is <emu-not-ref>covered</emu-not-ref> by the union of _unitGroup_ and _extraValues_, substituting _default_ if the property value is *undefined*.</dd>
     </dl>
     <p>
       Both singular and plural unit names are accepted, but only the singular form is used internally.
     </p>
     <emu-alg>
-      1. Let _allowedValues_ be a new empty List.
+      1. Let _singularNames_ be a new empty List.
       1. For each row of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row, in table order, do
-        1. Let _applicable_ be *false*.
-        1. If the Category column of the row is ~date~ and _unitGroup_ is ~date~ or ~datetime~, set _applicable_ to *true*.
-        1. Else if the Category column of the row is ~time~ and _unitGroup_ is ~time~ or ~datetime~, set _applicable_ to *true*.
-        1. If _applicable_ is *true*, then
-          1. Append the value in the Singular column of the row to _allowedValues_.
-          1. Append the value in the Plural column of the row to _allowedValues_.
+        1. Let _unit_ be the value in the Singular column of the row.
+        1. If the Category column of the row is ~date~ and _unitGroup_ is ~date~ or ~datetime~, append _unit_ to _singularNames_.
+        1. Else if the Category column of the row is ~time~ and _unitGroup_ is ~time~ or ~datetime~, append _unit_ to _singularNames_.
       1. If _extraValues_ is present, then
-        1. Set _allowedValues_ to the list-concatenation of _allowedValues_ and _extraValues_.
+        1. Set _singularNames_ to the list-concatenation of _singularNames_ and _extraValues_.
       1. If _default_ is ~required~, then
         1. Let _defaultValue_ be *undefined*.
       1. Else,
         1. Let _defaultValue_ be _default_.
-        1. If _defaultValue_ is not *undefined* and _allowedValues_ does not contain _defaultValue_, then
-          1. Append _defaultValue_ to _allowedValues_.
+        1. If _defaultValue_ is not *undefined* and _singularNames_ does not contain _defaultValue_, then
+          1. Append _defaultValue_ to _singularNames_.
+      1. Let _allowedValues_ be a copy of _singularNames_.
+      1. For each element _singularName_ of _singularNames_, do
+        1. If _singularName_ is listed in the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>, then
+          1. Let _pluralName_ be the value in the Plural column of the corresponding row.
+          1. Append _pluralName_ to _allowedValues_.
+      1. NOTE: For each singular Temporal unit name that is contained within _allowedValues_, the corresponding plural name is also contained within it.
       1. Let _value_ be ? GetOption(_normalizedOptions_, _key_, « String », _allowedValues_, _defaultValue_).
       1. If _value_ is *undefined* and _default_ is ~required~, throw a *RangeError* exception.
       1. If _value_ is listed in the Plural column of <emu-xref href="#table-temporal-units"></emu-xref>, then
