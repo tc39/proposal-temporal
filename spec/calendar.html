@@ -53,11 +53,6 @@
         <dt>description</dt>
         <dd>Each element in the returned List represents a calendar type supported by the implementation.</dd>
       </dl>
-
-      <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the AvailableCalendars abstract operation as specified in the ECMA-402 specification.
-        If an ECMAScript implementation does not include the ECMA-402 API the following specification of the AvailableCalendars abstract operation is used.
-      </p>
       <emu-alg>
         1. Let _calendars_ be the List of String values representing calendar types supported by the implementation.
         1. Assert: _calendars_ contains *"iso8601"*.

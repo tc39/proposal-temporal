@@ -84,33 +84,6 @@
         The DefaultTimeZone abstract operation returns a String value representing the valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name for the host environment's current time zone.
       </p>
     </emu-clause>
-
-    <ins class="block">
-      <emu-clause id="sup-calendar-types">
-        <h1>Calendar Types</h1>
-
-        <p>
-          The ECMAScript 2022 Internationalization API Specification identifies calendars using a <em>calendar type</em> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>.
-          Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z, inclusive) and/or digits (U+0030 DIGIT ZERO through U+0039 DIGIT NINE, inclusive), with zero or more medial hyphens (U+002D HYPHEN-MINUS).
-        </p>
-
-        <emu-clause id="sup-availablecalendars" type="abstract operation">
-          <h1>
-            AvailableCalendars (
-            ): a List of Strings
-          </h1>
-          <dl class="header">
-            <dt>description</dt>
-            <dd>The returned List is ordered as if an Array of the same values had been sorted using %Array.prototype.sort% using *undefined* as _comparefn_, and contains unique calendar types identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects.
-            The list must include *"iso8601"*.</dd>
-            <dt>redefinition</dt>
-            <dd>true</dd>
-          </dl>
-
-          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-availablecalendars"></emu-xref>.</p>
-        </emu-clause>
-      </emu-clause>
-    </ins>
   </emu-clause>
 
   <emu-clause id="sec-abstract-operations">
