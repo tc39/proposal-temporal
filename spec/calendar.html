@@ -20,7 +20,7 @@
     </p>
     <p>
       ECMAScript implementations identify built-in calendars using a <dfn variants="calendar types">calendar type</dfn> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>.
-      Their canonical form is a string containing all lower case letters with zero or more hyphens.
+      Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z, inclusive) and/or digits (U+0030 DIGIT ZERO through U+0039 DIGIT NINE, inclusive), with zero or more medial hyphens (U+002D HYPHEN-MINUS).
     </p>
     <p>
       <emu-xref href="#sec-temporal-calendar-constructor">The `Temporal.Calendar` constructor</emu-xref>, when called with the name of a built-in calendar as the argument, will return a valid `Temporal.Calendar` object.

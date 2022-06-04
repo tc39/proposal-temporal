@@ -90,7 +90,8 @@
         <h1>Calendar Types</h1>
 
         <p>
-          The ECMAScript 2022 Internationalization API Specification identifies calendars using a <em>calendar type</em> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>. Their canonical form is a string containing all lower case letters with zero or more hyphens.
+          The ECMAScript 2022 Internationalization API Specification identifies calendars using a <em>calendar type</em> as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35, Part 4, Section 2</a>.
+          Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z, inclusive) and/or digits (U+0030 DIGIT ZERO through U+0039 DIGIT NINE, inclusive), with zero or more medial hyphens (U+002D HYPHEN-MINUS).
         </p>
 
         <emu-clause id="sup-availablecalendars" type="abstract operation">
