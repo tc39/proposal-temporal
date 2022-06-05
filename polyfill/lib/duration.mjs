@@ -230,7 +230,7 @@ export class Duration {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    let smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined);
+    let smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
     let smallestUnitPresent = true;
     if (!smallestUnit) {
       smallestUnitPresent = false;

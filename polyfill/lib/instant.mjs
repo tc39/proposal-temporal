@@ -79,9 +79,7 @@ export class Instant {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-    const smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, DISALLOWED_UNITS);
-    if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const maximumIncrements = {
       hour: 24,
