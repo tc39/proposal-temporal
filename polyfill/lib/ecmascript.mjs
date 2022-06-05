@@ -155,18 +155,6 @@ const BUILTIN_CASTS = new Map([
   ['offset', ToString]
 ]);
 
-const ALLOWED_UNITS = [
-  'year',
-  'month',
-  'week',
-  'day',
-  'hour',
-  'minute',
-  'second',
-  'millisecond',
-  'microsecond',
-  'nanosecond'
-];
 // each item is [plural, singular, category]
 const SINGULAR_PLURAL_UNITS = [
   ['years', 'year', 'date'],
@@ -182,6 +170,7 @@ const SINGULAR_PLURAL_UNITS = [
 ];
 const SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
 const PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(([p, s]) => [s, p]));
+const UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(([p, s]) => s);
 
 import * as PARSE from './regex.mjs';
 
@@ -872,7 +861,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return 'nanosecond';
   },
   LargerOfTwoTemporalUnits: (unit1, unit2) => {
-    if (ALLOWED_UNITS.indexOf(unit1) > ALLOWED_UNITS.indexOf(unit2)) return unit2;
+    if (UNITS_DESCENDING.indexOf(unit1) > UNITS_DESCENDING.indexOf(unit2)) return unit2;
     return unit1;
   },
   MergeLargestUnitOption: (options, largestUnit) => {
