@@ -167,18 +167,21 @@ const ALLOWED_UNITS = [
   'microsecond',
   'nanosecond'
 ];
+// each item is [plural, singular, category]
 const SINGULAR_PLURAL_UNITS = [
-  ['years', 'year'],
-  ['months', 'month'],
-  ['weeks', 'week'],
-  ['days', 'day'],
-  ['hours', 'hour'],
-  ['minutes', 'minute'],
-  ['seconds', 'second'],
-  ['milliseconds', 'millisecond'],
-  ['microseconds', 'microsecond'],
-  ['nanoseconds', 'nanosecond']
+  ['years', 'year', 'date'],
+  ['months', 'month', 'date'],
+  ['weeks', 'week', 'date'],
+  ['days', 'day', 'date'],
+  ['hours', 'hour', 'time'],
+  ['minutes', 'minute', 'time'],
+  ['seconds', 'second', 'time'],
+  ['milliseconds', 'millisecond', 'time'],
+  ['microseconds', 'microsecond', 'time'],
+  ['nanoseconds', 'nanosecond', 'time']
 ];
+const SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
+const PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(([p, s]) => [s, p]));
 
 import * as PARSE from './regex.mjs';
 
@@ -732,6 +735,33 @@ export const ES = ObjectAssign({}, ES2020, {
       case 9:
         return { precision, unit: 'nanosecond', increment: 10 ** (9 - precision) };
     }
+  },
+  REQUIRED: Symbol('~required~'),
+  GetTemporalUnit: (options, key, unitGroup, requiredOrDefault, extraValues = []) => {
+    const allowedSingular = [];
+    for (const [plural, singular, category] of SINGULAR_PLURAL_UNITS) {
+      if (unitGroup === 'datetime' || unitGroup === category) {
+        allowedSingular.push(singular);
+      }
+    }
+    allowedSingular.push(...extraValues);
+    let defaultVal = requiredOrDefault;
+    if (defaultVal === ES.REQUIRED) {
+      defaultVal = undefined;
+    } else if (defaultVal !== undefined) {
+      allowedSingular.push(defaultVal);
+    }
+    const allowedValues = [...allowedSingular];
+    for (const singular of allowedSingular) {
+      const plural = PLURAL_FOR.get(singular);
+      if (plural !== undefined) allowedValues.push(plural);
+    }
+    let retval = ES.GetOption(options, key, allowedValues, defaultVal);
+    if (retval === undefined && requiredOrDefault === ES.REQUIRED) {
+      throw new RangeError(`${key} is required`);
+    }
+    if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
+    return retval;
   },
   ToLargestTemporalUnit: (options, fallback, disallowedStrings = [], autoValue) => {
     const singular = new Map(SINGULAR_PLURAL_UNITS.filter(([, sing]) => !disallowedStrings.includes(sing)));
@@ -3312,7 +3342,8 @@ export const ES = ObjectAssign({}, ES2020, {
     const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const MAX_DIFFERENCE_INCREMENTS = {
@@ -3362,7 +3393,8 @@ export const ES = ObjectAssign({}, ES2020, {
     const DISALLOWED_UNITS = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'day', DISALLOWED_UNITS);
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
@@ -3406,7 +3438,8 @@ export const ES = ObjectAssign({}, ES2020, {
     options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
+    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
@@ -3485,7 +3518,8 @@ export const ES = ObjectAssign({}, ES2020, {
     other = ES.ToTemporalTime(other);
     options = ES.GetOptionsObject(options);
     const DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'hour');
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+    if (largestUnit === 'auto') largestUnit = 'hour';
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
@@ -3567,7 +3601,18 @@ export const ES = ObjectAssign({}, ES2020, {
     options = ES.GetOptionsObject(options);
     const DISALLOWED_UNITS = ['week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+    if (largestUnit === 'week' || largestUnit === 'day') {
+      const allowed = SINGULAR_PLURAL_UNITS.reduce(
+        (allowed, [p, s, c]) => {
+          if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
+          return allowed;
+        },
+        []
+      );
+      throw new RangeError(`largestUnit must be one of ${allowed.join(', ')}, not ${largestUnit}`);
+    }
+    if (largestUnit === 'auto') largestUnit = 'year';
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
@@ -3617,7 +3662,8 @@ export const ES = ObjectAssign({}, ES2020, {
     options = ES.GetOptionsObject(options);
     const smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('hour', smallestUnit);
-    const largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
+    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);

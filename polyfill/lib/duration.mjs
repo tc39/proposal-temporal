@@ -237,7 +237,13 @@ export class Duration {
       smallestUnit = 'nanosecond';
     }
     defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
-    let largestUnit = ES.ToLargestTemporalUnit(roundTo, undefined);
+    let largestUnit = ES.GetTemporalUnit(
+      roundTo,
+      'largestUnit',
+      'datetime',
+      undefined,
+      ['auto']
+    );
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;

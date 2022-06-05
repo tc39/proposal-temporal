@@ -137,12 +137,8 @@ export class Calendar {
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
     options = ES.GetOptionsObject(options);
-    const largestUnit = ES.ToLargestTemporalUnit(
-      options,
-      'auto',
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'],
-      'day'
-    );
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+    if (largestUnit === 'auto') largestUnit = 'day';
     const { years, months, weeks, days } = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
