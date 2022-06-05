@@ -170,7 +170,7 @@ const SINGULAR_PLURAL_UNITS = [
 ];
 const SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
 const PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(([p, s]) => [s, p]));
-const UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(([p, s]) => s);
+const UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(([, s]) => s);
 
 import * as PARSE from './regex.mjs';
 
@@ -685,13 +685,10 @@ export const ES = ObjectAssign({}, ES2020, {
   ToSecondsStringPrecision: (options) => {
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') {
-      const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(
-        (allowed, [p, s, c]) => {
-          if (c === 'time' && s !== 'hour') allowed.push(s, p);
-          return allowed;
-        },
-        []
-      );
+      const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, [p, s, c]) => {
+        if (c === 'time' && s !== 'hour') allowed.push(s, p);
+        return allowed;
+      }, []);
       throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
     }
     switch (smallestUnit) {
@@ -738,7 +735,7 @@ export const ES = ObjectAssign({}, ES2020, {
   REQUIRED: Symbol('~required~'),
   GetTemporalUnit: (options, key, unitGroup, requiredOrDefault, extraValues = []) => {
     const allowedSingular = [];
-    for (const [plural, singular, category] of SINGULAR_PLURAL_UNITS) {
+    for (const [, singular, category] of SINGULAR_PLURAL_UNITS) {
       if (unitGroup === 'datetime' || unitGroup === category) {
         allowedSingular.push(singular);
       }
@@ -3566,13 +3563,10 @@ export const ES = ObjectAssign({}, ES2020, {
       );
     }
     options = ES.GetOptionsObject(options);
-    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(
-      (allowed, [p, s, c]) => {
-        if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
-        return allowed;
-      },
-      []
-    );
+    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, [p, s, c]) => {
+      if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
+      return allowed;
+    }, []);
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'month');
     if (smallestUnit === 'week' || smallestUnit === 'day') {
       throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
