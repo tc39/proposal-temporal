@@ -253,7 +253,9 @@ export class Duration {
     if (!smallestUnitPresent && !largestUnitPresent) {
       throw new RangeError('at least one of smallestUnit or largestUnit is required');
     }
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(roundTo, smallestUnit);
     let relativeTo = ES.ToRelativeTemporalObject(roundTo);

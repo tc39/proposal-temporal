@@ -843,11 +843,6 @@ export const ES = ObjectAssign({}, ES2020, {
     }
     return ES.CreateTemporalDate(year, month, day, calendar);
   },
-  ValidateTemporalUnitRange: (largestUnit, smallestUnit) => {
-    if (ALLOWED_UNITS.indexOf(largestUnit) > ALLOWED_UNITS.indexOf(smallestUnit)) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-  },
   DefaultTemporalLargestUnit: (
     years,
     months,
@@ -3322,7 +3317,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const MAX_DIFFERENCE_INCREMENTS = {
       hour: 24,
@@ -3372,7 +3369,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -3417,7 +3416,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
@@ -3497,7 +3498,9 @@ export const ES = ObjectAssign({}, ES2020, {
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
     if (largestUnit === 'auto') largestUnit = 'hour';
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const MAX_INCREMENTS = {
@@ -3591,7 +3594,9 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
     }
     if (largestUnit === 'auto') largestUnit = 'year';
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -3642,7 +3647,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('hour', smallestUnit);
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);

@@ -953,7 +953,7 @@
         1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *"nanosecond"*).
         1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~time~, *"auto"*).
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to *"hour"*.
-        1. Perform ? ValidateTemporalUnitRange(_largestUnit_, _smallestUnit_).
+        1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. If _operation_ is ~since~, then
           1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).

@@ -503,17 +503,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-validatetemporalunitrange" aoid="ValidateTemporalUnitRange">
-    <h1>ValidateTemporalUnitRange ( _largestUnit_, _smallestUnit_ )</h1>
-    <emu-alg>
-      1. Assert: Both _largestUnit_ and _smallestUnit_ are listed in the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>.
-      1. For each row of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row, in table order, do
-        1. Let _unit_ be the value in the Singular column of the row.
-        1. If SameValue(_largestUnit_, _unit_) is *true*, return ~unused~.
-        1. If SameValue(_smallestUnit_, _unit_) is *true*, throw a *RangeError* exception.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-largeroftwotemporalunits" aoid="LargerOfTwoTemporalUnits">
     <h1>LargerOfTwoTemporalUnits ( _u1_, _u2_ )</h1>
     <p>
