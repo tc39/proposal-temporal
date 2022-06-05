@@ -763,17 +763,6 @@ export const ES = ObjectAssign({}, ES2020, {
     if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
     return retval;
   },
-  ToLargestTemporalUnit: (options, fallback, disallowedStrings = [], autoValue) => {
-    const singular = new Map(SINGULAR_PLURAL_UNITS.filter(([, sing]) => !disallowedStrings.includes(sing)));
-    const allowed = new Set(ALLOWED_UNITS);
-    for (const s of disallowedStrings) {
-      allowed.delete(s);
-    }
-    const retval = ES.GetOption(options, 'largestUnit', ['auto', ...allowed, ...singular.keys()], fallback);
-    if (retval === 'auto' && autoValue !== undefined) return autoValue;
-    if (singular.has(retval)) return singular.get(retval);
-    return retval;
-  },
   ToSmallestTemporalUnit: (options, fallback, disallowedStrings = []) => {
     const singular = new Map(SINGULAR_PLURAL_UNITS.filter(([, sing]) => !disallowedStrings.includes(sing)));
     const allowed = new Set(ALLOWED_UNITS);
