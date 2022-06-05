@@ -855,7 +855,6 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds,
     nanoseconds
   ) => {
-    const singular = new Map(SINGULAR_PLURAL_UNITS);
     for (const [prop, v] of ObjectEntries({
       years,
       months,
@@ -868,7 +867,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microseconds,
       nanoseconds
     })) {
-      if (v !== 0) return singular.get(prop);
+      if (v !== 0) return SINGULAR_FOR.get(prop);
     }
     return 'nanosecond';
   },
