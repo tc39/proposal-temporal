@@ -339,8 +339,7 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    const unit = ES.ToTemporalDurationTotalUnit(totalOf, undefined);
-    if (unit === undefined) throw new RangeError('unit option is required');
+    const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
     const relativeTo = ES.ToRelativeTemporalObject(totalOf);
 
     // Convert larger units down to days

@@ -773,16 +773,6 @@ export const ES = ObjectAssign({}, ES2020, {
     if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
     return retval;
   },
-  ToTemporalDurationTotalUnit: (options) => {
-    // This AO is identical to ToSmallestTemporalUnit, except:
-    // - default is always `undefined` (caller will throw if omitted)
-    // - option is named `unit` (not `smallestUnit`)
-    // - all units are valid (no `disallowedStrings`)
-    const singular = new Map(SINGULAR_PLURAL_UNITS);
-    const value = ES.GetOption(options, 'unit', [...singular.values(), ...singular.keys()], undefined);
-    if (singular.has(value)) return singular.get(value);
-    return value;
-  },
   ToRelativeTemporalObject: (options) => {
     const relativeTo = options.relativeTo;
     if (relativeTo === undefined) return relativeTo;
