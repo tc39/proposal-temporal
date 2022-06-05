@@ -615,11 +615,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-defaultmergefields" aoid="DefaultMergeCalendarFields">
-      <h1>DefaultMergeCalendarFields ( _fields_, _additionalFields_ )</h1>
-      <p>
-        The abstract operation DefaultMergeCalendarFields implements the default logic for the `Temporal.Calendar.mergeFields` method, which is used as a fallback if the method is not present on a calendar, and also for the ISO 8601 calendar.
-      </p>
+    <emu-clause id="sec-temporal-defaultmergefields" type="abstract operation">
+      <h1>
+        DefaultMergeCalendarFields (
+          _fields_: an Object,
+          _additionalFields_: an Object,
+        ): either a normal completion containing an Object or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It implements the default logic for the `Temporal.Calendar.mergeFields` method, which is used for the ISO 8601 calendar and as a fallback if the method is not present on a calendar.</dd>
+      </dl>
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Let _originalKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
