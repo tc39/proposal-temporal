@@ -63,6 +63,7 @@
   ],
   "dependencies": {
     "big-integer": "^1.6.51",
+    "call-bind": "^1.0.2",
     "es-abstract": "^1.20.4"
   },
   "devDependencies": {

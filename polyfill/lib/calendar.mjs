@@ -32,7 +32,6 @@ const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
 const ObjectEntries = Object.entries;
-const ObjectKeys = Object.keys;
 
 const impl = {};
 
@@ -265,23 +264,17 @@ impl['iso8601'] = {
     return fields;
   },
   mergeFields(fields, additionalFields) {
+    fields = ES.ToObject(fields);
+    additionalFields = ES.ToObject(additionalFields);
     const merged = {};
-    const keys = ObjectKeys(fields);
-    for (let index = 0; index < keys.length; index++) {
-      const nextKey = keys[index];
-      if (nextKey === 'month' || nextKey === 'monthCode') continue;
-      merged[nextKey] = fields[nextKey];
+    ES.CopyDataProperties(merged, fields, [], [undefined]);
+    const additionalFieldsCopy = {};
+    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+    if ('month' in additionalFieldsCopy || 'monthCode' in additionalFieldsCopy) {
+      delete merged.month;
+      delete merged.monthCode;
     }
-    const newKeys = ObjectKeys(additionalFields);
-    for (let index = 0; index < newKeys.length; index++) {
-      const nextKey = newKeys[index];
-      merged[nextKey] = additionalFields[nextKey];
-    }
-    if (!ES.Call(ArrayIncludes, newKeys, ['month']) && !ES.Call(ArrayIncludes, newKeys, ['monthCode'])) {
-      const { month, monthCode } = fields;
-      if (month !== undefined) merged.month = month;
-      if (monthCode !== undefined) merged.monthCode = monthCode;
-    }
+    ES.CopyDataProperties(merged, additionalFieldsCopy, []);
     return merged;
   },
   dateAdd(date, years, months, weeks, days, overflow, calendar) {
@@ -1917,8 +1910,13 @@ const nonIsoGeneralImpl = {
     return fields;
   },
   mergeFields(fields, additionalFields) {
-    const fieldsCopy = { ...fields };
-    const additionalFieldsCopy = { ...additionalFields };
+    fields = ES.ToObject(fields);
+    additionalFields = ES.ToObject(additionalFields);
+    const fieldsCopy = {};
+    ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
+    const additionalFieldsCopy = {};
+    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+
     // era and eraYear are intentionally unused
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { month, monthCode, year, era, eraYear, ...original } = fieldsCopy;
