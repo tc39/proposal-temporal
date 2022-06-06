@@ -1751,26 +1751,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-tolimitedtemporalduration" type="abstract operation">
-      <h1>
-        ToLimitedTemporalDuration (
-          _temporalDurationLike_: an ECMAScript value,
-        )
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It converts _temporalDurationLike_ to a Duration Record, and returns it, ensuring that [[Days]], [[Months]], [[Weeks]], and [[Years]] are all zeros.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. If _duration_.[[Days]] is not 0, throw a *RangeError* exception.
-        1. If _duration_.[[Months]] is not 0, throw a *RangeError* exception.
-        1. If _duration_.[[Weeks]] is not 0, throw a *RangeError* exception.
-        1. If _duration_.[[Years]] is not 0, throw a *RangeError* exception.
-        1. Return _duration_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-temporaldurationtostring" type="abstract operation">
       <h1>
         TemporalDurationToString (
