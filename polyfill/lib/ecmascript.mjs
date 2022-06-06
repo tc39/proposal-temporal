@@ -21,6 +21,7 @@ const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2022/Call.js';
+import CopyDataProperties from 'es-abstract/2022/CopyDataProperties.js';
 import GetMethod from 'es-abstract/2022/GetMethod.js';
 import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
 import ToIntegerOrInfinity from 'es-abstract/2022/ToIntegerOrInfinity.js';
@@ -199,6 +200,7 @@ import * as PARSE from './regex.mjs';
 
 const ES2022 = {
   Call,
+  CopyDataProperties,
   GetMethod,
   HasOwnProperty,
   IsIntegralNumber,
@@ -930,10 +932,6 @@ export const ES = ObjectAssign({}, ES2022, {
   LargerOfTwoTemporalUnits: (unit1, unit2) => {
     if (UNITS_DESCENDING.indexOf(unit1) > UNITS_DESCENDING.indexOf(unit2)) return unit2;
     return unit1;
-  },
-  MergeLargestUnitOption: (options, largestUnit) => {
-    if (options === undefined) options = ObjectCreate(null);
-    return ObjectAssign(ObjectCreate(null), options, { largestUnit });
   },
   PrepareTemporalFields: (
     bag,
@@ -3364,7 +3362,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
-    const untilOptions = ES.MergeLargestUnitOption(options, dateLargestUnit);
+    const untilOptions = {};
+    ES.CopyDataProperties(untilOptions, options, []);
+    untilOptions.largestUnit = dateLargestUnit;
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
     // Signs of date part and time part may not agree; balance them together
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
@@ -3506,7 +3506,9 @@ export const ES = ObjectAssign({}, ES2022, {
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
+    const untilOptions = {};
+    ES.CopyDataProperties(untilOptions, options, []);
+    untilOptions.largestUnit = largestUnit;
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions);
 
     if (smallestUnit !== 'day' || roundingIncrement !== 1) {
@@ -3739,7 +3741,9 @@ export const ES = ObjectAssign({}, ES2022, {
     thisFields.day = 1;
     const thisDate = ES.CalendarDateFromFields(calendar, thisFields);
 
-    const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
+    const untilOptions = {};
+    ES.CopyDataProperties(untilOptions, options, []);
+    untilOptions.largestUnit = largestUnit;
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
 
     if (smallestUnit !== 'month' || roundingIncrement !== 1) {
@@ -3811,7 +3815,9 @@ export const ES = ObjectAssign({}, ES2022, {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
-      const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
+      const untilOptions = {};
+      ES.CopyDataProperties(untilOptions, options, []);
+      untilOptions.largestUnit = largestUnit;
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =

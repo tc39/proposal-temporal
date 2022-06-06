@@ -1,4 +1,5 @@
 import commonjs from '@rollup/plugin-commonjs';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
@@ -27,6 +28,7 @@ export default [
     plugins: [
       replace({ ...replaceConfig, __debug__: false, __isTest262__: isTest262 }),
       commonjs(),
+      nodePolyfills(),
       resolve(resolveConfig)
     ],
     output: {
@@ -47,6 +49,7 @@ export default [
     plugins: [
       replace({ ...replaceConfig, __debug__: true, __isTest262__: false }),
       commonjs(),
+      nodePolyfills(),
       resolve(resolveConfig),
       babel(babelConfig)
     ]
