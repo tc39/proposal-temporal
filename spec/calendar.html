@@ -723,19 +723,14 @@
       </dl>
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _fieldsEntries_ be ? EnumerableOwnProperties(_fields_, ~key+value~).
-        1. For each element _entry_ of _fieldsEntries_, do
-          1. If _entry_[1] is not *undefined*, then
-            1. Perform ! CreateDataPropertyOrThrow(_merged_, _entry_[0], _entry_[1]).
-        1. Let _monthOverride_ be *false*.
-        1. Let _additionalFieldsEntries_ be ? EnumerableOwnProperties(_additionalFields_, ~key+value~).
-        1. For each element _entry_ of _additionalFieldsEntries_, do
-          1. If _entry_[1] is not *undefined*, then
-            1. If _monthOverride_ is *false* and _entry_[0] is *"month"* or *"monthCode"*, then
-              1. Perform ! DeletePropertyOrThrow(_merged_, *"month"*).
-              1. Perform ! DeletePropertyOrThrow(_merged_, *"monthCode"*).
-              1. Set _monthOverride_ to *true*.
-            1. Perform ! CreateDataPropertyOrThrow(_merged_, _entry_[0], _entry_[1]).
+        1. Perform ? CopyDataProperties(_merged_, _fields_, « », « *undefined* »).
+        1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Perform ? CopyDataProperties(_additionalFieldsCopy_, _additionalFields_, « », « *undefined* »).
+        1. NOTE: Every property of _additionalFieldsCopy_ is a data property with non-*undefined* value, but some property keys may be Symbols.
+        1. If ! _additionalFieldsCopy_.[[OwnPropertyKeys]]() contains *"month"* or *"monthCode"*, then
+          1. Perform ! DeletePropertyOrThrow(_merged_, *"month"*).
+          1. Perform ! DeletePropertyOrThrow(_merged_, *"monthCode"*).
+        1. Perform ? CopyDataProperties(_merged_, _additionalFieldsCopy_, « »).
         1. Return _merged_.
       </emu-alg>
     </emu-clause>
