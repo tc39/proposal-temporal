@@ -1261,7 +1261,7 @@
           _timeZone_: an Object,
           _calendar_: an Object,
           _largestUnit_: a String,
-          optional _options_: an Object,
+          _options_: an Object,
         ): either a normal completion containing a Duration Record or an abrupt completion
       </h1>
       <dl class="header">
@@ -1320,7 +1320,7 @@
         1. Let _endNs_ be _startNs_ + _nanoseconds_.
         1. Let _endInstant_ be ! CreateTemporalInstant(ℤ(_endNs_)).
         1. Let _endDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_relativeTo_.[[TimeZone]], _endInstant_, _relativeTo_.[[Calendar]]).
-        1. Let _dateDifference_ be ? DifferenceISODateTime(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]], _endDateTime_.[[ISOHour]], _endDateTime_.[[ISOMinute]], _endDateTime_.[[ISOSecond]], _endDateTime_.[[ISOMillisecond]], _endDateTime_.[[ISOMicrosecond]], _endDateTime_.[[ISONanosecond]], _relativeTo_.[[Calendar]], *"day"*).
+        1. Let _dateDifference_ be ? DifferenceISODateTime(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]], _endDateTime_.[[ISOHour]], _endDateTime_.[[ISOMinute]], _endDateTime_.[[ISOSecond]], _endDateTime_.[[ISOMillisecond]], _endDateTime_.[[ISOMicrosecond]], _endDateTime_.[[ISONanosecond]], _relativeTo_.[[Calendar]], *"day"*, OrdinaryObjectCreate(*null*)).
         1. Let _days_ be _dateDifference_.[[Days]].
         1. Let _intermediateNs_ be ℝ(? AddZonedDateTime(ℤ(_startNs_), _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, 0, 0, 0, 0, 0, 0)).
         1. If _sign_ is 1, then
