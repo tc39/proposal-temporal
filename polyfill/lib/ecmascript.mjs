@@ -20,17 +20,28 @@ const ObjectEntries = Object.entries;
 const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
+import callBound from 'call-bind/callBound';
 import Call from 'es-abstract/2022/Call.js';
-import CopyDataProperties from 'es-abstract/2022/CopyDataProperties.js';
+import CreateDataPropertyOrThrow from 'es-abstract/2022/CreateDataPropertyOrThrow.js';
+import Get from 'es-abstract/2022/Get.js';
 import GetMethod from 'es-abstract/2022/GetMethod.js';
+import IsArray from 'es-abstract/2022/IsArray.js';
 import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
 import ToIntegerOrInfinity from 'es-abstract/2022/ToIntegerOrInfinity.js';
+import IsPropertyKey from 'es-abstract/2022/IsPropertyKey.js';
+import SameValue from 'es-abstract/2022/SameValue.js';
 import ToLength from 'es-abstract/2022/ToLength.js';
 import ToNumber from 'es-abstract/2022/ToNumber.js';
+import ToObject from 'es-abstract/2022/ToObject.js';
 import ToPrimitive from 'es-abstract/2022/ToPrimitive.js';
 import ToString from 'es-abstract/2022/ToString.js';
 import Type from 'es-abstract/2022/Type.js';
 import HasOwnProperty from 'es-abstract/2022/HasOwnProperty.js';
+
+import every from 'es-abstract/helpers/every.js';
+import forEach from 'es-abstract/helpers/forEach.js';
+import OwnPropertyKeys from 'es-abstract/helpers/OwnPropertyKeys.js';
+import some from 'es-abstract/helpers/some.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -67,6 +78,9 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
+
+const $TypeError = GetIntrinsic('%TypeError%');
+const $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
 
 const DAY_SECONDS = 86400;
 const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
@@ -200,13 +214,13 @@ import * as PARSE from './regex.mjs';
 
 const ES2022 = {
   Call,
-  CopyDataProperties,
   GetMethod,
   HasOwnProperty,
   IsIntegralNumber,
   ToIntegerOrInfinity,
   ToLength,
   ToNumber,
+  ToObject,
   ToPrimitive,
   ToString,
   Type
@@ -234,6 +248,50 @@ function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
 }
 
 export const ES = ObjectAssign({}, ES2022, {
+  // copied from es-abstract/2022/CopyDataProperties.js
+  // with modifications per Temporal spec/mainadditions.html
+  CopyDataProperties: (target, source, excludedKeys, excludedValues) => {
+    if (Type(target) !== 'Object') {
+      throw new $TypeError('Assertion failed: "target" must be an Object');
+    }
+
+    if (!IsArray(excludedKeys) || !every(excludedKeys, IsPropertyKey)) {
+      throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
+    }
+
+    if (typeof source === 'undefined' || source === null) {
+      return target;
+    }
+
+    var from = ToObject(source);
+
+    var keys = OwnPropertyKeys(from);
+    forEach(keys, function (nextKey) {
+      var excluded = some(excludedKeys, function (e) {
+        return SameValue(e, nextKey) === true;
+      });
+
+      var enumerable = $isEnumerable(from, nextKey) || (
+      // this is to handle string keys being non-enumerable in older engines
+        typeof source === 'string'
+              && nextKey >= 0
+              && IsIntegralNumber(ToNumber(nextKey))
+      );
+      if (excluded === false && enumerable) {
+        var propValue = Get(from, nextKey);
+        if (excludedValues !== undefined) {
+          forEach(excludedValues, function (e) {
+            if (SameValue(e, propValue) === true) {
+              excluded = true;
+            }
+          });
+        }
+        if (excluded === false) CreateDataPropertyOrThrow(target, nextKey, propValue);
+      }
+    });
+
+    return target;
+  },
   ToPositiveInteger: ToPositiveInteger,
   ToIntegerThrowOnInfinity,
   ToIntegerWithoutRounding,
@@ -4311,7 +4369,8 @@ export const ES = ObjectAssign({}, ES2022, {
     const startDate = ES.CalendarDateFromFields(calendar, fields);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    const optionsCopy = ObjectAssign(ObjectCreate(null), options);
+    const optionsCopy = ObjectCreate(null);
+    ES.CopyDataProperties(optionsCopy, options, []);
     const addedDate = ES.CalendarDateAdd(calendar, startDate, durationToAdd, options);
     const addedDateFields = ES.PrepareTemporalFields(addedDate, fieldNames, []);
 
