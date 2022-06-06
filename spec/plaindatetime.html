@@ -1087,7 +1087,7 @@
           _ns2_: an integer between 0 and 999 inclusive,
           _calendar_: an Object,
           _largestUnit_: a String,
-          optional _options_: an Object,
+          _options_: an Object,
         )
       </h1>
       <dl class="header">
@@ -1099,8 +1099,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _timeDifference_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be ! DurationSign(0, 0, 0, _timeDifference_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
         1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
