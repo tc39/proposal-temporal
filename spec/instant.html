@@ -687,7 +687,7 @@
       </dl>
       <emu-alg>
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
-        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_, « *"years"*, *"months"*, *"weeks"*, *"days"* »).
+        1. Let _duration_ be ? ToLimitedTemporalDuration(_temporalDurationLike_).
         1. Let _ns_ be ? AddInstant(_instant_.[[Nanoseconds]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
         1. Return ! CreateTemporalInstant(_ns_).
       </emu-alg>
