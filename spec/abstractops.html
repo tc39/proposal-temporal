@@ -505,27 +505,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-mergelargestunitoption" type="abstract operation">
-    <h1>
-      MergeLargestUnitOption (
-        _options_: an Object,
-        _largestUnit_: a String,
-      ): either a normal completion containing an Object, or an abrupt completion
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>It returns a new null-prototype Object with enumerable own String properties copied from the _options_ Object, and the `largestUnit` property set to _largestUnit_.</dd>
-    </dl>
-    <emu-alg>
-      1. Let _merged_ be OrdinaryObjectCreate(*null*).
-      1. Let _entries_ be ? EnumerableOwnProperties(_options_, ~key+value~).
-      1. For each element _entry_ of _entries_, do
-        1. Perform ! CreateDataPropertyOrThrow(_merged_, _entry_[0], _entry_[1]).
-      1. Perform ! CreateDataPropertyOrThrow(_merged_, *"largestUnit"*, _largestUnit_).
-      1. Return _merged_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" aoid="MaximumTemporalDurationRoundingIncrement">
     <h1>MaximumTemporalDurationRoundingIncrement ( _unit_ )</h1>
     <emu-alg>
