@@ -70,6 +70,43 @@
     <p>[...]</p>
   </emu-clause>
 
+  <emu-clause id="sec-copydataproperties" type="abstract operation">
+    <h1>
+      CopyDataProperties (
+        _target_: an Object,
+        _source_: an ECMAScript language value,
+        <del>_excludedItems_: a List of property keys,</del>
+        <ins>_excludedKeys_: a List of property keys,</ins>
+        <ins>optional _excludedValues_: a List of ECMAScript language values,</ins>
+      ): either a normal completion containing ~unused~ or a throw completion
+    </h1>
+    <dl class="header">
+    </dl>
+    <emu-alg>
+      1. If _source_ is *undefined* or *null*, return ~unused~.
+      1. Let _from_ be ! ToObject(_source_).
+      1. Let _keys_ be ? <emu-meta effects="user-code">_from_.[[OwnPropertyKeys]]</emu-meta>().
+      1. For each element _nextKey_ of _keys_, do
+        1. Let _excluded_ be *false*.
+        1. For each element _e_ of <del>_excludedItems_</del><ins>_excludedKeys_</ins>, do
+          1. If SameValue(_e_, _nextKey_) is *true*, then
+            1. Set _excluded_ to *true*.            
+        1. If _excluded_ is *false*, then
+          1. Let _desc_ be ? <emu-meta effects="user-code">_from_.[[GetOwnProperty]]</emu-meta>(_nextKey_).
+          1. If _desc_ is not *undefined* and _desc_.[[Enumerable]] is *true*, then
+            1. Let _propValue_ be ? Get(_from_, _nextKey_).
+            1. <ins>If _excludedValues_ is present, then</ins>
+              1. <ins>For each element _e_ of _excludedValues_, do</ins>
+                1. <ins>If SameValue(_e_, _propValue_) is *true*, then</ins>
+                  1. <ins>Set _excluded_ to *true*.</ins>
+            1. <del>Perform</del><ins>If _excluded_ is *false*, perform</ins> ! CreateDataPropertyOrThrow(_target_, _nextKey_, _propValue_).
+      1. Return ~unused~.
+    </emu-alg>
+    <emu-note>
+      <p>The target passed in here is always a newly created object which is not directly accessible in case of an error being thrown.</p>
+    </emu-note>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-properties-of-the-legacy-date-prototype-object">
     <h1><a href="https://tc39.es/ecma262/#sec-properties-of-the-date-prototype-object">Properties of the Date Prototype Object</a></h1>
 
