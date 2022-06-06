@@ -271,12 +271,10 @@ export const ES = ObjectAssign({}, ES2022, {
         return SameValue(e, nextKey) === true;
       });
 
-      var enumerable = $isEnumerable(from, nextKey) || (
-      // this is to handle string keys being non-enumerable in older engines
-        typeof source === 'string'
-              && nextKey >= 0
-              && IsIntegralNumber(ToNumber(nextKey))
-      );
+      var enumerable =
+        $isEnumerable(from, nextKey) ||
+        // this is to handle string keys being non-enumerable in older engines
+        (typeof source === 'string' && nextKey >= 0 && IsIntegralNumber(ToNumber(nextKey)));
       if (excluded === false && enumerable) {
         var propValue = Get(from, nextKey);
         if (excludedValues !== undefined) {
