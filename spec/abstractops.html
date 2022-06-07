@@ -282,8 +282,8 @@
             [[Unit]]: *"nanosecond"*,
             [[Increment]]: 1
           }.
-      1. If _fractionalDigitsVal_ is *NaN*, *+&infin;*<sub>𝔽</sub>, or *-&infin;*<sub>𝔽</sub>, throw a *RangeError* exception.
-      1. Set _fractionalDigitCount_ to ! ToIntegerOrInfinity(_fractionalDigitsVal_).
+      1. If _fractionalDigitsVal_ is *NaN*, throw a *RangeError* exception.
+      1. Set _fractionalDigitCount_ to ? ToIntegerThrowOnInfinity(_fractionalDigitsVal_).
       1. If _fractionalDigitCount_ &lt; 0 or _fractionalDigitCount_ &gt; 9, throw a *RangeError* exception.
       1. If _fractionalDigitCount_ is 0, then
         1. Return the Record {
