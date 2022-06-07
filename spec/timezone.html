@@ -562,7 +562,7 @@
         1. If _fSeconds_ is not empty, then
           1. Let _fSecondsDigits_ be the substring of CodePointsToString(_fSeconds_) from 1.
           1. Let _fSecondsDigitsExtended_ be the string-concatenation of _fSecondsDigits_ and *"000000000"*.
-          1. Let _nanosecondsDigits_ be the substring of _fSecondsDigitsExtended_ from 1 to 10.
+          1. Let _nanosecondsDigits_ be the substring of _fSecondsDigitsExtended_ from 0 to 9.
           1. Let _nanosecondsMV_ be ! ToIntegerOrInfinity(_nanosecondsDigits_).
         1. Else,
           1. Let _nanosecondsMV_ be 0.

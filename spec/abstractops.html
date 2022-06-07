@@ -1327,7 +1327,7 @@
       1. Let _hour_ be the source text matched by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
       1. Let _minute_ be the source text matched by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
       1. Let _second_ be the source text matched by the |TimeSecond| or |TimeSecondNotValidMonth| Parse Node contained within _parseResult_, or an empty sequence of code points if neither of those are present.
-      1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace it with the code point U+002D (HYPHEN-MINUS).
+      1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
       1. Let _yearMV_ be ! ToIntegerOrInfinity(CodePointsToString(_year_)).
       1. If _month_ is empty, then
         1. Let _monthMV_ be 1.
@@ -1345,9 +1345,9 @@
       1. If _fSeconds_ is not empty, then
         1. Let _fSecondsDigits_ be the substring of CodePointsToString(_fSeconds_) from 1.
         1. Let _fSecondsDigitsExtended_ be the string-concatenation of _fSecondsDigits_ and *"000000000"*.
-        1. Let _millisecond_ be the substring of _fSecondsDigitsExtended_ from 1 to 4.
-        1. Let _microsecond_ be the substring of _fSecondsDigitsExtended_ from 4 to 7.
-        1. Let _nanosecond_ be the substring of _fSecondsDigitsExtended_ from 7 to 10.
+        1. Let _millisecond_ be the substring of _fSecondsDigitsExtended_ from 0 to 3.
+        1. Let _microsecond_ be the substring of _fSecondsDigitsExtended_ from 3 to 6.
+        1. Let _nanosecond_ be the substring of _fSecondsDigitsExtended_ from 6 to 9.
         1. Let _millisecondMV_ be ! ToIntegerOrInfinity(_millisecond_).
         1. Let _microsecondMV_ be ! ToIntegerOrInfinity(_microsecond_).
         1. Let _nanosecondMV_ be ! ToIntegerOrInfinity(_nanosecond_).
