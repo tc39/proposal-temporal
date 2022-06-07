@@ -569,7 +569,7 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Append *"offset"* to _fieldNames_.
-        1. Let _partialZonedDateTime_ be ? PreparePartialTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_).
+        1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_, ~partial~).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
