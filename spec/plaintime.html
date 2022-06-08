@@ -317,12 +317,7 @@
         1. Let _smallestUnit_ be ? ToSmallestTemporalUnit(_roundTo_, « *"year"*, *"month"*, *"week"*, *"day"* », *undefined*).
         1. If _smallestUnit_ is *undefined*, throw a *RangeError* exception.
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
-        1. If _smallestUnit_ is *"hour"*, then
-          1. Let _maximum_ be 24.
-        1. Else if _smallestUnit_ is *"minute"* or *"second"*, then
-          1. Let _maximum_ be 60.
-        1. Else,
-          1. Let _maximum_ be 1000.
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_, _maximum_, *false*).
         1. Let _result_ be ! RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).

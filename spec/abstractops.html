@@ -238,13 +238,9 @@
     <emu-alg>
       1. If _smallestUnit_ is *"day"*, then
         1. Let _maximum_ be 1.
-      1. Else if _smallestUnit_ is *"hour"*, then
-        1. Let _maximum_ be 24.
-      1. Else if _smallestUnit_ is *"minute"* or *"second"*, then
-        1. Let _maximum_ be 60.
       1. Else,
-        1. Assert: _smallestUnit_ is *"millisecond"*, *"microsecond"*, or *"nanosecond"*.
-        1. Let _maximum_ be 1000.
+        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+        1. Assert: _maximum_ is not *undefined*.
       1. Return ? ToTemporalRoundingIncrement(_normalizedOptions_, _maximum_, *false*).
     </emu-alg>
   </emu-clause>
