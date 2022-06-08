@@ -2014,6 +2014,7 @@
   var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
   var $replace$1 = bind.call(Function.call, String.prototype.replace);
   var $strSlice$1 = bind.call(Function.call, String.prototype.slice);
+  var $exec$1 = bind.call(Function.call, RegExp.prototype.exec);
 
   /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
   var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
@@ -2069,6 +2070,9 @@
   		throw new $TypeError$7('"allowMissing" argument must be a boolean');
   	}
 
+  	if ($exec$1(/^%?[^%]*%?$/g, name) === null) {
+  		throw new $SyntaxError('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
+  	}
   	var parts = stringToPath(name);
   	var intrinsicBaseName = parts.length > 0 ? parts[0] : '';
 
@@ -3158,9 +3162,23 @@
     return ES.ToInteger(value); // ℝ(value) in spec text; converts -0 to 0
   };
 
-  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerWithoutRounding], ['months', ToIntegerWithoutRounding], ['weeks', ToIntegerWithoutRounding], ['days', ToIntegerWithoutRounding], ['hours', ToIntegerWithoutRounding], ['minutes', ToIntegerWithoutRounding], ['seconds', ToIntegerWithoutRounding], ['milliseconds', ToIntegerWithoutRounding], ['microseconds', ToIntegerWithoutRounding], ['nanoseconds', ToIntegerWithoutRounding], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]);
-  var ALLOWED_UNITS = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
-  var SINGULAR_PLURAL_UNITS = [['years', 'year'], ['months', 'month'], ['weeks', 'week'], ['days', 'day'], ['hours', 'hour'], ['minutes', 'minute'], ['seconds', 'second'], ['milliseconds', 'millisecond'], ['microseconds', 'microsecond'], ['nanoseconds', 'nanosecond']];
+  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerWithoutRounding], ['months', ToIntegerWithoutRounding], ['weeks', ToIntegerWithoutRounding], ['days', ToIntegerWithoutRounding], ['hours', ToIntegerWithoutRounding], ['minutes', ToIntegerWithoutRounding], ['seconds', ToIntegerWithoutRounding], ['milliseconds', ToIntegerWithoutRounding], ['microseconds', ToIntegerWithoutRounding], ['nanoseconds', ToIntegerWithoutRounding], ['era', ToString$1], ['eraYear', ToInteger$2], ['offset', ToString$1]]); // each item is [plural, singular, category]
+
+  var SINGULAR_PLURAL_UNITS = [['years', 'year', 'date'], ['months', 'month', 'date'], ['weeks', 'week', 'date'], ['days', 'day', 'date'], ['hours', 'hour', 'time'], ['minutes', 'minute', 'time'], ['seconds', 'second', 'time'], ['milliseconds', 'millisecond', 'time'], ['microseconds', 'microsecond', 'time'], ['nanoseconds', 'nanosecond', 'time']];
+  var SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
+  var PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        p = _ref2[0],
+        s = _ref2[1];
+
+    return [s, p];
+  }));
+  var UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        s = _ref4[1];
+
+    return s;
+  });
   var ES2020 = {
     Call: Call$1,
     GetMethod: GetMethod$2,
@@ -3827,7 +3845,20 @@
       return ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
     },
     ToSecondsStringPrecision: function ToSecondsStringPrecision(options) {
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, undefined, ['year', 'month', 'week', 'day', 'hour']);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+
+      if (smallestUnit === 'hour') {
+        var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref5) {
+          var _ref6 = _slicedToArray(_ref5, 3),
+              p = _ref6[0],
+              s = _ref6[1],
+              c = _ref6[2];
+
+          if (c === 'time' && s !== 'hour') allowed.push(s, p);
+          return allowed;
+        }, []);
+        throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
+      }
 
       switch (smallestUnit) {
         case 'minute':
@@ -3922,24 +3953,23 @@
           };
       }
     },
-    ToLargestTemporalUnit: function ToLargestTemporalUnit(options, fallback) {
-      var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var autoValue = arguments.length > 3 ? arguments[3] : undefined;
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref) {
-        var _ref2 = _slicedToArray(_ref, 2),
-            sing = _ref2[1];
+    REQUIRED: Symbol('~required~'),
+    GetTemporalUnit: function GetTemporalUnit(options, key, unitGroup, requiredOrDefault) {
+      var extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+      var allowedSingular = [];
 
-        return !disallowedStrings.includes(sing);
-      }));
-      var allowed = new Set(ALLOWED_UNITS);
-
-      var _iterator2 = _createForOfIteratorHelper(disallowedStrings),
+      var _iterator2 = _createForOfIteratorHelper(SINGULAR_PLURAL_UNITS),
           _step2;
 
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var s = _step2.value;
-          allowed.delete(s);
+          var _step2$value = _slicedToArray(_step2.value, 3),
+              _singular = _step2$value[1],
+              category = _step2$value[2];
+
+          if (unitGroup === 'datetime' || unitGroup === category) {
+            allowedSingular.push(_singular);
+          }
         }
       } catch (err) {
         _iterator2.e(err);
@@ -3947,48 +3977,31 @@
         _iterator2.f();
       }
 
-      var retval = ES.GetOption(options, 'largestUnit', ['auto'].concat(_toConsumableArray(allowed), _toConsumableArray(singular.keys())), fallback);
-      if (retval === 'auto' && autoValue !== undefined) return autoValue;
-      if (singular.has(retval)) return singular.get(retval);
-      return retval;
-    },
-    ToSmallestTemporalUnit: function ToSmallestTemporalUnit(options, fallback) {
-      var disallowedStrings = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-      var singular = new Map(SINGULAR_PLURAL_UNITS.filter(function (_ref3) {
-        var _ref4 = _slicedToArray(_ref3, 2),
-            sing = _ref4[1];
+      allowedSingular.push.apply(allowedSingular, _toConsumableArray(extraValues));
+      var defaultVal = requiredOrDefault;
 
-        return !disallowedStrings.includes(sing);
-      }));
-      var allowed = new Set(ALLOWED_UNITS);
-
-      var _iterator3 = _createForOfIteratorHelper(disallowedStrings),
-          _step3;
-
-      try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var s = _step3.value;
-          allowed.delete(s);
-        }
-      } catch (err) {
-        _iterator3.e(err);
-      } finally {
-        _iterator3.f();
+      if (defaultVal === ES.REQUIRED) {
+        defaultVal = undefined;
+      } else if (defaultVal !== undefined) {
+        allowedSingular.push(defaultVal);
       }
 
-      var value = ES.GetOption(options, 'smallestUnit', [].concat(_toConsumableArray(allowed), _toConsumableArray(singular.keys())), fallback);
-      if (singular.has(value)) return singular.get(value);
-      return value;
-    },
-    ToTemporalDurationTotalUnit: function ToTemporalDurationTotalUnit(options) {
-      // This AO is identical to ToSmallestTemporalUnit, except:
-      // - default is always `undefined` (caller will throw if omitted)
-      // - option is named `unit` (not `smallestUnit`)
-      // - all units are valid (no `disallowedStrings`)
-      var singular = new Map(SINGULAR_PLURAL_UNITS);
-      var value = ES.GetOption(options, 'unit', [].concat(_toConsumableArray(singular.values()), _toConsumableArray(singular.keys())), undefined);
-      if (singular.has(value)) return singular.get(value);
-      return value;
+      var allowedValues = [].concat(allowedSingular);
+
+      for (var _i = 0, _allowedSingular = allowedSingular; _i < _allowedSingular.length; _i++) {
+        var singular = _allowedSingular[_i];
+        var plural = PLURAL_FOR.get(singular);
+        if (plural !== undefined) allowedValues.push(plural);
+      }
+
+      var retval = ES.GetOption(options, key, allowedValues, defaultVal);
+
+      if (retval === undefined && requiredOrDefault === ES.REQUIRED) {
+        throw new RangeError("".concat(key, " is required"));
+      }
+
+      if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
+      return retval;
     },
     ToRelativeTemporalObject: function ToRelativeTemporalObject(options) {
       var relativeTo = options.relativeTo;
@@ -4061,15 +4074,8 @@
 
       return ES.CreateTemporalDate(year, month, day, calendar);
     },
-    ValidateTemporalUnitRange: function ValidateTemporalUnitRange(largestUnit, smallestUnit) {
-      if (ALLOWED_UNITS.indexOf(largestUnit) > ALLOWED_UNITS.indexOf(smallestUnit)) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-    },
     DefaultTemporalLargestUnit: function DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
-      var singular = new Map(SINGULAR_PLURAL_UNITS);
-
-      var _iterator4 = _createForOfIteratorHelper(ObjectEntries$1({
+      var _iterator3 = _createForOfIteratorHelper(ObjectEntries$1({
         years: years,
         months: months,
         weeks: weeks,
@@ -4081,26 +4087,26 @@
         microseconds: microseconds,
         nanoseconds: nanoseconds
       })),
-          _step4;
+          _step3;
 
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var _step4$value = _slicedToArray(_step4.value, 2),
-              prop = _step4$value[0],
-              v = _step4$value[1];
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var _step3$value = _slicedToArray(_step3.value, 2),
+              prop = _step3$value[0],
+              v = _step3$value[1];
 
-          if (v !== 0) return singular.get(prop);
+          if (v !== 0) return SINGULAR_FOR.get(prop);
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator4.f();
+        _iterator3.f();
       }
 
       return 'nanosecond';
     },
     LargerOfTwoTemporalUnits: function LargerOfTwoTemporalUnits(unit1, unit2) {
-      if (ALLOWED_UNITS.indexOf(unit1) > ALLOWED_UNITS.indexOf(unit2)) return unit2;
+      if (UNITS_DESCENDING.indexOf(unit1) > UNITS_DESCENDING.indexOf(unit2)) return unit2;
       return unit1;
     },
     MergeLargestUnitOption: function MergeLargestUnitOption(options, largestUnit) {
@@ -4113,12 +4119,12 @@
       var any = false;
       var result = {};
 
-      var _iterator5 = _createForOfIteratorHelper(fields),
-          _step5;
+      var _iterator4 = _createForOfIteratorHelper(fields),
+          _step4;
 
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var property = _step5.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var property = _step4.value;
           var value = bag[property];
 
           if (value !== undefined) {
@@ -4132,9 +4138,9 @@
           }
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator5.f();
+        _iterator4.f();
       }
 
       return any ? result : false;
@@ -4143,12 +4149,12 @@
       var result = {};
       var any = false;
 
-      var _iterator6 = _createForOfIteratorHelper(fields),
-          _step6;
+      var _iterator5 = _createForOfIteratorHelper(fields),
+          _step5;
 
       try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var fieldRecord = _step6.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var fieldRecord = _step5.value;
 
           var _fieldRecord = _slicedToArray(fieldRecord, 2),
               property = _fieldRecord[0],
@@ -4173,9 +4179,9 @@
           result[property] = value;
         }
       } catch (err) {
-        _iterator6.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator6.f();
+        _iterator5.f();
       }
 
       if (!any) {
@@ -4193,9 +4199,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref5) {
-          var _ref6 = _slicedToArray(_ref5, 1),
-              name = _ref6[0];
+        if (!entries.some(function (_ref7) {
+          var _ref8 = _slicedToArray(_ref7, 1),
+              name = _ref8[0];
 
           return name === fieldName;
         })) {
@@ -4208,9 +4214,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref7) {
-          var _ref8 = _slicedToArray(_ref7, 1),
-              name = _ref8[0];
+        if (!entries.some(function (_ref9) {
+          var _ref10 = _slicedToArray(_ref9, 1),
+              name = _ref10[0];
 
           return name === fieldName;
         })) {
@@ -4223,9 +4229,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref9) {
-          var _ref10 = _slicedToArray(_ref9, 1),
-              name = _ref10[0];
+        if (!entries.some(function (_ref11) {
+          var _ref12 = _slicedToArray(_ref11, 1),
+              name = _ref12[0];
 
           return name === fieldName;
         })) {
@@ -4241,9 +4247,9 @@
       var entries = [['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref11) {
-          var _ref12 = _slicedToArray(_ref11, 1),
-              name = _ref12[0];
+        if (!entries.some(function (_ref13) {
+          var _ref14 = _slicedToArray(_ref13, 1),
+              name = _ref14[0];
 
           return name === fieldName;
         })) {
@@ -4256,9 +4262,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset', undefined], ['timeZone']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref13) {
-          var _ref14 = _slicedToArray(_ref13, 1),
-              name = _ref14[0];
+        if (!entries.some(function (_ref15) {
+          var _ref16 = _slicedToArray(_ref15, 1),
+              name = _ref16[0];
 
           return name === fieldName;
         })) {
@@ -4582,12 +4588,12 @@
 
       var possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
 
-      var _iterator7 = _createForOfIteratorHelper(possibleInstants),
-          _step7;
+      var _iterator6 = _createForOfIteratorHelper(possibleInstants),
+          _step6;
 
       try {
-        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-          var candidate = _step7.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var candidate = _step6.value;
           var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
           var roundedCandidateOffset = ES.RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
 
@@ -4598,9 +4604,9 @@
         // zone and date/time.
 
       } catch (err) {
-        _iterator7.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator7.f();
+        _iterator6.f();
       }
 
       if (offsetOpt === 'reject') {
@@ -4831,19 +4837,19 @@
       if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
 
-      var _iterator8 = _createForOfIteratorHelper(fieldNames),
-          _step8;
+      var _iterator7 = _createForOfIteratorHelper(fieldNames),
+          _step7;
 
       try {
-        for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-          var name = _step8.value;
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var name = _step7.value;
           if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
           ArrayPrototypePush$2.call(result, name);
         }
       } catch (err) {
-        _iterator8.e(err);
+        _iterator7.e(err);
       } finally {
-        _iterator8.f();
+        _iterator7.f();
       }
 
       return result;
@@ -5187,12 +5193,12 @@
       var possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
       var result = [];
 
-      var _iterator9 = _createForOfIteratorHelper(possibleInstants),
-          _step9;
+      var _iterator8 = _createForOfIteratorHelper(possibleInstants),
+          _step8;
 
       try {
-        for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
-          var instant = _step9.value;
+        for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+          var instant = _step8.value;
 
           if (!ES.IsTemporalInstant(instant)) {
             throw new TypeError('bad return from getPossibleInstantsFor');
@@ -5201,9 +5207,9 @@
           ArrayPrototypePush$2.call(result, instant);
         }
       } catch (err) {
-        _iterator9.e(err);
+        _iterator8.e(err);
       } finally {
-        _iterator9.f();
+        _iterator8.f();
       }
 
       return result;
@@ -5767,8 +5773,8 @@
       return week;
     },
     DurationSign: function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
-      for (var _i = 0, _arr = [y, mon, w, d, h, min, s, ms, µs, ns]; _i < _arr.length; _i++) {
-        var prop = _arr[_i];
+      for (var _i2 = 0, _arr = [y, mon, w, d, h, min, s, ms, µs, ns]; _i2 < _arr.length; _i2++) {
+        var prop = _arr[_i2];
         if (prop !== 0) return prop < 0 ? -1 : 1;
       }
 
@@ -6474,8 +6480,8 @@
     RejectDuration: function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
       var sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
 
-      for (var _i2 = 0, _arr2 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i2 < _arr2.length; _i2++) {
-        var prop = _arr2[_i2];
+      for (var _i3 = 0, _arr2 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i3 < _arr2.length; _i3++) {
+        var prop = _arr2[_i3];
         if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         var propSign = MathSign(prop);
         if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
@@ -6856,11 +6862,15 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
       var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       var MAX_DIFFERENCE_INCREMENTS = {
         hour: 24,
@@ -6906,11 +6916,15 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var DISALLOWED_UNITS = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'day', DISALLOWED_UNITS);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'day');
       var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, defaultLargestUnit);
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -6947,10 +6961,15 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
       var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
+      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
@@ -6998,10 +7017,14 @@
       var sign = operation === 'since' ? -1 : 1;
       other = ES.ToTemporalTime(other);
       options = ES.GetOptionsObject(options);
-      var DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'hour');
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond', DISALLOWED_UNITS);
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+      if (largestUnit === 'auto') largestUnit = 'hour';
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var MAX_INCREMENTS = {
@@ -7055,10 +7078,33 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var DISALLOWED_UNITS = ['week', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'month', DISALLOWED_UNITS);
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', DISALLOWED_UNITS, 'year');
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref17) {
+        var _ref18 = _slicedToArray(_ref17, 3),
+            p = _ref18[0],
+            s = _ref18[1],
+            c = _ref18[2];
+
+        if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
+        return allowed;
+      }, []);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'month');
+
+      if (smallestUnit === 'week' || smallestUnit === 'day') {
+        throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
+      }
+
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+
+      if (largestUnit === 'week' || largestUnit === 'day') {
+        throw new RangeError("largestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(largestUnit));
+      }
+
+      if (largestUnit === 'auto') largestUnit = 'year';
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
@@ -7100,10 +7146,15 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.ToSmallestTemporalUnit(options, 'nanosecond');
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
       var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('hour', smallestUnit);
-      var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', [], defaultLargestUnit);
-      ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
+      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
+
+      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+      }
+
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
       if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
@@ -8104,8 +8155,8 @@
       };
     },
     CompareISODate: function CompareISODate(y1, m1, d1, y2, m2, d2) {
-      for (var _i3 = 0, _arr3 = [[y1, y2], [m1, m2], [d1, d2]]; _i3 < _arr3.length; _i3++) {
-        var _arr3$_i = _slicedToArray(_arr3[_i3], 2),
+      for (var _i4 = 0, _arr3 = [[y1, y2], [m1, m2], [d1, d2]]; _i4 < _arr3.length; _i4++) {
+        var _arr3$_i = _slicedToArray(_arr3[_i4], 2),
             x = _arr3$_i[0],
             y = _arr3$_i[1];
 
@@ -9046,9 +9097,7 @@
           roundTo = ES.GetOptionsObject(roundTo);
         }
 
-        var DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-        var smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, DISALLOWED_UNITS);
-        if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+        var smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
         var maximumIncrements = {
           hour: 24,
@@ -9338,7 +9387,8 @@
         one = ES.ToTemporalDate(one);
         two = ES.ToTemporalDate(two);
         options = ES.GetOptionsObject(options);
-        var largestUnit = ES.ToLargestTemporalUnit(options, 'auto', ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'], 'day');
+        var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+        if (largestUnit === 'auto') largestUnit = 'day';
 
         var _impl$GetSlot$dateUnt = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit),
             years = _impl$GetSlot$dateUnt.years,
@@ -12730,8 +12780,7 @@
           roundTo = ES.GetOptionsObject(roundTo);
         }
 
-        var smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, ['year', 'month', 'week']);
-        if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+        var smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED, ['day']);
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
         var maximumIncrements = {
           day: 1,
@@ -13117,7 +13166,7 @@
           roundTo = ES.GetOptionsObject(roundTo);
         }
 
-        var smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined);
+        var smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
         var smallestUnitPresent = true;
 
         if (!smallestUnit) {
@@ -13126,7 +13175,7 @@
         }
 
         defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
-        var largestUnit = ES.ToLargestTemporalUnit(roundTo, undefined);
+        var largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
         var largestUnitPresent = true;
 
         if (!largestUnit) {
@@ -13140,7 +13189,10 @@
           throw new RangeError('at least one of smallestUnit or largestUnit is required');
         }
 
-        ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+        if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+          throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
+        }
+
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
         var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(roundTo, smallestUnit);
         var relativeTo = ES.ToRelativeTemporalObject(roundTo);
@@ -13224,8 +13276,7 @@
           totalOf = ES.GetOptionsObject(totalOf);
         }
 
-        var unit = ES.ToTemporalDurationTotalUnit(totalOf, undefined);
-        if (unit === undefined) throw new RangeError('unit option is required');
+        var unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
         var relativeTo = ES.ToRelativeTemporalObject(totalOf); // Convert larger units down to days
 
         var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo);
@@ -13811,9 +13862,7 @@
           roundTo = ES.GetOptionsObject(roundTo);
         }
 
-        var DISALLOWED_UNITS = ['year', 'month', 'week', 'day'];
-        var smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, DISALLOWED_UNITS);
-        if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+        var smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
         var MAX_INCREMENTS = {
           hour: 24,
@@ -14626,8 +14675,7 @@
           roundTo = ES.GetOptionsObject(roundTo);
         }
 
-        var smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, ['year', 'month', 'week']);
-        if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+        var smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED, ['day']);
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
         var maximumIncrements = {
           day: 1,
