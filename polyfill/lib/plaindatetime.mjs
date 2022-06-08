@@ -295,8 +295,7 @@ export class PlainDateTime {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    const smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined, ['year', 'month', 'week']);
-    if (smallestUnit === undefined) throw new RangeError('smallestUnit is required');
+    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED, ['day']);
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const maximumIncrements = {
       day: 1,

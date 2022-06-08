@@ -230,14 +230,14 @@ export class Duration {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    let smallestUnit = ES.ToSmallestTemporalUnit(roundTo, undefined);
+    let smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
     let smallestUnitPresent = true;
     if (!smallestUnit) {
       smallestUnitPresent = false;
       smallestUnit = 'nanosecond';
     }
     defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
-    let largestUnit = ES.ToLargestTemporalUnit(roundTo, undefined);
+    let largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;
@@ -247,7 +247,9 @@ export class Duration {
     if (!smallestUnitPresent && !largestUnitPresent) {
       throw new RangeError('at least one of smallestUnit or largestUnit is required');
     }
-    ES.ValidateTemporalUnitRange(largestUnit, smallestUnit);
+    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
+      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+    }
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(roundTo, smallestUnit);
     let relativeTo = ES.ToRelativeTemporalObject(roundTo);
@@ -333,8 +335,7 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    const unit = ES.ToTemporalDurationTotalUnit(totalOf, undefined);
-    if (unit === undefined) throw new RangeError('unit option is required');
+    const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
     const relativeTo = ES.ToRelativeTemporalObject(totalOf);
 
     // Convert larger units down to days
