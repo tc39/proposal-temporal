@@ -795,7 +795,6 @@
       <h1>Partial Duration Records</h1>
       <p>
         A <dfn variants="partial Duration Records">partial Duration Record</dfn> is a Record value used to represent a portion of a Temporal.Duration object, in which it is not required that all the fields be specified.
-        Partial Duration Records are produced by the abstract operation ToPartialTemporalDuration, among others.
       </p>
       <p>
         Partial Duration Records have the same fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
@@ -927,19 +926,13 @@
           1. Return ? ParseTemporalDurationString(_string_).
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
-        1. Let _result_ be a new Duration Record.
-        1. Let _any_ be *false*.
+        1. Let _result_ be a new Duration Record with each field set to 0.
+        1. Let _partial_ be ? ToPartialDuration(_temporalDurationLike_).
         1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
-          1. Let _prop_ be the Property Name value of the current row.
-          1. Let _val_ be ? Get(_temporalDurationLike_, _prop_).
-          1. If _val_ is *undefined*, then
-            1. Set _result_'s field whose name is the Field Name value of the current row to 0.
-          1. Else,
-            1. Set _any_ to *true*.
-            1. Let _val_ be ? ToIntegerWithoutRounding(_val_).
-            1. Set _result_'s field whose name is the Field Name value of the current row to _val_.
-        1. If _any_ is *false*, then
-          1. Throw a *TypeError* exception.
+          1. Let _fieldName_ be the Field Name value of the current row.
+          1. Let _value_ be the value of the field of _partial_ whose name is _fieldName_.
+          1. If _value_ is not *undefined*, then
+            1. Set the field of _result_ whose name is _fieldName_ to _value_.
         1. If ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]] _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]) is *false*, then
           1. Throw a *RangeError* exception.
         1. Return _result_.
@@ -1055,7 +1048,8 @@
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. Set _value_ to ? ToIntegerWithoutRounding(_value_).
-            1. Set _result_'s field whose name is the Field Name value of the current row to _value_.
+            1. Let _fieldName_ be the Field Name value of the current row.
+            1. Set the field of _result_ whose name is _fieldName_ to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
         1. Return _result_.
