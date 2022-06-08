@@ -494,7 +494,7 @@
         1. Let _numberPart_ be the substring of _monthCode_ from 1.
         1. Set _numberPart_ to ! ToIntegerOrInfinity(_numberPart_).
         1. If _numberPart_ &lt; 1 or _numberPart_ &gt; 12, throw a *RangeError* exception.
-        1. If _month_ is not *undefined*, and _month_ &ne; _numberPart_, then
+        1. If _month_ is not *undefined* and _month_ &ne; _numberPart_, then
           1. Throw a *RangeError* exception.
         1. If SameValueNonNumeric(_monthCode_, ! BuildISOMonthCode(_numberPart_)) is *false*, then
           1. Throw a *RangeError* exception.
