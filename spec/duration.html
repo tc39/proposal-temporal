@@ -1751,28 +1751,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-tolimitedtemporalduration" type="abstract operation">
-      <h1>
-        ToLimitedTemporalDuration (
-          _temporalDurationLike_: an ECMAScript value,
-          _disallowedFields_: a List of Strings,
-        )
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It converts _temporalDurationLike_ to a Duration Record, and returns it, ensuring that all of the fields listed in _disallowedFields_ are zero.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
-          1. Let _prop_ be the Property Name value of the current row.
-          1. Let _value_ be _duration_'s field whose name is the Field Name value of the current row.
-          1. If _value_ is not 0 and _disallowedFields_ contains _prop_, then
-            1. Throw a *RangeError* exception.
-        1. Return _duration_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-temporaldurationtostring" type="abstract operation">
       <h1>
         TemporalDurationToString (
