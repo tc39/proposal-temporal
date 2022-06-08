@@ -45,7 +45,7 @@ export class PlainMonthDay {
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-    const props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
+    const props = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
     if (!props) {
       throw new TypeError('invalid month-day-like');
     }

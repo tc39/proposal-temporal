@@ -118,22 +118,12 @@ export class PlainTime {
     }
     ES.RejectObjectWithCalendarOrTimeZone(temporalTimeLike);
 
+    const partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
     options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
 
-    const props = ES.ToPartialRecord(temporalTimeLike, [
-      'hour',
-      'microsecond',
-      'millisecond',
-      'minute',
-      'nanosecond',
-      'second'
-    ]);
-    if (!props) {
-      throw new TypeError('invalid time-like');
-    }
     const fields = ES.ToTemporalTimeRecord(this);
-    let { hour, minute, second, millisecond, microsecond, nanosecond } = ObjectAssign(fields, props);
+    let { hour, minute, second, millisecond, microsecond, nanosecond } = ObjectAssign(fields, partialTime);
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,

@@ -102,7 +102,7 @@ export class PlainDate {
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-    const props = ES.ToPartialRecord(temporalDateLike, fieldNames);
+    const props = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
     if (!props) {
       throw new TypeError('invalid date-like');
     }
