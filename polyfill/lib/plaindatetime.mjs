@@ -170,7 +170,7 @@ export class PlainDateTime {
       'second',
       'year'
     ]);
-    const props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
+    const props = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
     if (!props) {
       throw new TypeError('invalid date-time-like');
     }

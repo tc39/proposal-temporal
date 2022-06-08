@@ -15,6 +15,7 @@ const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
+const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
 
@@ -178,6 +179,19 @@ const SINGULAR_PLURAL_UNITS = [
   ['milliseconds', 'millisecond'],
   ['microseconds', 'microsecond'],
   ['nanoseconds', 'nanosecond']
+];
+
+const DURATION_FIELDS = [
+  'days',
+  'hours',
+  'microseconds',
+  'milliseconds',
+  'minutes',
+  'months',
+  'nanoseconds',
+  'seconds',
+  'weeks',
+  'years'
 ];
 
 import * as PARSE from './regex.mjs';
@@ -592,33 +606,57 @@ export const ES = ObjectAssign({}, ES2020, {
         nanoseconds: GetSlot(item, NANOSECONDS)
       };
     }
-    const props = ES.ToPartialRecord(item, [
-      'days',
-      'hours',
-      'microseconds',
-      'milliseconds',
-      'minutes',
-      'months',
-      'nanoseconds',
-      'seconds',
-      'weeks',
-      'years'
-    ]);
-    if (!props) throw new TypeError('invalid duration-like');
-    let {
-      years = 0,
-      months = 0,
-      weeks = 0,
-      days = 0,
-      hours = 0,
-      minutes = 0,
-      seconds = 0,
-      milliseconds = 0,
-      microseconds = 0,
-      nanoseconds = 0
-    } = props;
+    const result = {
+      years: 0,
+      months: 0,
+      weeks: 0,
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+      microseconds: 0,
+      nanoseconds: 0
+    };
+    let partial = ES.ToTemporalPartialDurationRecord(item);
+    for (const property of DURATION_FIELDS) {
+      const value = partial[property];
+      if (value !== undefined) {
+        result[property] = value;
+      }
+    }
+    let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = result;
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-    return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return result;
+  },
+  ToTemporalPartialDurationRecord: (temporalDurationLike) => {
+    if (ES.Type(temporalDurationLike) !== 'Object') {
+      throw new TypeError('invalid duration-like');
+    }
+    const result = {
+      years: undefined,
+      months: undefined,
+      weeks: undefined,
+      days: undefined,
+      hours: undefined,
+      minutes: undefined,
+      seconds: undefined,
+      milliseconds: undefined,
+      microseconds: undefined,
+      nanoseconds: undefined
+    };
+    let any = false;
+    for (const property of DURATION_FIELDS) {
+      const value = temporalDurationLike[property];
+      if (value !== undefined) {
+        any = true;
+        result[property] = ES.ToIntegerWithoutRounding(value);
+      }
+    }
+    if (!any) {
+      throw new TypeError('invalid duration-like');
+    }
+    return result;
   },
   ToLimitedTemporalDuration: (item, disallowedProperties) => {
     let record = ES.ToTemporalDurationRecord(item);
@@ -876,43 +914,35 @@ export const ES = ObjectAssign({}, ES2020, {
     if (options === undefined) options = ObjectCreate(null);
     return { ...options, largestUnit };
   },
-  ToPartialRecord: (bag, fields) => {
-    let any = false;
-    let result = {};
-    for (const property of fields) {
-      const value = bag[property];
-      if (value !== undefined) {
-        any = true;
-        if (BUILTIN_CASTS.has(property)) {
-          result[property] = BUILTIN_CASTS.get(property)(value);
-        } else {
-          result[property] = value;
-        }
-      }
-    }
-    return any ? result : false;
-  },
-  PrepareTemporalFields: (bag, fields) => {
+  PrepareTemporalFields: (
+    bag,
+    fields,
+    completeness = 'complete',
+    { emptySourceErrorMessage = 'no supported properties found' } = {}
+  ) => {
     const result = {};
     let any = false;
     for (const fieldRecord of fields) {
-      const [property, defaultValue] = fieldRecord;
+      // Unlike the spec, this interface supports field defaults via [field, default] pairs.
+      // But we still need to also support simple strings.
+      const [property, defaultValue] = ES.Type(fieldRecord) === 'Object' ? fieldRecord : [fieldRecord];
       let value = bag[property];
-      if (value === undefined) {
-        if (fieldRecord.length === 1) {
-          throw new TypeError(`required property '${property}' missing or undefined`);
-        }
-        value = defaultValue;
-      } else {
+      if (value !== undefined) {
         any = true;
         if (BUILTIN_CASTS.has(property)) {
           value = BUILTIN_CASTS.get(property)(value);
         }
+        result[property] = value;
+      } else if (completeness !== 'partial') {
+        if (fieldRecord.length === 1) {
+          throw new TypeError(`required property '${property}' missing or undefined`);
+        }
+        value = defaultValue;
+        result[property] = value;
       }
-      result[property] = value;
     }
-    if (!any) {
-      throw new TypeError('no supported properties found');
+    if (completeness === 'partial' && !any) {
+      throw new TypeError(emptySourceErrorMessage);
     }
     if ((result['era'] === undefined) !== (result['eraYear'] === undefined)) {
       throw new RangeError("properties 'era' and 'eraYear' must be provided together");
@@ -971,15 +1001,19 @@ export const ES = ObjectAssign({}, ES2020, {
     });
     return ES.PrepareTemporalFields(bag, entries);
   },
-  ToTemporalTimeRecord: (bag) => {
-    return ES.PrepareTemporalFields(bag, [
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['nanosecond', 0],
-      ['second', 0]
-    ]);
+  ToTemporalTimeRecord: (bag, completeness = 'complete') => {
+    const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
+    const partial = ES.PrepareTemporalFields(bag, fields, 'partial', { emptySourceErrorMessage: 'invalid time-like' });
+    const result = {};
+    for (const field of fields) {
+      const valueDesc = ObjectGetOwnPropertyDescriptor(partial, field);
+      if (valueDesc !== undefined) {
+        result[field] = valueDesc.value;
+      } else if (completeness === 'complete') {
+        result[field] = 0;
+      }
+    }
+    return result;
   },
   ToTemporalYearMonthFields: (bag, fieldNames) => {
     const entries = [
