@@ -96,8 +96,8 @@
         1. Set _two_ to ? ToTemporalDuration(_two_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
-        1. Let _shift1_ be ? CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _shift2_ be ? CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _shift1_ be ? CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
+        1. Let _shift2_ be ? CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
         1. If any of _one_.[[Years]], _two_.[[Years]], _one_.[[Months]], _two_.[[Months]], _one_.[[Weeks]], or _two_.[[Weeks]] are not 0, then
           1. Let _unbalanceResult1_ be ? UnbalanceDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"day"*, _relativeTo_).
           1. Let _unbalanceResult2_ be ? UnbalanceDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"day"*, _relativeTo_).
@@ -1117,12 +1117,6 @@
           _mon_: an integer,
           _w_: an integer,
           _d_: an integer,
-          _h_: an integer,
-          _min_: an integer,
-          _s_: an integer,
-          _ms_: an integer,
-          _mus_: an integer,
-          _ns_: an integer,
         )
       </h1>
       <dl class="header">
@@ -1133,7 +1127,7 @@
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, return 0.
         1. Let _instant_ be ! CreateTemporalInstant(_relativeTo_.[[Nanoseconds]]).
         1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instant_).
-        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _w_, _d_, _h_, _min_, _s_, _ms_, _mus_, _ns_).
+        1. Let _after_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _y_, _mon_, _w_, _d_, 0, 0, 0, 0, 0, 0).
         1. Let _instantAfter_ be ! CreateTemporalInstant(_after_).
         1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_relativeTo_.[[TimeZone]], _instantAfter_).
         1. Return _offsetAfter_ - _offsetBefore_.
