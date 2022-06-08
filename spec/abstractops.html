@@ -616,7 +616,7 @@
   <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
     <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
     <emu-alg>
-      1. Assert: _second_, _millisecond_, _microsecond_ and _nanosecond_ are integers.
+      1. Assert: _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
       1. If _precision_ is *"minute"*, return *""*.
       1. Let _secondsString_ be the string-concatenation of the code unit 0x003A (COLON) and ToZeroPaddedDecimalString(_second_, 2).
       1. Let _fraction_ be _millisecond_ &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_.
