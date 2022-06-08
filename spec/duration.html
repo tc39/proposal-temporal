@@ -302,7 +302,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Let _temporalDurationLike_ be ? ToPartialDuration(_temporalDurationLike_).
+        1. Let _temporalDurationLike_ be ? ToTemporalPartialDurationRecord(_temporalDurationLike_).
         1. If _temporalDurationLike_.[[Years]] is not *undefined*, then
           1. Let _years_ be _temporalDurationLike_.[[Years]].
         1. Else,
@@ -927,7 +927,7 @@
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
         1. Let _result_ be a new Duration Record with each field set to 0.
-        1. Let _partial_ be ? ToPartialDuration(_temporalDurationLike_).
+        1. Let _partial_ be ? ToTemporalPartialDurationRecord(_temporalDurationLike_).
         1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
           1. Let _fieldName_ be the Field Name value of the current row.
           1. Let _value_ be the value of the field of _partial_ whose name is _fieldName_.
@@ -1027,9 +1027,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-topartialduration" type="abstract operation">
+    <emu-clause id="sec-temporal-totemporalpartialdurationrecord" type="abstract operation">
       <h1>
-        ToPartialDuration (
+        ToTemporalPartialDurationRecord (
           _temporalDurationLike_: an ECMAScript language value,
         )
       </h1>
