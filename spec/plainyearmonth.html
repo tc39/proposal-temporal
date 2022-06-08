@@ -504,7 +504,11 @@
         1. Assert: _year_ and _month_ are integers.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainISOYearMonth(_year_, _month_).
+          1. Set _month_ to the result of clamping _month_ between 1 and 12.
+          1. Return the Record {
+              [[Year]]: _year_,
+              [[Month]]: _month_
+            }.
         1. Else,
           1. Assert: _overflow_ is *"reject"*.
           1. If ! IsValidISOMonth(_month_) is *false*, throw a *RangeError* exception.
@@ -560,18 +564,6 @@
         1. Return the Record {
             [[Year]]: _year_,
             [[Month]]: _month_
-          }.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-constrainisoyearmonth" aoid="ConstrainISOYearMonth">
-      <h1>ConstrainISOYearMonth ( _year_, _month_ )</h1>
-      <emu-alg>
-        1. Assert: _year_ and _month_ are integers.
-        1. Set _month_ to the result of clamping _month_ between 1 and 12.
-        1. Return the Record {
-          [[Year]]: _year_,
-          [[Month]]: _month_
           }.
       </emu-alg>
     </emu-clause>
