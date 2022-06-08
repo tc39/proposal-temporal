@@ -81,7 +81,7 @@
       </p>
       <emu-alg>
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
-          1. Return ? CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
+          1. Return ! CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
         1. Return ? ToTemporalDuration(_item_).
       </emu-alg>
     </emu-clause>

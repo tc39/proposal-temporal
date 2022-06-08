@@ -66,7 +66,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Return ? CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
+          1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
         1. Return ? ToTemporalTime(_item_, _overflow_).
       </emu-alg>
     </emu-clause>

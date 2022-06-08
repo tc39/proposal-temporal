@@ -64,7 +64,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Perform ? ToTemporalOverflow(_options_).
-          1. Return ? CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
+          1. Return ! CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
         1. Return ? ToTemporalYearMonth(_item_, _options_).
       </emu-alg>
     </emu-clause>
