@@ -739,7 +739,7 @@
         1. Let _dtStart_ be ? CreateTemporalDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, _isoCalendar_).
         1. Let _instantStart_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dtStart_, *"compatible"*).
         1. Let _startNs_ be _instantStart_.[[Nanoseconds]].
-        1. Let _endNs_ be ? AddZonedDateTime(_startNs_, _timeZone_, _zonedDateTime_.[[Calendar]], 0, 0, 0, 1, 0, 0, 0, 0, 0, 0).
+        1. Let _endNs_ be ? AddZonedDateTime(_startNs_, _timeZone_, _calendar_, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be ℝ(_endNs_ - _startNs_).
         1. If _dayLengthNs_ is 0, then
           1. Throw a *RangeError* exception.
