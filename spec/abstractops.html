@@ -750,7 +750,7 @@
       1. If _unsignedRoundingMode_ is ~half-zero~, return _r1_.
       1. If _unsignedRoundingMode_ is ~half-infinity~, return _r2_.
       1. Assert: _unsignedRoundingMode_ is ~half-even~.
-      1. Let _cardinality_ be <emu-eqn>(_r1_ / (_r2_ – _r1_)) modulo 2</emu-eqn>.
+      1. Let _cardinality_ be <emu-eqn>_r1_ modulo 2</emu-eqn>.
       1. If _cardinality_ is 0, return _r1_.
       1. Return _r2_.
     </emu-alg>
