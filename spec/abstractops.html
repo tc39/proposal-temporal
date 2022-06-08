@@ -1466,6 +1466,7 @@
       <dd>It parses the argument as an ISO 8601 duration string and returns a Duration Record.</dd>
     </dl>
     <emu-note>The value of ToIntegerOrInfinity(*""*) is 0.</emu-note>
+    <emu-note>Use of mathematical values rather than approximations is important to avoid off-by-one errors with input like "PT46H66M71.50040904S".</emu-note>
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
