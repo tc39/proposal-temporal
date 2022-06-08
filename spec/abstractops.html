@@ -106,7 +106,7 @@
       </p>
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"trunc"*, *"halfExpand"* », _fallback_).
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, *"halfEven"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -123,6 +123,8 @@
     <emu-alg>
       1. If _roundingMode_ is *"ceil"*, return *"floor"*.
       1. If _roundingMode_ is *"floor"*, return *"ceil"*.
+      1. If _roundingMode_ is *"halfCeil"*, return *"halfFloor"*.
+      1. If _roundingMode_ is *"halfFloor"*, return *"halfCeil"*.
       1. Return _roundingMode_.
     </emu-alg>
   </emu-clause>
@@ -748,7 +750,7 @@
       RoundNumberToIncrement (
         _x_: a mathematical value,
         _increment_: an integer,
-        _roundingMode_: *"ceil"*, *"floor"*, *"trunc"*, or *"halfExpand"*,
+        _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
       ): an integer
     </h1>
     <dl class="header">
