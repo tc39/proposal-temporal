@@ -204,7 +204,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -215,7 +216,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -226,7 +228,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -237,7 +240,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -248,7 +252,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -259,7 +264,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -270,7 +276,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
+        1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -281,7 +288,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_calendar_) is Object.
-        1. Return ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
+        1. Return ToBoolean(_result_).
       </emu-alg>
     </emu-clause>
 
