@@ -1534,6 +1534,7 @@
           _calendar_: an Object,
           _relativeTo_: a Temporal.PlainDate,
           _duration_: a Temporal.Duration,
+          optional _dateAdd_: a function object or *undefined*,
         )
       </h1>
       <dl class="header">
@@ -1544,7 +1545,8 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_).
+        1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
+        1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, *undefined*, _dateAdd_).
         1. Let _days_ be DaysUntil(_relativeTo_, _newDate_).
         1. Return the Record {
             [[RelativeTo]]: _newDate_,
@@ -1644,7 +1646,7 @@
           1. Set _days_ to _days_ - _daysPassed_.
           1. If _days_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
           1. Let _oneYear_ be ! CreateTemporalDuration(_sign_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
+          1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_, _dateAdd_).
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
           1. Let _fractionalYears_ be _years_ + _days_ / abs(_oneYearDays_).
           1. Set _years_ to RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
@@ -1661,13 +1663,13 @@
           1. Let _days_ be _days_ + _weeksInDays_.
           1. If _days_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
           1. Let _oneMonth_ be ! CreateTemporalDuration(0, _sign_, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
+          1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_, _dateAdd_).
           1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) &ge; abs(_oneMonthDays_),
             1. Set _months_ to _months_ + _sign_.
             1. Set _days_ to _days_ - _oneMonthDays_.
-            1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
+            1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_, _dateAdd_).
             1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _fractionalMonths_ be _months_ + _days_ / abs(_oneMonthDays_).
