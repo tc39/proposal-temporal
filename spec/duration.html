@@ -1685,7 +1685,7 @@
           1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ - _nanoseconds_.
-        1. Let _duration_ be ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _duration_ be ? CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Return the Record {
           [[DurationRecord]]: _duration_,
           [[Remainder]]: _remainder_
