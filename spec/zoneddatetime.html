@@ -1052,7 +1052,9 @@
           1. Return _instant_.[[Nanoseconds]].
         1. If _offsetBehaviour_ is ~exact~ or _offsetOption_ is *"use"*, then
           1. Let _epochNanoseconds_ be GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-          1. Return _epochNanoseconds_ - ℤ(_offsetNanoseconds_).
+          1. Set _epochNanoseconds_ to _epochNanoseconds_ - ℤ(_offsetNanoseconds_).
+          1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
+          1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
