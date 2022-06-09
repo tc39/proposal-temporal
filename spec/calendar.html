@@ -487,7 +487,8 @@
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
         1. If _monthCode_ is *undefined*, then
           1. If _month_ is *undefined*, throw a *TypeError* exception.
-          1. Return _month_.
+          1. Assert: Type(_month_) is Number.
+          1. Return ℝ(_month_).
         1. Assert: Type(_monthCode_) is String.
         1. Let _monthLength_ be the length of _monthCode_.
         1. If _monthLength_ is not 3, throw a *RangeError* exception.
@@ -513,10 +514,12 @@
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », «»).
         1. Let _year_ be ! Get(_fields_, *"year"*).
         1. If _year_ is *undefined*, throw a *TypeError* exception.
+        1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
         1. Let _day_ be ! Get(_fields_, *"day"*).
         1. If _day_ is *undefined*, throw a *TypeError* exception.
-        1. Return ? RegulateISODate(_year_, _month_, _day_, _overflow_).
+        1. Assert: Type(_day_) is Number.
+        1. Return ? RegulateISODate(ℝ(_year_), _month_, ℝ(_day_), _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -531,8 +534,9 @@
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
         1. Let _year_ be ! Get(_fields_, *"year"*).
+        1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
-        1. Let _result_ be ? RegulateISOYearMonth(_year_, _month_, _overflow_).
+        1. Let _result_ be ? RegulateISOYearMonth(ℝ(_year_), _month_, _overflow_).
         1. Return the Record {
             [[Year]]: _result_.[[Year]],
             [[Month]]: _result_.[[Month]],
@@ -558,11 +562,13 @@
         1. Set _month_ to ? ResolveISOMonth(_fields_).
         1. Let _day_ be ! Get(_fields_, *"day"*).
         1. If _day_ is *undefined*, throw a *TypeError* exception.
+        1. Assert: Type(_day_) is Number.
         1. Let _referenceISOYear_ be 1972 (the first leap year after the Unix epoch).
         1. If _monthCode_ is *undefined*, then
-          1. Let _result_ be ? RegulateISODate(_year_, _month_, _day_, _overflow_).
+          1. Assert: Type(_year_) is Number.
+          1. Let _result_ be ? RegulateISODate(ℝ(_year_), _month_, ℝ(_day_), _overflow_).
         1. Else,
-          1. Let _result_ be ? RegulateISODate(_referenceISOYear_, _month_, _day_, _overflow_).
+          1. Let _result_ be ? RegulateISODate(_referenceISOYear_, _month_, ℝ(_day_), _overflow_).
         1. Return the Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]],
