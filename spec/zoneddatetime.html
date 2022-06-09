@@ -597,7 +597,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. If _plainTimeLike_ is *undefined*, then
-          1. Let _plainTime_ be ? CreateTemporalTime(0, 0, 0, 0, 0, 0).
+          1. Let _plainTime_ be ! CreateTemporalTime(0, 0, 0, 0, 0, 0).
         1. Else,
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
