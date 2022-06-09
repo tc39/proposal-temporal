@@ -1538,7 +1538,7 @@
           _calendar_: an Object,
           _relativeTo_: a Temporal.PlainDate,
           _duration_: a Temporal.Duration,
-          optional _dateAdd_: a function object or *undefined*,
+          _dateAdd_: a function object or *undefined*,
         )
       </h1>
       <dl class="header">
@@ -1549,7 +1549,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
         1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, *undefined*, _dateAdd_).
         1. Let _days_ be DaysUntil(_relativeTo_, _newDate_).
         1. Return the Record {
