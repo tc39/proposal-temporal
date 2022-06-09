@@ -385,6 +385,7 @@
         1. Assert: _isoMonth_, _isoDay_, and _referenceISOYear_ are integers.
         1. Assert: Type(_calendar_) is Object.
         1. If IsValidISODate(_referenceISOYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
+        1. If ISODateTimeWithinLimits(_referenceISOYear_, _isoMonth_, _isoDay_, 12, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainMonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainMonthDay.prototype%"*, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]], [[Calendar]] »).
         1. Set _object_.[[ISOMonth]] to _isoMonth_.
@@ -393,6 +394,9 @@
         1. Set _object_.[[ISOYear]] to _referenceISOYear_.
         1. Return _object_.
       </emu-alg>
+      <emu-note>
+        <p>Deferring to ISODateTimeWithinLimits with an hour of 12 avoids trouble at the extremes of the representable range of dates, which stop just before midnight on each end.</p>
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-temporalmonthdaytostring" aoid="TemporalMonthDayToString">
