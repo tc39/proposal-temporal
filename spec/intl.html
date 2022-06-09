@@ -2346,25 +2346,39 @@
     <emu-clause id="sec-abstracts">
       <h1>Abstract Operations</h1>
 
-      <emu-clause id="sup-temporal-preparetemporalfields">
-        <h1>PrepareTemporalFields ( _fields_, _fieldNames_, _requiredFields_ )</h1>
-        <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-preparetemporalfields"></emu-xref>.</p>
+      <emu-clause id="sup-temporal-preparetemporalfields" type="abstract operation">
+        <h1>
+          PrepareTemporalFields (
+            _fields_: an Object,
+            _fieldNames_: a List of property names,
+            _requiredFields_: ~partial~ or a List of property names,
+          ): either a normal completion containing an Object, or an abrupt completion
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>This definition supersedes the definition provided in <emu-xref href="#sec-temporal-preparetemporalfields"></emu-xref>.</dd>
+          <dt>redefinition</dt>
+          <dd>true</dd>
+        </dl>
         <emu-alg>
-          1. Assert: Type(_fields_) is Object.
           1. Let _result_ be OrdinaryObjectCreate(%Object.prototype%).
-          1. For each value _property_ of _fieldNames_, do
+          1. Let _any_ be *false*.
+          1. For each property name _property_ of _fieldNames_, do
             1. Let _value_ be ? Get(_fields_, _property_).
-            1. If _value_ is *undefined*, then
-              1. If _requiredFields_ contains _property_, then
-                1. Throw a *TypeError* exception.
-              1. Else,
-                1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>, then
-                  1. Set _value_ to the corresponding Default value of the same row.
-            1. Else,
-              1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>, then
+            1. If _value_ is not *undefined*, then
+              1. Set _any_ to *true*.
+              1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref> and there is a Conversion value in the same row, then
                 1. Let _Conversion_ represent the abstract operation named by the Conversion value of the same row.
                 1. Set _value_ to ? _Conversion_(_value_).
-            1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+              1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+            1. Else if _requiredFields_ is a List, then
+              1. If _requiredFields_ contains _property_, then
+                1. Throw a *TypeError* exception.
+              1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>, then
+                1. Set _value_ to the corresponding Default value of the same row.
+              1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
+          1. If _requiredFields_ is ~partial~ and _any_ is *false*, then
+            1. Throw a *TypeError* exception.
           1. Let _era_ be ? Get(_result_, *"era"*).
           1. Let _eraYear_ be ? Get(_result_, *"eraYear"*).
           1. If _era_ is *undefined* and _eraYear_ is not *undefined*, or if _era_ is not *undefined* and _eraYear_ is *undefined*, then
