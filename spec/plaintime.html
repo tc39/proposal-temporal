@@ -267,7 +267,7 @@
         1. Else,
           1. Let _nanosecond_ be _temporalTime_.[[ISONanosecond]].
         1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
-        1. Return ? CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
+        1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
