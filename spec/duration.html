@@ -1115,6 +1115,21 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-createnegateddurationrecord" type="abstract operation">
+      <h1>
+        CreateNegatedDurationRecord (
+          _duration_: a Duration Record,
+        )
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns a Duration Record that is the negation of _duration_.</dd>
+      </dl>
+      <emu-alg>
+        1. Return ! CreateDurationRecord(-_duration_.[[Years]], -_duration_.[[Months]], -_duration_.[[Weeks]], -_duration_.[[Days]], -_duration_.[[Hours]], -_duration_.[[Minutes]], -_duration_.[[Seconds]], -_duration_.[[Milliseconds]], -_duration_.[[Microseconds]], -_duration_.[[Nanoseconds]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calculateoffsetshift" type="abstract operation">
       <h1>
         CalculateOffsetShift (
