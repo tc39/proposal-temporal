@@ -1126,7 +1126,7 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
-      TimeHourMinuteBasicFormatNotAmbiguous :
+      TimeHourMinuteBasicFormatNotAmbiguousWithMonthDay :
           TimeHourNotValidMonth TimeMinute
           TimeHour TimeMinuteNotValidDay
           TimeHourNotThirtyOneDayMonth TimeMinuteThirtyOneOnly
@@ -1136,7 +1136,7 @@
           TimeHour TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth? TimeZoneBracketedAnnotation?
           TimeHourNotValidMonth TimeZone
           TimeHour `:` TimeMinute TimeZone?
-          TimeHourMinuteBasicFormatNotAmbiguous TimeZoneBracketedAnnotation?
+          TimeHourMinuteBasicFormatNotAmbiguousWithMonthDay TimeZoneBracketedAnnotation?
           TimeHour TimeMinute TimeZoneNumericUTCOffsetNotAmbiguousWithMonth TimeZoneBracketedAnnotation?
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction? TimeZone?
           TimeHour TimeMinute TimeSecondNotValidMonth TimeZone?
