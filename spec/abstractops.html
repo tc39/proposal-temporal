@@ -1049,11 +1049,11 @@
           TimeZoneNumericUTCOffset
           UTCDesignator
 
-      TimeZoneNumericUTCOffsetNotAmbiguous :
+      TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth :
           TimeZoneUTCOffset but not `-` TimeZoneUTCOffsetHour
 
       TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour :
-          TimeZoneNumericUTCOffsetNotAmbiguous
+          TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth
           `-` TimeHourNotValidMonth
 
       TimeZoneUTCOffsetName :
@@ -1133,7 +1133,7 @@
           TimeHourTwoOnly TimeMinuteThirtyOnly
 
       TimeSpecWithOptionalTimeZoneNotAmbiguous :
-          TimeHour TimeZoneNumericUTCOffsetNotAmbiguous? TimeZoneBracketedAnnotation?
+          TimeHour TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth? TimeZoneBracketedAnnotation?
           TimeHourNotValidMonth TimeZone
           TimeHour `:` TimeMinute TimeZone?
           TimeHourMinuteBasicFormatNotAmbiguous TimeZoneBracketedAnnotation?
