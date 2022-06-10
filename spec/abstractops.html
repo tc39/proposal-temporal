@@ -1050,12 +1050,7 @@
           UTCDesignator
 
       TimeZoneNumericUTCOffsetNotAmbiguous :
-          `+` TimeZoneUTCOffsetHour
-          U+2212 TimeZoneUTCOffsetHour
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
+          TimeZoneUTCOffset but not `-` TimeZoneUTCOffsetHour
 
       TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour :
           TimeZoneNumericUTCOffsetNotAmbiguous
