@@ -18,9 +18,9 @@ const ObjectDefineProperty = Object.defineProperty;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
-const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
+import callBound from 'call-bind/callBound';
 import Call from 'es-abstract/2020/Call.js';
 import GetMethod from 'es-abstract/2020/GetMethod.js';
 import IsInteger from 'es-abstract/2020/IsInteger.js';
@@ -67,6 +67,8 @@ import {
   MICROSECONDS,
   NANOSECONDS
 } from './slots.mjs';
+
+const $stringSlice = callBound('String.prototype.slice');
 
 const DAY_SECONDS = 86400;
 const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
@@ -400,7 +402,7 @@ export const ES = ObjectAssign({}, ES2020, {
     // and must be stripped so presence of a calendar doesn't result in interpretation
     // of otherwise ambiguous input as a time.
     const isoStringWithoutCalendar = calendar
-      ? StringPrototypeSlice.call(isoString, 0, isoString.length - calendar.length - 7)
+      ? $stringSlice(isoString, 0, isoString.length - calendar.length - 7)
       : isoString;
     try {
       const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar);
