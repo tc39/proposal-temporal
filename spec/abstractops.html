@@ -937,6 +937,9 @@
           `11`
           `12`
 
+      DateMonthWithThirtyOneDays : one of
+          `01` `03` `05` `07` `08` `10` `12`
+
       DateDay :
           `0` NonZeroDigit
           `1` DecimalDigit
@@ -952,6 +955,13 @@
 
       DateSpecMonthDay :
           TwoDashes? DateMonth `-`? DateDay
+
+      ValidMonthDay :
+          DateMonth `-`? `0` NonZeroDigit
+          DateMonth `-`? `1` DecimalDigit
+          DateMonth `-`? `2` DecimalDigit
+          DateMonth `-`? `30` but not one of `0230` or `02-30`
+          DateMonthWithThirtyOneDays `-`? `31`
 
       Date :
           DateYear `-` DateMonth `-` DateDay
@@ -1144,14 +1154,7 @@
           TimeHourTwoOnly TimeMinuteThirtyOnly
 
       TimeSpecWithOptionalTimeZoneNotAmbiguous :
-          TimeHour TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth? TimeZoneBracketedAnnotation?
-          TimeHourNotValidMonth TimeZone
-          TimeHour `:` TimeMinute TimeZone?
-          TimeHourMinuteBasicFormatNotAmbiguousWithMonthDay TimeZoneBracketedAnnotation?
-          TimeHour TimeMinute TimeZoneNumericUTCOffsetNotAmbiguousWithMonth TimeZoneBracketedAnnotation?
-          TimeHour `:` TimeMinute `:` TimeSecond TimeFraction? TimeZone?
-          TimeHour TimeMinute TimeSecondNotValidMonth TimeZone?
-          TimeHour TimeMinute TimeSecond TimeFraction TimeZone?
+          TimeSpec TimeZone? but not one of ValidMonthDay or DateSpecYearMonth
 
       TimeSpecSeparator :
           DateTimeSeparator TimeSpec
