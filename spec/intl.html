@@ -2379,10 +2379,11 @@
               1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
           1. If _requiredFields_ is ~partial~ and _any_ is *false*, then
             1. Throw a *TypeError* exception.
-          1. Let _era_ be ? Get(_result_, *"era"*).
-          1. Let _eraYear_ be ? Get(_result_, *"eraYear"*).
-          1. If _era_ is *undefined* and _eraYear_ is not *undefined*, or if _era_ is not *undefined* and _eraYear_ is *undefined*, then
-            1. Throw a *RangeError* exception.
+          1. If _requiredFields_ is not ~partial~, then
+            1. Let _era_ be ? Get(_result_, *"era"*).
+            1. Let _eraYear_ be ? Get(_result_, *"eraYear"*).
+            1. If _era_ is *undefined* and _eraYear_ is not *undefined*, or if _era_ is not *undefined* and _eraYear_ is *undefined*, then
+              1. Throw a *RangeError* exception.
           1. Return _result_.
         </emu-alg>
       </emu-clause>
