@@ -977,50 +977,6 @@
           MinuteSecond
           `60`
 
-      TimeHourNotValidMonth : one of
-          `00` `13` `14` `15` `16` `17` `18` `19` `20` `21` `23`
-
-      TimeHourNotThirtyOneDayMonth : one of
-          `02` `04` `06` `09` `11`
-
-      TimeHourTwoOnly :
-          `02`
-
-      TimeMinuteNotValidDay :
-          `00`
-          `32`
-          `33`
-          `34`
-          `35`
-          `36`
-          `37`
-          `38`
-          `39`
-          `4` DecimalDigit
-          `5` DecimalDigit
-          `60`
-
-      TimeMinuteThirtyOnly :
-          `30`
-
-      TimeMinuteThirtyOneOnly :
-          `31`
-
-      TimeSecondNotValidMonth :
-          `00`
-          `13`
-          `14`
-          `15`
-          `16`
-          `17`
-          `18`
-          `19`
-          `2` DecimalDigit
-          `3` DecimalDigit
-          `4` DecimalDigit
-          `5` DecimalDigit
-          `60`
-
       FractionalPart :
           DecimalDigit DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit?
 
@@ -1058,13 +1014,6 @@
       TimeZoneUTCOffset :
           TimeZoneNumericUTCOffset
           UTCDesignator
-
-      TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth :
-          TimeZoneNumericUTCOffset but not `-` TimeZoneUTCOffsetHour
-
-      TimeZoneNumericUTCOffsetNotAmbiguousWithMonth :
-          TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth
-          `-` TimeHourNotValidMonth
 
       TimeZoneUTCOffsetName :
           Sign Hour
@@ -1146,12 +1095,6 @@
           TimeHour TimeMinute
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
-
-      TimeHourMinuteBasicFormatNotAmbiguousWithMonthDay :
-          TimeHourNotValidMonth TimeMinute
-          TimeHour TimeMinuteNotValidDay
-          TimeHourNotThirtyOneDayMonth TimeMinuteThirtyOneOnly
-          TimeHourTwoOnly TimeMinuteThirtyOnly
 
       TimeSpecWithOptionalTimeZoneNotAmbiguous :
           TimeSpec TimeZone? but not one of ValidMonthDay or DateSpecYearMonth
@@ -1302,10 +1245,7 @@
       1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, |TemporalZonedDateTimeString| &raquo;, do
         1. If _parseResult_ is not a Parse Node, set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
       1. Assert: _parseResult_ is a Parse Node.
-      1. Let each of _year_, _month_, _day_, _fSeconds_, and _calendar_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeFraction|, and |CalendarName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
-      1. Let _hour_ be the source text matched by the |TimeHour|, |TimeHourNotValidMonth|, |TimeHourNotThirtyOneDayMonth|, or |TimeHourTwoOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
-      1. Let _minute_ be the source text matched by the |TimeMinute|, |TimeMinuteNotValidDay|, |TimeMinuteThirtyOnly|, or |TimeMinuteThirtyOneOnly| Parse Node contained within _parseResult_, or an empty sequence of code points if none of those are present.
-      1. Let _second_ be the source text matched by the |TimeSecond| or |TimeSecondNotValidMonth| Parse Node contained within _parseResult_, or an empty sequence of code points if neither of those are present.
+      1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, _fSeconds_, and _calendar_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFraction|, and |CalendarName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
       1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
       1. Let _yearMV_ be ! ToIntegerOrInfinity(CodePointsToString(_year_)).
       1. If _month_ is empty, then
