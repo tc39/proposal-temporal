@@ -18,6 +18,7 @@ const ObjectDefineProperty = Object.defineProperty;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
+const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
@@ -394,15 +395,19 @@ export const ES = ObjectAssign({}, ES2020, {
     if (/[tT ][0-9][0-9]/.test(isoString)) {
       return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
-    // slow but non-grammar-dependent way to ensure that time-only strings that
-    // are also valid PlainMonthDay and PlainYearMonth throw. corresponds to
-    // assertion in spec text
+    // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
+    // The calendar suffix is `[u-ca=${calendar}]`, i.e. calendar plus 7 characters,
+    // and must be stripped so presence of a calendar doesn't result in interpretation
+    // of otherwise ambiguous input as a time.
+    const isoStringWithoutCalendar = calendar
+      ? StringPrototypeSlice.call(isoString, 0, isoString.length - calendar.length - 7)
+      : isoString;
     try {
-      const { month, day } = ES.ParseTemporalMonthDayString(isoString);
+      const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar);
       ES.RejectISODate(1972, month, day);
     } catch {
       try {
-        const { year, month } = ES.ParseTemporalYearMonthString(isoString);
+        const { year, month } = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar);
         ES.RejectISODate(year, month, 1);
       } catch {
         return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
