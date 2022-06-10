@@ -226,13 +226,6 @@ function saveSecond(data, result) {
 const timeHour = withCode(hour, saveHour);
 const timeMinute = withCode(minuteSecond, saveMinute);
 const timeSecond = withCode(choice(minuteSecond, '60'), saveSecond);
-const timeHourNotValidMonth = withCode(choice('00', zeroPaddedInclusive(13, 23, 2)), saveHour);
-const timeHourNot31DayMonth = withCode(choice('02', '04', '06', '09', '11'), saveHour);
-const timeHour2Only = withCode('02', saveHour);
-const timeMinuteNotValidDay = withCode(choice('00', zeroPaddedInclusive(32, 59, 2)), saveMinute);
-const timeMinute30Only = withCode('30', saveMinute);
-const timeMinute31Only = withCode('31', saveMinute);
-const timeSecondNotValidMonth = withCode(choice('00', zeroPaddedInclusive(13, 60, 2)), saveSecond);
 const timeFraction = withCode(fraction, (data, result) => {
   result = result.slice(1);
   const fraction = result.padEnd(9, '0');
@@ -245,7 +238,6 @@ const timeZoneUTCOffsetSign = withCode(
   (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
 );
 const timeZoneUTCOffsetHour = hour;
-const timeZoneUTCOffsetHourNotValidMonth = zeroPaddedInclusive(13, 23, 2);
 const timeZoneUTCOffsetMinute = minuteSecond;
 const timeZoneUTCOffsetSecond = minuteSecond;
 const timeZoneUTCOffsetFraction = fraction;
@@ -261,24 +253,6 @@ const timeZoneNumericUTCOffset = withCode(
       seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
     )
   ),
-  saveOffset
-);
-const timeZoneNumericUTCOffsetNotAmbiguous = withCode(
-  choice(
-    seq(character('+\u2212'), timeZoneUTCOffsetHour),
-    seq(
-      timeZoneUTCOffsetSign,
-      timeZoneUTCOffsetHour,
-      choice(
-        seq(timeZoneUTCOffsetMinute, [timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]]),
-        seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
-      )
-    )
-  ),
-  saveOffset
-);
-const timeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour = withCode(
-  choice(timeZoneNumericUTCOffsetNotAmbiguous, seq('-', timeZoneUTCOffsetHourNotValidMonth)),
   saveOffset
 );
 const timeZoneUTCOffset = choice(utcDesignator, timeZoneNumericUTCOffset);
@@ -306,29 +280,14 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
-const timeSpecWithOptionalTimeZoneNotAmbiguous = choice(
-  seq(timeHour, [timeZoneNumericUTCOffsetNotAmbiguous], [timeZoneBracketedAnnotation]),
-  seq(timeHourNotValidMonth, timeZone),
-  seq(
-    choice(
-      seq(timeHourNotValidMonth, timeMinute),
-      seq(timeHour, timeMinuteNotValidDay),
-      seq(timeHourNot31DayMonth, timeMinute31Only),
-      seq(timeHour2Only, timeMinute30Only)
-    ),
-    [timeZoneBracketedAnnotation]
-  ),
-  seq(
-    timeHour,
-    timeMinute,
-    choice(
-      seq(timeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour, [timeZoneBracketedAnnotation]),
-      seq(timeSecondNotValidMonth, [timeZone]),
-      seq(timeSecond, timeFraction, [timeZone])
-    )
-  ),
-  seq(timeHour, ':', timeMinute, [':', timeSecond, [timeFraction]], [timeZone])
-);
+const timeSpecWithOptionalTimeZoneNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [timeZone]), (result) => {
+  if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
+    throw new SyntaxError('valid PlainMonthDay');
+  }
+  if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+    throw new SyntaxError('valid PlainYearMonth');
+  }
+});
 const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 
 function validateDayOfMonth(result, { year, month, day }) {
