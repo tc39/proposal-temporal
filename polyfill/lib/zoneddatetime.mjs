@@ -193,7 +193,7 @@ export class ZonedDateTime {
       'second',
       'year'
     ]);
-    ArrayPrototypePush.call(fieldNames, 'offset');
+    ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
     const props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
     if (!props) {
       throw new TypeError('invalid zoned-date-time-like');

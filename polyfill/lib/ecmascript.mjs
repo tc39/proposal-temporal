@@ -1576,7 +1576,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const result = [];
     for (const name of fieldNames) {
       if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
-      ArrayPrototypePush.call(result, name);
+      ES.Call(ArrayPrototypePush, result, [name]);
     }
     return result;
   },
@@ -1965,7 +1965,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (!ES.IsTemporalInstant(instant)) {
         throw new TypeError('bad return from getPossibleInstantsFor');
       }
-      ArrayPrototypePush.call(result, instant);
+      ES.Call(ArrayPrototypePush, result, [instant]);
     }
     return result;
   },
@@ -4816,7 +4816,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return MathFloor(value);
   },
   IsBuiltinCalendar: (id) => {
-    return ArrayIncludes.call(BUILTIN_CALENDAR_IDS, id);
+    return ES.Call(ArrayIncludes, BUILTIN_CALENDAR_IDS, [id]);
   }
 });
 

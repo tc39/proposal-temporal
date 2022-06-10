@@ -98,7 +98,7 @@ export class Calendar {
       if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
       if (!allowed.has(name)) throw new RangeError(`invalid field name ${name}`);
       allowed.delete(name);
-      ArrayPrototypePush.call(fieldsArray, name);
+      ES.Call(ArrayPrototypePush, fieldsArray, [name]);
     }
     return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
   }
@@ -278,7 +278,7 @@ impl['iso8601'] = {
     for (const nextKey of newKeys) {
       merged[nextKey] = additionalFields[nextKey];
     }
-    if (!ArrayIncludes.call(newKeys, 'month') && !ArrayIncludes.call(newKeys, 'monthCode')) {
+    if (!ES.Call(ArrayIncludes, newKeys, ['month']) && !ES.Call(ArrayIncludes, newKeys, ['monthCode'])) {
       const { month, monthCode } = fields;
       if (month !== undefined) merged.month = month;
       if (monthCode !== undefined) merged.monthCode = monthCode;
@@ -1400,12 +1400,14 @@ function adjustEras(eras) {
   // Ensure that the latest epoch is first in the array. This lets us try to
   // match eras in index order, with the last era getting the remaining older
   // years. Any reverse-signed era must be at the end.
-  ArraySort.call(eras, (e1, e2) => {
-    if (e1.reverseOf) return 1;
-    if (e2.reverseOf) return -1;
-    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
-    return e2.isoEpoch.year - e1.isoEpoch.year;
-  });
+  ES.Call(ArraySort, eras, [
+    (e1, e2) => {
+      if (e1.reverseOf) return 1;
+      if (e2.reverseOf) return -1;
+      if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
+      return e2.isoEpoch.year - e1.isoEpoch.year;
+    }
+  ]);
 
   // If there's a reversed era, then the one before it must be the era that's
   // being reversed.
@@ -1814,7 +1816,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (
           month === undefined &&
           monthCode.endsWith('L') &&
-          !ArrayIncludes.call(['M01L', 'M12L', 'M13L'], monthCode) &&
+          !ES.Call(ArrayIncludes, ['M01L', 'M12L', 'M13L'], [monthCode]) &&
           overflow === 'constrain'
         ) {
           let withoutML = monthCode.slice(1, -1);
@@ -1930,7 +1932,7 @@ const nonIsoGeneralImpl = {
     return result;
   },
   fields(fields) {
-    if (ArrayIncludes.call(fields, 'year')) fields = [...fields, 'era', 'eraYear'];
+    if (ES.Call(ArrayIncludes, fields, ['year'])) fields = [...fields, 'era', 'eraYear'];
     return fields;
   },
   mergeFields(fields, additionalFields) {
