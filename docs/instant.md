@@ -418,7 +418,7 @@ Temporal.Now.instant().subtract(oneHour);
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
@@ -508,7 +508,7 @@ epoch.toZonedDateTimeISO('UTC').until(
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
@@ -542,7 +542,7 @@ billion.since(epoch); // => PT1000000000S
     - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
       The default is 1.
     - `roundingMode` (string): How to handle the remainder.
-      Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+      Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
       The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.Instant` object which is `instant` rounded to `roundTo` (if a string parameter is used) or `roundingIncrement` of `smallestUnit` (if an object parameter is used).
@@ -629,7 +629,7 @@ one.equals(one); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `instant`.

@@ -394,7 +394,7 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `yearMonth` and until `other`.
@@ -455,7 +455,7 @@ ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: '
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `yearMonth` and since `other`.

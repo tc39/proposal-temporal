@@ -653,7 +653,7 @@ dt.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time after `datetime` and until `other`.
@@ -732,7 +732,7 @@ jan1.until(mar1);                            // => P60D
   - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
     The default is 1.
   - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`, which truncates any remainder towards zero.
 
 **Returns:** a `Temporal.Duration` representing the elapsed time before `datetime` and since `other`.
@@ -766,7 +766,7 @@ dt2.since(dt1); // => P8456DT12H5M29.9999965S
     - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
       The default is 1.
     - `roundingMode` (string): How to handle the remainder.
-      Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+      Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
       The default is `'halfExpand'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is `datetime` rounded to `roundTo` (if a string parameter is used) or `roundingIncrement` of `smallestUnit` (if an object parameter is used).
@@ -859,7 +859,7 @@ dt1.equals(dt1); // => true
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
 **Returns:** a string in the ISO 8601 date format representing `datetime`.

@@ -404,7 +404,7 @@ d.abs(); // PT8H30M
     - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
       The default is 1.
     - `roundingMode` (string): How to handle the remainder, if rounding.
-      Valid values are `'halfExpand'`, `'ceil'`, `'trunc'`, and `'floor'`.
+      Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
       The default is `'halfExpand'`.
     - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when converting between years, months, weeks, and days.
 
@@ -585,7 +585,7 @@ d.total({
     This option overrides `fractionalSecondDigits` if both are given.
     Valid values are `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
   - `roundingMode` (string): How to handle the remainder.
-    Valid values are `'ceil'`, `'floor'`, `'trunc'`, and `'halfExpand'`.
+    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
 **Returns:** the duration as an ISO 8601 string.
