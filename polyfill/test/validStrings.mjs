@@ -304,8 +304,7 @@ const calendarDateTime = seq(dateTime, [calendar]);
 const calendarDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [calendar]);
 const calendarTime = choice(
   seq(timeDesignator, timeSpec, [timeZone], [calendar]),
-  seq(timeSpec, [timeZone], calendar),
-  seq(timeSpecWithOptionalTimeZoneNotAmbiguous)
+  seq(timeSpecWithOptionalTimeZoneNotAmbiguous, [calendar])
 );
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
