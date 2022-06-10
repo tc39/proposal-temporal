@@ -1052,7 +1052,7 @@
       TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth :
           TimeZoneUTCOffset but not `-` TimeZoneUTCOffsetHour
 
-      TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour :
+      TimeZoneNumericUTCOffsetNotAmbiguousWithMonth :
           TimeZoneNumericUTCOffsetNotAmbiguousWithDayOfMonth
           `-` TimeHourNotValidMonth
 
@@ -1137,7 +1137,7 @@
           TimeHourNotValidMonth TimeZone
           TimeHour `:` TimeMinute TimeZone?
           TimeHourMinuteBasicFormatNotAmbiguous TimeZoneBracketedAnnotation?
-          TimeHour TimeMinute TimeZoneNumericUTCOffsetNotAmbiguousAllowedNegativeHour TimeZoneBracketedAnnotation?
+          TimeHour TimeMinute TimeZoneNumericUTCOffsetNotAmbiguousWithMonth TimeZoneBracketedAnnotation?
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction? TimeZone?
           TimeHour TimeMinute TimeSecondNotValidMonth TimeZone?
           TimeHour TimeMinute TimeSecond TimeFraction TimeZone?
