@@ -1071,9 +1071,20 @@
           TimeZoneIANANameComponent
           TimeZoneIANANameComponent `/` TimeZoneIANANameTail
 
+      TimeZoneIANALegacyName :
+          `Etc/GMT0`
+          `GMT0`
+          `GMT-0`
+          `GMT+0`
+          `EST5EDT`
+          `CST6CDT`
+          `MST7MDT`
+          `PST8PDT`
+
       TimeZoneIANAName :
           `Etc/GMT` ASCIISign UnpaddedHour
           TimeZoneIANANameTail but not `Etc/GMT` ASCIISign UnpaddedHour
+          TimeZoneIANALegacyName
 
       TimeZoneIdentifier :
           TimeZoneIANAName
