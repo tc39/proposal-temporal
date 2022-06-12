@@ -1398,36 +1398,16 @@
     <emu-clause id="sec-temporal-addduration" type="abstract operation">
       <h1>
         AddDuration (
-          _y1_: an integer,
-          _mon1_: an integer,
-          _w1_: an integer,
-          _d1_: an integer,
-          _h1_: an integer,
-          _min1_: an integer,
-          _s1_: an integer,
-          _ms1_: an integer,
-          _mus1_: an integer,
-          _ns1_: an integer,
-          _y2_: an integer,
-          _mon2_: an integer,
-          _w2_: an integer,
-          _d2_: an integer,
-          _h2_: an integer,
-          _min2_: an integer,
-          _s2_: an integer,
-          _ms2_: an integer,
-          _mus2_: an integer,
-          _ns2_: an integer,
+          _duration1_: a Duration Record or Temporal.Duration,
+          _duration2_: a Duration Record or Temporal.Duration,
           _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
         )
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds the components of a second duration represented by _y2_ through _ns2_ to those of a first duration represented by _y1_ through _ns1_, and balances the duration relative to the given date _relativeTo_, to ensure that no mixed signs remain in the result. The result is returned as a Duration Record.</dd>
+        <dd>It adds _duration1_ and _duration2_ component by component, balances the result relative to the date _relativeTo_ to ensure that no mixed signs remain, and returns it as a Duration Record.</dd>
       </dl>
       <emu-alg>
-        1. Let _duration1_ be ! CreateDurationRecord(_y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_).
-        1. Let _duration2_ be ! CreateDurationRecord(_y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _durationSum_ be the Record {
             [[Years]]: _duration1_.[[Years]] + _duration2_.[[Years]],
             [[Months]]: _duration1_.[[Months]] + _duration2_.[[Months]],
@@ -1738,7 +1718,9 @@
         1. If (_timeRemainderNs_ - _dayLengthNs_) &times; _direction_ &lt; 0, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _timeRemainderNs_ to ! RoundTemporalInstant(ℤ(_timeRemainderNs_ - _dayLengthNs_), _increment_, _unit_, _roundingMode_).
-        1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
+        1. Let _dateDuration_ be ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _adjustment_ be ! CreateDurationRecord(0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
+        1. Let _adjustedDateDuration_ be ? AddDuration(_dateDuration_, _adjustment_, _relativeTo_).
         1. Let _adjustedTimeDuration_ be ? BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
         1. Return ! CreateDurationRecord(_adjustedDateDuration_.[[Years]], _adjustedDateDuration_.[[Months]], _adjustedDateDuration_.[[Weeks]], _adjustedDateDuration_.[[Days]], _adjustedTimeDuration_.[[Hours]], _adjustedTimeDuration_.[[Minutes]], _adjustedTimeDuration_.[[Seconds]], _adjustedTimeDuration_.[[Milliseconds]], _adjustedTimeDuration_.[[Microseconds]], _adjustedTimeDuration_.[[Nanoseconds]]).
       </emu-alg>
@@ -1821,11 +1803,11 @@
         <dd>It adds/subtracts _other_ to/from _duration_, resulting in a longer/shorter duration.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
-        1. Set _other_ to ? ToTemporalDurationRecord(_other_).
+        1. Set _other_ to ? ToTemporalDuration(_other_).
+        1. If _operation_ is ~subtract~, set _other_ to CreateNegatedTemporalDuration(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_options_).
-        1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _sign_ &times; _other_.[[Years]], _sign_ &times; _other_.[[Months]], _sign_ &times; _other_.[[Weeks]], _sign_ &times; _other_.[[Days]], _sign_ &times; _other_.[[Hours]], _sign_ &times; _other_.[[Minutes]], _sign_ &times; _other_.[[Seconds]], _sign_ &times; _other_.[[Milliseconds]], _sign_ &times; _other_.[[Microseconds]], _sign_ &times; _other_.[[Nanoseconds]], _relativeTo_).
+        1. Let _result_ be ? AddDuration(_duration_, _other_, _relativeTo_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
