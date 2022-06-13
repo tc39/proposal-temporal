@@ -2650,6 +2650,34 @@ export const ES = ObjectAssign({}, ES2020, {
     largestUnit,
     relativeTo = undefined
   ) => {
+    let result = ES.BalancePossiblyInfiniteDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      largestUnit,
+      relativeTo
+    );
+    if (result === 'positive overflow' || result === 'negative overflow') {
+      throw new RangeError('Duration out of range');
+    } else {
+      return result;
+    }
+  },
+  BalancePossiblyInfiniteDuration: (
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    largestUnit,
+    relativeTo = undefined
+  ) => {
     if (ES.IsTemporalZonedDateTime(relativeTo)) {
       const endNs = ES.AddZonedDateTime(
         GetSlot(relativeTo, INSTANT),
@@ -2733,6 +2761,15 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds = microseconds.toJSNumber() * sign;
     nanoseconds = nanoseconds.toJSNumber() * sign;
 
+    for (const prop of [days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
+      if (!NumberIsFinite(prop)) {
+        if (sign === 1) {
+          return 'positive overflow';
+        } else if (sign === -1) {
+          return 'negative overflow';
+        }
+      }
+    }
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   UnbalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
