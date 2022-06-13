@@ -4897,7 +4897,7 @@
         for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
           var name = _step8.value;
           if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
-          ArrayPrototypePush$2.call(result, name);
+          ES.Call(ArrayPrototypePush$2, result, [name]);
         }
       } catch (err) {
         _iterator8.e(err);
@@ -5257,7 +5257,7 @@
             throw new TypeError('bad return from getPossibleInstantsFor');
           }
 
-          ArrayPrototypePush$2.call(result, instant);
+          ES.Call(ArrayPrototypePush$2, result, [instant]);
         }
       } catch (err) {
         _iterator9.e(err);
@@ -8314,7 +8314,7 @@
       return MathFloor$1(value);
     },
     IsBuiltinCalendar: function IsBuiltinCalendar(id) {
-      return ArrayIncludes$1.call(BUILTIN_CALENDAR_IDS, id);
+      return ES.Call(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [id]);
     }
   });
   var OFFSET = new RegExp("^".concat(offset.source, "$"));
@@ -9401,7 +9401,7 @@
             if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
             if (!allowed.has(name)) throw new RangeError("invalid field name ".concat(name));
             allowed.delete(name);
-            ArrayPrototypePush$1.call(fieldsArray, name);
+            ES.Call(ArrayPrototypePush$1, fieldsArray, [name]);
           }
         } catch (err) {
           _iterator.e(err);
@@ -9666,7 +9666,7 @@
         _iterator3.f();
       }
 
-      if (!ArrayIncludes.call(newKeys, 'month') && !ArrayIncludes.call(newKeys, 'monthCode')) {
+      if (!ES.Call(ArrayIncludes, newKeys, ['month']) && !ES.Call(ArrayIncludes, newKeys, ['monthCode'])) {
         var month = fields.month,
             monthCode = fields.monthCode;
         if (month !== undefined) merged.month = month;
@@ -11231,12 +11231,12 @@
     // match eras in index order, with the last era getting the remaining older
     // years. Any reverse-signed era must be at the end.
 
-    ArraySort.call(eras, function (e1, e2) {
+    ES.Call(ArraySort, eras, [function (e1, e2) {
       if (e1.reverseOf) return 1;
       if (e2.reverseOf) return -1;
       if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
       return e2.isoEpoch.year - e1.isoEpoch.year;
-    }); // If there's a reversed era, then the one before it must be the era that's
+    }]); // If there's a reversed era, then the one before it must be the era that's
     // being reversed.
 
     var lastEraReversed = eras[eras.length - 1].reverseOf;
@@ -11877,7 +11877,7 @@
           var _monthInfo = _months[numberPart];
           month = _monthInfo && _monthInfo.monthIndex; // If this leap month isn't present in this year, constrain down to the last day of the previous month.
 
-          if (month === undefined && monthCode.endsWith('L') && !ArrayIncludes.call(['M01L', 'M12L', 'M13L'], monthCode) && overflow === 'constrain') {
+          if (month === undefined && monthCode.endsWith('L') && !ES.Call(ArrayIncludes, ['M01L', 'M12L', 'M13L'], [monthCode]) && overflow === 'constrain') {
             var withoutML = monthCode.slice(1, -1);
             if (withoutML[0] === '0') withoutML = withoutML.slice(1);
             _monthInfo = _months[withoutML];
@@ -12014,7 +12014,7 @@
       return result;
     },
     fields: function fields(_fields6) {
-      if (ArrayIncludes.call(_fields6, 'year')) _fields6 = [].concat(_toConsumableArray(_fields6), ['era', 'eraYear']);
+      if (ES.Call(ArrayIncludes, _fields6, ['year'])) _fields6 = [].concat(_toConsumableArray(_fields6), ['era', 'eraYear']);
       return _fields6;
     },
     mergeFields: function mergeFields(fields, additionalFields) {
@@ -14580,7 +14580,7 @@
         var timeZone = GetSlot(this, TIME_ZONE);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
-        ArrayPrototypePush.call(fieldNames, 'offset');
+        ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
         var props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
 
         if (!props) {
