@@ -3107,6 +3107,7 @@
   var ObjectAssign$3 = Object.assign;
   var ObjectCreate$7 = Object.create;
   var ObjectDefineProperty = Object.defineProperty;
+  var ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
   var ObjectIs = Object.is;
   var ObjectEntries$1 = Object.entries;
   var DAY_SECONDS = 86400;
@@ -3179,6 +3180,7 @@
 
     return s;
   });
+  var DURATION_FIELDS = ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'];
   var ES2020 = {
     Call: Call$1,
     GetMethod: GetMethod$2,
@@ -3723,60 +3725,113 @@
         };
       }
 
-      var props = ES.ToPartialRecord(item, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
-      if (!props) throw new TypeError('invalid duration-like');
-      var _props$years = props.years,
-          years = _props$years === void 0 ? 0 : _props$years,
-          _props$months = props.months,
-          months = _props$months === void 0 ? 0 : _props$months,
-          _props$weeks = props.weeks,
-          weeks = _props$weeks === void 0 ? 0 : _props$weeks,
-          _props$days = props.days,
-          days = _props$days === void 0 ? 0 : _props$days,
-          _props$hours = props.hours,
-          hours = _props$hours === void 0 ? 0 : _props$hours,
-          _props$minutes = props.minutes,
-          minutes = _props$minutes === void 0 ? 0 : _props$minutes,
-          _props$seconds = props.seconds,
-          seconds = _props$seconds === void 0 ? 0 : _props$seconds,
-          _props$milliseconds = props.milliseconds,
-          milliseconds = _props$milliseconds === void 0 ? 0 : _props$milliseconds,
-          _props$microseconds = props.microseconds,
-          microseconds = _props$microseconds === void 0 ? 0 : _props$microseconds,
-          _props$nanoseconds = props.nanoseconds,
-          nanoseconds = _props$nanoseconds === void 0 ? 0 : _props$nanoseconds;
-      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-      return {
-        years: years,
-        months: months,
-        weeks: weeks,
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
-        milliseconds: milliseconds,
-        microseconds: microseconds,
-        nanoseconds: nanoseconds
+      var result = {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        microseconds: 0,
+        nanoseconds: 0
       };
-    },
-    ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item, disallowedProperties) {
-      var record = ES.ToTemporalDurationRecord(item);
+      var partial = ES.ToTemporalPartialDurationRecord(item);
 
-      var _iterator = _createForOfIteratorHelper(disallowedProperties),
+      var _iterator = _createForOfIteratorHelper(DURATION_FIELDS),
           _step;
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var property = _step.value;
+          var value = partial[property];
 
-          if (record[property] !== 0) {
-            throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
+          if (value !== undefined) {
+            result[property] = value;
           }
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
+      }
+
+      var years = result.years,
+          months = result.months,
+          weeks = result.weeks,
+          days = result.days,
+          hours = result.hours,
+          minutes = result.minutes,
+          seconds = result.seconds,
+          milliseconds = result.milliseconds,
+          microseconds = result.microseconds,
+          nanoseconds = result.nanoseconds;
+      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      return result;
+    },
+    ToTemporalPartialDurationRecord: function ToTemporalPartialDurationRecord(temporalDurationLike) {
+      if (ES.Type(temporalDurationLike) !== 'Object') {
+        throw new TypeError('invalid duration-like');
+      }
+
+      var result = {
+        years: undefined,
+        months: undefined,
+        weeks: undefined,
+        days: undefined,
+        hours: undefined,
+        minutes: undefined,
+        seconds: undefined,
+        milliseconds: undefined,
+        microseconds: undefined,
+        nanoseconds: undefined
+      };
+      var any = false;
+
+      var _iterator2 = _createForOfIteratorHelper(DURATION_FIELDS),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var property = _step2.value;
+          var value = temporalDurationLike[property];
+
+          if (value !== undefined) {
+            any = true;
+            result[property] = ES.ToIntegerWithoutRounding(value);
+          }
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+
+      if (!any) {
+        throw new TypeError('invalid duration-like');
+      }
+
+      return result;
+    },
+    ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item, disallowedProperties) {
+      var record = ES.ToTemporalDurationRecord(item);
+
+      var _iterator3 = _createForOfIteratorHelper(disallowedProperties),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var property = _step3.value;
+
+          if (record[property] !== 0) {
+            throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
+          }
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
       }
 
       return record;
@@ -3958,23 +4013,23 @@
       var extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
       var allowedSingular = [];
 
-      var _iterator2 = _createForOfIteratorHelper(SINGULAR_PLURAL_UNITS),
-          _step2;
+      var _iterator4 = _createForOfIteratorHelper(SINGULAR_PLURAL_UNITS),
+          _step4;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _step2$value = _slicedToArray(_step2.value, 3),
-              _singular = _step2$value[1],
-              category = _step2$value[2];
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var _step4$value = _slicedToArray(_step4.value, 3),
+              _singular = _step4$value[1],
+              category = _step4$value[2];
 
           if (unitGroup === 'datetime' || unitGroup === category) {
             allowedSingular.push(_singular);
           }
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator2.f();
+        _iterator4.f();
       }
 
       allowedSingular.push.apply(allowedSingular, _toConsumableArray(extraValues));
@@ -4075,7 +4130,7 @@
       return ES.CreateTemporalDate(year, month, day, calendar);
     },
     DefaultTemporalLargestUnit: function DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
-      var _iterator3 = _createForOfIteratorHelper(ObjectEntries$1({
+      var _iterator5 = _createForOfIteratorHelper(ObjectEntries$1({
         years: years,
         months: months,
         weeks: weeks,
@@ -4087,20 +4142,20 @@
         microseconds: microseconds,
         nanoseconds: nanoseconds
       })),
-          _step3;
+          _step5;
 
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var _step3$value = _slicedToArray(_step3.value, 2),
-              prop = _step3$value[0],
-              v = _step3$value[1];
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var _step5$value = _slicedToArray(_step5.value, 2),
+              prop = _step5$value[0],
+              v = _step5$value[1];
 
           if (v !== 0) return SINGULAR_FOR.get(prop);
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator3.f();
+        _iterator5.f();
       }
 
       return 'nanosecond';
@@ -4115,77 +4170,57 @@
         largestUnit: largestUnit
       });
     },
-    ToPartialRecord: function ToPartialRecord(bag, fields) {
-      var any = false;
-      var result = {};
+    PrepareTemporalFields: function PrepareTemporalFields(bag, fields) {
+      var completeness = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'complete';
 
-      var _iterator4 = _createForOfIteratorHelper(fields),
-          _step4;
+      var _ref7 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+          _ref7$emptySourceErro = _ref7.emptySourceErrorMessage,
+          emptySourceErrorMessage = _ref7$emptySourceErro === void 0 ? 'no supported properties found' : _ref7$emptySourceErro;
+
+      var result = {};
+      var any = false;
+
+      var _iterator6 = _createForOfIteratorHelper(fields),
+          _step6;
 
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var property = _step4.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var fieldRecord = _step6.value;
+
+          // Unlike the spec, this interface supports field defaults via [field, default] pairs.
+          // But we still need to also support simple strings.
+          var _ref8 = ES.Type(fieldRecord) === 'Object' ? fieldRecord : [fieldRecord],
+              _ref9 = _slicedToArray(_ref8, 2),
+              property = _ref9[0],
+              defaultValue = _ref9[1];
+
           var value = bag[property];
 
           if (value !== undefined) {
             any = true;
 
             if (BUILTIN_CASTS.has(property)) {
-              result[property] = BUILTIN_CASTS.get(property)(value);
-            } else {
-              result[property] = value;
+              value = BUILTIN_CASTS.get(property)(value);
             }
-          }
-        }
-      } catch (err) {
-        _iterator4.e(err);
-      } finally {
-        _iterator4.f();
-      }
 
-      return any ? result : false;
-    },
-    PrepareTemporalFields: function PrepareTemporalFields(bag, fields) {
-      var result = {};
-      var any = false;
-
-      var _iterator5 = _createForOfIteratorHelper(fields),
-          _step5;
-
-      try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var fieldRecord = _step5.value;
-
-          var _fieldRecord = _slicedToArray(fieldRecord, 2),
-              property = _fieldRecord[0],
-              defaultValue = _fieldRecord[1];
-
-          var value = bag[property];
-
-          if (value === undefined) {
+            result[property] = value;
+          } else if (completeness !== 'partial') {
             if (fieldRecord.length === 1) {
               throw new TypeError("required property '".concat(property, "' missing or undefined"));
             }
 
             value = defaultValue;
-          } else {
-            any = true;
-
-            if (BUILTIN_CASTS.has(property)) {
-              value = BUILTIN_CASTS.get(property)(value);
-            }
+            result[property] = value;
           }
-
-          result[property] = value;
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator5.f();
+        _iterator6.f();
       }
 
-      if (!any) {
-        throw new TypeError('no supported properties found');
+      if (completeness === 'partial' && !any) {
+        throw new TypeError(emptySourceErrorMessage);
       }
 
       if (result['era'] === undefined !== (result['eraYear'] === undefined)) {
@@ -4199,9 +4234,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref7) {
-          var _ref8 = _slicedToArray(_ref7, 1),
-              name = _ref8[0];
+        if (!entries.some(function (_ref10) {
+          var _ref11 = _slicedToArray(_ref10, 1),
+              name = _ref11[0];
 
           return name === fieldName;
         })) {
@@ -4214,9 +4249,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref9) {
-          var _ref10 = _slicedToArray(_ref9, 1),
-              name = _ref10[0];
+        if (!entries.some(function (_ref12) {
+          var _ref13 = _slicedToArray(_ref12, 1),
+              name = _ref13[0];
 
           return name === fieldName;
         })) {
@@ -4229,9 +4264,9 @@
       var entries = [['day', undefined], ['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref11) {
-          var _ref12 = _slicedToArray(_ref11, 1),
-              name = _ref12[0];
+        if (!entries.some(function (_ref14) {
+          var _ref15 = _slicedToArray(_ref14, 1),
+              name = _ref15[0];
 
           return name === fieldName;
         })) {
@@ -4241,15 +4276,33 @@
       return ES.PrepareTemporalFields(bag, entries);
     },
     ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
-      return ES.PrepareTemporalFields(bag, [['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['nanosecond', 0], ['second', 0]]);
+      var completeness = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'complete';
+      var fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
+      var partial = ES.PrepareTemporalFields(bag, fields, 'partial', {
+        emptySourceErrorMessage: 'invalid time-like'
+      });
+      var result = {};
+
+      for (var _i2 = 0, _fields = fields; _i2 < _fields.length; _i2++) {
+        var field = _fields[_i2];
+        var valueDesc = ObjectGetOwnPropertyDescriptor(partial, field);
+
+        if (valueDesc !== undefined) {
+          result[field] = valueDesc.value;
+        } else if (completeness === 'complete') {
+          result[field] = 0;
+        }
+      }
+
+      return result;
     },
     ToTemporalYearMonthFields: function ToTemporalYearMonthFields(bag, fieldNames) {
       var entries = [['month', undefined], ['monthCode', undefined], ['year', undefined]]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref13) {
-          var _ref14 = _slicedToArray(_ref13, 1),
-              name = _ref14[0];
+        if (!entries.some(function (_ref16) {
+          var _ref17 = _slicedToArray(_ref16, 1),
+              name = _ref17[0];
 
           return name === fieldName;
         })) {
@@ -4262,9 +4315,9 @@
       var entries = [['day', undefined], ['hour', 0], ['microsecond', 0], ['millisecond', 0], ['minute', 0], ['month', undefined], ['monthCode', undefined], ['nanosecond', 0], ['second', 0], ['year', undefined], ['offset', undefined], ['timeZone']]; // Add extra fields from the calendar at the end
 
       fieldNames.forEach(function (fieldName) {
-        if (!entries.some(function (_ref15) {
-          var _ref16 = _slicedToArray(_ref15, 1),
-              name = _ref16[0];
+        if (!entries.some(function (_ref18) {
+          var _ref19 = _slicedToArray(_ref18, 1),
+              name = _ref19[0];
 
           return name === fieldName;
         })) {
@@ -4588,12 +4641,12 @@
 
       var possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
 
-      var _iterator6 = _createForOfIteratorHelper(possibleInstants),
-          _step6;
+      var _iterator7 = _createForOfIteratorHelper(possibleInstants),
+          _step7;
 
       try {
-        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-          var candidate = _step6.value;
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var candidate = _step7.value;
           var candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
           var roundedCandidateOffset = ES.RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
 
@@ -4604,9 +4657,9 @@
         // zone and date/time.
 
       } catch (err) {
-        _iterator6.e(err);
+        _iterator7.e(err);
       } finally {
-        _iterator6.f();
+        _iterator7.f();
       }
 
       if (offsetOpt === 'reject') {
@@ -4837,19 +4890,19 @@
       if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
 
-      var _iterator7 = _createForOfIteratorHelper(fieldNames),
-          _step7;
+      var _iterator8 = _createForOfIteratorHelper(fieldNames),
+          _step8;
 
       try {
-        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-          var name = _step7.value;
+        for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+          var name = _step8.value;
           if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
           ArrayPrototypePush$2.call(result, name);
         }
       } catch (err) {
-        _iterator7.e(err);
+        _iterator8.e(err);
       } finally {
-        _iterator7.f();
+        _iterator8.f();
       }
 
       return result;
@@ -5193,12 +5246,12 @@
       var possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
       var result = [];
 
-      var _iterator8 = _createForOfIteratorHelper(possibleInstants),
-          _step8;
+      var _iterator9 = _createForOfIteratorHelper(possibleInstants),
+          _step9;
 
       try {
-        for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-          var instant = _step8.value;
+        for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
+          var instant = _step9.value;
 
           if (!ES.IsTemporalInstant(instant)) {
             throw new TypeError('bad return from getPossibleInstantsFor');
@@ -5207,9 +5260,9 @@
           ArrayPrototypePush$2.call(result, instant);
         }
       } catch (err) {
-        _iterator8.e(err);
+        _iterator9.e(err);
       } finally {
-        _iterator8.f();
+        _iterator9.f();
       }
 
       return result;
@@ -5773,8 +5826,8 @@
       return week;
     },
     DurationSign: function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
-      for (var _i2 = 0, _arr = [y, mon, w, d, h, min, s, ms, µs, ns]; _i2 < _arr.length; _i2++) {
-        var prop = _arr[_i2];
+      for (var _i3 = 0, _arr = [y, mon, w, d, h, min, s, ms, µs, ns]; _i3 < _arr.length; _i3++) {
+        var prop = _arr[_i3];
         if (prop !== 0) return prop < 0 ? -1 : 1;
       }
 
@@ -6480,8 +6533,8 @@
     RejectDuration: function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
       var sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
 
-      for (var _i3 = 0, _arr2 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i3 < _arr2.length; _i3++) {
-        var prop = _arr2[_i3];
+      for (var _i4 = 0, _arr2 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i4 < _arr2.length; _i4++) {
+        var prop = _arr2[_i4];
         if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         var propSign = MathSign(prop);
         if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
@@ -7078,11 +7131,11 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref17) {
-        var _ref18 = _slicedToArray(_ref17, 3),
-            p = _ref18[0],
-            s = _ref18[1],
-            c = _ref18[2];
+      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref20) {
+        var _ref21 = _slicedToArray(_ref20, 3),
+            p = _ref21[0],
+            s = _ref21[1],
+            c = _ref21[2];
 
         if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
         return allowed;
@@ -8155,8 +8208,8 @@
       };
     },
     CompareISODate: function CompareISODate(y1, m1, d1, y2, m2, d2) {
-      for (var _i4 = 0, _arr3 = [[y1, y2], [m1, m2], [d1, d2]]; _i4 < _arr3.length; _i4++) {
-        var _arr3$_i = _slicedToArray(_arr3[_i4], 2),
+      for (var _i5 = 0, _arr3 = [[y1, y2], [m1, m2], [d1, d2]]; _i5 < _arr3.length; _i5++) {
+        var _arr3$_i = _slicedToArray(_arr3[_i5], 2),
             x = _arr3$_i[0],
             y = _arr3$_i[1];
 
@@ -12284,7 +12337,7 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalDateLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var props = ES.ToPartialRecord(temporalDateLike, fieldNames);
+        var props = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
 
         if (!props) {
           throw new TypeError('invalid date-like');
@@ -12671,7 +12724,7 @@
         options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
-        var props = ES.ToPartialRecord(temporalDateTimeLike, fieldNames);
+        var props = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
 
         if (!props) {
           throw new TypeError('invalid date-time-like');
@@ -13087,7 +13140,7 @@
       key: "with",
       value: function _with(durationLike) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        var props = ES.ToPartialRecord(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years']);
+        var props = ES.PrepareTemporalFields(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], 'partial');
 
         if (!props) {
           throw new TypeError('invalid duration-like');
@@ -13467,7 +13520,7 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var props = ES.ToPartialRecord(temporalMonthDayLike, fieldNames);
+        var props = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
 
         if (!props) {
           throw new TypeError('invalid month-day-like');
@@ -13794,17 +13847,12 @@
         }
 
         ES.RejectObjectWithCalendarOrTimeZone(temporalTimeLike);
+        var partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
         options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
-        var props = ES.ToPartialRecord(temporalTimeLike, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
-
-        if (!props) {
-          throw new TypeError('invalid time-like');
-        }
-
         var fields = ES.ToTemporalTimeRecord(this);
 
-        var _ObjectAssign = ObjectAssign(fields, props),
+        var _ObjectAssign = ObjectAssign(fields, partialTime),
             hour = _ObjectAssign.hour,
             minute = _ObjectAssign.minute,
             second = _ObjectAssign.second,
@@ -14142,7 +14190,7 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalYearMonthLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-        var props = ES.ToPartialRecord(temporalYearMonthLike, fieldNames);
+        var props = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
 
         if (!props) {
           throw new TypeError('invalid year-month-like');
@@ -14533,7 +14581,7 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ArrayPrototypePush.call(fieldNames, 'offset');
-        var props = ES.ToPartialRecord(temporalZonedDateTimeLike, fieldNames);
+        var props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
 
         if (!props) {
           throw new TypeError('invalid zoned-date-time-like');
