@@ -908,8 +908,7 @@
         1. Let _intermediate_ be ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
-        1. Let _intermediate_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
-        1. Return ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _overflow_).
+        1. Return BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
       </emu-alg>
     </emu-clause>
 
