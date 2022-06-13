@@ -1143,11 +1143,7 @@
           _epochNanoseconds_: a BigInt,
           _timeZone_: a String,
           _calendar_: a String,
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _norm_: a Normalized Time Duration Record,
+          _duration_: a Normalized Duration Record,
           optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
@@ -1160,16 +1156,16 @@
       </dl>
       <emu-alg>
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
-        1. If _years_ = 0, _months_ = 0, _weeks_ = 0, and _days_ = 0, then
-          1. Return ? AddInstant(_epochNanoseconds_, _norm_).
+        1. If _duration_.[[Years]] = 0, and _duration_.[[Months]] = 0, and _duration_.[[Weeks]] = 0, and _duration_.[[Days]] = 0, then
+          1. Return ? AddInstant(_epochNanoseconds_, _duration_.[[NormalizedTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).
         1. Let _datePart_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Let _dateDuration_ be CreateDurationRecord(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_).
         1. If ISODateTimeWithinLimits(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _intermediateDateTime_.[[Hour]], _intermediateDateTime_.[[Minute]], _intermediateDateTime_.[[Second]], _intermediateDateTime_.[[Millisecond]], _intermediateDateTime_.[[Microsecond]], _intermediateDateTime_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
         1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
-        1. Return ? AddInstant(_intermediateNs_, _norm_).
+        1. Return ? AddInstant(_intermediateNs_, _duration_.[[NormalizedTime]]).
       </emu-alg>
     </emu-clause>
 
@@ -1303,14 +1299,15 @@
         <dd>It adds/subtracts _temporalDurationLike_ to/from _zonedDateTime_.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
+        1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
+        1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _norm_ be NormalizeTimeDuration(_sign_ × _duration_.[[Hours]], _sign_ × _duration_.[[Minutes]], _sign_ × _duration_.[[Seconds]], _sign_ × _duration_.[[Milliseconds]], _sign_ × _duration_.[[Microseconds]], _sign_ × _duration_.[[Nanoseconds]]).
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _sign_ × _duration_.[[Years]], _sign_ × _duration_.[[Months]], _sign_ × _duration_.[[Weeks]], _sign_ × _duration_.[[Days]], _norm_, _overflow_).
+        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _duration_ to ! CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_, _overflow_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>

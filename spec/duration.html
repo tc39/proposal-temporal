@@ -105,9 +105,11 @@
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _norm1_ be NormalizeTimeDuration(_one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
+          1. Let _duration1_ be ! CreateNormalizedDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _norm1_).
           1. Let _norm2_ be NormalizeTimeDuration(_two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
-          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _norm1_).
-          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_).
+          1. Let _duration2_ be ! CreateNormalizedDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_).
+          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration1_).
+          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration2_).
           1. If _after1_ &gt; _after2_, return *1*<sub>𝔽</sub>.
           1. If _after1_ &lt; _after2_, return *-1*<sub>𝔽</sub>.
           1. Return *+0*<sub>𝔽</sub>.
@@ -455,7 +457,8 @@
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _normalizedDuration_ be ! CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendar_, _timeZone_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
         1. Else if _plainRelativeTo_ is not *undefined*, then
@@ -503,7 +506,8 @@
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _normalizedDuration_ be ! CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendar_, _timeZone_, _unit_, 1, _unit_, *"trunc"*).
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
