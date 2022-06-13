@@ -2600,7 +2600,8 @@ export const ES = ObjectAssign({}, ES2020, {
       GetSlot(dtEnd, ISO_MICROSECOND),
       GetSlot(dtEnd, ISO_NANOSECOND),
       calendar,
-      'day'
+      'day',
+      ObjectCreate(null)
     );
     let intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0);
     // may disambiguate
@@ -3927,7 +3928,14 @@ export const ES = ObjectAssign({}, ES2020, {
         ));
       } else {
         ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-          ES.DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit));
+          ES.DifferenceZonedDateTime(
+            GetSlot(relativeTo, EPOCHNANOSECONDS),
+            endNs,
+            timeZone,
+            calendar,
+            largestUnit,
+            ObjectCreate(null)
+          ));
       }
     }
 
