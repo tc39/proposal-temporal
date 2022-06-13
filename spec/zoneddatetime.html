@@ -431,7 +431,7 @@
         1. Let _month_ be _temporalDateTime_.[[ISOMonth]].
         1. Let _day_ be _temporalDateTime_.[[ISODay]].
         1. Let _today_ be ? CreateTemporalDateTime(_year_, _month_, _day_, 0, 0, 0, 0, 0, 0, _isoCalendar_).
-        1. Let _tomorrowFields_ be ? AddISODate(_year_, _month_, _day_, 0, 0, 0, 1, *"reject"*).
+        1. Let _tomorrowFields_ be BalanceISODate(_year_, _month_, _day_ + 1).
         1. Let _tomorrow_ be ? CreateTemporalDateTime(_tomorrowFields_.[[Year]], _tomorrowFields_.[[Month]], _tomorrowFields_.[[Day]], 0, 0, 0, 0, 0, 0, _isoCalendar_).
         1. Let _todayInstant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _today_, *"compatible"*).
         1. Let _tomorrowInstant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _tomorrow_, *"compatible"*).
