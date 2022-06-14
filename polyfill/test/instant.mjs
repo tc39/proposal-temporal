@@ -12,55 +12,13 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal, notEqual, throws } = assert;
+const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
 const { Instant } = Temporal;
 
 describe('Instant', () => {
   describe('Instant.from() works', () => {
-    it('variant UTC designator', () => {
-      equal(`${Instant.from('1976-11-18T15:23z')}`, '1976-11-18T15:23:00Z');
-    });
-    it('any number of decimal places', () => {
-      equal(`${Instant.from('1976-11-18T15:23:30.1Z')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.12Z')}`, '1976-11-18T15:23:30.12Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.123Z')}`, '1976-11-18T15:23:30.123Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.1234Z')}`, '1976-11-18T15:23:30.1234Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.12345Z')}`, '1976-11-18T15:23:30.12345Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.123456Z')}`, '1976-11-18T15:23:30.123456Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.1234567Z')}`, '1976-11-18T15:23:30.1234567Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.12345678Z')}`, '1976-11-18T15:23:30.12345678Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z')}`, '1976-11-18T15:23:30.123456789Z');
-    });
-    it('variant decimal separator', () => {
-      equal(`${Instant.from('1976-11-18T15:23:30,12Z')}`, '1976-11-18T15:23:30.12Z');
-    });
-    it('variant minus sign', () => {
-      equal(`${Instant.from('1976-11-18T15:23:30.12\u221202:00')}`, '1976-11-18T17:23:30.12Z');
-      equal(`${Instant.from('\u2212009999-11-18T15:23:30.12Z')}`, '-009999-11-18T15:23:30.12Z');
-    });
-    it('mixture of basic and extended format', () => {
-      equal(`${Instant.from('19761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('1976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('1976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('1976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('19761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('19761118T152330.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+0019761118T15:23:30.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+001976-11-18T152330.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+001976-11-18T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+001976-11-18T152330.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+0019761118T15:23:30.1+0000')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+0019761118T152330.1+00:00')}`, '1976-11-18T15:23:30.1Z');
-      equal(`${Instant.from('+0019761118T152330.1+0000')}`, '1976-11-18T15:23:30.1Z');
-    });
-    it('optional parts', () => {
-      equal(`${Instant.from('1976-11-18T15:23:30+00')}`, '1976-11-18T15:23:30Z');
-      equal(`${Instant.from('1976-11-18T15Z')}`, '1976-11-18T15:00:00Z');
-    });
-    it('ignores any specified calendar', () =>
-      equal(`${Instant.from('1976-11-18T15:23:30.123456789Z[u-ca=discord]')}`, '1976-11-18T15:23:30.123456789Z'));
     it('no junk at end of string', () => throws(() => Instant.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
   });
   describe('Instant.add works', () => {
@@ -120,17 +78,6 @@ describe('Instant', () => {
     it('epoch equal', () => assert(i2.equals(i2)));
     it('cross epoch unequal', () => assert(!i1.equals(i2)));
     it('epoch unequal', () => assert(!i2.equals(i3)));
-  });
-  describe("Comparison operators don't work", () => {
-    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
-    const i1again = Instant.from('1963-02-13T09:36:29.123456789Z');
-    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
-    it('=== is object equality', () => equal(i1, i1));
-    it('!== is object equality', () => notEqual(i1, i1again));
-    it('<', () => throws(() => i1 < i2));
-    it('>', () => throws(() => i1 > i2));
-    it('<=', () => throws(() => i1 <= i2));
-    it('>=', () => throws(() => i1 >= i2));
   });
   describe('Instant.since() works', () => {
     const earlier = Instant.from('1976-11-18T15:23:30.123456789Z');
@@ -587,13 +534,6 @@ describe('Instant', () => {
     it('throws without required smallestUnit parameter', () => {
       throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
-    });
-    it('throws on disallowed or invalid smallestUnit (string param)', () => {
-      ['era', 'year', 'month', 'week', 'day', 'years', 'months', 'weeks', 'days', 'nonsense'].forEach(
-        (smallestUnit) => {
-          throws(() => inst.round(smallestUnit), RangeError);
-        }
-      );
     });
     const incrementOneNearest = [
       ['hour', '1976-11-18T14:00:00Z'],
