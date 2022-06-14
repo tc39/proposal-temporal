@@ -505,7 +505,7 @@
     <emu-clause id="sec-temporal-isodatefromfields" aoid="ISODateFromFields">
       <h1>ISODateFromFields ( _fields_, _options_ )</h1>
       <p>
-        The ISODateFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.dateFromFields` method for the ISO 8601 calendar.
+        The ISODateFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.dateFromFields` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
@@ -523,7 +523,7 @@
     <emu-clause id="sec-temporal-isoyearmonthfromfields" aoid="ISOYearMonthFromFields">
       <h1>ISOYearMonthFromFields ( _fields_, _options_ )</h1>
       <p>
-        The ISOYearMonthFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.yearMonthFromFields` method for the ISO 8601 calendar.
+        The ISOYearMonthFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.yearMonthFromFields` method for the ISO 8601 calendar.
         It returns a Record with three fields ([[Year]], [[Month]], and [[ReferenceISODay]]). All are integers.
       </p>
       <emu-alg>
@@ -545,7 +545,7 @@
     <emu-clause id="sec-temporal-isomonthdayfromfields" aoid="ISOMonthDayFromFields">
       <h1>ISOMonthDayFromFields ( _fields_, _options_ )</h1>
       <p>
-        The ISOMonthDayFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.monthDayFromFields` method for the ISO 8601 calendar.
+        The ISOMonthDayFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.monthDayFromFields` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
@@ -576,7 +576,7 @@
     <emu-clause id="sec-temporal-isoyear" aoid="ISOYear">
       <h1>ISOYear ( _temporalObject_ )</h1>
       <p>
-        The ISOYear abstract operation implements the calendar-specific logic in the `Temporal.Calendar.year` method for the ISO 8601 calendar.
+        The ISOYear abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.year` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISOYear]] internal slot.
@@ -587,7 +587,7 @@
     <emu-clause id="sec-temporal-isomonth" aoid="ISOMonth">
       <h1>ISOMonth ( _temporalObject_ )</h1>
       <p>
-        The ISOMonth abstract operation implements the calendar-specific logic in the `Temporal.Calendar.month` method for the ISO 8601 calendar.
+        The ISOMonth abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.month` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
@@ -598,7 +598,7 @@
     <emu-clause id="sec-temporal-isomonthcode" aoid="ISOMonthCode">
       <h1>ISOMonthCode ( _temporalObject_ )</h1>
       <p>
-        The ISOMonthCode abstract operation implements the calendar-specific logic in the `Temporal.Calendar.monthCode` method for the ISO 8601 calendar.
+        The ISOMonthCode abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.monthCode` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
@@ -609,7 +609,7 @@
     <emu-clause id="sec-temporal-isoday" aoid="ISODay">
       <h1>ISODay ( _temporalObject_ )</h1>
       <p>
-        The ISODay abstract operation implements the calendar-specific logic in the `Temporal.Calendar.day` method for the ISO 8601 calendar.
+        The ISODay abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.day` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISODay]] internal slot.
