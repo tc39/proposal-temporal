@@ -18,9 +18,6 @@ import * as Temporal from 'proposal-temporal';
 const { Instant } = Temporal;
 
 describe('Instant', () => {
-  describe('Instant.from() works', () => {
-    it('no junk at end of string', () => throws(() => Instant.from('1976-11-18T15:23:30.123456789Zjunk'), RangeError));
-  });
   describe('Instant.add works', () => {
     const inst = Instant.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
