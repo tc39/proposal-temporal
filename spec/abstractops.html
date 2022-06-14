@@ -505,7 +505,7 @@
   <emu-clause id="sec-temporal-mergelargestunitoption" type="abstract operation">
     <h1>
       MergeLargestUnitOption (
-        _options_: an Object or *undefined*,
+        _options_: an Object,
         _largestUnit_: a String,
       ): either a normal completion containing an Object, or an abrupt completion
     </h1>
@@ -514,7 +514,6 @@
       <dd>It returns a new plain Object with enumerable own String properties copied from the _options_ Object, and the `largestUnit` property set to _largestUnit_.</dd>
     </dl>
     <emu-alg>
-      1. If _options_ is *undefined*, set _options_ to OrdinaryObjectCreate(*null*).
       1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
       1. Let _keys_ be ? EnumerableOwnPropertyNames(_options_, ~key~).
       1. For each element _nextKey_ of _keys_, do
