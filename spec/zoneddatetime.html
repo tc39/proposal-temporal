@@ -1231,8 +1231,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
-        1. Assert: _durationFieldsRecord_ has all the fields specified in <emu-xref href="#table-temporal-durati
-        on-record-fields"></emu-xref>.
+        1. Assert: _durationFieldsRecord_ has all the fields specified in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
         1. If DefaultTemporalLargestUnit(_durationFieldsRecord_) is not *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Return ? AddInstant(_epochNanoseconds_, _durationFieldsRecord_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
