@@ -998,7 +998,7 @@
     <emu-clause id="sec-temporal-defaulttemporallargestunit" type="abstract operation">
       <h1>
         DefaultTemporalLargestUnit (
-          _duration_: a Duration Record or Temporal.Duration,
+          _durationFieldsRecord_: a Record or Temporal.Duration,
         )
       </h1>
       <dl class="header">
@@ -1006,15 +1006,16 @@
         <dd>It implements the logic used in the `Temporal.Duration.prototype.round()` method and elsewhere, where the `largestUnit` option, if not given explicitly, is set to the largest-magnitude non-zero unit.</dd>
       </dl>
       <emu-alg>
-        1. If _duration_.[[Years]] is not 0, return *"year"*.
-        1. If _duration_.[[Months]] is not 0, return *"month"*.
-        1. If _duration_.[[Weeks]] is not 0, return *"week"*.
-        1. If _duration_.[[Days]] is not 0, return *"day"*.
-        1. If _duration_.[[Hours]] is not 0, return *"hour"*.
-        1. If _duration_.[[Minutes]] is not 0, return *"minute"*.
-        1. If _duration_.[[Seconds]] is not 0, return *"second"*.
-        1. If _duration_.[[Milliseconds]] is not 0, return *"millisecond"*.
-        1. If _duration_.[[Microseconds]] is not 0, return *"microsecond"*.
+        1. Assert: _durationFieldsRecord_ has all the fields specified in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
+        1. If _durationFieldsRecord_.[[Years]] is not 0, return *"year"*.
+        1. If _durationFieldsRecord_.[[Months]] is not 0, return *"month"*.
+        1. If _durationFieldsRecord_.[[Weeks]] is not 0, return *"week"*.
+        1. If _durationFieldsRecord_.[[Days]] is not 0, return *"day"*.
+        1. If _durationFieldsRecord_.[[Hours]] is not 0, return *"hour"*.
+        1. If _durationFieldsRecord_.[[Minutes]] is not 0, return *"minute"*.
+        1. If _durationFieldsRecord_.[[Seconds]] is not 0, return *"second"*.
+        1. If _durationFieldsRecord_.[[Milliseconds]] is not 0, return *"millisecond"*.
+        1. If _durationFieldsRecord_.[[Microseconds]] is not 0, return *"microsecond"*.
         1. Return *"nanosecond"*.
       </emu-alg>
     </emu-clause>
@@ -1176,7 +1177,19 @@
       <emu-alg>
         1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If Type(_relativeTo_) is Object and _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], ! CreateTemporalDurationRecord(0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_)).
+          1. Let _durationFieldsRecord_ be the Record {
+              [[Years]]: 0,
+              [[Months]]: 0,
+              [[Weeks]]: 0,
+              [[Days]]: _days_,
+              [[Hours]]: _hours_,
+              [[Minutes]]: _minutes_,
+              [[Seconds]]: _seconds_,
+              [[Milliseconds]]: _milliseconds_,
+              [[Microseconds]]: _microseconds_,
+              [[Nanoseconds]]: _nanoseconds_
+            }.
+          1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _durationFieldsRecord_).
           1. Set _nanoseconds_ to ℝ(_endNs_ - _relativeTo_.[[Nanoseconds]]).
         1. Else,
           1. Set _nanoseconds_ to ! TotalDurationNanoseconds(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
@@ -1420,6 +1433,7 @@
             [[Microseconds]]: _duration1_.[[Microseconds]] + _duration2_.[[Microseconds]],
             [[Nanoseconds]]: _duration1_.[[Nanoseconds]] + _duration2_.[[Nanoseconds]]
           }.
+        1. Note: _durationSum_ may have mixed signs or field values that are out of bounds for a validated Duration Record.
         1. Let _largestUnit1_ be ! DefaultTemporalLargestUnit(_duration1_).
         1. Let _largestUnit2_ be ! DefaultTemporalLargestUnit(_duration2_).
         1. Let _largestUnit_ be ! LargerOfTwoTemporalUnits(_largestUnit1_, _largestUnit2_).
