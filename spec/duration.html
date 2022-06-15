@@ -1709,7 +1709,7 @@
           _increment_: an integer,
           _unit_: a String,
           _roundingMode_: a String,
-          optional _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
+          _relativeTo_: *undefined*, a Temporal.PlainDate, or a Temporal.ZonedDateTime,
         )
       </h1>
       <dl class="header">
@@ -1721,7 +1721,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _relativeTo_ is not present; or Type(_relativeTo_) is not Object; or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
+        1. If Type(_relativeTo_) is not Object; or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot; or _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _timeRemainderNs_ be ! TotalDurationNanoseconds(0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, 0).
         1. If _timeRemainderNs_ = 0, let _direction_ be 0.
