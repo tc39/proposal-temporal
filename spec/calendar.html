@@ -652,25 +652,25 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmergefieldnames" type="abstract operation">
+    <emu-clause id="sec-temporal-mergelists" type="abstract operation">
       <h1>
-        CalendarMergeFieldNames (
-          _receiverFieldNames_: a List,
-          _inputFieldNames_: a List,
+        MergeLists (
+          _a_: a List,
+          _b_: a List,
         ): a List
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns the List containing all the elements of _receiverFieldNames_ followed by all the elements of _inputFieldNames_, with duplicate elements removed.</dd>
+        <dd>It returns the list-concatenation of its arguments, with duplicate elements removed.</dd>
       </dl>
       <emu-alg>
         1. Let _merged_ be a new empty List.
-        1. For each element _name_ of _receiverFieldNames_, do
-          1. If _merged_ does not contain _name_, then
-            1. Append _name_ to _merged_.
-        1. For each element _name_ of _inputFieldNames_, do
-          1. If _merged_ does not contain _name_, then
-            1. Append _name_ to _merged_.
+        1. For each element _element_ of _a_, do
+          1. If _merged_ does not contain _element_, then
+            1. Append _element_ to _merged_.
+        1. For each element _element_ of _b_, do
+          1. If _merged_ does not contain _element_, then
+            1. Append _element_ to _merged_.
         1. Return _merged_.
       </emu-alg>
     </emu-clause>
