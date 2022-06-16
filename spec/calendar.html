@@ -99,9 +99,8 @@
       </p>
       <emu-alg>
         1. Let _fields_ be ? GetMethod(_calendar_, *"fields"*).
-        1. Let _fieldsArray_ be CreateArrayFromList(_fieldNames_).
-        1. If _fields_ is not *undefined*, then
-          1. Set _fieldsArray_ to ? Call(_fields_, _calendar_, « _fieldsArray_ »).
+        1. If _fields_ is *undefined*, return _fieldNames_.
+        1. Let _fieldsArray_ be ? Call(_fields_, _calendar_, « CreateArrayFromList(_fieldNames_) »).
         1. Return ? IterableToListOfType(_fieldsArray_, « String »).
       </emu-alg>
     </emu-clause>
