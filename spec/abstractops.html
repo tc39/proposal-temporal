@@ -279,7 +279,7 @@
             [[Increment]]: 1
           }.
       1. If _fractionalDigitsVal_ is *NaN*, *+&infin;*<sub>𝔽</sub>, or *-&infin;*<sub>𝔽</sub>, throw a *RangeError* exception.
-      1. Let _fractionalDigitCount_ be ! ToIntegerOrInfinity(_fractionalDigitsVal_).
+      1. Let _fractionalDigitCount_ be RoundTowardsZero(ℝ(_fractionalDigitsVal_)).
       1. If _fractionalDigitCount_ &lt; 0 or _fractionalDigitCount_ &gt; 9, throw a *RangeError* exception.
       1. If _fractionalDigitCount_ is 0, then
         1. Return the Record {
