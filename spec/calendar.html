@@ -651,29 +651,6 @@
         1. Return _merged_.
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-temporal-mergelists" type="abstract operation">
-      <h1>
-        MergeLists (
-          _a_: a List,
-          _b_: a List,
-        ): a List
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns the list-concatenation of its arguments, with duplicate elements removed.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _merged_ be a new empty List.
-        1. For each element _element_ of _a_, do
-          1. If _merged_ does not contain _element_, then
-            1. Append _element_ to _merged_.
-        1. For each element _element_ of _b_, do
-          1. If _merged_ does not contain _element_, then
-            1. Append _element_ to _merged_.
-        1. Return _merged_.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-calendar-constructor">
