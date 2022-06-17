@@ -442,7 +442,8 @@
         1. Let _minute_ be ℝ(! MinFromTime(_epochMilliseconds_)).
         1. Let _second_ be ℝ(! SecFromTime(_epochMilliseconds_)).
         1. Let _millisecond_ be ℝ(! msFromTime(_epochMilliseconds_)).
-        1. Let _microsecond_ be floor(_remainderNs_ / 1000) modulo 1000.
+        1. Let _microsecond_ be floor(_remainderNs_ / 1000).
+        1. Assert: _microsecond_ &lt; 1000.
         1. Let _nanosecond_ be _remainderNs_ modulo 1000.
         1. Return the Record {
           [[Year]]: _year_,
