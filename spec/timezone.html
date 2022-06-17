@@ -275,9 +275,9 @@
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, then
           1. Let _epochNanoseconds_ be GetEpochFromISOParts(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
-          1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_ - ℤ(_timeZone_.[[OffsetNanoseconds]])).
-          1. Return CreateArrayFromList(« _instant_ »).
-        1. Let _possibleEpochNanoseconds_ be GetIANATimeZoneEpochValue(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+          1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ - ℤ(_timeZone_.[[OffsetNanoseconds]]) ».
+        1. Else,
+          1. Let _possibleEpochNanoseconds_ be GetIANATimeZoneEpochValue(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
         1. Let _possibleInstants_ be a new empty List.
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
