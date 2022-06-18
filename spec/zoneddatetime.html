@@ -727,7 +727,7 @@
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « *"day"* »).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~, *"day"*).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
         1. Let _roundingIncrement_ be ? ToTemporalDateTimeRoundingIncrement(_roundTo_, _smallestUnit_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
