@@ -315,7 +315,7 @@
         _key_: a property key,
         _unitGroup_: ~date~, ~time~, or ~datetime~,
         _default_: ~required~ or an ECMAScript language value,
-        optional _extraValues_: a List of ECMAScript language values,
+        optional _extraValue_: an ECMAScript language value,
       ): either a normal completion containing an ECMAScript language value, or an abrupt completion
     </h1>
     <dl class="header">
@@ -331,8 +331,8 @@
         1. Let _unit_ be the value in the Singular column of the row.
         1. If the Category column of the row is ~date~ and _unitGroup_ is ~date~ or ~datetime~, append _unit_ to _singularNames_.
         1. Else if the Category column of the row is ~time~ and _unitGroup_ is ~time~ or ~datetime~, append _unit_ to _singularNames_.
-      1. If _extraValues_ is present, then
-        1. Set _singularNames_ to the list-concatenation of _singularNames_ and _extraValues_.
+      1. If _extraValue_ is present, then
+        1. Append _extraValue_ to _singularNames_.
       1. If _default_ is ~required~, then
         1. Let _defaultValue_ be *undefined*.
       1. Else,
