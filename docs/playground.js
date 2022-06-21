@@ -3586,11 +3586,23 @@
           offset = _ES$ParseTemporalInst.offset,
           z = _ES$ParseTemporalInst.z;
 
-      var epochNs = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      if (epochNs === null) throw new RangeError('DateTime outside of supported range');
       if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
       var offsetNs = z ? 0 : ES.ParseTimeZoneOffsetString(offset);
-      return epochNs.subtract(offsetNs);
+
+      var _ES$BalanceISODateTim = ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond - offsetNs);
+
+      year = _ES$BalanceISODateTim.year;
+      month = _ES$BalanceISODateTim.month;
+      day = _ES$BalanceISODateTim.day;
+      hour = _ES$BalanceISODateTim.hour;
+      minute = _ES$BalanceISODateTim.minute;
+      second = _ES$BalanceISODateTim.second;
+      millisecond = _ES$BalanceISODateTim.millisecond;
+      microsecond = _ES$BalanceISODateTim.microsecond;
+      nanosecond = _ES$BalanceISODateTim.nanosecond;
+      var epochNs = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+      if (epochNs === null) throw new RangeError('DateTime outside of supported range');
+      return epochNs;
     },
     RegulateISODate: function RegulateISODate(year, month, day, overflow) {
       switch (overflow) {
@@ -5153,17 +5165,17 @@
           microsecond = _ES$GetISOPartsFromEp.microsecond,
           nanosecond = _ES$GetISOPartsFromEp.nanosecond;
 
-      var _ES$BalanceISODateTim = ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+      var _ES$BalanceISODateTim2 = ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
 
-      year = _ES$BalanceISODateTim.year;
-      month = _ES$BalanceISODateTim.month;
-      day = _ES$BalanceISODateTim.day;
-      hour = _ES$BalanceISODateTim.hour;
-      minute = _ES$BalanceISODateTim.minute;
-      second = _ES$BalanceISODateTim.second;
-      millisecond = _ES$BalanceISODateTim.millisecond;
-      microsecond = _ES$BalanceISODateTim.microsecond;
-      nanosecond = _ES$BalanceISODateTim.nanosecond;
+      year = _ES$BalanceISODateTim2.year;
+      month = _ES$BalanceISODateTim2.month;
+      day = _ES$BalanceISODateTim2.day;
+      hour = _ES$BalanceISODateTim2.hour;
+      minute = _ES$BalanceISODateTim2.minute;
+      second = _ES$BalanceISODateTim2.second;
+      millisecond = _ES$BalanceISODateTim2.millisecond;
+      microsecond = _ES$BalanceISODateTim2.microsecond;
+      nanosecond = _ES$BalanceISODateTim2.nanosecond;
       return ES.CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     },
     BuiltinTimeZoneGetInstantFor: function BuiltinTimeZoneGetInstantFor(timeZone, dateTime, disambiguation) {
