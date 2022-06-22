@@ -852,6 +852,7 @@
       </p>
       <emu-alg>
         1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
+        1. Assert: IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
         1. If _unit_ is *"day"*, then
           1. If _dayLengthNs_ is not present, set _dayLengthNs_ to nsPerDay.
