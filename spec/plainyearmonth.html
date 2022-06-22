@@ -666,7 +666,7 @@
           1. Let _day_ be ? ToPositiveInteger(_dayFromCalendar_).
         1. Else,
           1. Let _day_ be 1.
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, _day_).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_day_)).
         1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_).
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _optionsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
