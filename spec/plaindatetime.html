@@ -1011,8 +1011,9 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: ISODateTimeWithinLimits(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _timeResult_ be ! AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Let _datePart_ be ? CreateTemporalDate(_year_, _month_, _day_, _calendar_).
+        1. Let _datePart_ be ! CreateTemporalDate(_year_, _month_, _day_, _calendar_).
         1. Let _dateDuration_ be ? CreateTemporalDuration(_years_, _months_, _weeks_, _days_ + _timeResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
         1. Return the Record {
