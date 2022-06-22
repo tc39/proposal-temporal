@@ -749,7 +749,7 @@
           1. Let _valueDesc_ be OrdinaryGetOwnProperty(_partial_, _propertyName_).
           1. If _valueDesc_ is not *undefined*, then
             1. Assert: _valueDesc_ is a data Property Descriptor.
-            1. Set the field of _result_ whose name is _field_ to _valueDesc_.[[Value]].
+            1. Set the field of _result_ whose name is _field_ to ℝ(_valueDesc_.[[Value]]).
           1. Else if _completeness_ is ~complete~, then
             1. Set the field of _result_ whose name is _field_ to 0.
         1. Return _result_.
