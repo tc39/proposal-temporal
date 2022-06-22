@@ -938,15 +938,15 @@
         1. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _offset_ be ? BuiltinTimeZoneGetOffsetStringFor(_timeZone_, _instant_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, _dateTime_.[[ISODay]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, _dateTime_.[[ISOHour]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, _dateTime_.[[ISOMicrosecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, _dateTime_.[[ISOMillisecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, _dateTime_.[[ISOMinute]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, _dateTime_.[[ISOMonth]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, _dateTime_.[[ISONanosecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, _dateTime_.[[ISOSecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, _dateTime_.[[ISOYear]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[ISODay]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_dateTime_.[[ISOHour]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_dateTime_.[[ISOMicrosecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, 𝔽(_dateTime_.[[ISOMillisecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, 𝔽(_dateTime_.[[ISOMinute]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_dateTime_.[[ISOMonth]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, 𝔽(_dateTime_.[[ISONanosecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_dateTime_.[[ISOSecond]])).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_dateTime_.[[ISOYear]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"offset"*, _offset_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _timeZone_).
         1. Return _fields_.
