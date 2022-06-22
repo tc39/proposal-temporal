@@ -606,7 +606,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
+        1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 

@@ -853,7 +853,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
+        1. Return ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -1233,7 +1233,7 @@
           1. Return ? AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Let _datePart_ be ? CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
+        1. Let _datePart_ be ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
         1. Let _dateDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
         1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
