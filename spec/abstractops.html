@@ -1748,8 +1748,16 @@
         1. If _value_ is not *undefined*, then
           1. Set _any_ to *true*.
           1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref> and there is a Conversion value in the same row, then
-            1. Let _Conversion_ represent the abstract operation named by the Conversion value of the same row.
-            1. Set _value_ to ? _Conversion_(_value_).
+            1. Let _Conversion_ be the Conversion value of the same row.
+            1. If _Conversion_ is ~ToIntegerThrowOnInfinity~, then
+              1. Set _value_ to ? ToIntegerThrowOnInfinity(_value_).
+              1. Set _value_ to 𝔽(_value_).
+            1. Else if _Conversion_ is ~ToPositiveInteger~, then
+              1. Set _value_ to ? ToPositiveInteger(_value_).
+              1. Set _value_ to 𝔽(_value_).
+            1. Else,
+              1. Assert: _Conversion_ is ~ToString~.
+              1. Set _value_ to ? ToString(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Else if _requiredFields_ is a List, then
           1. If _requiredFields_ contains _property_, then
@@ -1775,67 +1783,67 @@
         <tbody>
           <tr>
             <td>*"year"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"month"*</td>
-            <td>ToPositiveInteger</td>
+            <td>~ToPositiveInteger~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"monthCode"*</td>
-            <td>ToString</td>
+            <td>~ToString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"day"*</td>
-            <td>ToPositiveInteger</td>
+            <td>~ToPositiveInteger~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"hour"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"minute"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"second"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"millisecond"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"microsecond"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"nanosecond"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>0</td>
           </tr>
           <tr>
             <td>*"offset"*</td>
-            <td>ToString</td>
+            <td>~ToString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"era"*</td>
-            <td>ToString</td>
+            <td>~ToString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"eraYear"*</td>
-            <td>ToIntegerThrowOnInfinity</td>
+            <td>~ToIntegerThrowOnInfinity~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
