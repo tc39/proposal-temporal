@@ -96,62 +96,62 @@ describe('Instant', () => {
       equal(`${later.since(earlier, { smallestUnit: 'minutes', roundingMode: 'halfExpand' })}`, 'PT22586123M');
     });
     const largestUnit = 'hours';
-    const incrementOneNearest = [
-      ['hours', 'PT376435H'],
-      ['minutes', 'PT376435H23M'],
-      ['seconds', 'PT376435H23M8S'],
-      ['milliseconds', 'PT376435H23M8.149S'],
-      ['microseconds', 'PT376435H23M8.148529S'],
-      ['nanoseconds', 'PT376435H23M8.148529313S']
-    ];
-    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+    it('halfExpand', () => {
       const roundingMode = 'halfExpand';
-      it(`rounds to nearest ${smallestUnit}`, () => {
+      const incrementOneNearest = [
+        ['hours', 'PT376435H'],
+        ['minutes', 'PT376435H23M'],
+        ['seconds', 'PT376435H23M8S'],
+        ['milliseconds', 'PT376435H23M8.149S'],
+        ['microseconds', 'PT376435H23M8.148529S'],
+        ['nanoseconds', 'PT376435H23M8.148529313S']
+      ];
+      incrementOneNearest.forEach(([smallestUnit, expected]) => {
         equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    const incrementOneCeil = [
-      ['hours', 'PT376436H', '-PT376435H'],
-      ['minutes', 'PT376435H24M', '-PT376435H23M'],
-      ['seconds', 'PT376435H23M9S', '-PT376435H23M8S'],
-      ['milliseconds', 'PT376435H23M8.149S', '-PT376435H23M8.148S'],
-      ['microseconds', 'PT376435H23M8.14853S', '-PT376435H23M8.148529S'],
-      ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
-    ];
-    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+    it('ceil', () => {
       const roundingMode = 'ceil';
-      it(`rounds up to ${smallestUnit}`, () => {
+      const incrementOneCeil = [
+        ['hours', 'PT376436H', '-PT376435H'],
+        ['minutes', 'PT376435H24M', '-PT376435H23M'],
+        ['seconds', 'PT376435H23M9S', '-PT376435H23M8S'],
+        ['milliseconds', 'PT376435H23M8.149S', '-PT376435H23M8.148S'],
+        ['microseconds', 'PT376435H23M8.14853S', '-PT376435H23M8.148529S'],
+        ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
+      ];
+      incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
         equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
-    const incrementOneFloor = [
-      ['hours', 'PT376435H', '-PT376436H'],
-      ['minutes', 'PT376435H23M', '-PT376435H24M'],
-      ['seconds', 'PT376435H23M8S', '-PT376435H23M9S'],
-      ['milliseconds', 'PT376435H23M8.148S', '-PT376435H23M8.149S'],
-      ['microseconds', 'PT376435H23M8.148529S', '-PT376435H23M8.14853S'],
-      ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
-    ];
-    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+    it('floor', () => {
       const roundingMode = 'floor';
-      it(`rounds down to ${smallestUnit}`, () => {
+      const incrementOneFloor = [
+        ['hours', 'PT376435H', '-PT376436H'],
+        ['minutes', 'PT376435H23M', '-PT376435H24M'],
+        ['seconds', 'PT376435H23M8S', '-PT376435H23M9S'],
+        ['milliseconds', 'PT376435H23M8.148S', '-PT376435H23M8.149S'],
+        ['microseconds', 'PT376435H23M8.148529S', '-PT376435H23M8.14853S'],
+        ['nanoseconds', 'PT376435H23M8.148529313S', '-PT376435H23M8.148529313S']
+      ];
+      incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
         equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
-    const incrementOneTrunc = [
-      ['hours', 'PT376435H'],
-      ['minutes', 'PT376435H23M'],
-      ['seconds', 'PT376435H23M8S'],
-      ['milliseconds', 'PT376435H23M8.148S'],
-      ['microseconds', 'PT376435H23M8.148529S'],
-      ['nanoseconds', 'PT376435H23M8.148529313S']
-    ];
-    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+    it('trunc', () => {
       const roundingMode = 'trunc';
-      it(`truncates to ${smallestUnit}`, () => {
+      const incrementOneTrunc = [
+        ['hours', 'PT376435H'],
+        ['minutes', 'PT376435H23M'],
+        ['seconds', 'PT376435H23M8S'],
+        ['milliseconds', 'PT376435H23M8.148S'],
+        ['microseconds', 'PT376435H23M8.148529S'],
+        ['nanoseconds', 'PT376435H23M8.148529313S']
+      ];
+      incrementOneTrunc.forEach(([smallestUnit, expected]) => {
         equal(`${later.since(earlier, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${earlier.since(later, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
@@ -228,16 +228,16 @@ describe('Instant', () => {
         assert(later.since(earlier, options) instanceof Temporal.Duration);
       });
     });
-    ['minutes', 'seconds'].forEach((smallestUnit) => {
-      it(`valid ${smallestUnit} increments divide into 60`, () => {
+    it('valid increments divide into 60', () => {
+      ['minutes', 'seconds'].forEach((smallestUnit) => {
         [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
           assert(later.since(earlier, options) instanceof Temporal.Duration);
         });
       });
     });
-    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
-      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+    it('valid increments divide into 1000', () => {
+      ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
         [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
           assert(later.since(earlier, options) instanceof Temporal.Duration);
@@ -321,62 +321,62 @@ describe('Instant', () => {
       equal(`${earlier.until(later, { smallestUnit: 'minutes', roundingMode: 'halfExpand' })}`, 'PT26436596M');
     });
     const largestUnit = 'hours';
-    const incrementOneNearest = [
-      ['hours', 'PT440610H'],
-      ['minutes', 'PT440609H56M'],
-      ['seconds', 'PT440609H56M3S'],
-      ['milliseconds', 'PT440609H56M3.149S'],
-      ['microseconds', 'PT440609H56M3.148529S'],
-      ['nanoseconds', 'PT440609H56M3.148529313S']
-    ];
-    incrementOneNearest.forEach(([smallestUnit, expected]) => {
+    it('halfExpand', () => {
       const roundingMode = 'halfExpand';
-      it(`rounds to nearest ${smallestUnit}`, () => {
+      const incrementOneNearest = [
+        ['hours', 'PT440610H'],
+        ['minutes', 'PT440609H56M'],
+        ['seconds', 'PT440609H56M3S'],
+        ['milliseconds', 'PT440609H56M3.149S'],
+        ['microseconds', 'PT440609H56M3.148529S'],
+        ['nanoseconds', 'PT440609H56M3.148529313S']
+      ];
+      incrementOneNearest.forEach(([smallestUnit, expected]) => {
         equal(`${earlier.until(later, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    const incrementOneCeil = [
-      ['hours', 'PT440610H', '-PT440609H'],
-      ['minutes', 'PT440609H57M', '-PT440609H56M'],
-      ['seconds', 'PT440609H56M4S', '-PT440609H56M3S'],
-      ['milliseconds', 'PT440609H56M3.149S', '-PT440609H56M3.148S'],
-      ['microseconds', 'PT440609H56M3.14853S', '-PT440609H56M3.148529S'],
-      ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
-    ];
-    incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+    it('ceil', () => {
       const roundingMode = 'ceil';
-      it(`rounds up to ${smallestUnit}`, () => {
+      const incrementOneCeil = [
+        ['hours', 'PT440610H', '-PT440609H'],
+        ['minutes', 'PT440609H57M', '-PT440609H56M'],
+        ['seconds', 'PT440609H56M4S', '-PT440609H56M3S'],
+        ['milliseconds', 'PT440609H56M3.149S', '-PT440609H56M3.148S'],
+        ['microseconds', 'PT440609H56M3.14853S', '-PT440609H56M3.148529S'],
+        ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
+      ];
+      incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
         equal(`${earlier.until(later, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
-    const incrementOneFloor = [
-      ['hours', 'PT440609H', '-PT440610H'],
-      ['minutes', 'PT440609H56M', '-PT440609H57M'],
-      ['seconds', 'PT440609H56M3S', '-PT440609H56M4S'],
-      ['milliseconds', 'PT440609H56M3.148S', '-PT440609H56M3.149S'],
-      ['microseconds', 'PT440609H56M3.148529S', '-PT440609H56M3.14853S'],
-      ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
-    ];
-    incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+    it('floor', () => {
       const roundingMode = 'floor';
-      it(`rounds down to ${smallestUnit}`, () => {
+      const incrementOneFloor = [
+        ['hours', 'PT440609H', '-PT440610H'],
+        ['minutes', 'PT440609H56M', '-PT440609H57M'],
+        ['seconds', 'PT440609H56M3S', '-PT440609H56M4S'],
+        ['milliseconds', 'PT440609H56M3.148S', '-PT440609H56M3.149S'],
+        ['microseconds', 'PT440609H56M3.148529S', '-PT440609H56M3.14853S'],
+        ['nanoseconds', 'PT440609H56M3.148529313S', '-PT440609H56M3.148529313S']
+      ];
+      incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
         equal(`${earlier.until(later, { largestUnit, smallestUnit, roundingMode })}`, expectedPositive);
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, expectedNegative);
       });
     });
-    const incrementOneTrunc = [
-      ['hours', 'PT440609H'],
-      ['minutes', 'PT440609H56M'],
-      ['seconds', 'PT440609H56M3S'],
-      ['milliseconds', 'PT440609H56M3.148S'],
-      ['microseconds', 'PT440609H56M3.148529S'],
-      ['nanoseconds', 'PT440609H56M3.148529313S']
-    ];
-    incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+    it('trunc', () => {
       const roundingMode = 'trunc';
-      it(`truncates to ${smallestUnit}`, () => {
+      const incrementOneTrunc = [
+        ['hours', 'PT440609H'],
+        ['minutes', 'PT440609H56M'],
+        ['seconds', 'PT440609H56M3S'],
+        ['milliseconds', 'PT440609H56M3.148S'],
+        ['microseconds', 'PT440609H56M3.148529S'],
+        ['nanoseconds', 'PT440609H56M3.148529313S']
+      ];
+      incrementOneTrunc.forEach(([smallestUnit, expected]) => {
         equal(`${earlier.until(later, { largestUnit, smallestUnit, roundingMode })}`, expected);
         equal(`${later.until(earlier, { largestUnit, smallestUnit, roundingMode })}`, `-${expected}`);
       });
@@ -453,16 +453,16 @@ describe('Instant', () => {
         assert(earlier.until(later, options) instanceof Temporal.Duration);
       });
     });
-    ['minutes', 'seconds'].forEach((smallestUnit) => {
-      it(`valid ${smallestUnit} increments divide into 60`, () => {
+    it('valid increments divide into 60', () => {
+      ['minutes', 'seconds'].forEach((smallestUnit) => {
         [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
           assert(earlier.until(later, options) instanceof Temporal.Duration);
         });
       });
     });
-    ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
-      it(`valid ${smallestUnit} increments divide into 1000`, () => {
+    it('valid increments divide into 1000', () => {
+      ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
         [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
           const options = { largestUnit, smallestUnit, roundingIncrement };
           assert(earlier.until(later, options) instanceof Temporal.Duration);
@@ -510,43 +510,57 @@ describe('Instant', () => {
       throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
     });
-    const incrementOneNearest = [
-      ['hour', '1976-11-18T14:00:00Z'],
-      ['minute', '1976-11-18T14:24:00Z'],
-      ['second', '1976-11-18T14:23:30Z'],
-      ['millisecond', '1976-11-18T14:23:30.123Z'],
-      ['microsecond', '1976-11-18T14:23:30.123457Z'],
-      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
-    ];
-    incrementOneNearest.forEach(([smallestUnit, expected]) => {
-      it(`rounds to nearest ${smallestUnit}`, () =>
-        equal(`${inst.round({ smallestUnit, roundingMode: 'halfExpand' })}`, expected));
+    it('halfExpand', () => {
+      const incrementOneNearest = [
+        ['hour', '1976-11-18T14:00:00Z'],
+        ['minute', '1976-11-18T14:24:00Z'],
+        ['second', '1976-11-18T14:23:30Z'],
+        ['millisecond', '1976-11-18T14:23:30.123Z'],
+        ['microsecond', '1976-11-18T14:23:30.123457Z'],
+        ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+      ];
+      incrementOneNearest.forEach(([smallestUnit, expected]) => {
+        equal(`${inst.round({ smallestUnit, roundingMode: 'halfExpand' })}`, expected);
+      });
     });
-    const incrementOneCeil = [
-      ['hour', '1976-11-18T15:00:00Z'],
-      ['minute', '1976-11-18T14:24:00Z'],
-      ['second', '1976-11-18T14:23:31Z'],
-      ['millisecond', '1976-11-18T14:23:30.124Z'],
-      ['microsecond', '1976-11-18T14:23:30.123457Z'],
-      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
-    ];
-    incrementOneCeil.forEach(([smallestUnit, expected]) => {
-      it(`rounds up to ${smallestUnit}`, () =>
-        equal(`${inst.round({ smallestUnit, roundingMode: 'ceil' })}`, expected));
+    it('ceil', () => {
+      const incrementOneCeil = [
+        ['hour', '1976-11-18T15:00:00Z'],
+        ['minute', '1976-11-18T14:24:00Z'],
+        ['second', '1976-11-18T14:23:31Z'],
+        ['millisecond', '1976-11-18T14:23:30.124Z'],
+        ['microsecond', '1976-11-18T14:23:30.123457Z'],
+        ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+      ];
+      incrementOneCeil.forEach(([smallestUnit, expected]) => {
+        equal(`${inst.round({ smallestUnit, roundingMode: 'ceil' })}`, expected);
+      });
     });
-    const incrementOneFloor = [
-      ['hour', '1976-11-18T14:00:00Z'],
-      ['minute', '1976-11-18T14:23:00Z'],
-      ['second', '1976-11-18T14:23:30Z'],
-      ['millisecond', '1976-11-18T14:23:30.123Z'],
-      ['microsecond', '1976-11-18T14:23:30.123456Z'],
-      ['nanosecond', '1976-11-18T14:23:30.123456789Z']
-    ];
-    incrementOneFloor.forEach(([smallestUnit, expected]) => {
-      it(`rounds down to ${smallestUnit}`, () =>
-        equal(`${inst.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
-      it(`truncates to ${smallestUnit}`, () =>
-        equal(`${inst.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
+    it('floor', () => {
+      const incrementOneFloor = [
+        ['hour', '1976-11-18T14:00:00Z'],
+        ['minute', '1976-11-18T14:23:00Z'],
+        ['second', '1976-11-18T14:23:30Z'],
+        ['millisecond', '1976-11-18T14:23:30.123Z'],
+        ['microsecond', '1976-11-18T14:23:30.123456Z'],
+        ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+      ];
+      incrementOneFloor.forEach(([smallestUnit, expected]) => {
+        equal(`${inst.round({ smallestUnit, roundingMode: 'floor' })}`, expected);
+      });
+    });
+    it('trunc', () => {
+      const incrementOneFloor = [
+        ['hour', '1976-11-18T14:00:00Z'],
+        ['minute', '1976-11-18T14:23:00Z'],
+        ['second', '1976-11-18T14:23:30Z'],
+        ['millisecond', '1976-11-18T14:23:30.123Z'],
+        ['microsecond', '1976-11-18T14:23:30.123456Z'],
+        ['nanosecond', '1976-11-18T14:23:30.123456789Z']
+      ];
+      incrementOneFloor.forEach(([smallestUnit, expected]) => {
+        equal(`${inst.round({ smallestUnit, roundingMode: 'trunc' })}`, expected);
+      });
     });
     it('rounds to an increment of hours', () => {
       equal(`${inst.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00Z');
