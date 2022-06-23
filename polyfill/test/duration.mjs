@@ -8,23 +8,25 @@ import { strict as assert } from 'assert';
 const { throws, equal, notEqual } = assert;
 
 import * as Temporal from 'proposal-temporal';
-const { Duration } = Temporal;
 
 describe('Duration', () => {
   describe('toString()', () => {
     it("serializing balance doesn't trip out-of-range", () => {
-      const d = Duration.from({ seconds: Number.MAX_VALUE, milliseconds: Number.MAX_VALUE });
+      const d = Temporal.Duration.from({ seconds: Number.MAX_VALUE, milliseconds: Number.MAX_VALUE });
       const str = d.toString();
       assert(str.startsWith('PT'));
       assert(str.endsWith('S'));
       // actual string representation may vary, since MAX_VALUE is not precise
     });
     it("serializing balance doesn't lose precision when values are precise", () => {
-      const d = Duration.from({ milliseconds: Number.MAX_SAFE_INTEGER, microseconds: Number.MAX_SAFE_INTEGER });
+      const d = Temporal.Duration.from({
+        milliseconds: Number.MAX_SAFE_INTEGER,
+        microseconds: Number.MAX_SAFE_INTEGER
+      });
       equal(`${d}`, 'PT9016206453995.731991S');
     });
     it('rounding can affect units up to seconds', () => {
-      const d4 = Duration.from('P1Y1M1W1DT23H59M59.999999999S');
+      const d4 = Temporal.Duration.from('P1Y1M1W1DT23H59M59.999999999S');
       equal(d4.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' }), 'P1Y1M1W1DT23H59M60.00000000S');
     });
   });
@@ -42,16 +44,18 @@ describe('Duration', () => {
       'nanoseconds'
     ];
     it('minimum is zero', () => {
-      equal(`${new Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
-      units.forEach((unit) => equal(`${Duration.from({ [unit]: 0 })}`, 'PT0S'));
-      ['P0Y', 'P0M', 'P0W', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) => equal(`${Duration.from(str)}`, 'PT0S'));
+      equal(`${new Temporal.Duration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)}`, 'PT0S');
+      units.forEach((unit) => equal(`${Temporal.Duration.from({ [unit]: 0 })}`, 'PT0S'));
+      ['P0Y', 'P0M', 'P0W', 'P0D', 'PT0H', 'PT0M', 'PT0S'].forEach((str) =>
+        equal(`${Temporal.Duration.from(str)}`, 'PT0S')
+      );
     });
     it('unrepresentable number is not allowed', () => {
       units.forEach((unit, ix) => {
         // eslint-disable-next-line no-loss-of-precision,@typescript-eslint/no-loss-of-precision
-        throws(() => new Duration(...Array(ix).fill(0), 1e309), RangeError);
+        throws(() => new Temporal.Duration(...Array(ix).fill(0), 1e309), RangeError);
         // eslint-disable-next-line no-loss-of-precision,@typescript-eslint/no-loss-of-precision
-        throws(() => Duration.from({ [unit]: 1e309 }), RangeError);
+        throws(() => Temporal.Duration.from({ [unit]: 1e309 }), RangeError);
       });
       const manyNines = '9'.repeat(309);
       [
@@ -62,7 +66,7 @@ describe('Duration', () => {
         `PT${manyNines}H`,
         `PT${manyNines}M`,
         `PT${manyNines}S`
-      ].forEach((str) => throws(() => Duration.from(str), RangeError));
+      ].forEach((str) => throws(() => Temporal.Duration.from(str), RangeError));
     });
     it('max safe integer is allowed', () => {
       [
@@ -77,8 +81,8 @@ describe('Duration', () => {
         'PT9007199254.740991S',
         'PT9007199.254740991S'
       ].forEach((str, ix) => {
-        equal(`${new Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER)}`, str);
-        equal(`${Duration.from(str)}`, str);
+        equal(`${new Temporal.Duration(...Array(ix).fill(0), Number.MAX_SAFE_INTEGER)}`, str);
+        equal(`${Temporal.Duration.from(str)}`, str);
       });
     });
     it('larger integers are allowed but may lose precision', () => {
@@ -90,9 +94,9 @@ describe('Duration', () => {
           equal(str.slice(-1), suffix);
           equal(str.length, prefix.length + suffix.length + infix.length + 27);
         }
-        doAsserts(new Duration(...Array(ix).fill(0), 1e26, ...Array(9 - ix).fill(0)));
-        doAsserts(Duration.from({ [units[ix]]: 1e26 }));
-        if (!infix) doAsserts(Duration.from(`${prefix}100000000000000000000000000${suffix}`));
+        doAsserts(new Temporal.Duration(...Array(ix).fill(0), 1e26, ...Array(9 - ix).fill(0)));
+        doAsserts(Temporal.Duration.from({ [units[ix]]: 1e26 }));
+        if (!infix) doAsserts(Temporal.Duration.from(`${prefix}100000000000000000000000000${suffix}`));
       }
       test(0, 'P', 'Y');
       test(1, 'P', 'M');
@@ -106,13 +110,13 @@ describe('Duration', () => {
       test(9, 'PT', 'S', '.');
     });
   });
-  describe('Duration.add()', () => {
-    const max = new Duration(0, 0, 0, ...Array(7).fill(Number.MAX_VALUE));
+  describe('Temporal.Duration.add()', () => {
+    const max = new Temporal.Duration(0, 0, 0, ...Array(7).fill(Number.MAX_VALUE));
     it('always throws when addition overflows', () => {
       throws(() => max.add(max), RangeError);
     });
-    const oneDay = new Duration(0, 0, 0, 1);
-    const hours24 = new Duration(0, 0, 0, 0, 24);
+    const oneDay = new Temporal.Duration(0, 0, 0, 1);
+    const hours24 = new Temporal.Duration(0, 0, 0, 0, 24);
     it('relativeTo does not affect days if PlainDate', () => {
       const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(`${oneDay.add(hours24, { relativeTo })}`, 'P2D');
@@ -124,8 +128,8 @@ describe('Duration', () => {
     const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
     const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
-    const hours12 = new Duration(0, 0, 0, 0, 12);
-    const hours25 = new Duration(0, 0, 0, 0, 25);
+    const hours12 = new Temporal.Duration(0, 0, 0, 0, 12);
+    const hours25 = new Temporal.Duration(0, 0, 0, 0, 25);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(`${hours25.add(oneDay, { relativeTo: inRepeatedHour })}`, 'P2D');
@@ -137,9 +141,15 @@ describe('Duration', () => {
         equal(`${oneDay.negated().add(hours25.negated(), { relativeTo })}`, '-P2D');
       });
       it('start inside repeated hour, end in skipped hour', () => {
-        equal(`${hours25.add(Duration.from({ days: 125, hours: 1 }), { relativeTo: inRepeatedHour })}`, 'P126DT1H');
+        equal(
+          `${hours25.add(Temporal.Duration.from({ days: 125, hours: 1 }), { relativeTo: inRepeatedHour })}`,
+          'P126DT1H'
+        );
         // this takes you to 03:00 on the next skipped-hour day
-        equal(`${oneDay.add(Duration.from({ days: 125, hours: 1 }), { relativeTo: inRepeatedHour })}`, 'P126DT1H');
+        equal(
+          `${oneDay.add(Temporal.Duration.from({ days: 125, hours: 1 }), { relativeTo: inRepeatedHour })}`,
+          'P126DT1H'
+        );
       });
       it('start in normal hour, end in skipped hour', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-08T02:30[America/Vancouver]');
@@ -229,9 +239,9 @@ describe('Duration', () => {
       );
     });
   });
-  describe('Duration.subtract()', () => {
-    const oneDay = new Duration(0, 0, 0, 1);
-    const hours24 = new Duration(0, 0, 0, 0, 24);
+  describe('Temporal.Duration.subtract()', () => {
+    const oneDay = new Temporal.Duration(0, 0, 0, 1);
+    const hours24 = new Temporal.Duration(0, 0, 0, 0, 24);
     it('relativeTo does not affect days if PlainDate', () => {
       const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(`${oneDay.subtract(hours24, { relativeTo })}`, 'PT0S');
@@ -243,16 +253,22 @@ describe('Duration', () => {
     const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
     const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
-    const twoDays = new Duration(0, 0, 0, 2);
-    const threeDays = new Duration(0, 0, 0, 3);
+    const twoDays = new Temporal.Duration(0, 0, 0, 2);
+    const threeDays = new Temporal.Duration(0, 0, 0, 3);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(`${hours24.subtract(oneDay, { relativeTo: inRepeatedHour })}`, '-PT1H');
         equal(`${oneDay.subtract(hours24, { relativeTo: inRepeatedHour })}`, 'PT1H');
       });
       it('start inside repeated hour, end in skipped hour', () => {
-        equal(`${Duration.from({ days: 127, hours: 1 }).subtract(oneDay, { relativeTo: inRepeatedHour })}`, 'P126DT1H');
-        equal(`${Duration.from({ days: 127, hours: 1 }).subtract(hours24, { relativeTo: inRepeatedHour })}`, 'P126D');
+        equal(
+          `${Temporal.Duration.from({ days: 127, hours: 1 }).subtract(oneDay, { relativeTo: inRepeatedHour })}`,
+          'P126DT1H'
+        );
+        equal(
+          `${Temporal.Duration.from({ days: 127, hours: 1 }).subtract(hours24, { relativeTo: inRepeatedHour })}`,
+          'P126D'
+        );
       });
       it('start in normal hour, end in skipped hour', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
@@ -277,8 +293,8 @@ describe('Duration', () => {
       });
       it('Samoa skipped 24 hours', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
-        equal(`${twoDays.subtract(Duration.from({ hours: 48 }), { relativeTo })}`, '-P1D');
-        equal(`${Duration.from({ hours: 48 }).subtract(twoDays, { relativeTo })}`, 'P2D');
+        equal(`${twoDays.subtract(Temporal.Duration.from({ hours: 48 }), { relativeTo })}`, '-P1D');
+        equal(`${Temporal.Duration.from({ hours: 48 }).subtract(twoDays, { relativeTo })}`, 'P2D');
       });
     });
     it('casts relativeTo to ZonedDateTime if possible', () => {
@@ -322,14 +338,14 @@ describe('Duration', () => {
       );
     });
   });
-  describe('Duration.round()', () => {
-    const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
-    const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
+  describe('Temporal.Duration.round()', () => {
+    const d = new Temporal.Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const d2 = new Temporal.Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDate.from('2020-01-01');
     it("succeeds with largestUnit: 'auto'", () => {
-      equal(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
+      equal(`${Temporal.Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`, 'PT25H');
     });
-    const hours25 = new Duration(0, 0, 0, 0, 25);
+    const hours25 = new Temporal.Duration(0, 0, 0, 0, 25);
     it('days are 24 hours if relativeTo not given', () => {
       equal(`${hours25.round({ largestUnit: 'days' })}`, 'P1DT1H');
     });
@@ -344,8 +360,8 @@ describe('Duration', () => {
     const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
     const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
-    const oneDay = new Duration(0, 0, 0, 1);
-    const hours12 = new Duration(0, 0, 0, 0, 12);
+    const oneDay = new Temporal.Duration(0, 0, 0, 1);
+    const hours12 = new Temporal.Duration(0, 0, 0, 0, 12);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(`${hours25.round({ largestUnit: 'days', relativeTo: inRepeatedHour })}`, 'P1D');
@@ -358,11 +374,17 @@ describe('Duration', () => {
       });
       it('start inside repeated hour, end in skipped hour', () => {
         equal(
-          `${Duration.from({ days: 126, hours: 1 }).round({ largestUnit: 'days', relativeTo: inRepeatedHour })}`,
+          `${Temporal.Duration.from({ days: 126, hours: 1 }).round({
+            largestUnit: 'days',
+            relativeTo: inRepeatedHour
+          })}`,
           'P126DT1H'
         );
         equal(
-          `${Duration.from({ days: 126, hours: 1 }).round({ largestUnit: 'hours', relativeTo: inRepeatedHour })}`,
+          `${Temporal.Duration.from({ days: 126, hours: 1 }).round({
+            largestUnit: 'hours',
+            relativeTo: inRepeatedHour
+          })}`,
           'PT3026H'
         );
       });
@@ -406,7 +428,7 @@ describe('Duration', () => {
       it('Samoa skipped 24 hours', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
         equal(`${hours25.round({ largestUnit: 'days', relativeTo })}`, 'P2DT1H');
-        equal(`${Duration.from({ hours: 48 }).round({ largestUnit: 'days', relativeTo })}`, 'P3D');
+        equal(`${Temporal.Duration.from({ hours: 48 }).round({ largestUnit: 'days', relativeTo })}`, 'P3D');
       });
     });
     it('casts relativeTo to ZonedDateTime if possible', () => {
@@ -458,14 +480,14 @@ describe('Duration', () => {
       throws(() => hours25.round({ largestUnit: 'days', relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
     it('incorrectly-spelled properties are ignored in relativeTo', () => {
-      const oneMonth = Duration.from({ months: 1 });
+      const oneMonth = Temporal.Duration.from({ months: 1 });
       equal(
         `${oneMonth.round({ largestUnit: 'days', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } })}`,
         'P31D'
       );
     });
     it('throws if neither one of largestUnit or smallestUnit is given', () => {
-      const hoursOnly = new Duration(0, 0, 0, 0, 1);
+      const hoursOnly = new Temporal.Duration(0, 0, 0, 0, 1);
       [{}, () => {}, { roundingMode: 'ceil' }].forEach((roundTo) => {
         throws(() => d.round(roundTo), RangeError);
         throws(() => hoursOnly.round(roundTo), RangeError);
@@ -512,7 +534,7 @@ describe('Duration', () => {
       throws(() => d.round({ largestUnit: 'nanoseconds' }), RangeError);
     });
     it('durations do not balance beyond their current largest unit by default', () => {
-      const fortyDays = Duration.from({ days: 40 });
+      const fortyDays = Temporal.Duration.from({ days: 40 });
       equal(`${fortyDays.round({ smallestUnit: 'seconds' })}`, 'P40D');
     });
     const roundAndBalanceResults = {
@@ -623,34 +645,34 @@ describe('Duration', () => {
       equal(`${d.negated().round({ smallestUnit: 'years', relativeTo })}`, '-P6Y');
     });
     it('balances up differently depending on relativeTo', () => {
-      const fortyDays = Duration.from({ days: 40 });
+      const fortyDays = Temporal.Duration.from({ days: 40 });
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-01-01' })}`, 'P1M9D');
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-02-01' })}`, 'P1M11D');
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-03-01' })}`, 'P1M9D');
       equal(`${fortyDays.round({ largestUnit: 'years', relativeTo: '2020-04-01' })}`, 'P1M10D');
-      const minusForty = Duration.from({ days: -40 });
+      const minusForty = Temporal.Duration.from({ days: -40 });
       equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-02-01' })}`, '-P1M9D');
       equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-01-01' })}`, '-P1M9D');
       equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-03-01' })}`, '-P1M11D');
       equal(`${minusForty.round({ largestUnit: 'years', relativeTo: '2020-04-01' })}`, '-P1M9D');
     });
     it('balances up to the next unit after rounding', () => {
-      const almostWeek = Duration.from({ days: 6, hours: 20 });
+      const almostWeek = Temporal.Duration.from({ days: 6, hours: 20 });
       equal(`${almostWeek.round({ largestUnit: 'weeks', smallestUnit: 'days', relativeTo: '2020-01-01' })}`, 'P1W');
     });
     it('balances days up to both years and months', () => {
-      const twoYears = Duration.from({ months: 11, days: 396 });
+      const twoYears = Temporal.Duration.from({ months: 11, days: 396 });
       equal(`${twoYears.round({ largestUnit: 'years', relativeTo: '2017-01-01' })}`, 'P2Y');
     });
     it('does not balance up to weeks if largestUnit is larger than weeks', () => {
-      const monthAlmostWeek = Duration.from({ months: 1, days: 6, hours: 20 });
+      const monthAlmostWeek = Temporal.Duration.from({ months: 1, days: 6, hours: 20 });
       equal(`${monthAlmostWeek.round({ smallestUnit: 'days', relativeTo: '2020-01-01' })}`, 'P1M7D');
     });
     it('balances down differently depending on relativeTo', () => {
-      const oneYear = Duration.from({ years: 1 });
+      const oneYear = Temporal.Duration.from({ years: 1 });
       equal(`${oneYear.round({ largestUnit: 'days', relativeTo: '2019-01-01' })}`, 'P365D');
       equal(`${oneYear.round({ largestUnit: 'days', relativeTo: '2019-07-01' })}`, 'P366D');
-      const minusYear = Duration.from({ years: -1 });
+      const minusYear = Temporal.Duration.from({ years: -1 });
       equal(`${minusYear.round({ largestUnit: 'days', relativeTo: '2020-01-01' })}`, '-P365D');
       equal(`${minusYear.round({ largestUnit: 'days', relativeTo: '2020-07-01' })}`, '-P366D');
     });
@@ -761,10 +783,10 @@ describe('Duration', () => {
       );
     });
     it('counts the correct number of days when rounding relative to a date', () => {
-      const days = Duration.from({ days: 45 });
+      const days = Temporal.Duration.from({ days: 45 });
       equal(`${days.round({ relativeTo: '2019-01-01', smallestUnit: 'months' })}`, 'P2M');
       equal(`${days.negated().round({ relativeTo: '2019-02-15', smallestUnit: 'months' })}`, '-P1M');
-      const yearAndHalf = Duration.from({ days: 547, hours: 12 });
+      const yearAndHalf = Temporal.Duration.from({ days: 547, hours: 12 });
       equal(`${yearAndHalf.round({ relativeTo: '2018-01-01', smallestUnit: 'years' })}`, 'P2Y');
       equal(`${yearAndHalf.round({ relativeTo: '2018-07-01', smallestUnit: 'years' })}`, 'P1Y');
       equal(`${yearAndHalf.round({ relativeTo: '2019-01-01', smallestUnit: 'years' })}`, 'P1Y');
@@ -783,9 +805,9 @@ describe('Duration', () => {
       );
     });
   });
-  describe('Duration.total()', () => {
-    const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
-    const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
+  describe('Temporal.Duration.total()', () => {
+    const d = new Temporal.Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+    const d2 = new Temporal.Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
     const relativeTo = Temporal.PlainDate.from('2020-01-01');
     it('throws on disallowed or invalid unit (object param)', () => {
       ['era', 'nonsense'].forEach((unit) => {
@@ -824,7 +846,7 @@ describe('Duration', () => {
       throws(() => d.total({ unit: 'months', relativeTo: '1971-01-01T00:00+02:00[Africa/Monrovia]' }), RangeError);
     });
     it('does not throw on HH:MM rounded offset for ZonedDateTime relativeTo string', () => {
-      const oneMonth = Duration.from({ months: 1 });
+      const oneMonth = Temporal.Duration.from({ months: 1 });
       equal(oneMonth.total({ unit: 'months', relativeTo: '1971-01-01T00:00-00:45[Africa/Monrovia]' }), 1);
     });
     it('throws on HH:MM rounded offset for ZonedDateTime relativeTo property bag', () => {
@@ -842,7 +864,7 @@ describe('Duration', () => {
       throws(() => d.total({ unit: 'months', relativeTo: { years: 2020, month: 1, day: 1 } }), TypeError);
     });
     it('incorrectly-spelled properties are ignored in relativeTo', () => {
-      const oneMonth = Duration.from({ months: 1 });
+      const oneMonth = Temporal.Duration.from({ months: 1 });
       equal(oneMonth.total({ unit: 'months', relativeTo: { year: 2020, month: 1, day: 1, months: 2 } }), 1);
     });
     it('throws RangeError if unit property is missing', () => {
@@ -955,7 +977,7 @@ describe('Duration', () => {
       });
     }
     it('balances differently depending on relativeTo', () => {
-      const fortyDays = Duration.from({ days: 40 });
+      const fortyDays = Temporal.Duration.from({ days: 40 });
       equal(
         fortyDays.total({ unit: 'months', relativeTo: '2020-02-01' }).toPrecision(16),
         (1 + 11 / 31).toPrecision(16)
@@ -966,7 +988,7 @@ describe('Duration', () => {
       );
     });
     it('balances differently depending on relativeTo (negative)', () => {
-      const negativeFortyDays = Duration.from({ days: -40 });
+      const negativeFortyDays = Temporal.Duration.from({ days: -40 });
       equal(
         negativeFortyDays.total({ unit: 'months', relativeTo: '2020-03-01' }).toPrecision(16),
         (-(1 + 11 / 31)).toPrecision(16)
@@ -976,7 +998,7 @@ describe('Duration', () => {
         (-(1 + 9 / 29)).toPrecision(16)
       );
     });
-    const oneDay = new Duration(0, 0, 0, 1);
+    const oneDay = new Temporal.Duration(0, 0, 0, 1);
     it('relativeTo does not affect days if PlainDate', () => {
       const relativeTo = Temporal.PlainDate.from('2017-01-01');
       equal(oneDay.total({ unit: 'hours', relativeTo }), 24);
@@ -988,8 +1010,8 @@ describe('Duration', () => {
     const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
     const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
     const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
-    const hours12 = new Duration(0, 0, 0, 0, 12);
-    const hours25 = new Duration(0, 0, 0, 0, 25);
+    const hours12 = new Temporal.Duration(0, 0, 0, 0, 12);
+    const hours25 = new Temporal.Duration(0, 0, 0, 0, 25);
     describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
       it('start inside repeated hour, end after', () => {
         equal(hours25.total({ unit: 'days', relativeTo: inRepeatedHour }), 1);
@@ -1001,9 +1023,15 @@ describe('Duration', () => {
         equal(oneDay.negated().total({ unit: 'hours', relativeTo }), -25);
       });
       it('start inside repeated hour, end in skipped hour', () => {
-        const totalDays = Duration.from({ days: 126, hours: 1 }).total({ unit: 'days', relativeTo: inRepeatedHour });
+        const totalDays = Temporal.Duration.from({ days: 126, hours: 1 }).total({
+          unit: 'days',
+          relativeTo: inRepeatedHour
+        });
         assert(Math.abs(totalDays - (126 + 1 / 23)) < Number.EPSILON);
-        equal(Duration.from({ days: 126, hours: 1 }).total({ unit: 'hours', relativeTo: inRepeatedHour }), 3026);
+        equal(
+          Temporal.Duration.from({ days: 126, hours: 1 }).total({ unit: 'hours', relativeTo: inRepeatedHour }),
+          3026
+        );
       });
       it('start in normal hour, end in skipped hour', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
@@ -1053,15 +1081,15 @@ describe('Duration', () => {
         const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
         const totalDays = hours25.total({ unit: 'days', relativeTo });
         assert(Math.abs(totalDays - (2 + 1 / 24)) < Number.EPSILON);
-        equal(Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 3);
-        equal(Duration.from({ days: 2 }).total({ unit: 'hours', relativeTo }), 24);
-        equal(Duration.from({ days: 3 }).total({ unit: 'hours', relativeTo }), 48);
+        equal(Temporal.Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo }), 3);
+        equal(Temporal.Duration.from({ days: 2 }).total({ unit: 'hours', relativeTo }), 24);
+        equal(Temporal.Duration.from({ days: 3 }).total({ unit: 'hours', relativeTo }), 48);
       });
     });
     it('totaling back up to days', () => {
       const relativeTo = Temporal.ZonedDateTime.from('2019-11-02T00:00[America/Vancouver]');
-      equal(Duration.from({ hours: 48 }).total({ unit: 'days' }), 2);
-      const totalDays = Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo });
+      equal(Temporal.Duration.from({ hours: 48 }).total({ unit: 'days' }), 2);
+      const totalDays = Temporal.Duration.from({ hours: 48 }).total({ unit: 'days', relativeTo });
       assert(Math.abs(totalDays - (1 + 24 / 25)) < Number.EPSILON);
     });
     it('casts relativeTo to ZonedDateTime if possible', () => {
@@ -1072,21 +1100,21 @@ describe('Duration', () => {
       );
     });
     it('balances up to the next unit after rounding', () => {
-      const almostWeek = Duration.from({ days: 6, hours: 20 });
+      const almostWeek = Temporal.Duration.from({ days: 6, hours: 20 });
       const totalWeeks = almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' });
       assert(Math.abs(totalWeeks - (6 + 20 / 24) / 7) < Number.EPSILON);
     });
     it('balances up to the next unit after rounding (negative)', () => {
-      const almostWeek = Duration.from({ days: -6, hours: -20 });
+      const almostWeek = Temporal.Duration.from({ days: -6, hours: -20 });
       const totalWeeks = almostWeek.total({ unit: 'weeks', relativeTo: '2020-01-01' });
       assert(Math.abs(totalWeeks - -((6 + 20 / 24) / 7)) < Number.EPSILON);
     });
     it('balances days up to both years and months', () => {
-      const twoYears = Duration.from({ months: 11, days: 396 });
+      const twoYears = Temporal.Duration.from({ months: 11, days: 396 });
       equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), 2);
     });
     it('balances days up to both years and months (negative)', () => {
-      const twoYears = Duration.from({ months: -11, days: -396 });
+      const twoYears = Temporal.Duration.from({ months: -11, days: -396 });
       equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), -2);
     });
     it('throws with invalid offset in relativeTo', () => {
@@ -1100,9 +1128,9 @@ describe('Duration', () => {
       );
     });
   });
-  describe('Duration.compare', () => {
+  describe('Temporal.Duration.compare', () => {
     it('does not lose precision when totaling everything down to nanoseconds', () => {
-      notEqual(Duration.compare({ days: 200 }, { days: 200, nanoseconds: 1 }), 0);
+      notEqual(Temporal.Duration.compare({ days: 200 }, { days: 200, nanoseconds: 1 }), 0);
     });
     it('throws with invalid offset in relativeTo', () => {
       throws(() => {
