@@ -17,9 +17,8 @@ const { equal, notEqual, throws } = assert;
 import * as Temporal from 'proposal-temporal';
 
 describe('Temporal.ZonedDateTime', () => {
-  const tz = new Temporal.TimeZone('America/Los_Angeles');
-
   describe('Construction and properties', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     const epochMillis = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
     const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
     it('works', () => {
@@ -979,6 +978,7 @@ describe('Temporal.ZonedDateTime', () => {
   });
 
   describe('Temporal.ZonedDateTime.withTimeZone()', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     const instant = Temporal.Instant.from('2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     const zdt = instant.toZonedDateTimeISO('UTC');
     it('zonedDateTime.withTimeZone(America/Los_Angeles) works', () => {
@@ -2079,6 +2079,7 @@ describe('Temporal.ZonedDateTime', () => {
     });
   });
   describe('Temporal.ZonedDateTime.toPlainDate()', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
       equal(`${zdt.toPlainDate()}`, '2019-10-29');
@@ -2092,12 +2093,14 @@ describe('Temporal.ZonedDateTime', () => {
     });
   });
   describe('Temporal.ZonedDateTime.toPlainTime()', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
       equal(`${zdt.toPlainTime()}`, '02:46:38.271986102');
     });
   });
   describe('Temporal.ZonedDateTime.toPlainYearMonth()', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
       equal(`${zdt.toPlainYearMonth()}`, '2019-10');
@@ -2111,6 +2114,7 @@ describe('Temporal.ZonedDateTime', () => {
     });
   });
   describe('Temporal.ZonedDateTime.toPlainMonthDay()', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
     it('works', () => {
       const zdt = Temporal.Instant.from('2019-10-29T09:46:38.271986102Z').toZonedDateTimeISO(tz);
       equal(`${zdt.toPlainMonthDay()}`, '10-29');
@@ -2158,9 +2162,10 @@ describe('Temporal.ZonedDateTime', () => {
     });
   });
 
-  const hourBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 8, 1).toZonedDateTime(tz);
-  const dayBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 7, 2, 30).toZonedDateTime(tz);
   describe('properties around DST', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
+    const hourBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 8, 1).toZonedDateTime(tz);
+    const dayBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 7, 2, 30).toZonedDateTime(tz);
     it('hoursInDay works with DST start', () => {
       equal(hourBeforeDstStart.hoursInDay, 23);
     });
@@ -2211,6 +2216,9 @@ describe('Temporal.ZonedDateTime', () => {
   });
 
   describe('math around DST', () => {
+    const tz = new Temporal.TimeZone('America/Los_Angeles');
+    const hourBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 8, 1).toZonedDateTime(tz);
+    const dayBeforeDstStart = new Temporal.PlainDateTime(2020, 3, 7, 2, 30).toZonedDateTime(tz);
     it('add 1 hour to get to DST start', () => {
       const added = hourBeforeDstStart.add({ hours: 1 });
       equal(added.hour, 3);
