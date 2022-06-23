@@ -2046,10 +2046,10 @@ describe('Temporal.ZonedDateTime', () => {
     const zdt2 = Temporal.ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
     it('=== is object equality', () => equal(zdt1, zdt1));
     it('!== is object equality', () => notEqual(zdt1, zdt1again));
-    it('<', () => throws(() => zdt1 < zdt2));
-    it('>', () => throws(() => zdt1 > zdt2));
-    it('<=', () => throws(() => zdt1 <= zdt2));
-    it('>=', () => throws(() => zdt1 >= zdt2));
+    it('<', () => throws(() => zdt1 < zdt2, TypeError));
+    it('>', () => throws(() => zdt1 > zdt2, TypeError));
+    it('<=', () => throws(() => zdt1 <= zdt2, TypeError));
+    it('>=', () => throws(() => zdt1 >= zdt2, TypeError));
   });
 
   describe('Temporal.ZonedDateTime.toInstant()', () => {
