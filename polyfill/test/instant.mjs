@@ -19,17 +19,19 @@ import * as Temporal from 'proposal-temporal';
 describe('Instant', () => {
   describe('Temporal.Instant.add works', () => {
     const inst = Temporal.Instant.from('1969-12-25T12:23:45.678901234Z');
-    describe('cross epoch in ms', () => {
+    it('cross epoch in ms', () => {
       const one = inst.subtract({ hours: 240, nanoseconds: 800 });
       const two = inst.add({ hours: 240, nanoseconds: 800 });
       const three = two.subtract({ hours: 480, nanoseconds: 1600 });
       const four = one.add({ hours: 480, nanoseconds: 1600 });
-      it(`(${inst}).subtract({ hours: 240, nanoseconds: 800 }) = ${one}`, () =>
-        equal(`${one}`, '1969-12-15T12:23:45.678900434Z'));
-      it(`(${inst}).add({ hours: 240, nanoseconds: 800 }) = ${two}`, () =>
-        equal(`${two}`, '1970-01-04T12:23:45.678902034Z'));
-      it(`(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
-      it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
+      equal(
+        `${one}`,
+        '1969-12-15T12:23:45.678900434Z',
+        `(${inst}).subtract({ hours: 240, nanoseconds: 800 }) = ${one}`
+      );
+      equal(`${two}`, '1970-01-04T12:23:45.678902034Z', `(${inst}).add({ hours: 240, nanoseconds: 800 }) = ${two}`);
+      assert(three.equals(one), `(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`);
+      assert(four.equals(two), `(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`);
     });
   });
   describe('Temporal.Instant.compare works', () => {
