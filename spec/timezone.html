@@ -617,9 +617,7 @@
         1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
         1. If _parseResult_.[[Name]] is not *undefined*, then
           1. Let _name_ be _parseResult_.[[Name]].
-          1. If ParseText(StringToCodePoints(_name_, |TimeZoneNumericUTCOffset|)) is not a List of errors, then
-            1. If _parseResult_.[[OffsetString]] is not *undefined*, and ! ParseTimeZoneOffsetString(_parseResult_.[[OffsetString]]) &ne; ! ParseTimeZoneOffsetString(_name_), throw a *RangeError* exception.
-          1. Else,
+          1. If ParseText(StringToCodePoints(_name_, |TimeZoneNumericUTCOffset|)) is a List of errors, then
             1. If ! IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
             1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
           1. Return ! CreateTemporalTimeZone(_name_).
