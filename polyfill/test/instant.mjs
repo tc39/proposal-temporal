@@ -15,11 +15,10 @@ import { strict as assert } from 'assert';
 const { equal, throws } = assert;
 
 import * as Temporal from 'proposal-temporal';
-const { Instant } = Temporal;
 
 describe('Instant', () => {
-  describe('Instant.add works', () => {
-    const inst = Instant.from('1969-12-25T12:23:45.678901234Z');
+  describe('Temporal.Instant.add works', () => {
+    const inst = Temporal.Instant.from('1969-12-25T12:23:45.678901234Z');
     describe('cross epoch in ms', () => {
       const one = inst.subtract({ hours: 240, nanoseconds: 800 });
       const two = inst.add({ hours: 240, nanoseconds: 800 });
@@ -33,29 +32,29 @@ describe('Instant', () => {
       it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
   });
-  describe('Instant.compare works', () => {
-    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
-    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
-    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
-    it('pre epoch equal', () => equal(Instant.compare(i1, Instant.from(i1)), 0));
-    it('epoch equal', () => equal(Instant.compare(i2, Instant.from(i2)), 0));
-    it('cross epoch smaller/larger', () => equal(Instant.compare(i1, i2), -1));
-    it('cross epoch larger/smaller', () => equal(Instant.compare(i2, i1), 1));
-    it('epoch smaller/larger', () => equal(Instant.compare(i2, i3), -1));
-    it('epoch larger/smaller', () => equal(Instant.compare(i3, i2), 1));
+  describe('Temporal.Instant.compare works', () => {
+    const i1 = Temporal.Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Temporal.Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Temporal.Instant.from('1981-12-15T14:34:31.987654321Z');
+    it('pre epoch equal', () => equal(Temporal.Instant.compare(i1, Temporal.Instant.from(i1)), 0));
+    it('epoch equal', () => equal(Temporal.Instant.compare(i2, Temporal.Instant.from(i2)), 0));
+    it('cross epoch smaller/larger', () => equal(Temporal.Instant.compare(i1, i2), -1));
+    it('cross epoch larger/smaller', () => equal(Temporal.Instant.compare(i2, i1), 1));
+    it('epoch smaller/larger', () => equal(Temporal.Instant.compare(i2, i3), -1));
+    it('epoch larger/smaller', () => equal(Temporal.Instant.compare(i3, i2), 1));
   });
-  describe('Instant.equals works', () => {
-    const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
-    const i2 = Instant.from('1976-11-18T15:23:30.123456789Z');
-    const i3 = Instant.from('1981-12-15T14:34:31.987654321Z');
+  describe('Temporal.Instant.equals works', () => {
+    const i1 = Temporal.Instant.from('1963-02-13T09:36:29.123456789Z');
+    const i2 = Temporal.Instant.from('1976-11-18T15:23:30.123456789Z');
+    const i3 = Temporal.Instant.from('1981-12-15T14:34:31.987654321Z');
     it('pre epoch equal', () => assert(i1.equals(i1)));
     it('epoch equal', () => assert(i2.equals(i2)));
     it('cross epoch unequal', () => assert(!i1.equals(i2)));
     it('epoch unequal', () => assert(!i2.equals(i3)));
   });
-  describe('Instant.since() works', () => {
-    const earlier = Instant.from('1976-11-18T15:23:30.123456789Z');
-    const later = Instant.from('2019-10-29T10:46:38.271986102Z');
+  describe('Temporal.Instant.since() works', () => {
+    const earlier = Temporal.Instant.from('1976-11-18T15:23:30.123456789Z');
+    const later = Temporal.Instant.from('2019-10-29T10:46:38.271986102Z');
     const diff = later.since(earlier);
     it(`(${earlier}).since(${later}) == (${later}).since(${earlier}).negated()`, () =>
       equal(`${earlier.since(later)}`, `${diff.negated()}`));
@@ -63,8 +62,8 @@ describe('Instant', () => {
       equal(`${earlier.until(later)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    const feb20 = Instant.from('2020-02-01T00:00Z');
-    const feb21 = Instant.from('2021-02-01T00:00Z');
+    const feb20 = Temporal.Instant.from('2020-02-01T00:00Z');
+    const feb21 = Temporal.Instant.from('2021-02-01T00:00Z');
     it('can return minutes and hours', () => {
       equal(`${feb21.since(feb20, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb21.since(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
@@ -278,9 +277,9 @@ describe('Instant', () => {
       );
     });
   });
-  describe('Instant.until() works', () => {
-    const earlier = Instant.from('1969-07-24T16:50:35.123456789Z');
-    const later = Instant.from('2019-10-29T10:46:38.271986102Z');
+  describe('Temporal.Instant.until() works', () => {
+    const earlier = Temporal.Instant.from('1969-07-24T16:50:35.123456789Z');
+    const later = Temporal.Instant.from('2019-10-29T10:46:38.271986102Z');
     const diff = earlier.until(later);
     it(`(${later}).until(${earlier}) == (${earlier}).until(${later}).negated()`, () =>
       equal(`${later.until(earlier)}`, `${diff.negated()}`));
@@ -288,8 +287,8 @@ describe('Instant', () => {
       equal(`${later.since(earlier)}`, `${diff}`));
     it(`(${earlier}).add(${diff}) == (${later})`, () => assert(earlier.add(diff).equals(later)));
     it(`(${later}).subtract(${diff}) == (${earlier})`, () => assert(later.subtract(diff).equals(earlier)));
-    const feb20 = Instant.from('2020-02-01T00:00Z');
-    const feb21 = Instant.from('2021-02-01T00:00Z');
+    const feb20 = Temporal.Instant.from('2020-02-01T00:00Z');
+    const feb21 = Temporal.Instant.from('2021-02-01T00:00Z');
     it('can return minutes and hours', () => {
       equal(`${feb20.until(feb21, { largestUnit: 'hours' })}`, 'PT8784H');
       equal(`${feb20.until(feb21, { largestUnit: 'minutes' })}`, 'PT527040M');
@@ -503,8 +502,8 @@ describe('Instant', () => {
       );
     });
   });
-  describe('Instant.round works', () => {
-    const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
+  describe('Temporal.Instant.round works', () => {
+    const inst = Temporal.Instant.from('1976-11-18T14:23:30.123456789Z');
     it('throws without required smallestUnit parameter', () => {
       throws(() => inst.round({}), RangeError);
       throws(() => inst.round({ roundingIncrement: 1, roundingMode: 'ceil' }), RangeError);
@@ -575,7 +574,7 @@ describe('Instant', () => {
       equal(`${inst.round({ smallestUnit: 'nanosecond', roundingIncrement: 86400e9 })}`, expected);
     });
     it('allows increments that divide evenly into solar days', () => {
-      assert(inst.round({ smallestUnit: 'second', roundingIncrement: 864 }) instanceof Instant);
+      assert(inst.round({ smallestUnit: 'second', roundingIncrement: 864 }) instanceof Temporal.Instant);
     });
     it('throws on increments that do not divide evenly into solar days', () => {
       throws(() => inst.round({ smallestUnit: 'hour', roundingIncrement: 7 }), RangeError);
@@ -599,17 +598,17 @@ describe('Instant', () => {
   describe('Min/max range', () => {
     it('constructing from ns', () => {
       const limit = 8_640_000_000_000_000_000_000n;
-      throws(() => new Instant(-limit - 1n), RangeError);
-      throws(() => new Instant(limit + 1n), RangeError);
-      equal(`${new Instant(-limit)}`, '-271821-04-20T00:00:00Z');
-      equal(`${new Instant(limit)}`, '+275760-09-13T00:00:00Z');
+      throws(() => new Temporal.Instant(-limit - 1n), RangeError);
+      throws(() => new Temporal.Instant(limit + 1n), RangeError);
+      equal(`${new Temporal.Instant(-limit)}`, '-271821-04-20T00:00:00Z');
+      equal(`${new Temporal.Instant(limit)}`, '+275760-09-13T00:00:00Z');
     });
     it('constructing from ms', () => {
       const limit = 86400e11;
-      throws(() => Instant.fromEpochMilliseconds(-limit - 1), RangeError);
-      throws(() => Instant.fromEpochMilliseconds(limit + 1), RangeError);
-      equal(`${Instant.fromEpochMilliseconds(-limit)}`, '-271821-04-20T00:00:00Z');
-      equal(`${Instant.fromEpochMilliseconds(limit)}`, '+275760-09-13T00:00:00Z');
+      throws(() => Temporal.Instant.fromEpochMilliseconds(-limit - 1), RangeError);
+      throws(() => Temporal.Instant.fromEpochMilliseconds(limit + 1), RangeError);
+      equal(`${Temporal.Instant.fromEpochMilliseconds(-limit)}`, '-271821-04-20T00:00:00Z');
+      equal(`${Temporal.Instant.fromEpochMilliseconds(limit)}`, '+275760-09-13T00:00:00Z');
     });
     it('converting from DateTime', () => {
       const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');
@@ -619,8 +618,8 @@ describe('Instant', () => {
       throws(() => utc.getInstantFor(max), RangeError);
     });
   });
-  describe('Instant.toZonedDateTimeISO() works', () => {
-    const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
+  describe('Temporal.Instant.toZonedDateTimeISO() works', () => {
+    const inst = Temporal.Instant.from('1976-11-18T14:23:30.123456789Z');
     it('throws without parameter', () => {
       throws(() => inst.toZonedDateTimeISO(), RangeError);
     });
@@ -637,8 +636,8 @@ describe('Instant', () => {
       equal(`${zdt}`, '1976-11-18T09:23:30.123456789-05:00[America/New_York]');
     });
   });
-  describe('Instant.toZonedDateTime() works', () => {
-    const inst = Instant.from('1976-11-18T14:23:30.123456789Z');
+  describe('Temporal.Instant.toZonedDateTime() works', () => {
+    const inst = Temporal.Instant.from('1976-11-18T14:23:30.123456789Z');
     it('throws without parameter', () => {
       throws(() => inst.toZonedDateTime(), TypeError);
     });
