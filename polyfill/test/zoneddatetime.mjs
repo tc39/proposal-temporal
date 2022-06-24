@@ -20,162 +20,6 @@ const { ZonedDateTime } = Temporal;
 describe('ZonedDateTime', () => {
   const tz = new Temporal.TimeZone('America/Los_Angeles');
 
-  describe('Structure', () => {
-    it('ZonedDateTime is a Function', () => {
-      equal(typeof ZonedDateTime, 'function');
-    });
-    it('ZonedDateTime has a prototype', () => {
-      assert(ZonedDateTime.prototype);
-      equal(typeof ZonedDateTime.prototype, 'object');
-    });
-    describe('ZonedDateTime.prototype', () => {
-      it('ZonedDateTime.prototype has calendar', () => {
-        assert('calendar' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has timeZone', () => {
-        assert('timeZone' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has year', () => {
-        assert('year' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has month', () => {
-        assert('month' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has monthCode', () => {
-        assert('monthCode' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has day', () => {
-        assert('day' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has hour', () => {
-        assert('hour' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has minute', () => {
-        assert('minute' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has second', () => {
-        assert('second' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has millisecond', () => {
-        assert('millisecond' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has microsecond', () => {
-        assert('microsecond' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has nanosecond', () => {
-        assert('nanosecond' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has epochSeconds', () => {
-        assert('epochSeconds' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has epochMilliseconds', () => {
-        assert('epochMilliseconds' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has epochMicroseconds', () => {
-        assert('epochMicroseconds' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has epochNanoseconds', () => {
-        assert('epochNanoseconds' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has dayOfWeek', () => {
-        assert('dayOfWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has dayOfYear', () => {
-        assert('dayOfYear' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has weekOfYear', () => {
-        assert('weekOfYear' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has hoursInDay', () => {
-        assert('hoursInDay' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has daysInWeek', () => {
-        assert('daysInWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has daysInMonth', () => {
-        assert('daysInMonth' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has daysInYear', () => {
-        assert('daysInYear' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has monthsInYear', () => {
-        assert('daysInWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has inLeapYear', () => {
-        assert('daysInWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has startOfDay', () => {
-        assert('daysInWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype has offset', () => {
-        assert('daysInWeek' in ZonedDateTime.prototype);
-      });
-      it('ZonedDateTime.prototype.with is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.with, 'function');
-      });
-      it('ZonedDateTime.prototype.withTimeZone is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.withTimeZone, 'function');
-      });
-      it('ZonedDateTime.prototype.withCalendar is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.withCalendar, 'function');
-      });
-      it('ZonedDateTime.prototype.add is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.add, 'function');
-      });
-      it('ZonedDateTime.prototype.subtract is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.subtract, 'function');
-      });
-      it('ZonedDateTime.prototype.until is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.until, 'function');
-      });
-      it('ZonedDateTime.prototype.since is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.since, 'function');
-      });
-      it('ZonedDateTime.prototype.round is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.round, 'function');
-      });
-      it('ZonedDateTime.prototype.equals is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.equals, 'function');
-      });
-      it('ZonedDateTime.prototype.toString is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toString, 'function');
-      });
-      it('ZonedDateTime.prototype.toLocaleString is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toLocaleString, 'function');
-      });
-      it('ZonedDateTime.prototype.valueOf is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.valueOf, 'function');
-      });
-      it('ZonedDateTime.prototype.toInstant is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toInstant, 'function');
-      });
-      it('ZonedDateTime.prototype.toPlainDate is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toPlainDate, 'function');
-      });
-      it('ZonedDateTime.prototype.toPlainTime is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toPlainTime, 'function');
-      });
-      it('ZonedDateTime.prototype.toPlainDateTime is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toPlainDateTime, 'function');
-      });
-      it('ZonedDateTime.prototype.toPlainYearMonth is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toPlainYearMonth, 'function');
-      });
-      it('ZonedDateTime.prototype.toPlainMonthDay is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.toPlainMonthDay, 'function');
-      });
-      it('ZonedDateTime.prototype.getISOFields is a Function', () => {
-        equal(typeof ZonedDateTime.prototype.getISOFields, 'function');
-      });
-    });
-    it('ZonedDateTime.from is a Function', () => {
-      equal(typeof ZonedDateTime.from, 'function');
-    });
-    it('ZonedDateTime.compare is a Function', () => {
-      equal(typeof ZonedDateTime.compare, 'function');
-    });
-  });
-
   describe('Construction and properties', () => {
     const epochMillis = Date.UTC(1976, 10, 18, 15, 23, 30, 123);
     const epochNanos = BigInt(epochMillis) * BigInt(1e6) + BigInt(456789);
@@ -422,7 +266,7 @@ describe('ZonedDateTime', () => {
         equal(zdt.toString(), '2020-11-01T03:00:00-08:00[America/Los_Angeles]');
       });
       it('throw when bad offset', () => {
-        ['', 'PREFER', 'balance', 3, null].forEach((offset) => {
+        ['', 'PREFER', 'balance'].forEach((offset) => {
           throws(() => ZonedDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset }), RangeError);
         });
       });
@@ -499,7 +343,7 @@ describe('ZonedDateTime', () => {
         throws(() => ZonedDateTime.from(str, { offset, disambiguation: 'reject' }), RangeError);
       });
       it('throw when bad disambiguation', () => {
-        ['', 'EARLIER', 'balance', 3, null].forEach((disambiguation) => {
+        ['', 'EARLIER', 'balance'].forEach((disambiguation) => {
           throws(() => ZonedDateTime.from('2020-11-01T04:00[America/Los_Angeles]', { disambiguation }), RangeError);
         });
       });
@@ -838,11 +682,6 @@ describe('ZonedDateTime', () => {
       it('constrain is the default', () => {
         equal(`${zdt.with({ month: 29 })}`, `${zdt.with({ month: 29 }, { overflow: 'constrain' })}`);
       });
-      it('invalid overflow', () => {
-        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-          throws(() => zdt.with({ day: 5 }, { overflow }), RangeError)
-        );
-      });
     });
     const dstStartDay = ZonedDateTime.from('2019-03-10T12:00:01-02:30[America/St_Johns]');
     const dstEndDay = ZonedDateTime.from('2019-11-03T12:00:01-03:30[America/St_Johns]');
@@ -901,7 +740,7 @@ describe('ZonedDateTime', () => {
         );
       });
       it('invalid disambiguation', () => {
-        ['', 'EARLIER', 'balance', 3, null].forEach((disambiguation) =>
+        ['', 'EARLIER', 'balance'].forEach((disambiguation) =>
           throws(() => zdt.with({ day: 5 }, { disambiguation }), RangeError)
         );
       });
@@ -973,9 +812,7 @@ describe('ZonedDateTime', () => {
         equal(`${doubleTime.with({ minute: 31 })}`, `${doubleTime.with({ minute: 31 }, { offset: 'prefer' })}`);
       });
       it('invalid offset', () => {
-        ['', 'PREFER', 'balance', 3, null].forEach((offset) =>
-          throws(() => zdt.with({ day: 5 }, { offset }), RangeError)
-        );
+        ['', 'PREFER', 'balance'].forEach((offset) => throws(() => zdt.with({ day: 5 }, { offset }), RangeError));
       });
     });
     it('options may be a function object', () => {
@@ -1202,11 +1039,6 @@ describe('ZonedDateTime', () => {
     it('throw when ambiguous result with reject', () => {
       throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => zdt.add({ months: 1 }, { overflow }), RangeError)
-      );
-    });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
         throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
@@ -1246,11 +1078,6 @@ describe('ZonedDateTime', () => {
     });
     it('throw when ambiguous result with reject', () => {
       throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
-    });
-    it('invalid overflow', () => {
-      ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-        throws(() => zdt.subtract({ months: 1 }, { overflow }), RangeError)
-      );
     });
     it('mixed positive and negative values always throw', () => {
       ['constrain', 'reject'].forEach((overflow) =>
@@ -1354,9 +1181,6 @@ describe('ZonedDateTime', () => {
       equal(`${earlier.until(later, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
       equal(`${earlier.until(later, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
       equal(`${earlier.until(later, { smallestUnit: 'days', roundingMode: 'halfExpand' })}`, 'P973D');
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => earlier.until(later, { roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['years', 'P3Y'],
@@ -1669,9 +1493,6 @@ describe('ZonedDateTime', () => {
       equal(`${later.since(earlier, { smallestUnit: 'months', roundingMode: 'halfExpand' })}`, 'P32M');
       equal(`${later.since(earlier, { smallestUnit: 'weeks', roundingMode: 'halfExpand' })}`, 'P139W');
     });
-    it('throws on invalid roundingMode', () => {
-      throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
-    });
     const incrementOneNearest = [
       ['years', 'P3Y'],
       ['months', 'P32M'],
@@ -1912,9 +1733,6 @@ describe('ZonedDateTime', () => {
       ['era', 'year', 'month', 'week', 'years', 'months', 'weeks', 'nonsense'].forEach((smallestUnit) => {
         throws(() => zdt.round(smallestUnit), RangeError);
       });
-    });
-    it('throws on invalid roundingMode', () => {
-      throws(() => zdt.round({ smallestUnit: 'second', roundingMode: 'cile' }), RangeError);
     });
     const incrementOneNearest = [
       ['day', '1976-11-19T00:00:00+01:00[Europe/Vienna]'],
