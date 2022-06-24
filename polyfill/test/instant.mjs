@@ -71,20 +71,20 @@ describe('Instant', () => {
       equal(`${feb21.since(feb20, { largestUnit: 'minutes' })}`, 'PT527040M');
     });
     it('can return subseconds', () => {
-      const later = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+      const latersub = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
-      const msDiff = later.since(feb20, { largestUnit: 'milliseconds' });
+      const msDiff = latersub.since(feb20, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
       equal(msDiff.milliseconds, 86400250);
       equal(msDiff.microseconds, 250);
       equal(msDiff.nanoseconds, 250);
 
-      const µsDiff = later.since(feb20, { largestUnit: 'microseconds' });
+      const µsDiff = latersub.since(feb20, { largestUnit: 'microseconds' });
       equal(µsDiff.milliseconds, 0);
       equal(µsDiff.microseconds, 86400250250);
       equal(µsDiff.nanoseconds, 250);
 
-      const nsDiff = later.since(feb20, { largestUnit: 'nanoseconds' });
+      const nsDiff = latersub.since(feb20, { largestUnit: 'nanoseconds' });
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
@@ -296,20 +296,20 @@ describe('Instant', () => {
       equal(`${feb20.until(feb21, { largestUnit: 'minutes' })}`, 'PT527040M');
     });
     it('can return subseconds', () => {
-      const later = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+      const latersub = feb20.add({ hours: 24, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
-      const msDiff = feb20.until(later, { largestUnit: 'milliseconds' });
+      const msDiff = feb20.until(latersub, { largestUnit: 'milliseconds' });
       equal(msDiff.seconds, 0);
       equal(msDiff.milliseconds, 86400250);
       equal(msDiff.microseconds, 250);
       equal(msDiff.nanoseconds, 250);
 
-      const µsDiff = feb20.until(later, { largestUnit: 'microseconds' });
+      const µsDiff = feb20.until(latersub, { largestUnit: 'microseconds' });
       equal(µsDiff.milliseconds, 0);
       equal(µsDiff.microseconds, 86400250250);
       equal(µsDiff.nanoseconds, 250);
 
-      const nsDiff = feb20.until(later, { largestUnit: 'nanoseconds' });
+      const nsDiff = feb20.until(latersub, { largestUnit: 'nanoseconds' });
       equal(nsDiff.microseconds, 0);
       equal(nsDiff.nanoseconds, 86400250250250);
     });
