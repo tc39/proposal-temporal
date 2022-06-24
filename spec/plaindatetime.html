@@ -1100,7 +1100,7 @@
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] - _timeSign_).
           1. Set _timeDifference_ to ! BalanceDuration(-_timeSign_, _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]], _largestUnit_).
         1. Let _date1_ be ? CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendar_).
-        1. Let _date2_ be ? CreateTemporalDate(_y2_, _mon2_, _d2_, _calendar_).
+        1. Let _date2_ be ! CreateTemporalDate(_y2_, _mon2_, _d2_, _calendar_).
         1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
         1. Let _untilOptions_ be ? MergeLargestUnitOption(_options_, _dateLargestUnit_).
         1. Let _dateDifference_ be ? CalendarDateUntil(_calendar_, _date1_, _date2_, _untilOptions_).
