@@ -3166,7 +3166,7 @@ export const ES = ObjectAssign({}, ES2020, {
       nanosecond: nanoseconds
     } = ES.BalanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds));
 
-    deltaDays *= sign;
+    if (deltaDays != 0) throw new Error('assertion failure in DifferenceTime: _bt_.[[Days]] should be 0');
     hours *= sign;
     minutes *= sign;
     seconds *= sign;
@@ -3174,7 +3174,7 @@ export const ES = ObjectAssign({}, ES2020, {
     microseconds *= sign;
     nanoseconds *= sign;
 
-    return { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+    return { hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   DifferenceInstant(ns1, ns2, increment, unit, roundingMode) {
     const diff = ns2.minus(ns1);
@@ -3213,7 +3213,7 @@ export const ES = ObjectAssign({}, ES2020, {
     largestUnit,
     options
   ) => {
-    let { deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       h1,
       min1,
       s1,
@@ -3228,19 +3228,7 @@ export const ES = ObjectAssign({}, ES2020, {
       ns2
     );
 
-    const timeSign = ES.DurationSign(
-      0,
-      0,
-      0,
-      deltaDays,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 + deltaDays));
+    const timeSign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     const dateSign = ES.CompareISODate(y2, mon2, d2, y1, mon1, d1);
     if (dateSign === -timeSign) {
       ({ year: y1, month: mon1, day: d1 } = ES.BalanceISODate(y1, mon1, d1 - timeSign));
