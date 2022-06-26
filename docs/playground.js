@@ -4178,7 +4178,7 @@
     },
     MergeLargestUnitOption: function MergeLargestUnitOption(options, largestUnit) {
       if (options === undefined) options = ObjectCreate$7(null);
-      return _objectSpread2(_objectSpread2({}, options), {}, {
+      return ObjectAssign$3(ObjectCreate$7(null), options, {
         largestUnit: largestUnit
       });
     },
@@ -4189,7 +4189,7 @@
           _ref7$emptySourceErro = _ref7.emptySourceErrorMessage,
           emptySourceErrorMessage = _ref7$emptySourceErro === void 0 ? 'no supported properties found' : _ref7$emptySourceErro;
 
-      var result = {};
+      var result = ObjectCreate$7(null);
       var any = false;
 
       var _iterator6 = _createForOfIteratorHelper(fields),
@@ -7175,13 +7175,11 @@
       var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
+      otherFields.day = 1;
       var thisFields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
-      var otherDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, otherFields), {}, {
-        day: 1
-      }));
-      var thisDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, thisFields), {}, {
-        day: 1
-      }));
+      thisFields.day = 1;
+      var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
+      var thisDate = ES.CalendarDateFromFields(calendar, thisFields);
       var untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
 
       var _ES$CalendarDateUntil3 = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions),
@@ -7686,13 +7684,9 @@
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var fields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-      var day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
-      var startDate = ES.CalendarDateFromFields(calendar, _objectSpread2(_objectSpread2({}, fields), {}, {
-        day: day
-      }));
-
-      var optionsCopy = _objectSpread2({}, options);
-
+      fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
+      var startDate = ES.CalendarDateFromFields(calendar, fields);
+      var optionsCopy = ObjectAssign$3(ObjectCreate$7(null), options);
       var addedDate = ES.CalendarDateAdd(calendar, startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
         days: days
       }), options);
