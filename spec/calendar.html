@@ -168,6 +168,7 @@
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
+      <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarmonthcode" aoid="CalendarMonthCode">
@@ -193,6 +194,7 @@
         1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
+      <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardayofweek" aoid="CalendarDayOfWeek">
