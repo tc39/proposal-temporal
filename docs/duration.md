@@ -445,13 +445,20 @@ The `roundingMode` option controls how the rounding is performed.
 
 - `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round away from zero like `ceil` for positive durations and like `floor` for negative durations.
+  This is the default, and matches the behaviour of `Math.round()`.
 - `ceil`: Always round towards positive infinity.
   For negative durations this option will decrease the absolute value of the duration which may be unexpected.
-  To round away from zero, use `ceil` for positive durations and `floor` for negative durations.
+  To round away from zero, use `expand`.
+- `expand`:  Always round away from from zero like `ceil` for positive durations and like `floor` for negative durations.
 - `trunc`: Always round towards zero, chopping off the part after the decimal point.
 - `floor`: Always round down, towards negative infinity.
   This mode acts the same as `trunc` for positive durations but for negative durations it will increase the absolute value of the result which may be unexpected.
   For this reason, `trunc` is recommended for most "round down" use cases.
+- `halfCeil`: Round to the nearest of the allowed values like `halfExpand`, but when there is a tie, round towards positive infinity like `ceil`.
+- `halfFloor`: Round to the nearest of the allowed values like `halfExpand`, but when there is a tie, round towards negative infinity like `floor`.
+- `halfTrunc`: Round to the nearest of the allowed values like `halfExpand`, but when there is a tie, round towards zero like `trunc`.
+- `halfEven`: Round to the nearest of the allowed values like `halfExpand`, but when there is a tie, round towards the value that is an even multiple of the `roundingIncrement`.
+  For example, with a `roundingIncrement` of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).
 
 The `relativeTo` option gives the starting point used when converting between or rounding to years, months, weeks, or days.
 It may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
