@@ -789,11 +789,15 @@ If `smallestUnit` is `'day'`, then 1 is the only allowed value for `roundingIncr
 
 The `roundingMode` option controls how the rounding is performed.
 
-- `ceil`: Always round up, towards the end of time.
+- `ceil`, `expand`: Always round up, towards the end of time.
 - `floor`, `trunc`: Always round down, towards the beginning of time.
-  (These two modes behave the same, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.)
-- `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+- `halfCeil`, `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round up, like `ceil`.
+- `halfFloor`, `halfTrunc`: Round to the nearest of the allowed values, like `halfExpand`, but when there is a tie, round down, like `floor`.
+- `halfEven`: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of `roundingIncrement`.
+  For example, with a `roundingIncrement` of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).
+
+Several pairs of modes behave the same as each other, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.
 
 As expected for a method named "round", the default rounding mode is `'halfExpand'` to match the behavior of `Math.round`.
 Note that this is different than the `'trunc'` default used by `until` and `since` options because rounding up would be an unexpected default for those operations.
