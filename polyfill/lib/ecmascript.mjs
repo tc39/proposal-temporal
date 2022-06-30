@@ -687,7 +687,12 @@ export const ES = ObjectAssign({}, ES2020, {
     return ES.GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
   },
   ToTemporalRoundingMode: (options, fallback) => {
-    return ES.GetOption(options, 'roundingMode', ['ceil', 'floor', 'trunc', 'halfExpand'], fallback);
+    return ES.GetOption(
+      options,
+      'roundingMode',
+      ['ceil', 'floor', 'expand', 'trunc', 'halfCeil', 'halfFloor', 'halfExpand', 'halfTrunc', 'halfEven'],
+      fallback
+    );
   },
   NegateTemporalRoundingMode: (roundingMode) => {
     switch (roundingMode) {
@@ -695,6 +700,10 @@ export const ES = ObjectAssign({}, ES2020, {
         return 'floor';
       case 'floor':
         return 'ceil';
+      case 'halfCeil':
+        return 'halfFloor';
+      case 'halfFloor':
+        return 'halfCeil';
       default:
         return roundingMode;
     }
@@ -4196,6 +4205,9 @@ export const ES = ObjectAssign({}, ES2020, {
     let { quotient, remainder } = quantity.divmod(increment);
     if (remainder.equals(bigInt.zero)) return quantity;
     const sign = remainder.lt(bigInt.zero) ? -1 : 1;
+    const tiebreaker = remainder.multiply(2).abs();
+    const tie = tiebreaker.equals(increment);
+    const expandIsNearer = tiebreaker.gt(increment);
     switch (mode) {
       case 'ceil':
         if (sign > 0) quotient = quotient.add(sign);
@@ -4203,13 +4215,30 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'floor':
         if (sign < 0) quotient = quotient.add(sign);
         break;
+      case 'expand':
+        // always expand if there is a remainder
+        quotient = quotient.add(sign);
+        break;
       case 'trunc':
         // no change needed, because divmod is a truncation
         break;
+      case 'halfCeil':
+        if (expandIsNearer || (tie && sign > 0)) quotient = quotient.add(sign);
+        break;
+      case 'halfFloor':
+        if (expandIsNearer || (tie && sign < 0)) quotient = quotient.add(sign);
+        break;
       case 'halfExpand':
         // "half up away from zero"
-        if (remainder.multiply(2).abs() >= increment) quotient = quotient.add(sign);
+        if (expandIsNearer || tie) quotient = quotient.add(sign);
         break;
+      case 'halfTrunc':
+        if (expandIsNearer) quotient = quotient.add(sign);
+        break;
+      case 'halfEven': {
+        if (expandIsNearer || (tie && quotient.isOdd())) quotient = quotient.add(sign);
+        break;
+      }
     }
     return quotient.multiply(increment);
   },
