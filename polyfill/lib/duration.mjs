@@ -444,8 +444,8 @@ export class Duration {
     const ms2 = GetSlot(two, MILLISECONDS);
     const µs2 = GetSlot(two, MICROSECONDS);
     let ns2 = GetSlot(two, NANOSECONDS);
-    const shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
-    const shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
+    const shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1);
+    const shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2);
     if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
       ({ days: d1 } = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'day', relativeTo));
       ({ days: d2 } = ES.UnbalanceDurationRelative(y2, mon2, w2, d2, 'day', relativeTo));
