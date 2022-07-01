@@ -3418,7 +3418,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const date1 = ES.CreateTemporalDate(y1, mon1, d1, calendar);
     const date2 = ES.CreateTemporalDate(y2, mon2, d2, calendar);
     const dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
-    const untilOptions = {};
+    const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
     untilOptions.largestUnit = dateLargestUnit;
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, date1, date2, untilOptions);
@@ -3562,7 +3562,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
-    const untilOptions = {};
+    const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
     untilOptions.largestUnit = largestUnit;
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions);
@@ -3797,7 +3797,7 @@ export const ES = ObjectAssign({}, ES2022, {
     thisFields.day = 1;
     const thisDate = ES.CalendarDateFromFields(calendar, thisFields);
 
-    const untilOptions = {};
+    const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
     untilOptions.largestUnit = largestUnit;
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
@@ -3871,7 +3871,7 @@ export const ES = ObjectAssign({}, ES2022, {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
-      const untilOptions = {};
+      const untilOptions = ObjectCreate(null);
       ES.CopyDataProperties(untilOptions, options, []);
       untilOptions.largestUnit = largestUnit;
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =

@@ -608,7 +608,7 @@
         1. Let _thisFields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_).
-        1. Let _untilOptions_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ? CopyDataProperties(_untilOptions_, _settings_.[[Options]], « »).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _result_ be ? CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _untilOptions_).
