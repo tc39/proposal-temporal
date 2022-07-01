@@ -4343,10 +4343,14 @@
         if (ES.IsTemporalDate(item)) return item;
 
         if (ES.IsTemporalZonedDateTime(item)) {
+          ES.ToTemporalOverflow(options); // validate and ignore
+
           item = ES.BuiltinTimeZoneGetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
         }
 
         if (ES.IsTemporalDateTime(item)) {
+          ES.ToTemporalOverflow(options); // validate and ignore
+
           return ES.CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
         }
 
@@ -4412,10 +4416,14 @@
         if (ES.IsTemporalDateTime(item)) return item;
 
         if (ES.IsTemporalZonedDateTime(item)) {
+          ES.ToTemporalOverflow(options); // validate and ignore
+
           return ES.BuiltinTimeZoneGetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
         }
 
         if (ES.IsTemporalDate(item)) {
+          ES.ToTemporalOverflow(options); // validate and ignore
+
           return ES.CreateTemporalDateTime(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), 0, 0, 0, 0, 0, 0, GetSlot(item, CALENDAR));
         }
 
