@@ -31,6 +31,7 @@ const ArraySort = Array.prototype.sort;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
+const ObjectCreate = Object.create;
 const ObjectEntries = Object.entries;
 
 const impl = {};
@@ -268,7 +269,7 @@ impl['iso8601'] = {
     additionalFields = ES.ToObject(additionalFields);
     const merged = {};
     ES.CopyDataProperties(merged, fields, [], [undefined]);
-    const additionalFieldsCopy = {};
+    const additionalFieldsCopy = ObjectCreate(null);
     ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
     if ('month' in additionalFieldsCopy || 'monthCode' in additionalFieldsCopy) {
       delete merged.month;

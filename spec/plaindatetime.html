@@ -1076,7 +1076,7 @@
         1. Let _date1_ be ! CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendar_).
         1. Let _date2_ be ! CreateTemporalDate(_y2_, _mon2_, _d2_, _calendar_).
         1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
-        1. Let _untilOptions_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ? CopyDataProperties(_untilOptions_, _options_, « »).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _dateLargestUnit_).
         1. Let _dateDifference_ be ? CalendarDateUntil(_calendar_, _date1_, _date2_, _untilOptions_).

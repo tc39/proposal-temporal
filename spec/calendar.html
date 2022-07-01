@@ -724,7 +724,7 @@
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Perform ? CopyDataProperties(_merged_, _fields_, « », « *undefined* »).
-        1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+        1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(*null*).
         1. Perform ? CopyDataProperties(_additionalFieldsCopy_, _additionalFields_, « », « *undefined* »).
         1. NOTE: Every property of _additionalFieldsCopy_ is a data property with non-*undefined* value, but some property keys may be Symbols.
         1. If ! _additionalFieldsCopy_.[[OwnPropertyKeys]]() contains *"month"* or *"monthCode"*, then
