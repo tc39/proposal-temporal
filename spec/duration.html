@@ -1381,22 +1381,24 @@
         1. Let _calendar_ be _relativeTo_.[[Calendar]].
         1. If _largestUnit_ is *"year"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
-          1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+          1. Let _newRelativeTo_ be _moveResult_.[[RelativeTo]].
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) &ge; abs(_oneYearDays_),
             1. Set _days_ to _days_ - _oneYearDays_.
             1. Set _years_ to _years_ + _sign_.
+            1. Set _relativeTo_ to _newRelativeTo_.
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneYear_).
-            1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+            1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneYearDays_ to _moveResult_.[[Days]].
           1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
-          1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+          1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) &ge; abs(_oneMonthDays_),
             1. Set _days_ to _days_ - _oneMonthDays_.
             1. Set _months_ to _months_ + _sign_.
+            1. Set _relativeTo_ to _newRelativeTo_.
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
-            1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+            1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
@@ -1416,24 +1418,26 @@
             1. Set _oneYearMonths_ to _untilResult_.[[Months]].
         1. Else if _largestUnit_ is *"month"*, then
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
-          1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+          1. Let _newRelativeTo_ be _moveResult_.[[RelativeTo]].
           1. Let _oneMonthDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) &ge; abs(_oneMonthDays_),
             1. Set _days_ to _days_ - _oneMonthDays_.
             1. Set _months_ to _months_ + _sign_.
+            1. Set _relativeTo_ to _newRelativeTo_.
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneMonth_).
-            1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+            1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
         1. Else,
           1. Assert: _largestUnit_ is *"week"*.
           1. Let _moveResult_ be ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
-          1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+          1. Let _newRelativeTo_ be _moveResult_.[[RelativeTo]].
           1. Let _oneWeekDays_ be _moveResult_.[[Days]].
           1. Repeat, while abs(_days_) &ge; abs(_oneWeekDays_),
             1. Set _days_ to _days_ - _oneWeekDays_.
             1. Set _weeks_ to _weeks_ + _sign_.
+            1. Set _relativeTo_ to _newRelativeTo_.
             1. Set _moveResult_ to ? MoveRelativeDate(_calendar_, _relativeTo_, _oneWeek_).
-            1. Set _relativeTo_ to _moveResult_.[[RelativeTo]].
+            1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneWeekDays_ to _moveResult_.[[Days]].
         1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
       </emu-alg>
