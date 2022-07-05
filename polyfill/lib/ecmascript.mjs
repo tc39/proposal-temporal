@@ -605,7 +605,8 @@ export const ES = ObjectAssign({}, ES2022, {
       nanoseconds: 0
     };
     let partial = ES.ToTemporalPartialDurationRecord(item);
-    for (const property of DURATION_FIELDS) {
+    for (let index = 0; index < DURATION_FIELDS.length; index++) {
+      const property = DURATION_FIELDS[index];
       const value = partial[property];
       if (value !== undefined) {
         result[property] = value;
@@ -632,7 +633,8 @@ export const ES = ObjectAssign({}, ES2022, {
       nanoseconds: undefined
     };
     let any = false;
-    for (const property of DURATION_FIELDS) {
+    for (let index = 0; index < DURATION_FIELDS.length; index++) {
+      const property = DURATION_FIELDS[index];
       const value = temporalDurationLike[property];
       if (value !== undefined) {
         any = true;
@@ -776,20 +778,25 @@ export const ES = ObjectAssign({}, ES2022, {
   REQUIRED: Symbol('~required~'),
   GetTemporalUnit: (options, key, unitGroup, requiredOrDefault, extraValues = []) => {
     const allowedSingular = [];
-    for (const [, singular, category] of SINGULAR_PLURAL_UNITS) {
+    for (let index = 0; index < SINGULAR_PLURAL_UNITS.length; index++) {
+      const unitInfo = SINGULAR_PLURAL_UNITS[index];
+      const singular = unitInfo[1];
+      const category = unitInfo[2];
       if (unitGroup === 'datetime' || unitGroup === category) {
         allowedSingular.push(singular);
       }
     }
-    allowedSingular.push(...extraValues);
+    ES.Call(ArrayPrototypePush, allowedSingular, extraValues);
     let defaultVal = requiredOrDefault;
     if (defaultVal === ES.REQUIRED) {
       defaultVal = undefined;
     } else if (defaultVal !== undefined) {
       allowedSingular.push(defaultVal);
     }
-    const allowedValues = [...allowedSingular];
-    for (const singular of allowedSingular) {
+    const allowedValues = [];
+    ES.Call(ArrayPrototypePush, allowedValues, allowedSingular);
+    for (let index = 0; index < allowedSingular.length; index++) {
+      const singular = allowedSingular[index];
       const plural = PLURAL_FOR.get(singular);
       if (plural !== undefined) allowedValues.push(plural);
     }
@@ -881,7 +888,7 @@ export const ES = ObjectAssign({}, ES2022, {
     microseconds,
     nanoseconds
   ) => {
-    for (const [prop, v] of ObjectEntries({
+    const entries = ObjectEntries({
       years,
       months,
       weeks,
@@ -892,7 +899,11 @@ export const ES = ObjectAssign({}, ES2022, {
       milliseconds,
       microseconds,
       nanoseconds
-    })) {
+    });
+    for (let index = 0; index < entries.length; index++) {
+      const entry = entries[index];
+      const prop = entry[0];
+      const v = entry[1];
       if (v !== 0) return SINGULAR_FOR.get(prop);
     }
     return 'nanosecond';
@@ -913,7 +924,8 @@ export const ES = ObjectAssign({}, ES2022, {
   ) => {
     const result = ObjectCreate(null);
     let any = false;
-    for (const property of fields) {
+    for (let index = 0; index < fields.length; index++) {
+      const property = fields[index];
       let value = bag[property];
       if (value !== undefined) {
         any = true;
@@ -942,7 +954,8 @@ export const ES = ObjectAssign({}, ES2022, {
     const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
     const partial = ES.PrepareTemporalFields(bag, fields, 'partial', { emptySourceErrorMessage: 'invalid time-like' });
     const result = {};
-    for (const field of fields) {
+    for (let index = 0; index < fields.length; index++) {
+      const field = fields[index];
       const valueDesc = ObjectGetOwnPropertyDescriptor(partial, field);
       if (valueDesc !== undefined) {
         result[field] = valueDesc.value;
@@ -1251,7 +1264,8 @@ export const ES = ObjectAssign({}, ES2022, {
 
     // "prefer" or "reject"
     const possibleInstants = ES.GetPossibleInstantsFor(timeZone, dt);
-    for (const candidate of possibleInstants) {
+    for (let index = 0; index < possibleInstants.length; index++) {
+      const candidate = possibleInstants[index];
       const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
       const roundedCandidateOffset = ES.RoundNumberToIncrement(
         bigInt(candidateOffset),
@@ -2277,7 +2291,14 @@ export const ES = ObjectAssign({}, ES2022, {
     const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone);
     // Using `format` instead of `formatToParts` for compatibility with older clients
     const datetime = formatter.format(new Date(epochMilliseconds));
-    const [month, day, year, era, hour, minute, second] = datetime.split(/[^\w]+/);
+    const splits = datetime.split(/[^\w]+/);
+    const month = splits[0];
+    const day = splits[1];
+    const year = splits[2];
+    const era = splits[3];
+    const hour = splits[4];
+    const minute = splits[5];
+    const second = splits[6];
     return {
       year: era.toUpperCase().startsWith('B') ? -year + 1 : +year,
       month: +month,
@@ -2379,7 +2400,9 @@ export const ES = ObjectAssign({}, ES2022, {
     return week;
   },
   DurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
-    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+    const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
+    for (let index = 0; index < fields.length; index++) {
+      const prop = fields[index];
       if (prop !== 0) return prop < 0 ? -1 : 1;
     }
     return 0;
@@ -2686,13 +2709,19 @@ export const ES = ObjectAssign({}, ES2022, {
     microseconds = microseconds.toJSNumber() * sign;
     nanoseconds = nanoseconds.toJSNumber() * sign;
 
-    for (const prop of [days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]) {
-      if (!NumberIsFinite(prop)) {
-        if (sign === 1) {
-          return 'positive overflow';
-        } else if (sign === -1) {
-          return 'negative overflow';
-        }
+    if (
+      !NumberIsFinite(days) ||
+      !NumberIsFinite(hours) ||
+      !NumberIsFinite(minutes) ||
+      !NumberIsFinite(seconds) ||
+      !NumberIsFinite(milliseconds) ||
+      !NumberIsFinite(microseconds) ||
+      !NumberIsFinite(nanoseconds)
+    ) {
+      if (sign === 1) {
+        return 'positive overflow';
+      } else if (sign === -1) {
+        return 'negative overflow';
       }
     }
     return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
@@ -3051,7 +3080,9 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   RejectDuration: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
-    for (const prop of [y, mon, w, d, h, min, s, ms, µs, ns]) {
+    const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
+    for (let index = 0; index < fields.length; index++) {
+      const prop = fields[index];
       if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
       const propSign = MathSign(prop);
       if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
@@ -3620,7 +3651,10 @@ export const ES = ObjectAssign({}, ES2022, {
       );
     }
     options = ES.GetOptionsObject(options);
-    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, [p, s, c]) => {
+    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
+      const p = unitInfo[0];
+      const s = unitInfo[1];
+      const c = unitInfo[2];
       if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
       return allowed;
     }, []);
@@ -4765,13 +4799,9 @@ export const ES = ObjectAssign({}, ES2022, {
   },
 
   CompareISODate: (y1, m1, d1, y2, m2, d2) => {
-    for (const [x, y] of [
-      [y1, y2],
-      [m1, m2],
-      [d1, d2]
-    ]) {
-      if (x !== y) return ES.ComparisonResult(x - y);
-    }
+    if (y1 !== y2) return ES.ComparisonResult(y1 - y2);
+    if (m1 !== m2) return ES.ComparisonResult(m1 - m2);
+    if (d1 !== d2) return ES.ComparisonResult(d1 - d2);
     return 0;
   },
 

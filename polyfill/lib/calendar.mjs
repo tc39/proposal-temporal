@@ -266,12 +266,15 @@ impl['iso8601'] = {
   },
   mergeFields(fields, additionalFields) {
     const merged = {};
-    for (const nextKey of ObjectKeys(fields)) {
+    const keys = ObjectKeys(fields);
+    for (let index = 0; index < keys.length; index++) {
+      const nextKey = keys[index];
       if (nextKey === 'month' || nextKey === 'monthCode') continue;
       merged[nextKey] = fields[nextKey];
     }
     const newKeys = ObjectKeys(additionalFields);
-    for (const nextKey of newKeys) {
+    for (let index = 0; index < newKeys.length; index++) {
+      const nextKey = newKeys[index];
       merged[nextKey] = additionalFields[nextKey];
     }
     if (!ES.Call(ArrayIncludes, newKeys, ['month']) && !ES.Call(ArrayIncludes, newKeys, ['monthCode'])) {
