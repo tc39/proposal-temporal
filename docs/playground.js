@@ -7686,10 +7686,10 @@
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
       fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
       var startDate = ES.CalendarDateFromFields(calendar, fields);
+      var Duration = GetIntrinsic('%Temporal.Duration%');
+      var durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
       var optionsCopy = ObjectAssign$3(ObjectCreate$7(null), options);
-      var addedDate = ES.CalendarDateAdd(calendar, startDate, _objectSpread2(_objectSpread2({}, duration), {}, {
-        days: days
-      }), options);
+      var addedDate = ES.CalendarDateAdd(calendar, startDate, durationToAdd, options);
       var addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
       return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
     },
