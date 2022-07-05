@@ -174,9 +174,9 @@ export class PlainDateTime {
     if (!props) {
       throw new TypeError('invalid date-time-like');
     }
-    let fields = ES.ToTemporalDateTimeFields(this, fieldNames);
+    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     fields = ES.CalendarMergeFields(calendar, fields, props);
-    fields = ES.ToTemporalDateTimeFields(fields, fieldNames);
+    fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
 
@@ -401,14 +401,14 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+    const fields = ES.PrepareTemporalFields(this, fieldNames, []);
     return ES.CalendarYearMonthFromFields(calendar, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
-    const fields = ES.ToTemporalMonthDayFields(this, fieldNames);
+    const fields = ES.PrepareTemporalFields(this, fieldNames, []);
     return ES.CalendarMonthDayFromFields(calendar, fields);
   }
   toPlainTime() {

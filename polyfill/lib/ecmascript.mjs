@@ -156,6 +156,15 @@ const BUILTIN_CASTS = new Map([
   ['offset', ToString]
 ]);
 
+const BUILTIN_DEFAULTS = new Map([
+  ['hour', 0],
+  ['minute', 0],
+  ['second', 0],
+  ['millisecond', 0],
+  ['microsecond', 0],
+  ['nanosecond', 0]
+]);
+
 // each item is [plural, singular, category]
 const SINGULAR_PLURAL_UNITS = [
   ['years', 'year', 'date'],
@@ -831,7 +840,7 @@ export const ES = ObjectAssign({}, ES2020, {
         'second',
         'year'
       ]);
-      const fields = ES.ToTemporalDateTimeFields(relativeTo, fieldNames);
+      const fields = ES.PrepareTemporalFields(relativeTo, fieldNames, []);
       const dateOptions = ObjectCreate(null);
       dateOptions.overflow = 'constrain';
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
@@ -917,15 +926,12 @@ export const ES = ObjectAssign({}, ES2020, {
   PrepareTemporalFields: (
     bag,
     fields,
-    completeness = 'complete',
+    requiredFields,
     { emptySourceErrorMessage = 'no supported properties found' } = {}
   ) => {
     const result = ObjectCreate(null);
     let any = false;
-    for (const fieldRecord of fields) {
-      // Unlike the spec, this interface supports field defaults via [field, default] pairs.
-      // But we still need to also support simple strings.
-      const [property, defaultValue] = ES.Type(fieldRecord) === 'Object' ? fieldRecord : [fieldRecord];
+    for (const property of fields) {
       let value = bag[property];
       if (value !== undefined) {
         any = true;
@@ -933,15 +939,15 @@ export const ES = ObjectAssign({}, ES2020, {
           value = BUILTIN_CASTS.get(property)(value);
         }
         result[property] = value;
-      } else if (completeness !== 'partial') {
-        if (fieldRecord.length === 1) {
+      } else if (requiredFields !== 'partial') {
+        if (ES.Call(ArrayIncludes, requiredFields, [property])) {
           throw new TypeError(`required property '${property}' missing or undefined`);
         }
-        value = defaultValue;
+        value = BUILTIN_DEFAULTS.get(property);
         result[property] = value;
       }
     }
-    if (completeness === 'partial' && !any) {
+    if (requiredFields === 'partial' && !any) {
       throw new TypeError(emptySourceErrorMessage);
     }
     if ((result['era'] === undefined) !== (result['eraYear'] === undefined)) {
@@ -950,57 +956,6 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   // field access in the following operations is intentionally alphabetical
-  ToTemporalDateFields: (bag, fieldNames) => {
-    const entries = [
-      ['day', undefined],
-      ['month', undefined],
-      ['monthCode', undefined],
-      ['year', undefined]
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.PrepareTemporalFields(bag, entries);
-  },
-  ToTemporalDateTimeFields: (bag, fieldNames) => {
-    const entries = [
-      ['day', undefined],
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['month', undefined],
-      ['monthCode', undefined],
-      ['nanosecond', 0],
-      ['second', 0],
-      ['year', undefined]
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.PrepareTemporalFields(bag, entries);
-  },
-  ToTemporalMonthDayFields: (bag, fieldNames) => {
-    const entries = [
-      ['day', undefined],
-      ['month', undefined],
-      ['monthCode', undefined],
-      ['year', undefined]
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.PrepareTemporalFields(bag, entries);
-  },
   ToTemporalTimeRecord: (bag, completeness = 'complete') => {
     const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
     const partial = ES.PrepareTemporalFields(bag, fields, 'partial', { emptySourceErrorMessage: 'invalid time-like' });
@@ -1014,43 +969,6 @@ export const ES = ObjectAssign({}, ES2020, {
       }
     }
     return result;
-  },
-  ToTemporalYearMonthFields: (bag, fieldNames) => {
-    const entries = [
-      ['month', undefined],
-      ['monthCode', undefined],
-      ['year', undefined]
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.PrepareTemporalFields(bag, entries);
-  },
-  ToTemporalZonedDateTimeFields: (bag, fieldNames) => {
-    const entries = [
-      ['day', undefined],
-      ['hour', 0],
-      ['microsecond', 0],
-      ['millisecond', 0],
-      ['minute', 0],
-      ['month', undefined],
-      ['monthCode', undefined],
-      ['nanosecond', 0],
-      ['second', 0],
-      ['year', undefined],
-      ['offset', undefined],
-      ['timeZone']
-    ];
-    // Add extra fields from the calendar at the end
-    fieldNames.forEach((fieldName) => {
-      if (!entries.some(([name]) => name === fieldName)) {
-        entries.push([fieldName, undefined]);
-      }
-    });
-    return ES.PrepareTemporalFields(bag, entries);
   },
 
   ToTemporalDate: (item, options) => {
@@ -1075,7 +993,7 @@ export const ES = ObjectAssign({}, ES2020, {
       }
       const calendar = ES.GetTemporalCalendarWithISODefault(item);
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-      const fields = ES.ToTemporalDateFields(item, fieldNames);
+      const fields = ES.PrepareTemporalFields(item, fieldNames, []);
       return ES.CalendarDateFromFields(calendar, fields, options);
     }
     ES.ToTemporalOverflow(options); // validate and ignore
@@ -1143,7 +1061,7 @@ export const ES = ObjectAssign({}, ES2020, {
         'second',
         'year'
       ]);
-      const fields = ES.ToTemporalDateTimeFields(item, fieldNames);
+      const fields = ES.PrepareTemporalFields(item, fieldNames, []);
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
     } else {
@@ -1211,7 +1129,7 @@ export const ES = ObjectAssign({}, ES2020, {
         calendar = ES.ToTemporalCalendar(calendar);
       }
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-      const fields = ES.ToTemporalMonthDayFields(item, fieldNames);
+      const fields = ES.PrepareTemporalFields(item, fieldNames, []);
       // Callers who omit the calendar are not writing calendar-independent
       // code. In that case, `monthCode`/`year` can be omitted; `month` and
       // `day` are sufficient. Add a `year` to satisfy calendar validation.
@@ -1286,7 +1204,7 @@ export const ES = ObjectAssign({}, ES2020, {
       if (ES.IsTemporalYearMonth(item)) return item;
       const calendar = ES.GetTemporalCalendarWithISODefault(item);
       const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-      const fields = ES.ToTemporalYearMonthFields(item, fieldNames);
+      const fields = ES.PrepareTemporalFields(item, fieldNames, []);
       return ES.CalendarYearMonthFromFields(calendar, fields, options);
     }
 
@@ -1394,7 +1312,8 @@ export const ES = ObjectAssign({}, ES2020, {
         'second',
         'year'
       ]);
-      const fields = ES.ToTemporalZonedDateTimeFields(item, fieldNames);
+      ES.Call(ArrayPrototypePush, fieldNames, ['timeZone', 'offset']);
+      const fields = ES.PrepareTemporalFields(item, fieldNames, ['timeZone']);
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
       timeZone = ES.ToTemporalTimeZone(fields.timeZone);
@@ -3622,9 +3541,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
 
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const otherFields = ES.ToTemporalYearMonthFields(other, fieldNames);
+    const otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
     otherFields.day = 1;
-    const thisFields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
+    const thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
     thisFields.day = 1;
     const otherDate = ES.CalendarDateFromFields(calendar, otherFields);
     const thisDate = ES.CalendarDateFromFields(calendar, thisFields);
@@ -4207,7 +4126,7 @@ export const ES = ObjectAssign({}, ES2020, {
 
     const calendar = GetSlot(yearMonth, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    const fields = ES.ToTemporalYearMonthFields(yearMonth, fieldNames);
+    const fields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
     const startDate = ES.CalendarDateFromFields(calendar, fields);
@@ -4215,7 +4134,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const optionsCopy = ObjectAssign(ObjectCreate(null), options);
     const addedDate = ES.CalendarDateAdd(calendar, startDate, durationToAdd, options);
-    const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
+    const addedDateFields = ES.PrepareTemporalFields(addedDate, fieldNames, []);
 
     return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
   },
