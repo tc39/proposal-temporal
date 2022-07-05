@@ -4211,8 +4211,10 @@ export const ES = ObjectAssign({}, ES2020, {
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
     const startDate = ES.CalendarDateFromFields(calendar, fields);
+    const Duration = GetIntrinsic('%Temporal.Duration%');
+    const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
     const optionsCopy = ObjectAssign(ObjectCreate(null), options);
-    const addedDate = ES.CalendarDateAdd(calendar, startDate, { ...duration, days }, options);
+    const addedDate = ES.CalendarDateAdd(calendar, startDate, durationToAdd, options);
     const addedDateFields = ES.ToTemporalYearMonthFields(addedDate, fieldNames);
 
     return ES.CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
