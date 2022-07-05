@@ -11,6 +11,3 @@ built-ins/Temporal/PlainTime/prototype/add/argument-string-negative-fractional-u
 built-ins/Temporal/PlainTime/prototype/subtract/argument-string-negative-fractional-units.js
 built-ins/Temporal/ZonedDateTime/prototype/add/argument-string-negative-fractional-units.js
 built-ins/Temporal/ZonedDateTime/prototype/subtract/argument-string-negative-fractional-units.js
-# https://github.com/tc39/test262/pull/3549
-built-ins/Temporal/PlainYearMonth/prototype/add/calendar-datefromfields-called.js
-built-ins/Temporal/PlainYearMonth/prototype/subtract/calendar-datefromfields-called.js

@@ -75,9 +75,9 @@ export class PlainYearMonth {
     if (!props) {
       throw new TypeError('invalid year-month-like');
     }
-    let fields = ES.ToTemporalYearMonthFields(this, fieldNames);
+    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     fields = ES.CalendarMergeFields(calendar, fields, props);
-    fields = ES.ToTemporalYearMonthFields(fields, fieldNames);
+    fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
     options = ES.GetOptionsObject(options);
 
@@ -132,27 +132,15 @@ export class PlainYearMonth {
     const calendar = GetSlot(this, CALENDAR);
 
     const receiverFieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-    let fields = ES.ToTemporalYearMonthFields(this, receiverFieldNames);
+    let fields = ES.PrepareTemporalFields(this, receiverFieldNames, []);
 
     const inputFieldNames = ES.CalendarFields(calendar, ['day']);
-    const inputEntries = [['day']];
-    // Add extra fields from the calendar at the end
-    inputFieldNames.forEach((fieldName) => {
-      if (!inputEntries.some(([name]) => name === fieldName)) {
-        inputEntries.push([fieldName, undefined]);
-      }
-    });
-    const inputFields = ES.PrepareTemporalFields(item, inputEntries);
+    const inputFields = ES.PrepareTemporalFields(item, inputFieldNames, []);
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
 
+    // TODO: Use MergeLists abstract operation.
     const mergedFieldNames = [...new Set([...receiverFieldNames, ...inputFieldNames])];
-    const mergedEntries = [];
-    mergedFieldNames.forEach((fieldName) => {
-      if (!mergedEntries.some(([name]) => name === fieldName)) {
-        mergedEntries.push([fieldName, undefined]);
-      }
-    });
-    mergedFields = ES.PrepareTemporalFields(mergedFields, mergedEntries);
+    mergedFields = ES.PrepareTemporalFields(mergedFields, mergedFieldNames, []);
     const options = ObjectCreate(null);
     options.overflow = 'reject';
     return ES.CalendarDateFromFields(calendar, mergedFields, options);
