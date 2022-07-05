@@ -6459,13 +6459,13 @@
         days: days
       };
     },
-    CalculateOffsetShift: function CalculateOffsetShift(relativeTo, y, mon, w, d, h, min, s, ms, µs, ns) {
+    CalculateOffsetShift: function CalculateOffsetShift(relativeTo, y, mon, w, d) {
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
         var instant = GetSlot(relativeTo, INSTANT);
         var timeZone = GetSlot(relativeTo, TIME_ZONE);
         var calendar = GetSlot(relativeTo, CALENDAR);
         var offsetBefore = ES.GetOffsetNanosecondsFor(timeZone, instant);
-        var after = ES.AddZonedDateTime(instant, timeZone, calendar, y, mon, w, d, h, min, s, ms, µs, ns);
+        var after = ES.AddZonedDateTime(instant, timeZone, calendar, y, mon, w, d, 0, 0, 0, 0, 0, 0);
         var TemporalInstant = GetIntrinsic('%Temporal.Instant%');
         var instantAfter = new TemporalInstant(after);
         var offsetAfter = ES.GetOffsetNanosecondsFor(timeZone, instantAfter);
@@ -6755,7 +6755,7 @@
       milliseconds = _ES$BalanceTime2.millisecond;
       microseconds = _ES$BalanceTime2.microsecond;
       nanoseconds = _ES$BalanceTime2.nanosecond;
-      deltaDays *= sign;
+      if (deltaDays != 0) throw new Error('assertion failure in DifferenceTime: _bt_.[[Days]] should be 0');
       hours *= sign;
       minutes *= sign;
       seconds *= sign;
@@ -6763,7 +6763,6 @@
       microseconds *= sign;
       nanoseconds *= sign;
       return {
-        deltaDays: deltaDays,
         hours: hours,
         minutes: minutes,
         seconds: seconds,
@@ -6791,7 +6790,6 @@
     },
     DifferenceISODateTime: function DifferenceISODateTime(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendar, largestUnit, options) {
       var _ES$DifferenceTime = ES.DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2),
-          deltaDays = _ES$DifferenceTime.deltaDays,
           hours = _ES$DifferenceTime.hours,
           minutes = _ES$DifferenceTime.minutes,
           seconds = _ES$DifferenceTime.seconds,
@@ -6799,21 +6797,15 @@
           microseconds = _ES$DifferenceTime.microseconds,
           nanoseconds = _ES$DifferenceTime.nanoseconds;
 
-      var timeSign = ES.DurationSign(0, 0, 0, deltaDays, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-
-      var _ES$BalanceISODate2 = ES.BalanceISODate(y1, mon1, d1 + deltaDays);
-
-      y1 = _ES$BalanceISODate2.year;
-      mon1 = _ES$BalanceISODate2.month;
-      d1 = _ES$BalanceISODate2.day;
+      var timeSign = ES.DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       var dateSign = ES.CompareISODate(y2, mon2, d2, y1, mon1, d1);
 
       if (dateSign === -timeSign) {
-        var _ES$BalanceISODate3 = ES.BalanceISODate(y1, mon1, d1 - timeSign);
+        var _ES$BalanceISODate2 = ES.BalanceISODate(y1, mon1, d1 - timeSign);
 
-        y1 = _ES$BalanceISODate3.year;
-        mon1 = _ES$BalanceISODate3.month;
-        d1 = _ES$BalanceISODate3.day;
+        y1 = _ES$BalanceISODate2.year;
+        mon1 = _ES$BalanceISODate2.month;
+        d1 = _ES$BalanceISODate2.day;
 
         var _ES$BalanceDuration = ES.BalanceDuration(-timeSign, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 
@@ -7324,11 +7316,11 @@
       days += 7 * weeks;
       day += days;
 
-      var _ES$BalanceISODate4 = ES.BalanceISODate(year, month, day);
+      var _ES$BalanceISODate3 = ES.BalanceISODate(year, month, day);
 
-      year = _ES$BalanceISODate4.year;
-      month = _ES$BalanceISODate4.month;
-      day = _ES$BalanceISODate4.day;
+      year = _ES$BalanceISODate3.year;
+      month = _ES$BalanceISODate3.month;
+      day = _ES$BalanceISODate3.day;
       return {
         year: year,
         month: month,
@@ -7775,11 +7767,11 @@
       microsecond = _ES$RoundTime.microsecond;
       nanosecond = _ES$RoundTime.nanosecond;
 
-      var _ES$BalanceISODate5 = ES.BalanceISODate(year, month, day + deltaDays);
+      var _ES$BalanceISODate4 = ES.BalanceISODate(year, month, day + deltaDays);
 
-      year = _ES$BalanceISODate5.year;
-      month = _ES$BalanceISODate5.month;
-      day = _ES$BalanceISODate5.day;
+      year = _ES$BalanceISODate4.year;
+      month = _ES$BalanceISODate4.month;
+      day = _ES$BalanceISODate4.day;
       return {
         year: year,
         month: month,
@@ -13457,8 +13449,8 @@
         var ms2 = GetSlot(two, MILLISECONDS);
         var µs2 = GetSlot(two, MICROSECONDS);
         var ns2 = GetSlot(two, NANOSECONDS);
-        var shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
-        var shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
+        var shift1 = ES.CalculateOffsetShift(relativeTo, y1, mon1, w1, d1);
+        var shift2 = ES.CalculateOffsetShift(relativeTo, y2, mon2, w2, d2);
 
         if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
           var _ES$UnbalanceDuration3 = ES.UnbalanceDurationRelative(y1, mon1, w1, d1, 'day', relativeTo);
