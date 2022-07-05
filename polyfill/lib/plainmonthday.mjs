@@ -3,7 +3,10 @@ import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, GetSlot } from './slots.mjs';
 
+const ArrayPrototypePush = Array.prototype.push;
 const ObjectCreate = Object.create;
+const SetPrototypeAdd = Set.prototype.add;
+const SetPrototypeForEach = Set.prototype.forEach;
 
 export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) {
@@ -59,11 +62,9 @@ export class PlainMonthDay {
   equals(other) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalMonthDay(other);
-    for (const slot of [ISO_MONTH, ISO_DAY, ISO_YEAR]) {
-      const val1 = GetSlot(this, slot);
-      const val2 = GetSlot(other, slot);
-      if (val1 !== val2) return false;
-    }
+    if (GetSlot(this, ISO_YEAR) !== GetSlot(other, ISO_YEAR)) return false;
+    if (GetSlot(this, ISO_MONTH) !== GetSlot(other, ISO_MONTH)) return false;
+    if (GetSlot(this, ISO_DAY) !== GetSlot(other, ISO_DAY)) return false;
     return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
   }
   toString(options = undefined) {
@@ -96,7 +97,17 @@ export class PlainMonthDay {
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
 
     // TODO: Use MergeLists abstract operation.
-    const mergedFieldNames = [...new Set([...receiverFieldNames, ...inputFieldNames])];
+    const uniqueFieldNames = new Set();
+    for (let index = 0; index < receiverFieldNames.length; index++) {
+      ES.Call(SetPrototypeAdd, uniqueFieldNames, [receiverFieldNames[index]]);
+    }
+    for (let index = 0; index < inputFieldNames.length; index++) {
+      ES.Call(SetPrototypeAdd, uniqueFieldNames, [inputFieldNames[index]]);
+    }
+    const mergedFieldNames = [];
+    ES.Call(SetPrototypeForEach, uniqueFieldNames, [
+      (element) => ES.Call(ArrayPrototypePush, mergedFieldNames, [element])
+    ]);
     mergedFields = ES.PrepareTemporalFields(mergedFields, mergedFieldNames, []);
     const options = ObjectCreate(null);
     options.overflow = 'reject';
