@@ -4532,13 +4532,12 @@ export const ES = ObjectAssign({}, ES2020, {
     relativeTo = undefined
   ) => {
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-    let calendar, zdtRelative;
-    if (relativeTo) {
+    let calendar;
+    const zdtRelative = ES.IsTemporalZonedDateTime(relativeTo) ? relativeTo : undefined;
+    if (unit === 'year' || unit === 'month' || unit === 'week') {
+      if (!relativeTo) throw new RangeError(`A starting point is required for ${unit}s rounding`);
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
-        zdtRelative = relativeTo;
         relativeTo = ES.ToTemporalDate(relativeTo);
-      } else if (!ES.IsTemporalDate(relativeTo)) {
-        throw new TypeError('starting point must be PlainDate or ZonedDateTime');
       }
       calendar = GetSlot(relativeTo, CALENDAR);
     }
@@ -4561,8 +4560,6 @@ export const ES = ObjectAssign({}, ES2020, {
     let total;
     switch (unit) {
       case 'year': {
-        if (!calendar) throw new RangeError('A starting point is required for years rounding');
-
         // convert months and weeks to days by calculating difference(
         // relativeTo + years, relativeTo + { years, months, weeks })
         const yearsDuration = new TemporalDuration(years);
@@ -4602,8 +4599,6 @@ export const ES = ObjectAssign({}, ES2020, {
         break;
       }
       case 'month': {
-        if (!calendar) throw new RangeError('A starting point is required for months rounding');
-
         // convert weeks to days by calculating difference(relativeTo +
         //   { years, months }, relativeTo + { years, months, weeks })
         const yearsMonths = new TemporalDuration(years, months);
@@ -4636,7 +4631,6 @@ export const ES = ObjectAssign({}, ES2020, {
         break;
       }
       case 'week': {
-        if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
         // Weeks may be different lengths of days depending on the calendar,
         // convert days to weeks in a loop as described above under 'years'.
         const sign = MathSign(days);
