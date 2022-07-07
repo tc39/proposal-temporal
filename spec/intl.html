@@ -506,7 +506,7 @@
         1. Let _result_ be ! ArrayCreate(0).
         1. Let _n_ be 0.
         1. For each Record _part_ in _parts_, do
-          1. Let _O_ be ObjectCreate(%Object.prototype%).
+          1. Let _O_ be OrdinaryObjectCreate(%Object.prototype%).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"type"*, _part_.[[Type]]).
           1. Perform ! CreateDataPropertyOrThrow(_O_, *"value"*, _part_.[[Value]]).
           1. Perform ! CreateDataProperty(_result_, ! ToString(_n_), _O_).
