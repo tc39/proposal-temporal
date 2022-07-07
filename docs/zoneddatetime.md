@@ -1309,7 +1309,7 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
 
-`options.timeZone` will be automatically set from the time zone of of `zonedDateTime`.
+`options.timeZone` will be automatically set from the time zone of `zonedDateTime`.
 If a different time zone ID is provided in `options.timeZone`, a RangeError will be thrown.
 To display a `Temporal.ZonedDateTime` value in a different time zone, use `withTimeZone(timeZone).toLocaleString()`.
 
