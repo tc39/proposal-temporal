@@ -1705,6 +1705,10 @@ export const ES = ObjectAssign({}, ES2020, {
       if (!('calendar' in calendarLike)) return calendarLike;
       calendarLike = calendarLike.calendar;
       if (ES.Type(calendarLike) === 'Object' && !('calendar' in calendarLike)) return calendarLike;
+      const identifier = ES.ToString(calendarLike);
+      if (!ES.IsBuiltinCalendar(identifier)) throw new RangeError(`Invalid built-in calendar name: ${identifier}`);
+      const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
+      return new TemporalCalendar(identifier);
     }
     const identifier = ES.ToString(calendarLike);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
