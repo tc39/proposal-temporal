@@ -506,7 +506,8 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_, or *null* if no such transition exists.
+        The returned value _t_ represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The operation returns *null* if no such transition exists for which _t_ &le; ℤ(nsMaxInstant).
       </p>
       <p>
         Given the same values of _epochNanoseconds_ and _timeZoneIdentifier_, the result must be the same for the lifetime of the surrounding agent.
@@ -523,7 +524,8 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_, or *null* if no such transition exists.
+        The returned value _t_ represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The operation returns *null* if no such transition exists for which _t_ &ge; ℤ(nsMinInstant).
       </p>
       <p>
         Given the same values of _epochNanoseconds_ and _timeZoneIdentifier_, the result must be the same for the lifetime of the surrounding agent.
