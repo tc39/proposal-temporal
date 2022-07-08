@@ -1,5 +1,7 @@
 # Temporal
 
+> **注:** このドキュメントは[原文](https://tc39.es/proposal-temporal/docs/index.html)を部分的に日本語に翻訳したものです。全てのドキュメント，および最新の内容を確認したい場合は[原文](https://tc39.es/proposal-temporal/docs/index.html)を参照してください。
+
 <details>
   <summary><strong>Table of Contents</strong></summary>
 <!-- toc -->
