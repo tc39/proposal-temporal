@@ -1039,20 +1039,8 @@ describe('ZonedDateTime', () => {
     it('throw when ambiguous result with reject', () => {
       throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-      );
-    });
     it('options may be a function object', () => {
       equal(`${zdt.add({ years: 1 }, () => {})}`, '1970-12-25T12:23:45.678901234+00:00[UTC]');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => zdt.add({}), TypeError);
-      throws(() => zdt.add({ hour: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${zdt.add({ hour: 1, minutes: 1 })}`, '1969-12-25T12:24:45.678901234+00:00[UTC]');
     });
   });
   describe('ZonedDateTime.subtract()', () => {
@@ -1079,20 +1067,8 @@ describe('ZonedDateTime', () => {
     it('throw when ambiguous result with reject', () => {
       throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('mixed positive and negative values always throw', () => {
-      ['constrain', 'reject'].forEach((overflow) =>
-        throws(() => zdt.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-      );
-    });
     it('options may be a function object', () => {
       equal(`${zdt.subtract({ years: 1 }, () => {})}`, '1968-12-25T12:23:45.678901234+00:00[UTC]');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => zdt.subtract({}), TypeError);
-      throws(() => zdt.subtract({ hour: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${zdt.subtract({ hour: 1, minutes: 1 })}`, '1969-12-25T12:22:45.678901234+00:00[UTC]');
     });
   });
 
