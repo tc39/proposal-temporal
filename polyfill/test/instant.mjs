@@ -32,29 +32,6 @@ describe('Instant', () => {
       it(`(${two}).subtract({ hours: 480, nanoseconds: 1600 }) = ${one}`, () => assert(three.equals(one)));
       it(`(${one}).add({ hours: 480, nanoseconds: 1600 }) = ${two}`, () => assert(four.equals(two)));
     });
-    it('mixed positive and negative values always throw', () => {
-      throws(() => inst.add({ hours: 1, minutes: -30 }), RangeError);
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => inst.add({}), TypeError);
-      throws(() => inst.add({ hour: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${inst.add({ hour: 1, minutes: 1 })}`, '1969-12-25T12:24:45.678901234Z');
-    });
-  });
-  describe('Instant.subtract works', () => {
-    const inst = Instant.from('1969-12-25T12:23:45.678901234Z');
-    it('mixed positive and negative values always throw', () => {
-      throws(() => inst.subtract({ hours: 1, minutes: -30 }), RangeError);
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => inst.subtract({}), TypeError);
-      throws(() => inst.subtract({ hour: 12 }), TypeError);
-    });
-    it('incorrectly-spelled properties are ignored', () => {
-      equal(`${inst.subtract({ hour: 1, minutes: 1 })}`, '1969-12-25T12:22:45.678901234Z');
-    });
   });
   describe('Instant.compare works', () => {
     const i1 = Instant.from('1963-02-13T09:36:29.123456789Z');
