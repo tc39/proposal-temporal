@@ -3979,11 +3979,11 @@
         throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digits));
       }
 
-      if (NumberIsNaN(digits) || digits < 0 || digits > 9) {
+      var precision = MathTrunc(digits);
+
+      if (!NumberIsFinite(precision) || precision < 0 || precision > 9) {
         throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digits));
       }
-
-      var precision = MathFloor$1(digits);
 
       switch (precision) {
         case 0:
