@@ -229,15 +229,6 @@ describe('Duration', () => {
       throws(() => oneDay.add(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
       throws(() => oneDay.add(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
     });
-    it('throws with invalid offset in relativeTo', () => {
-      throws(
-        () =>
-          Temporal.Duration.from('P2D').add('P1M', {
-            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
-          }),
-        RangeError
-      );
-    });
   });
   describe('Temporal.Duration.subtract()', () => {
     const oneDay = new Temporal.Duration(0, 0, 0, 1);
@@ -327,15 +318,6 @@ describe('Duration', () => {
       throws(() => oneDay.subtract(hours24, { relativeTo: { month: 11, day: 3 } }), TypeError);
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
       throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
-    });
-    it('throws with invalid offset in relativeTo', () => {
-      throws(
-        () =>
-          Temporal.Duration.from('P2D').subtract('P1M', {
-            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
-          }),
-        RangeError
-      );
     });
   });
   describe('Temporal.Duration.round()', () => {
@@ -794,16 +776,6 @@ describe('Duration', () => {
       equal(`${yearAndHalf.round({ relativeTo: '2020-01-01', smallestUnit: 'years' })}`, 'P1Y');
       equal(`${yearAndHalf.round({ relativeTo: '2020-07-01', smallestUnit: 'years' })}`, 'P2Y');
     });
-    it('throws with invalid offset in relativeTo', () => {
-      throws(
-        () =>
-          Temporal.Duration.from('P1M280D').round({
-            smallestUnit: 'month',
-            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
-          }),
-        RangeError
-      );
-    });
   });
   describe('Temporal.Duration.total()', () => {
     const d = new Temporal.Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
@@ -1117,29 +1089,10 @@ describe('Duration', () => {
       const twoYears = Temporal.Duration.from({ months: -11, days: -396 });
       equal(twoYears.total({ unit: 'years', relativeTo: '2017-01-01' }), -2);
     });
-    it('throws with invalid offset in relativeTo', () => {
-      throws(
-        () =>
-          Temporal.Duration.from('P1M280D').total({
-            unit: 'month',
-            relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
-          }),
-        RangeError
-      );
-    });
   });
   describe('Temporal.Duration.compare', () => {
     it('does not lose precision when totaling everything down to nanoseconds', () => {
       notEqual(Temporal.Duration.compare({ days: 200 }, { days: 200, nanoseconds: 1 }), 0);
-    });
-    it('throws with invalid offset in relativeTo', () => {
-      throws(() => {
-        const d1 = Temporal.Duration.from('P1M280D');
-        const d2 = Temporal.Duration.from('P1M281D');
-        Temporal.Duration.compare(d1, d2, {
-          relativeTo: { year: 2021, month: 11, day: 26, offset: '+088:00', timeZone: 'Europe/London' }
-        });
-      }, RangeError);
     });
   });
 });
