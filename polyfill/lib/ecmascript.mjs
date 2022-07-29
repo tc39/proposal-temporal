@@ -278,6 +278,10 @@ export const ES = ObjectAssign({}, ES2020, {
     if (z) return 'UTC';
     return offset; // if !ianaName && !z then offset must be present
   },
+  MaybeFormatCalendarAnnotation: (calendar, showCalendar) => {
+    if (showCalendar === 'never') return '';
+    return ES.FormatCalendarAnnotation(ES.ToString(calendar), showCalendar);
+  },
   FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
     if (showCalendar === 'auto' && id === 'iso8601') return '';
@@ -2024,8 +2028,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
     const day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-    const calendarID = ES.ToString(GetSlot(date, CALENDAR));
-    const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    const calendar = ES.MaybeFormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
     return `${year}-${month}-${day}${calendar}`;
   },
   TemporalDateTimeToString: (dateTime, precision, showCalendar = 'auto', options = undefined) => {
@@ -2063,8 +2066,7 @@ export const ES = ObjectAssign({}, ES2020, {
     hour = ES.ISODateTimePartString(hour);
     minute = ES.ISODateTimePartString(minute);
     const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-    const calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
-    const calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    const calendar = ES.MaybeFormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
     return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
   },
   TemporalMonthDayToString: (monthDay, showCalendar = 'auto') => {
@@ -2134,8 +2136,7 @@ export const ES = ObjectAssign({}, ES2020, {
       result += ES.FormatISOTimeZoneOffsetString(offsetNs);
     }
     if (showTimeZone !== 'never') result += `[${tz}]`;
-    const calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
-    result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
+    result += ES.MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
     return result;
   },
 
