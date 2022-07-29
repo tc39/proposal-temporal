@@ -100,47 +100,12 @@ describe('Temporal.ZonedDateTime', () => {
       it('string output is 1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][u-ca=gregory]', () =>
         equal(`${zdt}`, '1976-11-18T16:23:30.123456789+01:00[Europe/Vienna][u-ca=gregory]'));
     });
-
-    it('casts time zone', () => {
-      const zdt = new Temporal.ZonedDateTime(epochNanos, 'Asia/Seoul');
-      equal(typeof zdt.timeZone, 'object');
-      assert(zdt.timeZone instanceof Temporal.TimeZone);
-      equal(zdt.timeZone.id, 'Asia/Seoul');
-    });
-    it('defaults to ISO calendar', () => {
-      const zdt = new Temporal.ZonedDateTime(epochNanos, tz);
-      equal(typeof zdt.calendar, 'object');
-      assert(zdt.calendar instanceof Temporal.Calendar);
-      equal(zdt.calendar.id, 'iso8601');
-    });
-    it('casts calendar', () => {
-      const zdt = new Temporal.ZonedDateTime(epochNanos, Temporal.TimeZone.from('Asia/Tokyo'), 'japanese');
-      equal(typeof zdt.calendar, 'object');
-      assert(zdt.calendar instanceof Temporal.Calendar);
-      equal(zdt.calendar.id, 'japanese');
-    });
   });
 
   describe('string parsing', () => {
-    it('parses with an IANA zone', () => {
-      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[America/Los_Angeles]');
-      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-    });
-    it('parses with an IANA zone but no offset', () => {
-      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00[America/Los_Angeles]');
-      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-    });
     it('parses with an IANA zone but no offset (with disambiguation)', () => {
       const zdt = Temporal.ZonedDateTime.from('2020-03-08T02:30[America/Los_Angeles]', { disambiguation: 'earlier' });
       equal(zdt.toString(), '2020-03-08T01:30:00-08:00[America/Los_Angeles]');
-    });
-    it('parses with an offset in brackets', () => {
-      const zdt = Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00[-08:00]');
-      equal(zdt.toString(), '2020-03-08T01:00:00-08:00[-08:00]');
-    });
-    it('throws if no brackets', () => {
-      throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-08:00'), RangeError);
-      throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00Z'), RangeError);
     });
     it('"Z" means preserve the exact time in the given IANA time zone', () => {
       const zdt = Temporal.ZonedDateTime.from('2020-03-08T09:00:00Z[America/Los_Angeles]');
@@ -243,10 +208,6 @@ describe('Temporal.ZonedDateTime', () => {
       );
     });
     describe('Offset option', () => {
-      it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {
-        throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-04:00[-08:00]'), RangeError);
-        throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-04:00[-08:00]', { offset: 'reject' }), RangeError);
-      });
       it("{ offset: 'reject' } throws if offset does not match IANA time zone", () => {
         throws(() => Temporal.ZonedDateTime.from('2020-03-08T01:00-04:00[America/Chicago]'), RangeError);
         throws(
@@ -273,14 +234,6 @@ describe('Temporal.ZonedDateTime', () => {
       it("{ offset: 'use' } uses offset only", () => {
         const zdt = Temporal.ZonedDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset: 'use' });
         equal(zdt.toString(), '2020-11-01T03:00:00-08:00[America/Los_Angeles]');
-      });
-      it('throw when bad offset', () => {
-        ['', 'PREFER', 'balance'].forEach((offset) => {
-          throws(
-            () => Temporal.ZonedDateTime.from('2020-11-01T04:00-07:00[America/Los_Angeles]', { offset }),
-            RangeError
-          );
-        });
       });
     });
     describe('Disambiguation option', () => {
@@ -406,16 +359,6 @@ describe('Temporal.ZonedDateTime', () => {
         '1976-11-18T00:00:00+01:00[Africa/Lagos]'
       );
     });
-    it('casts timeZone property', () => {
-      equal(
-        `${Temporal.ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: 'Africa/Lagos' })}`,
-        '1976-11-18T00:00:00+01:00[Africa/Lagos]'
-      );
-      equal(
-        `${Temporal.ZonedDateTime.from({ year: 1976, month: 11, day: 18, timeZone: -1030 })}`,
-        '1976-11-18T00:00:00-10:30[-10:30]'
-      );
-    });
     it('casts offset property', () => {
       const zdt = Temporal.ZonedDateTime.from({
         year: 1976,
@@ -426,23 +369,6 @@ describe('Temporal.ZonedDateTime', () => {
       });
       equal(`${zdt}`, '1976-11-18T00:00:00-10:30[-10:30]');
     });
-    it('throws with invalid offset', () => {
-      const offsets = ['use', 'prefer', 'ignore', 'reject'];
-      offsets.forEach((offset) => {
-        throws(() => {
-          Temporal.ZonedDateTime.from(
-            {
-              year: 2021,
-              month: 11,
-              day: 26,
-              offset: '+099:00',
-              timeZone: 'Europe/London'
-            },
-            { offset }
-          );
-        }, RangeError);
-      });
-    });
     describe('Overflow option', () => {
       const bad = { year: 2019, month: 1, day: 32, timeZone: lagos };
       it('reject', () => throws(() => Temporal.ZonedDateTime.from(bad, { overflow: 'reject' }), RangeError));
@@ -452,14 +378,6 @@ describe('Temporal.ZonedDateTime', () => {
           `${Temporal.ZonedDateTime.from(bad, { overflow: 'constrain' })}`,
           '2019-01-31T00:00:00+01:00[Africa/Lagos]'
         );
-      });
-      it('throw when bad overflow', () => {
-        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) => {
-          throws(
-            () => Temporal.ZonedDateTime.from({ year: 2019, month: 1, day: 1, timeZone: lagos }, { overflow }),
-            RangeError
-          );
-        });
       });
     });
     describe('Offset option', () => {
@@ -509,14 +427,6 @@ describe('Temporal.ZonedDateTime', () => {
           `${Temporal.ZonedDateTime.from(obj, { offset: 'use' })}`,
           '2020-11-01T03:00:00-08:00[America/Los_Angeles]'
         );
-      });
-      it('throw when bad offset', () => {
-        ['', 'PREFER', 'balance', 3, null].forEach((offset) => {
-          throws(
-            () => Temporal.ZonedDateTime.from({ year: 2019, month: 1, day: 1, timeZone: lagos }, { offset }),
-            RangeError
-          );
-        });
       });
     });
     describe('Disambiguation option', () => {
@@ -604,70 +514,6 @@ describe('Temporal.ZonedDateTime', () => {
       });
     });
     describe('sub-minute time zone offsets', () => {
-      ['use', 'ignore', 'prefer', 'reject'].forEach((offset) => {
-        it(`accepts the exact offset string (offset=${offset})`, () => {
-          const zdt1 = Temporal.ZonedDateTime.from('1971-01-01T12:00-00:44:30[Africa/Monrovia]', { offset });
-          equal(`${zdt1}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
-          equal(zdt1.offset, '-00:44:30');
-
-          const zdt2 = Temporal.ZonedDateTime.from('1921-01-01T12:00+00:19:32[Europe/Amsterdam]', { offset });
-          equal(`${zdt2}`, '1921-01-01T12:00:00+00:20[Europe/Amsterdam]');
-          equal(zdt2.offset, '+00:19:32');
-        });
-      });
-      it('prioritizes the offset string with HH:MM precision when offset=use', () => {
-        const zdt1 = Temporal.ZonedDateTime.from('1971-01-01T12:00-00:45[Africa/Monrovia]', { offset: 'use' });
-        equal(`${zdt1}`, '1971-01-01T12:00:30-00:45[Africa/Monrovia]');
-        equal(zdt1.offset, '-00:44:30');
-
-        const zdt2 = Temporal.ZonedDateTime.from('1921-01-01T12:00+00:20[Europe/Amsterdam]', { offset: 'use' });
-        equal(`${zdt2}`, '1921-01-01T11:59:32+00:20[Europe/Amsterdam]');
-        equal(zdt2.offset, '+00:19:32');
-      });
-      ['ignore', 'prefer', 'reject'].forEach((offset) => {
-        it(`accepts the offset string with HH:MM precision (offset=${offset})`, () => {
-          const zdt1 = Temporal.ZonedDateTime.from('1971-01-01T12:00-00:45[Africa/Monrovia]', { offset });
-          equal(`${zdt1}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
-          equal(zdt1.offset, '-00:44:30');
-
-          const zdt2 = Temporal.ZonedDateTime.from('1921-01-01T12:00+00:20[Europe/Amsterdam]', { offset });
-          equal(`${zdt2}`, '1921-01-01T12:00:00+00:20[Europe/Amsterdam]');
-          equal(zdt2.offset, '+00:19:32');
-        });
-      });
-      it('does not do fuzzy matching on HH:MM offset string passed in a property bag in from()', () => {
-        const properties = { year: 1971, month: 1, day: 1, hour: 12, offset: '-00:45', timeZone: 'Africa/Monrovia' };
-        const zdt1 = Temporal.ZonedDateTime.from(properties, { offset: 'use' });
-        equal(`${zdt1}`, '1971-01-01T12:00:30-00:45[Africa/Monrovia]');
-
-        const zdt2 = Temporal.ZonedDateTime.from(properties, { offset: 'ignore' });
-        equal(`${zdt2}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
-
-        const zdt3 = Temporal.ZonedDateTime.from(properties, { offset: 'prefer' });
-        equal(`${zdt3}`, '1971-01-01T12:00:00-00:45[Africa/Monrovia]');
-
-        throws(() => Temporal.ZonedDateTime.from(properties, { offset: 'reject' }), RangeError);
-      });
-      it('does not do fuzzy matching on HH:MM offset string passed in a property bag in with()', () => {
-        const zdt = Temporal.ZonedDateTime.from({
-          year: 1971,
-          month: 1,
-          day: 1,
-          hour: 12,
-          timeZone: 'Africa/Monrovia'
-        });
-
-        const zdt1 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'use' });
-        equal(`${zdt1}`, '1971-02-01T12:00:30-00:45[Africa/Monrovia]');
-
-        const zdt2 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'ignore' });
-        equal(`${zdt2}`, '1971-02-01T12:00:00-00:45[Africa/Monrovia]');
-
-        const zdt3 = zdt.with({ month: 2, offset: '-00:45' }, { offset: 'prefer' });
-        equal(`${zdt3}`, '1971-02-01T12:00:00-00:45[Africa/Monrovia]');
-
-        throws(() => zdt.with({ month: 2, offset: '-00:45' }, { offset: 'reject' }), RangeError);
-      });
       it('does not truncate offset property to minutes', () => {
         const zdt = Temporal.ZonedDateTime.from({
           year: 1971,
@@ -733,9 +579,6 @@ describe('Temporal.ZonedDateTime', () => {
         throws(() => zdt.with({ day: 31 }, { overflow }), RangeError);
         throws(() => zdt.with({ hour: 29 }, { overflow }), RangeError);
         throws(() => zdt.with({ nanosecond: 9000 }, { overflow }), RangeError);
-      });
-      it('constrain is the default', () => {
-        equal(`${zdt.with({ month: 29 })}`, `${zdt.with({ month: 29 }, { overflow: 'constrain' })}`);
       });
     });
     const dstStartDay = Temporal.ZonedDateTime.from('2019-03-10T12:00:01-02:30[America/St_Johns]');
@@ -870,9 +713,6 @@ describe('Temporal.ZonedDateTime', () => {
         ['', 'PREFER', 'balance'].forEach((offset) => throws(() => zdt.with({ day: 5 }, { offset }), RangeError));
       });
     });
-    it('options may be a function object', () => {
-      equal(`${zdt.with({ day: 5 }, () => {})}`, '1976-11-05T15:23:30.123456789+00:00[UTC]');
-    });
     it('object must contain at least one correctly-spelled property', () => {
       throws(() => zdt.with({}), TypeError);
       throws(() => zdt.with({ months: 12 }), TypeError);
@@ -902,14 +742,6 @@ describe('Temporal.ZonedDateTime', () => {
       throws(() => zdt.with('12:00'), TypeError);
       throws(() => zdt.with('invalid'), TypeError);
     });
-    it('throws with invalid offset', () => {
-      const offsets = ['use', 'prefer', 'ignore', 'reject'];
-      offsets.forEach((offset) => {
-        throws(() => {
-          Temporal.ZonedDateTime.from('2022-11-26[Europe/London]').with({ offset: '+088:00' }, { offset });
-        }, RangeError);
-      });
-    });
   });
 
   describe('.withPlainTime manipulation', () => {
@@ -923,13 +755,6 @@ describe('Temporal.ZonedDateTime', () => {
     });
     it("withPlainTime('12:34') works", () => {
       equal(`${zdt.withPlainTime('12:34')}`, '2015-12-07T12:34:00-08:00[America/Los_Angeles]');
-    });
-    it('withPlainTime() defaults to midnight', () => {
-      equal(`${zdt.withPlainTime()}`, '2015-12-07T00:00:00-08:00[America/Los_Angeles]');
-    });
-    it('object must contain at least one correctly-spelled property', () => {
-      throws(() => zdt.withPlainTime({}), TypeError);
-      throws(() => zdt.withPlainTime({ minutes: 12 }), TypeError);
     });
     it('incorrectly-spelled properties are ignored', () => {
       equal(`${zdt.withPlainTime({ hour: 10, seconds: 55 })}`, '2015-12-07T10:00:00-08:00[America/Los_Angeles]');
@@ -984,9 +809,6 @@ describe('Temporal.ZonedDateTime', () => {
     it('zonedDateTime.withTimeZone(America/Los_Angeles) works', () => {
       equal(`${zdt.withTimeZone(tz)}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
     });
-    it('casts its argument', () => {
-      equal(`${zdt.withTimeZone('America/Los_Angeles')}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles]');
-    });
     it('keeps instant and calendar the same', () => {
       const zdt = Temporal.ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][u-ca=gregory]');
       const zdt2 = zdt.withTimeZone('America/Vancouver');
@@ -1001,12 +823,6 @@ describe('Temporal.ZonedDateTime', () => {
     it('zonedDateTime.withCalendar(japanese) works', () => {
       const cal = Temporal.Calendar.from('japanese');
       equal(`${zdt.withCalendar(cal)}`, '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][u-ca=japanese]');
-    });
-    it('casts its argument', () => {
-      equal(
-        `${zdt.withCalendar('japanese')}`,
-        '2019-11-18T15:23:30.123456789-08:00[America/Los_Angeles][u-ca=japanese]'
-      );
     });
     it('keeps instant and time zone the same', () => {
       const zdt = Temporal.ZonedDateTime.from('2019-11-18T15:23:30.123456789+01:00[Europe/Madrid][u-ca=gregory]');
@@ -1097,9 +913,6 @@ describe('Temporal.ZonedDateTime', () => {
     it('throw when ambiguous result with reject', () => {
       throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
     });
-    it('options may be a function object', () => {
-      equal(`${zdt.add({ years: 1 }, () => {})}`, '1970-12-25T12:23:45.678901234+00:00[UTC]');
-    });
   });
   describe('Temporal.ZonedDateTime.subtract()', () => {
     const zdt = Temporal.ZonedDateTime.from('1969-12-25T12:23:45.678901234+00:00[UTC]');
@@ -1124,9 +937,6 @@ describe('Temporal.ZonedDateTime', () => {
     });
     it('throw when ambiguous result with reject', () => {
       throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
-    });
-    it('options may be a function object', () => {
-      equal(`${zdt.subtract({ years: 1 }, () => {})}`, '1968-12-25T12:23:45.678901234+00:00[UTC]');
     });
   });
 
@@ -1204,9 +1014,6 @@ describe('Temporal.ZonedDateTime', () => {
       const zdt1 = new Temporal.ZonedDateTime(0n, 'UTC');
       const zdt2 = new Temporal.ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
       throws(() => zdt1.until(zdt2), RangeError);
-    });
-    it('options may be a function object', () => {
-      equal(`${feb20.until(feb21, () => {})}`, 'PT8784H');
     });
     const earlier = Temporal.ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = Temporal.ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
@@ -1292,10 +1099,6 @@ describe('Temporal.ZonedDateTime', () => {
         equal(`${later.until(earlier, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('trunc is the default', () => {
-      equal(`${earlier.until(later, { smallestUnit: 'minutes' })}`, 'PT23356H17M');
-      equal(`${earlier.until(later, { smallestUnit: 'seconds' })}`, 'PT23356H17M4S');
-    });
     it('rounds to an increment of hours', () => {
       equal(
         `${earlier.until(later, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'halfExpand' })}`,
@@ -1370,76 +1173,11 @@ describe('Temporal.ZonedDateTime', () => {
       throws(() => earlier.until(later, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
       throws(() => earlier.until(later, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
     });
-    it('accepts singular units', () => {
-      equal(`${earlier.until(later, { largestUnit: 'year' })}`, `${earlier.until(later, { largestUnit: 'years' })}`);
-      equal(`${earlier.until(later, { smallestUnit: 'year' })}`, `${earlier.until(later, { smallestUnit: 'years' })}`);
-      equal(`${earlier.until(later, { largestUnit: 'month' })}`, `${earlier.until(later, { largestUnit: 'months' })}`);
-      equal(
-        `${earlier.until(later, { smallestUnit: 'month' })}`,
-        `${earlier.until(later, { smallestUnit: 'months' })}`
-      );
-      equal(`${earlier.until(later, { largestUnit: 'day' })}`, `${earlier.until(later, { largestUnit: 'days' })}`);
-      equal(`${earlier.until(later, { smallestUnit: 'day' })}`, `${earlier.until(later, { smallestUnit: 'days' })}`);
-      equal(`${earlier.until(later, { largestUnit: 'hour' })}`, `${earlier.until(later, { largestUnit: 'hours' })}`);
-      equal(`${earlier.until(later, { smallestUnit: 'hour' })}`, `${earlier.until(later, { smallestUnit: 'hours' })}`);
-      equal(
-        `${earlier.until(later, { largestUnit: 'minute' })}`,
-        `${earlier.until(later, { largestUnit: 'minutes' })}`
-      );
-      equal(
-        `${earlier.until(later, { smallestUnit: 'minute' })}`,
-        `${earlier.until(later, { smallestUnit: 'minutes' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'second' })}`,
-        `${earlier.until(later, { largestUnit: 'seconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { smallestUnit: 'second' })}`,
-        `${earlier.until(later, { smallestUnit: 'seconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'millisecond' })}`,
-        `${earlier.until(later, { largestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { smallestUnit: 'millisecond' })}`,
-        `${earlier.until(later, { smallestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'microsecond' })}`,
-        `${earlier.until(later, { largestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { smallestUnit: 'microsecond' })}`,
-        `${earlier.until(later, { smallestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { largestUnit: 'nanosecond' })}`,
-        `${earlier.until(later, { largestUnit: 'nanoseconds' })}`
-      );
-      equal(
-        `${earlier.until(later, { smallestUnit: 'nanosecond' })}`,
-        `${earlier.until(later, { smallestUnit: 'nanoseconds' })}`
-      );
-    });
     it('rounds relative to the receiver', () => {
       const dt1 = Temporal.ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
       const dt2 = Temporal.ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
       equal(`${dt1.until(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P2Y');
       equal(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P1Y');
-    });
-    it('throws with invalid offset', () => {
-      throws(() => {
-        const zdt = Temporal.ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
-        zdt.until({
-          year: 2021,
-          month: 11,
-          day: 26,
-          offset: '+099:00',
-          timeZone: 'Europe/London'
-        });
-      }, RangeError);
     });
   });
   describe('Temporal.ZonedDateTime.since()', () => {
@@ -1522,9 +1260,6 @@ describe('Temporal.ZonedDateTime', () => {
       const zdt1 = new Temporal.ZonedDateTime(0n, 'UTC');
       const zdt2 = new Temporal.ZonedDateTime(0n, 'UTC', Temporal.Calendar.from('japanese'));
       throws(() => zdt1.since(zdt2), RangeError);
-    });
-    it('options may be a function object', () => {
-      equal(`${feb21.since(feb20, () => {})}`, 'PT8784H');
     });
     const earlier = Temporal.ZonedDateTime.from('2019-01-08T09:22:36.123456789+01:00[Europe/Vienna]');
     const later = Temporal.ZonedDateTime.from('2021-09-07T14:39:40.987654321+02:00[Europe/Vienna]');
@@ -1609,10 +1344,6 @@ describe('Temporal.ZonedDateTime', () => {
         equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
       });
     });
-    it('trunc is the default', () => {
-      equal(`${later.since(earlier, { smallestUnit: 'minutes' })}`, 'PT23356H17M');
-      equal(`${later.since(earlier, { smallestUnit: 'seconds' })}`, 'PT23356H17M4S');
-    });
     it('rounds to an increment of hours', () => {
       equal(
         `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'halfExpand' })}`,
@@ -1687,76 +1418,11 @@ describe('Temporal.ZonedDateTime', () => {
       throws(() => later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
       throws(() => later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
     });
-    it('accepts singular units', () => {
-      equal(`${later.since(earlier, { largestUnit: 'year' })}`, `${later.since(earlier, { largestUnit: 'years' })}`);
-      equal(`${later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier, { smallestUnit: 'years' })}`);
-      equal(`${later.since(earlier, { largestUnit: 'month' })}`, `${later.since(earlier, { largestUnit: 'months' })}`);
-      equal(
-        `${later.since(earlier, { smallestUnit: 'month' })}`,
-        `${later.since(earlier, { smallestUnit: 'months' })}`
-      );
-      equal(`${later.since(earlier, { largestUnit: 'day' })}`, `${later.since(earlier, { largestUnit: 'days' })}`);
-      equal(`${later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier, { smallestUnit: 'days' })}`);
-      equal(`${later.since(earlier, { largestUnit: 'hour' })}`, `${later.since(earlier, { largestUnit: 'hours' })}`);
-      equal(`${later.since(earlier, { smallestUnit: 'hour' })}`, `${later.since(earlier, { smallestUnit: 'hours' })}`);
-      equal(
-        `${later.since(earlier, { largestUnit: 'minute' })}`,
-        `${later.since(earlier, { largestUnit: 'minutes' })}`
-      );
-      equal(
-        `${later.since(earlier, { smallestUnit: 'minute' })}`,
-        `${later.since(earlier, { smallestUnit: 'minutes' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'second' })}`,
-        `${later.since(earlier, { largestUnit: 'seconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { smallestUnit: 'second' })}`,
-        `${later.since(earlier, { smallestUnit: 'seconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'millisecond' })}`,
-        `${later.since(earlier, { largestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { smallestUnit: 'millisecond' })}`,
-        `${later.since(earlier, { smallestUnit: 'milliseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'microsecond' })}`,
-        `${later.since(earlier, { largestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { smallestUnit: 'microsecond' })}`,
-        `${later.since(earlier, { smallestUnit: 'microseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { largestUnit: 'nanosecond' })}`,
-        `${later.since(earlier, { largestUnit: 'nanoseconds' })}`
-      );
-      equal(
-        `${later.since(earlier, { smallestUnit: 'nanosecond' })}`,
-        `${later.since(earlier, { smallestUnit: 'nanoseconds' })}`
-      );
-    });
     it('rounds relative to the receiver', () => {
       const dt1 = Temporal.ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
       const dt2 = Temporal.ZonedDateTime.from('2020-07-02T00:00+00:00[UTC]');
       equal(`${dt2.since(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, 'P1Y');
       equal(`${dt1.since(dt2, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`, '-P2Y');
-    });
-    it('throws with invalid offset', () => {
-      throws(() => {
-        const zdt = Temporal.ZonedDateTime.from('2019-01-01T00:00+00:00[UTC]');
-        zdt.since({
-          year: 2021,
-          month: 11,
-          day: 26,
-          offset: '+099:00',
-          timeZone: 'Europe/London'
-        });
-      }, RangeError);
     });
   });
 
@@ -1813,10 +1479,6 @@ describe('Temporal.ZonedDateTime', () => {
         equal(`${zdt.round({ smallestUnit, roundingMode: 'floor' })}`, expected));
       it(`truncates to ${smallestUnit}`, () =>
         equal(`${zdt.round({ smallestUnit, roundingMode: 'trunc' })}`, expected));
-    });
-    it('halfExpand is the default', () => {
-      equal(`${zdt.round({ smallestUnit: 'minute' })}`, '1976-11-18T15:24:00+01:00[Europe/Vienna]');
-      equal(`${zdt.round({ smallestUnit: 'second' })}`, '1976-11-18T15:23:30+01:00[Europe/Vienna]');
     });
     it('rounds to an increment of hours', () => {
       equal(`${zdt.round({ smallestUnit: 'hour', roundingIncrement: 4 })}`, '1976-11-18T16:00:00+01:00[Europe/Vienna]');
@@ -1897,16 +1559,6 @@ describe('Temporal.ZonedDateTime', () => {
         equal(`${bal.round({ smallestUnit })}`, '1976-11-19T00:00:00+01:00[Europe/Vienna]');
       });
     });
-    it('accepts plural units', () => {
-      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
-        assert(zdt.round({ smallestUnit }).equals(zdt.round({ smallestUnit: `${smallestUnit}s` })));
-      });
-    });
-    it('accepts string parameter as shortcut for {smallestUnit}', () => {
-      ['day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'].forEach((smallestUnit) => {
-        assert(zdt.round(smallestUnit).equals(zdt.round({ smallestUnit })));
-      });
-    });
     it('rounds correctly to a 25-hour day', () => {
       const roundTo = { smallestUnit: 'day' };
       const roundMeDown = Temporal.ZonedDateTime.from('2020-11-01T12:29:59-08:00[America/Vancouver]');
@@ -1974,17 +1626,6 @@ describe('Temporal.ZonedDateTime', () => {
         TypeError
       );
     });
-    it('throws with invalid offset', () => {
-      throws(() => {
-        zdt.equals({
-          year: 2021,
-          month: 11,
-          day: 26,
-          offset: '+099:00',
-          timeZone: 'Europe/London'
-        });
-      }, RangeError);
-    });
   });
   describe('Temporal.ZonedDateTime.toString()', () => {
     const zdt1 = Temporal.ZonedDateTime.from('1976-11-18T15:23+01:00[Europe/Vienna]');
@@ -2004,12 +1645,8 @@ describe('Temporal.ZonedDateTime', () => {
         '1976-11-18T15:23:00+01:00[Europe/Vienna]'
       );
     });
-    it('default is calendar = auto', () => {
-      equal(zdt1.toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna]');
-      equal(zdt1.withCalendar('gregory').toString(), '1976-11-18T15:23:00+01:00[Europe/Vienna][u-ca=gregory]');
-    });
     it('throws on invalid calendar', () => {
-      ['ALWAYS', 'sometimes', false, 3, null].forEach((calendarName) => {
+      ['ALWAYS', 'sometimes'].forEach((calendarName) => {
         throws(() => zdt1.toString({ calendarName }), RangeError);
       });
     });
@@ -2039,17 +1676,6 @@ describe('Temporal.ZonedDateTime', () => {
       const zdt6 = Temporal.ZonedDateTime.from(roundedString);
       equal(zdt6.epochNanoseconds - zdt5.epochNanoseconds, 1n);
     });
-  });
-  describe("Comparison operators don't work", () => {
-    const zdt1 = Temporal.ZonedDateTime.from('1963-02-13T09:36:29.123456789+01:00[Europe/Vienna]');
-    const zdt1again = Temporal.ZonedDateTime.from('1963-02-13T09:36:29.123456789+01:00[Europe/Vienna]');
-    const zdt2 = Temporal.ZonedDateTime.from('1976-11-18T15:23:30.123456789+01:00[Europe/Vienna]');
-    it('=== is object equality', () => equal(zdt1, zdt1));
-    it('!== is object equality', () => notEqual(zdt1, zdt1again));
-    it('<', () => throws(() => zdt1 < zdt2, TypeError));
-    it('>', () => throws(() => zdt1 > zdt2, TypeError));
-    it('<=', () => throws(() => zdt1 <= zdt2, TypeError));
-    it('>=', () => throws(() => zdt1 >= zdt2, TypeError));
   });
 
   describe('Temporal.ZonedDateTime.toInstant()', () => {
@@ -2125,40 +1751,6 @@ describe('Temporal.ZonedDateTime', () => {
         calendar: 'gregory'
       });
       equal(zdt.toPlainMonthDay().calendar.id, 'gregory');
-    });
-  });
-
-  describe('Temporal.ZonedDateTime.getISOFields()', () => {
-    const zdt1 = Temporal.ZonedDateTime.from('1976-11-18T15:23:30.123456789+08:00[Asia/Shanghai]');
-    const fields = zdt1.getISOFields();
-    it('fields', () => {
-      equal(fields.isoYear, 1976);
-      equal(fields.isoMonth, 11);
-      equal(fields.isoDay, 18);
-      equal(fields.isoHour, 15);
-      equal(fields.isoMinute, 23);
-      equal(fields.isoSecond, 30);
-      equal(fields.isoMillisecond, 123);
-      equal(fields.isoMicrosecond, 456);
-      equal(fields.isoNanosecond, 789);
-      equal(fields.offset, '+08:00');
-      equal(fields.timeZone.id, 'Asia/Shanghai');
-      equal(fields.calendar.id, 'iso8601');
-    });
-    it('enumerable', () => {
-      const fields2 = { ...fields };
-      equal(fields2.isoYear, 1976);
-      equal(fields2.isoMonth, 11);
-      equal(fields2.isoDay, 18);
-      equal(fields2.isoHour, 15);
-      equal(fields2.isoMinute, 23);
-      equal(fields2.isoSecond, 30);
-      equal(fields2.isoMillisecond, 123);
-      equal(fields2.isoMicrosecond, 456);
-      equal(fields2.isoNanosecond, 789);
-      equal(fields2.offset, '+08:00');
-      equal(fields2.timeZone, fields.timeZone);
-      equal(fields2.calendar, fields.calendar);
     });
   });
 
@@ -2611,17 +2203,6 @@ describe('Temporal.ZonedDateTime', () => {
       const clockAfter = Temporal.ZonedDateTime.from('2000-01-01T01:30-04:00[America/Halifax]');
       equal(Temporal.ZonedDateTime.compare(clockBefore, clockAfter), 1);
       equal(Temporal.PlainDateTime.compare(clockBefore.toPlainDateTime(), clockAfter.toPlainDateTime()), -1);
-    });
-    it('throws with invalid offset', () => {
-      throws(() => {
-        Temporal.ZonedDateTime.compare(zdt1, {
-          year: 2021,
-          month: 11,
-          day: 26,
-          offset: '+099:00',
-          timeZone: 'Europe/London'
-        });
-      }, RangeError);
     });
   });
 });
