@@ -5977,6 +5977,16 @@
     },
     BalanceDuration: function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
       var relativeTo = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : undefined;
+      var result = ES.BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo);
+
+      if (result === 'positive overflow' || result === 'negative overflow') {
+        throw new RangeError('Duration out of range');
+      } else {
+        return result;
+      }
+    },
+    BalancePossiblyInfiniteDuration: function BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
+      var relativeTo = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : undefined;
 
       if (ES.IsTemporalZonedDateTime(relativeTo)) {
         var endNs = ES.AddZonedDateTime(GetSlot(relativeTo, INSTANT), GetSlot(relativeTo, TIME_ZONE), GetSlot(relativeTo, CALENDAR), 0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -6102,6 +6112,19 @@
       milliseconds = milliseconds.toJSNumber() * sign;
       microseconds = microseconds.toJSNumber() * sign;
       nanoseconds = nanoseconds.toJSNumber() * sign;
+
+      for (var _i4 = 0, _arr2 = [days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]; _i4 < _arr2.length; _i4++) {
+        var prop = _arr2[_i4];
+
+        if (!NumberIsFinite(prop)) {
+          if (sign === 1) {
+            return 'positive overflow';
+          } else if (sign === -1) {
+            return 'negative overflow';
+          }
+        }
+      }
+
       return {
         days: days,
         hours: hours,
@@ -6470,8 +6493,8 @@
     RejectDuration: function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
       var sign = ES.DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
 
-      for (var _i4 = 0, _arr2 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i4 < _arr2.length; _i4++) {
-        var prop = _arr2[_i4];
+      for (var _i5 = 0, _arr3 = [y, mon, w, d, h, min, s, ms, µs, ns]; _i5 < _arr3.length; _i5++) {
+        var prop = _arr3[_i5];
         if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
         var propSign = MathSign(prop);
         if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
@@ -8131,10 +8154,10 @@
       };
     },
     CompareISODate: function CompareISODate(y1, m1, d1, y2, m2, d2) {
-      for (var _i5 = 0, _arr3 = [[y1, y2], [m1, m2], [d1, d2]]; _i5 < _arr3.length; _i5++) {
-        var _arr3$_i = _slicedToArray(_arr3[_i5], 2),
-            x = _arr3$_i[0],
-            y = _arr3$_i[1];
+      for (var _i6 = 0, _arr4 = [[y1, y2], [m1, m2], [d1, d2]]; _i6 < _arr4.length; _i6++) {
+        var _arr4$_i = _slicedToArray(_arr4[_i6], 2),
+            x = _arr4$_i[0],
+            y = _arr4$_i[1];
 
         if (x !== y) return ES.ComparisonResult(x - y);
       }
@@ -13268,15 +13291,21 @@
           intermediate = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
         }
 
-        var _ES$BalanceDuration2 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit, intermediate);
+        var balanceResult = ES.BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit, intermediate);
 
-        days = _ES$BalanceDuration2.days;
-        hours = _ES$BalanceDuration2.hours;
-        minutes = _ES$BalanceDuration2.minutes;
-        seconds = _ES$BalanceDuration2.seconds;
-        milliseconds = _ES$BalanceDuration2.milliseconds;
-        microseconds = _ES$BalanceDuration2.microseconds;
-        nanoseconds = _ES$BalanceDuration2.nanoseconds;
+        if (balanceResult === 'positive overflow') {
+          return Infinity;
+        } else if (balanceResult === 'negative overflow') {
+          return -Infinity;
+        }
+
+        days = balanceResult.days;
+        hours = balanceResult.hours;
+        minutes = balanceResult.minutes;
+        seconds = balanceResult.seconds;
+        milliseconds = balanceResult.milliseconds;
+        microseconds = balanceResult.microseconds;
+        nanoseconds = balanceResult.nanoseconds;
 
         // Finally, truncate to the correct unit and calculate remainder
         var _ES$RoundDuration2 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, unit, 'trunc', relativeTo),
