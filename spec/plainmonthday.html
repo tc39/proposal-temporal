@@ -411,7 +411,7 @@
         1. If _showCalendar_ is *"always"* or if _calendarID_ is not *"iso8601"*, then
           1. Let _year_ be ! PadISOYear(_monthDay_.[[ISOYear]]).
           1. Set _result_ to the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _result_.
-        1. Let _calendarString_ be ! FormatCalendarAnnotation(_calendarID_, _showCalendar_).
+        1. Let _calendarString_ be FormatCalendarAnnotation(_calendarID_, _showCalendar_).
         1. Set _result_ to the string-concatenation of _result_ and _calendarString_.
         1. Return _result_.
       </emu-alg>
