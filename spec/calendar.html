@@ -389,21 +389,53 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-formatcalendarannotation" aoid="FormatCalendarAnnotation">
-      <h1>FormatCalendarAnnotation ( _id_, _showCalendar_ )</h1>
-      <p>
-        The abstract operation FormatCalendarAnnotation returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
-        Depending on the given _id_ and value of _showCalendar_, the string may be empty if no calendar annotation need be included.
-      </p>
-      <emu-note type="editor">
-        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://ryzokuken.dev/draft-ryzokuken-datetime-extended/documents/rfc-3339.html#name-internet-date-time-format">Date and Time on the Internet: Timestamps with additional information</a>.
-      </emu-note>
+    <emu-clause id="sec-temporal-maybeformatcalendarannotation" type="abstract operation">
+      <h1>
+        MaybeFormatCalendarAnnotation (
+          _calendarObject_: an Object,
+          _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
+        ): either a normal completion containing a String, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
+          Depending on the given _calendarObject_ and the value of _showCalendar_, the string may be empty if no calendar annotation need be included.
+          This operation may invoke an observable ToString operation on _calendarObject_, but not if _showCalendar_ is *"never"*.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _showCalendar_ is *"auto"*, *"always"*, or *"never"*.
+        1. If _showCalendar_ is *"never"*, return the empty String.
+        1. Let _calendarID_ be ? ToString(_calendarObject_).
+        1. Return FormatCalendarAnnotation(_calendarID_, _showCalendar_).
+      </emu-alg>
+      <emu-note type="editor">
+        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended">Date and Time on the Internet: Timestamps with additional information</a>.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
+      <h1>
+        FormatCalendarAnnotation (
+          _id_: a String,
+          _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
+          Depending on the given _id_ and value of _showCalendar_, the string may be empty if no calendar annotation need be included.
+        </dd>
+      </dl>
+      <emu-alg>
         1. If _showCalendar_ is *"never"*, return the empty String.
         1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
         1. Return the string-concatenation of *"[u-ca="*, _id_, and *"]"*.
       </emu-alg>
+      <emu-note type="editor">
+        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended">Date and Time on the Internet: Timestamps with additional information</a>.
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
