@@ -14645,8 +14645,8 @@
         var endNs = ES.AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
         var dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
 
-        if (dayLengthNs.isZero()) {
-          throw new RangeError('cannot round a ZonedDateTime in a calendar with zero-length days');
+        if (dayLengthNs.leq(0)) {
+          throw new RangeError('cannot round a ZonedDateTime in a calendar with zero- or negative-length days');
         }
 
         var _ES$RoundISODateTime = ES.RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode, dayLengthNs);
