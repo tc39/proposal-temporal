@@ -111,10 +111,6 @@ describe('Duration', () => {
     });
   });
   describe('Temporal.Duration.add()', () => {
-    const max = new Temporal.Duration(0, 0, 0, ...Array(7).fill(Number.MAX_VALUE));
-    it('always throws when addition overflows', () => {
-      throws(() => max.add(max), RangeError);
-    });
     const oneDay = new Temporal.Duration(0, 0, 0, 1);
     const hours24 = new Temporal.Duration(0, 0, 0, 0, 24);
     it('relativeTo does not affect days if PlainDate', () => {
