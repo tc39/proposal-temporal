@@ -3274,6 +3274,10 @@
       if (z) return 'UTC';
       return offset; // if !ianaName && !z then offset must be present
     },
+    MaybeFormatCalendarAnnotation: function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
+      if (showCalendar === 'never') return '';
+      return ES.FormatCalendarAnnotation(ES.ToString(calendar), showCalendar);
+    },
     FormatCalendarAnnotation: function FormatCalendarAnnotation(id, showCalendar) {
       if (showCalendar === 'never') return '';
       if (showCalendar === 'auto' && id === 'iso8601') return '';
@@ -5350,8 +5354,7 @@
       var year = ES.ISOYearString(GetSlot(date, ISO_YEAR));
       var month = ES.ISODateTimePartString(GetSlot(date, ISO_MONTH));
       var day = ES.ISODateTimePartString(GetSlot(date, ISO_DAY));
-      var calendarID = ES.ToString(GetSlot(date, CALENDAR));
-      var calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+      var calendar = ES.MaybeFormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
       return "".concat(year, "-").concat(month, "-").concat(day).concat(calendar);
     },
     TemporalDateTimeToString: function TemporalDateTimeToString(dateTime, precision) {
@@ -5391,8 +5394,7 @@
       hour = ES.ISODateTimePartString(hour);
       minute = ES.ISODateTimePartString(minute);
       var seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-      var calendarID = ES.ToString(GetSlot(dateTime, CALENDAR));
-      var calendar = ES.FormatCalendarAnnotation(calendarID, showCalendar);
+      var calendar = ES.MaybeFormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
       return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
     },
     TemporalMonthDayToString: function TemporalMonthDayToString(monthDay) {
@@ -5462,8 +5464,7 @@
       }
 
       if (showTimeZone !== 'never') result += "[".concat(tz, "]");
-      var calendarID = ES.ToString(GetSlot(zdt, CALENDAR));
-      result += ES.FormatCalendarAnnotation(calendarID, showCalendar);
+      result += ES.MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
       return result;
     },
     TestTimeZoneOffsetString: function TestTimeZoneOffsetString(string) {
