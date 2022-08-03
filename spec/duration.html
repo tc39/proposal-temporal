@@ -1401,7 +1401,7 @@
             1. Set _newRelativeTo_ to _moveResult_.[[RelativeTo]].
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
-          1. Let _newRelativeTo_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
+          1. Set _newRelativeTo_ to ? CalendarDateAdd(_calendar_, _relativeTo_, _oneYear_, *undefined*, _dateAdd_).
           1. Let _dateUntil_ be ? GetMethod(_calendar_, *"dateUntil"*).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
