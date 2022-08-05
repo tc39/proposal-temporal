@@ -7,12 +7,10 @@
   "browser": "dist/index.umd.js",
   "types": "index.d.ts",
   "scripts": {
-    "coverage": "c8 report --reporter html",
     "test": "node --loader ./test/resolve.source.mjs ./test/all.mjs",
     "test-cookbook": "npm run build && TEST=all npm run test-cookbook-one && TEST=stockExchangeTimeZone npm run test-cookbook-one",
     "test-cookbook-one": "node --loader ./test/resolve.cookbook.mjs ../docs/cookbook/$TEST.mjs",
     "test262": "./ci_test.sh",
-    "codecov:tests": "./ci_codecov_test.sh",
     "codecov:test262": "./ci_codecov_test262.sh",
     "build": "rollup -c rollup.config.js",
     "build262": "TEST262=1 rollup -c rollup.config.js",

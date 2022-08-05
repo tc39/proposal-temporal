@@ -9,4 +9,4 @@ fi
 
 export COVERAGE=yes
 npm run test262
-codecov $SHA_ARG -F test262 -f coverage/test262.lcov
+codecov $SHA_ARG -f coverage/test262.lcov
