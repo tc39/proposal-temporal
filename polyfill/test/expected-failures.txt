@@ -12,7 +12,5 @@ built-ins/Temporal/PlainTime/prototype/subtract/argument-string-negative-fractio
 built-ins/Temporal/ZonedDateTime/prototype/add/argument-string-negative-fractional-units.js
 built-ins/Temporal/ZonedDateTime/prototype/subtract/argument-string-negative-fractional-units.js
 
-# Intl-enumeration not supported
 intl402/Temporal/TimeZone/prototype/getNextTransition/transition-at-instant-boundaries.js
 intl402/Temporal/TimeZone/prototype/getPreviousTransition/transition-at-instant-boundaries.js
-intl402/Temporal/TimeZone/supported-values-of.js
