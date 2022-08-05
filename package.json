@@ -21,7 +21,6 @@
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run test-cookbook && npm run test262",
-    "codecov:tests": "cd polyfill && npm install && npm run codecov:tests",
     "codecov:test262": "cd polyfill && npm install && npm run codecov:test262",
     "test-cookbook": "cd polyfill && npm install && npm run test-cookbook",
     "test-demitasse": "cd polyfill && npm install && npm run test",

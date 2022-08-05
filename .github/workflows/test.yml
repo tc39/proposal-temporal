@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 18.x
       - run: npm ci
-      - run: npm run codecov:tests
+      - run: npm run test-demitasse
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   test-test262:
