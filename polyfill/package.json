@@ -8,16 +8,16 @@
   "types": "index.d.ts",
   "scripts": {
     "coverage": "c8 report --reporter html",
-    "test": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu --loader ./test/resolve.source.mjs ./test/all.mjs",
+    "test": "node --loader ./test/resolve.source.mjs ./test/all.mjs",
     "test-cookbook": "npm run build && TEST=all npm run test-cookbook-one && TEST=stockExchangeTimeZone npm run test-cookbook-one",
-    "test-cookbook-one": "node --no-warnings --experimental-modules --icu-data-dir node_modules/full-icu --loader ./test/resolve.cookbook.mjs ../docs/cookbook/$TEST.mjs",
+    "test-cookbook-one": "node --loader ./test/resolve.cookbook.mjs ../docs/cookbook/$TEST.mjs",
     "test262": "./ci_test.sh",
     "codecov:tests": "./ci_codecov_test.sh",
     "codecov:test262": "./ci_codecov_test262.sh",
     "build": "rollup -c rollup.config.js",
     "build262": "TEST262=1 rollup -c rollup.config.js",
     "prepublishOnly": "npm run build",
-    "playground": "node --experimental-modules --no-warnings --icu-data-dir node_modules/full-icu -r ./lib/init.js"
+    "playground": "node -r ./lib/init.js"
   },
   "repository": {
     "type": "git",
@@ -80,7 +80,6 @@
     "c8": "^7.11.0",
     "codecov": "^3.8.2",
     "core-js": "^3.21.1",
-    "full-icu": "^1.4.0",
     "nyc": "^15.1.0",
     "rollup": "^2.68.0",
     "rollup-plugin-terser": "^7.0.2",
@@ -89,6 +88,6 @@
     "uuid": "^8.3.2"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   }
 }

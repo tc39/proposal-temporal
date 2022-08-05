@@ -2,8 +2,7 @@
 // tries to parse them
 
 // Run with:
-// node --experimental-modules --no-warnings --icu-data-dir \
-//    ./node_modules/full-icu/ test/validStrings.mjs
+// node test/validStrings.mjs
 
 import assert from 'assert';
 import { ES } from '../lib/ecmascript.mjs';

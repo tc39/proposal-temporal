@@ -223,7 +223,6 @@ describe('Intl', () => {
     });
     const hasOutdatedChineseIcuData = !testChineseData.endsWith('2001');
     const itOrSkip = (id) => ((id === 'chinese' || id === 'dangi') && hasOutdatedChineseIcuData ? it.skip : it);
-    const nodeVersion = process.versions.node.split('.')[0];
 
     it('verify that Intl.DateTimeFormat.formatToParts output matches snapshot data', () => {
       // This test isn't testing Temporal. Instead, it's verifying that the
@@ -264,175 +263,49 @@ describe('Intl', () => {
       const year1Content = getLocalizedDates('0001-01-01T00:00Z');
       // to generate snapshot: `          '${year1Content.replaceAll('\n', "\\n' +\n          '")}',\n`
 
-      const year2000Snapshots = {
-        node12:
-          'iso8601: 1/1/2000\n' +
-          'buddhist: 1/1/2543\n' +
-          'chinese: 11/25/16\n' +
-          'coptic: 4/22/1716\n' +
-          'dangi: 11/25/16\n' +
-          'ethioaa: 4/22/7492\n' +
-          'ethiopic: 4/22/1992\n' +
-          'gregory: 1/1/2000\n' +
-          'hebrew: 4/23/5760\n' +
-          'indian: 10/11/1921\n' +
-          'islamic: 9/25/1420\n' +
-          'islamic-umalqura: 9/24/1420\n' +
-          'islamic-tbla: 9/25/1420\n' +
-          'islamic-civil: 9/24/1420\n' +
-          'islamic-rgsa: 9/25/1420\n' +
-          'islamicc: 9/24/1420\n' +
-          'japanese: 1/1/12\n' +
-          'persian: 10/11/1378\n' +
-          'roc: 1/1/89',
-        node14:
-          'iso8601: 1/1/2000\n' +
-          'buddhist: 1/1/2543 BE\n' +
-          'chinese: 11/25/1999\n' +
-          'coptic: 4/22/1716 ERA1\n' +
-          'dangi: 11/25/1999\n' +
-          'ethioaa: 4/22/7492 ERA0\n' +
-          'ethiopic: 4/22/1992 ERA1\n' +
-          'gregory: 1/1/2000\n' +
-          'hebrew: 23 Tevet 5760\n' +
-          'indian: 10/11/1921 Saka\n' +
-          'islamic: 9/25/1420 AH\n' +
-          'islamic-umalqura: 9/24/1420 AH\n' +
-          'islamic-tbla: 9/25/1420 AH\n' +
-          'islamic-civil: 9/24/1420 AH\n' +
-          'islamic-rgsa: 9/25/1420 AH\n' +
-          'islamicc: 9/24/1420 AH\n' +
-          'japanese: 1/1/12 H\n' +
-          'persian: 10/11/1378 AP\n' +
-          'roc: 1/1/89 Minguo',
-        node16:
-          'iso8601: 1/1/2000\n' +
-          'buddhist: 1/1/2543 BE\n' +
-          'chinese: 11/25/1999\n' +
-          'coptic: 4/22/1716 ERA1\n' +
-          'dangi: 11/25/1999\n' +
-          'ethioaa: 4/22/7492 ERA0\n' +
-          'ethiopic: 4/22/1992 ERA1\n' +
-          'gregory: 1/1/2000\n' +
-          'hebrew: 23 Tevet 5760\n' +
-          'indian: 10/11/1921 Saka\n' +
-          'islamic: 9/25/1420 AH\n' +
-          'islamic-umalqura: 9/24/1420 AH\n' +
-          'islamic-tbla: 9/25/1420 AH\n' +
-          'islamic-civil: 9/24/1420 AH\n' +
-          'islamic-rgsa: 9/25/1420 AH\n' +
-          'islamicc: 9/24/1420 AH\n' +
-          'japanese: 1/1/12 H\n' +
-          'persian: 10/11/1378 AP\n' +
-          'roc: 1/1/89 Minguo',
-        node17:
-          'iso8601: 1/1/2000\n' +
-          'buddhist: 1/1/2543 BE\n' +
-          'chinese: 11/25/1999\n' +
-          'coptic: 4/22/1716 ERA1\n' +
-          'dangi: 11/25/1999\n' +
-          'ethioaa: 4/22/7492 ERA0\n' +
-          'ethiopic: 4/22/1992 ERA1\n' +
-          'gregory: 1/1/2000\n' +
-          'hebrew: 23 Tevet 5760\n' +
-          'indian: 10/11/1921 Saka\n' +
-          'islamic: 9/25/1420 AH\n' +
-          'islamic-umalqura: 9/24/1420 AH\n' +
-          'islamic-tbla: 9/25/1420 AH\n' +
-          'islamic-civil: 9/24/1420 AH\n' +
-          'islamic-rgsa: 9/25/1420 AH\n' +
-          'islamicc: 9/24/1420 AH\n' +
-          'japanese: 1/1/12 H\n' +
-          'persian: 10/11/1378 AP\n' +
-          'roc: 1/1/89 Minguo'
-      };
-      year2000Snapshots.other = year2000Snapshots.node17;
-      equal(year2000Content, year2000Snapshots[`node${nodeVersion}`] || year2000Snapshots.other);
+      const year2000Snapshot =
+        'iso8601: 1/1/2000\n' +
+        'buddhist: 1/1/2543 BE\n' +
+        'chinese: 11/25/1999\n' +
+        'coptic: 4/22/1716 ERA1\n' +
+        'dangi: 11/25/1999\n' +
+        'ethioaa: 4/22/7492 ERA0\n' +
+        'ethiopic: 4/22/1992 ERA1\n' +
+        'gregory: 1/1/2000\n' +
+        'hebrew: 23 Tevet 5760\n' +
+        'indian: 10/11/1921 Saka\n' +
+        'islamic: 9/25/1420 AH\n' +
+        'islamic-umalqura: 9/24/1420 AH\n' +
+        'islamic-tbla: 9/25/1420 AH\n' +
+        'islamic-civil: 9/24/1420 AH\n' +
+        'islamic-rgsa: 9/25/1420 AH\n' +
+        'islamicc: 9/24/1420 AH\n' +
+        'japanese: 1/1/12 H\n' +
+        'persian: 10/11/1378 AP\n' +
+        'roc: 1/1/89 Minguo';
+      equal(year2000Content, year2000Snapshot);
 
-      const year1Snapshots = {
-        node12:
-          'iso8601: 1/1/1\n' +
-          'buddhist: 1/3/544\n' +
-          'chinese: 11/21/57\n' +
-          'coptic: 5/8/284\n' +
-          'dangi: 11/21/57\n' +
-          'ethioaa: 5/8/5493\n' +
-          'ethiopic: 5/8/5493\n' +
-          'gregory: 1/1/1\n' +
-          'hebrew: 4/18/3761\n' +
-          'indian: 10/11/-78\n' +
-          'islamic: -7/20/-639\n' +
-          'islamic-umalqura: 5/18/-640\n' +
-          'islamic-tbla: 5/19/-640\n' +
-          'islamic-civil: 5/18/-640\n' +
-          'islamic-rgsa: -7/20/-639\n' +
-          'islamicc: 5/18/-640\n' +
-          'japanese: 1/3/-643\n' +
-          'persian: 10/11/-621\n' +
-          'roc: 1/3/1911',
-        node14:
-          'iso8601: 1/1/1\n' +
-          'buddhist: 1/3/544 BE\n' +
-          'chinese: 11/21/0\n' +
-          'coptic: 5/8/284 ERA0\n' +
-          'dangi: 11/21/0\n' +
-          'ethioaa: 5/8/5493 ERA0\n' +
-          'ethiopic: 5/8/5493 ERA0\n' +
-          'gregory: 1/1/1\n' +
-          'hebrew: 18 Tevet 3761\n' +
-          'indian: 10/11/-78 Saka\n' +
-          'islamic: 5/20/-640 AH\n' +
-          'islamic-umalqura: 5/18/-640 AH\n' +
-          'islamic-tbla: 5/19/-640 AH\n' +
-          'islamic-civil: 5/18/-640 AH\n' +
-          'islamic-rgsa: 5/20/-640 AH\n' +
-          'islamicc: 5/18/-640 AH\n' +
-          'japanese: 1/3/-643 Taika (645–650)\n' +
-          'persian: 10/11/-621 AP\n' +
-          'roc: 1/3/1911 B.R.O.C.',
-        node16:
-          'iso8601: 1/1/1\n' +
-          'buddhist: 1/3/544 BE\n' +
-          'chinese: 11/21/0\n' +
-          'coptic: 5/8/284 ERA0\n' +
-          'dangi: 11/21/0\n' +
-          'ethioaa: 5/8/5493 ERA0\n' +
-          'ethiopic: 5/8/5493 ERA0\n' +
-          'gregory: 1/1/1\n' +
-          'hebrew: 18 Tevet 3761\n' +
-          'indian: 10/11/-78 Saka\n' +
-          'islamic: 5/20/-640 AH\n' +
-          'islamic-umalqura: 5/18/-640 AH\n' +
-          'islamic-tbla: 5/19/-640 AH\n' +
-          'islamic-civil: 5/18/-640 AH\n' +
-          'islamic-rgsa: 5/20/-640 AH\n' +
-          'islamicc: 5/18/-640 AH\n' +
-          'japanese: 1/3/-643 Taika (645–650)\n' +
-          'persian: 10/11/-621 AP\n' +
-          'roc: 1/3/1911 B.R.O.C.',
-        node17:
-          'iso8601: 1/1/1\n' +
-          'buddhist: 1/3/544 BE\n' +
-          'chinese: 11/21/0\n' +
-          'coptic: 5/8/284 ERA0\n' +
-          'dangi: 11/21/0\n' +
-          'ethioaa: 5/8/5493 ERA0\n' +
-          'ethiopic: 5/8/5493 ERA0\n' +
-          'gregory: 1/1/1\n' +
-          'hebrew: 18 Tevet 3761\n' +
-          'indian: 10/11/-78 Saka\n' +
-          'islamic: 5/20/-640 AH\n' +
-          'islamic-umalqura: 5/18/-640 AH\n' +
-          'islamic-tbla: 5/19/-640 AH\n' +
-          'islamic-civil: 5/18/-640 AH\n' +
-          'islamic-rgsa: 5/20/-640 AH\n' +
-          'islamicc: 5/18/-640 AH\n' +
-          'japanese: 1/3/-643 Taika (645–650)\n' +
-          'persian: 10/11/-621 AP\n' +
-          'roc: 1/3/1911 B.R.O.C.'
-      };
-      year1Snapshots.other = year1Snapshots.node17;
-      equal(year1Content, year1Snapshots[`node${nodeVersion}`] || year1Snapshots.other);
+      const year1Snapshot =
+        'iso8601: 1/1/1\n' +
+        'buddhist: 1/3/544 BE\n' +
+        'chinese: 11/21/0\n' +
+        'coptic: 5/8/284 ERA0\n' +
+        'dangi: 11/21/0\n' +
+        'ethioaa: 5/8/5493 ERA0\n' +
+        'ethiopic: 5/8/5493 ERA0\n' +
+        'gregory: 1/1/1\n' +
+        'hebrew: 18 Tevet 3761\n' +
+        'indian: 10/11/-78 Saka\n' +
+        'islamic: 5/20/-640 AH\n' +
+        'islamic-umalqura: 5/18/-640 AH\n' +
+        'islamic-tbla: 5/19/-640 AH\n' +
+        'islamic-civil: 5/18/-640 AH\n' +
+        'islamic-rgsa: 5/20/-640 AH\n' +
+        'islamicc: 5/18/-640 AH\n' +
+        'japanese: 1/3/-643 Taika (645–650)\n' +
+        'persian: 10/11/-621 AP\n' +
+        'roc: 1/3/1911 B.R.O.C.';
+      equal(year1Content, year1Snapshot);
     });
 
     const fromWithCases = {
@@ -472,19 +345,11 @@ describe('Intl', () => {
       hebrew: { year2000: { year: 5760, month: 4, day: 23 }, year1: { year: 3761, month: 4, day: 18 } },
       indian: {
         year2000: { year: 1921, month: 10, day: 11, era: 'saka' },
-        // with() fails due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
-        // from() succeeds because the bug only gets triggered before 1/1/1 ISO.
-        // Fixed in later versions of Node 14/15/16
-        year1: {
-          with: { node12: RangeError, year: -78, month: 10, day: 11, era: 'saka' },
-          from: { year: -78, month: 10, day: 11, era: 'saka' }
-        }
+        year1: { year: -78, month: 10, day: 11, era: 'saka' }
       },
-      // Older islamic dates will fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10527
-      // Fixed in later versions of Node 14/15/16
       islamic: {
         year2000: { year: 1420, month: 9, day: 25, era: 'ah' },
-        year1: { node12: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
+        year1: { year: -640, month: 5, day: 20, era: 'ah' }
       },
       'islamic-umalqura': {
         year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
@@ -500,7 +365,7 @@ describe('Intl', () => {
       },
       'islamic-rgsa': {
         year2000: { year: 1420, month: 9, day: 25, era: 'ah' },
-        year1: { node12: RangeError, year: -640, month: 5, day: 20, era: 'ah' }
+        year1: { year: -640, month: 5, day: 20, era: 'ah' }
       },
       islamicc: {
         year2000: { year: 1420, month: 9, day: 24, era: 'ah' },
@@ -539,18 +404,11 @@ describe('Intl', () => {
         year1: Temporal.PlainDate.from('0001-01-01')
       };
       for (const [name, date] of Object.entries(dates)) {
-        const getValues = (type) => {
-          let val = tests[name];
-          if (val[type]) val = val[type];
-          return val;
-        };
-        const fromValues = getValues('from');
-        const fromErrorExpected =
-          fromValues === RangeError || (nodeVersion === '12' && fromValues.node12 === RangeError);
-        itOrSkip(id)(`from: ${id} ${name} ${fromErrorExpected ? ' (throws)' : ''}`, () => {
+        const values = tests[name];
+        const errorExpected = values === RangeError;
+        itOrSkip(id)(`from: ${id} ${name} ${errorExpected ? ' (throws)' : ''}`, () => {
           const now = globalThis.performance ? globalThis.performance.now() : Date.now();
-          const values = fromValues;
-          if (fromErrorExpected) {
+          if (errorExpected) {
             // Some calendars will fail due to Chromium bugs noted in the test definitions
             throws(() => {
               const inCal = date.withCalendar(id);
@@ -639,13 +497,10 @@ describe('Intl', () => {
           // eslint-disable-next-line no-console
           if (logPerf) console.log(`from: ${id} ${name}: ${ms.toFixed(2)}ms, total: ${totalNow.toFixed(2)}ms`);
         });
-        const withValues = getValues('with');
-        const withErrorExpected =
-          withValues === RangeError || (nodeVersion === '12' && withValues.node12 === RangeError);
-        itOrSkip(id)(`with: ${id} ${name} ${withErrorExpected ? ' (throws)' : ''}`, () => {
+        itOrSkip(id)(`with: ${id} ${name} ${errorExpected ? ' (throws)' : ''}`, () => {
           const now = globalThis.performance ? globalThis.performance.now() : Date.now();
           const inCal = date.withCalendar(id);
-          if (withErrorExpected) {
+          if (errorExpected) {
             // Some calendars will fail due to Chromium bugs noted in the test definitions
             throws(() => inCal.with({ day: 1 }).year, RangeError);
             return;
@@ -1007,8 +862,7 @@ describe('Intl', () => {
     }
     const monthDayCases = [
       { calendar: 'iso8601', isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
-      // Buddhist calendar suffers pre-node15 https://bugs.chromium.org/p/chromium/issues/detail?id=1173158
-      { calendar: 'buddhist', nodeBefore15: RangeError, isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
+      { calendar: 'buddhist', isoReferenceYear: 1972, year: 2004, month: 2, day: 29 },
       { calendar: 'chinese', isoReferenceYear: 1963, year: 2001, month: 5, monthCode: 'M04L', day: 15 },
       { calendar: 'chinese', isoReferenceYear: 1971, year: 2000, month: 6, day: 30 },
       { calendar: 'coptic', isoReferenceYear: 1971, year: 2006, month: 13, day: 6 },
@@ -1035,12 +889,6 @@ describe('Intl', () => {
     for (let test of monthDayCases) {
       const id = test.calendar;
       itOrSkip(`monthDay works for ${id} - ${++i}: ${test.monthCode || test.month}/${test.day}`, () => {
-        const errorExpected =
-          test === RangeError || ((nodeVersion === '14' || nodeVersion === '12') && test.nodeBefore15 === RangeError);
-        if (errorExpected) {
-          throws(() => Temporal.PlainMonthDay.from({ year, month, day, calendar }));
-          return;
-        }
         if (test.monthCode === undefined) test.monthCode = `M${test.month.toString().padStart(2, '0')}`;
         const { calendar, monthCode, month, day, year, isoReferenceYear } = test;
         const md = Temporal.PlainMonthDay.from({ year, month, day, calendar });
@@ -1074,15 +922,6 @@ describe('Intl', () => {
   });
 
   describe('Indian calendar', () => {
-    it('throws in Node 12 & 14 before 1 CE', () => {
-      // Dates before ISO 1 fail due to https://bugs.chromium.org/p/v8/issues/detail?id=10529
-      // Fixed in Node 15
-      const vulnerableToBceBug =
-        new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', { timeZone: 'UTC' }) !== '10/11/-79 Saka';
-      if (vulnerableToBceBug) {
-        throws(() => Temporal.PlainDate.from('0000-01-01').withCalendar('indian').day, RangeError);
-      }
-    });
     it('handles leap days', () => {
       const leapYearFirstDay = Temporal.PlainDate.from('2004-03-21[u-ca=indian]');
       equal(leapYearFirstDay.year, 2004 - 78);

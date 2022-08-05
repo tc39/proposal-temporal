@@ -3,7 +3,6 @@
  ** This code is governed by the license found in the LICENSE file.
  */
 
-// Current Node.js
 export function globalPreload() {
   return `\
 const { createRequire } = getBuiltin('module');
@@ -13,6 +12,3 @@ require('./script.js');
 globalThis.assert = getBuiltin('assert').strict;
 `;
 }
-
-// LTS Node.js
-export const getGlobalPreloadCode = globalPreload;
