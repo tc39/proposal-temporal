@@ -8,23 +8,11 @@
 import Demitasse from '@pipobscure/demitasse';
 import Pretty from '@pipobscure/demitasse-pretty';
 
-// tests with long tedious output
+// exhaustive date arithmetic tests, not suitable for test262
 import './datemath.mjs';
-import './regex.mjs';
 
-// tests of internals
+// tests of internals, not suitable for test262
 import './ecmascript.mjs';
-
-// tests of public API
-import './timezone.mjs';
-import './instant.mjs';
-import './zoneddatetime.mjs';
-import './duration.mjs';
-import './intl.mjs';
-
-// tests of userland objects
-import './usertimezone.mjs';
-import './usercalendar.mjs';
 
 Promise.resolve()
   .then(() => {
