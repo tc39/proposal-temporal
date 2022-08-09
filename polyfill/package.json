@@ -84,7 +84,6 @@
     "rollup": "^2.68.0",
     "rollup-plugin-terser": "^7.0.2",
     "test262-harness": "^9.0.0",
-    "timezones.json": "^1.6.1",
     "uuid": "^8.3.2"
   },
   "engines": {
