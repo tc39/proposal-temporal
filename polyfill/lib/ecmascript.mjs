@@ -2267,6 +2267,18 @@ export const ES = ObjectAssign({}, ES2020, {
     return result;
   },
   GetIANATimeZonePreviousTransition: (epochNanoseconds, id) => {
+    // Optimization: if the instant is more than a year in the future and there
+    // are no transitions between the present day and a year from now, assume
+    // there are none after
+    const now = ES.SystemUTCEpochNanoSeconds();
+    const yearLater = now.plus(DAY_NANOS.multiply(366));
+    if (epochNanoseconds.gt(yearLater)) {
+      const prevBeforeNextYear = ES.GetIANATimeZonePreviousTransition(yearLater, id);
+      if (prevBeforeNextYear === null || prevBeforeNextYear.lt(now)) {
+        return prevBeforeNextYear;
+      }
+    }
+
     const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
     let rightNanos = bigInt(epochNanoseconds).minus(1);
     let rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
