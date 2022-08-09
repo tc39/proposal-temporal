@@ -6,34 +6,9 @@
 
 import assert from 'assert';
 import { ES } from '../lib/ecmascript.mjs';
-import timezoneData from 'timezones.json';
 
-const timezoneNames = new Set(timezoneData.reduce((list, entry) => list.concat(entry.utc), []));
-// Remove names that are not recognized by Node (which is sourced from CLDR)
-const bad = ['Antarctica/McMurdo', 'CST6CDT', 'EST5EDT', 'MST7MDT', 'PST8PDT'];
-bad.forEach((name) => timezoneNames.delete(name));
-
-const calendarNames = [
-  'buddhist',
-  'chinese',
-  'coptic',
-  'dangi',
-  'ethioaa',
-  'ethiopic',
-  'gregory',
-  'hebrew',
-  'indian',
-  'islamic',
-  'islamic-umalqura',
-  'islamic-tbla',
-  'islamic-civil',
-  'islamic-rgsa',
-  'iso8601',
-  'japanese',
-  'persian',
-  'roc',
-  'islamicc'
-];
+const timezoneNames = Intl.supportedValuesOf('timeZone');
+const calendarNames = Intl.supportedValuesOf('calendar');
 
 function toProduction(productionLike) {
   if (typeof productionLike === 'string') return new Literal(productionLike);
