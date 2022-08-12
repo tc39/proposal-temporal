@@ -5635,6 +5635,20 @@
       return result;
     },
     GetIANATimeZonePreviousTransition: function GetIANATimeZonePreviousTransition(epochNanoseconds, id) {
+      // Optimization: if the instant is more than a year in the future and there
+      // are no transitions between the present day and a year from now, assume
+      // there are none after
+      var now = ES.SystemUTCEpochNanoSeconds();
+      var yearLater = now.plus(DAY_NANOS.multiply(366));
+
+      if (epochNanoseconds.gt(yearLater)) {
+        var prevBeforeNextYear = ES.GetIANATimeZonePreviousTransition(yearLater, id);
+
+        if (prevBeforeNextYear === null || prevBeforeNextYear.lt(now)) {
+          return prevBeforeNextYear;
+        }
+      }
+
       var lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
 
       var rightNanos = bigInt(epochNanoseconds).minus(1);
