@@ -52,6 +52,9 @@ const frontmatterMatcher = /\/\*---\n(.*)---\*\//ms;
 const UTF8 = { encoding: 'utf-8' };
 const GLOB_OPTS = { filesOnly: true };
 
+// EX_NOINPUT -- An input file (not a system file) did not exist or was not readable.
+const EX_NOINPUT = 66;
+
 // === Preparation ===
 
 // Prepare Temporal polyfill. This vm.Script gets executed once for each test,
@@ -88,7 +91,7 @@ function getHelperScript(includeName) {
 // Weed out common error case for people who have just cloned the repo
 if (!fs.statSync('test262/test/').isDirectory()) {
   print(color.yellow("Missing Test262 directory. Try initializing the submodule with 'git submodule update --init'"));
-  process.exit(1);
+  process.exit(EX_NOINPUT);
 }
 
 const testGlobs = process.argv.slice(2);
@@ -119,7 +122,7 @@ const testFiles = new Set(globResults);
 const total = testFiles.size;
 if (total === 0) {
   print('Nothing to do.');
-  process.exit(1);
+  process.exit(EX_NOINPUT);
 }
 
 // Set up progress bar; don't print one if stdout isn't a terminal, instead use

@@ -18,8 +18,8 @@ subdirs=$(find test262/test/*/Temporal/* -maxdepth 0 -type d -exec basename "{}"
 
 failed=0
 node runtest262.mjs "*.js" || failed=1
-# does not set failed=1 because that directory currently doesn't exist:
-node runtest262.mjs "test262/test/built-ins/Date/*/toTemporalInstant/*.js" || true
+# Tolerate absence (but not failures) of test files matching the following pattern
+node runtest262.mjs "test262/test/built-ins/Date/*/toTemporalInstant/*.js" || [ $? = 66 ] || failed=1
 for subdir in $subdirs; do
   node runtest262.mjs "$subdir/**" || failed=1
 done
