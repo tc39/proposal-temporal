@@ -572,8 +572,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"year"*, *"day"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _year_ be ! Get(_fields_, *"year"*).
         1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
@@ -591,8 +591,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _year_ be ! Get(_fields_, *"year"*).
         1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
@@ -612,8 +612,8 @@
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _month_ be ! Get(_fields_, *"month"*).
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
         1. Let _year_ be ! Get(_fields_, *"year"*).
