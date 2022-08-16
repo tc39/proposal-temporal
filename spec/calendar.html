@@ -483,14 +483,36 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toisoweekofyear" aoid="ToISOWeekOfYear">
-      <h1>ToISOWeekOfYear ( _year_, _month_, _day_ )</h1>
+    <emu-clause id="sec-temporal-toisoweekofyear" type="abstract operation">
+      <h1>
+        ToISOWeekOfYear (
+          _year_: an Integer,
+          _month_: an Integer,
+          _day_: an Integer,
+        ): an Integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It implements the logic for the `Temporal.Calendar.prototype.weekOfYear` method, which is used for the ISO 8601 calendar.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_ is an integer.
-        1. Assert: _month_ is an integer.
-        1. Assert: _day_ is an integer.
-        1. Let _date_ be the date given by _year_, _month_, and _day_.
-        1. Return _date_'s week number according to ISO-8601 as an integer.
+        1. Let _dayOfYear_ be ToISODayOfYear(_year_, _month_, _day_).
+        1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
+        1. If _dayOfWeek_ is 0, then
+          1. Set _dayOfWeek_ to 7.
+        1. Let _week_ be floor((_dayOfYear_  - _dayOfWeek_ + 10) / 7).
+        1. If _week_ &lt; 1, then
+          1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
+          1. If _dayOfJan1st_ is 5, then
+            1. Return 53.
+          1. If _dayOfJan1st_ is 6, then
+            1. Return 52 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
+          1. Return 52.
+        1. If _week_ is 53, then
+          1. Let _test_ be InLeapYear(TimeFromYear(𝔽(_year_))) + 365 - _dayOfYear_ - 4 + _dayOfWeek_.
+          1. If _test_ &lt; 0, then
+            1. Return 1.
+        1. Return _week_.
       </emu-alg>
       <emu-note>Beware that dates at the beginning of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
     </emu-clause>
@@ -681,6 +703,46 @@
           1. If _monthCode_ is not *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_merged_, *"monthCode"*, _monthCode_).
         1. Return _merged_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-toisodayofyear" type="abstract operation">
+      <h1>
+        ToISODayOfYear (
+          _year_: an Integer,
+          _month_: an Integer,
+          _day_: an Integer,
+        ): an Integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It implements the logic for the `Temporal.Calendar.prototype.dayOfYear` method, which is used for the ISO 8601 calendar.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _epochDays_ be MakeDay(year, month - 1, day).
+        1. Assert: _epochDays_ is finite.
+        1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)) + *1*<sub>𝔽</sub>.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-toisodayofweek" type="abstract operation">
+      <h1>
+        ToISODayOfWeek (
+          _year_: an Integer,
+          _month_: an Integer,
+          _day_: an Integer,
+        ): an Integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It implements the logic for the `Temporal.Calendar.prototype.dayOfWeek` method, which is used for the ISO 8601 calendar.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _epochDays_ be MakeDay(year, month - 1, day).
+        1. Assert: _epochDays_ is finite.
+        1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
+        1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return *7*<sub>𝔽</sub>.
+        1. Return _dayOfWeek_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -980,11 +1042,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
-        1. Assert: _epochDays_ is finite.
-        1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
-        1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return *7*<sub>𝔽</sub>.
-        1. Return _dayOfWeek_.
+        1. Return ToISODayOfWeek(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]]), 𝔽(_temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -1002,9 +1060,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Let _epochDays_ be MakeDay(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]] - 1), 𝔽(_temporalDate_.[[ISODay]])).
-        1. Assert: _epochDays_ is finite.
-        1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)) + *1*<sub>𝔽</sub>.
+        1. Return ToISODayOfYear(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]]), 𝔽(_temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
