@@ -500,7 +500,7 @@
         1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
         1. If _dayOfWeek_ is 0, then
           1. Set _dayOfWeek_ to 7.
-        1. Let _week_ be floor((_dayOfYear_  - _dayOfWeek_ + 10) / 7).
+        1. Let _week_ be floor((_dayOfYear_ - _dayOfWeek_ + 10) / 7).
         1. If _week_ &lt; 1, then
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is 5, then
@@ -1078,7 +1078,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(! ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
+        1. Return ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
