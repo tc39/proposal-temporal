@@ -502,18 +502,19 @@
         1. Let _friday_ be 5.
         1. Let _saturday_ be 6.
         1. Let _sunday_ be 7.
-        1. Let _dayInAWeek_ be 7.
+        1. Let _daysInAWeek_ be 7.
+        1. Let _weeksInAYear_ be 52.
         1. If _dayOfWeek_ is 0, then
-          1. Set _dayOfWeek_ to _saturday_.
-        1. Let _week_ be floor((_dayOfYear_ - _dayOfWeek_ + _dayInAWeek_ + _thursday_ - 1) / _dayInAWeek_).
+          1. Set _dayOfWeek_ to _sunday_.
+        1. Let _week_ be floor((_dayOfYear_ - _dayOfWeek_ + _daysInAWeek_ + _thursday_ - 1) / _daysInAWeek_).
         1. If _week_ &lt; 1, then
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
-            1. Return 53.
+            1. Return _weeksInAYear_ + 1.
           1. If _dayOfJan1st_ is _saturday_, then
-            1. Return 52 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
-          1. Return 52.
-        1. If _week_ is 53, then
+            1. Return _weeksInAYear_ + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
+          1. Return _weeksInAYear_.
+        1. If _week_ is _weeksInAYear_ + 1, then
           1. Let _test_ be InLeapYear(TimeFromYear(𝔽(_year_))) + 365 - _dayOfYear_ - _thursday_ + _dayOfWeek_.
           1. If _test_ &lt; 0, then
             1. Return 1.
