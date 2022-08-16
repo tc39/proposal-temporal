@@ -3110,6 +3110,7 @@
   var ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
   var ObjectIs = Object.is;
   var ObjectEntries$1 = Object.entries;
+  var StringPrototypeSlice = String.prototype.slice;
   var DAY_SECONDS = 86400;
   var DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
   var NS_MIN = bigInt(-DAY_SECONDS).multiply(1e17);
@@ -3417,20 +3418,23 @@
           nanosecond: nanosecond,
           calendar: calendar
         };
-      } // slow but non-grammar-dependent way to ensure that time-only strings that
-      // are also valid PlainMonthDay and PlainYearMonth throw. corresponds to
-      // assertion in spec text
+      } // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
+      // The calendar suffix is `[u-ca=${calendar}]`, i.e. calendar plus 7 characters,
+      // and must be stripped so presence of a calendar doesn't result in interpretation
+      // of otherwise ambiguous input as a time.
 
+
+      var isoStringWithoutCalendar = calendar ? ES.Call(StringPrototypeSlice, isoString, [0, -(calendar.length + 7)]) : isoString;
 
       try {
-        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoString),
+        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar),
             month = _ES$ParseTemporalMont.month,
             day = _ES$ParseTemporalMont.day;
 
         ES.RejectISODate(1972, month, day);
       } catch (_unused2) {
         try {
-          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoString),
+          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar),
               year = _ES$ParseTemporalYear.year,
               _month = _ES$ParseTemporalYear.month;
 
