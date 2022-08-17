@@ -501,18 +501,18 @@
         1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
         1. Let _wednesday_ be 3.
         1. Let _daysInWeek_ be 7.
-        1. Let _maxWeeksInYear_ be 53.
+        1. Let _maxWeekNumber_ be 53.
         1. Let _week_ be floor((_dayOfYear_ - (_daysInWeek_ - _dayOfWeek_ + _wednesday_ )) / _daysInWeek_).
         1. If _week_ &lt; 1, then
           1. Let _friday_ be 5.
           1. Let _saturday_ be 6.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
-            1. Return _maxWeeksInYear_.
+            1. Return _maxWeekNumber_.
           1. If _dayOfJan1st_ is _saturday_, then
-            1. Return _maxWeeksInYear_ - 1 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
-          1. Return _maxWeeksInYear_ - 1.
-        1. If _week_ is _maxWeeksInYear_, then
+            1. Return _maxWeekNumber_ - 1 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
+          1. Return _maxWeekNumber_ - 1.
+        1. If _week_ is _maxWeekNumber_, then
           1. Let _thursday_ be 4.
           1. Let _daysInYear_ be DaysInYear((𝔽(_year_))).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
