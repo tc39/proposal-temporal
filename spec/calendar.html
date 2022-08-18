@@ -525,7 +525,7 @@
       <emu-note>Beware that dates at the beginning of a year may be part of a week from the preceding year, and dates at the end of a year may be part of a week at the beginning of the next year, as the first week of any year is defined as the week that contains the first Thursday of the year.</emu-note>
       <emu-note>This rule is based on the principle that a week belongs to the calendar year to which the majority of its calendar days belong.</emu-note>
       <emu-note>In the week calendar, calendar days of the first and last calendar week of a calendar year may belong to the previous and the next calendar year respectively.</emu-note>
-      <emu-note>ISO week 1 of every calendar year includes its January 4 and starts on the first Monday on or before that, the ISO week calendar year of any date is its calendar year adjusted by -1 if it precedes that Monday or by +1 if it falls on or after that Monday of week 1 for the next calendar year, and the ISO week number of any date is 1 plus the number of complete weeks from the start of its week calendar week 1.</emu-note>
+      <emu-note>ISO week 1 of every calendar year includes its January 4 and starts on the first Monday on or before that, the ISO week calendar year of any date is its calendar year adjusted by -1 if it precedes that Monday or by 1 if it falls on or after that Monday of week 1 for the next calendar year, and the ISO week number of any date is 1 plus the number of complete weeks from the start of its week calendar week 1.</emu-note>
       <emu-note>See ISO 8601-1:2019 section 3.1.1.23 week calendar for more details.</emu-note>
     </emu-clause>
 
@@ -1056,7 +1056,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Return 𝔽(ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
@@ -1074,7 +1074,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Return 𝔽(ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
