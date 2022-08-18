@@ -1089,7 +1089,7 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Return 𝔽(ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
 
