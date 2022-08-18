@@ -1870,7 +1870,7 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Return ToISODayOfWeek(𝔽(_temporalDate_.[[ISOYear]]), 𝔽(_temporalDate_.[[ISOMonth]]), 𝔽(_temporalDate_.[[ISODay]])).
+              1. Return 𝔽(ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Let _dayOfWeek_ be ! CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_dayOfWeek_).
           </emu-alg>
