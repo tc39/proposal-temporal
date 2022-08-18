@@ -497,15 +497,17 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _dayOfYear_ be ToISODayOfYear(_year_, _month_, _day_).
-        1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
         1. Let _wednesday_ be 3.
+        1. Let _thursday_ be 4.
+        1. Let _friday_ be 5.
+        1. Let _saturday_ be 6.
         1. Let _daysInWeek_ be 7.
         1. Let _maxWeekNumber_ be 53.
+        1. Let _dayOfYear_ be ToISODayOfYear(_year_, _month_, _day_).
+        1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
         1. Let _week_ be floor((_dayOfYear_ - (_daysInWeek_ - _dayOfWeek_ + _wednesday_ )) / _daysInWeek_).
         1. If _week_ &lt; 1, then
-          1. Let _friday_ be 5.
-          1. Let _saturday_ be 6.
+          1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
             1. Return _maxWeekNumber_.
@@ -513,7 +515,6 @@
             1. Return _maxWeekNumber_.
           1. Return _maxWeekNumber_ - 1.
         1. If _week_ is _maxWeekNumber_, then
-          1. Let _thursday_ be 4.
           1. Let _daysInYear_ be DaysInYear(𝔽(_year_)).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
@@ -730,6 +731,7 @@
         <dd>It implements the logic for the `Temporal.Calendar.prototype.dayOfYear` method, which is used for the ISO 8601 calendar.</dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _epochDays_ be MakeDay(year, month - 1, day).
         1. Assert: _epochDays_ is finite.
         1. Return DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)) + *1*<sub>𝔽</sub>.
@@ -749,6 +751,7 @@
         <dd>It implements the logic for the `Temporal.Calendar.prototype.dayOfWeek` method, which is used for the ISO 8601 calendar.</dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _epochDays_ be MakeDay(year, month - 1, day).
         1. Assert: _epochDays_ is finite.
         1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
