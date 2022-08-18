@@ -853,40 +853,39 @@ export const ES = ObjectAssign({}, ES2020, {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset, z } =
         ES.ParseISODateTime(ES.ToString(relativeTo)));
-      if (ianaName) timeZone = ianaName;
-      if (z) {
-        offsetBehaviour = 'exact';
-      } else if (!offset) {
-        offsetBehaviour = 'wall';
+      if (ianaName) {
+        timeZone = ianaName;
+        if (z) {
+          offsetBehaviour = 'exact';
+        } else if (!offset) {
+          offsetBehaviour = 'wall';
+        }
+        matchMinutes = true;
       }
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
-      matchMinutes = true;
     }
-    if (timeZone !== undefined) {
-      timeZone = ES.ToTemporalTimeZone(timeZone);
-      let offsetNs = 0;
-      if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
-      const epochNanoseconds = ES.InterpretISODateTimeOffset(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        offsetBehaviour,
-        offsetNs,
-        timeZone,
-        'compatible',
-        'reject',
-        matchMinutes
-      );
-      return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
-    }
-    return ES.CreateTemporalDate(year, month, day, calendar);
+    if (timeZone === undefined) return ES.CreateTemporalDate(year, month, day, calendar);
+    timeZone = ES.ToTemporalTimeZone(timeZone);
+    const offsetNs = offsetBehaviour === 'option' ? ES.ParseTimeZoneOffsetString(ES.ToString(offset)) : 0;
+    const epochNanoseconds = ES.InterpretISODateTimeOffset(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      offsetBehaviour,
+      offsetNs,
+      timeZone,
+      'compatible',
+      'reject',
+      matchMinutes
+    );
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   },
   DefaultTemporalLargestUnit: (
     years,
