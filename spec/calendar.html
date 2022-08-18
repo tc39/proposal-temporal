@@ -509,8 +509,8 @@
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
             1. Return _maxWeekNumber_.
-          1. If _dayOfJan1st_ is _saturday_, then
-            1. Return _maxWeekNumber_ - 1 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_ - 1)))).
+          1. If _dayOfJan1st_ is _saturday_, and InLeapYear(TimeFromYear(𝔽(_year_ - 1))) is *1*<sub>𝔽</sub>, then
+            1. Return _maxWeekNumber_.
           1. Return _maxWeekNumber_ - 1.
         1. If _week_ is _maxWeekNumber_, then
           1. Let _thursday_ be 4.
