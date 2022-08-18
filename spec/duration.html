@@ -1217,7 +1217,7 @@
             1. If v &lt; 0, then
               1. Return ~negative overflow~.
             1. Return ~positive overflow~.
-        1. Return ? CreateTimeDurationRecord(_days_, _hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
+        1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
         1. If Type(_relativeTo_) is Object and _relativeTo_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Let _endNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
           1. Set _nanoseconds_ to ℝ(_endNs_ - _relativeTo_.[[Nanoseconds]]).
