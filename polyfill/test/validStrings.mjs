@@ -264,7 +264,7 @@ const timeZoneUTCOffsetName = seq(
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
-  (data, result) => (data.ianaName = ES.GetCanonicalTimeZoneIdentifier(result).toString())
+  (data, result) => (data.ianaName = result)
 );
 const timeZoneBracketedAnnotation = seq('[', timeZoneIdentifier, ']');
 const timeZoneOffsetRequired = withCode(seq(timeZoneUTCOffset, [timeZoneBracketedAnnotation]), (data) => {

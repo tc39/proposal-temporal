@@ -274,8 +274,8 @@ export const ES = ObjectAssign({}, ES2020, {
   },
 
   ParseTemporalTimeZone: (stringIdent) => {
-    let { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
-    if (ianaName) return ianaName;
+    const { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
+    if (ianaName) return ES.GetCanonicalTimeZoneIdentifier(ianaName);
     if (z) return 'UTC';
     return offset; // if !ianaName && !z then offset must be present
   },
@@ -438,12 +438,8 @@ export const ES = ObjectAssign({}, ES2020, {
     return { month, day, calendar, referenceISOYear };
   },
   ParseTemporalTimeZoneString: (stringIdent) => {
-    try {
-      let canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-      if (canonicalIdent) return { ianaName: canonicalIdent.toString() };
-    } catch {
-      // fall through
-    }
+    const bareID = new RegExp(`^${PARSE.timeZoneID.source}$`, 'i');
+    if (bareID.test(stringIdent)) return { ianaName: stringIdent };
     try {
       // Try parsing ISO string instead
       const result = ES.ParseISODateTime(stringIdent);
