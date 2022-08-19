@@ -850,6 +850,10 @@ export const ES = ObjectAssign({}, ES2022, {
           offsetBehaviour = 'wall';
         }
         matchMinutes = true;
+      } else if (z) {
+        throw new RangeError(
+          'Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone'
+        );
       }
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
