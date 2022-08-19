@@ -1465,7 +1465,9 @@
       <dd>It parses the argument as an ISO 8601 string and returns the information needed to construct either a Temporal.ZonedDateTime or a Temporal.PlainDate instance, e.g. as the value of a `relativeTo` option.</dd>
     </dl>
     <emu-alg>
-      1. If ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|) is a List of errors, throw a *RangeError* exception.
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. If _parseResult_ contains a |UTCDesignator| ParseNode but no |TimeZoneBracketedAnnotation| Parse Node, throw a *RangeError* exception.
       1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
