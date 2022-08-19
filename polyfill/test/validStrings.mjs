@@ -116,6 +116,12 @@ class CharacterClass extends Choice {
 function character(str) {
   return new CharacterClass(str);
 }
+function lcalpha() {
+  return new CharacterClass('abcdefghijklmnopqrstuvwxyz');
+}
+function alpha() {
+  return new CharacterClass('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+}
 function digit() {
   return new CharacterClass('0123456789');
 }
@@ -151,6 +157,9 @@ class ZeroOrMore {
     }
     return retval;
   }
+}
+function zeroOrMore(production) {
+  return new ZeroOrMore(production);
 }
 function oneOrMore(production) {
   return seq(production, new ZeroOrMore(production));
@@ -196,6 +205,7 @@ const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
   data.z = 'Z';
 });
+const annotationCriticalFlag = character('!');
 const timeFractionalPart = between(1, 9, digit());
 const fraction = seq(decimalSeparator, timeFractionalPart);
 
@@ -263,7 +273,7 @@ const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
   (data, result) => (data.ianaName = result)
 );
-const timeZoneBracketedAnnotation = seq('[', timeZoneIdentifier, ']');
+const timeZoneBracketedAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
 const timeZoneOffsetRequired = withCode(seq(timeZoneUTCOffset, [timeZoneBracketedAnnotation]), (data) => {
   if (!('offset' in data)) data.offset = undefined;
 });
@@ -271,8 +281,18 @@ const timeZoneNameRequired = withCode(seq([timeZoneUTCOffset], timeZoneBracketed
   if (!('offset' in data)) data.offset = undefined;
 });
 const timeZone = choice(timeZoneOffsetRequired, timeZoneNameRequired);
-const calendarName = withCode(choice(...calendarNames), (data, result) => (data.calendar = result));
-const calendar = seq('[u-ca=', calendarName, ']');
+const aKeyLeadingChar = choice(lcalpha(), character('_'));
+const aKeyChar = choice(lcalpha(), digit(), character('_-'));
+const aValChar = choice(alpha(), digit());
+const annotationKey = seq(aKeyLeadingChar, zeroOrMore(aKeyChar));
+const annotationValueComponent = oneOrMore(aValChar);
+const annotationValue = seq(annotationValueComponent, zeroOrMore(seq('-', annotationValueComponent)));
+const annotation = seq('[', /*[annotationCriticalFlag],*/ annotationKey, '=', annotationValue, ']');
+const calendarName = withCode(choice(...calendarNames), (data, result) => {
+  if (!data.calendar) data.calendar = result;
+});
+const calendarAnnotation = seq('[', [annotationCriticalFlag], 'u-ca=', calendarName, ']');
+const annotations = oneOrMore(choice(calendarAnnotation, annotation));
 const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
@@ -297,12 +317,12 @@ const date = withSyntaxConstraints(
   validateDayOfMonth
 );
 const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
-const calendarDateTime = seq(dateTime, [calendar]);
-const calendarDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [calendar]);
-const calendarTime = choice(
-  seq(timeDesignator, timeSpec, [timeZone], [calendar]),
-  seq(timeSpecWithOptionalTimeZoneNotAmbiguous, [calendar])
+const annotatedTime = choice(
+  seq(timeDesignator, timeSpec, [timeZone], [annotations]),
+  seq(timeSpecWithOptionalTimeZoneNotAmbiguous, [annotations])
 );
+const annotatedDateTime = seq(dateTime, [annotations]);
+const annotatedDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [annotations]);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -356,19 +376,19 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired, [calendar]);
-const zonedDateTime = seq(date, [timeSpecSeparator], timeZoneNameRequired, [calendar]);
+const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired, [annotations]);
+const zonedDateTime = seq(date, [timeSpecSeparator], timeZoneNameRequired, [annotations]);
 
 // goal elements
 const goals = {
   Instant: instant,
-  Date: calendarDateTime,
-  DateTime: calendarDateTime,
+  Date: annotatedDateTime,
+  DateTime: annotatedDateTime,
   Duration: duration,
-  MonthDay: choice(dateSpecMonthDay, calendarDateTime),
-  Time: choice(calendarTime, calendarDateTimeTimeRequired),
-  TimeZone: choice(timeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
-  YearMonth: choice(dateSpecYearMonth, calendarDateTime),
+  MonthDay: choice(dateSpecMonthDay, annotatedDateTime),
+  Time: choice(annotatedTime, annotatedDateTimeTimeRequired),
+  TimeZone: choice(timeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [annotations])),
+  YearMonth: choice(dateSpecYearMonth, annotatedDateTime),
   ZonedDateTime: zonedDateTime
 };
 

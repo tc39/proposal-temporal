@@ -15,9 +15,6 @@ export const timeZoneID = new RegExp(
     ')'
 );
 
-const calComponent = /[A-Za-z0-9]{3,8}/;
-export const calendarID = new RegExp(`(?:${calComponent.source}(?:-${calComponent.source})*)`);
-
 const yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
 const monthpart = /(?:0[1-9]|1[0-2])/;
 const daypart = /(?:0[1-9]|[12]\d|3[01])/;
@@ -26,15 +23,15 @@ export const datesplit = new RegExp(
 );
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[(${timeZoneID.source})\\])?`);
-const calendar = new RegExp(`\\[u-ca=(${calendarID.source})\\]`);
+const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[!?(${timeZoneID.source})\\])?`);
+export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 
 export const zoneddatetime = new RegExp(
-  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}(?:${calendar.source})?$`,
+  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}((?:${annotation.source})*)$`,
   'i'
 );
 
-export const time = new RegExp(`^T?${timesplit.source}(?:${zonesplit.source})?(?:${calendar.source})?$`, 'i');
+export const time = new RegExp(`^T?${timesplit.source}(?:${zonesplit.source})?((?:${annotation.source})*)$`, 'i');
 
 // The short forms of YearMonth and MonthDay are only for the ISO calendar.
 // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,

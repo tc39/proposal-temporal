@@ -327,7 +327,15 @@ export const ES = ObjectAssign({}, ES2022, {
       if (offset === '-00:00') offset = '+00:00';
     }
     const ianaName = match[19];
-    const calendar = match[20];
+    const annotations = match[20];
+    let calendar;
+    for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
+      if (key === 'u-ca') {
+        if (calendar === undefined) calendar = value;
+      } else if (critical === '!') {
+        throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+      }
+    }
     ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     return {
       year,
@@ -364,7 +372,7 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   ParseTemporalTimeString: (isoString) => {
     const match = PARSE.time.exec(isoString);
-    let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+    let hour, minute, second, millisecond, microsecond, nanosecond, annotations, calendar;
     if (match) {
       hour = ES.ToIntegerOrInfinity(match[1]);
       minute = ES.ToIntegerOrInfinity(match[2] || match[5]);
@@ -374,7 +382,14 @@ export const ES = ObjectAssign({}, ES2022, {
       millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
       microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
       nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
-      calendar = match[15];
+      annotations = match[15];
+      for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
+        if (key === 'u-ca') {
+          if (calendar === undefined) calendar = value;
+        } else if (critical === '!') {
+          throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+        }
+      }
       if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
     } else {
       let z, hasTime;
@@ -388,18 +403,17 @@ export const ES = ObjectAssign({}, ES2022, {
       return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
     // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
-    // The calendar suffix is `[u-ca=${calendar}]`, i.e. calendar plus 7 characters,
-    // and must be stripped so presence of a calendar doesn't result in interpretation
-    // of otherwise ambiguous input as a time.
-    const isoStringWithoutCalendar = calendar
-      ? ES.Call(StringPrototypeSlice, isoString, [0, -(calendar.length + 7)])
+    // The annotations must be stripped so presence of a calendar doesn't result
+    // in interpretation of otherwise ambiguous input as a time.
+    const isoStringWithoutAnnotations = annotations
+      ? ES.Call(StringPrototypeSlice, isoString, [0, -annotations.length])
       : isoString;
     try {
-      const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar);
+      const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutAnnotations);
       ES.RejectISODate(1972, month, day);
     } catch {
       try {
-        const { year, month } = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar);
+        const { year, month } = ES.ParseTemporalYearMonthString(isoStringWithoutAnnotations);
         ES.RejectISODate(year, month, 1);
       } catch {
         return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
