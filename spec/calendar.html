@@ -505,7 +505,7 @@
         1. Let _maxWeekNumber_ be 53.
         1. Let _dayOfYear_ be ToISODayOfYear(_year_, _month_, _day_).
         1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
-        1. Let _week_ be floor((_dayOfYear_ - (_daysInWeek_ - _dayOfWeek_ + _wednesday_ )) / _daysInWeek_).
+        1. Let _week_ be floor((_dayOfYear_ + _daysInWeek_ - _dayOfWeek_ + _wednesday_ ) / _daysInWeek_).
         1. If _week_ &lt; 1, then
           1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
