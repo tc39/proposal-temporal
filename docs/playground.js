@@ -9284,6 +9284,7 @@
   var _excluded = ["month", "monthCode", "year", "era", "eraYear"];
   var ArrayIncludes = Array.prototype.includes;
   var ArrayPrototypePush$1 = Array.prototype.push;
+  var ArrayPrototypeSort = Array.prototype.sort;
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ArraySort = Array.prototype.sort;
   var MathAbs = Math.abs;
@@ -11925,9 +11926,10 @@
   var nonIsoGeneralImpl = {
     dateFromFields: function dateFromFields(fields, options, calendar) {
       var overflow = ES.ToTemporalOverflow(options);
-      var cache = new OneObjectCache(); // Intentionally alphabetical
-
-      fields = ES.PrepareTemporalFields(fields, ['day', 'era', 'eraYear', 'month', 'monthCode', 'year'], ['day']);
+      var cache = new OneObjectCache();
+      var fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
+      ES.Call(ArrayPrototypeSort, fieldNames, []);
+      fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
       var _this$helper$calendar = this.helper.calendarToIsoDate(fields, overflow, cache),
           year = _this$helper$calendar.year,
@@ -11940,9 +11942,10 @@
     },
     yearMonthFromFields: function yearMonthFromFields(fields, options, calendar) {
       var overflow = ES.ToTemporalOverflow(options);
-      var cache = new OneObjectCache(); // Intentionally alphabetical
-
-      fields = ES.PrepareTemporalFields(fields, ['era', 'eraYear', 'month', 'monthCode', 'year'], []);
+      var cache = new OneObjectCache();
+      var fieldNames = this.fields(['month', 'monthCode', 'year']);
+      ES.Call(ArrayPrototypeSort, fieldNames, []);
+      fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
       var _this$helper$calendar2 = this.helper.calendarToIsoDate(_objectSpread2(_objectSpread2({}, fields), {}, {
         day: 1
@@ -11958,13 +11961,13 @@
       return result;
     },
     monthDayFromFields: function monthDayFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options); // All built-in calendars require `day`, but some allow other fields to be
-      // substituted for `month`. And for lunisolar calendars, either `monthCode`
-      // or `year` must be provided because `month` is ambiguous without a year or
-      // a code.
+      var overflow = ES.ToTemporalOverflow(options);
+      var cache = new OneObjectCache(); // For lunisolar calendars, either `monthCode` or `year` must be provided
+      // because `month` is ambiguous without a year or a code.
 
-      var cache = new OneObjectCache();
-      fields = ES.PrepareTemporalFields(fields, ['day', 'era', 'eraYear', 'month', 'monthCode', 'year'], ['day']);
+      var fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
+      ES.Call(ArrayPrototypeSort, fieldNames, []);
+      fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
       var _this$helper$monthDay = this.helper.monthDayFromFields(fields, overflow, cache),
           year = _this$helper$monthDay.year,
