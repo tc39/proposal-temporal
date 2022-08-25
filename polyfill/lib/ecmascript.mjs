@@ -710,7 +710,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
   },
   ToShowTimeZoneNameOption: (options) => {
-    return ES.GetOption(options, 'timeZoneName', ['auto', 'never'], 'auto');
+    return ES.GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
   },
   ToShowOffsetOption: (options) => {
     return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
@@ -2151,7 +2151,10 @@ export const ES = ObjectAssign({}, ES2022, {
       const offsetNs = ES.GetOffsetNanosecondsFor(tz, instant);
       result += ES.FormatISOTimeZoneOffsetString(offsetNs);
     }
-    if (showTimeZone !== 'never') result += `[${tz}]`;
+    if (showTimeZone !== 'never') {
+      const flag = showTimeZone === 'critical' ? '!' : '';
+      result += `[${flag}${tz}]`;
+    }
     result += ES.MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
     return result;
   },

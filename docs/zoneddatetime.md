@@ -1249,7 +1249,7 @@ zdt1.equals(zdt1); // => true
     Valid values are `'auto'` and `'never'`.
     The default is `'auto'`.
   - `timeZoneName` (string): Whether to show the time zone name annotation in the return value.
-    Valid values are `'auto'` and `'never'`.
+    Valid values are `'auto'`, `'never'`, and `'critical'`.
     The default is `'auto'`.
   - `calendarName` (string): Whether to show the calendar annotation in the return value.
     Valid values are `'auto'`, `'always'`, `'never'`, and `'critical'`.
@@ -1288,8 +1288,9 @@ For more information on the calendar annotation, see [ISO string extensions](./s
 
 Likewise, passing `'never'` to the `timeZoneName` or `offset` options controls whether the time zone offset (`+01:00`) or name annotation (`[Europe/Paris]`) are shown.
 If the time zone offset is shown, it is always shown rounded to the nearest minute.
+The `timeZoneName` option can additionally be `'critical'` which will add an additional `!` to the annotation, similar to `calendarName`.
 
-The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output.
+The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output and `'critical'` is not used.
 For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
 
 Example usage:
