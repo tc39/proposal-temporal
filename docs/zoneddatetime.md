@@ -1252,7 +1252,7 @@ zdt1.equals(zdt1); // => true
     Valid values are `'auto'` and `'never'`.
     The default is `'auto'`.
   - `calendarName` (string): Whether to show the calendar annotation in the return value.
-    Valid values are `'auto'`, `'always'`, and `'never'`.
+    Valid values are `'auto'`, `'always'`, `'never'`, and `'critical'`.
     The default is `'auto'`.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
@@ -1283,6 +1283,7 @@ Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `zonedDateTime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+Normally not necessary, a value of `'critical'` is equivalent to `'always'` but the annotation will contain an additional `!` for certain interoperation use cases.
 For more information on the calendar annotation, see [ISO string extensions](./strings.md#calendar-systems).
 
 Likewise, passing `'never'` to the `timeZoneName` or `offset` options controls whether the time zone offset (`+01:00`) or name annotation (`[Europe/Paris]`) are shown.

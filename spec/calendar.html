@@ -466,7 +466,7 @@
       <h1>
         MaybeFormatCalendarAnnotation (
           _calendarObject_: an Object or *undefined*,
-          _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
+          _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
         ): either a normal completion containing a String, or an abrupt completion
       </h1>
       <dl class="header">
@@ -492,7 +492,7 @@
       <h1>
         FormatCalendarAnnotation (
           _id_: a String,
-          _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
+          _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
         ): a String
       </h1>
       <dl class="header">
@@ -505,7 +505,8 @@
       <emu-alg>
         1. If _showCalendar_ is *"never"*, return the empty String.
         1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
-        1. Return the string-concatenation of *"[u-ca="*, _id_, and *"]"*.
+        1. If _showCalendar_ is *"critical"*, let _flag_ be *"!"*; else, let flag be the empty String.
+        1. Return the string-concatenation of *"["*, _flag_, *"u-ca="*, _id_, and *"]"*.
       </emu-alg>
       <emu-note type="editor">
         The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended">Date and Time on the Internet: Timestamps with additional information</a>.

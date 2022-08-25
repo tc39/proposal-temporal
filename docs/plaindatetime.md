@@ -854,7 +854,7 @@ dt1.equals(dt1); // => true
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `calendarName` (string): Whether to show the calendar annotation in the return value.
-    Valid values are `'auto'`, `'always'`, and `'never'`.
+    Valid values are `'auto'`, `'always'`, `'never'`, and `'critical'`.
     The default is `'auto'`.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
@@ -879,6 +879,7 @@ Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `datetime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+Normally not necessary, a value of `'critical'` is equivalent to `'always'` but the annotation will contain an additional `!` for certain interoperation use cases.
 For more information on the calendar annotation, see [the `Temporal` string formats documentation](./strings.md#calendar-systems).
 
 Example usage:
