@@ -392,7 +392,7 @@
     <emu-clause id="sec-temporal-maybeformatcalendarannotation" type="abstract operation">
       <h1>
         MaybeFormatCalendarAnnotation (
-          _calendarObject_: an Object,
+          _calendarObject_: an Object or *undefined*,
           _showCalendar_: one of *"auto"*, *"always"*, or *"never"*,
         ): either a normal completion containing a String, or an abrupt completion
       </h1>
@@ -406,6 +406,7 @@
       </dl>
       <emu-alg>
         1. If _showCalendar_ is *"never"*, return the empty String.
+        1. Assert: Type(_calendarObject_) is Object.
         1. Let _calendarID_ be ? ToString(_calendarObject_).
         1. Return FormatCalendarAnnotation(_calendarID_, _showCalendar_).
       </emu-alg>
