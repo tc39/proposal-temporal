@@ -414,12 +414,12 @@ function fuzzMode(mode) {
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
         if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
-        assert.equal(parsed[prop], expected);
+        assert.equal(parsed[prop], expected, prop);
       }
       console.log(`${fuzzed} => ok`);
     } catch (e) {
       if (e instanceof assert.AssertionError) {
-        console.log(`${fuzzed} => parsed wrong: expected`, e.expected, 'actual', e.actual);
+        console.log(`${fuzzed} => ${e.message} parsed wrong: expected`, e.expected, 'actual', e.actual);
         console.log('generated data:', generatedData);
       } else {
         console.log(`${fuzzed} failed!`, e);
