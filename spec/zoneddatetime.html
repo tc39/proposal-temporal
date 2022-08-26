@@ -1335,6 +1335,7 @@
         1. If _days_ &gt; 0 and _sign_ = -1, throw a *RangeError* exception.
         1. If _nanoseconds_ &lt; 0 and _sign_ = 1, throw a *RangeError* exception.
         1. If _nanoseconds_ &gt; 0 and _sign_ = -1, throw a *RangeError* exception.
+        1. If abs(_nanoseconds_) &ge; abs(_dayLengthNs_), throw a *RangeError* exception.
         1. Return the Record {
           [[Days]]: _days_,
           [[Nanoseconds]]: _nanoseconds_,
