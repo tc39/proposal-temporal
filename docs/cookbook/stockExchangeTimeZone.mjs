@@ -203,3 +203,19 @@ openInstant = date.toZonedDateTime(tzNYSE).toInstant();
 closeInstant = date.toZonedDateTime(tzNYSE).timeZone.getNextTransition(openInstant);
 assert.equal(openInstant.toZonedDateTimeISO('America/New_York').toPlainTime().toString(), '09:30:00');
 assert.equal(closeInstant.toZonedDateTimeISO('America/New_York').toPlainTime().toString(), '16:00:00');
+
+// 6. How many hours does a particular market day last?
+// (shows examples of arithmetic)
+
+// Monday lasts 24 hours
+const monday = Temporal.ZonedDateTime.from('2022-08-22T09:30[America/New_York]').withTimeZone(tzNYSE);
+assert.equal(monday.hoursInDay, 24);
+
+// Friday lasts 72 hours, until Monday starts again
+const friday = monday.add({ days: 4 });
+assert.equal(friday.hoursInDay, 72);
+
+// Adding 1 day to Friday gets you the next Monday
+assert.equal(friday.add({ days: 1 }).toString(), '2022-08-29T09:30:00-04:00[NYSE]');
+// Adding 3 days to Friday also gets you the next Monday
+assert.equal(friday.add({ days: 3 }).toString(), '2022-08-29T09:30:00-04:00[NYSE]');
