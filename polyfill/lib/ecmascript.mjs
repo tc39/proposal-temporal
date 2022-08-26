@@ -2685,6 +2685,12 @@ export const ES = ObjectAssign({}, ES2022, {
         days = days.add(sign);
       }
     } while (isOverflow);
+    if (!days.isZero() && MathSign(days.toJSNumber()) != sign) {
+      throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
+    }
+    if (!nanoseconds.isZero() && MathSign(nanoseconds.toJSNumber()) != sign) {
+      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
+    }
     return { days: days.toJSNumber(), nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
   },
   BalanceDuration: (
