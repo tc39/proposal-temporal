@@ -2691,6 +2691,9 @@ export const ES = ObjectAssign({}, ES2022, {
     if (!nanoseconds.isZero() && MathSign(nanoseconds.toJSNumber()) != sign) {
       throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
     }
+    if (nanoseconds.abs().geq(MathAbs(dayLengthNs))) {
+      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds longer than the day length');
+    }
     return { days: days.toJSNumber(), nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
   },
   BalanceDuration: (
