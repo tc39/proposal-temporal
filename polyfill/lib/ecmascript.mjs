@@ -2318,7 +2318,18 @@ export const ES = ObjectAssign({}, ES2022, {
       second: +second
     };
   },
-  GetIANATimeZoneEpochValue: (id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+  GetNamedTimeZoneEpochNanoseconds: (
+    id,
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond
+  ) => {
     let ns = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (ns === null) throw new RangeError('DateTime outside of supported range');
     let nsEarlier = ns.minus(DAY_NANOS);
