@@ -215,7 +215,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return 𝔽(_timeZone_.[[OffsetNanoseconds]]).
-        1. Return 𝔽(GetIANATimeZoneOffsetNanoseconds(_instant_.[[Nanoseconds]], _timeZone_.[[Identifier]])).
+        1. Return 𝔽(GetNamedTimeZoneOffsetNanoseconds(_timeZone_.[[Identifier]], _instant_.[[Nanoseconds]])).
       </emu-alg>
     </emu-clause>
 
@@ -444,23 +444,6 @@
           [[Nanosecond]]: _nanosecond_
           }.
       </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporalgetianatimezoneoffsetnanoseconds" type="implementation-defined abstract operation">
-      <h1>
-        GetIANATimeZoneOffsetNanoseconds (
-          _epochNanoseconds_: a BigInt,
-          _timeZoneIdentifier_: a String,
-        ): an integer
-      </h1>
-      <dl class="header">
-      </dl>
-      <p>
-        The returned integer represents the offset of the IANA time zone identified by _timeZoneIdentifier_ from UTC, at the instant corresponding to _epochNanoseconds_.
-      </p>
-      <p>
-        Given the same values of _epochNanoseconds_ and _timeZoneIdentifier_, the result must be the same for the lifetime of the surrounding agent.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-getianatimezonenexttransition" type="implementation-defined abstract operation">

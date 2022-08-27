@@ -2159,7 +2159,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
     return formatter.resolvedOptions().timeZone;
   },
-  GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
+  GetNamedTimeZoneOffsetNanoseconds: (id, epochNanoseconds) => {
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
     const utc = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -2242,19 +2242,19 @@ export const ES = ObjectAssign({}, ES2022, {
   GetIANATimeZoneNextTransition: (epochNanoseconds, id) => {
     const uppercap = ES.SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
     let leftNanos = epochNanoseconds;
-    let leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
+    let leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
     let rightNanos = leftNanos;
     let rightOffsetNs = leftOffsetNs;
     while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
       rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
-      rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
+      rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
       if (leftOffsetNs === rightOffsetNs) {
         leftNanos = rightNanos;
       }
     }
     if (leftOffsetNs === rightOffsetNs) return null;
     const result = bisect(
-      (epochNs) => ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id),
+      (epochNs) => ES.GetNamedTimeZoneOffsetNanoseconds(id, epochNs),
       leftNanos,
       rightNanos,
       leftOffsetNs,
@@ -2277,19 +2277,19 @@ export const ES = ObjectAssign({}, ES2022, {
 
     const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
     let rightNanos = bigInt(epochNanoseconds).minus(1);
-    let rightOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(rightNanos, id);
+    let rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
     let leftNanos = rightNanos;
     let leftOffsetNs = rightOffsetNs;
     while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
       leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
-      leftOffsetNs = ES.GetIANATimeZoneOffsetNanoseconds(leftNanos, id);
+      leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
       if (rightOffsetNs === leftOffsetNs) {
         rightNanos = leftNanos;
       }
     }
     if (rightOffsetNs === leftOffsetNs) return null;
     const result = bisect(
-      (epochNs) => ES.GetIANATimeZoneOffsetNanoseconds(epochNs, id),
+      (epochNs) => ES.GetNamedTimeZoneOffsetNanoseconds(id, epochNs),
       leftNanos,
       rightNanos,
       leftOffsetNs,
@@ -2336,8 +2336,8 @@ export const ES = ObjectAssign({}, ES2022, {
     if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
     let nsLater = ns.plus(DAY_NANOS);
     if (nsLater.greater(NS_MAX)) nsLater = ns;
-    const earliest = ES.GetIANATimeZoneOffsetNanoseconds(nsEarlier, id);
-    const latest = ES.GetIANATimeZoneOffsetNanoseconds(nsLater, id);
+    const earliest = ES.GetNamedTimeZoneOffsetNanoseconds(id, nsEarlier);
+    const latest = ES.GetNamedTimeZoneOffsetNanoseconds(id, nsLater);
     const found = earliest === latest ? [earliest] : [earliest, latest];
     return found
       .map((offsetNanoseconds) => {

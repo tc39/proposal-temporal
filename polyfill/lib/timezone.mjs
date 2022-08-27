@@ -53,7 +53,7 @@ export class TimeZone {
       return ES.ParseTimeZoneOffsetString(id);
     }
 
-    return ES.GetIANATimeZoneOffsetNanoseconds(GetSlot(instant, EPOCHNANOSECONDS), id);
+    return ES.GetNamedTimeZoneOffsetNanoseconds(id, GetSlot(instant, EPOCHNANOSECONDS));
   }
   getOffsetStringFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
