@@ -519,7 +519,7 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond,
       nanosecond - offsetNs
     ));
-    const epochNs = ES.GetEpochFromISOParts(
+    const epochNs = ES.GetUTCEpochNanoseconds(
       year,
       month,
       day,
@@ -1247,7 +1247,7 @@ export const ES = ObjectAssign({}, ES2022, {
     // for this timezone and date/time.
     if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
       // Calculate the instant for the input's date/time and offset
-      const epochNs = ES.GetEpochFromISOParts(
+      const epochNs = ES.GetUTCEpochNanoseconds(
         year,
         month,
         day,
@@ -1784,7 +1784,17 @@ export const ES = ObjectAssign({}, ES2022, {
     const millisecond = GetSlot(dateTime, ISO_MILLISECOND);
     const microsecond = GetSlot(dateTime, ISO_MICROSECOND);
     const nanosecond = GetSlot(dateTime, ISO_NANOSECOND);
-    const utcns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const utcns = ES.GetUTCEpochNanoseconds(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
     if (utcns === null) throw new RangeError('DateTime outside of supported range');
     const dayBefore = new Instant(utcns.minus(86400e9));
     const dayAfter = new Instant(utcns.plus(86400e9));
@@ -2152,7 +2162,7 @@ export const ES = ObjectAssign({}, ES2022, {
   GetIANATimeZoneOffsetNanoseconds: (epochNanoseconds, id) => {
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
-    const utc = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    const utc = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
   },
@@ -2188,7 +2198,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const minuteString = ES.ISODateTimePartString(minutes);
     return `${sign}${hourString}:${minuteString}`;
   },
-  GetEpochFromISOParts: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
+  GetUTCEpochNanoseconds: (year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
     // Note: Date.UTC() interprets one and two-digit years as being in the
     // 20th century, so don't use it
     const legacyDate = new Date();
@@ -2309,7 +2319,7 @@ export const ES = ObjectAssign({}, ES2022, {
     };
   },
   GetIANATimeZoneEpochValue: (id, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) => {
-    let ns = ES.GetEpochFromISOParts(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    let ns = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (ns === null) throw new RangeError('DateTime outside of supported range');
     let nsEarlier = ns.minus(DAY_NANOS);
     if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
@@ -3047,7 +3057,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (
       (year === YEAR_MIN &&
         null ==
-          ES.GetEpochFromISOParts(
+          ES.GetUTCEpochNanoseconds(
             year,
             month,
             day + 1,
@@ -3060,7 +3070,17 @@ export const ES = ObjectAssign({}, ES2022, {
           )) ||
       (year === YEAR_MAX &&
         null ==
-          ES.GetEpochFromISOParts(year, month, day - 1, hour, minute, second, millisecond, microsecond, nanosecond + 1))
+          ES.GetUTCEpochNanoseconds(
+            year,
+            month,
+            day - 1,
+            hour,
+            minute,
+            second,
+            millisecond,
+            microsecond,
+            nanosecond + 1
+          ))
     ) {
       throw new RangeError('DateTime outside of supported range');
     }

@@ -789,34 +789,6 @@
   <emu-clause id="sec-temporal-plaindatetime-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-getepochfromisoparts" type="abstract operation">
-      <h1>
-        GetEpochFromISOParts (
-          _year_: an integer,
-          _month_: an integer between 1 and 12 inclusive,
-          _day_: an integer between 1 and 31 inclusive,
-          _hour_: an integer between 0 and 23 inclusive,
-          _minute_: an integer between 0 and 59 inclusive,
-          _second_: an integer between 0 and 59 inclusive,
-          _millisecond_: an integer between 0 and 999 inclusive,
-          _microsecond_: an integer between 0 and 999 inclusive,
-          _nanosecond_: an integer between 0 and 999 inclusive,
-        ): a BigInt
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>The returned value represents a number of nanoseconds since the Unix epoch in UTC that corresponds to the given ISO 8601 calendar date and wall-clock time in UTC.</dd>
-      </dl>
-      <emu-alg>
-        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _date_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
-        1. Let _time_ be MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
-        1. Let _ms_ be MakeDate(_date_, _time_).
-        1. Assert: _ms_ is finite.
-        1. Return ℤ(ℝ(_ms_) &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-isodatetimewithinlimits" type="abstract operation">
       <h1>
         ISODateTimeWithinLimits (
@@ -843,7 +815,7 @@
       </emu-note>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _ns_ be ℝ(GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)).
+        1. Let _ns_ be ℝ(GetUTCEpochNanoseconds(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_)).
         1. If _ns_ &le; nsMinInstant - nsPerDay, then
           1. Return *false*.
         1. If _ns_ &ge; nsMaxInstant + nsPerDay, then
