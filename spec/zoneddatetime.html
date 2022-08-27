@@ -313,7 +313,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _s_ be RoundTowardsZero(ℝ(_ns_) / 10<sup>9</sup>).
+        1. Let _s_ be truncate(ℝ(_ns_) / 10<sup>9</sup>).
         1. Return 𝔽(_s_).
       </emu-alg>
     </emu-clause>
@@ -328,7 +328,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _ms_ be RoundTowardsZero(ℝ(_ns_) / 10<sup>6</sup>).
+        1. Let _ms_ be truncate(ℝ(_ns_) / 10<sup>6</sup>).
         1. Return 𝔽(_ms_).
       </emu-alg>
     </emu-clause>
@@ -343,7 +343,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _µs_ be RoundTowardsZero(ℝ(_ns_) / 10<sup>3</sup>).
+        1. Let _µs_ be truncate(ℝ(_ns_) / 10<sup>3</sup>).
         1. Return ℤ(_µs_).
       </emu-alg>
     </emu-clause>
@@ -1298,7 +1298,7 @@
         1. If _nanoseconds_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
         1. If Type(_relativeTo_) is not Object or _relativeTo_ does not have an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return the Record {
-            [[Days]]: RoundTowardsZero(_nanoseconds_ / _dayLengthNs_),
+            [[Days]]: truncate(_nanoseconds_ / _dayLengthNs_),
             [[Nanoseconds]]: (abs(_nanoseconds_) modulo _dayLengthNs_) &times; _sign_,
             [[DayLength]]: _dayLengthNs_
             }.
