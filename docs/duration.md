@@ -552,7 +552,7 @@ This means that an ISO 8601 string with a time zone name annotation in it, or a 
 Example usage:
 
 ```javascript
-// How many seconds in 18 hours and 20 minutes?
+// How many seconds in 130 hours and 20 minutes?
 d = Temporal.Duration.from({ hours: 130, minutes: 20 });
 d.total({ unit: 'second' }); // => 469200
 
