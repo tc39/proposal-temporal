@@ -274,7 +274,7 @@
           1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ - ℤ(_timeZone_.[[OffsetNanoseconds]]) ».
         1. Else,
-          1. Let _possibleEpochNanoseconds_ be GetIANATimeZoneEpochValue(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
         1. Let _possibleInstants_ be a new empty List.
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
@@ -444,36 +444,6 @@
           [[Nanosecond]]: _nanosecond_
           }.
       </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-getianatimezoneepochvalue" type="implementation-defined abstract operation">
-      <h1>
-        GetIANATimeZoneEpochValue (
-          _timeZoneIdentifier_: a String,
-          _year_: an integer,
-          _month_: an integer between 1 and 12 inclusive,
-          _day_: an integer between 1 and 31 inclusive,
-          _hour_: an integer between 0 and 23 inclusive,
-          _minute_: an integer between 0 and 59 inclusive,
-          _second_: an integer between 0 and 59 inclusive,
-          _millisecond_: an integer between 0 and 999 inclusive,
-          _microsecond_: an integer between 0 and 999 inclusive,
-          _nanosecond_: an integer between 0 and 999 inclusive,
-        ): a List of BigInts
-      </h1>
-      <dl class="header">
-      </dl>
-      <p>
-        Each value in the returned List represents a number of nanoseconds since the Unix epoch in UTC that corresponds to the given ISO 8601 calendar date and wall-clock time in the IANA time zone identified by _timeZoneIdentifier_.
-      </p>
-      <p>
-        When the input represents a local time repeating multiple times at a negative time zone transition (e.g. when the daylight saving time ends or the time zone offset is decreased due to a time zone rule change), the returned List will have more than one element. The elements are sorted in numerical order.
-        When the input represents a skipped local time at a positive time zone transition (e.g. when the daylight saving time starts or the time zone offset is increased due to a time zone rule change), the returned List will be empty.
-        Otherwise, the returned List will have one element.
-      </p>
-      <p>
-        It is an error to call GetIANATimeZoneEpochValue with arguments such that IsValidISODate(_year_, _month_, _day_) is *false*.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporalgetianatimezoneoffsetnanoseconds" type="implementation-defined abstract operation">

@@ -96,7 +96,7 @@ export class TimeZone {
       return [new Instant(epochNs.minus(offsetNs))];
     }
 
-    const possibleEpochNs = ES.GetIANATimeZoneEpochValue(
+    const possibleEpochNs = ES.GetNamedTimeZoneEpochNanoseconds(
       id,
       GetSlot(dateTime, ISO_YEAR),
       GetSlot(dateTime, ISO_MONTH),
