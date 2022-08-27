@@ -785,7 +785,7 @@
           1. Let _days_ be ℝ(_epochDays2_) - ℝ(_epochDays1_).
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is *"week"*, then
-            1. Set _weeks_ to RoundTowardsZero(_days_ / 7).
+            1. Set _weeks_ to truncate(_days_ / 7).
             1. Set _days_ to remainder(_days_, 7).
           1. Return ! CreateDateDurationRecord(0, 0, _weeks_, _days_).
       </emu-alg>

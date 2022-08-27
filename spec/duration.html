@@ -1807,11 +1807,11 @@
       </dl>
       <emu-alg>
         1. Let _sign_ be ! DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _microseconds_ to _microseconds_ + RoundTowardsZero(_nanoseconds_ / 1000).
+        1. Set _microseconds_ to _microseconds_ + truncate(_nanoseconds_ / 1000).
         1. Set _nanoseconds_ to remainder(_nanoseconds_, 1000).
-        1. Set _milliseconds_ to _milliseconds_ + RoundTowardsZero(_microseconds_ / 1000).
+        1. Set _milliseconds_ to _milliseconds_ + truncate(_microseconds_ / 1000).
         1. Set _microseconds_ to remainder(_microseconds_, 1000).
-        1. Set _seconds_ to _seconds_ + RoundTowardsZero(_milliseconds_ / 1000).
+        1. Set _seconds_ to _seconds_ + truncate(_milliseconds_ / 1000).
         1. Set _milliseconds_ to remainder(_milliseconds_, 1000).
         1. Let _datePart_ be *""*.
         1. If _years_ is not 0, then

@@ -983,21 +983,21 @@
             <td>[[Weekday]]</td>
             <td>
               <del>`WeekDay(tz)` specified in ES2023's <emu-xref href="#sec-week-day">Week Day</emu-xref></del>
-              <ins>! WeekDay(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! WeekDay(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Era]]</td>
             <td>
               <del>Let `year` be `YearFromTime(tz)` specified in ES2023's <emu-xref href="#sec-year-number">Year Number</emu-xref>. If `year` is less than 0, return 'BC', else, return 'AD'.</del>
-              <ins>Let _year_ be ! YearFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>))). If _year_ &lt; *-0*<sub>𝔽</sub>, return *"BC"*, else, return *"AD"*.</ins>
+              <ins>Let _year_ be ! YearFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>))). If _year_ &lt; *-0*<sub>𝔽</sub>, return *"BC"*, else, return *"AD"*.</ins>
             </td>
           </tr>
           <tr>
             <td>[[Year]]</td>
             <td>
               <del>`YearFromTime(tz)` specified in ES2023's <emu-xref href="#sec-year-number">Year Number</emu-xref></del>
-              <ins>! YearFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! YearFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
@@ -1012,42 +1012,42 @@
             <td>[[Month]]</td>
             <td>
               <del>`MonthFromTime(tz)` specified in ES2023's <emu-xref href="#sec-month-number">Month Number</emu-xref></del>
-              <ins>! MonthFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! MonthFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Day]]</td>
             <td>
               <del>`DateFromTime(tz)` specified in ES2023's <emu-xref href="#sec-date-number">Date Number</emu-xref></del>
-              <ins>! DateFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! DateFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Hour]]</td>
             <td>
               <del>`HourFromTime(tz)` specified in ES2023's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
-              <ins>! HourFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! HourFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Minute]]</td>
             <td>
               <del>`MinFromTime(tz)` specified in ES2023's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
-              <ins>! MinFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! MinFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Second]]</td>
             <td>
               <del>`SecFromTime(tz)` specified in ES2023's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
-              <ins>! SecFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! SecFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
             <td>[[Millisecond]]</td>
             <td>
               <del>`msFromTime(tz)` specified in ES2023's <emu-xref href="#sec-hours-minutes-second-and-milliseconds">Hours, Minutes, Second, and Milliseconds</emu-xref></del>
-              <ins>! msFromTime(𝔽(RoundTowardsZero(_tz_ / 10<sup>6</sup>)))</ins>
+              <ins>! msFromTime(𝔽(truncate(_tz_ / 10<sup>6</sup>)))</ins>
             </td>
           </tr>
           <tr>
