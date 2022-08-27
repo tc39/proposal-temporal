@@ -1045,13 +1045,14 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _calendar_ be ! GetISO8601Calendar().
         1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_).
         1. If _offsetBehaviour_ is ~wall~ or _offsetOption_ is *"ignore"*, then
           1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
           1. Return _instant_.[[Nanoseconds]].
         1. If _offsetBehaviour_ is ~exact~ or _offsetOption_ is *"use"*, then
-          1. Let _epochNanoseconds_ be GetEpochFromISOParts(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
           1. Set _epochNanoseconds_ to _epochNanoseconds_ - ℤ(_offsetNanoseconds_).
           1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
           1. Return _epochNanoseconds_.
