@@ -1693,6 +1693,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
   ToTemporalTimeZone: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
+      if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
       if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
       if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
       temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
