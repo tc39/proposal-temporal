@@ -536,6 +536,8 @@
       <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
       <emu-alg>
         1. If Type(_temporalTimeZoneLike_) is Object, then
+          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalTimeZone]] internal slot, then
+            1. Return _temporalTimeZoneLike_.
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
           1. If ? HasProperty(_temporalTimeZoneLike_, *"timeZone"*) is *false*, return _temporalTimeZoneLike_.
