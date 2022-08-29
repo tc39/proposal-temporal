@@ -1630,6 +1630,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
   ToTemporalCalendar: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
+      if (ES.IsTemporalCalendar(calendarLike)) return calendarLike;
       if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
       if (!('calendar' in calendarLike)) return calendarLike;
       calendarLike = calendarLike.calendar;
