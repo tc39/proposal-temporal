@@ -47,7 +47,7 @@ export class Calendar {
     id = ES.ToString(id);
     if (!ES.IsBuiltinCalendar(id)) throw new RangeError(`invalid calendar identifier ${id}`);
     CreateSlots(this);
-    SetSlot(this, CALENDAR_ID, id);
+    SetSlot(this, CALENDAR_ID, ES.ASCIILowercase(id));
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {

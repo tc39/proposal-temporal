@@ -39,7 +39,7 @@
       </dl>
       <emu-alg>
         1. Let _calendars_ be AvailableCalendars().
-        1. If _calendars_ contains _id_, return *true*.
+        1. If _calendars_ contains the ASCII-lowercase of _id_, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -72,7 +72,7 @@
         1. Assert: IsBuiltinCalendar(_identifier_) is *true*.
         1. If _newTarget_ is not provided, set _newTarget_ to %Temporal.Calendar%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.Calendar.prototype%"*, « [[InitializedTemporalCalendar]], [[Identifier]] »).
-        1. Set _object_.[[Identifier]] to _identifier_.
+        1. Set _object_.[[Identifier]] to the ASCII-lowercase of _identifier_.
         1. Return _object_.
       </emu-alg>
     </emu-clause>
