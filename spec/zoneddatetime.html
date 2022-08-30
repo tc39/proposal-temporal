@@ -1355,7 +1355,8 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _options_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _differenceNs_ be ! DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-          1. Assert: The following steps cannot fail due to overflow in the Number domain because abs(_differenceNs_) &le; 2 &times; nsMaxInstant.
+          1. Assert: abs(_differenceNs_) &le; 2 &times; nsMaxInstant.
+          1. NOTE: The following steps cannot fail due to overflow in the Number domain.
           1. Let _balanceResult_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _differenceNs_, _settings_.[[LargestUnit]]).
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ &times; _balanceResult_.[[Hours]], _sign_ &times; _balanceResult_.[[Minutes]], _sign_ &times; _balanceResult_.[[Seconds]], _sign_ &times; _balanceResult_.[[Milliseconds]], _sign_ &times; _balanceResult_.[[Microseconds]], _sign_ &times; _balanceResult_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
