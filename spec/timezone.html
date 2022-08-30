@@ -84,28 +84,6 @@
         1. Return *"UTC"*.
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-defaulttimezone" type="abstract operation">
-      <h1>
-        DefaultTimeZone (
-        )
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns a String value representing the host environment's current time zone, which is either a valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name, or an offset conforming to the syntax of a |TimeZoneNumericUTCOffset|.</dd>
-      </dl>
-
-      <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the DefaultTimeZone abstract operation as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        The minimum implementation of DefaultTimeZone for ECMAScript implementations that do not include the ECMA-402 API, supporting only the *"UTC"* time zone, performs the following steps when called:
-      </p>
-
-      <emu-alg>
-        1. Return *"UTC"*.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-timezone-constructor">

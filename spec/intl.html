@@ -73,17 +73,6 @@
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-canonicalizetimezonename"></emu-xref>.</p>
       </ins>
     </emu-clause>
-
-    <emu-clause id="sup-defaulttimezone">
-      <h1><a href="https://tc39.es/ecma402/#sec-defaulttimezone">DefaultTimeZone</a> ( )</h1>
-
-      <ins class="block">
-        <p>This definition supersedes the definition provided in <emu-xref href="#sec-defaulttimezone"></emu-xref>.</p>
-      </ins>
-      <p>
-        The DefaultTimeZone abstract operation returns a String value representing the valid (<emu-xref href="#sec-isvalidtimezonename"></emu-xref>) and canonicalized (<emu-xref href="#sec-canonicalizetimezonename"></emu-xref>) time zone name for the host environment's current time zone.
-      </p>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-abstract-operations">
@@ -201,7 +190,7 @@
         1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is *undefined*, then
-          1. Set _timeZone_ to ! DefaultTimeZone().
+          1. Set _timeZone_ to DefaultTimeZone().
         1. Else,
           1. Set _timeZone_ to ? ToString(_timeZone_).
           1. If the result of ! IsValidTimeZoneName(_timeZone_) is *false*, then
