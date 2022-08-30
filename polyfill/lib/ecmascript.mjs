@@ -17,6 +17,9 @@ const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const ObjectEntries = Object.entries;
+const StringFromCharCode = String.fromCharCode;
+const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
+const StringPrototypeReplace = String.prototype.replace;
 const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
@@ -5021,7 +5024,16 @@ export const ES = ObjectAssign({}, ES2022, {
     return MathFloor(value);
   },
   IsBuiltinCalendar: (id) => {
-    return ES.Call(ArrayIncludes, BUILTIN_CALENDAR_IDS, [id]);
+    return ES.Call(ArrayIncludes, BUILTIN_CALENDAR_IDS, [ES.ASCIILowercase(id)]);
+  },
+  ASCIILowercase: (str) => {
+    return ES.Call(StringPrototypeReplace, str, [
+      /[A-Z]/g,
+      (l) => {
+        const code = ES.Call(StringPrototypeCharCodeAt, l, [0]);
+        return StringFromCharCode(code + 0x20);
+      }
+    ]);
   }
 });
 

@@ -73,6 +73,11 @@
       },
       {
         "type": "term",
+        "term": "ASCII-lowercase",
+        "id": "sec-case-sensitivity-and-case-mapping"
+      },
+      {
+        "type": "term",
         "term": "%DateTimeFormat%",
         "id": "sec-intl-datetimeformat-constructor"
       },
