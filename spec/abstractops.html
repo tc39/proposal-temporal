@@ -993,6 +993,8 @@
           TimeZoneIANANameComponent `/` TimeZoneIANANameTail
 
       TimeZoneIANALegacyName :
+          &gt; An ASCII-case-insensitive match for one of the following:
+          `Etc/GMT` ASCIISign UnpaddedHour
           `Etc/GMT0`
           `GMT0`
           `GMT-0`
@@ -1003,7 +1005,6 @@
           `PST8PDT`
 
       TimeZoneIANAName :
-          `Etc/GMT` ASCIISign UnpaddedHour
           TimeZoneIANANameTail
           TimeZoneIANALegacyName
 
