@@ -8,13 +8,6 @@
   <emu-clause id="sec-time-zone-names">
     <h1>Time Zone Names</h1>
 
-    <emu-note type="editor">
-      <p>
-        The normative intention of this section is that an implementation must support UTC and a local time zone, which may also be UTC, or a named time zone like *"Europe/London"*, or an offset time zone like *"+01:00"*; and that the local time zone must in any case be consistent with the time zone offsets that can be determined using `Date.prototype.getTimezoneOffset()`, `Date.prototype.toString()`, and `Date.prototype.toTimeString()`.
-        The exact formal definition of "local time zone" is still to be determined.
-      </p>
-    </emu-note>
-
     <p>
       An ECMAScript implementation must support a number of built-in time zones.
       At a minimum, implementations must support a built-in time zone named *"UTC"*.
