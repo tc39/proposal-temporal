@@ -287,7 +287,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
         1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return *null*.
-        1. Let _transition_ be GetIANATimeZonePreviousTransition(_startingPoint_.[[Nanoseconds]], _timeZone_.[[Identifier]]).
+        1. Let _transition_ be GetNamedTimeZonePreviousTransition(_timeZone_.[[Identifier]], _startingPoint_.[[Nanoseconds]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalInstant(_transition_).
       </emu-alg>
@@ -442,9 +442,9 @@
 
     <emu-clause id="sec-temporal-getianatimezoneprevioustransition" type="implementation-defined abstract operation">
       <h1>
-        GetIANATimeZonePreviousTransition (
-          _epochNanoseconds_: a BigInt,
+        GetNamedTimeZonePreviousTransition (
           _timeZoneIdentifier_: a String,
+          _epochNanoseconds_: a BigInt,
         ): a BigInt or *null*
       </h1>
       <dl class="header">
@@ -454,7 +454,7 @@
         The operation returns *null* if no such transition exists for which _t_ &ge; ℤ(nsMinInstant).
       </p>
       <p>
-        Given the same values of _epochNanoseconds_ and _timeZoneIdentifier_, the result must be the same for the lifetime of the surrounding agent.
+        Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.
       </p>
     </emu-clause>
 
