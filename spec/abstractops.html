@@ -974,33 +974,8 @@
       TimeFraction :
           Fraction
 
-      TimeZoneUTCOffsetSign :
-          Sign
-
-      TimeZoneUTCOffsetHour :
-          Hour
-
-      TimeZoneUTCOffsetMinute :
-          MinuteSecond
-
-      TimeZoneUTCOffsetSecond :
-          MinuteSecond
-
-      TimeZoneUTCOffsetFractionalPart:
-          FractionalPart
-
-      TimeZoneUTCOffsetFraction :
-          DecimalSeparator TimeZoneUTCOffsetFractionalPart
-
-      TimeZoneNumericUTCOffset :
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour `:` TimeZoneUTCOffsetMinute `:` TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
-          TimeZoneUTCOffsetSign TimeZoneUTCOffsetHour TimeZoneUTCOffsetMinute TimeZoneUTCOffsetSecond TimeZoneUTCOffsetFraction?
-
       TimeZoneUTCOffset :
-          TimeZoneNumericUTCOffset
+          UTCOffset
           UTCDesignator
 
       TimeZoneUTCOffsetName :
@@ -1266,8 +1241,8 @@
       1. If _parseResult_ contains a |UTCDesignator| Parse Node, then
         1. Set _timeZoneResult_.[[Z]] to *true*.
       1. Else,
-        1. If _parseResult_ contains a |TimeZoneNumericUTCOffset| Parse Node, then
-          1. Let _offset_ be the source text matched by the |TimeZoneNumericUTCOffset| Parse Node contained within _parseResult_.
+        1. If _parseResult_ contains a |UTCOffset| Parse Node, then
+          1. Let _offset_ be the source text matched by the |UTCOffset| Parse Node contained within _parseResult_.
           1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
       1. If _calendar_ is empty, then
         1. Let _calendarVal_ be *undefined*.

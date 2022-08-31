@@ -233,29 +233,26 @@ const timeFraction = withCode(fraction, (data, result) => {
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
-const timeZoneUTCOffsetSign = withCode(
+const temporalSign = withCode(
   sign,
   (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
 );
-const timeZoneUTCOffsetHour = hour;
-const timeZoneUTCOffsetMinute = minuteSecond;
-const timeZoneUTCOffsetSecond = minuteSecond;
-const timeZoneUTCOffsetFraction = fraction;
+const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
   data.offset = ES.GetCanonicalTimeZoneIdentifier(result).toString();
 }
-const timeZoneNumericUTCOffset = withCode(
+const utcOffset = withCode(
   seq(
-    timeZoneUTCOffsetSign,
-    timeZoneUTCOffsetHour,
+    temporalSign,
+    hour,
     choice(
-      [timeZoneUTCOffsetMinute, [timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]]],
-      seq(':', timeZoneUTCOffsetMinute, [':', timeZoneUTCOffsetSecond, [timeZoneUTCOffsetFraction]])
+      [minuteSecond, [minuteSecond, [temporalDecimalFraction]]],
+      seq(':', minuteSecond, [':', minuteSecond, [temporalDecimalFraction]])
     )
   ),
   saveOffset
 );
-const timeZoneUTCOffset = choice(utcDesignator, timeZoneNumericUTCOffset);
+const timeZoneUTCOffset = choice(utcDesignator, utcOffset);
 const timeZoneUTCOffsetName = seq(
   sign,
   hour,
