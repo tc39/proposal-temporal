@@ -469,7 +469,7 @@
         1. If _timeZoneName_ is *undefined*, then
           1. Let _timeZone_ be *undefined*.
         1. Else,
-          1. If ParseText(StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is a List of errors, then
+          1. If IsTimeZoneOffsetString(_timeZoneName_) is *false*, then
             1. If ! IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
             1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
           1. Let _timeZone_ be ! CreateTemporalTimeZone(_timeZoneName_).
@@ -482,7 +482,8 @@
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       1. If _offsetBehaviour_ is ~option~, then
         1. Set _offsetString_ to ? ToString(_offsetString_).
-        1. Let _offsetNs_ be ? ParseTimeZoneOffsetString(_offsetString_).
+        1. If IsTimeZoneOffsetString(_offsetString_) is *false*, throw a *RangeError* exception.
+        1. Let _offsetNs_ be ParseTimeZoneOffsetString(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
       1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).

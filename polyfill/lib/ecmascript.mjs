@@ -2137,7 +2137,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return result;
   },
 
-  TestTimeZoneOffsetString: (string) => {
+  IsTimeZoneOffsetString: (string) => {
     return OFFSET.test(String(string));
   },
   ParseTimeZoneOffsetString: (string) => {
@@ -2153,7 +2153,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   },
   GetCanonicalTimeZoneIdentifier: (timeZoneIdentifier) => {
-    if (ES.TestTimeZoneOffsetString(timeZoneIdentifier)) {
+    if (ES.IsTimeZoneOffsetString(timeZoneIdentifier)) {
       const offsetNs = ES.ParseTimeZoneOffsetString(timeZoneIdentifier);
       return ES.FormatTimeZoneOffsetString(offsetNs);
     }
