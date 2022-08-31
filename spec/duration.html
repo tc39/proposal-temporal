@@ -1503,7 +1503,7 @@
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffNs_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, *"halfExpand"*).
           1. Assert: abs(_diffNs_) &le; 2 &times; nsMaxInstant.
-          1. NOTE: The following steps cannot fail due to overflow in the Number domain.
+          1. NOTE: The following steps cannot fail due to overflow in the Number domain because of the previous assertion.
           1. Let _result_ be ! BalanceDuration(0, 0, 0, 0, 0, 0, _diffNs_, _largestUnit_).
           1. Return ! CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Return ? DifferenceZonedDateTime(_relativeTo_.[[Nanoseconds]], _endNs_, _timeZone_, _calendar_, _largestUnit_, OrdinaryObjectCreate(*null*)).
