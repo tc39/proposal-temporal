@@ -49,7 +49,7 @@ export class TimeZone {
     instant = ES.ToTemporalInstant(instant);
     const id = GetSlot(this, TIMEZONE_ID);
 
-    if (ES.TestTimeZoneOffsetString(id)) {
+    if (ES.IsTimeZoneOffsetString(id)) {
       return ES.ParseTimeZoneOffsetString(id);
     }
 
@@ -79,7 +79,7 @@ export class TimeZone {
     const Instant = GetIntrinsic('%Temporal.Instant%');
     const id = GetSlot(this, TIMEZONE_ID);
 
-    if (ES.TestTimeZoneOffsetString(id)) {
+    if (ES.IsTimeZoneOffsetString(id)) {
       const epochNs = ES.GetUTCEpochNanoseconds(
         GetSlot(dateTime, ISO_YEAR),
         GetSlot(dateTime, ISO_MONTH),
@@ -116,7 +116,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
+    if (ES.IsTimeZoneOffsetString(id) || id === 'UTC') {
       return null;
     }
 
@@ -131,7 +131,7 @@ export class TimeZone {
     const id = GetSlot(this, TIMEZONE_ID);
 
     // Offset time zones or UTC have no transitions
-    if (ES.TestTimeZoneOffsetString(id) || id === 'UTC') {
+    if (ES.IsTimeZoneOffsetString(id) || id === 'UTC') {
       return null;
     }
 
