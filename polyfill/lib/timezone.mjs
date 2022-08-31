@@ -122,7 +122,7 @@ export class TimeZone {
 
     let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
     const Instant = GetIntrinsic('%Temporal.Instant%');
-    epochNanoseconds = ES.GetIANATimeZoneNextTransition(epochNanoseconds, id);
+    epochNanoseconds = ES.GetNamedTimeZoneNextTransition(id, epochNanoseconds);
     return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
   }
   getPreviousTransition(startingPoint) {
