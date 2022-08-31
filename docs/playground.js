@@ -3065,7 +3065,7 @@
 
   var tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
   var offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
-  var timeZoneID = new RegExp("(?:(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*|Etc/GMT[-+]\\d{1,2}|").concat(offsetNoCapture.source, ")"));
+  var timeZoneID = new RegExp('(?:' + ["(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*"), 'Etc/GMT(?:0|[-+]\\d{1,2})', 'GMT[-+]?0', 'EST5EDT', 'CST6CDT', 'MST7MDT', 'PST8PDT', offsetNoCapture.source].join('|') + ')');
   var calComponent = /[A-Za-z0-9]{3,8}/;
   var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
@@ -3271,7 +3271,7 @@
           offset = _ES$ParseTemporalTime.offset,
           z = _ES$ParseTemporalTime.z;
 
-      if (ianaName) return ianaName;
+      if (ianaName) return ES.GetCanonicalTimeZoneIdentifier(ianaName);
       if (z) return 'UTC';
       return offset; // if !ianaName && !z then offset must be present
     },
@@ -3331,15 +3331,6 @@
       }
 
       var ianaName = match[19];
-
-      if (ianaName) {
-        try {
-          // Canonicalize name if it is an IANA link name or is capitalized wrong
-          ianaName = ES.GetCanonicalTimeZoneIdentifier(ianaName).toString();
-        } catch (_unused) {// Not an IANA name, may be a custom ID, pass through unchanged
-        }
-      }
-
       var calendar = match[20];
       ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       return {
@@ -3432,14 +3423,14 @@
             day = _ES$ParseTemporalMont.day;
 
         ES.RejectISODate(1972, month, day);
-      } catch (_unused2) {
+      } catch (_unused) {
         try {
           var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar),
               year = _ES$ParseTemporalYear.year,
               _month = _ES$ParseTemporalYear.month;
 
           ES.RejectISODate(year, _month, 1);
-        } catch (_unused3) {
+        } catch (_unused2) {
           return {
             hour: hour,
             minute: minute,
@@ -3513,13 +3504,10 @@
       };
     },
     ParseTemporalTimeZoneString: function ParseTemporalTimeZoneString(stringIdent) {
-      try {
-        var canonicalIdent = ES.GetCanonicalTimeZoneIdentifier(stringIdent);
-        if (canonicalIdent) return {
-          ianaName: canonicalIdent.toString()
-        };
-      } catch (_unused4) {// fall through
-      }
+      var bareID = new RegExp("^".concat(timeZoneID.source, "$"), 'i');
+      if (bareID.test(stringIdent)) return {
+        ianaName: stringIdent
+      };
 
       try {
         // Try parsing ISO string instead
@@ -3528,7 +3516,7 @@
         if (result.z || result.offset || result.ianaName) {
           return result;
         }
-      } catch (_unused5) {// fall through
+      } catch (_unused3) {// fall through
       }
 
       throw new RangeError("Invalid time zone: ".concat(stringIdent));
@@ -4127,28 +4115,28 @@
         ianaName = _ES$ParseISODateTime4.ianaName;
         offset = _ES$ParseISODateTime4.offset;
         z = _ES$ParseISODateTime4.z;
-        if (ianaName) timeZone = ianaName;
 
-        if (z) {
-          offsetBehaviour = 'exact';
-        } else if (!offset) {
-          offsetBehaviour = 'wall';
+        if (ianaName) {
+          timeZone = ianaName;
+
+          if (z) {
+            offsetBehaviour = 'exact';
+          } else if (!offset) {
+            offsetBehaviour = 'wall';
+          }
+
+          matchMinutes = true;
         }
 
         if (!calendar) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
-        matchMinutes = true;
       }
 
-      if (timeZone !== undefined) {
-        timeZone = ES.ToTemporalTimeZone(timeZone);
-        var offsetNs = 0;
-        if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(ES.ToString(offset));
-        var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
-        return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
-      }
-
-      return ES.CreateTemporalDate(year, month, day, calendar);
+      if (timeZone === undefined) return ES.CreateTemporalDate(year, month, day, calendar);
+      timeZone = ES.ToTemporalTimeZone(timeZone);
+      var offsetNs = offsetBehaviour === 'option' ? ES.ParseTimeZoneOffsetString(ES.ToString(offset)) : 0;
+      var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
+      return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
     },
     DefaultTemporalLargestUnit: function DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
       var _iterator5 = _createForOfIteratorHelper(ObjectEntries$1({
@@ -4986,7 +4974,7 @@
         var _ES$ParseISODateTime5 = ES.ParseISODateTime(identifier);
 
         calendar = _ES$ParseISODateTime5.calendar;
-      } catch (_unused6) {
+      } catch (_unused4) {
         throw new RangeError("Invalid calendar: ".concat(identifier));
       }
 
