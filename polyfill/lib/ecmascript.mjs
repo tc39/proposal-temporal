@@ -2162,7 +2162,7 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   GetNamedTimeZoneOffsetNanoseconds: (id, epochNanoseconds) => {
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-      ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
+      ES.GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
     const utc = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (utc === null) throw new RangeError('Date outside of supported range');
     return +utc.minus(epochNanoseconds);
@@ -2235,7 +2235,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     return { epochMilliseconds, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
-  GetIANATimeZoneDateTimeParts: (epochNanoseconds, id) => {
+  GetNamedTimeZoneDateTimeParts: (id, epochNanoseconds) => {
     const { epochMilliseconds, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(epochNanoseconds);
     const { year, month, day, hour, minute, second } = ES.GetFormatterParts(id, epochMilliseconds);
     return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
@@ -2343,7 +2343,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return found
       .map((offsetNanoseconds) => {
         const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
-        const parts = ES.GetIANATimeZoneDateTimeParts(epochNanoseconds, id);
+        const parts = ES.GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
         if (
           year !== parts.year ||
           month !== parts.month ||
