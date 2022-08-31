@@ -2239,7 +2239,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const { year, month, day, hour, minute, second } = ES.GetFormatterParts(id, epochMilliseconds);
     return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
-  GetIANATimeZoneNextTransition: (epochNanoseconds, id) => {
+  GetNamedTimeZoneNextTransition: (id, epochNanoseconds) => {
     const uppercap = ES.SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
     let leftNanos = epochNanoseconds;
     let leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
