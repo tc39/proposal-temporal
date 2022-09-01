@@ -1208,14 +1208,6 @@
 
       TemporalZonedDateTimeString :
           Date TimeSpecSeparator? TimeZoneNameRequired Calendar?
-
-      ISODateTimeString :
-          TemporalInstantString
-          TemporalDateTimeString
-          TemporalZonedDateTimeString
-          CalendarTime
-          DateSpecYearMonth
-          DateSpecMonthDay
     </emu-grammar>
     <ul>
       <li>
@@ -1361,7 +1353,7 @@
     </dl>
     <emu-alg>
       1. Let _parseResult_ be Completion(ParseISODateTime(_isoString_)).
-      1. If _parseResult_.[[Type]] is ~normal~, then
+      1. If _parseResult_ is a normal completion, then
         1. Let _calendar_ be _parseResult_.[[Value]].[[Calendar]].
         1. If _calendar_ is *undefined*, return *"iso8601"*.
         1. Else, return _calendar_.
