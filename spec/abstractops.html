@@ -1211,11 +1211,19 @@
       TemporalZonedDateTimeString :
           Date TimeSpecSeparator? TimeZoneNameRequired Calendar?
     </emu-grammar>
-    <ul>
-      <li>
-        It is a Syntax Error if |DateExtendedYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
-      </li>
-    </ul>
+
+    <emu-clause id="sec-temporal-iso8601grammar-early-errors">
+      <h1>Early errors</h1>
+      <emu-grammar>
+        DateExtendedYear :
+          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if |DateExtendedYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
+        </li>
+      </ul>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-parseisodatetime" type="abstract operation">
