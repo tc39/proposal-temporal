@@ -380,7 +380,7 @@ const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'na
 const comparisonItems = {
   Instant: [...dateItems, ...timeItems, 'offset'],
   Date: [...dateItems, 'calendar'],
-  DateTime: [...dateItems, ...timeItems],
+  DateTime: [...dateItems, ...timeItems, 'calendar'],
   Duration: [
     'years',
     'months',
