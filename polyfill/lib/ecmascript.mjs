@@ -18,7 +18,6 @@ const ObjectDefineProperty = Object.defineProperty;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
-const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import Call from 'es-abstract/2020/Call.js';
@@ -388,18 +387,12 @@ export const ES = ObjectAssign({}, ES2020, {
       return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
     // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
-    // The calendar suffix is `[u-ca=${calendar}]`, i.e. calendar plus 7 characters,
-    // and must be stripped so presence of a calendar doesn't result in interpretation
-    // of otherwise ambiguous input as a time.
-    const isoStringWithoutCalendar = calendar
-      ? ES.Call(StringPrototypeSlice, isoString, [0, -(calendar.length + 7)])
-      : isoString;
     try {
-      const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar);
+      const { month, day } = ES.ParseTemporalMonthDayString(isoString);
       ES.RejectISODate(1972, month, day);
     } catch {
       try {
-        const { year, month } = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar);
+        const { year, month } = ES.ParseTemporalYearMonthString(isoString);
         ES.RejectISODate(year, month, 1);
       } catch {
         return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
@@ -417,6 +410,9 @@ export const ES = ObjectAssign({}, ES2020, {
       year = ES.ToInteger(yearString);
       month = ES.ToInteger(match[2]);
       calendar = match[3];
+      if (calendar !== undefined && calendar !== 'iso8601') {
+        throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
+      }
     } else {
       let z;
       ({ year, month, calendar, day: referenceISODay, z } = ES.ParseISODateTime(isoString));
@@ -430,6 +426,10 @@ export const ES = ObjectAssign({}, ES2020, {
     if (match) {
       month = ES.ToInteger(match[1]);
       day = ES.ToInteger(match[2]);
+      calendar = match[10];
+      if (calendar !== undefined && calendar != 'iso8601') {
+        throw new RangeError('MM-DD format is only valid with iso8601 calendar');
+      }
     } else {
       let z;
       ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString));
@@ -1628,7 +1628,11 @@ export const ES = ObjectAssign({}, ES2020, {
     try {
       ({ calendar } = ES.ParseISODateTime(identifier));
     } catch {
-      throw new RangeError(`Invalid calendar: ${identifier}`);
+      try {
+        ({ calendar } = ES.ParseTemporalYearMonthString(identifier));
+      } catch {
+        ({ calendar } = ES.ParseTemporalMonthDayString(identifier));
+      }
     }
     if (!calendar) calendar = 'iso8601';
     return new TemporalCalendar(calendar);

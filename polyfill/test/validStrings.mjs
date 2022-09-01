@@ -281,10 +281,10 @@ const timeSpec = seq(
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
 const timeSpecWithOptionalTimeZoneNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [timeZone]), (result) => {
-  if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
+  if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)/.test(result)) {
     throw new SyntaxError('valid PlainMonthDay');
   }
-  if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+  if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])/.test(result)) {
     throw new SyntaxError('valid PlainYearMonth');
   }
 });
@@ -306,6 +306,19 @@ const calendarTime = choice(
   seq(timeDesignator, timeSpec, [timeZone], [calendar]),
   seq(timeSpecWithOptionalTimeZoneNotAmbiguous, [calendar])
 );
+const annotatedYearMonth = withSyntaxConstraints(
+  seq(dateSpecYearMonth, [timeZoneBracketedAnnotation], [calendar]),
+  (result, data) => {
+    if (data.calendar !== undefined && data.calendar !== 'iso8601') {
+      throw new SyntaxError('retry if YYYY-MM with non-ISO calendar');
+    }
+  }
+);
+const annotatedMonthDay = withSyntaxConstraints(seq(dateSpecMonthDay, [timeZone], [calendar]), (result, data) => {
+  if (data.calendar !== undefined && data.calendar !== 'iso8601') {
+    throw new SyntaxError('retry if MM-DD with non-ISO calendar');
+  }
+});
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -368,10 +381,10 @@ const goals = {
   Date: calendarDateTime,
   DateTime: calendarDateTime,
   Duration: duration,
-  MonthDay: choice(dateSpecMonthDay, calendarDateTime),
+  MonthDay: choice(annotatedMonthDay, calendarDateTime),
   Time: choice(calendarTime, calendarDateTimeTimeRequired),
   TimeZone: choice(timeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [calendar])),
-  YearMonth: choice(dateSpecYearMonth, calendarDateTime),
+  YearMonth: choice(annotatedYearMonth, calendarDateTime),
   ZonedDateTime: zonedDateTime
 };
 

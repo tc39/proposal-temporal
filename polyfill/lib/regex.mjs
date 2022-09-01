@@ -36,14 +36,21 @@ export const zoneddatetime = new RegExp(
 
 export const time = new RegExp(`^T?${timesplit.source}(?:${zonesplit.source})?(?:${calendar.source})?$`, 'i');
 
-// The short forms of YearMonth and MonthDay are only for the ISO calendar.
+// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
+// a calendar annotation is still allowed and will throw if not ISO.
 // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
 // with the reference fields.
 // YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
 // RFC 3339 and we don't allow 2-digit years, so we allow it.
 // Not ambiguous with HHMMSS because that requires a 'T' prefix
-export const yearmonth = new RegExp(`^(${yearpart.source})-?(${monthpart.source})$`);
-export const monthday = new RegExp(`^(?:--)?(${monthpart.source})-?(${daypart.source})$`);
+// In YearMonth, a time zone annotation is allowed but no UTC offset, because
+// YYYY-MM-UU is ambiguous with YYYY-MM-DD
+export const yearmonth = new RegExp(
+  `^(${yearpart.source})-?(${monthpart.source})(?:\\[${timeZoneID.source}\\])?(?:${calendar.source})?$`
+);
+export const monthday = new RegExp(
+  `^(?:--)?(${monthpart.source})-?(${daypart.source})(?:${zonesplit.source})?(?:${calendar.source})?$`
+);
 
 const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 

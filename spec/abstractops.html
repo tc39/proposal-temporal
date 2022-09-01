@@ -1096,8 +1096,14 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
+      AmbiguousMonthDay :
+          ValidMonthDay TimeZone?
+
+      AmbiguousYearMonth :
+          DateSpecYearMonth TimeZoneBracketedAnnotation?
+
       TimeSpecWithOptionalTimeZoneNotAmbiguous :
-          TimeSpec TimeZone? but not one of ValidMonthDay or DateSpecYearMonth
+          TimeSpec TimeZone? but not one of AmbiguousMonthDay or AmbiguousYearMonth
 
       TimeSpecSeparator :
           DateTimeSeparator TimeSpec
@@ -1114,6 +1120,12 @@
 
       CalendarDateTimeTimeRequired :
           Date TimeSpecSeparator TimeZone? Calendar?
+
+      AnnotatedYearMonth:
+          DateSpecYearMonth TimeZoneBracketedAnnotation? Calendar?
+
+      AnnotatedMonthDay:
+          DateSpecMonthDay TimeZone? Calendar?
 
       DurationWholeSeconds :
           DecimalDigits[~Sep]
@@ -1195,7 +1207,7 @@
           Duration
 
       TemporalMonthDayString :
-          DateSpecMonthDay
+          AnnotatedMonthDay
           CalendarDateTime
 
       TemporalTimeString :
@@ -1203,7 +1215,7 @@
           CalendarDateTimeTimeRequired
 
       TemporalYearMonthString :
-          DateSpecYearMonth
+          AnnotatedYearMonth
           CalendarDateTime
 
       TemporalZonedDateTimeString :
@@ -1214,8 +1226,8 @@
           TemporalInstantString
           CalendarDateTime
           CalendarTime
-          DateSpecYearMonth
-          DateSpecMonthDay
+          AnnotatedYearMonth
+          AnnotatedMonthDay
     </emu-grammar>
     <ul>
       <li>
@@ -1237,8 +1249,13 @@
     <emu-note>The value of ! ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Let _parseResult_ be ~empty~.
-      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalMonthDayString|, |TemporalTimeString|, |TemporalYearMonthString|, |TemporalZonedDateTimeString| &raquo;, do
+      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalTimeString|, |TemporalZonedDateTimeString| &raquo;, do
         1. If _parseResult_ is not a Parse Node, set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
+      1. For each nonterminal _goal_ of &laquo; |TemporalMonthDayString|, |TemporalYearMonthString| &raquo;, do
+        1. If _parseResult_ is not a Parse Node, then
+          1. Set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
+          1. If _parseResult_ contains a |CalendarName| Parse Node _c_, and CodePointsToString(_c_) is not *"iso8601"*, then
+            1. Throw a *RangeError* exception.
       1. If _parseResult_ is not a Parse Node, throw a *RangeError* exception.
       1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, _fSeconds_, and _calendar_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, |TimeFraction|, and |CalendarName| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
       1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
