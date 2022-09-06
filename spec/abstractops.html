@@ -1001,33 +1001,41 @@
           `.`
           `_`
 
-      TZChar :
+      TZChar[Legacy] :
           Alpha
           `.`
           `-`
           `_`
+          [+Legacy] `+`
+          [+Legacy] DecimalDigit
 
-      TimeZoneIANANameComponent :
-          TZLeadingChar TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? TZChar? but not one of `.` or `..`
+      TimeZoneIANANameComponent[Legacy] :
+          > Readability note: This production matches 1 to 14 characters.
+          TZLeadingChar but not `.`
+          TZLeadingChar TZChar[?Legacy] but not `..`
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
+          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
 
-      TimeZoneIANANameTail :
-          TimeZoneIANANameComponent
-          TimeZoneIANANameComponent `/` TimeZoneIANANameTail
+      TimeZoneIANANameTail[Legacy] :
+          TimeZoneIANANameComponent[?Legacy]
+          TimeZoneIANANameComponent[?Legacy] `/` TimeZoneIANANameTail[?Legacy]
 
       TimeZoneIANALegacyName :
-          &gt; An ASCII-case-insensitive match for one of the following:
-          `Etc/GMT` ASCIISign UnpaddedHour
-          `Etc/GMT0`
-          `GMT0`
-          `GMT-0`
-          `GMT+0`
-          `EST5EDT`
-          `CST6CDT`
-          `MST7MDT`
-          `PST8PDT`
+          TimeZoneIANANameTail[+Legacy] [&gt; but only if `etc/gmt` |ASCIISign| |UnpaddedHour| matches StringToCodePoints(the ASCII-lowercase of CodePointsToString(the sequence of code points matched by |TimeZoneIANANameTail|))]
+          TimeZoneIANANameTail[+Legacy] [&gt; but only if the sequence of code points matched by |TimeZoneIANANameTail| is an ASCII-case-insensitive match for an element of « *"Etc/GMT0"*, *"GMT0"*, *"GMT-0"*, *"GMT+0"*, *"EST5EDT"*, *"CST6CDT"*, *"MST7MDT"*, *"PST8PDT"* »]
 
       TimeZoneIANAName :
-          TimeZoneIANANameTail
+          TimeZoneIANANameTail[~Legacy]
           TimeZoneIANALegacyName
 
       TimeZoneIdentifier :
