@@ -1620,7 +1620,7 @@
               _calendar_: a String,
               _fields_: an Object,
               _additionalFields_: an Object,
-            ): either a normal completion containing an Object or an abrupt completion
+            ): an Object
           </h1>
           <dl class="header">
             <dt>description</dt>
@@ -2071,7 +2071,7 @@
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_additionalFieldsCopy_, _key_, _propValue_).
-            1. Return ! CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopy_, _additionalFieldsCopy_).
+            1. Return CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopy_, _additionalFieldsCopy_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
