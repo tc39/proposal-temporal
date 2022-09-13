@@ -2070,7 +2070,7 @@
   		throw new $TypeError$7('"allowMissing" argument must be a boolean');
   	}
 
-  	if ($exec$1(/^%?[^%]*%?$/g, name) === null) {
+  	if ($exec$1(/^%?[^%]*%?$/, name) === null) {
   		throw new $SyntaxError('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
   	}
   	var parts = stringToPath(name);
@@ -2347,12 +2347,20 @@
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
   var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-  /* globals document: false */
-  var documentDotAll = typeof document === 'object' && typeof document.all === 'undefined' && document.all !== undefined ? document.all : {};
+  var isDDA = typeof document === 'object' ? function isDocumentDotAll(value) {
+  	/* globals document: false */
+  	// in IE 8, typeof document.all is "object"
+  	if (typeof value === 'undefined' || typeof value === 'object') {
+  		try {
+  			return value('') === null;
+  		} catch (e) { /**/ }
+  	}
+  	return false;
+  } : function () { return false; };
 
   var isCallable$2 = reflectApply
   	? function isCallable(value) {
-  		if (value === documentDotAll) { return true; }
+  		if (isDDA(value)) { return true; }
   		if (!value) { return false; }
   		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
   		if (typeof value === 'function' && !value.prototype) { return true; }
@@ -2364,14 +2372,14 @@
   		return !isES6ClassFn(value);
   	}
   	: function isCallable(value) {
-  		if (value === documentDotAll) { return true; }
+  		if (isDDA(value)) { return true; }
   		if (!value) { return false; }
   		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
   		if (typeof value === 'function' && !value.prototype) { return true; }
   		if (hasToStringTag$1) { return tryFunctionObject(value); }
   		if (isES6ClassFn(value)) { return false; }
   		var strClass = toStr$3.call(value);
-  		return strClass === fnClass || strClass === genClass;
+  		return strClass === fnClass || strClass === genClass || tryFunctionObject(value);
   	};
 
   // http://262.ecma-international.org/5.1/#sec-9.11
