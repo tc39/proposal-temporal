@@ -3137,19 +3137,32 @@ export const ES = ObjectAssign({}, ES2020, {
 
     return { hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  DifferenceInstant(ns1, ns2, increment, unit, roundingMode) {
+  DifferenceInstant(ns1, ns2, increment, smallestUnit, largestUnit, roundingMode) {
     const diff = ns2.minus(ns1);
 
-    const remainder = diff.mod(86400e9);
-    const wholeDays = diff.minus(remainder);
-    const roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
-    const roundedDiff = wholeDays.plus(roundedRemainder);
+    let hours = 0;
+    let minutes = 0;
+    let nanoseconds = diff.mod(1e3).toJSNumber();
+    let microseconds = diff.divide(1e3).mod(1e3).toJSNumber();
+    let milliseconds = diff.divide(1e6).mod(1e3).toJSNumber();
+    let seconds = diff.divide(1e9).toJSNumber();
 
-    const nanoseconds = +roundedDiff.mod(1e3);
-    const microseconds = +roundedDiff.divide(1e3).mod(1e3);
-    const milliseconds = +roundedDiff.divide(1e6).mod(1e3);
-    const seconds = +roundedDiff.divide(1e9);
-    return { seconds, milliseconds, microseconds, nanoseconds };
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      increment,
+      smallestUnit,
+      roundingMode
+    ));
+    return ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
   },
   DifferenceISODateTime: (
     y1,
@@ -3316,24 +3329,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_DIFFERENCE_INCREMENTS[smallestUnit], false);
     const onens = GetSlot(first, EPOCHNANOSECONDS);
     const twons = GetSlot(second, EPOCHNANOSECONDS);
-    let { seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+    let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
       onens,
       twons,
       roundingIncrement,
       smallestUnit,
+      largestUnit,
       roundingMode
     );
-    let hours, minutes;
-    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-      0,
-      0,
-      0,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      largestUnit
-    ));
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   },
@@ -3646,22 +3649,13 @@ export const ES = ObjectAssign({}, ES2020, {
       months = 0;
       weeks = 0;
       days = 0;
-      ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
         ns1,
         ns2,
         roundingIncrement,
         smallestUnit,
+        largestUnit,
         roundingMode
-      ));
-      ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-        0,
-        0,
-        0,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds,
-        largestUnit
       ));
     } else {
       const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
@@ -3875,22 +3869,13 @@ export const ES = ObjectAssign({}, ES2020, {
         months = 0;
         weeks = 0;
         days = 0;
-        ({ seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
+        ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
           GetSlot(relativeTo, EPOCHNANOSECONDS),
           endNs,
           1,
           'nanosecond',
+          largestUnit,
           'halfExpand'
-        ));
-        ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
-          0,
-          0,
-          0,
-          seconds,
-          milliseconds,
-          microseconds,
-          nanoseconds,
-          largestUnit
         ));
       } else {
         ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
