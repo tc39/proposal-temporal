@@ -1618,13 +1618,13 @@
           <h1>
             CalendarDateMergeFields (
               _calendar_: a String,
-              _fields_: a List of Strings,
-              _additionalFields_: a List of Strings,
-            )
+              _fields_: an Object,
+              _additionalFields_: an Object,
+            ): an Object
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It takes two lists of calendar-specific fields for the calendar represented by _calendar_ in _fields_ and _additionalFields_ and returns a new list that includes both sets of fields. The values in _additionalFields_ should supersede the values in _fields_. Also, the returned field list must be free of ambiguity or conflicts. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
+            <dd>It takes two Objects of calendar-specific fields for the calendar represented by _calendar_ in _fields_ and _additionalFields_ and returns a new Object that includes both sets of fields. The values in _additionalFields_ should supersede the values in _fields_. Also, the returned Object must be free of ambiguity or conflicts. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
           </dl>
           <emu-note>
             For example, if _fields_ contains *"year"* but _additionalFields_ contains *"era"* and *"eraYear"*, then the returned list must not include *"year"* in order to avoid ambiguity or conflict between different ways of specifying the year.
@@ -2071,7 +2071,7 @@
               1. Let _propValue_ be ? Get(_additionalFields_, _key_).
               1. If _propValue_ is not *undefined*, then
                 1. Perform ! CreateDataPropertyOrThrow(_additionalFieldsCopy_, _key_, _propValue_).
-            1. Return ! CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopy_, _additionalFieldsCopy_).
+            1. Return CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopy_, _additionalFieldsCopy_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
