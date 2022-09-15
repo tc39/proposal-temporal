@@ -2344,19 +2344,33 @@
   	}
   };
   var toStr$3 = Object.prototype.toString;
+  var objectClass = '[object Object]';
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
+  var ddaClass = '[object HTMLAllCollection]';
   var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-  var isDDA = typeof document === 'object' ? function isDocumentDotAll(value) {
-  	/* globals document: false */
-  	// in IE 8, typeof document.all is "object"
-  	if (typeof value === 'undefined' || typeof value === 'object') {
-  		try {
-  			return value('') === null;
-  		} catch (e) { /**/ }
+
+  var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+  var isDDA = function isDocumentDotAll() { return false; };
+  if (typeof document === 'object') {
+  	// Firefox 3 canonicalized DDA to undefined when it's not accessed directly
+  	var all = document.all;
+  	if (toStr$3.call(all) === toStr$3.call(document.all)) {
+  		isDDA = function isDocumentDotAll(value) {
+  			/* globals document: false */
+  			// in IE 6-8, typeof document.all is "object" and it's truthy
+  			if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+  				try {
+  					var str = toStr$3.call(value);
+  					// IE 6-8 uses `objectClass`
+  					return (str === ddaClass || str === objectClass) && value('') == null; // eslint-disable-line eqeqeq
+  				} catch (e) { /**/ }
+  			}
+  			return false;
+  		};
   	}
-  	return false;
-  } : function () { return false; };
+  }
 
   var isCallable$2 = reflectApply
   	? function isCallable(value) {
@@ -2375,7 +2389,6 @@
   		if (isDDA(value)) { return true; }
   		if (!value) { return false; }
   		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-  		if (typeof value === 'function' && !value.prototype) { return true; }
   		if (hasToStringTag$1) { return tryFunctionObject(value); }
   		if (isES6ClassFn(value)) { return false; }
   		var strClass = toStr$3.call(value);
@@ -9518,8 +9531,8 @@
   DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
   impl['iso8601'] = {
     dateFromFields: function dateFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       fields = ES.PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['year', 'day']);
+      var overflow = ES.ToTemporalOverflow(options);
       fields = resolveNonLunisolarMonth(fields);
       var _fields2 = fields,
           year = _fields2.year,
@@ -9534,8 +9547,8 @@
       return ES.CreateTemporalDate(year, month, day, calendar);
     },
     yearMonthFromFields: function yearMonthFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       fields = ES.PrepareTemporalFields(fields, ['month', 'monthCode', 'year'], ['year']);
+      var overflow = ES.ToTemporalOverflow(options);
       fields = resolveNonLunisolarMonth(fields);
       var _fields3 = fields,
           year = _fields3.year,
@@ -9550,8 +9563,8 @@
       1);
     },
     monthDayFromFields: function monthDayFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       fields = ES.PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['day']);
+      var overflow = ES.ToTemporalOverflow(options);
 
       if (fields.month !== undefined && fields.year === undefined && fields.monthCode === undefined) {
         throw new TypeError('either year or monthCode required with month');
@@ -11901,11 +11914,11 @@
 
   var nonIsoGeneralImpl = {
     dateFromFields: function dateFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       var cache = new OneObjectCache();
       var fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
       ES.Call(ArrayPrototypeSort, fieldNames, []);
       fields = ES.PrepareTemporalFields(fields, fieldNames, []);
+      var overflow = ES.ToTemporalOverflow(options);
 
       var _this$helper$calendar = this.helper.calendarToIsoDate(fields, overflow, cache),
           year = _this$helper$calendar.year,
@@ -11917,11 +11930,11 @@
       return result;
     },
     yearMonthFromFields: function yearMonthFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       var cache = new OneObjectCache();
       var fieldNames = this.fields(['month', 'monthCode', 'year']);
       ES.Call(ArrayPrototypeSort, fieldNames, []);
       fields = ES.PrepareTemporalFields(fields, fieldNames, []);
+      var overflow = ES.ToTemporalOverflow(options);
 
       var _this$helper$calendar2 = this.helper.calendarToIsoDate(_objectSpread2(_objectSpread2({}, fields), {}, {
         day: 1
@@ -11937,13 +11950,13 @@
       return result;
     },
     monthDayFromFields: function monthDayFromFields(fields, options, calendar) {
-      var overflow = ES.ToTemporalOverflow(options);
       var cache = new OneObjectCache(); // For lunisolar calendars, either `monthCode` or `year` must be provided
       // because `month` is ambiguous without a year or a code.
 
       var fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
       ES.Call(ArrayPrototypeSort, fieldNames, []);
       fields = ES.PrepareTemporalFields(fields, fieldNames, []);
+      var overflow = ES.ToTemporalOverflow(options);
 
       var _this$helper$monthDay = this.helper.monthDayFromFields(fields, overflow, cache),
           year = _this$helper$monthDay.year,
