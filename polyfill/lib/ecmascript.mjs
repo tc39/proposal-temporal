@@ -376,6 +376,7 @@ export const ES = ObjectAssign({}, ES2020, {
       microsecond = ES.ToInteger(fraction.slice(3, 6));
       nanosecond = ES.ToInteger(fraction.slice(6, 9));
       calendar = match[15];
+      if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
     } else {
       let z, hasTime;
       ({ hasTime, hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } =
