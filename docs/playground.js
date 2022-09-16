@@ -5082,7 +5082,7 @@
         throw new TypeError('bad return from getOffsetNanosecondsFor');
       }
 
-      if (!ES.IsInteger(offsetNs) || MathAbs$1(offsetNs) > 86400e9) {
+      if (!ES.IsInteger(offsetNs) || MathAbs$1(offsetNs) >= 86400e9) {
         throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
       }
 
