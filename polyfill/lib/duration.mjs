@@ -339,8 +339,8 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
     const relativeTo = ES.ToRelativeTemporalObject(totalOf);
+    const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
     // Convert larger units down to days
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
