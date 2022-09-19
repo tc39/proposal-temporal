@@ -1320,9 +1320,9 @@ export const ES = ObjectAssign({}, ES2020, {
       ]);
       ES.Call(ArrayPrototypePush, fieldNames, ['timeZone', 'offset']);
       const fields = ES.PrepareTemporalFields(item, fieldNames, ['timeZone']);
+      timeZone = ES.ToTemporalTimeZone(fields.timeZone);
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
-      timeZone = ES.ToTemporalTimeZone(fields.timeZone);
       offset = fields.offset;
       if (offset === undefined) {
         offsetBehaviour = 'wall';
