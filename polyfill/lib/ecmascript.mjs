@@ -3598,9 +3598,9 @@ export const ES = ObjectAssign({}, ES2020, {
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
     otherFields.day = 1;
+    const otherDate = ES.CalendarDateFromFields(calendar, otherFields);
     const thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
     thisFields.day = 1;
-    const otherDate = ES.CalendarDateFromFields(calendar, otherFields);
     const thisDate = ES.CalendarDateFromFields(calendar, thisFields);
 
     const untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
