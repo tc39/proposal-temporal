@@ -4346,8 +4346,8 @@ export const ES = ObjectAssign({}, ES2020, {
       'day'
     ).days;
   },
-  MoveRelativeDate: (calendar, relativeTo, duration) => {
-    const later = ES.CalendarDateAdd(calendar, relativeTo, duration);
+  MoveRelativeDate: (calendar, relativeTo, duration, dateAdd = ES.GetMethod(calendar, 'dateAdd')) => {
+    const later = ES.CalendarDateAdd(calendar, relativeTo, duration, undefined, dateAdd);
     const days = ES.DaysUntil(relativeTo, later);
     return { relativeTo: later, days };
   },
@@ -4560,7 +4560,7 @@ export const ES = ObjectAssign({}, ES2020, {
         const daysPassed = ES.DaysUntil(oldRelativeTo, relativeTo);
         days -= daysPassed;
         const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
-        let { days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+        let { days: oneYearDays } = ES.MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
 
         // Note that `nanoseconds` below (here and in similar code for months,
         // weeks, and days further below) isn't actually nanoseconds for the
@@ -4596,11 +4596,11 @@ export const ES = ObjectAssign({}, ES2020, {
         const sign = MathSign(days);
         const oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
         let oneMonthDays;
-        ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
+        ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
         while (MathAbs(days) >= MathAbs(oneMonthDays)) {
           months += sign;
           days -= oneMonthDays;
-          ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth));
+          ({ relativeTo, days: oneMonthDays } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
         }
         oneMonthDays = MathAbs(oneMonthDays);
         const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
