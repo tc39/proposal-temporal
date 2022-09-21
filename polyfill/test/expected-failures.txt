@@ -71,3 +71,4 @@ intl402/Temporal/Calendar/calendar-case-insensitive.js
 intl402/Temporal/Calendar/from/calendar-case-insensitive.js
 intl402/Temporal/Calendar/prototype/era/argument-propertybag-calendar-case-insensitive.js
 intl402/Temporal/Calendar/prototype/eraYear/argument-propertybag-calendar-case-insensitive.js
+intl402/Temporal/ZonedDateTime/prototype/withCalendar/calendar-case-insensitive.js
