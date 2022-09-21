@@ -981,7 +981,7 @@ The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;expand&#39;</code>, <code>&#39;trunc&#39;</code>, <code>&#39;halfCeil&#39;</code>, <code>&#39;halfFloor&#39;</code>, <code>&#39;halfExpand&#39;</code>, <code>&#39;halfTrunc&#39;</code>, and <code>&#39;halfEven&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
@@ -1064,7 +1064,7 @@ The default is <code>&#39;nanosecond&#39;</code>, i.e., no rounding.</li>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder, if rounding.
-Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;expand&#39;</code>, <code>&#39;trunc&#39;</code>, <code>&#39;halfCeil&#39;</code>, <code>&#39;halfFloor&#39;</code>, <code>&#39;halfExpand&#39;</code>, <code>&#39;halfTrunc&#39;</code>, and <code>&#39;halfEven&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towards zero.</li>
 </ul>
 </li>
@@ -1090,7 +1090,7 @@ Valid values are <code>&#39;day&#39;</code>, <code>&#39;hour&#39;</code>, <code>
 <li><code>roundingIncrement</code> (number): The granularity to round to, of the unit given by <code>smallestUnit</code>.
 The default is 1.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;halfExpand&#39;</code>, <code>&#39;ceil&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;floor&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;expand&#39;</code>, <code>&#39;trunc&#39;</code>, <code>&#39;halfCeil&#39;</code>, <code>&#39;halfFloor&#39;</code>, <code>&#39;halfExpand&#39;</code>, <code>&#39;halfTrunc&#39;</code>, and <code>&#39;halfEven&#39;</code>.
 The default is <code>&#39;halfExpand&#39;</code>.</li>
 </ul>
 </li>
@@ -1111,12 +1111,15 @@ Instead of 60 minutes, use 1 hour.)</p>
 <p>If <code>smallestUnit</code> is <code>&#39;day&#39;</code>, then 1 is the only allowed value for <code>roundingIncrement</code>.</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>&#39;ceil&#39;</code>: Always round up, towards the end of time.</li>
-<li><code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>: Always round down, towards the beginning of time.
-(These two modes behave the same, but are both included for consistency with <code>Temporal.Duration.prototype.round()</code>, where they are not the same.)</li>
-<li><code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+<li><code>&#39;ceil&#39;</code>, <code>&#39;expand&#39;</code>: Always round up, towards the end of time.</li>
+<li><code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>: Always round down, towards the beginning of time.</li>
+<li><code>&#39;halfCeil&#39;</code>, <code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
 When there is a tie, round up, like <code>&#39;ceil&#39;</code>.</li>
+<li><code>&#39;halfFloor&#39;</code>, <code>&#39;halfTrunc&#39;</code>: Round to the nearest of the allowed values, like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round down, like <code>&#39;floor&#39;</code>.</li>
+<li><code>&#39;halfEven&#39;</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
+For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
+<p>Several pairs of modes behave the same as each other, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.</p>
 <p>As expected for a method named &quot;round&quot;, the default rounding mode is <code>&#39;halfExpand&#39;</code> to match the behavior of <code>Math.round</code>.
 Note that this is different than the <code>&#39;trunc&#39;</code> default used by <code>until</code> and <code>since</code> options because rounding up would be an unexpected default for those operations.
 Other properties behave identically between these methods.</p>
@@ -1171,7 +1174,7 @@ The default is <code>&#39;auto&#39;</code>.</li>
 This option overrides <code>fractionalSecondDigits</code> if both are given.
 Valid values are <code>&#39;minute&#39;</code>, <code>&#39;second&#39;</code>, <code>&#39;millisecond&#39;</code>, <code>&#39;microsecond&#39;</code>, and <code>&#39;nanosecond&#39;</code>.</li>
 <li><code>roundingMode</code> (string): How to handle the remainder.
-Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>, and <code>&#39;halfExpand&#39;</code>.
+Valid values are <code>&#39;ceil&#39;</code>, <code>&#39;floor&#39;</code>, <code>&#39;expand&#39;</code>, <code>&#39;trunc&#39;</code>, <code>&#39;halfCeil&#39;</code>, <code>&#39;halfFloor&#39;</code>, <code>&#39;halfExpand&#39;</code>, <code>&#39;halfTrunc&#39;</code>, and <code>&#39;halfEven&#39;</code>.
 The default is <code>&#39;trunc&#39;</code>.</li>
 </ul>
 </li>
