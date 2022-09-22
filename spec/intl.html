@@ -1839,7 +1839,8 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _monthCode_ be ! ISOMonthCode(_temporalDateLike_).
+              1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+              1. Let _monthCode_ be ISOMonthCode(_temporalDateLike_.[[ISOMonth]]).
             1. Else,
               1. Let _monthCode_ be ! CalendarDateMonthCode(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return _monthCode_.
