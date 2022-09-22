@@ -504,24 +504,11 @@
             }.
         1. Else,
           1. Assert: _overflow_ is *"reject"*.
-          1. If ! IsValidISOMonth(_month_) is *false*, throw a *RangeError* exception.
+          1. If _month_ &lt; 1 or _month_ &gt; 12, throw a *RangeError* exception.
           1. Return the Record {
               [[Year]]: _year_,
               [[Month]]: _month_
             }.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isvalidisomonth" aoid="IsValidISOMonth">
-      <h1>IsValidISOMonth ( _month_ )</h1>
-      <p>
-        The abstract operation IsValidISOMonth returns *true* if its argument is a valid month in the ISO 8601 calendar, and *false* otherwise.
-      </p>
-      <emu-alg>
-        1. Assert: _month_ is an integer.
-        1. If _month_ &lt; 1 or _month_ &gt; 12, then
-          1. Return *false*.
-        1. Return *true*.
       </emu-alg>
     </emu-clause>
 
