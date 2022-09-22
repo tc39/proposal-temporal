@@ -526,11 +526,16 @@
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-buildisomonthcode" aoid="BuildISOMonthCode">
-      <h1>BuildISOMonthCode ( _month_ )</h1>
-      <p>
-        The abstract operation BuildISOMonthCode returns the corresponding string month code, given the numeric ISO calendar month _month_, which must be an integer between 1 and 12, inclusive.
-      </p>
+    <emu-clause id="sec-temporal-isomonthcode" type="abstract operation">
+      <h1>
+        ISOMonthCode (
+          _month_: an integer between 1 and 12 inclusive,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns the string month code for a month in the ISO 8601 calendar.</dd>
+      </dl>
       <emu-alg>
         1. Let _numberPart_ be ToZeroPaddedDecimalString(_month_, 2).
         1. Return the string-concatenation of *"M"* and _numberPart_.
@@ -557,7 +562,7 @@
         1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
         1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
         1. Let _monthCodeNumber_ be ! ToIntegerOrInfinity(_monthCodeDigits_).
-        1. Assert: SameValue(_monthCode_, ! BuildISOMonthCode(_monthCodeNumber_)) is *true*.
+        1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeNumber_)) is *true*.
         1. If _month_ is not *undefined* and SameValue(_month_, _monthCodeNumber_) is *false*, throw a *RangeError* exception.
         1. Return _monthCodeNumber_.
       </emu-alg>
@@ -653,17 +658,6 @@
       <emu-alg>
         1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
         1. Return 𝔽(_temporalObject_.[[ISOMonth]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isomonthcode" aoid="ISOMonthCode">
-      <h1>ISOMonthCode ( _temporalObject_ )</h1>
-      <p>
-        The ISOMonthCode abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.monthCode` method for the ISO 8601 calendar.
-      </p>
-      <emu-alg>
-        1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
-        1. Return ! BuildISOMonthCode(_temporalObject_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -1014,7 +1008,8 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return ! ISOMonthCode(_temporalDateLike_).
+        1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+        1. Return ISOMonthCode(_temporalDateLike_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
