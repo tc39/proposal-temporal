@@ -554,12 +554,12 @@
         1. Assert: Type(_monthCode_) is String.
         1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
         1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
-        1. Let _numberPart_ be the substring of _monthCode_ from 1.
-        1. If ParseText(StringToCodePoints(_numberPart_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
-        1. Set _numberPart_ to ! ToIntegerOrInfinity(_numberPart_).
-        1. Assert: SameValue(_monthCode_, ! BuildISOMonthCode(_numberPart_)) is *true*.
-        1. If _month_ is not *undefined* and SameValue(_month_, _numberPart_) is *false*, throw a *RangeError* exception.
-        1. Return _numberPart_.
+        1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
+        1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
+        1. Let _monthCodeNumber_ be ! ToIntegerOrInfinity(_monthCodeDigits_).
+        1. Assert: SameValue(_monthCode_, ! BuildISOMonthCode(_monthCodeNumber_)) is *true*.
+        1. If _month_ is not *undefined* and SameValue(_month_, _monthCodeNumber_) is *false*, throw a *RangeError* exception.
+        1. Return _monthCodeNumber_.
       </emu-alg>
     </emu-clause>
 
