@@ -546,21 +546,19 @@
       <emu-alg>
         1. Assert: _fields_ is an ordinary object with no more and no less than the own data properties listed in <emu-xref href="#table-temporal-field-requirements"></emu-xref>.
         1. Let _month_ be ! Get(_fields_, *"month"*).
+        1. Assert: _month_ is *undefined* or _month_ is a Number.
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
         1. If _monthCode_ is *undefined*, then
           1. If _month_ is *undefined*, throw a *TypeError* exception.
-          1. Assert: Type(_month_) is Number.
           1. Return ℝ(_month_).
         1. Assert: Type(_monthCode_) is String.
-        1. Let _monthLength_ be the length of _monthCode_.
-        1. If _monthLength_ is not 3, throw a *RangeError* exception.
+        1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
+        1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
         1. Let _numberPart_ be the substring of _monthCode_ from 1.
+        1. If ParseText(StringToCodePoints(_numberPart_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
         1. Set _numberPart_ to ! ToIntegerOrInfinity(_numberPart_).
-        1. If _numberPart_ &lt; 1 or _numberPart_ &gt; 12, throw a *RangeError* exception.
-        1. If _month_ is not *undefined* and _month_ &ne; _numberPart_, then
-          1. Throw a *RangeError* exception.
-        1. If SameValueNonNumeric(_monthCode_, ! BuildISOMonthCode(_numberPart_)) is *false*, then
-          1. Throw a *RangeError* exception.
+        1. Assert: SameValue(_monthCode_, ! BuildISOMonthCode(_numberPart_)) is *true*.
+        1. If _month_ is not *undefined* and SameValue(_month_, _numberPart_) is *false*, throw a *RangeError* exception.
         1. Return _numberPart_.
       </emu-alg>
     </emu-clause>
