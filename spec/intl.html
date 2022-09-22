@@ -1799,7 +1799,8 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _year_ be ! ISOYear(_temporalDateLike_).
+              1. Assert: _temporalDateLike_ has an [[ISOYear]] internal slot.
+              1. Let _year_ be _temporalDateLike_.[[ISOYear]].
             1. Else,
               1. Let _year_ be ! CalendarDateYear(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_year_).
@@ -1820,7 +1821,8 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _month_ be ! ISOMonth(_temporalDateLike_).
+              1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+              1. Let _month_ be _temporalDateLike_.[[ISOMonth]].
             1. Else,
               1. Let _month_ be ! CalendarDateMonth(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_month_).
@@ -1859,7 +1861,8 @@
             1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
               1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _day_ be ! ISODay(_temporalDateLike_).
+              1. Assert: _temporalDateLike_ has an [[ISODay]] internal slot.
+              1. Let _day_ be _temporalDateLike_.[[ISODay]].
             1. Else,
               1. Let _day_ be ! CalendarDateDay(_calendar_.[[Identifier]], _temporalDateLike_).
             1. Return 𝔽(_day_).

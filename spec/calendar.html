@@ -639,39 +639,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isoyear" aoid="ISOYear">
-      <h1>ISOYear ( _temporalObject_ )</h1>
-      <p>
-        The ISOYear abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.year` method for the ISO 8601 calendar.
-      </p>
-      <emu-alg>
-        1. Assert: _temporalObject_ has an [[ISOYear]] internal slot.
-        1. Return 𝔽(_temporalObject_.[[ISOYear]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isomonth" aoid="ISOMonth">
-      <h1>ISOMonth ( _temporalObject_ )</h1>
-      <p>
-        The ISOMonth abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.month` method for the ISO 8601 calendar.
-      </p>
-      <emu-alg>
-        1. Assert: _temporalObject_ has an [[ISOMonth]] internal slot.
-        1. Return 𝔽(_temporalObject_.[[ISOMonth]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isoday" aoid="ISODay">
-      <h1>ISODay ( _temporalObject_ )</h1>
-      <p>
-        The ISODay abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.day` method for the ISO 8601 calendar.
-      </p>
-      <emu-alg>
-        1. Assert: _temporalObject_ has an [[ISODay]] internal slot.
-        1. Return 𝔽(_temporalObject_.[[ISODay]]).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-defaultmergecalendarfields" type="abstract operation">
       <h1>
         DefaultMergeCalendarFields (
@@ -968,7 +935,8 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return ! ISOYear(_temporalDateLike_).
+        1. Assert: _temporalDateLike_ has an [[ISOYear]] internal slot.
+        1. Return 𝔽(_temporalDateLike_.[[ISOYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -989,7 +957,8 @@
           1. Throw a *TypeError* exception.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return ! ISOMonth(_temporalDateLike_).
+        1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+        1. Return 𝔽(_temporalDateLike_.[[ISOMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -1028,7 +997,8 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return ! ISODay(_temporalDateLike_).
+        1. Assert: _temporalDateLike_ has an [[ISODay]] internal slot.
+        1. Return 𝔽(_temporalDateLike_.[[ISODay]]).
       </emu-alg>
     </emu-clause>
 
