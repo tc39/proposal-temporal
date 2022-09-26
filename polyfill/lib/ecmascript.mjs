@@ -4393,7 +4393,7 @@ export const ES = ObjectAssign({}, ES2020, {
       'day'
     ).days;
   },
-  MoveRelativeDate: (calendar, relativeTo, duration, dateAdd = ES.GetMethod(calendar, 'dateAdd')) => {
+  MoveRelativeDate: (calendar, relativeTo, duration, dateAdd) => {
     const later = ES.CalendarDateAdd(calendar, relativeTo, duration, undefined, dateAdd);
     const days = ES.DaysUntil(relativeTo, later);
     return { relativeTo: later, days };
