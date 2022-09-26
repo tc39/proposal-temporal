@@ -1816,7 +1816,7 @@
 
   var $SyntaxError = SyntaxError;
   var $Function = Function;
-  var $TypeError$7 = TypeError;
+  var $TypeError$8 = TypeError;
 
   // eslint-disable-next-line consistent-return
   var getEvalledConstructor = function (expressionSyntax) {
@@ -1835,7 +1835,7 @@
   }
 
   var throwTypeError = function () {
-  	throw new $TypeError$7();
+  	throw new $TypeError$8();
   };
   var ThrowTypeError = $gOPD
   	? (function () {
@@ -1918,7 +1918,7 @@
   	'%SyntaxError%': $SyntaxError,
   	'%ThrowTypeError%': ThrowTypeError,
   	'%TypedArray%': TypedArray,
-  	'%TypeError%': $TypeError$7,
+  	'%TypeError%': $TypeError$8,
   	'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
   	'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
   	'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -2014,7 +2014,7 @@
   var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
   var $replace$1 = bind.call(Function.call, String.prototype.replace);
   var $strSlice$1 = bind.call(Function.call, String.prototype.slice);
-  var $exec$1 = bind.call(Function.call, RegExp.prototype.exec);
+  var $exec$2 = bind.call(Function.call, RegExp.prototype.exec);
 
   /* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
   var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
@@ -2049,7 +2049,7 @@
   			value = doEval(intrinsicName);
   		}
   		if (typeof value === 'undefined' && !allowMissing) {
-  			throw new $TypeError$7('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+  			throw new $TypeError$8('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
   		}
 
   		return {
@@ -2064,13 +2064,13 @@
 
   var getIntrinsic = function GetIntrinsic(name, allowMissing) {
   	if (typeof name !== 'string' || name.length === 0) {
-  		throw new $TypeError$7('intrinsic name must be a non-empty string');
+  		throw new $TypeError$8('intrinsic name must be a non-empty string');
   	}
   	if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-  		throw new $TypeError$7('"allowMissing" argument must be a boolean');
+  		throw new $TypeError$8('"allowMissing" argument must be a boolean');
   	}
 
-  	if ($exec$1(/^%?[^%]*%?$/, name) === null) {
+  	if ($exec$2(/^%?[^%]*%?$/, name) === null) {
   		throw new $SyntaxError('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
   	}
   	var parts = stringToPath(name);
@@ -2112,7 +2112,7 @@
   		} else if (value != null) {
   			if (!(part in value)) {
   				if (!allowMissing) {
-  					throw new $TypeError$7('base intrinsic for ' + name + ' exists, but the property is not available.');
+  					throw new $TypeError$8('base intrinsic for ' + name + ' exists, but the property is not available.');
   				}
   				return void undefined$1;
   			}
@@ -2196,26 +2196,26 @@
   }
   }(callBind$1));
 
-  var GetIntrinsic$e = getIntrinsic;
+  var GetIntrinsic$f = getIntrinsic;
 
   var callBind = callBind$1.exports;
 
-  var $indexOf = callBind(GetIntrinsic$e('String.prototype.indexOf'));
+  var $indexOf = callBind(GetIntrinsic$f('String.prototype.indexOf'));
 
-  var callBound$3 = function callBoundIntrinsic(name, allowMissing) {
-  	var intrinsic = GetIntrinsic$e(name, !!allowMissing);
+  var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
+  	var intrinsic = GetIntrinsic$f(name, !!allowMissing);
   	if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
   		return callBind(intrinsic);
   	}
   	return intrinsic;
   };
 
-  var GetIntrinsic$d = getIntrinsic;
+  var GetIntrinsic$e = getIntrinsic;
 
-  var $Array = GetIntrinsic$d('%Array%');
+  var $Array = GetIntrinsic$e('%Array%');
 
   // eslint-disable-next-line global-require
-  var toStr$4 = !$Array.isArray && callBound$3('Object.prototype.toString');
+  var toStr$4 = !$Array.isArray && callBound$4('Object.prototype.toString');
 
   var IsArray$2 = $Array.isArray || function IsArray(argument) {
   	return toStr$4(argument) === '[object Array]';
@@ -2224,21 +2224,21 @@
   // https://ecma-international.org/ecma-262/6.0/#sec-isarray
   var IsArray$1 = IsArray$2;
 
-  var GetIntrinsic$c = getIntrinsic;
-  var callBound$2 = callBound$3;
+  var GetIntrinsic$d = getIntrinsic;
+  var callBound$3 = callBound$4;
 
-  var $TypeError$6 = GetIntrinsic$c('%TypeError%');
+  var $TypeError$7 = GetIntrinsic$d('%TypeError%');
 
   var IsArray = IsArray$1;
 
-  var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$2('%Function.prototype.apply%');
+  var $apply = GetIntrinsic$d('%Reflect.apply%', true) || callBound$3('%Function.prototype.apply%');
 
   // https://ecma-international.org/ecma-262/6.0/#sec-call
 
   var Call = function Call(F, V) {
   	var argumentsList = arguments.length > 2 ? arguments[2] : [];
   	if (!IsArray(argumentsList)) {
-  		throw new $TypeError$6('Assertion failed: optional `argumentsList`, if provided, must be a List');
+  		throw new $TypeError$7('Assertion failed: optional `argumentsList`, if provided, must be a List');
   	}
   	return $apply(F, V, argumentsList);
   };
@@ -2251,24 +2251,24 @@
   	return typeof argument === 'string' || typeof argument === 'symbol';
   };
 
-  var GetIntrinsic$b = getIntrinsic;
+  var GetIntrinsic$c = getIntrinsic;
 
-  var $TypeError$5 = GetIntrinsic$b('%TypeError%');
+  var $TypeError$6 = GetIntrinsic$c('%TypeError%');
 
   // http://262.ecma-international.org/5.1/#sec-9.10
 
   var CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
   	if (value == null) {
-  		throw new $TypeError$5(optMessage || ('Cannot call method on ' + value));
+  		throw new $TypeError$6(optMessage || ('Cannot call method on ' + value));
   	}
   	return value;
   };
 
   var RequireObjectCoercible$1 = CheckObjectCoercible;
 
-  var GetIntrinsic$a = getIntrinsic;
+  var GetIntrinsic$b = getIntrinsic;
 
-  var $Object = GetIntrinsic$a('%Object%');
+  var $Object = GetIntrinsic$b('%Object%');
 
   var RequireObjectCoercible = RequireObjectCoercible$1;
 
@@ -2279,9 +2279,9 @@
   	return $Object(value);
   };
 
-  var GetIntrinsic$9 = getIntrinsic;
+  var GetIntrinsic$a = getIntrinsic;
 
-  var $TypeError$4 = GetIntrinsic$9('%TypeError%');
+  var $TypeError$5 = GetIntrinsic$a('%TypeError%');
 
   var IsPropertyKey$2 = IsPropertyKey$3;
   var ToObject = ToObject$1;
@@ -2291,7 +2291,7 @@
   var GetV$1 = function GetV(V, P) {
   	// 7.3.2.1
   	if (!IsPropertyKey$2(P)) {
-  		throw new $TypeError$4('Assertion failed: IsPropertyKey(P) is not true');
+  		throw new $TypeError$5('Assertion failed: IsPropertyKey(P) is not true');
   	}
 
   	// 7.3.2.2-3
@@ -2347,14 +2347,16 @@
   var objectClass = '[object Object]';
   var fnClass = '[object Function]';
   var genClass = '[object GeneratorFunction]';
-  var ddaClass = '[object HTMLAllCollection]';
-  var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+  var ddaClass = '[object HTMLAllCollection]'; // IE 11
+  var ddaClass2 = '[object HTML document.all class]';
+  var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+  var hasToStringTag$2 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
 
   var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
 
   var isDDA = function isDocumentDotAll() { return false; };
   if (typeof document === 'object') {
-  	// Firefox 3 canonicalized DDA to undefined when it's not accessed directly
+  	// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
   	var all = document.all;
   	if (toStr$3.call(all) === toStr$3.call(document.all)) {
   		isDDA = function isDocumentDotAll(value) {
@@ -2363,8 +2365,12 @@
   			if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
   				try {
   					var str = toStr$3.call(value);
-  					// IE 6-8 uses `objectClass`
-  					return (str === ddaClass || str === objectClass) && value('') == null; // eslint-disable-line eqeqeq
+  					return (
+  						str === ddaClass
+  						|| str === ddaClass2
+  						|| str === ddaClass3 // opera 12.16
+  						|| str === objectClass // IE 6-8
+  					) && value('') == null; // eslint-disable-line eqeqeq
   				} catch (e) { /**/ }
   			}
   			return false;
@@ -2377,31 +2383,31 @@
   		if (isDDA(value)) { return true; }
   		if (!value) { return false; }
   		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-  		if (typeof value === 'function' && !value.prototype) { return true; }
   		try {
   			reflectApply(value, null, badArrayLike);
   		} catch (e) {
   			if (e !== isCallableMarker) { return false; }
   		}
-  		return !isES6ClassFn(value);
+  		return !isES6ClassFn(value) && tryFunctionObject(value);
   	}
   	: function isCallable(value) {
   		if (isDDA(value)) { return true; }
   		if (!value) { return false; }
   		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-  		if (hasToStringTag$1) { return tryFunctionObject(value); }
+  		if (hasToStringTag$2) { return tryFunctionObject(value); }
   		if (isES6ClassFn(value)) { return false; }
   		var strClass = toStr$3.call(value);
-  		return strClass === fnClass || strClass === genClass || tryFunctionObject(value);
+  		if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+  		return tryFunctionObject(value);
   	};
 
   // http://262.ecma-international.org/5.1/#sec-9.11
 
   var IsCallable$1 = isCallable$2;
 
-  var GetIntrinsic$8 = getIntrinsic;
+  var GetIntrinsic$9 = getIntrinsic;
 
-  var $TypeError$3 = GetIntrinsic$8('%TypeError%');
+  var $TypeError$4 = GetIntrinsic$9('%TypeError%');
 
   var GetV = GetV$1;
   var IsCallable = IsCallable$1;
@@ -2412,7 +2418,7 @@
   var GetMethod$1 = function GetMethod(O, P) {
   	// 7.3.9.1
   	if (!IsPropertyKey$1(P)) {
-  		throw new $TypeError$3('Assertion failed: IsPropertyKey(P) is not true');
+  		throw new $TypeError$4('Assertion failed: IsPropertyKey(P) is not true');
   	}
 
   	// 7.3.9.2
@@ -2425,7 +2431,7 @@
 
   	// 7.3.9.5
   	if (!IsCallable(func)) {
-  		throw new $TypeError$3(P + 'is not a function');
+  		throw new $TypeError$4(P + 'is not a function');
   	}
 
   	// 7.3.9.6
@@ -2434,9 +2440,9 @@
 
   var GetMethod$2 = GetMethod$1;
 
-  var GetIntrinsic$7 = getIntrinsic;
+  var GetIntrinsic$8 = getIntrinsic;
 
-  var $abs$1 = GetIntrinsic$7('%Math.abs%');
+  var $abs$1 = GetIntrinsic$8('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -2480,9 +2486,9 @@
 
   var IsInteger$1 = IsInteger;
 
-  var GetIntrinsic$6 = getIntrinsic;
+  var GetIntrinsic$7 = getIntrinsic;
 
-  var $abs = GetIntrinsic$6('%Math.abs%');
+  var $abs = GetIntrinsic$7('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -2592,22 +2598,87 @@
   	return $sign(number) * floor(abs(number));
   };
 
-  var callBound$1 = callBound$3;
-
-  var $exec = callBound$1('RegExp.prototype.exec');
-
-  var regexTester$1 = function regexTester(regex) {
-  	return function test(s) { return $exec(regex, s) !== null; };
-  };
-
-  var isPrimitive$2 = function isPrimitive(value) {
-  	return value === null || (typeof value !== 'function' && typeof value !== 'object');
-  };
-
   var hasSymbols$2 = shams$1;
 
   var shams = function hasToStringTagShams() {
   	return hasSymbols$2() && !!Symbol.toStringTag;
+  };
+
+  var callBound$2 = callBound$4;
+  var hasToStringTag$1 = shams();
+  var has$1;
+  var $exec$1;
+  var isRegexMarker;
+  var badStringifier;
+
+  if (hasToStringTag$1) {
+  	has$1 = callBound$2('Object.prototype.hasOwnProperty');
+  	$exec$1 = callBound$2('RegExp.prototype.exec');
+  	isRegexMarker = {};
+
+  	var throwRegexMarker = function () {
+  		throw isRegexMarker;
+  	};
+  	badStringifier = {
+  		toString: throwRegexMarker,
+  		valueOf: throwRegexMarker
+  	};
+
+  	if (typeof Symbol.toPrimitive === 'symbol') {
+  		badStringifier[Symbol.toPrimitive] = throwRegexMarker;
+  	}
+  }
+
+  var $toString = callBound$2('Object.prototype.toString');
+  var gOPD = Object.getOwnPropertyDescriptor;
+  var regexClass = '[object RegExp]';
+
+  var isRegex$1 = hasToStringTag$1
+  	// eslint-disable-next-line consistent-return
+  	? function isRegex(value) {
+  		if (!value || typeof value !== 'object') {
+  			return false;
+  		}
+
+  		var descriptor = gOPD(value, 'lastIndex');
+  		var hasLastIndexDataProperty = descriptor && has$1(descriptor, 'value');
+  		if (!hasLastIndexDataProperty) {
+  			return false;
+  		}
+
+  		try {
+  			$exec$1(value, badStringifier);
+  		} catch (e) {
+  			return e === isRegexMarker;
+  		}
+  	}
+  	: function isRegex(value) {
+  		// In older browsers, typeof regex incorrectly returns 'function'
+  		if (!value || (typeof value !== 'object' && typeof value !== 'function')) {
+  			return false;
+  		}
+
+  		return $toString(value) === regexClass;
+  	};
+
+  var callBound$1 = callBound$4;
+  var GetIntrinsic$6 = getIntrinsic;
+  var isRegex = isRegex$1;
+
+  var $exec = callBound$1('RegExp.prototype.exec');
+  var $TypeError$3 = GetIntrinsic$6('%TypeError%');
+
+  var safeRegexTest = function regexTester(regex) {
+  	if (!isRegex(regex)) {
+  		throw new $TypeError$3('`regex` must be a RegExp');
+  	}
+  	return function test(s) {
+  		return $exec(regex, s) !== null;
+  	};
+  };
+
+  var isPrimitive$2 = function isPrimitive(value) {
+  	return value === null || (typeof value !== 'function' && typeof value !== 'object');
   };
 
   var getDay = Date.prototype.getDay;
@@ -2761,8 +2832,8 @@
   var $RegExp = GetIntrinsic$5('%RegExp%');
   var $parseInteger = GetIntrinsic$5('%parseInt%');
 
-  var callBound = callBound$3;
-  var regexTester = regexTester$1;
+  var callBound = callBound$4;
+  var regexTester = safeRegexTest;
   var isPrimitive = isPrimitive$2;
 
   var $strSlice = callBound('String.prototype.slice');
@@ -4644,6 +4715,7 @@
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ES.Call(ArrayPrototypePush$2, fieldNames, ['timeZone', 'offset']);
         var fields = ES.PrepareTemporalFields(item, fieldNames, ['timeZone']);
+        timeZone = ES.ToTemporalTimeZone(fields.timeZone);
 
         var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
 
@@ -4656,7 +4728,6 @@
         millisecond = _ES$InterpretTemporal3.millisecond;
         microsecond = _ES$InterpretTemporal3.microsecond;
         nanosecond = _ES$InterpretTemporal3.nanosecond;
-        timeZone = ES.ToTemporalTimeZone(fields.timeZone);
         offset = fields.offset;
 
         if (offset === undefined) {
@@ -6210,75 +6281,80 @@
           break;
 
         case 'week':
-          if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance years down to days
+          {
+            if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
 
-          while (MathAbs$1(years) > 0) {
-            var oneYearDays = void 0;
-
-            var _ES$MoveRelativeDate = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
-
-            relativeTo = _ES$MoveRelativeDate.relativeTo;
-            oneYearDays = _ES$MoveRelativeDate.days;
-            days += oneYearDays;
-            years -= sign;
-          } // balance months down to days
+            var _dateAdd = ES.GetMethod(calendar, 'dateAdd'); // balance years down to days
 
 
-          while (MathAbs$1(months) > 0) {
-            var oneMonthDays = void 0;
+            while (MathAbs$1(years) > 0) {
+              var oneYearDays = void 0;
 
-            var _ES$MoveRelativeDate2 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate = ES.MoveRelativeDate(calendar, relativeTo, oneYear, _dateAdd);
 
-            relativeTo = _ES$MoveRelativeDate2.relativeTo;
-            oneMonthDays = _ES$MoveRelativeDate2.days;
-            days += oneMonthDays;
-            months -= sign;
+              relativeTo = _ES$MoveRelativeDate.relativeTo;
+              oneYearDays = _ES$MoveRelativeDate.days;
+              days += oneYearDays;
+              years -= sign;
+            } // balance months down to days
+
+
+            while (MathAbs$1(months) > 0) {
+              var oneMonthDays = void 0;
+
+              var _ES$MoveRelativeDate2 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd);
+
+              relativeTo = _ES$MoveRelativeDate2.relativeTo;
+              oneMonthDays = _ES$MoveRelativeDate2.days;
+              days += oneMonthDays;
+              months -= sign;
+            }
           }
-
           break;
 
         default:
-          // balance years down to days
-          while (MathAbs$1(years) > 0) {
+          {
+            if (years == 0 && months == 0 && weeks == 0) break;
             if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
 
-            var _oneYearDays = void 0;
-
-            var _ES$MoveRelativeDate3 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
-
-            relativeTo = _ES$MoveRelativeDate3.relativeTo;
-            _oneYearDays = _ES$MoveRelativeDate3.days;
-            days += _oneYearDays;
-            years -= sign;
-          } // balance months down to days
+            var _dateAdd2 = ES.GetMethod(calendar, 'dateAdd'); // balance years down to days
 
 
-          while (MathAbs$1(months) > 0) {
-            if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
+            while (MathAbs$1(years) > 0) {
+              var _oneYearDays = void 0;
 
-            var _oneMonthDays = void 0;
+              var _ES$MoveRelativeDate3 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, _dateAdd2);
 
-            var _ES$MoveRelativeDate4 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
-
-            relativeTo = _ES$MoveRelativeDate4.relativeTo;
-            _oneMonthDays = _ES$MoveRelativeDate4.days;
-            days += _oneMonthDays;
-            months -= sign;
-          } // balance weeks down to days
+              relativeTo = _ES$MoveRelativeDate3.relativeTo;
+              _oneYearDays = _ES$MoveRelativeDate3.days;
+              days += _oneYearDays;
+              years -= sign;
+            } // balance months down to days
 
 
-          while (MathAbs$1(weeks) > 0) {
-            if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
-            var oneWeekDays = void 0;
+            while (MathAbs$1(months) > 0) {
+              var _oneMonthDays = void 0;
 
-            var _ES$MoveRelativeDate5 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate4 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd2);
 
-            relativeTo = _ES$MoveRelativeDate5.relativeTo;
-            oneWeekDays = _ES$MoveRelativeDate5.days;
-            days += oneWeekDays;
-            weeks -= sign;
+              relativeTo = _ES$MoveRelativeDate4.relativeTo;
+              _oneMonthDays = _ES$MoveRelativeDate4.days;
+              days += _oneMonthDays;
+              months -= sign;
+            } // balance weeks down to days
+
+
+            while (MathAbs$1(weeks) > 0) {
+              var oneWeekDays = void 0;
+
+              var _ES$MoveRelativeDate5 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd2);
+
+              relativeTo = _ES$MoveRelativeDate5.relativeTo;
+              oneWeekDays = _ES$MoveRelativeDate5.days;
+              days += oneWeekDays;
+              weeks -= sign;
+            }
           }
-
           break;
       }
 
@@ -6312,11 +6388,12 @@
       switch (largestUnit) {
         case 'year':
           {
-            if (!calendar) throw new RangeError('a starting point is required for years balancing'); // balance days up to years
+            if (!calendar) throw new RangeError('a starting point is required for years balancing');
+            var dateAdd = ES.GetMethod(calendar, 'dateAdd'); // balance days up to years
 
             var newRelativeTo, oneYearDays;
 
-            var _ES$MoveRelativeDate6 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+            var _ES$MoveRelativeDate6 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
 
             newRelativeTo = _ES$MoveRelativeDate6.relativeTo;
             oneYearDays = _ES$MoveRelativeDate6.days;
@@ -6326,7 +6403,7 @@
               years += sign;
               relativeTo = newRelativeTo;
 
-              var _ES$MoveRelativeDate7 = ES.MoveRelativeDate(calendar, relativeTo, oneYear);
+              var _ES$MoveRelativeDate7 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
 
               newRelativeTo = _ES$MoveRelativeDate7.relativeTo;
               oneYearDays = _ES$MoveRelativeDate7.days;
@@ -6335,7 +6412,7 @@
 
             var oneMonthDays;
 
-            var _ES$MoveRelativeDate8 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate8 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd);
 
             newRelativeTo = _ES$MoveRelativeDate8.relativeTo;
             oneMonthDays = _ES$MoveRelativeDate8.days;
@@ -6345,14 +6422,13 @@
               months += sign;
               relativeTo = newRelativeTo;
 
-              var _ES$MoveRelativeDate9 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate9 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd);
 
               newRelativeTo = _ES$MoveRelativeDate9.relativeTo;
               oneMonthDays = _ES$MoveRelativeDate9.days;
             } // balance months up to years
 
 
-            var dateAdd = ES.GetMethod(calendar, 'dateAdd');
             newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
             var dateUntil = ES.GetMethod(calendar, 'dateUntil');
             var untilOptions = ObjectCreate$7(null);
@@ -6378,11 +6454,14 @@
 
         case 'month':
           {
-            if (!calendar) throw new RangeError('a starting point is required for months balancing'); // balance days up to months
+            if (!calendar) throw new RangeError('a starting point is required for months balancing');
+
+            var _dateAdd3 = ES.GetMethod(calendar, 'dateAdd'); // balance days up to months
+
 
             var _newRelativeTo, _oneMonthDays2;
 
-            var _ES$MoveRelativeDate10 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate10 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd3);
 
             _newRelativeTo = _ES$MoveRelativeDate10.relativeTo;
             _oneMonthDays2 = _ES$MoveRelativeDate10.days;
@@ -6392,7 +6471,7 @@
               months += sign;
               relativeTo = _newRelativeTo;
 
-              var _ES$MoveRelativeDate11 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate11 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd3);
 
               _newRelativeTo = _ES$MoveRelativeDate11.relativeTo;
               _oneMonthDays2 = _ES$MoveRelativeDate11.days;
@@ -6403,11 +6482,14 @@
 
         case 'week':
           {
-            if (!calendar) throw new RangeError('a starting point is required for weeks balancing'); // balance days up to weeks
+            if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
+
+            var _dateAdd4 = ES.GetMethod(calendar, 'dateAdd'); // balance days up to weeks
+
 
             var _newRelativeTo2, oneWeekDays;
 
-            var _ES$MoveRelativeDate12 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+            var _ES$MoveRelativeDate12 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd4);
 
             _newRelativeTo2 = _ES$MoveRelativeDate12.relativeTo;
             oneWeekDays = _ES$MoveRelativeDate12.days;
@@ -6417,7 +6499,7 @@
               weeks += sign;
               relativeTo = _newRelativeTo2;
 
-              var _ES$MoveRelativeDate13 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate13 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd4);
 
               _newRelativeTo2 = _ES$MoveRelativeDate13.relativeTo;
               oneWeekDays = _ES$MoveRelativeDate13.days;
@@ -7145,9 +7227,9 @@
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
       otherFields.day = 1;
+      var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
       var thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
       thisFields.day = 1;
-      var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
       var thisDate = ES.CalendarDateFromFields(calendar, thisFields);
       var untilOptions = ES.MergeLargestUnitOption(options, largestUnit);
 
@@ -7833,8 +7915,8 @@
     DaysUntil: function DaysUntil(earlier, later) {
       return ES.DifferenceISODate(GetSlot(earlier, ISO_YEAR), GetSlot(earlier, ISO_MONTH), GetSlot(earlier, ISO_DAY), GetSlot(later, ISO_YEAR), GetSlot(later, ISO_MONTH), GetSlot(later, ISO_DAY), 'day').days;
     },
-    MoveRelativeDate: function MoveRelativeDate(calendar, relativeTo, duration) {
-      var later = ES.CalendarDateAdd(calendar, relativeTo, duration);
+    MoveRelativeDate: function MoveRelativeDate(calendar, relativeTo, duration, dateAdd) {
+      var later = ES.CalendarDateAdd(calendar, relativeTo, duration, undefined, dateAdd);
       var days = ES.DaysUntil(relativeTo, later);
       return {
         relativeTo: later,
@@ -7982,7 +8064,7 @@
             days -= daysPassed;
             var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
 
-            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear),
+            var _ES$MoveRelativeDate14 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd),
                 oneYearDays = _ES$MoveRelativeDate14.days; // Note that `nanoseconds` below (here and in similar code for months,
             // weeks, and days further below) isn't actually nanoseconds for the
             // full date range.  Instead, it's a BigInt representation of total
@@ -8008,13 +8090,13 @@
 
             var yearsMonths = new TemporalDuration(years, months);
 
-            var _dateAdd = ES.GetMethod(calendar, 'dateAdd');
+            var _dateAdd5 = ES.GetMethod(calendar, 'dateAdd');
 
-            var yearsMonthsLater = ES.CalendarDateAdd(calendar, relativeTo, yearsMonths, undefined, _dateAdd);
+            var yearsMonthsLater = ES.CalendarDateAdd(calendar, relativeTo, yearsMonths, undefined, _dateAdd5);
 
             var _yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
 
-            var _yearsMonthsWeeksLater = ES.CalendarDateAdd(calendar, relativeTo, _yearsMonthsWeeks, undefined, _dateAdd);
+            var _yearsMonthsWeeksLater = ES.CalendarDateAdd(calendar, relativeTo, _yearsMonthsWeeks, undefined, _dateAdd5);
 
             var weeksInDays = ES.DaysUntil(yearsMonthsLater, _yearsMonthsWeeksLater);
             relativeTo = yearsMonthsLater;
@@ -8025,7 +8107,7 @@
             var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
             var oneMonthDays;
 
-            var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+            var _ES$MoveRelativeDate15 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
 
             relativeTo = _ES$MoveRelativeDate15.relativeTo;
             oneMonthDays = _ES$MoveRelativeDate15.days;
@@ -8034,7 +8116,7 @@
               months += sign;
               days -= oneMonthDays;
 
-              var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth);
+              var _ES$MoveRelativeDate16 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
 
               relativeTo = _ES$MoveRelativeDate16.relativeTo;
               oneMonthDays = _ES$MoveRelativeDate16.days;
@@ -8062,9 +8144,12 @@
             var _sign2 = MathSign(days);
 
             var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
+
+            var _dateAdd6 = ES.GetMethod(calendar, 'dateAdd');
+
             var oneWeekDays;
 
-            var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+            var _ES$MoveRelativeDate17 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
 
             relativeTo = _ES$MoveRelativeDate17.relativeTo;
             oneWeekDays = _ES$MoveRelativeDate17.days;
@@ -8073,7 +8158,7 @@
               weeks += _sign2;
               days -= oneWeekDays;
 
-              var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek);
+              var _ES$MoveRelativeDate18 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
 
               relativeTo = _ES$MoveRelativeDate18.relativeTo;
               oneWeekDays = _ES$MoveRelativeDate18.days;
@@ -13319,8 +13404,8 @@
           totalOf = ES.GetOptionsObject(totalOf);
         }
 
-        var unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
-        var relativeTo = ES.ToRelativeTemporalObject(totalOf); // Convert larger units down to days
+        var relativeTo = ES.ToRelativeTemporalObject(totalOf);
+        var unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED); // Convert larger units down to days
 
         var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo);
 
