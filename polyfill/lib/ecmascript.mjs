@@ -465,26 +465,41 @@ export const ES = ObjectAssign({}, ES2020, {
     const days = ES.ToInteger(match[5]) * sign;
     const hours = ES.ToInteger(match[6]) * sign;
     let fHours = match[7];
-    let minutes = ES.ToInteger(match[8]) * sign;
+    let minutesStr = match[8];
     let fMinutes = match[9];
-    let seconds = ES.ToInteger(match[10]) * sign;
-    let fSeconds = match[11] + '000000000';
-    let milliseconds = ES.ToInteger(fSeconds.slice(0, 3)) * sign;
-    let microseconds = ES.ToInteger(fSeconds.slice(3, 6)) * sign;
-    let nanoseconds = ES.ToInteger(fSeconds.slice(6, 9)) * sign;
+    let secondsStr = match[10];
+    let fSeconds = match[11];
+    let minutes = 0;
+    let seconds = 0;
+    // fractional hours, minutes, or seconds, expressed in whole nanoseconds:
+    let excessNanoseconds = 0;
 
-    fHours = fHours ? (sign * ES.ToInteger(fHours)) / 10 ** fHours.length : 0;
-    fMinutes = fMinutes ? (sign * ES.ToInteger(fMinutes)) / 10 ** fMinutes.length : 0;
+    if (fHours !== undefined) {
+      if (minutesStr ?? fMinutes ?? secondsStr ?? fSeconds ?? false) {
+        throw new RangeError('only the smallest unit can be fractional');
+      }
+      excessNanoseconds = ES.ToInteger((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+    } else {
+      minutes = ES.ToInteger(minutesStr) * sign;
+      if (fMinutes !== undefined) {
+        if (secondsStr ?? fSeconds ?? false) {
+          throw new RangeError('only the smallest unit can be fractional');
+        }
+        excessNanoseconds = ES.ToInteger((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+      } else {
+        seconds = ES.ToInteger(secondsStr) * sign;
+        if (fSeconds !== undefined) {
+          excessNanoseconds = ES.ToInteger((fSeconds + '000000000').slice(0, 9)) * sign;
+        }
+      }
+    }
 
-    ({ minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DurationHandleFractions(
-      fHours,
-      minutes,
-      fMinutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    ));
+    const nanoseconds = excessNanoseconds % 1000;
+    const microseconds = MathTrunc(excessNanoseconds / 1000) % 1000;
+    const milliseconds = MathTrunc(excessNanoseconds / 1e6) % 1000;
+    seconds += MathTrunc(excessNanoseconds / 1e9) % 60;
+    minutes += MathTrunc(excessNanoseconds / 6e10);
+
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
@@ -559,44 +574,6 @@ export const ES = ObjectAssign({}, ES2020, {
         break;
     }
     return { year, month };
-  },
-  DurationHandleFractions: (fHours, minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds) => {
-    if (fHours !== 0) {
-      [minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds].forEach((val) => {
-        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-      });
-      let mins = fHours * 60;
-      minutes = MathTrunc(mins);
-      fMinutes = mins % 1;
-    }
-
-    if (fMinutes !== 0) {
-      [seconds, milliseconds, microseconds, nanoseconds].forEach((val) => {
-        if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-      });
-      let secs = fMinutes * 60;
-      seconds = MathTrunc(secs);
-      const fSeconds = secs % 1;
-
-      if (fSeconds !== 0) {
-        let mils = fSeconds * 1000;
-        milliseconds = MathTrunc(mils);
-        const fMilliseconds = mils % 1;
-
-        if (fMilliseconds !== 0) {
-          let mics = fMilliseconds * 1000;
-          microseconds = MathTrunc(mics);
-          const fMicroseconds = mics % 1;
-
-          if (fMicroseconds !== 0) {
-            let nans = fMicroseconds * 1000;
-            nanoseconds = MathTrunc(nans);
-          }
-        }
-      }
-    }
-
-    return { minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ToTemporalDurationRecord: (item) => {
     if (ES.Type(item) !== 'Object') {
