@@ -3851,12 +3851,12 @@ export const ES = ObjectAssign({}, ES2020, {
       years = months = weeks = 0;
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
         d1 + d2,
-        h1 + h2,
-        min1 + min2,
-        s1 + s2,
-        ms1 + ms2,
-        µs1 + µs2,
-        ns1 + ns2,
+        bigInt(h1).add(h2),
+        bigInt(min1).add(min2),
+        bigInt(s1).add(s2),
+        bigInt(ms1).add(ms2),
+        bigInt(µs1).add(µs2),
+        bigInt(ns1).add(ns2),
         largestUnit
       ));
     } else if (ES.IsTemporalDate(relativeTo)) {
@@ -3876,12 +3876,12 @@ export const ES = ObjectAssign({}, ES2020, {
       // Signs of date part and time part may not agree; balance them together
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
         days,
-        h1 + h2,
-        min1 + min2,
-        s1 + s2,
-        ms1 + ms2,
-        µs1 + µs2,
-        ns1 + ns2,
+        bigInt(h1).add(h2),
+        bigInt(min1).add(min2),
+        bigInt(s1).add(s2),
+        bigInt(ms1).add(ms2),
+        bigInt(µs1).add(µs2),
+        bigInt(ns1).add(ns2),
         largestUnit
       ));
     } else {
