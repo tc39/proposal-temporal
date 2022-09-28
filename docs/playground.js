@@ -3200,7 +3200,6 @@
   var ObjectCreate$7 = Object.create;
   var ObjectDefineProperty = Object.defineProperty;
   var ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-  var ObjectIs = Object.is;
   var ObjectEntries$1 = Object.entries;
   var StringPrototypeSlice = String.prototype.slice;
   var DAY_SECONDS = 86400;
@@ -3631,23 +3630,48 @@
       var days = ES.ToInteger(match[5]) * sign;
       var hours = ES.ToInteger(match[6]) * sign;
       var fHours = match[7];
-      var minutes = ES.ToInteger(match[8]) * sign;
+      var minutesStr = match[8];
       var fMinutes = match[9];
-      var seconds = ES.ToInteger(match[10]) * sign;
-      var fSeconds = match[11] + '000000000';
-      var milliseconds = ES.ToInteger(fSeconds.slice(0, 3)) * sign;
-      var microseconds = ES.ToInteger(fSeconds.slice(3, 6)) * sign;
-      var nanoseconds = ES.ToInteger(fSeconds.slice(6, 9)) * sign;
-      fHours = fHours ? sign * ES.ToInteger(fHours) / Math.pow(10, fHours.length) : 0;
-      fMinutes = fMinutes ? sign * ES.ToInteger(fMinutes) / Math.pow(10, fMinutes.length) : 0;
+      var secondsStr = match[10];
+      var fSeconds = match[11];
+      var minutes = 0;
+      var seconds = 0; // fractional hours, minutes, or seconds, expressed in whole nanoseconds:
 
-      var _ES$DurationHandleFra = ES.DurationHandleFractions(fHours, minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds);
+      var excessNanoseconds = 0;
 
-      minutes = _ES$DurationHandleFra.minutes;
-      seconds = _ES$DurationHandleFra.seconds;
-      milliseconds = _ES$DurationHandleFra.milliseconds;
-      microseconds = _ES$DurationHandleFra.microseconds;
-      nanoseconds = _ES$DurationHandleFra.nanoseconds;
+      if (fHours !== undefined) {
+        var _ref5, _ref6, _ref7;
+
+        if ((_ref5 = (_ref6 = (_ref7 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref7 !== void 0 ? _ref7 : secondsStr) !== null && _ref6 !== void 0 ? _ref6 : fSeconds) !== null && _ref5 !== void 0 ? _ref5 : false) {
+          throw new RangeError('only the smallest unit can be fractional');
+        }
+
+        excessNanoseconds = ES.ToInteger((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+      } else {
+        minutes = ES.ToInteger(minutesStr) * sign;
+
+        if (fMinutes !== undefined) {
+          var _ref8;
+
+          if ((_ref8 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref8 !== void 0 ? _ref8 : false) {
+            throw new RangeError('only the smallest unit can be fractional');
+          }
+
+          excessNanoseconds = ES.ToInteger((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+        } else {
+          seconds = ES.ToInteger(secondsStr) * sign;
+
+          if (fSeconds !== undefined) {
+            excessNanoseconds = ES.ToInteger((fSeconds + '000000000').slice(0, 9)) * sign;
+          }
+        }
+      }
+
+      var nanoseconds = excessNanoseconds % 1000;
+      var microseconds = MathTrunc(excessNanoseconds / 1000) % 1000;
+      var milliseconds = MathTrunc(excessNanoseconds / 1e6) % 1000;
+      seconds += MathTrunc(excessNanoseconds / 1e9) % 60;
+      minutes += MathTrunc(excessNanoseconds / 6e10);
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
@@ -3761,50 +3785,6 @@
       return {
         year: year,
         month: month
-      };
-    },
-    DurationHandleFractions: function DurationHandleFractions(fHours, minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds) {
-      if (fHours !== 0) {
-        [minutes, fMinutes, seconds, milliseconds, microseconds, nanoseconds].forEach(function (val) {
-          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-        });
-        var mins = fHours * 60;
-        minutes = MathTrunc(mins);
-        fMinutes = mins % 1;
-      }
-
-      if (fMinutes !== 0) {
-        [seconds, milliseconds, microseconds, nanoseconds].forEach(function (val) {
-          if (val !== 0) throw new RangeError('only the smallest unit can be fractional');
-        });
-        var secs = fMinutes * 60;
-        seconds = MathTrunc(secs);
-        var fSeconds = secs % 1;
-
-        if (fSeconds !== 0) {
-          var mils = fSeconds * 1000;
-          milliseconds = MathTrunc(mils);
-          var fMilliseconds = mils % 1;
-
-          if (fMilliseconds !== 0) {
-            var mics = fMilliseconds * 1000;
-            microseconds = MathTrunc(mics);
-            var fMicroseconds = mics % 1;
-
-            if (fMicroseconds !== 0) {
-              var nans = fMicroseconds * 1000;
-              nanoseconds = MathTrunc(nans);
-            }
-          }
-        }
-      }
-
-      return {
-        minutes: minutes,
-        seconds: seconds,
-        milliseconds: milliseconds,
-        microseconds: microseconds,
-        nanoseconds: nanoseconds
       };
     },
     ToTemporalDurationRecord: function ToTemporalDurationRecord(item) {
@@ -4011,11 +3991,11 @@
       var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
 
       if (smallestUnit === 'hour') {
-        var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref5) {
-          var _ref6 = _slicedToArray(_ref5, 3),
-              p = _ref6[0],
-              s = _ref6[1],
-              c = _ref6[2];
+        var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref9) {
+          var _ref10 = _slicedToArray(_ref9, 3),
+              p = _ref10[0],
+              s = _ref10[1],
+              c = _ref10[2];
 
           if (c === 'time' && s !== 'hour') allowed.push(s, p);
           return allowed;
@@ -4279,9 +4259,9 @@
       });
     },
     PrepareTemporalFields: function PrepareTemporalFields(bag, fields, requiredFields) {
-      var _ref7 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-          _ref7$emptySourceErro = _ref7.emptySourceErrorMessage,
-          emptySourceErrorMessage = _ref7$emptySourceErro === void 0 ? 'no supported properties found' : _ref7$emptySourceErro;
+      var _ref11 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+          _ref11$emptySourceErr = _ref11.emptySourceErrorMessage,
+          emptySourceErrorMessage = _ref11$emptySourceErr === void 0 ? 'no supported properties found' : _ref11$emptySourceErr;
 
       var result = ObjectCreate$7(null);
       var any = false;
@@ -5966,30 +5946,56 @@
       };
     },
     BalanceTime: function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
-      if (!NumberIsFinite(hour) || !NumberIsFinite(minute) || !NumberIsFinite(second) || !NumberIsFinite(millisecond) || !NumberIsFinite(microsecond) || !NumberIsFinite(nanosecond)) {
-        throw new RangeError('infinity is out of range');
-      }
+      hour = bigInt(hour);
+      minute = bigInt(minute);
+      second = bigInt(second);
+      millisecond = bigInt(millisecond);
+      microsecond = bigInt(microsecond);
+      nanosecond = bigInt(nanosecond);
+      var quotient;
 
-      microsecond += MathFloor$1(nanosecond / 1000);
-      nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
-      millisecond += MathFloor$1(microsecond / 1000);
-      microsecond = ES.NonNegativeModulo(microsecond, 1000);
-      second += MathFloor$1(millisecond / 1000);
-      millisecond = ES.NonNegativeModulo(millisecond, 1000);
-      minute += MathFloor$1(second / 60);
-      second = ES.NonNegativeModulo(second, 60);
-      hour += MathFloor$1(minute / 60);
-      minute = ES.NonNegativeModulo(minute, 60);
-      var deltaDays = MathFloor$1(hour / 24);
-      hour = ES.NonNegativeModulo(hour, 24);
+      var _ES$NonNegativeBigInt = ES.NonNegativeBigIntDivmod(nanosecond, 1000);
+
+      quotient = _ES$NonNegativeBigInt.quotient;
+      nanosecond = _ES$NonNegativeBigInt.remainder;
+      microsecond = microsecond.add(quotient);
+
+      var _ES$NonNegativeBigInt2 = ES.NonNegativeBigIntDivmod(microsecond, 1000);
+
+      quotient = _ES$NonNegativeBigInt2.quotient;
+      microsecond = _ES$NonNegativeBigInt2.remainder;
+      millisecond = millisecond.add(quotient);
+
+      var _ES$NonNegativeBigInt3 = ES.NonNegativeBigIntDivmod(millisecond, 1000);
+
+      quotient = _ES$NonNegativeBigInt3.quotient;
+      millisecond = _ES$NonNegativeBigInt3.remainder;
+      second = second.add(quotient);
+
+      var _ES$NonNegativeBigInt4 = ES.NonNegativeBigIntDivmod(second, 60);
+
+      quotient = _ES$NonNegativeBigInt4.quotient;
+      second = _ES$NonNegativeBigInt4.remainder;
+      minute = minute.add(quotient);
+
+      var _ES$NonNegativeBigInt5 = ES.NonNegativeBigIntDivmod(minute, 60);
+
+      quotient = _ES$NonNegativeBigInt5.quotient;
+      minute = _ES$NonNegativeBigInt5.remainder;
+      hour = hour.add(quotient);
+
+      var _ES$NonNegativeBigInt6 = ES.NonNegativeBigIntDivmod(hour, 24);
+
+      quotient = _ES$NonNegativeBigInt6.quotient;
+      hour = _ES$NonNegativeBigInt6.remainder;
       return {
-        deltaDays: deltaDays,
-        hour: hour,
-        minute: minute,
-        second: second,
-        millisecond: millisecond,
-        microsecond: microsecond,
-        nanosecond: nanosecond
+        deltaDays: quotient.toJSNumber(),
+        hour: hour.toJSNumber(),
+        minute: minute.toJSNumber(),
+        second: second.toJSNumber(),
+        millisecond: millisecond.toJSNumber(),
+        microsecond: microsecond.toJSNumber(),
+        nanosecond: nanosecond.toJSNumber()
       };
     },
     TotalDurationNanoseconds: function TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) {
@@ -6253,7 +6259,12 @@
 
       var oneYear = new TemporalDuration(sign);
       var oneMonth = new TemporalDuration(0, sign);
-      var oneWeek = new TemporalDuration(0, 0, sign);
+      var oneWeek = new TemporalDuration(0, 0, sign); // Perform arithmetic in the mathematical integer domain
+
+      years = bigInt(years);
+      months = bigInt(months);
+      weeks = bigInt(weeks);
+      days = bigInt(days);
 
       switch (largestUnit) {
         case 'year':
@@ -6267,15 +6278,15 @@
             var dateAdd = ES.GetMethod(calendar, 'dateAdd');
             var dateUntil = ES.GetMethod(calendar, 'dateUntil');
 
-            while (MathAbs$1(years) > 0) {
+            while (!years.abs().isZero()) {
               var newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
               var untilOptions = ObjectCreate$7(null);
               untilOptions.largestUnit = 'month';
               var untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
               var oneYearMonths = GetSlot(untilResult, MONTHS);
               relativeTo = newRelativeTo;
-              months += oneYearMonths;
-              years -= sign;
+              months = months.add(oneYearMonths);
+              years = years.subtract(sign);
             }
           }
           break;
@@ -6287,82 +6298,82 @@
             var _dateAdd = ES.GetMethod(calendar, 'dateAdd'); // balance years down to days
 
 
-            while (MathAbs$1(years) > 0) {
+            while (!years.abs().isZero()) {
               var oneYearDays = void 0;
 
               var _ES$MoveRelativeDate = ES.MoveRelativeDate(calendar, relativeTo, oneYear, _dateAdd);
 
               relativeTo = _ES$MoveRelativeDate.relativeTo;
               oneYearDays = _ES$MoveRelativeDate.days;
-              days += oneYearDays;
-              years -= sign;
+              days = days.add(oneYearDays);
+              years = years.subtract(sign);
             } // balance months down to days
 
 
-            while (MathAbs$1(months) > 0) {
+            while (!months.abs().isZero()) {
               var oneMonthDays = void 0;
 
               var _ES$MoveRelativeDate2 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd);
 
               relativeTo = _ES$MoveRelativeDate2.relativeTo;
               oneMonthDays = _ES$MoveRelativeDate2.days;
-              days += oneMonthDays;
-              months -= sign;
+              days = days.add(oneMonthDays);
+              months = months.subtract(sign);
             }
           }
           break;
 
         default:
           {
-            if (years == 0 && months == 0 && weeks == 0) break;
+            if (years.isZero() && months.isZero() && weeks.isZero()) break;
             if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
 
             var _dateAdd2 = ES.GetMethod(calendar, 'dateAdd'); // balance years down to days
 
 
-            while (MathAbs$1(years) > 0) {
+            while (!years.abs().isZero()) {
               var _oneYearDays = void 0;
 
               var _ES$MoveRelativeDate3 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, _dateAdd2);
 
               relativeTo = _ES$MoveRelativeDate3.relativeTo;
               _oneYearDays = _ES$MoveRelativeDate3.days;
-              days += _oneYearDays;
-              years -= sign;
+              days = days.add(_oneYearDays);
+              years = years.subtract(sign);
             } // balance months down to days
 
 
-            while (MathAbs$1(months) > 0) {
+            while (!months.abs().isZero()) {
               var _oneMonthDays = void 0;
 
               var _ES$MoveRelativeDate4 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd2);
 
               relativeTo = _ES$MoveRelativeDate4.relativeTo;
               _oneMonthDays = _ES$MoveRelativeDate4.days;
-              days += _oneMonthDays;
-              months -= sign;
+              days = days.add(_oneMonthDays);
+              months = months.subtract(sign);
             } // balance weeks down to days
 
 
-            while (MathAbs$1(weeks) > 0) {
+            while (!weeks.abs().isZero()) {
               var oneWeekDays = void 0;
 
               var _ES$MoveRelativeDate5 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd2);
 
               relativeTo = _ES$MoveRelativeDate5.relativeTo;
               oneWeekDays = _ES$MoveRelativeDate5.days;
-              days += oneWeekDays;
-              weeks -= sign;
+              days = days.add(oneWeekDays);
+              weeks = weeks.subtract(sign);
             }
           }
           break;
       }
 
       return {
-        years: years,
-        months: months,
-        weeks: weeks,
-        days: days
+        years: years.toJSNumber(),
+        months: months.toJSNumber(),
+        weeks: weeks.toJSNumber(),
+        days: days.toJSNumber()
       };
     },
     BalanceDurationRelative: function BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
@@ -6383,7 +6394,12 @@
 
       var oneYear = new TemporalDuration(sign);
       var oneMonth = new TemporalDuration(0, sign);
-      var oneWeek = new TemporalDuration(0, 0, sign);
+      var oneWeek = new TemporalDuration(0, 0, sign); // Perform arithmetic in the mathematical integer domain
+
+      years = bigInt(years);
+      months = bigInt(months);
+      weeks = bigInt(weeks);
+      days = bigInt(days);
 
       switch (largestUnit) {
         case 'year':
@@ -6398,9 +6414,9 @@
             newRelativeTo = _ES$MoveRelativeDate6.relativeTo;
             oneYearDays = _ES$MoveRelativeDate6.days;
 
-            while (MathAbs$1(days) >= MathAbs$1(oneYearDays)) {
-              days -= oneYearDays;
-              years += sign;
+            while (days.abs().geq(MathAbs$1(oneYearDays))) {
+              days = days.subtract(oneYearDays);
+              years = years.add(sign);
               relativeTo = newRelativeTo;
 
               var _ES$MoveRelativeDate7 = ES.MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
@@ -6417,9 +6433,9 @@
             newRelativeTo = _ES$MoveRelativeDate8.relativeTo;
             oneMonthDays = _ES$MoveRelativeDate8.days;
 
-            while (MathAbs$1(days) >= MathAbs$1(oneMonthDays)) {
-              days -= oneMonthDays;
-              months += sign;
+            while (days.abs().geq(MathAbs$1(oneMonthDays))) {
+              days = days.subtract(oneMonthDays);
+              months = months.add(sign);
               relativeTo = newRelativeTo;
 
               var _ES$MoveRelativeDate9 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd);
@@ -6436,9 +6452,9 @@
             var untilResult = ES.CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
             var oneYearMonths = GetSlot(untilResult, MONTHS);
 
-            while (MathAbs$1(months) >= MathAbs$1(oneYearMonths)) {
-              months -= oneYearMonths;
-              years += sign;
+            while (months.abs().geq(MathAbs$1(oneYearMonths))) {
+              months = months.subtract(oneYearMonths);
+              years = years.add(sign);
               relativeTo = newRelativeTo;
               newRelativeTo = ES.CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
 
@@ -6466,9 +6482,9 @@
             _newRelativeTo = _ES$MoveRelativeDate10.relativeTo;
             _oneMonthDays2 = _ES$MoveRelativeDate10.days;
 
-            while (MathAbs$1(days) >= MathAbs$1(_oneMonthDays2)) {
-              days -= _oneMonthDays2;
-              months += sign;
+            while (days.abs().geq(MathAbs$1(_oneMonthDays2))) {
+              days = days.subtract(_oneMonthDays2);
+              months = months.add(sign);
               relativeTo = _newRelativeTo;
 
               var _ES$MoveRelativeDate11 = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd3);
@@ -6494,9 +6510,9 @@
             _newRelativeTo2 = _ES$MoveRelativeDate12.relativeTo;
             oneWeekDays = _ES$MoveRelativeDate12.days;
 
-            while (MathAbs$1(days) >= MathAbs$1(oneWeekDays)) {
-              days -= oneWeekDays;
-              weeks += sign;
+            while (days.abs().geq(MathAbs$1(oneWeekDays))) {
+              days = days.subtract(oneWeekDays);
+              weeks = weeks.add(sign);
               relativeTo = _newRelativeTo2;
 
               var _ES$MoveRelativeDate13 = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd4);
@@ -6510,10 +6526,10 @@
       }
 
       return {
-        years: years,
-        months: months,
-        weeks: weeks,
-        days: days
+        years: years.toJSNumber(),
+        months: months.toJSNumber(),
+        weeks: weeks.toJSNumber(),
+        days: days.toJSNumber()
       };
     },
     CalculateOffsetShift: function CalculateOffsetShift(relativeTo, y, mon, w, d) {
@@ -7194,11 +7210,11 @@
       }
 
       options = ES.GetOptionsObject(options);
-      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref8) {
-        var _ref9 = _slicedToArray(_ref8, 3),
-            p = _ref9[0],
-            s = _ref9[1],
-            c = _ref9[2];
+      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, _ref12) {
+        var _ref13 = _slicedToArray(_ref12, 3),
+            p = _ref13[0],
+            s = _ref13[1],
+            c = _ref13[2];
 
         if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
         return allowed;
@@ -7412,7 +7428,7 @@
 
         years = months = weeks = 0;
 
-        var _ES$BalanceDuration6 = ES.BalanceDuration(d1 + d2, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+        var _ES$BalanceDuration6 = ES.BalanceDuration(d1 + d2, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit);
 
         days = _ES$BalanceDuration6.days;
         hours = _ES$BalanceDuration6.hours;
@@ -7440,7 +7456,7 @@
         weeks = _ES$CalendarDateUntil4.weeks;
         days = _ES$CalendarDateUntil4.days;
 
-        var _ES$BalanceDuration7 = ES.BalanceDuration(days, h1 + h2, min1 + min2, s1 + s2, ms1 + ms2, µs1 + µs2, ns1 + ns2, largestUnit);
+        var _ES$BalanceDuration7 = ES.BalanceDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit);
 
         days = _ES$BalanceDuration7.days;
         hours = _ES$BalanceDuration7.hours;
@@ -7809,9 +7825,9 @@
       return quotient.multiply(increment);
     },
     RoundInstant: function RoundInstant(epochNs, increment, unit, roundingMode) {
-      // Note: NonNegativeModulo, but with BigInt
-      var remainder = epochNs.mod(86400e9);
-      if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
+      var _ES$NonNegativeBigInt7 = ES.NonNegativeBigIntDivmod(epochNs, 86400e9),
+          remainder = _ES$NonNegativeBigInt7.remainder;
+
       var wholeDays = epochNs.minus(remainder);
       var roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
       return wholeDays.plus(roundedRemainder);
@@ -8290,11 +8306,20 @@
 
       return 0;
     },
-    NonNegativeModulo: function NonNegativeModulo(x, y) {
-      var result = x % y;
-      if (ObjectIs(result, -0)) return 0;
-      if (result < 0) result += y;
-      return result;
+    NonNegativeBigIntDivmod: function NonNegativeBigIntDivmod(x, y) {
+      var _x$divmod = x.divmod(y),
+          quotient = _x$divmod.quotient,
+          remainder = _x$divmod.remainder;
+
+      if (remainder.lesser(0)) {
+        quotient = quotient.prev();
+        remainder = remainder.plus(y);
+      }
+
+      return {
+        quotient: quotient,
+        remainder: remainder
+      };
     },
     ToBigInt: function ToBigInt(arg) {
       if (bigInt.isInstance(arg)) {
