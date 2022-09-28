@@ -16,7 +16,6 @@ const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-const ObjectIs = Object.is;
 const ObjectEntries = Object.entries;
 const StringPrototypeSlice = String.prototype.slice;
 
@@ -2443,36 +2442,41 @@ export const ES = ObjectAssign({}, ES2020, {
     return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
   },
   BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
-    if (
-      !NumberIsFinite(hour) ||
-      !NumberIsFinite(minute) ||
-      !NumberIsFinite(second) ||
-      !NumberIsFinite(millisecond) ||
-      !NumberIsFinite(microsecond) ||
-      !NumberIsFinite(nanosecond)
-    ) {
-      throw new RangeError('infinity is out of range');
-    }
+    hour = bigInt(hour);
+    minute = bigInt(minute);
+    second = bigInt(second);
+    millisecond = bigInt(millisecond);
+    microsecond = bigInt(microsecond);
+    nanosecond = bigInt(nanosecond);
 
-    microsecond += MathFloor(nanosecond / 1000);
-    nanosecond = ES.NonNegativeModulo(nanosecond, 1000);
+    let quotient;
 
-    millisecond += MathFloor(microsecond / 1000);
-    microsecond = ES.NonNegativeModulo(microsecond, 1000);
+    ({ quotient, remainder: nanosecond } = ES.NonNegativeBigIntDivmod(nanosecond, 1000));
+    microsecond = microsecond.add(quotient);
 
-    second += MathFloor(millisecond / 1000);
-    millisecond = ES.NonNegativeModulo(millisecond, 1000);
+    ({ quotient, remainder: microsecond } = ES.NonNegativeBigIntDivmod(microsecond, 1000));
+    millisecond = millisecond.add(quotient);
 
-    minute += MathFloor(second / 60);
-    second = ES.NonNegativeModulo(second, 60);
+    ({ quotient, remainder: millisecond } = ES.NonNegativeBigIntDivmod(millisecond, 1000));
+    second = second.add(quotient);
 
-    hour += MathFloor(minute / 60);
-    minute = ES.NonNegativeModulo(minute, 60);
+    ({ quotient, remainder: second } = ES.NonNegativeBigIntDivmod(second, 60));
+    minute = minute.add(quotient);
 
-    let deltaDays = MathFloor(hour / 24);
-    hour = ES.NonNegativeModulo(hour, 24);
+    ({ quotient, remainder: minute } = ES.NonNegativeBigIntDivmod(minute, 60));
+    hour = hour.add(quotient);
 
-    return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
+    ({ quotient, remainder: hour } = ES.NonNegativeBigIntDivmod(hour, 24));
+
+    return {
+      deltaDays: quotient.toJSNumber(),
+      hour: hour.toJSNumber(),
+      minute: minute.toJSNumber(),
+      second: second.toJSNumber(),
+      millisecond: millisecond.toJSNumber(),
+      microsecond: microsecond.toJSNumber(),
+      nanosecond: nanosecond.toJSNumber()
+    };
   },
   TotalDurationNanoseconds: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) => {
     if (days !== 0) nanoseconds = bigInt(nanoseconds).subtract(offsetShift);
@@ -4290,9 +4294,7 @@ export const ES = ObjectAssign({}, ES2020, {
     return quotient.multiply(increment);
   },
   RoundInstant: (epochNs, increment, unit, roundingMode) => {
-    // Note: NonNegativeModulo, but with BigInt
-    let remainder = epochNs.mod(86400e9);
-    if (remainder.lesser(0)) remainder = remainder.plus(86400e9);
+    let { remainder } = ES.NonNegativeBigIntDivmod(epochNs, 86400e9);
     const wholeDays = epochNs.minus(remainder);
     const roundedRemainder = ES.RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
     return wholeDays.plus(roundedRemainder);
@@ -4769,11 +4771,13 @@ export const ES = ObjectAssign({}, ES2020, {
     return 0;
   },
 
-  NonNegativeModulo: (x, y) => {
-    let result = x % y;
-    if (ObjectIs(result, -0)) return 0;
-    if (result < 0) result += y;
-    return result;
+  NonNegativeBigIntDivmod: (x, y) => {
+    let { quotient, remainder } = x.divmod(y);
+    if (remainder.lesser(0)) {
+      quotient = quotient.prev();
+      remainder = remainder.plus(y);
+    }
+    return { quotient, remainder };
   },
   ToBigInt: (arg) => {
     if (bigInt.isInstance(arg)) {
