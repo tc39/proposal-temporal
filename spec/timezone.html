@@ -132,15 +132,8 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Set _identifier_ to ? ToString(_identifier_).
-        1. Let _parseResult_ be ParseText(StringToCodePoints(_identifier_), |TimeZoneNumericUTCOffset|).
-        1. If _parseResult_ is a List of errors, then
-          1. If ! IsValidTimeZoneName(_identifier_) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Set _identifier_ to ! CanonicalizeTimeZoneName(_identifier_).
-        1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
+        1. Return ? CreateTemporalTimeZone(? ToTimeZoneIdentifier(_identifier_), NewTarget).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -617,12 +610,10 @@
           1. If Type(_temporalTimeZoneLike_) is Object and ? HasProperty(_temporalTimeZoneLike_, *"timeZone"*) is *false*, return _temporalTimeZoneLike_.
         1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
         1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
-        1. If _parseResult_.[[Name]] is not *undefined*, then
-          1. Let _name_ be _parseResult_.[[Name]].
-          1. If ParseText(StringToCodePoints(_name_), |TimeZoneNumericUTCOffset|) is a List of errors, then
-            1. If ! IsValidTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
-            1. Set _name_ to ! CanonicalizeTimeZoneName(_name_).
-          1. Return ! CreateTemporalTimeZone(_name_).
+        1. Let _name_ be _parseResult_.[[Name]].
+        1. If _name_ is not *undefined*, then
+          1. Assert: _name_ is a String.
+          1. Return ? CreateTemporalTimeZone(? ToTimeZoneIdentifier(_name_)).
         1. If _parseResult_.[[Z]] is *true*, return ! CreateTemporalTimeZone(*"UTC"*).
         1. Return ! CreateTemporalTimeZone(_parseResult_.[[OffsetString]]).
       </emu-alg>

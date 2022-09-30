@@ -1110,17 +1110,14 @@
           1. Perform ? ToTemporalOverflow(_options_).
           1. Let _string_ be ? ToString(_item_).
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
-          1. Let _timeZoneName_ be _result_.[[TimeZone]].[[Name]].
-          1. Assert: _timeZoneName_ is not *undefined*.
-          1. If ParseText(StringToCodePoints(_timeZoneName_), |TimeZoneNumericUTCOffset|) is a List of errors, then
-            1. If ! IsValidTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
-            1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
           1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.
           1. Else if _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_timeZoneName_).
+          1. Let _timeZoneName_ be _result_.[[TimeZone]].[[Name]].
+          1. Assert: _timeZoneName_ is a String.
+          1. Let _timeZone_ be ? CreateTemporalTimeZone(? ToTimeZoneIdentifier(_timeZoneName_)).
           1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
           1. Set _matchBehaviour_ to ~match minutes~.
         1. Let _offsetNanoseconds_ be 0.
