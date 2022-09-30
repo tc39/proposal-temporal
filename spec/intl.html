@@ -199,15 +199,14 @@
           1. Let _hc_ be _r_.[[hc]].
           1. If _hc_ is *null*, set _hc_ to _hcDefault_.
         1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
-        1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
-        1. If _timeZone_ is *undefined*, then
-          1. Set _timeZone_ to ! DefaultTimeZone().
+        1. Let _timeZoneIdentifier_ be ? Get(_options_, *"timeZone"*).
+        1. If _timeZoneIdentifier_ is *undefined*, then
+          1. Set _dateTimeFormat_.[[TimeZone]] to ! DefaultTimeZone().
         1. Else,
-          1. Set _timeZone_ to ? ToString(_timeZone_).
-          1. If the result of ! IsValidTimeZoneName(_timeZone_) is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Set _timeZone_ to ! CanonicalizeTimeZoneName(_timeZone_).
-        1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
+          1. Set _timeZoneIdentifier_ to ? ToTimeZoneIdentifier(_timeZoneIdentifier_).
+          1. NOTE: _timeZoneIdentifier_ may identify either an offset time zone or a named time zone.
+          1. If ! IsValidTimeZoneName(_timeZoneIdentifier_) is *false*, throw a *RangeError* exception.
+          1. Set _dateTimeFormat_.[[TimeZone]] to ! CanonicalizeTimeZoneName(_timeZoneIdentifier_).
         1. Let _formatOptions_ be a new Record.
         1. Set _formatOptions_.[[hourCycle]] to _hc_.
         1. Let _hasExplicitFormatComponents_ be *false*.
