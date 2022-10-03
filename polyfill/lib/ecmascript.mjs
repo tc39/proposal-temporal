@@ -2544,10 +2544,11 @@ export const ES = ObjectAssign({}, ES2020, {
     // back inside the period where it belongs. Note that this case only can
     // happen for positive durations because the only direction that
     // `disambiguation: 'compatible'` can change clock time is forwards.
+    days = bigInt(days);
     if (sign === 1) {
-      while (days > 0 && intermediateNs.greater(endNs)) {
-        --days;
-        intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0);
+      while (days.greater(0) && intermediateNs.greater(endNs)) {
+        days = days.prev();
+        intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days.toJSNumber(), 0, 0, 0, 0, 0, 0);
         // may do disambiguation
       }
     }
@@ -2564,10 +2565,10 @@ export const ES = ObjectAssign({}, ES2020, {
       if (isOverflow) {
         nanoseconds = nanoseconds.subtract(dayLengthNs);
         relativeInstant = new TemporalInstant(oneDayFartherNs);
-        days += sign;
+        days = days.add(sign);
       }
     } while (isOverflow);
-    return { days, nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
+    return { days: days.toJSNumber(), nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
   },
   BalanceDuration: (
     days,
