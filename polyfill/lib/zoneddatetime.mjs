@@ -138,7 +138,9 @@ export class ZonedDateTime {
     const timeZone = GetSlot(this, TIME_ZONE);
     const todayNs = GetSlot(ES.BuiltinTimeZoneGetInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
     const tomorrowNs = GetSlot(ES.BuiltinTimeZoneGetInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-    return tomorrowNs.subtract(todayNs).toJSNumber() / 3.6e12;
+    const diffNs = tomorrowNs.subtract(todayNs);
+    const { quotient, remainder } = diffNs.divmod(3.6e12);
+    return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

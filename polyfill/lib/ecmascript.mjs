@@ -4621,7 +4621,8 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = bigInt(oneYearDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
-        total = nanoseconds.toJSNumber() / divisor.toJSNumber();
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         years = rounded.divide(divisor).toJSNumber();
         nanoseconds = months = weeks = days = 0;
         break;
@@ -4655,7 +4656,8 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
-        total = nanoseconds.toJSNumber() / divisor.toJSNumber();
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         months = rounded.divide(divisor).toJSNumber();
         nanoseconds = weeks = days = 0;
         break;
@@ -4678,7 +4680,8 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
         nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
-        total = nanoseconds.toJSNumber() / divisor.toJSNumber();
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         weeks = rounded.divide(divisor).toJSNumber();
         nanoseconds = days = 0;
         break;
@@ -4687,7 +4690,8 @@ export const ES = ObjectAssign({}, ES2020, {
         const divisor = bigInt(dayLengthNs);
         nanoseconds = divisor.multiply(days).plus(nanoseconds);
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
-        total = nanoseconds.toJSNumber() / divisor.toJSNumber();
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         days = rounded.divide(divisor).toJSNumber();
         nanoseconds = 0;
         break;
@@ -4701,7 +4705,8 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(milliseconds).multiply(1e6))
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
-        total = nanoseconds.toJSNumber() / divisor;
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         hours = rounded.divide(divisor).toJSNumber();
         minutes = seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -4715,7 +4720,8 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(milliseconds).multiply(1e6))
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
-        total = nanoseconds.toJSNumber() / divisor;
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         minutes = rounded.divide(divisor).toJSNumber();
         seconds = milliseconds = microseconds = nanoseconds = 0;
@@ -4728,7 +4734,8 @@ export const ES = ObjectAssign({}, ES2020, {
           .plus(bigInt(milliseconds).multiply(1e6))
           .plus(bigInt(microseconds).multiply(1e3))
           .plus(nanoseconds);
-        total = nanoseconds.toJSNumber() / divisor;
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         seconds = rounded.divide(divisor).toJSNumber();
         milliseconds = microseconds = nanoseconds = 0;
@@ -4737,7 +4744,8 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'millisecond': {
         const divisor = 1e6;
         nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
-        total = nanoseconds.toJSNumber() / divisor;
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         milliseconds = rounded.divide(divisor).toJSNumber();
         microseconds = nanoseconds = 0;
@@ -4746,7 +4754,8 @@ export const ES = ObjectAssign({}, ES2020, {
       case 'microsecond': {
         const divisor = 1e3;
         nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
-        total = nanoseconds.toJSNumber() / divisor;
+        const { quotient, remainder } = nanoseconds.divmod(divisor);
+        total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
         const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor * increment, roundingMode);
         microseconds = rounded.divide(divisor).toJSNumber();
         nanoseconds = 0;
