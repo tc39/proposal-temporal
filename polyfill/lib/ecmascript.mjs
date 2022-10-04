@@ -1569,35 +1569,35 @@ export const ES = ObjectAssign({}, ES2020, {
   },
   CalendarDayOfWeek: (calendar, dateLike) => {
     const dayOfWeek = ES.GetMethod(calendar, 'dayOfWeek');
-    return ES.Call(dayOfWeek, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(dayOfWeek, calendar, [dateLike]));
   },
   CalendarDayOfYear: (calendar, dateLike) => {
     const dayOfYear = ES.GetMethod(calendar, 'dayOfYear');
-    return ES.Call(dayOfYear, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(dayOfYear, calendar, [dateLike]));
   },
   CalendarWeekOfYear: (calendar, dateLike) => {
     const weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
-    return ES.Call(weekOfYear, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(weekOfYear, calendar, [dateLike]));
   },
   CalendarDaysInWeek: (calendar, dateLike) => {
     const daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
-    return ES.Call(daysInWeek, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(daysInWeek, calendar, [dateLike]));
   },
   CalendarDaysInMonth: (calendar, dateLike) => {
     const daysInMonth = ES.GetMethod(calendar, 'daysInMonth');
-    return ES.Call(daysInMonth, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(daysInMonth, calendar, [dateLike]));
   },
   CalendarDaysInYear: (calendar, dateLike) => {
     const daysInYear = ES.GetMethod(calendar, 'daysInYear');
-    return ES.Call(daysInYear, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(daysInYear, calendar, [dateLike]));
   },
   CalendarMonthsInYear: (calendar, dateLike) => {
     const monthsInYear = ES.GetMethod(calendar, 'monthsInYear');
-    return ES.Call(monthsInYear, calendar, [dateLike]);
+    return ES.ToPositiveInteger(ES.Call(monthsInYear, calendar, [dateLike]));
   },
   CalendarInLeapYear: (calendar, dateLike) => {
     const inLeapYear = ES.GetMethod(calendar, 'inLeapYear');
-    return ES.Call(inLeapYear, calendar, [dateLike]);
+    return !!ES.Call(inLeapYear, calendar, [dateLike]);
   },
 
   ToTemporalCalendar: (calendarLike) => {
