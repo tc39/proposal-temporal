@@ -171,7 +171,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarDaysInYear(_calendar_, _yearMonth_).
+        1. Return 𝔽(? CalendarDaysInYear(_calendar_, _yearMonth_)).
       </emu-alg>
     </emu-clause>
 
@@ -185,7 +185,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarDaysInMonth(_calendar_, _yearMonth_).
+        1. Return 𝔽(? CalendarDaysInMonth(_calendar_, _yearMonth_)).
       </emu-alg>
     </emu-clause>
 
@@ -199,7 +199,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarMonthsInYear(_calendar_, _yearMonth_).
+        1. Return 𝔽(? CalendarMonthsInYear(_calendar_, _yearMonth_)).
       </emu-alg>
     </emu-clause>
 

@@ -146,7 +146,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarYear(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarYear(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -163,7 +163,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarMonth(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarMonth(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -197,7 +197,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDay(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDay(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -374,7 +374,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDayOfWeek(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDayOfWeek(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -391,7 +391,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDayOfYear(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDayOfYear(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -408,7 +408,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarWeekOfYear(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarWeekOfYear(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -451,7 +451,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDaysInWeek(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDaysInWeek(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -468,7 +468,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDaysInMonth(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDaysInMonth(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -485,7 +485,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarDaysInYear(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarDaysInYear(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -502,7 +502,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Return ? CalendarMonthsInYear(_calendar_, _temporalDateTime_).
+        1. Return 𝔽(? CalendarMonthsInYear(_calendar_, _temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
