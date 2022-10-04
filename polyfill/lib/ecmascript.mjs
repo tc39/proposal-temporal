@@ -20,16 +20,16 @@ const ObjectEntries = Object.entries;
 const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
-import Call from 'es-abstract/2020/Call.js';
-import GetMethod from 'es-abstract/2020/GetMethod.js';
-import IsInteger from 'es-abstract/2020/IsInteger.js';
-import ToInteger from 'es-abstract/2020/ToInteger.js';
-import ToLength from 'es-abstract/2020/ToLength.js';
-import ToNumber from 'es-abstract/2020/ToNumber.js';
-import ToPrimitive from 'es-abstract/2020/ToPrimitive.js';
-import ToString from 'es-abstract/2020/ToString.js';
-import Type from 'es-abstract/2020/Type.js';
-import HasOwnProperty from 'es-abstract/2020/HasOwnProperty.js';
+import Call from 'es-abstract/2022/Call.js';
+import GetMethod from 'es-abstract/2022/GetMethod.js';
+import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
+import ToIntegerOrInfinity from 'es-abstract/2022/ToIntegerOrInfinity.js';
+import ToLength from 'es-abstract/2022/ToLength.js';
+import ToNumber from 'es-abstract/2022/ToNumber.js';
+import ToPrimitive from 'es-abstract/2022/ToPrimitive.js';
+import ToString from 'es-abstract/2022/ToString.js';
+import Type from 'es-abstract/2022/Type.js';
+import HasOwnProperty from 'es-abstract/2022/HasOwnProperty.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -98,7 +98,7 @@ const BUILTIN_CALENDAR_IDS = [
 ];
 
 const ToIntegerThrowOnInfinity = (value) => {
-  const integer = ES.ToInteger(value);
+  const integer = ToIntegerOrInfinity(value);
   if (!NumberIsFinite(integer)) {
     throw new RangeError('infinity is out of range');
   }
@@ -106,7 +106,7 @@ const ToIntegerThrowOnInfinity = (value) => {
 };
 
 const ToPositiveInteger = (value, property) => {
-  value = ToInteger(value);
+  value = ToIntegerOrInfinity(value);
   if (!NumberIsFinite(value)) {
     throw new RangeError('infinity is out of range');
   }
@@ -124,10 +124,10 @@ const ToIntegerWithoutRounding = (value) => {
   if (!NumberIsFinite(value)) {
     throw new RangeError('infinity is out of range');
   }
-  if (!ES.IsInteger(value)) {
+  if (!IsIntegralNumber(value)) {
     throw new RangeError(`unsupported fractional value ${value}`);
   }
-  return ES.ToInteger(value); // ℝ(value) in spec text; converts -0 to 0
+  return ToIntegerOrInfinity(value); // ℝ(value) in spec text; converts -0 to 0
 };
 
 const BUILTIN_CASTS = new Map([
@@ -152,7 +152,7 @@ const BUILTIN_CASTS = new Map([
   ['microseconds', ToIntegerWithoutRounding],
   ['nanoseconds', ToIntegerWithoutRounding],
   ['era', ToString],
-  ['eraYear', ToInteger],
+  ['eraYear', ToIntegerOrInfinity],
   ['offset', ToString]
 ]);
 
@@ -197,12 +197,12 @@ const DURATION_FIELDS = [
 
 import * as PARSE from './regex.mjs';
 
-const ES2020 = {
+const ES2022 = {
   Call,
   GetMethod,
   HasOwnProperty,
-  IsInteger,
-  ToInteger,
+  IsIntegralNumber,
+  ToIntegerOrInfinity,
   ToLength,
   ToNumber,
   ToPrimitive,
@@ -231,7 +231,7 @@ function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
   return instance;
 }
 
-export const ES = ObjectAssign({}, ES2020, {
+export const ES = ObjectAssign({}, ES2022, {
   ToPositiveInteger: ToPositiveInteger,
   ToIntegerThrowOnInfinity,
   ToIntegerWithoutRounding,
@@ -294,18 +294,18 @@ export const ES = ObjectAssign({}, ES2020, {
     let yearString = match[1];
     if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
     if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
-    const year = ES.ToInteger(yearString);
-    const month = ES.ToInteger(match[2] || match[4]);
-    const day = ES.ToInteger(match[3] || match[5]);
+    const year = ES.ToIntegerOrInfinity(yearString);
+    const month = ES.ToIntegerOrInfinity(match[2] || match[4]);
+    const day = ES.ToIntegerOrInfinity(match[3] || match[5]);
     const hasTime = match[6] !== undefined;
-    const hour = ES.ToInteger(match[6]);
-    const minute = ES.ToInteger(match[7] || match[10]);
-    let second = ES.ToInteger(match[8] || match[11]);
+    const hour = ES.ToIntegerOrInfinity(match[6]);
+    const minute = ES.ToIntegerOrInfinity(match[7] || match[10]);
+    let second = ES.ToIntegerOrInfinity(match[8] || match[11]);
     if (second === 60) second = 59;
     const fraction = (match[9] || match[12]) + '000000000';
-    const millisecond = ES.ToInteger(fraction.slice(0, 3));
-    const microsecond = ES.ToInteger(fraction.slice(3, 6));
-    const nanosecond = ES.ToInteger(fraction.slice(6, 9));
+    const millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
+    const microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
+    const nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
     let offset;
     let z = false;
     if (match[13]) {
@@ -366,14 +366,14 @@ export const ES = ObjectAssign({}, ES2020, {
     const match = PARSE.time.exec(isoString);
     let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
     if (match) {
-      hour = ES.ToInteger(match[1]);
-      minute = ES.ToInteger(match[2] || match[5]);
-      second = ES.ToInteger(match[3] || match[6]);
+      hour = ES.ToIntegerOrInfinity(match[1]);
+      minute = ES.ToIntegerOrInfinity(match[2] || match[5]);
+      second = ES.ToIntegerOrInfinity(match[3] || match[6]);
       if (second === 60) second = 59;
       const fraction = (match[4] || match[7]) + '000000000';
-      millisecond = ES.ToInteger(fraction.slice(0, 3));
-      microsecond = ES.ToInteger(fraction.slice(3, 6));
-      nanosecond = ES.ToInteger(fraction.slice(6, 9));
+      millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
+      microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
+      nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
       calendar = match[15];
       if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
     } else {
@@ -414,8 +414,8 @@ export const ES = ObjectAssign({}, ES2020, {
       let yearString = match[1];
       if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
       if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
-      year = ES.ToInteger(yearString);
-      month = ES.ToInteger(match[2]);
+      year = ES.ToIntegerOrInfinity(yearString);
+      month = ES.ToIntegerOrInfinity(match[2]);
       calendar = match[3];
     } else {
       let z;
@@ -428,8 +428,8 @@ export const ES = ObjectAssign({}, ES2020, {
     const match = PARSE.monthday.exec(isoString);
     let month, day, calendar, referenceISOYear;
     if (match) {
-      month = ES.ToInteger(match[1]);
-      day = ES.ToInteger(match[2]);
+      month = ES.ToIntegerOrInfinity(match[1]);
+      day = ES.ToIntegerOrInfinity(match[2]);
     } else {
       let z;
       ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString));
@@ -458,11 +458,11 @@ export const ES = ObjectAssign({}, ES2020, {
       throw new RangeError(`invalid duration: ${isoString}`);
     }
     const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
-    const years = ES.ToInteger(match[2]) * sign;
-    const months = ES.ToInteger(match[3]) * sign;
-    const weeks = ES.ToInteger(match[4]) * sign;
-    const days = ES.ToInteger(match[5]) * sign;
-    const hours = ES.ToInteger(match[6]) * sign;
+    const years = ES.ToIntegerOrInfinity(match[2]) * sign;
+    const months = ES.ToIntegerOrInfinity(match[3]) * sign;
+    const weeks = ES.ToIntegerOrInfinity(match[4]) * sign;
+    const days = ES.ToIntegerOrInfinity(match[5]) * sign;
+    const hours = ES.ToIntegerOrInfinity(match[6]) * sign;
     let fHours = match[7];
     let minutesStr = match[8];
     let fMinutes = match[9];
@@ -477,18 +477,18 @@ export const ES = ObjectAssign({}, ES2020, {
       if (minutesStr ?? fMinutes ?? secondsStr ?? fSeconds ?? false) {
         throw new RangeError('only the smallest unit can be fractional');
       }
-      excessNanoseconds = ES.ToInteger((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+      excessNanoseconds = ES.ToIntegerOrInfinity((fHours + '000000000').slice(0, 9)) * 3600 * sign;
     } else {
-      minutes = ES.ToInteger(minutesStr) * sign;
+      minutes = ES.ToIntegerOrInfinity(minutesStr) * sign;
       if (fMinutes !== undefined) {
         if (secondsStr ?? fSeconds ?? false) {
           throw new RangeError('only the smallest unit can be fractional');
         }
-        excessNanoseconds = ES.ToInteger((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+        excessNanoseconds = ES.ToIntegerOrInfinity((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
       } else {
-        seconds = ES.ToInteger(secondsStr) * sign;
+        seconds = ES.ToIntegerOrInfinity(secondsStr) * sign;
         if (fSeconds !== undefined) {
-          excessNanoseconds = ES.ToInteger((fSeconds + '000000000').slice(0, 9)) * sign;
+          excessNanoseconds = ES.ToIntegerOrInfinity((fSeconds + '000000000').slice(0, 9)) * sign;
         }
       }
     }
@@ -1701,7 +1701,7 @@ export const ES = ObjectAssign({}, ES2020, {
     if (typeof offsetNs !== 'number') {
       throw new TypeError('bad return from getOffsetNanosecondsFor');
     }
-    if (!ES.IsInteger(offsetNs) || MathAbs(offsetNs) >= 86400e9) {
+    if (!ES.IsIntegralNumber(offsetNs) || MathAbs(offsetNs) >= 86400e9) {
       throw new RangeError('out-of-range return from getOffsetNanosecondsFor');
     }
     return offsetNs;
