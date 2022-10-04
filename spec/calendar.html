@@ -145,156 +145,216 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendaryear" aoid="CalendarYear">
-      <h1>CalendarYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarYear calls the given _calendar_'s `year()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendaryear" type="abstract operation">
+      <h1>
+        CalendarYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `year()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _dateLike_ »).
         1. If _result_ is *undefined*, throw a *RangeError* exception.
         1. Return ? ToIntegerThrowOnInfinity(_result_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmonth" aoid="CalendarMonth">
-      <h1>CalendarMonth ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarMonth calls the given _calendar_'s `month()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarmonth" type="abstract operation">
+      <h1>
+        CalendarMonth (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `month()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmonthcode" aoid="CalendarMonthCode">
-      <h1>CalendarMonthCode ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarMonthCode calls the given _calendar_'s `monthCode()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarmonthcode" type="abstract operation">
+      <h1>
+        CalendarMonthCode (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, Temporal.PlainYearMonth, or Temporal.PlainMonthDay,
+        ): either a normal completion containing a String, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `monthCode()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _dateLike_ »).
         1. If _result_ is *undefined*, throw a *RangeError* exception.
         1. Return ? ToString(_result_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarday" aoid="CalendarDay">
-      <h1>CalendarDay ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDay calls the given _calendar_'s `day()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarday" type="abstract operation">
+      <h1>
+        CalendarDay (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainMonthDay,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `day()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardayofweek" aoid="CalendarDayOfWeek">
-      <h1>CalendarDayOfWeek ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDayOfWeek calls the given _calendar_'s `dayOfWeek()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendardayofweek" type="abstract operation">
+      <h1>
+        CalendarDayOfWeek (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `dayOfWeek()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardayofyear" aoid="CalendarDayOfYear">
-      <h1>CalendarDayOfYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDayOfYear calls the given _calendar_'s `dayOfYear()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendardayofyear" type="abstract operation">
+      <h1>
+        CalendarDayOfYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `dayOfYear()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarweekofyear" aoid="CalendarWeekOfYear">
-      <h1>CalendarWeekOfYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarWeekOfYear calls the given _calendar_'s `weekOfYear()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarweekofyear" type="abstract operation">
+      <h1>
+        CalendarWeekOfYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `weekOfYear()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardaysinweek" aoid="CalendarDaysInWeek">
-      <h1>CalendarDaysInWeek ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDaysInWeek calls the given _calendar_'s `daysInWeek()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendardaysinweek" type="abstract operation">
+      <h1>
+        CalendarDaysInWeek (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `daysInWeek()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardaysinmonth" aoid="CalendarDaysInMonth">
-      <h1>CalendarDaysInMonth ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDaysInMonth calls the given _calendar_'s `daysInMonth()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendardaysinmonth" type="abstract operation">
+      <h1>
+        CalendarDaysInMonth (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `daysInMonth()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardaysinyear" aoid="CalendarDaysInYear">
-      <h1>CalendarDaysInYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarDaysInYear calls the given _calendar_'s `daysInYear()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendardaysinyear" type="abstract operation">
+      <h1>
+        CalendarDaysInYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `daysInYear()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmonthsinyear" aoid="CalendarMonthsInYear">
-      <h1>CalendarMonthsInYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarMonthsInYear calls the given _calendar_'s `monthsInYear()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarmonthsinyear" type="abstract operation">
+      <h1>
+        CalendarMonthsInYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `monthsInYear()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
         1. Return ? ToPositiveInteger(_result_).
       </emu-alg>
       <emu-note>ToPositiveInteger(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarinleapyear" aoid="CalendarInLeapYear">
-      <h1>CalendarInLeapYear ( _calendar_, _dateLike_ )</h1>
-      <p>
-        The abstract operation CalendarInLeapYear calls the given _calendar_'s `inLeapYear()` method and validates the result.
-      </p>
+    <emu-clause id="sec-temporal-calendarinleapyear" type="abstract operation">
+      <h1>
+        CalendarInLeapYear (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing a Boolean, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `inLeapYear()` method and validates the result.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
         1. Return ToBoolean(_result_).
       </emu-alg>
