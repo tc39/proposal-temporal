@@ -1530,9 +1530,6 @@ export const ES = ObjectAssign({}, ES2020, {
   CalendarMonth: (calendar, dateLike) => {
     const month = ES.GetMethod(calendar, 'month');
     const result = ES.Call(month, calendar, [dateLike]);
-    if (result === undefined) {
-      throw new RangeError('calendar month result must be a positive integer');
-    }
     return ES.ToPositiveInteger(result);
   },
   CalendarMonthCode: (calendar, dateLike) => {
@@ -1546,9 +1543,6 @@ export const ES = ObjectAssign({}, ES2020, {
   CalendarDay: (calendar, dateLike) => {
     const day = ES.GetMethod(calendar, 'day');
     const result = ES.Call(day, calendar, [dateLike]);
-    if (result === undefined) {
-      throw new RangeError('calendar day result must be a positive integer');
-    }
     return ES.ToPositiveInteger(result);
   },
   CalendarEra: (calendar, dateLike) => {
@@ -4216,7 +4210,7 @@ export const ES = ObjectAssign({}, ES2020, {
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const fields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
+    fields.day = sign < 0 ? ES.CalendarDaysInMonth(calendar, yearMonth) : 1;
     const startDate = ES.CalendarDateFromFields(calendar, fields);
     const Duration = GetIntrinsic('%Temporal.Duration%');
     const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
