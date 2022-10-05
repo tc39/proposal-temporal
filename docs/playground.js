@@ -4957,11 +4957,6 @@
     CalendarMonth: function CalendarMonth(calendar, dateLike) {
       var month = ES.GetMethod(calendar, 'month');
       var result = ES.Call(month, calendar, [dateLike]);
-
-      if (result === undefined) {
-        throw new RangeError('calendar month result must be a positive integer');
-      }
-
       return ES.ToPositiveInteger(result);
     },
     CalendarMonthCode: function CalendarMonthCode(calendar, dateLike) {
@@ -4977,11 +4972,6 @@
     CalendarDay: function CalendarDay(calendar, dateLike) {
       var day = ES.GetMethod(calendar, 'day');
       var result = ES.Call(day, calendar, [dateLike]);
-
-      if (result === undefined) {
-        throw new RangeError('calendar day result must be a positive integer');
-      }
-
       return ES.ToPositiveInteger(result);
     },
     CalendarEra: function CalendarEra(calendar, dateLike) {
@@ -5006,35 +4996,35 @@
     },
     CalendarDayOfWeek: function CalendarDayOfWeek(calendar, dateLike) {
       var dayOfWeek = ES.GetMethod(calendar, 'dayOfWeek');
-      return ES.Call(dayOfWeek, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(dayOfWeek, calendar, [dateLike]));
     },
     CalendarDayOfYear: function CalendarDayOfYear(calendar, dateLike) {
       var dayOfYear = ES.GetMethod(calendar, 'dayOfYear');
-      return ES.Call(dayOfYear, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(dayOfYear, calendar, [dateLike]));
     },
     CalendarWeekOfYear: function CalendarWeekOfYear(calendar, dateLike) {
       var weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
-      return ES.Call(weekOfYear, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(weekOfYear, calendar, [dateLike]));
     },
     CalendarDaysInWeek: function CalendarDaysInWeek(calendar, dateLike) {
       var daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
-      return ES.Call(daysInWeek, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(daysInWeek, calendar, [dateLike]));
     },
     CalendarDaysInMonth: function CalendarDaysInMonth(calendar, dateLike) {
       var daysInMonth = ES.GetMethod(calendar, 'daysInMonth');
-      return ES.Call(daysInMonth, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(daysInMonth, calendar, [dateLike]));
     },
     CalendarDaysInYear: function CalendarDaysInYear(calendar, dateLike) {
       var daysInYear = ES.GetMethod(calendar, 'daysInYear');
-      return ES.Call(daysInYear, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(daysInYear, calendar, [dateLike]));
     },
     CalendarMonthsInYear: function CalendarMonthsInYear(calendar, dateLike) {
       var monthsInYear = ES.GetMethod(calendar, 'monthsInYear');
-      return ES.Call(monthsInYear, calendar, [dateLike]);
+      return ES.ToPositiveInteger(ES.Call(monthsInYear, calendar, [dateLike]));
     },
     CalendarInLeapYear: function CalendarInLeapYear(calendar, dateLike) {
       var inLeapYear = ES.GetMethod(calendar, 'inLeapYear');
-      return ES.Call(inLeapYear, calendar, [dateLike]);
+      return !!ES.Call(inLeapYear, calendar, [dateLike]);
     },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
       if (ES.Type(calendarLike) === 'Object') {
@@ -7739,7 +7729,7 @@
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var fields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-      fields.day = sign < 0 ? ES.ToPositiveInteger(ES.CalendarDaysInMonth(calendar, yearMonth)) : 1;
+      fields.day = sign < 0 ? ES.CalendarDaysInMonth(calendar, yearMonth) : 1;
       var startDate = ES.CalendarDateFromFields(calendar, fields);
       var Duration = GetIntrinsic('%Temporal.Duration%');
       var durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
