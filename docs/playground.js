@@ -6056,10 +6056,12 @@
       // happen for positive durations because the only direction that
       // `disambiguation: 'compatible'` can change clock time is forwards.
 
+      days = bigInt(days);
+
       if (sign === 1) {
-        while (days > 0 && intermediateNs.greater(endNs)) {
-          --days;
-          intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0); // may do disambiguation
+        while (days.greater(0) && intermediateNs.greater(endNs)) {
+          days = days.prev();
+          intermediateNs = ES.AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days.toJSNumber(), 0, 0, 0, 0, 0, 0); // may do disambiguation
         }
       }
 
@@ -6077,12 +6079,12 @@
         if (isOverflow) {
           nanoseconds = nanoseconds.subtract(dayLengthNs);
           relativeInstant = new TemporalInstant(oneDayFartherNs);
-          days += sign;
+          days = days.add(sign);
         }
       } while (isOverflow);
 
       return {
-        days: days,
+        days: days.toJSNumber(),
         nanoseconds: nanoseconds,
         dayLengthNs: MathAbs$1(dayLengthNs)
       };
@@ -8093,7 +8095,12 @@
             var divisor = bigInt(oneYearDays).multiply(dayLengthNs);
             nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
             var rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
-            total = nanoseconds.toJSNumber() / divisor.toJSNumber();
+
+            var _nanoseconds$divmod7 = nanoseconds.divmod(divisor),
+                quotient = _nanoseconds$divmod7.quotient,
+                remainder = _nanoseconds$divmod7.remainder;
+
+            total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
             years = rounded.divide(divisor).toJSNumber();
             nanoseconds = months = weeks = days = 0;
             break;
@@ -8146,7 +8153,11 @@
 
             var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor.toJSNumber();
+            var _nanoseconds$divmod8 = nanoseconds.divmod(_divisor),
+                _quotient = _nanoseconds$divmod8.quotient,
+                _remainder = _nanoseconds$divmod8.remainder;
+
+            total = _quotient.toJSNumber() + _remainder.toJSNumber() / _divisor;
             months = _rounded.divide(_divisor).toJSNumber();
             nanoseconds = weeks = days = 0;
             break;
@@ -8188,7 +8199,11 @@
 
             var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor2.toJSNumber();
+            var _nanoseconds$divmod9 = nanoseconds.divmod(_divisor2),
+                _quotient2 = _nanoseconds$divmod9.quotient,
+                _remainder2 = _nanoseconds$divmod9.remainder;
+
+            total = _quotient2.toJSNumber() + _remainder2.toJSNumber() / _divisor2;
             weeks = _rounded2.divide(_divisor2).toJSNumber();
             nanoseconds = days = 0;
             break;
@@ -8202,7 +8217,11 @@
 
             var _rounded3 = ES.RoundNumberToIncrement(nanoseconds, _divisor3.multiply(increment).toJSNumber(), roundingMode);
 
-            total = nanoseconds.toJSNumber() / _divisor3.toJSNumber();
+            var _nanoseconds$divmod10 = nanoseconds.divmod(_divisor3),
+                _quotient3 = _nanoseconds$divmod10.quotient,
+                _remainder3 = _nanoseconds$divmod10.remainder;
+
+            total = _quotient3.toJSNumber() + _remainder3.toJSNumber() / _divisor3;
             days = _rounded3.divide(_divisor3).toJSNumber();
             nanoseconds = 0;
             break;
@@ -8212,7 +8231,12 @@
           {
             var _divisor4 = 3600e9;
             nanoseconds = bigInt(hours).multiply(3600e9).plus(bigInt(minutes).multiply(60e9)).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
-            total = nanoseconds.toJSNumber() / _divisor4;
+
+            var _nanoseconds$divmod11 = nanoseconds.divmod(_divisor4),
+                _quotient4 = _nanoseconds$divmod11.quotient,
+                _remainder4 = _nanoseconds$divmod11.remainder;
+
+            total = _quotient4.toJSNumber() + _remainder4.toJSNumber() / _divisor4;
 
             var _rounded4 = ES.RoundNumberToIncrement(nanoseconds, _divisor4 * increment, roundingMode);
 
@@ -8225,7 +8249,12 @@
           {
             var _divisor5 = 60e9;
             nanoseconds = bigInt(minutes).multiply(60e9).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
-            total = nanoseconds.toJSNumber() / _divisor5;
+
+            var _nanoseconds$divmod12 = nanoseconds.divmod(_divisor5),
+                _quotient5 = _nanoseconds$divmod12.quotient,
+                _remainder5 = _nanoseconds$divmod12.remainder;
+
+            total = _quotient5.toJSNumber() + _remainder5.toJSNumber() / _divisor5;
 
             var _rounded5 = ES.RoundNumberToIncrement(nanoseconds, _divisor5 * increment, roundingMode);
 
@@ -8238,7 +8267,12 @@
           {
             var _divisor6 = 1e9;
             nanoseconds = bigInt(seconds).multiply(1e9).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
-            total = nanoseconds.toJSNumber() / _divisor6;
+
+            var _nanoseconds$divmod13 = nanoseconds.divmod(_divisor6),
+                _quotient6 = _nanoseconds$divmod13.quotient,
+                _remainder6 = _nanoseconds$divmod13.remainder;
+
+            total = _quotient6.toJSNumber() + _remainder6.toJSNumber() / _divisor6;
 
             var _rounded6 = ES.RoundNumberToIncrement(nanoseconds, _divisor6 * increment, roundingMode);
 
@@ -8251,7 +8285,12 @@
           {
             var _divisor7 = 1e6;
             nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
-            total = nanoseconds.toJSNumber() / _divisor7;
+
+            var _nanoseconds$divmod14 = nanoseconds.divmod(_divisor7),
+                _quotient7 = _nanoseconds$divmod14.quotient,
+                _remainder7 = _nanoseconds$divmod14.remainder;
+
+            total = _quotient7.toJSNumber() + _remainder7.toJSNumber() / _divisor7;
 
             var _rounded7 = ES.RoundNumberToIncrement(nanoseconds, _divisor7 * increment, roundingMode);
 
@@ -8264,7 +8303,12 @@
           {
             var _divisor8 = 1e3;
             nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
-            total = nanoseconds.toJSNumber() / _divisor8;
+
+            var _nanoseconds$divmod15 = nanoseconds.divmod(_divisor8),
+                _quotient8 = _nanoseconds$divmod15.quotient,
+                _remainder8 = _nanoseconds$divmod15.remainder;
+
+            total = _quotient8.toJSNumber() + _remainder8.toJSNumber() / _divisor8;
 
             var _rounded8 = ES.RoundNumberToIncrement(nanoseconds, _divisor8 * increment, roundingMode);
 
@@ -14579,7 +14623,13 @@
         var timeZone = GetSlot(this, TIME_ZONE);
         var todayNs = GetSlot(ES.BuiltinTimeZoneGetInstantFor(timeZone, today, 'compatible'), EPOCHNANOSECONDS);
         var tomorrowNs = GetSlot(ES.BuiltinTimeZoneGetInstantFor(timeZone, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-        return tomorrowNs.subtract(todayNs).toJSNumber() / 3.6e12;
+        var diffNs = tomorrowNs.subtract(todayNs);
+
+        var _diffNs$divmod = diffNs.divmod(3.6e12),
+            quotient = _diffNs$divmod.quotient,
+            remainder = _diffNs$divmod.remainder;
+
+        return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
       }
     }, {
       key: "daysInWeek",
