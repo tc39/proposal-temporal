@@ -1635,6 +1635,7 @@
           1. Let _monthsWeeksInDays_ be DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_.
+          1. Assert: _days_ is an integer.
           1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
           1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, *undefined*, _dateAdd_).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
@@ -1729,6 +1730,7 @@
           1. Set _remainder_ to _nanoseconds_.
           1. Set _nanoseconds_ to RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
           1. Set _remainder_ to _remainder_ - _nanoseconds_.
+        1. Assert: _days_ is an integer.
         1. Let _duration_ be ? CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Return the Record {
           [[DurationRecord]]: _duration_,
