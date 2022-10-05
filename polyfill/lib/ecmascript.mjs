@@ -1502,7 +1502,8 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
-    if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
+    if (fields === undefined) return fieldNames;
+    fieldNames = ES.Call(fields, calendar, [fieldNames]);
     const result = [];
     for (const name of fieldNames) {
       if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
