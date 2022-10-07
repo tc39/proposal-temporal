@@ -483,9 +483,6 @@
         1. Let _calendarID_ be ? ToString(_calendarObject_).
         1. Return FormatCalendarAnnotation(_calendarID_, _showCalendar_).
       </emu-alg>
-      <emu-note type="editor">
-        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended">Date and Time on the Internet: Timestamps with additional information</a>.
-      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
@@ -508,9 +505,6 @@
         1. If _showCalendar_ is *"critical"*, let _flag_ be *"!"*; else, let flag be the empty String.
         1. Return the string-concatenation of *"["*, _flag_, *"u-ca="*, _id_, and *"]"*.
       </emu-alg>
-      <emu-note type="editor">
-        The exact form this annotation will take is undergoing a standardization process in the IETF; it is being discussed in the Internet Draft <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended">Date and Time on the Internet: Timestamps with additional information</a>.
-      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
