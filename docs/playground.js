@@ -4768,7 +4768,8 @@
     },
     CalendarFields: function CalendarFields(calendar, fieldNames) {
       var fields = ES.GetMethod(calendar, 'fields');
-      if (fields !== undefined) fieldNames = ES.Call(fields, calendar, [fieldNames]);
+      if (fields === undefined) return fieldNames;
+      fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
 
       var _iterator2 = _createForOfIteratorHelper(fieldNames),
