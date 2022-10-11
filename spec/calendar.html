@@ -727,13 +727,13 @@
       </dl>
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _fieldsKeys_ be ? EnumerableOwnPropertyNames(_fields_, ~key~).
+        1. Let _fieldsKeys_ be ? EnumerableOwnProperties(_fields_, ~key~).
         1. For each element _key_ of _fieldsKeys_, do
           1. If _key_ is not *"month"* or *"monthCode"*, then
             1. Let _propValue_ be ? Get(_fields_, _key_).
             1. If _propValue_ is not *undefined*, then
               1. Perform ! CreateDataPropertyOrThrow(_merged_, _key_, _propValue_).
-        1. Let _additionalFieldsKeys_ be ? EnumerableOwnPropertyNames(_additionalFields_, ~key~).
+        1. Let _additionalFieldsKeys_ be ? EnumerableOwnProperties(_additionalFields_, ~key~).
         1. For each element _key_ of _additionalFieldsKeys_, do
           1. Let _propValue_ be ? Get(_additionalFields_, _key_).
           1. If _propValue_ is not *undefined*, then
