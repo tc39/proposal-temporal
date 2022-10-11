@@ -858,7 +858,7 @@ dt1<span class="token punctuation">.</span><span class="token function">equals</
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>calendarName</code> (string): Whether to show the calendar annotation in the return value.
-Valid values are <code>&#39;auto&#39;</code>, <code>&#39;always&#39;</code>, and <code>&#39;never&#39;</code>.
+Valid values are <code>&#39;auto&#39;</code>, <code>&#39;always&#39;</code>, <code>&#39;never&#39;</code>, and <code>&#39;critical&#39;</code>.
 The default is <code>&#39;auto&#39;</code>.</li>
 <li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
 Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
@@ -881,6 +881,7 @@ If no options are given, the default is <code>fractionalSecondDigits: &#39;auto&
 Note that rounding may change the value of other units as well.</p>
 <p>Normally, a calendar annotation is shown when <code>datetime</code>&#39;s calendar is not the ISO 8601 calendar.
 By setting the <code>calendarName</code> option to <code>&#39;always&#39;</code> or <code>&#39;never&#39;</code> this can be overridden to always or never show the annotation, respectively.
+Normally not necessary, a value of <code>&#39;critical&#39;</code> is equivalent to <code>&#39;always&#39;</code> but the annotation will contain an additional <code>!</code> for certain interoperation use cases.
 For more information on the calendar annotation, see <a href="./strings.html#calendar-systems">the <code>Temporal</code> string formats documentation</a>.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->

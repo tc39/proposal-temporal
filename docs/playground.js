@@ -3025,18 +3025,16 @@
   var tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
   var offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
   var timeZoneID = new RegExp('(?:' + ["(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*"), 'Etc/GMT(?:0|[-+]\\d{1,2})', 'GMT[-+]?0', 'EST5EDT', 'CST6CDT', 'MST7MDT', 'PST8PDT', offsetNoCapture.source].join('|') + ')');
-  var calComponent = /[A-Za-z0-9]{3,8}/;
-  var calendarID = new RegExp("(?:".concat(calComponent.source, "(?:-").concat(calComponent.source, ")*)"));
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
   var monthpart = /(?:0[1-9]|1[0-2])/;
   var daypart = /(?:0[1-9]|[12]\d|3[01])/;
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(").concat(monthpart.source, ")-(").concat(daypart.source, ")|(").concat(monthpart.source, ")(").concat(daypart.source, "))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[(").concat(timeZoneID.source, ")\\])?"));
-  var calendar = new RegExp("\\[u-ca=(".concat(calendarID.source, ")\\]"));
-  var zoneddatetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "(?:").concat(calendar.source, ")?$"), 'i');
-  var time = new RegExp("^T?".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?(?:").concat(calendar.source, ")?$"), 'i');
+  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[!?(").concat(timeZoneID.source, ")\\])?"));
+  var annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
+  var zoneddatetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "((?:").concat(annotation.source, ")*)$"), 'i');
+  var time = new RegExp("^T?".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?((?:").concat(annotation.source, ")*)$"), 'i');
 
   // The short forms of YearMonth and MonthDay are only for the ISO calendar.
   // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
@@ -3223,7 +3221,8 @@
     FormatCalendarAnnotation: function FormatCalendarAnnotation(id, showCalendar) {
       if (showCalendar === 'never') return '';
       if (showCalendar === 'auto' && id === 'iso8601') return '';
-      return "[u-ca=".concat(id, "]");
+      var flag = showCalendar === 'critical' ? '!' : '';
+      return "[".concat(flag, "u-ca=").concat(id, "]");
     },
     ParseISODateTime: function ParseISODateTime(isoString) {
       // ZDT is the superset of fields for every other Temporal type
@@ -3267,7 +3266,27 @@
         if (offset === '-00:00') offset = '+00:00';
       }
       var ianaName = match[19];
-      var calendar = match[20];
+      var annotations = match[20];
+      var calendar;
+      var _iterator = _createForOfIteratorHelper(annotations.matchAll(annotation)),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = _slicedToArray(_step.value, 4),
+            critical = _step$value[1],
+            key = _step$value[2],
+            value = _step$value[3];
+          if (key === 'u-ca') {
+            if (calendar === undefined) calendar = value;
+          } else if (critical === '!') {
+            throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
       ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
       return {
         year: year,
@@ -3304,7 +3323,7 @@
     },
     ParseTemporalTimeString: function ParseTemporalTimeString(isoString) {
       var match = time.exec(isoString);
-      var hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+      var hour, minute, second, millisecond, microsecond, nanosecond, annotations, calendar;
       if (match) {
         hour = ES.ToIntegerOrInfinity(match[1]);
         minute = ES.ToIntegerOrInfinity(match[2] || match[5]);
@@ -3314,7 +3333,26 @@
         millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
         microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
         nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
-        calendar = match[15];
+        annotations = match[15];
+        var _iterator2 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
+          _step2;
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var _step2$value = _slicedToArray(_step2.value, 4),
+              critical = _step2$value[1],
+              key = _step2$value[2],
+              value = _step2$value[3];
+            if (key === 'u-ca') {
+              if (calendar === undefined) calendar = value;
+            } else if (critical === '!') {
+              throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
+            }
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
         if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
       } else {
         var z, hasTime;
@@ -3344,18 +3382,17 @@
         };
       }
       // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
-      // The calendar suffix is `[u-ca=${calendar}]`, i.e. calendar plus 7 characters,
-      // and must be stripped so presence of a calendar doesn't result in interpretation
-      // of otherwise ambiguous input as a time.
-      var isoStringWithoutCalendar = calendar ? ES.Call(StringPrototypeSlice, isoString, [0, -(calendar.length + 7)]) : isoString;
+      // The annotations must be stripped so presence of a calendar doesn't result
+      // in interpretation of otherwise ambiguous input as a time.
+      var isoStringWithoutAnnotations = annotations ? ES.Call(StringPrototypeSlice, isoString, [0, -annotations.length]) : isoString;
       try {
-        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoStringWithoutCalendar),
+        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoStringWithoutAnnotations),
           month = _ES$ParseTemporalMont.month,
           day = _ES$ParseTemporalMont.day;
         ES.RejectISODate(1972, month, day);
       } catch (_unused) {
         try {
-          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoStringWithoutCalendar),
+          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoStringWithoutAnnotations),
             year = _ES$ParseTemporalYear.year,
             _month = _ES$ParseTemporalYear.month;
           ES.RejectISODate(year, _month, 1);
@@ -3673,19 +3710,19 @@
     },
     ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item, disallowedProperties) {
       var record = ES.ToTemporalDurationRecord(item);
-      var _iterator = _createForOfIteratorHelper(disallowedProperties),
-        _step;
+      var _iterator3 = _createForOfIteratorHelper(disallowedProperties),
+        _step3;
       try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var property = _step.value;
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var property = _step3.value;
           if (record[property] !== 0) {
             throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
           }
         }
       } catch (err) {
-        _iterator.e(err);
+        _iterator3.e(err);
       } finally {
-        _iterator.f();
+        _iterator3.f();
       }
       return record;
     },
@@ -3719,10 +3756,10 @@
       return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
     },
     ToShowCalendarOption: function ToShowCalendarOption(options) {
-      return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never'], 'auto');
+      return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
     },
     ToShowTimeZoneNameOption: function ToShowTimeZoneNameOption(options) {
-      return ES.GetOption(options, 'timeZoneName', ['auto', 'never'], 'auto');
+      return ES.GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
     },
     ToShowOffsetOption: function ToShowOffsetOption(options) {
       return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
@@ -3930,6 +3967,8 @@
             offsetBehaviour = 'wall';
           }
           matchMinutes = true;
+        } else if (z) {
+          throw new RangeError('Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone');
         }
         if (!calendar) calendar = ES.GetISO8601Calendar();
         calendar = ES.ToTemporalCalendar(calendar);
@@ -4509,18 +4548,18 @@
       if (fields === undefined) return fieldNames;
       fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
-      var _iterator2 = _createForOfIteratorHelper(fieldNames),
-        _step2;
+      var _iterator4 = _createForOfIteratorHelper(fieldNames),
+        _step4;
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var name = _step2.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var name = _step4.value;
           if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
           ES.Call(ArrayPrototypePush$4, result, [name]);
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator2.f();
+        _iterator4.f();
       }
       return result;
     },
@@ -4819,20 +4858,20 @@
       var getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
       var possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
       var result = [];
-      var _iterator3 = _createForOfIteratorHelper(possibleInstants),
-        _step3;
+      var _iterator5 = _createForOfIteratorHelper(possibleInstants),
+        _step5;
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var instant = _step3.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var instant = _step5.value;
           if (!ES.IsTemporalInstant(instant)) {
             throw new TypeError('bad return from getPossibleInstantsFor');
           }
           ES.Call(ArrayPrototypePush$4, result, [instant]);
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator3.f();
+        _iterator5.f();
       }
       return result;
     },
@@ -5004,7 +5043,7 @@
       var resultString = "".concat(month, "-").concat(day);
       var calendar = GetSlot(monthDay, CALENDAR);
       var calendarID = ES.ToString(calendar);
-      if (showCalendar === 'always' || calendarID !== 'iso8601') {
+      if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
         var year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
         resultString = "".concat(year, "-").concat(resultString);
       }
@@ -5019,7 +5058,7 @@
       var resultString = "".concat(year, "-").concat(month);
       var calendar = GetSlot(yearMonth, CALENDAR);
       var calendarID = ES.ToString(calendar);
-      if (showCalendar === 'always' || calendarID !== 'iso8601') {
+      if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
         var day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
         resultString += "-".concat(day);
       }
@@ -5055,7 +5094,10 @@
         var offsetNs = ES.GetOffsetNanosecondsFor(tz, instant);
         result += ES.FormatISOTimeZoneOffsetString(offsetNs);
       }
-      if (showTimeZone !== 'never') result += "[".concat(tz, "]");
+      if (showTimeZone !== 'never') {
+        var flag = showTimeZone === 'critical' ? '!' : '';
+        result += "[".concat(flag).concat(tz, "]");
+      }
       result += ES.MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
       return result;
     },
