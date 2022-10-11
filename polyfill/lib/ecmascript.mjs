@@ -2775,6 +2775,7 @@ export const ES = ObjectAssign({}, ES2022, {
   UnbalanceDurationRelative: (years, months, weeks, days, largestUnit, relativeTo) => {
     const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
     const sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+    if (sign === 0) return { years, months, weeks, days };
 
     let calendar;
     if (relativeTo) {
