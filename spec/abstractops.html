@@ -517,7 +517,7 @@
     </dl>
     <emu-alg>
       1. Let _merged_ be OrdinaryObjectCreate(*null*).
-      1. Let _keys_ be ? EnumerableOwnPropertyNames(_options_, ~key~).
+      1. Let _keys_ be ? EnumerableOwnProperties(_options_, ~key~).
       1. For each element _nextKey_ of _keys_, do
         1. Let _propValue_ be ? Get(_options_, _nextKey_).
         1. Perform ! CreateDataPropertyOrThrow(_merged_, _nextKey_, _propValue_).
