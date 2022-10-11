@@ -390,8 +390,9 @@
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.TimeZone%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]], [[OffsetNanoseconds]] »).
         1. If IsTimeZoneOffsetString(_identifier_) is *true*, then
-          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(ParseTimeZoneOffsetString(_identifier_)).
-          1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.[[Value]].
+          1. Let _offsetNanosecondsResult_ be ParseTimeZoneOffsetString(_identifier_).
+          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_offsetNanosecondsResult_).
+          1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.
         1. Else,
           1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
           1. Set _object_.[[Identifier]] to _identifier_.
