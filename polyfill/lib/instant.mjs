@@ -141,15 +141,9 @@ export class Instant {
     const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
-  toZonedDateTimeISO(item) {
+  toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (ES.Type(item) === 'Object') {
-      const timeZoneProperty = item.timeZone;
-      if (timeZoneProperty !== undefined) {
-        item = timeZoneProperty;
-      }
-    }
-    const timeZone = ES.ToTemporalTimeZone(item);
+    timeZone = ES.ToTemporalTimeZone(timeZone);
     const calendar = ES.GetISO8601Calendar();
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
