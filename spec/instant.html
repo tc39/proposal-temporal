@@ -394,18 +394,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetimeiso">
-      <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _item_ )</h1>
+      <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _timeZone_ )</h1>
       <p>
         This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If Type(_item_) is Object, then
-          1. Let _timeZoneProperty_ be ? Get(_item_, *"timeZone"*).
-          1. If _timeZoneProperty_ is not *undefined*, then
-            1. Set _item_ to _timeZoneProperty_.
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
+        1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
         1. Let _calendar_ be ! GetISO8601Calendar().
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
