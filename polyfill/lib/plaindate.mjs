@@ -203,12 +203,16 @@ export class PlainDate {
 
     let timeZone, temporalTime;
     if (ES.Type(item) === 'Object') {
-      let timeZoneLike = item.timeZone;
-      if (timeZoneLike === undefined) {
-        timeZone = ES.ToTemporalTimeZone(item);
+      if (ES.IsTemporalTimeZone(item)) {
+        timeZone = item;
       } else {
-        timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-        temporalTime = item.plainTime;
+        let timeZoneLike = item.timeZone;
+        if (timeZoneLike === undefined) {
+          timeZone = ES.ToTemporalTimeZone(item);
+        } else {
+          timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+          temporalTime = item.plainTime;
+        }
       }
     } else {
       timeZone = ES.ToTemporalTimeZone(item);
