@@ -467,13 +467,17 @@
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. If Type(_item_) is Object, then
-          1. Let _timeZoneLike_ be ? Get(_item_, *"timeZone"*).
-          1. If _timeZoneLike_ is *undefined*, then
-            1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
+          1. If _item_ has an [[InitializedTemporalTimeZone]] internal slot, then
+            1. Let _timeZone_ be _item_.
             1. Let _temporalTime_ be *undefined*.
           1. Else,
-            1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
-            1. Let _temporalTime_ be ? Get(_item_, *"plainTime"*).
+            1. Let _timeZoneLike_ be ? Get(_item_, *"timeZone"*).
+            1. If _timeZoneLike_ is *undefined*, then
+              1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
+              1. Let _temporalTime_ be *undefined*.
+            1. Else,
+              1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
+              1. Let _temporalTime_ be ? Get(_item_, *"plainTime"*).
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_item_).
           1. Let _temporalTime_ be *undefined*.
