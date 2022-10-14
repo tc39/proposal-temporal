@@ -4662,6 +4662,7 @@
     },
     ToTemporalCalendar: function ToTemporalCalendar(calendarLike) {
       if (ES.Type(calendarLike) === 'Object') {
+        if (ES.IsTemporalCalendar(calendarLike)) return calendarLike;
         if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
         if (!('calendar' in calendarLike)) return calendarLike;
         calendarLike = calendarLike.calendar;
@@ -4724,6 +4725,7 @@
     },
     ToTemporalTimeZone: function ToTemporalTimeZone(temporalTimeZoneLike) {
       if (ES.Type(temporalTimeZoneLike) === 'Object') {
+        if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
         if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
         if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
         temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
@@ -8368,15 +8370,9 @@
       }
     }, {
       key: "toZonedDateTimeISO",
-      value: function toZonedDateTimeISO(item) {
+      value: function toZonedDateTimeISO(timeZone) {
         if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-        if (ES.Type(item) === 'Object') {
-          var timeZoneProperty = item.timeZone;
-          if (timeZoneProperty !== undefined) {
-            item = timeZoneProperty;
-          }
-        }
-        var timeZone = ES.ToTemporalTimeZone(item);
+        timeZone = ES.ToTemporalTimeZone(timeZone);
         var calendar = ES.GetISO8601Calendar();
         return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
       }
@@ -11328,12 +11324,16 @@
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         var timeZone, temporalTime;
         if (ES.Type(item) === 'Object') {
-          var timeZoneLike = item.timeZone;
-          if (timeZoneLike === undefined) {
-            timeZone = ES.ToTemporalTimeZone(item);
+          if (ES.IsTemporalTimeZone(item)) {
+            timeZone = item;
           } else {
-            timeZone = ES.ToTemporalTimeZone(timeZoneLike);
-            temporalTime = item.plainTime;
+            var timeZoneLike = item.timeZone;
+            if (timeZoneLike === undefined) {
+              timeZone = ES.ToTemporalTimeZone(item);
+            } else {
+              timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+              temporalTime = item.plainTime;
+            }
           }
         } else {
           timeZone = ES.ToTemporalTimeZone(item);
