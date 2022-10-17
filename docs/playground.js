@@ -5706,6 +5706,12 @@
     UnbalanceDurationRelative: function UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
       var TemporalDuration = GetIntrinsic('%Temporal.Duration%');
       var sign = ES.DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+      if (sign === 0) return {
+        years: years,
+        months: months,
+        weeks: weeks,
+        days: days
+      };
       var calendar;
       if (relativeTo) {
         relativeTo = ES.ToTemporalDate(relativeTo);
