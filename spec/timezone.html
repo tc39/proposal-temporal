@@ -93,7 +93,7 @@
       <emu-alg>
         1. Let _timeZones_ be the List of String values representing time zones supported by the implementation.
         1. Assert: _timeZones_ contains *"UTC"*.
-        1. Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+        1. [declared="comparefn"] Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
         1. Return _timeZones_.
       </emu-alg>
       <emu-note><p>

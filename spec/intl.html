@@ -89,7 +89,7 @@
           1. Let _timeZones_ be a List containing the String value of each Zone or Link name in the IANA Time Zone Database that is supported by the implementation.
           1. Assert: _timeZones_ contains *"UTC"*.
           1. Assert: _timeZones_ does not contain any element that does not identify a Zone or Link name in the IANA Time Zone Database.
-          1. Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+          1. [declared="comparefn"] Sort _timeZones_ in order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
           1. Return _timeZones_.
         </emu-alg>
 
@@ -216,7 +216,7 @@
           1. Set _timeZone_ to DefaultTimeZone().
         1. Else,
           1. Set _timeZone_ to ? ToString(_timeZone_).
-          1. If <del>the result of IsValidTimeZoneName<!---->(_timeZone_)</del><ins>IsAvailableTimeZoneName(_timeZone_)</ins> is *false*, then
+          1. If <del>the result of IsValidTimeZoneName(_timeZone_)</del><ins>IsAvailableTimeZoneName(_timeZone_)</ins> is *false*, then
             1. Throw a *RangeError* exception.
           1. Set _timeZone_ to ! CanonicalizeTimeZoneName(_timeZone_).
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
@@ -256,7 +256,7 @@
             1. <del>Set _dateTimeFormat_'s internal slot whose name is the Internal Slot column of the row to _p_.</del>
         1. <del>If _dateTimeFormat_.[[Hour]] is *undefined*, then</del>
           1. <del>Set _dateTimeFormat_.[[HourCycle]] to *undefined*.</del>
-        1. <del>If _dateTimeformat_.[[HourCycle]] is *"h11"* or *"h12"*, then</del>
+        1. <del>If _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then</del>
           1. <del>Let _pattern_ be _bestFormat_.[[pattern12]].</del>
           1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns12]].</del>
         1. <del>Else,</del>
@@ -974,7 +974,7 @@
       <emu-alg>
         1. Assert: Type(_t_) is <del>Number</del><ins>BigInt</ins>.
         1. If _calendar_ is *"gregory"*, then
-          1. <del>Let _timeZoneOffset_ be the value calculated according to LocalTZA<!---->(_t_, *true*) where the local time zone is replaced with timezone _timeZone_.</del>
+          1. <del>Let _timeZoneOffset_ be the value calculated according to LocalTZA(_t_, *true*) where the local time zone is replaced with timezone _timeZone_.</del>
           1. <ins>Let _timeZoneOffset_ be GetNamedTimeZoneOffsetNanoseconds(_timeZone_, _t_).</ins>
           1. Let _tz_ be <del>_t_</del><ins>ℝ(_t_)</ins> + _timeZoneOffset_.
           1. Return a record with fields calculated from _tz_ according to <del><emu-xref href="#table-datetimeformat-tolocaltime-record"></emu-xref></del><ins><emu-xref href="#table-temporal-plaindatetimeformat-tolocaltime-record"></emu-xref></ins>.
@@ -1662,7 +1662,7 @@
               1. Let _result_ be ? ISODateFromFields(_fields_, _options_).
             1. Else,
               1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-              1. Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+              1. [declared="comparefn"] Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
@@ -1685,7 +1685,7 @@
               1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
             1. Else,
               1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], « *"month"*, *"monthCode"*, *"year"* »).
-              1. Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+              1. [declared="comparefn"] Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
@@ -1709,7 +1709,7 @@
               1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _options_).
             1. Else,
               1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-              1. Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
+              1. [declared="comparefn"] Sort _fieldNames_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
               1. Let _overflow_ be ? ToTemporalOverflow(_options_).
               1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
@@ -1945,7 +1945,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _daysInWeek_ be 7.
             1. Else,
-              1. Let _daysInWeek_ be ! CalendarDateDaysInWeek(_calendar_.[[Identifier]], _temporalDateLike_).
+              1. Let _daysInWeek_ be ! CalendarDateDaysInWeek(_calendar_.[[Identifier]], _temporalDate_).
             1. Return 𝔽(_daysInWeek_).
           </emu-alg>
         </emu-clause>
