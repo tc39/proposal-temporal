@@ -1031,7 +1031,7 @@
           TimeZoneIANANameComponent[?Legacy] `/` TimeZoneIANANameTail[?Legacy]
 
       TimeZoneIANALegacyName :
-          TimeZoneIANANameTail[+Legacy] [&gt; but only if `etc/gmt` |ASCIISign| |UnpaddedHour| matches StringToCodePoints(the ASCII-lowercase of CodePointsToString(the sequence of code points matched by |TimeZoneIANANameTail|))]
+          TimeZoneIANANameTail[+Legacy] [&gt; but only if `etc/gmt` |ASCIISign| |UnpaddedHour| matches the ASCII-lowercase of the sequence of code points matched by (|TimeZoneIANANameTail|)]
           TimeZoneIANANameTail[+Legacy] [&gt; but only if the sequence of code points matched by |TimeZoneIANANameTail| is an ASCII-case-insensitive match for an element of « *"Etc/GMT0"*, *"GMT0"*, *"GMT-0"*, *"GMT+0"*, *"EST5EDT"*, *"CST6CDT"*, *"MST7MDT"*, *"PST8PDT"* »]
 
       TimeZoneIANAName :

@@ -11,6 +11,30 @@
     </p>
   </emu-note>
 
+  <emu-clause id="sec-ecmascript-language-types-string-type">
+    <h1><a href="https://tc39.es/ecma262/#sec-ecmascript-language-types-string-type">The String Type</a></h1>
+
+    <emu-note type="editor">
+      <p>
+        This section intends to move the definitions of ASCII-uppercase, ASCII-lowercase, and ASCII-case-insensitive match from ECMA-402 into ECMA-262, after the definition of the ASCII word characters, and generalizes the former two definitions to cover sequences of code points.
+      </p>
+    </emu-note>
+
+    <p>[...]</p>
+
+    <ins class="block">
+      <p>
+        The <dfn>ASCII-uppercase</dfn> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units. The ASCII-uppercase of a sequence of Unicode code points _A_ is the sequence of code points derived from _A_ by replacing each occurrence of an ASCII lowercase letter code point (U+0061 through U+007A, inclusive) with the corresponding ASCII uppercase letter code point (U+0041 through U+005A, inclusive) while preserving all other code points.
+      </p>
+      <p>
+        The <dfn>ASCII-lowercase</dfn> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units. The ASCII-lowercase of a sequence of Unicode code points _A_ is the sequence of code points derived from _A_ by replacing each occurrence of an ASCII uppercase letter code point (U+0041 through U+005A, inclusive) with the corresponding ASCII lowercase letter code point (U+0061 through U+007A, inclusive) while preserving all other code points.
+      </p>
+      <p>
+        A String value _A_ is an <dfn>ASCII-case-insensitive match</dfn> for String value _B_ if the ASCII-uppercase of _A_ is exactly the same sequence of code units as the ASCII-uppercase of _B_. A sequence of Unicode code points _A_ is an ASCII-case-insensitive match for _B_ if _B_ is an ASCII-case-insensitive match for ! CodePointsToString(_A_).
+      </p>
+    </ins>
+  </emu-clause>
+
   <ins class="block">
     <emu-clause id="sec-temporal-mergelists" type="abstract operation">
       <h1>
