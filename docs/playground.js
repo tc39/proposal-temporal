@@ -7109,6 +7109,9 @@
   var ObjectDefineProperty = Object.defineProperty;
   var ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
   var ObjectEntries$1 = Object.entries;
+  var StringFromCharCode = String.fromCharCode;
+  var StringPrototypeCharCodeAt = String.prototype.charCodeAt;
+  var StringPrototypeReplace = String.prototype.replace;
   var StringPrototypeSlice = String.prototype.slice;
   var $TypeError = GetIntrinsic('%TypeError%');
   var $isEnumerable = callBound$7('Object.prototype.propertyIsEnumerable');
@@ -11674,7 +11677,13 @@
       return MathFloor$1(value);
     },
     IsBuiltinCalendar: function IsBuiltinCalendar(id) {
-      return ES.Call(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [id]);
+      return ES.Call(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [ES.ASCIILowercase(id)]);
+    },
+    ASCIILowercase: function ASCIILowercase(str) {
+      return ES.Call(StringPrototypeReplace, str, [/[A-Z]/g, function (l) {
+        var code = ES.Call(StringPrototypeCharCodeAt, l, [0]);
+        return StringFromCharCode(code + 0x20);
+      }]);
     }
   });
   var OFFSET = new RegExp("^".concat(offset.source, "$"));
@@ -12554,7 +12563,7 @@
       id = ES.ToString(id);
       if (!ES.IsBuiltinCalendar(id)) throw new RangeError("invalid calendar identifier ".concat(id));
       CreateSlots(this);
-      SetSlot(this, CALENDAR_ID, id);
+      SetSlot(this, CALENDAR_ID, ES.ASCIILowercase(id));
       {
         Object.defineProperty(this, '_repr_', {
           value: "".concat(this[Symbol.toStringTag], " <").concat(id, ">"),
@@ -13242,7 +13251,8 @@
      * possible calendar:
      * - no eras or a constant era defined in `.constantEra`
      * - non-lunisolar calendar (no leap months)
-     * */adjustCalendarDate: function adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
+     * */
+    adjustCalendarDate: function adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
       if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
       this.validateCalendarDate(calendarDate);
       // For calendars that always use the same era, set it here so that derived
