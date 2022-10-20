@@ -162,7 +162,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _s_ be truncate(ℝ(_ns_) / 10<sup>9</sup>).
+        1. Let _s_ be floor(ℝ(_ns_) / 10<sup>9</sup>).
         1. Return 𝔽(_s_).
       </emu-alg>
     </emu-clause>
@@ -177,7 +177,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _ms_ be truncate(ℝ(_ns_) / 10<sup>6</sup>).
+        1. Let _ms_ be floor(ℝ(_ns_) / 10<sup>6</sup>).
         1. Return 𝔽(_ms_).
       </emu-alg>
     </emu-clause>
@@ -192,7 +192,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _µs_ be truncate(ℝ(_ns_) / 10<sup>3</sup>).
+        1. Let _µs_ be floor(ℝ(_ns_) / 10<sup>3</sup>).
         1. Return ℤ(_µs_).
       </emu-alg>
     </emu-clause>
