@@ -9654,6 +9654,15 @@
           days = days.add(sign);
         }
       } while (isOverflow);
+      if (!days.isZero() && MathSign(days.toJSNumber()) != sign) {
+        throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
+      }
+      if (!nanoseconds.isZero() && MathSign(nanoseconds.toJSNumber()) != sign) {
+        throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
+      }
+      if (nanoseconds.abs().geq(MathAbs$1(dayLengthNs))) {
+        throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds longer than the day length');
+      }
       return {
         days: days.toJSNumber(),
         nanoseconds: nanoseconds,
