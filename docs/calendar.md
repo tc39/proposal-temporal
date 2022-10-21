@@ -199,6 +199,8 @@ When subclassing `Temporal.Calendar`, this property doesn't need to be overridde
 
 ### calendar.**weekOfYear**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | object | string): number
 
+### calendar.**yearOfWeek**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | object | string): number
+
 ### calendar.**daysInWeek**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | object | string): number
 
 ### calendar.**daysInMonth**(_date_: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.ZonedDateTime | Temporal.PlainYearMonth | object | string): number
