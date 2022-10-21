@@ -412,6 +412,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.yearofweek">
+      <h1>get Temporal.ZonedDateTime.prototype.yearOfWeek</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.yearOfWeek` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. Return 𝔽(? CalendarYearOfWeek(_calendar_, _temporalDateTime_)).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.hoursinday">
       <h1>get Temporal.ZonedDateTime.prototype.hoursInDay</h1>
       <p>

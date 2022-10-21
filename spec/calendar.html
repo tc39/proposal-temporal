@@ -270,6 +270,24 @@
       <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-calendaryearofweek" type="abstract operation">
+      <h1>
+        CalendarYearOfWeek (
+          _calendar_: an Object,
+          _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `yearOfWeek()` method and validates the result.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
+        1. If _result_ is *undefined*, throw a *RangeError* exception.
+        1. Return ? ToIntegerThrowOnInfinity(_result_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendardaysinweek" type="abstract operation">
       <h1>
         CalendarDaysInWeek (
@@ -563,11 +581,14 @@
           _year_: an integer,
           _month_: an integer,
           _day_: an integer,
-        ): an integer
+        ): a Record with fields [[Week]] (a positive integer) and [[Year]] (an integer)
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It determines where a calendar day falls in the ISO 8601 week calendar and returns its <em>calendar week of year</em>, which is the 1-based ordinal number of its calendar week within the corresponding calendar year (which may differ from _year_ by up to 1 in either direction).</dd>
+        <dd>
+          It determines where a calendar day falls in the ISO 8601 week calendar and calculates its <em>calendar week of year</em>, which is the 1-based ordinal number of its calendar week within the corresponding <em>week calendar year</em> (which may differ from _year_ by up to 1 in either direction).
+          The returned Record contains the calendar week of year in the [[Week]] field, and the week calendar year in the [[Year]] field.
+        </dd>
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
@@ -584,17 +605,17 @@
           1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
-            1. Return _maxWeekNumber_.
+            1. Return { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
           1. If _dayOfJan1st_ is _saturday_, and InLeapYear(TimeFromYear(𝔽(_year_ - 1))) is *1*<sub>𝔽</sub>, then
-            1. Return _maxWeekNumber_.
-          1. Return _maxWeekNumber_ - 1.
+            1. Return { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
+          1. Return { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
         1. If _week_ is _maxWeekNumber_, then
           1. Let _daysInYear_ be DaysInYear(𝔽(_year_)).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
           1. If _daysLaterInYear_ &lt; _daysAfterThursday_, then
-            1. Return 1.
-        1. Return _week_.
+            1. Return { [[Week]]: 1, [[Year]]: _year_ + 1 }.
+        1. Return the Record { [[Week]]: _week_, [[Year]]: _year_ }.
       </emu-alg>
       <emu-note>In the ISO 8601 week calendar, calendar week number 1 of a calendar year is the week including the first Thursday of that year (based on the principle that a week belongs to the same calendar year as the majority of its calendar days), which always includes January 4 and starts on the Monday on or immediately before then. Because of this, some calendar days of the first calendar week of a calendar year may be part of the _preceding_ [proleptic Gregorian] date calendar year, and some calendar days of the last calendar week of a calendar year may be part of the _following_ [proleptic Gregorian] date calendar year. See ISO 8601 for details.</emu-note>
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>
@@ -1116,7 +1137,27 @@
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
+        1. Let _isoYearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Return 𝔽(_isoYearWeek_.[[Week]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.yearofweek">
+      <h1>Temporal.Calendar.prototype.yearOfWeek ( _temporalDateLike_ )</h1>
+      <p>
+        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
+        If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
+      </p>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
+        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+        1. Let _isoYearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Return 𝔽(_isoYearWeek_.[[Year]]).
       </emu-alg>
     </emu-clause>
 

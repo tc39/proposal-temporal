@@ -219,6 +219,20 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.plaindate.prototype.yearofweek">
+      <h1>get Temporal.PlainDate.prototype.yearOfWeek</h1>
+      <p>
+        `Temporal.PlainDate.prototype.yearOfWeek` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _temporalDate_.[[Calendar]].
+        1. Return 𝔽(? CalendarYearOfWeek(_calendar_, _temporalDate_)).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.plaindate.prototype.daysinweek">
       <h1>get Temporal.PlainDate.prototype.daysInWeek</h1>
       <p>
