@@ -1562,12 +1562,22 @@
             CalendarDateWeekOfYear (
               _calendar_: a String,
               _date_: a Temporal.PlainDateTime or Temporal.PlainDate,
-            )
+            ): a Record with fields [[Week]] (a positive integer) and [[Year]] (an integer)
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It takes a date-like object _date_ and returns the week of the year in the calendar represented by _calendar_. The return value should be 1-based.</dd>
+            <dd>It takes a date-like object _date_ and calculates the <em>calendar week of year</em>, and the corresponding <em>week calendar year</em>, in the calendar represented by _calendar_.</dd>
           </dl>
+          <p>
+            The value in the [[Week]] field should be 1-based.
+          </p>
+          <p>
+            The value in the [[Year]] field is relative to the first day of a calendar-specific "epoch year", as in CalendarDateYear, not relative to an era as in CalendarDateEraYear.
+          </p>
+          <p>
+            Usually the [[Year]] field will contain the same value given by CalendarDateYear, but may contain the previous or next year if the week number in the [[Week]] field overlaps two different years.
+            See also ToISOWeekOfYear.
+          </p>
         </emu-clause>
 
         <emu-clause id="sec-temporal-calendardatedaysinweek" type="abstract operation">
@@ -1952,9 +1962,28 @@
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Return 𝔽(ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
-            1. Let _weekOfYear_ be ! CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
-            1. Return 𝔽(_weekOfYear_).
+              1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+            1. Else,
+              1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+            1. Return 𝔽(_yearWeek_.[[Week]]).
+          </emu-alg>
+        </emu-clause>
+
+        <emu-clause id="sup-temporal.calendar.prototype.yearofweek">
+          <h1>Temporal.Calendar.prototype.yearOfWeek ( _temporalDateLike_ )</h1>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.calendar.prototype.yearofweek"></emu-xref>.</p>
+          <p>
+            This method performs the following steps when called:
+          </p>
+          <emu-alg>
+            1. Let _calendar_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+            1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+            1. Else,
+              1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+            1. Return 𝔽(_yearWeek_.[[Year]]).
           </emu-alg>
         </emu-clause>
 
