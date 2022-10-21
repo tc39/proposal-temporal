@@ -1664,6 +1664,14 @@ export const ES = ObjectAssign({}, ES2022, {
     const weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
     return ES.ToPositiveInteger(ES.Call(weekOfYear, calendar, [dateLike]));
   },
+  CalendarYearOfWeek: (calendar, dateLike) => {
+    const yearOfWeek = ES.GetMethod(calendar, 'yearOfWeek');
+    const result = ES.Call(yearOfWeek, calendar, [dateLike]);
+    if (result === undefined) {
+      throw new RangeError('calendar yearOfWeek result must be an integer');
+    }
+    return ES.ToIntegerThrowOnInfinity(result);
+  },
   CalendarDaysInWeek: (calendar, dateLike) => {
     const daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
     return ES.ToPositiveInteger(ES.Call(daysInWeek, calendar, [dateLike]));
@@ -2489,18 +2497,18 @@ export const ES = ObjectAssign({}, ES2022, {
 
     if (week < 1) {
       if (doj === 5 || (doj === 6 && ES.LeapYear(year - 1))) {
-        return 53;
+        return { week: 53, year: year - 1 };
       } else {
-        return 52;
+        return { week: 52, year: year - 1 };
       }
     }
     if (week === 53) {
       if ((ES.LeapYear(year) ? 366 : 365) - doy < 4 - dow) {
-        return 1;
+        return { week: 1, year: year + 1 };
       }
     }
 
-    return week;
+    return { week, year };
   },
   DurationSign: (y, mon, w, d, h, min, s, ms, µs, ns) => {
     const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
