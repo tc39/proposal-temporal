@@ -346,13 +346,24 @@ For the ISO 8601 calendar, this is normally a value between 1 and 52, but in a f
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on [ISO week date](https://en.wikipedia.org/wiki/ISO_week_date).
 
+When combining the week number with a year number, make sure to use `datetime.yearOfWeek` instead of `datetime.year`.
+This is because the first few days of a calendar year may be part of the last week of the previous year, and the last few days of a calendar year may be part of the first week of the new year, depending on which year the first Thursday falls in.
+
 Usage example:
 
 ```javascript
-dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
+dt = Temporal.PlainDateTime.from('2022-01-01T03:24:30.000003500');
 // ISO week date
-console.log(dt.year, dt.weekOfYear, dt.dayOfWeek); // => '1995 49 4'
+console.log(dt.yearOfWeek, dt.weekOfYear, dt.dayOfWeek); // => '2021 52 6'
 ```
+
+### datetime.**yearOfWeek** : number
+
+The `yearOfWeek` read-only property gives the ISO "week calendar year" of the date, which is the year number corresponding to the ISO week number.
+For the ISO 8601 calendar, this is normally the same as `datetime.year`, but in a few cases it may be the previous or following year.
+For more information on ISO week numbers, see for example the Wikipedia article on [ISO week date](https://en.wikipedia.org/wiki/ISO_week_date).
+
+See `weekOfYear` for a usage example.
 
 ### datetime.**daysInWeek** : number
 
