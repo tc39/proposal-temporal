@@ -125,6 +125,10 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), dateTime(this));
   }
+  get yearOfWeek() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    return ES.CalendarYearOfWeek(GetSlot(this, CALENDAR), dateTime(this));
+  }
   get hoursInDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const dt = dateTime(this);

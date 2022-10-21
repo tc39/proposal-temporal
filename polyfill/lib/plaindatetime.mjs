@@ -129,6 +129,10 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), this);
   }
+  get yearOfWeek() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return ES.CalendarYearOfWeek(GetSlot(this, CALENDAR), this);
+  }
   get daysInWeek() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.CalendarDaysInWeek(GetSlot(this, CALENDAR), this);

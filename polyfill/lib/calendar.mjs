@@ -190,6 +190,11 @@ export class Calendar {
     date = ES.ToTemporalDate(date);
     return impl[GetSlot(this, CALENDAR_ID)].weekOfYear(date);
   }
+  yearOfWeek(date) {
+    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+    date = ES.ToTemporalDate(date);
+    return impl[GetSlot(this, CALENDAR_ID)].yearOfWeek(date);
+  }
   daysInWeek(date) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     date = ES.ToTemporalDate(date);
@@ -321,7 +326,10 @@ impl['iso8601'] = {
     return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
   },
   weekOfYear(date) {
-    return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+    return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).week;
+  },
+  yearOfWeek(date) {
+    return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).year;
   },
   daysInWeek() {
     return 7;
@@ -2004,6 +2012,9 @@ const nonIsoGeneralImpl = {
   },
   weekOfYear(date) {
     return impl['iso8601'].weekOfYear(date);
+  },
+  yearOfWeek(date) {
+    return impl['iso8601'].yearOfWeek(date);
   },
   daysInWeek(date) {
     return impl['iso8601'].daysInWeek(date);
