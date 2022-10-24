@@ -20,7 +20,6 @@ const ObjectEntries = Object.entries;
 const StringFromCharCode = String.fromCharCode;
 const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
 const StringPrototypeReplace = String.prototype.replace;
-const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import callBound from 'call-bind/callBound';
@@ -441,7 +440,7 @@ export const ES = ObjectAssign({}, ES2022, {
       millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
       microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
       nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
-      annotations = match[15];
+      annotations = match[14];
       for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
         if (key === 'u-ca') {
           if (calendar === undefined) calendar = value;
@@ -462,17 +461,12 @@ export const ES = ObjectAssign({}, ES2022, {
       return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
     // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
-    // The annotations must be stripped so presence of a calendar doesn't result
-    // in interpretation of otherwise ambiguous input as a time.
-    const isoStringWithoutAnnotations = annotations
-      ? ES.Call(StringPrototypeSlice, isoString, [0, -annotations.length])
-      : isoString;
     try {
-      const { month, day } = ES.ParseTemporalMonthDayString(isoStringWithoutAnnotations);
+      const { month, day } = ES.ParseTemporalMonthDayString(isoString);
       ES.RejectISODate(1972, month, day);
     } catch {
       try {
-        const { year, month } = ES.ParseTemporalYearMonthString(isoStringWithoutAnnotations);
+        const { year, month } = ES.ParseTemporalYearMonthString(isoString);
         ES.RejectISODate(year, month, 1);
       } catch {
         return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
@@ -489,7 +483,17 @@ export const ES = ObjectAssign({}, ES2022, {
       if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
       year = ES.ToIntegerOrInfinity(yearString);
       month = ES.ToIntegerOrInfinity(match[2]);
-      calendar = match[3];
+      const annotations = match[3];
+      for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
+        if (key === 'u-ca') {
+          if (calendar === undefined) calendar = value;
+        } else if (critical === '!') {
+          throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+        }
+      }
+      if (calendar !== undefined && calendar !== 'iso8601') {
+        throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
+      }
     } else {
       let z;
       ({ year, month, calendar, day: referenceISODay, z } = ES.ParseISODateTime(isoString));
@@ -503,6 +507,17 @@ export const ES = ObjectAssign({}, ES2022, {
     if (match) {
       month = ES.ToIntegerOrInfinity(match[1]);
       day = ES.ToIntegerOrInfinity(match[2]);
+      const annotations = match[3];
+      for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
+        if (key === 'u-ca') {
+          if (calendar === undefined) calendar = value;
+        } else if (critical === '!') {
+          throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+        }
+      }
+      if (calendar !== undefined && calendar !== 'iso8601') {
+        throw new RangeError('MM-DD format is only valid with iso8601 calendar');
+      }
     } else {
       let z;
       ({ month, day, calendar, year: referenceISOYear, z } = ES.ParseISODateTime(isoString));
@@ -1706,7 +1721,11 @@ export const ES = ObjectAssign({}, ES2022, {
     try {
       ({ calendar } = ES.ParseISODateTime(identifier));
     } catch {
-      throw new RangeError(`Invalid calendar: ${identifier}`);
+      try {
+        ({ calendar } = ES.ParseTemporalYearMonthString(identifier));
+      } catch {
+        ({ calendar } = ES.ParseTemporalMonthDayString(identifier));
+      }
     }
     if (!calendar) calendar = 'iso8601';
     return new TemporalCalendar(calendar);
