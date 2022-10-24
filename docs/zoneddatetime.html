@@ -327,7 +327,7 @@ The default is <code>&#39;reject&#39;</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.ZonedDateTime</code> object.</p>
 <p>This static method creates a new <code>Temporal.ZonedDateTime</code> object from another value.
 If the value is another <code>Temporal.ZonedDateTime</code> object, a new but otherwise identical object will be returned.
-If the value is any other object, a <code>Temporal.ZonedDateTime</code> will be constructed from the values of any <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>), <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and/or <code>calendar</code> properties that are present.
+If the value is any other object, a <code>Temporal.ZonedDateTime</code> will be constructed from the values of any <code>timeZone</code>, <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>), <code>day</code>, <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, <code>nanosecond</code>, and/or <code>calendar</code> properties that are present.
 At least the <code>timeZone</code>, <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>), and <code>day</code> properties must be present. Other properties are optional.
 If <code>calendar</code> is missing, it will be assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>.
 Any other missing properties will be assumed to be 0 (for time fields).</p>
