@@ -76,7 +76,7 @@ new Temporal.ZonedDateTime(0n, 'America/Los_Angeles');
 
 This static method creates a new `Temporal.ZonedDateTime` object from another value.
 If the value is another `Temporal.ZonedDateTime` object, a new but otherwise identical object will be returned.
-If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `year` (or `era` and `eraYear`), `month` (or `monthCode`), `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
+If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `timeZone`, `year` (or `era` and `eraYear`), `month` (or `monthCode`), `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
 At least the `timeZone`, `year` (or `era` and `eraYear`), `month` (or `monthCode`), and `day` properties must be present. Other properties are optional.
 If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
 Any other missing properties will be assumed to be 0 (for time fields).
