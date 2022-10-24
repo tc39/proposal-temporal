@@ -579,14 +579,11 @@
           _year_: an integer,
           _month_: an integer,
           _day_: an integer,
-        ): a Record with fields [[Week]] (a positive integer) and [[Year]] (an integer)
+        ): a Year-Week Record
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>
-          It determines where a calendar day falls in the ISO 8601 week calendar and calculates its <em>calendar week of year</em>, which is the 1-based ordinal number of its calendar week within the corresponding <em>week calendar year</em> (which may differ from _year_ by up to 1 in either direction).
-          The returned Record contains the calendar week of year in the [[Week]] field, and the week calendar year in the [[Year]] field.
-        </dd>
+        <dd>It determines where a calendar day falls in the ISO 8601 week calendar and calculates its <em>calendar week of year</em>, which is the 1-based ordinal number of its calendar week within the corresponding <em>week calendar year</em> (which may differ from _year_ by up to 1 in either direction).</dd>
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
@@ -603,17 +600,17 @@
           1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
-            1. Return { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
+            1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
           1. If _dayOfJan1st_ is _saturday_, and InLeapYear(TimeFromYear(𝔽(_year_ - 1))) is *1*<sub>𝔽</sub>, then
-            1. Return { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
-          1. Return { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
+            1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
+          1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
         1. If _week_ is _maxWeekNumber_, then
           1. Let _daysInYear_ be DaysInYear(𝔽(_year_)).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
           1. If _daysLaterInYear_ &lt; _daysAfterThursday_, then
-            1. Return { [[Week]]: 1, [[Year]]: _year_ + 1 }.
-        1. Return the Record { [[Week]]: _week_, [[Year]]: _year_ }.
+            1. Return the Year-Week Record { [[Week]]: 1, [[Year]]: _year_ + 1 }.
+        1. Return the Year-Week Record { [[Week]]: _week_, [[Year]]: _year_ }.
       </emu-alg>
       <emu-note>In the ISO 8601 week calendar, calendar week number 1 of a calendar year is the week including the first Thursday of that year (based on the principle that a week belongs to the same calendar year as the majority of its calendar days), which always includes January 4 and starts on the Monday on or immediately before then. Because of this, some calendar days of the first calendar week of a calendar year may be part of the _preceding_ [proleptic Gregorian] date calendar year, and some calendar days of the last calendar week of a calendar year may be part of the _following_ [proleptic Gregorian] date calendar year. See ISO 8601 for details.</emu-note>
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>
