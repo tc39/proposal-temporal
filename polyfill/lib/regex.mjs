@@ -23,24 +23,45 @@ export const datesplit = new RegExp(
 );
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-const zonesplit = new RegExp(`(?:([zZ])|(?:${offset.source})?)(?:\\[!?(${timeZoneID.source})\\])?`);
+const offsetpart = new RegExp(`([zZ])|${offset.source}?`);
 export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 
 export const zoneddatetime = new RegExp(
-  `^${datesplit.source}(?:(?:T|\\s+)${timesplit.source})?${zonesplit.source}((?:${annotation.source})*)$`,
+  [
+    `^${datesplit.source}`,
+    `(?:(?:T|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
+    `(?:\\[!?(${timeZoneID.source})\\])?`,
+    `((?:${annotation.source})*)$`
+  ].join(''),
   'i'
 );
 
-export const time = new RegExp(`^T?${timesplit.source}(?:${zonesplit.source})?((?:${annotation.source})*)$`, 'i');
+export const time = new RegExp(
+  [
+    `^T?${timesplit.source}`,
+    `(?:${offsetpart.source})?`,
+    `(?:\\[!?${timeZoneID.source}\\])?`,
+    `((?:${annotation.source})*)$`
+  ].join(''),
+  'i'
+);
 
-// The short forms of YearMonth and MonthDay are only for the ISO calendar.
+// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
+// annotations are still allowed, and will throw if the calendar annotation is
+// not ISO.
 // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
 // with the reference fields.
 // YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
 // RFC 3339 and we don't allow 2-digit years, so we allow it.
 // Not ambiguous with HHMMSS because that requires a 'T' prefix
-export const yearmonth = new RegExp(`^(${yearpart.source})-?(${monthpart.source})$`);
-export const monthday = new RegExp(`^(?:--)?(${monthpart.source})-?(${daypart.source})$`);
+// UTC offsets are not allowed, because they are not allowed with any date-only
+// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
+export const yearmonth = new RegExp(
+  `^(${yearpart.source})-?(${monthpart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`
+);
+export const monthday = new RegExp(
+  `^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`
+);
 
 const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 

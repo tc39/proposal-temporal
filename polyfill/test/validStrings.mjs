@@ -273,14 +273,7 @@ const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
   (data, result) => (data.ianaName = result)
 );
-const timeZoneBracketedAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
-const timeZoneOffsetRequired = withCode(seq(timeZoneUTCOffset, [timeZoneBracketedAnnotation]), (data) => {
-  if (!('offset' in data)) data.offset = undefined;
-});
-const timeZoneNameRequired = withCode(seq([timeZoneUTCOffset], timeZoneBracketedAnnotation), (data) => {
-  if (!('offset' in data)) data.offset = undefined;
-});
-const timeZone = choice(timeZoneOffsetRequired, timeZoneNameRequired);
+const timeZoneAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
 const aKeyLeadingChar = choice(lcalpha(), character('_'));
 const aKeyChar = choice(lcalpha(), digit(), character('_-'));
 const aValChar = choice(alpha(), digit());
@@ -297,7 +290,7 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
-const timeSpecWithOptionalTimeZoneNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [timeZone]), (result) => {
+const timeSpecWithOptionalOffsetNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [timeZoneUTCOffset]), (result) => {
   if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
     throw new SyntaxError('valid PlainMonthDay');
   }
@@ -305,7 +298,6 @@ const timeSpecWithOptionalTimeZoneNotAmbiguous = withSyntaxConstraints(seq(timeS
     throw new SyntaxError('valid PlainYearMonth');
   }
 });
-const timeSpecSeparator = seq(dateTimeSeparator, timeSpec);
 
 function validateDayOfMonth(result, { year, month, day }) {
   if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
@@ -316,13 +308,36 @@ const date = withSyntaxConstraints(
   choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
   validateDayOfMonth
 );
-const dateTime = seq(date, [timeSpecSeparator], [timeZone]);
+const dateTime = seq(date, [dateTimeSeparator, timeSpec, [timeZoneUTCOffset]]);
 const annotatedTime = choice(
-  seq(timeDesignator, timeSpec, [timeZone], [annotations]),
-  seq(timeSpecWithOptionalTimeZoneNotAmbiguous, [annotations])
+  seq(timeDesignator, timeSpec, [timeZoneUTCOffset], [timeZoneAnnotation], [annotations]),
+  seq(timeSpecWithOptionalOffsetNotAmbiguous, [timeZoneAnnotation], [annotations])
 );
-const annotatedDateTime = seq(dateTime, [annotations]);
-const annotatedDateTimeTimeRequired = seq(date, timeSpecSeparator, [timeZone], [annotations]);
+const annotatedDateTime = seq(dateTime, [timeZoneAnnotation], [annotations]);
+const annotatedDateTimeTimeRequired = seq(
+  date,
+  dateTimeSeparator,
+  timeSpec,
+  [timeZoneUTCOffset],
+  [timeZoneAnnotation],
+  [annotations]
+);
+const annotatedYearMonth = withSyntaxConstraints(
+  seq(dateSpecYearMonth, [timeZoneAnnotation], [annotations]),
+  (result, data) => {
+    if (data.calendar !== undefined && data.calendar !== 'iso8601') {
+      throw new SyntaxError('retry if YYYY-MM with non-ISO calendar');
+    }
+  }
+);
+const annotatedMonthDay = withSyntaxConstraints(
+  seq(dateSpecMonthDay, [timeZoneAnnotation], [annotations]),
+  (result, data) => {
+    if (data.calendar !== undefined && data.calendar !== 'iso8601') {
+      throw new SyntaxError('retry if MM-DD with non-ISO calendar');
+    }
+  }
+);
 
 const durationFractionalPart = withCode(between(1, 9, digit()), (data, result) => {
   const fraction = result.padEnd(9, '0');
@@ -376,8 +391,8 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, [timeSpecSeparator], timeZoneOffsetRequired, [annotations]);
-const zonedDateTime = seq(date, [timeSpecSeparator], timeZoneNameRequired, [annotations]);
+const instant = seq(date, dateTimeSeparator, timeSpec, timeZoneUTCOffset, [timeZoneAnnotation], [annotations]);
+const zonedDateTime = seq(dateTime, timeZoneAnnotation, [annotations]);
 
 // goal elements
 const goals = {
@@ -385,10 +400,10 @@ const goals = {
   Date: annotatedDateTime,
   DateTime: annotatedDateTime,
   Duration: duration,
-  MonthDay: choice(dateSpecMonthDay, annotatedDateTime),
+  MonthDay: choice(annotatedMonthDay, annotatedDateTime),
   Time: choice(annotatedTime, annotatedDateTimeTimeRequired),
-  TimeZone: choice(timeZoneIdentifier, seq(date, [timeSpecSeparator], timeZone, [annotations])),
-  YearMonth: choice(dateSpecYearMonth, annotatedDateTime),
+  TimeZone: choice(timeZoneIdentifier, zonedDateTime, instant),
+  YearMonth: choice(annotatedYearMonth, annotatedDateTime),
   ZonedDateTime: zonedDateTime
 };
 
