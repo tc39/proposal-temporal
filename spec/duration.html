@@ -35,20 +35,20 @@
       <p>
         The `Temporal.Duration` function performs the following steps when called:
       </p>
-      <emu-note>The value of ! ToIntegerWithoutRounding(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerIfIntegral(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _y_ be ? ToIntegerWithoutRounding(_years_).
-        1. Let _mo_ be ? ToIntegerWithoutRounding(_months_).
-        1. Let _w_ be ? ToIntegerWithoutRounding(_weeks_).
-        1. Let _d_ be ? ToIntegerWithoutRounding(_days_).
-        1. Let _h_ be ? ToIntegerWithoutRounding(_hours_).
-        1. Let _m_ be ? ToIntegerWithoutRounding(_minutes_).
-        1. Let _s_ be ? ToIntegerWithoutRounding(_seconds_).
-        1. Let _ms_ be ? ToIntegerWithoutRounding(_milliseconds_).
-        1. Let _mis_ be ? ToIntegerWithoutRounding(_microseconds_).
-        1. Let _ns_ be ? ToIntegerWithoutRounding(_nanoseconds_).
+        1. Let _y_ be ? ToIntegerIfIntegral(_years_).
+        1. Let _mo_ be ? ToIntegerIfIntegral(_months_).
+        1. Let _w_ be ? ToIntegerIfIntegral(_weeks_).
+        1. Let _d_ be ? ToIntegerIfIntegral(_days_).
+        1. Let _h_ be ? ToIntegerIfIntegral(_hours_).
+        1. Let _m_ be ? ToIntegerIfIntegral(_minutes_).
+        1. Let _s_ be ? ToIntegerIfIntegral(_seconds_).
+        1. Let _ms_ be ? ToIntegerIfIntegral(_milliseconds_).
+        1. Let _mis_ be ? ToIntegerIfIntegral(_microseconds_).
+        1. Let _ns_ be ? ToIntegerIfIntegral(_nanoseconds_).
         1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -1050,7 +1050,7 @@
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
-            1. Set _value_ to ? ToIntegerWithoutRounding(_value_).
+            1. Set _value_ to ? ToIntegerIfIntegral(_value_).
             1. Let _fieldName_ be the Field Name value of the current row.
             1. Set the field of _result_ whose name is _fieldName_ to _value_.
         1. If _any_ is *false*, then
