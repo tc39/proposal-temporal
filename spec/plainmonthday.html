@@ -28,16 +28,16 @@
       <p>
         This function performs the following steps when called:
       </p>
-      <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerWithTruncation(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. If _referenceISOYear_ is *undefined*, then
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
-        1. Let _m_ be ? ToIntegerThrowOnInfinity(_isoMonth_).
-        1. Let _d_ be ? ToIntegerThrowOnInfinity(_isoDay_).
+        1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
+        1. Let _d_ be ? ToIntegerWithTruncation(_isoDay_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
-        1. Let _ref_ be ? ToIntegerThrowOnInfinity(_referenceISOYear_).
+        1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>
       <emu-note>1972 is the first leap year after the Unix epoch.</emu-note>

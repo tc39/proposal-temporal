@@ -1574,23 +1574,28 @@
       The abstract operation ToPositiveInteger takes argument _argument_. It converts _argument_ to an integer _i_ for which <emu-eqn>0 &lt; _i_</emu-eqn>. It performs the following steps:
     </p>
     <emu-alg>
-      1. Let _integer_ be ? ToIntegerThrowOnInfinity(_argument_).
+      1. Let _integer_ be ? ToIntegerWithTruncation(_argument_).
       1. If _integer_ &le; 0, then
         1. Throw a *RangeError* exception.
       1. Return _integer_.
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tointegerthrowoninfinity" aoid="ToIntegerThrowOnInfinity">
-    <h1>ToIntegerThrowOnInfinity ( _argument_ )</h1>
-    <p>
-      The abstract operation ToIntegerThrowOnInfinity takes argument _argument_. It converts _argument_ to an integer. It performs the following steps:
-    </p>
+  <emu-clause id="sec-tointegerwithtruncation" type="abstract operation">
+    <h1>
+      ToIntegerWithTruncation (
+        _argument_: an ECMAScript language value,
+      ): either a normal completion containing an integer, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not finite.</dd>
+    </dl>
     <emu-alg>
-      1. Let _integer_ be ? ToIntegerOrInfinity(_argument_).
-      1. If _integer_ is -&infin; or +&infin;, then
-        1. Throw a *RangeError* exception.
-      1. Return _integer_.
+      1. Let _number_ be ? ToNumber(_argument_).
+      1. If _number_ is *NaN*, return 0.
+      1. If _number_ is *+&infin;*<sub>𝔽</sub> or *-&infin;*<sub>𝔽</sub>, throw a *RangeError* exception.
+      1. Return truncate(ℝ(number)).
     </emu-alg>
   </emu-clause>
 
@@ -1637,8 +1642,8 @@
           1. Set _any_ to *true*.
           1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref> and there is a Conversion value in the same row, then
             1. Let _Conversion_ be the Conversion value of the same row.
-            1. If _Conversion_ is ~ToIntegerThrowOnInfinity~, then
-              1. Set _value_ to ? ToIntegerThrowOnInfinity(_value_).
+            1. If _Conversion_ is ~ToIntegerWithTruncation~, then
+              1. Set _value_ to ? ToIntegerWithTruncation(_value_).
               1. Set _value_ to 𝔽(_value_).
             1. Else if _Conversion_ is ~ToPositiveInteger~, then
               1. Set _value_ to ? ToPositiveInteger(_value_).
@@ -1657,7 +1662,7 @@
         1. Throw a *TypeError* exception.
       1. Return _result_.
     </emu-alg>
-    <emu-note>The values of ! ToIntegerThrowOnInfinity(*undefined*) and ! ToPositiveInteger(*undefined*) are 0.</emu-note>
+    <emu-note>The values of ! ToIntegerWithTruncation(*undefined*) and ! ToPositiveInteger(*undefined*) are 0.</emu-note>
     <emu-table id="table-temporal-field-requirements">
       <emu-caption>Temporal field requirements</emu-caption>
       <table class="real-table">
@@ -1671,7 +1676,7 @@
         <tbody>
           <tr>
             <td>*"year"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
@@ -1691,32 +1696,32 @@
           </tr>
           <tr>
             <td>*"hour"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"minute"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"second"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"millisecond"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"microsecond"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"nanosecond"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
@@ -1731,7 +1736,7 @@
           </tr>
           <tr>
             <td>*"eraYear"*</td>
-            <td>~ToIntegerThrowOnInfinity~</td>
+            <td>~ToIntegerWithTruncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>

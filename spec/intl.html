@@ -1386,7 +1386,7 @@
           <emu-alg>
             1. Assert: Type(_calendar_) is Object.
             1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _dateLike_ »).
-            1. If _result_ is not *undefined*, set _result_ to ? ToIntegerThrowOnInfinity(_result_).
+            1. If _result_ is not *undefined*, set _result_ to ? ToIntegerWithTruncation(_result_).
             1. Return _result_.
           </emu-alg>
         </emu-clause>
@@ -2388,8 +2388,8 @@
               1. Set _any_ to *true*.
               1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref> and there is a Conversion value in the same row, then
                 1. Let _Conversion_ be the Conversion value of the same row.
-                1. If _Conversion_ is ~ToIntegerThrowOnInfinity~, then
-                  1. Set _value_ to ? ToIntegerThrowOnInfinity(_value_).
+                1. If _Conversion_ is ~ToIntegerWithTruncation~, then
+                  1. Set _value_ to ? ToIntegerWithTruncation(_value_).
                   1. Set _value_ to 𝔽(_value_).
                 1. Else if _Conversion_ is ~ToPositiveInteger~, then
                   1. Set _value_ to ? ToPositiveInteger(_value_).
