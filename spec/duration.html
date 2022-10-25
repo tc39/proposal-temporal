@@ -689,6 +689,30 @@
             <th>Meaning</th>
           </tr>
           <tr>
+            <td>[[Years]]</td>
+            <td>*"years"*</td>
+            <td>a float64-representable integer</td>
+            <td>
+              The number of years in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Months]]</td>
+            <td>*"months"*</td>
+            <td>a float64-representable integer</td>
+            <td>
+              The number of months in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Weeks]]</td>
+            <td>*"weeks"*</td>
+            <td>a float64-representable integer</td>
+            <td>
+              The number of weeks in the duration.
+            </td>
+          </tr>
+          <tr>
             <td>[[Days]]</td>
             <td>*"days"*</td>
             <td>a float64-representable integer</td>
@@ -705,43 +729,11 @@
             </td>
           </tr>
           <tr>
-            <td>[[Microseconds]]</td>
-            <td>*"microseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of microseconds in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Milliseconds]]</td>
-            <td>*"milliseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of milliseconds in the duration.
-            </td>
-          </tr>
-          <tr>
             <td>[[Minutes]]</td>
             <td>*"minutes"*</td>
             <td>a float64-representable integer</td>
             <td>
               The number of minutes in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Months]]</td>
-            <td>*"months"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of months in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Nanoseconds]]</td>
-            <td>*"nanoseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of nanoseconds in the duration.
             </td>
           </tr>
           <tr>
@@ -753,19 +745,27 @@
             </td>
           </tr>
           <tr>
-            <td>[[Weeks]]</td>
-            <td>*"weeks"*</td>
+            <td>[[Milliseconds]]</td>
+            <td>*"milliseconds"*</td>
             <td>a float64-representable integer</td>
             <td>
-              The number of weeks in the duration.
+              The number of milliseconds in the duration.
             </td>
           </tr>
           <tr>
-            <td>[[Years]]</td>
-            <td>*"years"*</td>
+            <td>[[Microseconds]]</td>
+            <td>*"microseconds"*</td>
             <td>a float64-representable integer</td>
             <td>
-              The number of years in the duration.
+              The number of microseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Nanoseconds]]</td>
+            <td>*"nanoseconds"*</td>
+            <td>a float64-representable integer</td>
+            <td>
+              The number of nanoseconds in the duration.
             </td>
           </tr>
         </table>
@@ -931,7 +931,7 @@
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
         1. Let _result_ be a new Duration Record with each field set to 0.
         1. Let _partial_ be ? ToTemporalPartialDurationRecord(_temporalDurationLike_).
-        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
+        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, do
           1. Let _fieldName_ be the Field Name value of the current row.
           1. Let _value_ be the value of the field of _partial_ whose name is _fieldName_.
           1. If _value_ is not *undefined*, then
@@ -1045,13 +1045,16 @@
           1. Throw a *TypeError* exception.
         1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
         1. Let _any_ be *false*.
-        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, in table order, do
-          1. Let _property_ be the Property Name value of the current row.
+        1. Let _propertyNames_ be a new empty List.
+        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, do
+          1. Append the property name in the Property Name column of the row to _propertyNames_.
+        1. Let _sortedPropertyNames_ be SortStringListByCodeUnit(_propertyNames_).
+        1. For each property name _property_ of _sortedPropertyNames_, do
           1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
           1. If _value_ is not *undefined*, then
             1. Set _any_ to *true*.
             1. Set _value_ to ? ToIntegerIfIntegral(_value_).
-            1. Let _fieldName_ be the Field Name value of the current row.
+            1. Let _fieldName_ be the field name named in the Field Name column in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref> for Property Name _property_.
             1. Set the field of _result_ whose name is _fieldName_ to _value_.
         1. If _any_ is *false*, then
           1. Throw a *TypeError* exception.
