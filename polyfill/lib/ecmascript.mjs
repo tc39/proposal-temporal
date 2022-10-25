@@ -126,18 +126,15 @@ const ToIntegerWithTruncation = (value) => {
   return integer;
 };
 
-const ToPositiveInteger = (value, property) => {
-  value = ToIntegerOrInfinity(value);
-  if (!NumberIsFinite(value)) {
-    throw new RangeError('infinity is out of range');
-  }
-  if (value < 1) {
+const ToPositiveIntegerWithTruncation = (value, property) => {
+  const integer = ToIntegerWithTruncation(value);
+  if (integer <= 0) {
     if (property !== undefined) {
       throw new RangeError(`property '${property}' cannot be a a number less than one`);
     }
     throw new RangeError('Cannot convert a number less than one to a positive integer');
   }
-  return value;
+  return integer;
 };
 const ToIntegerWithoutRounding = (value) => {
   value = ES.ToNumber(value);
@@ -153,9 +150,9 @@ const ToIntegerWithoutRounding = (value) => {
 
 const BUILTIN_CASTS = new Map([
   ['year', ToIntegerWithTruncation],
-  ['month', ToPositiveInteger],
+  ['month', ToPositiveIntegerWithTruncation],
   ['monthCode', ToString],
-  ['day', ToPositiveInteger],
+  ['day', ToPositiveIntegerWithTruncation],
   ['hour', ToIntegerWithTruncation],
   ['minute', ToIntegerWithTruncation],
   ['second', ToIntegerWithTruncation],
@@ -296,7 +293,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     return target;
   },
-  ToPositiveInteger: ToPositiveInteger,
+  ToPositiveIntegerWithTruncation,
   ToIntegerWithTruncation,
   ToIntegerWithoutRounding,
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
@@ -1624,7 +1621,7 @@ export const ES = ObjectAssign({}, ES2022, {
   CalendarMonth: (calendar, dateLike) => {
     const month = ES.GetMethod(calendar, 'month');
     const result = ES.Call(month, calendar, [dateLike]);
-    return ES.ToPositiveInteger(result);
+    return ES.ToPositiveIntegerWithTruncation(result);
   },
   CalendarMonthCode: (calendar, dateLike) => {
     const monthCode = ES.GetMethod(calendar, 'monthCode');
@@ -1637,7 +1634,7 @@ export const ES = ObjectAssign({}, ES2022, {
   CalendarDay: (calendar, dateLike) => {
     const day = ES.GetMethod(calendar, 'day');
     const result = ES.Call(day, calendar, [dateLike]);
-    return ES.ToPositiveInteger(result);
+    return ES.ToPositiveIntegerWithTruncation(result);
   },
   CalendarEra: (calendar, dateLike) => {
     const era = ES.GetMethod(calendar, 'era');
@@ -1657,31 +1654,31 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   CalendarDayOfWeek: (calendar, dateLike) => {
     const dayOfWeek = ES.GetMethod(calendar, 'dayOfWeek');
-    return ES.ToPositiveInteger(ES.Call(dayOfWeek, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfWeek, calendar, [dateLike]));
   },
   CalendarDayOfYear: (calendar, dateLike) => {
     const dayOfYear = ES.GetMethod(calendar, 'dayOfYear');
-    return ES.ToPositiveInteger(ES.Call(dayOfYear, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfYear, calendar, [dateLike]));
   },
   CalendarWeekOfYear: (calendar, dateLike) => {
     const weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
-    return ES.ToPositiveInteger(ES.Call(weekOfYear, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(weekOfYear, calendar, [dateLike]));
   },
   CalendarDaysInWeek: (calendar, dateLike) => {
     const daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
-    return ES.ToPositiveInteger(ES.Call(daysInWeek, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInWeek, calendar, [dateLike]));
   },
   CalendarDaysInMonth: (calendar, dateLike) => {
     const daysInMonth = ES.GetMethod(calendar, 'daysInMonth');
-    return ES.ToPositiveInteger(ES.Call(daysInMonth, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInMonth, calendar, [dateLike]));
   },
   CalendarDaysInYear: (calendar, dateLike) => {
     const daysInYear = ES.GetMethod(calendar, 'daysInYear');
-    return ES.ToPositiveInteger(ES.Call(daysInYear, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInYear, calendar, [dateLike]));
   },
   CalendarMonthsInYear: (calendar, dateLike) => {
     const monthsInYear = ES.GetMethod(calendar, 'monthsInYear');
-    return ES.ToPositiveInteger(ES.Call(monthsInYear, calendar, [dateLike]));
+    return ES.ToPositiveIntegerWithTruncation(ES.Call(monthsInYear, calendar, [dateLike]));
   },
   CalendarInLeapYear: (calendar, dateLike) => {
     const inLeapYear = ES.GetMethod(calendar, 'inLeapYear');

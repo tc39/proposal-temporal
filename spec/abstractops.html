@@ -1568,15 +1568,19 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-topositiveinteger" aoid="ToPositiveInteger">
-    <h1>ToPositiveInteger ( _argument_ )</h1>
-    <p>
-      The abstract operation ToPositiveInteger takes argument _argument_. It converts _argument_ to an integer _i_ for which <emu-eqn>0 &lt; _i_</emu-eqn>. It performs the following steps:
-    </p>
+  <emu-clause id="sec-topositiveintegerwithtruncation" type="abstract operation">
+    <h1>
+      ToPositiveIntegerWithTruncation (
+        _argument_: an ECMAScript language value,
+      ): either a normal completion containing a positive integer, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not finite or not positive.</dd>
+    </dl>
     <emu-alg>
       1. Let _integer_ be ? ToIntegerWithTruncation(_argument_).
-      1. If _integer_ &le; 0, then
-        1. Throw a *RangeError* exception.
+      1. If _integer_ &le; 0, throw a *RangeError* exception.
       1. Return _integer_.
     </emu-alg>
   </emu-clause>
@@ -1645,8 +1649,8 @@
             1. If _Conversion_ is ~ToIntegerWithTruncation~, then
               1. Set _value_ to ? ToIntegerWithTruncation(_value_).
               1. Set _value_ to 𝔽(_value_).
-            1. Else if _Conversion_ is ~ToPositiveInteger~, then
-              1. Set _value_ to ? ToPositiveInteger(_value_).
+            1. Else if _Conversion_ is ~ToPositiveIntegerWithTruncation~, then
+              1. Set _value_ to ? ToPositiveIntegerWithTruncation(_value_).
               1. Set _value_ to 𝔽(_value_).
             1. Else,
               1. Assert: _Conversion_ is ~ToString~.
@@ -1662,7 +1666,7 @@
         1. Throw a *TypeError* exception.
       1. Return _result_.
     </emu-alg>
-    <emu-note>The values of ! ToIntegerWithTruncation(*undefined*) and ! ToPositiveInteger(*undefined*) are 0.</emu-note>
+    <emu-note>The values of ! ToIntegerWithTruncation(*undefined*) and ! ToPositiveIntegerWithTruncation(*undefined*) are 0.</emu-note>
     <emu-table id="table-temporal-field-requirements">
       <emu-caption>Temporal field requirements</emu-caption>
       <table class="real-table">
@@ -1681,7 +1685,7 @@
           </tr>
           <tr>
             <td>*"month"*</td>
-            <td>~ToPositiveInteger~</td>
+            <td>~ToPositiveIntegerWithTruncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
@@ -1691,7 +1695,7 @@
           </tr>
           <tr>
             <td>*"day"*</td>
-            <td>~ToPositiveInteger~</td>
+            <td>~ToPositiveIntegerWithTruncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
