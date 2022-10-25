@@ -917,11 +917,11 @@
       <h1>
         ToTemporalDurationRecord (
           _temporalDurationLike_: an ECMAScript language value,
-        )
+        ): either a normal completion containing a Duration Record, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _temporalDurationLike_ to a Duration Record and returns it.</dd>
+        <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_, with absent or undefined properties corresponding to fields containing 0.</dd>
       </dl>
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
@@ -1034,11 +1034,11 @@
       <h1>
         ToTemporalPartialDurationRecord (
           _temporalDurationLike_: an ECMAScript language value,
-        )
+        ): either a normal completion containing a partial Duration Record, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a partial Duration Record with fields set according to the properties of _temporalDurationLike_.</dd>
+        <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_.</dd>
       </dl>
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
