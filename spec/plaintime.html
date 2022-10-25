@@ -744,7 +744,7 @@
         1. If _completeness_ is not present, set _completeness_ to ~complete~.
         1. Let _partial_ be ? PrepareTemporalFields(_temporalTimeLike_, « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"second"* », ~partial~).
         1. Let _result_ be a new TemporalTimeLike Record with each field set to *undefined*.
-        1. For each row of <emu-xref href="#table-temporal-temporaltimelike-record-fields"></emu-xref>, except the header row, in table order, do
+        1. For each row of <emu-xref href="#table-temporal-temporaltimelike-record-fields"></emu-xref>, except the header row, do
           1. Let _field_ be the Field Name value of the current row.
           1. Let _propertyName_ be the Property Name value of the current row.
           1. Let _valueDesc_ be OrdinaryGetOwnProperty(_partial_, _propertyName_).
@@ -772,8 +772,13 @@
             </tr>
 
             <tr>
-              <td>[[Microsecond]]</td>
-              <td>*"microsecond"*</td>
+              <td>[[Minute]]</td>
+              <td>*"minute"*</td>
+            </tr>
+
+            <tr>
+              <td>[[Second]]</td>
+              <td>*"second"*</td>
             </tr>
 
             <tr>
@@ -782,18 +787,13 @@
             </tr>
 
             <tr>
-              <td>[[Minute]]</td>
-              <td>*"minute"*</td>
+              <td>[[Microsecond]]</td>
+              <td>*"microsecond"*</td>
             </tr>
 
             <tr>
               <td>[[Nanosecond]]</td>
               <td>*"nanosecond"*</td>
-            </tr>
-
-            <tr>
-              <td>[[Second]]</td>
-              <td>*"second"*</td>
             </tr>
           </tbody>
         </table>
