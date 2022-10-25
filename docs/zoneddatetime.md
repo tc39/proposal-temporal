@@ -14,7 +14,7 @@ As the only `Temporal` type that persists a time zone, `Temporal.ZonedDateTime` 
 - Creating derived values (e.g. change time to 2:30AM) can avoid worrying that the result will be invalid due to the time zone's DST rules.
 - Properties are available to easily measure attributes like "length of day" or "starting time of day" which may not be the same on all days in all time zones due to DST transitions or political changes to the definitions of time zones.
 - It's easy to flip back and forth between a human-readable representation (like `Temporal.PlainDateTime`) and the UTC timeline (like `Temporal.Instant`) without having to do any work to keep the two in sync.
-- A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string that can be sorted alphabetically by the exact time they happened.
+- A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string.
   This behavior is also be helpful for developers who are not sure which of those components will be needed by later readers of this data.
 - Multiple time-zone-sensitive operations can be performed in a chain without having to repeatedly provide the same time zone.
 
