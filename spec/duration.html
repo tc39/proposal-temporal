@@ -931,11 +931,16 @@
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
         1. Let _result_ be a new Duration Record with each field set to 0.
         1. Let _partial_ be ? ToTemporalPartialDurationRecord(_temporalDurationLike_).
-        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, do
-          1. Let _fieldName_ be the Field Name value of the current row.
-          1. Let _value_ be the value of the field of _partial_ whose name is _fieldName_.
-          1. If _value_ is not *undefined*, then
-            1. Set the field of _result_ whose name is _fieldName_ to _value_.
+        1. If _partial_.[[Years]] is not *undefined*, set _result_.[[Years]] to _partial_.[[Years]].
+        1. If _partial_.[[Months]] is not *undefined*, set _result_.[[Months]] to _partial_.[[Months]].
+        1. If _partial_.[[Weeks]] is not *undefined*, set _result_.[[Weeks]] to _partial_.[[Weeks]].
+        1. If _partial_.[[Days]] is not *undefined*, set _result_.[[Days]] to _partial_.[[Days]].
+        1. If _partial_.[[Hours]] is not *undefined*, set _result_.[[Hours]] to _partial_.[[Hours]].
+        1. If _partial_.[[Minutes]] is not *undefined*, set _result_.[[Minutes]] to _partial_.[[Minutes]].
+        1. If _partial_.[[Seconds]] is not *undefined*, set _result_.[[Seconds]] to _partial_.[[Seconds]].
+        1. If _partial_.[[Milliseconds]] is not *undefined*, set _result_.[[Milliseconds]] to _partial_.[[Milliseconds]].
+        1. If _partial_.[[Microseconds]] is not *undefined*, set _result_.[[Microseconds]] to _partial_.[[Microseconds]].
+        1. If _partial_.[[Nanoseconds]] is not *undefined*, set _result_.[[Nanoseconds]] to _partial_.[[Nanoseconds]].
         1. If ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]) is *false*, then
           1. Throw a *RangeError* exception.
         1. Return _result_.
@@ -1044,20 +1049,27 @@
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
-        1. Let _any_ be *false*.
-        1. Let _propertyNames_ be a new empty List.
-        1. For each row of <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, except the header row, do
-          1. Append the property name in the Property Name column of the row to _propertyNames_.
-        1. Let _sortedPropertyNames_ be SortStringListByCodeUnit(_propertyNames_).
-        1. For each property name _property_ of _sortedPropertyNames_, do
-          1. Let _value_ be ? Get(_temporalDurationLike_, _property_).
-          1. If _value_ is not *undefined*, then
-            1. Set _any_ to *true*.
-            1. Set _value_ to ? ToIntegerIfIntegral(_value_).
-            1. Let _fieldName_ be the field name named in the Field Name column in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref> for Property Name _property_.
-            1. Set the field of _result_ whose name is _fieldName_ to _value_.
-        1. If _any_ is *false*, then
-          1. Throw a *TypeError* exception.
+        1. Let _days_ be ? Get(_temporalDurationLike_, *"days"*).
+        1. If _days_ is not *undefined*, set _result_.[[Days]] to ? ToIntegerIfIntegral(_days_).
+        1. Let _hours_ be ? Get(_temporalDurationLike_, *"hours"*).
+        1. If _hours_ is not *undefined*, set _result_.[[Hours]] to ? ToIntegerIfIntegral(_hours_).
+        1. Let _microseconds_ be ? Get(_temporalDurationLike_, *"microseconds"*).
+        1. If _microseconds_ is not *undefined*, set _result_.[[Microseconds]] to ? ToIntegerIfIntegral(_microseconds_).
+        1. Let _milliseconds_ be ? Get(_temporalDurationLike_, *"milliseconds"*).
+        1. If _milliseconds_ is not *undefined*, set _result_.[[Milliseconds]] to ? ToIntegerIfIntegral(_milliseconds_).
+        1. Let _minutes_ be ? Get(_temporalDurationLike_, *"minutes"*).
+        1. If _minutes_ is not *undefined*, set _result_.[[Minutes]] to ? ToIntegerIfIntegral(_minutes_).
+        1. Let _months_ be ? Get(_temporalDurationLike_, *"months"*).
+        1. If _months_ is not *undefined*, set _result_.[[Months]] to ? ToIntegerIfIntegral(_months_).
+        1. Let _nanoseconds_ be ? Get(_temporalDurationLike_, *"nanoseconds"*).
+        1. If _nanoseconds_ is not *undefined*, set _result_.[[Nanoseconds]] to ? ToIntegerIfIntegral(_nanoseconds_).
+        1. Let _seconds_ be ? Get(_temporalDurationLike_, *"seconds"*).
+        1. If _seconds_ is not *undefined*, set _result_.[[Seconds]] to ? ToIntegerIfIntegral(_seconds_).
+        1. Let _weeks_ be ? Get(_temporalDurationLike_, *"weeks"*).
+        1. If _weeks_ is not *undefined*, set _result_.[[Weeks]] to ? ToIntegerIfIntegral(_weeks_).
+        1. Let _years_ be ? Get(_temporalDurationLike_, *"years"*).
+        1. If _years_ is not *undefined*, set _result_.[[Years]] to ? ToIntegerIfIntegral(_years_).
+        1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all *undefined*, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
