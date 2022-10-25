@@ -115,11 +115,14 @@ const BUILTIN_CALENDAR_IDS = [
   'gregory'
 ];
 
-const ToIntegerThrowOnInfinity = (value) => {
-  const integer = ToIntegerOrInfinity(value);
-  if (!NumberIsFinite(integer)) {
+const ToIntegerWithTruncation = (value) => {
+  const number = ToNumber(value);
+  if (NumberIsNaN(number) || number === 0) return 0;
+  if (!NumberIsFinite(number)) {
     throw new RangeError('infinity is out of range');
   }
+  const integer = MathTrunc(number);
+  if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
   return integer;
 };
 
@@ -149,16 +152,16 @@ const ToIntegerWithoutRounding = (value) => {
 };
 
 const BUILTIN_CASTS = new Map([
-  ['year', ToIntegerThrowOnInfinity],
+  ['year', ToIntegerWithTruncation],
   ['month', ToPositiveInteger],
   ['monthCode', ToString],
   ['day', ToPositiveInteger],
-  ['hour', ToIntegerThrowOnInfinity],
-  ['minute', ToIntegerThrowOnInfinity],
-  ['second', ToIntegerThrowOnInfinity],
-  ['millisecond', ToIntegerThrowOnInfinity],
-  ['microsecond', ToIntegerThrowOnInfinity],
-  ['nanosecond', ToIntegerThrowOnInfinity],
+  ['hour', ToIntegerWithTruncation],
+  ['minute', ToIntegerWithTruncation],
+  ['second', ToIntegerWithTruncation],
+  ['millisecond', ToIntegerWithTruncation],
+  ['microsecond', ToIntegerWithTruncation],
+  ['nanosecond', ToIntegerWithTruncation],
   ['years', ToIntegerWithoutRounding],
   ['months', ToIntegerWithoutRounding],
   ['weeks', ToIntegerWithoutRounding],
@@ -294,7 +297,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return target;
   },
   ToPositiveInteger: ToPositiveInteger,
-  ToIntegerThrowOnInfinity,
+  ToIntegerWithTruncation,
   ToIntegerWithoutRounding,
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
@@ -1616,7 +1619,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (result === undefined) {
       throw new RangeError('calendar year result must be an integer');
     }
-    return ES.ToIntegerThrowOnInfinity(result);
+    return ES.ToIntegerWithTruncation(result);
   },
   CalendarMonth: (calendar, dateLike) => {
     const month = ES.GetMethod(calendar, 'month');
@@ -1648,7 +1651,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const eraYear = ES.GetMethod(calendar, 'eraYear');
     let result = ES.Call(eraYear, calendar, [dateLike]);
     if (result !== undefined) {
-      result = ES.ToIntegerThrowOnInfinity(result);
+      result = ES.ToIntegerWithTruncation(result);
     }
     return result;
   },

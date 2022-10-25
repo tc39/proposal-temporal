@@ -10,13 +10,13 @@ const SetPrototypeForEach = Set.prototype.forEach;
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) {
-    isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
-    isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+    isoYear = ES.ToIntegerWithTruncation(isoYear);
+    isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     calendar = ES.ToTemporalCalendar(calendar);
-    referenceISODay = ES.ToIntegerThrowOnInfinity(referenceISODay);
+    referenceISODay = ES.ToIntegerWithTruncation(referenceISODay);
 
     // Note: if the arguments are not passed,
-    //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+    //       ToIntegerWithTruncation(undefined) will have returned 0, which will
     //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
     //       check exists only to improve the error message.
     if (arguments.length < 2) {

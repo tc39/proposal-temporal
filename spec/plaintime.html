@@ -29,16 +29,16 @@
       <p>
         This function performs the following steps when called:
       </p>
-      <emu-note>The value of ! ToIntegerThrowOnInfinity(*undefined*) is 0.</emu-note>
+      <emu-note>The value of ! ToIntegerWithTruncation(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _hour_ be ? ToIntegerThrowOnInfinity(_hour_).
-        1. Let _minute_ be ? ToIntegerThrowOnInfinity(_minute_).
-        1. Let _second_ be ? ToIntegerThrowOnInfinity(_second_).
-        1. Let _millisecond_ be ? ToIntegerThrowOnInfinity(_millisecond_).
-        1. Let _microsecond_ be ? ToIntegerThrowOnInfinity(_microsecond_).
-        1. Let _nanosecond_ be ? ToIntegerThrowOnInfinity(_nanosecond_).
+        1. Let _hour_ be ? ToIntegerWithTruncation(_hour_).
+        1. Let _minute_ be ? ToIntegerWithTruncation(_minute_).
+        1. Let _second_ be ? ToIntegerWithTruncation(_second_).
+        1. Let _millisecond_ be ? ToIntegerWithTruncation(_millisecond_).
+        1. Let _microsecond_ be ? ToIntegerWithTruncation(_microsecond_).
+        1. Let _nanosecond_ be ? ToIntegerWithTruncation(_nanosecond_).
         1. Return ? CreateTemporalTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, NewTarget).
       </emu-alg>
     </emu-clause>

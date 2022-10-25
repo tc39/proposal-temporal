@@ -18,13 +18,13 @@ import {
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
-    isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
-    isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
-    isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+    isoYear = ES.ToIntegerWithTruncation(isoYear);
+    isoMonth = ES.ToIntegerWithTruncation(isoMonth);
+    isoDay = ES.ToIntegerWithTruncation(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
 
     // Note: if the arguments are not passed,
-    //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+    //       ToIntegerWithTruncation(undefined) will have returned 0, which will
     //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
     //       exists only to improve the error message.
     if (arguments.length < 3) {
