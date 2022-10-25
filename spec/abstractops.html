@@ -1666,7 +1666,10 @@
         1. Throw a *TypeError* exception.
       1. Return _result_.
     </emu-alg>
-    <emu-note>The values of ! ToIntegerWithTruncation(*undefined*) and ! ToPositiveIntegerWithTruncation(*undefined*) are 0.</emu-note>
+    <emu-note>
+      The value of ! ToIntegerWithTruncation(*undefined*) is 0.
+      ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.
+    </emu-note>
     <emu-table id="table-temporal-field-requirements">
       <emu-caption>Temporal field requirements</emu-caption>
       <table class="real-table">
