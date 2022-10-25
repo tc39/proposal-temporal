@@ -136,16 +136,13 @@ const ToPositiveIntegerWithTruncation = (value, property) => {
   }
   return integer;
 };
-const ToIntegerWithoutRounding = (value) => {
-  value = ES.ToNumber(value);
-  if (NumberIsNaN(value)) return 0;
-  if (!NumberIsFinite(value)) {
-    throw new RangeError('infinity is out of range');
-  }
-  if (!IsIntegralNumber(value)) {
-    throw new RangeError(`unsupported fractional value ${value}`);
-  }
-  return ToIntegerOrInfinity(value); // ℝ(value) in spec text; converts -0 to 0
+const ToIntegerIfIntegral = (value) => {
+  const number = ES.ToNumber(value);
+  if (NumberIsNaN(number) || number === 0) return 0;
+  if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
+  if (!IsIntegralNumber(number)) throw new RangeError(`unsupported fractional value ${value}`);
+  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
+  return number;
 };
 
 const BUILTIN_CASTS = new Map([
@@ -159,16 +156,16 @@ const BUILTIN_CASTS = new Map([
   ['millisecond', ToIntegerWithTruncation],
   ['microsecond', ToIntegerWithTruncation],
   ['nanosecond', ToIntegerWithTruncation],
-  ['years', ToIntegerWithoutRounding],
-  ['months', ToIntegerWithoutRounding],
-  ['weeks', ToIntegerWithoutRounding],
-  ['days', ToIntegerWithoutRounding],
-  ['hours', ToIntegerWithoutRounding],
-  ['minutes', ToIntegerWithoutRounding],
-  ['seconds', ToIntegerWithoutRounding],
-  ['milliseconds', ToIntegerWithoutRounding],
-  ['microseconds', ToIntegerWithoutRounding],
-  ['nanoseconds', ToIntegerWithoutRounding],
+  ['years', ToIntegerIfIntegral],
+  ['months', ToIntegerIfIntegral],
+  ['weeks', ToIntegerIfIntegral],
+  ['days', ToIntegerIfIntegral],
+  ['hours', ToIntegerIfIntegral],
+  ['minutes', ToIntegerIfIntegral],
+  ['seconds', ToIntegerIfIntegral],
+  ['milliseconds', ToIntegerIfIntegral],
+  ['microseconds', ToIntegerIfIntegral],
+  ['nanoseconds', ToIntegerIfIntegral],
   ['era', ToString],
   ['eraYear', ToIntegerOrInfinity],
   ['offset', ToString]
@@ -295,7 +292,7 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   ToPositiveIntegerWithTruncation,
   ToIntegerWithTruncation,
-  ToIntegerWithoutRounding,
+  ToIntegerIfIntegral,
   IsTemporalInstant: (item) => HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR),
   IsTemporalTimeZone: (item) => HasSlot(item, TIMEZONE_ID),
   IsTemporalCalendar: (item) => HasSlot(item, CALENDAR_ID),
@@ -714,7 +711,7 @@ export const ES = ObjectAssign({}, ES2022, {
       const value = temporalDurationLike[property];
       if (value !== undefined) {
         any = true;
-        result[property] = ES.ToIntegerWithoutRounding(value);
+        result[property] = ES.ToIntegerIfIntegral(value);
       }
     }
     if (!any) {

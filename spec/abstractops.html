@@ -1603,15 +1603,15 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tointegerwithoutrounding" type="abstract operation">
+  <emu-clause id="sec-tointegerifintegral" type="abstract operation">
     <h1>
-      ToIntegerWithoutRounding (
+      ToIntegerIfIntegral (
         _argument_: an ECMAScript language value,
-      )
+      ): either a normal completion containing an integer, or an abrupt completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer, throwing if doing so would require rounding.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not a finite integral Number.</dd>
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
