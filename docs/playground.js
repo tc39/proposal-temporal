@@ -7124,39 +7124,35 @@
   var BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
   var BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
-  var ToIntegerThrowOnInfinity = function ToIntegerThrowOnInfinity(value) {
-    var integer = ToIntegerOrInfinity$2(value);
-    if (!NumberIsFinite(integer)) {
+  var ToIntegerWithTruncation = function ToIntegerWithTruncation(value) {
+    var number = ToNumber$2(value);
+    if (NumberIsNaN(number) || number === 0) return 0;
+    if (!NumberIsFinite(number)) {
       throw new RangeError('infinity is out of range');
     }
+    var integer = MathTrunc(number);
+    if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
     return integer;
   };
-  var ToPositiveInteger = function ToPositiveInteger(value, property) {
-    value = ToIntegerOrInfinity$2(value);
-    if (!NumberIsFinite(value)) {
-      throw new RangeError('infinity is out of range');
-    }
-    if (value < 1) {
+  var ToPositiveIntegerWithTruncation = function ToPositiveIntegerWithTruncation(value, property) {
+    var integer = ToIntegerWithTruncation(value);
+    if (integer <= 0) {
       if (property !== undefined) {
         throw new RangeError("property '".concat(property, "' cannot be a a number less than one"));
       }
       throw new RangeError('Cannot convert a number less than one to a positive integer');
     }
-    return value;
+    return integer;
   };
-  var ToIntegerWithoutRounding = function ToIntegerWithoutRounding(value) {
-    value = ES.ToNumber(value);
-    if (NumberIsNaN(value)) return 0;
-    if (!NumberIsFinite(value)) {
-      throw new RangeError('infinity is out of range');
-    }
-    if (!IsIntegralNumber$1(value)) {
-      throw new RangeError("unsupported fractional value ".concat(value));
-    }
-    return ToIntegerOrInfinity$2(value); // ℝ(value) in spec text; converts -0 to 0
+  var ToIntegerIfIntegral = function ToIntegerIfIntegral(value) {
+    var number = ES.ToNumber(value);
+    if (NumberIsNaN(number) || number === 0) return 0;
+    if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
+    if (!IsIntegralNumber$1(number)) throw new RangeError("unsupported fractional value ".concat(value));
+    if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
+    return number;
   };
-
-  var BUILTIN_CASTS = new Map([['year', ToIntegerThrowOnInfinity], ['month', ToPositiveInteger], ['monthCode', ToString$1], ['day', ToPositiveInteger], ['hour', ToIntegerThrowOnInfinity], ['minute', ToIntegerThrowOnInfinity], ['second', ToIntegerThrowOnInfinity], ['millisecond', ToIntegerThrowOnInfinity], ['microsecond', ToIntegerThrowOnInfinity], ['nanosecond', ToIntegerThrowOnInfinity], ['years', ToIntegerWithoutRounding], ['months', ToIntegerWithoutRounding], ['weeks', ToIntegerWithoutRounding], ['days', ToIntegerWithoutRounding], ['hours', ToIntegerWithoutRounding], ['minutes', ToIntegerWithoutRounding], ['seconds', ToIntegerWithoutRounding], ['milliseconds', ToIntegerWithoutRounding], ['microseconds', ToIntegerWithoutRounding], ['nanoseconds', ToIntegerWithoutRounding], ['era', ToString$1], ['eraYear', ToIntegerOrInfinity$2], ['offset', ToString$1]]);
+  var BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToString$1], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['years', ToIntegerIfIntegral], ['months', ToIntegerIfIntegral], ['weeks', ToIntegerIfIntegral], ['days', ToIntegerIfIntegral], ['hours', ToIntegerIfIntegral], ['minutes', ToIntegerIfIntegral], ['seconds', ToIntegerIfIntegral], ['milliseconds', ToIntegerIfIntegral], ['microseconds', ToIntegerIfIntegral], ['nanoseconds', ToIntegerIfIntegral], ['era', ToString$1], ['eraYear', ToIntegerOrInfinity$2], ['offset', ToString$1]]);
   var BUILTIN_DEFAULTS = new Map([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
   // each item is [plural, singular, category]
@@ -7242,9 +7238,9 @@
       });
       return target;
     },
-    ToPositiveInteger: ToPositiveInteger,
-    ToIntegerThrowOnInfinity: ToIntegerThrowOnInfinity,
-    ToIntegerWithoutRounding: ToIntegerWithoutRounding,
+    ToPositiveIntegerWithTruncation: ToPositiveIntegerWithTruncation,
+    ToIntegerWithTruncation: ToIntegerWithTruncation,
+    ToIntegerIfIntegral: ToIntegerIfIntegral,
     IsTemporalInstant: function IsTemporalInstant(item) {
       return HasSlot(item, EPOCHNANOSECONDS) && !HasSlot(item, TIME_ZONE, CALENDAR);
     },
@@ -7567,11 +7563,11 @@
         throw new RangeError("invalid duration: ".concat(isoString));
       }
       var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : 1;
-      var years = ES.ToIntegerOrInfinity(match[2]) * sign;
-      var months = ES.ToIntegerOrInfinity(match[3]) * sign;
-      var weeks = ES.ToIntegerOrInfinity(match[4]) * sign;
-      var days = ES.ToIntegerOrInfinity(match[5]) * sign;
-      var hours = ES.ToIntegerOrInfinity(match[6]) * sign;
+      var years = ES.ToIntegerWithTruncation(match[2]) * sign;
+      var months = ES.ToIntegerWithTruncation(match[3]) * sign;
+      var weeks = ES.ToIntegerWithTruncation(match[4]) * sign;
+      var days = ES.ToIntegerWithTruncation(match[5]) * sign;
+      var hours = ES.ToIntegerWithTruncation(match[6]) * sign;
       var fHours = match[7];
       var minutesStr = match[8];
       var fMinutes = match[9];
@@ -7586,19 +7582,19 @@
         if ((_ref5 = (_ref6 = (_ref7 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref7 !== void 0 ? _ref7 : secondsStr) !== null && _ref6 !== void 0 ? _ref6 : fSeconds) !== null && _ref5 !== void 0 ? _ref5 : false) {
           throw new RangeError('only the smallest unit can be fractional');
         }
-        excessNanoseconds = ES.ToIntegerOrInfinity((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+        excessNanoseconds = ES.ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
       } else {
-        minutes = ES.ToIntegerOrInfinity(minutesStr) * sign;
+        minutes = ES.ToIntegerWithTruncation(minutesStr) * sign;
         if (fMinutes !== undefined) {
           var _ref8;
           if ((_ref8 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref8 !== void 0 ? _ref8 : false) {
             throw new RangeError('only the smallest unit can be fractional');
           }
-          excessNanoseconds = ES.ToIntegerOrInfinity((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+          excessNanoseconds = ES.ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
         } else {
-          seconds = ES.ToIntegerOrInfinity(secondsStr) * sign;
+          seconds = ES.ToIntegerWithTruncation(secondsStr) * sign;
           if (fSeconds !== undefined) {
-            excessNanoseconds = ES.ToIntegerOrInfinity((fSeconds + '000000000').slice(0, 9)) * sign;
+            excessNanoseconds = ES.ToIntegerWithTruncation((fSeconds + '000000000').slice(0, 9)) * sign;
           }
         }
       }
@@ -7607,7 +7603,6 @@
       var milliseconds = MathTrunc(excessNanoseconds / 1e6) % 1000;
       seconds += MathTrunc(excessNanoseconds / 1e9) % 60;
       minutes += MathTrunc(excessNanoseconds / 6e10);
-      ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       return {
         years: years,
         months: months,
@@ -7782,7 +7777,7 @@
         var value = temporalDurationLike[property];
         if (value !== undefined) {
           any = true;
-          result[property] = ES.ToIntegerWithoutRounding(value);
+          result[property] = ES.ToIntegerIfIntegral(value);
         }
       }
       if (!any) {
@@ -8668,12 +8663,12 @@
       if (result === undefined) {
         throw new RangeError('calendar year result must be an integer');
       }
-      return ES.ToIntegerThrowOnInfinity(result);
+      return ES.ToIntegerWithTruncation(result);
     },
     CalendarMonth: function CalendarMonth(calendar, dateLike) {
       var month = ES.GetMethod(calendar, 'month');
       var result = ES.Call(month, calendar, [dateLike]);
-      return ES.ToPositiveInteger(result);
+      return ES.ToPositiveIntegerWithTruncation(result);
     },
     CalendarMonthCode: function CalendarMonthCode(calendar, dateLike) {
       var monthCode = ES.GetMethod(calendar, 'monthCode');
@@ -8686,7 +8681,7 @@
     CalendarDay: function CalendarDay(calendar, dateLike) {
       var day = ES.GetMethod(calendar, 'day');
       var result = ES.Call(day, calendar, [dateLike]);
-      return ES.ToPositiveInteger(result);
+      return ES.ToPositiveIntegerWithTruncation(result);
     },
     CalendarEra: function CalendarEra(calendar, dateLike) {
       var era = ES.GetMethod(calendar, 'era');
@@ -8700,37 +8695,37 @@
       var eraYear = ES.GetMethod(calendar, 'eraYear');
       var result = ES.Call(eraYear, calendar, [dateLike]);
       if (result !== undefined) {
-        result = ES.ToIntegerThrowOnInfinity(result);
+        result = ES.ToIntegerWithTruncation(result);
       }
       return result;
     },
     CalendarDayOfWeek: function CalendarDayOfWeek(calendar, dateLike) {
       var dayOfWeek = ES.GetMethod(calendar, 'dayOfWeek');
-      return ES.ToPositiveInteger(ES.Call(dayOfWeek, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfWeek, calendar, [dateLike]));
     },
     CalendarDayOfYear: function CalendarDayOfYear(calendar, dateLike) {
       var dayOfYear = ES.GetMethod(calendar, 'dayOfYear');
-      return ES.ToPositiveInteger(ES.Call(dayOfYear, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfYear, calendar, [dateLike]));
     },
     CalendarWeekOfYear: function CalendarWeekOfYear(calendar, dateLike) {
       var weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
-      return ES.ToPositiveInteger(ES.Call(weekOfYear, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(weekOfYear, calendar, [dateLike]));
     },
     CalendarDaysInWeek: function CalendarDaysInWeek(calendar, dateLike) {
       var daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
-      return ES.ToPositiveInteger(ES.Call(daysInWeek, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInWeek, calendar, [dateLike]));
     },
     CalendarDaysInMonth: function CalendarDaysInMonth(calendar, dateLike) {
       var daysInMonth = ES.GetMethod(calendar, 'daysInMonth');
-      return ES.ToPositiveInteger(ES.Call(daysInMonth, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInMonth, calendar, [dateLike]));
     },
     CalendarDaysInYear: function CalendarDaysInYear(calendar, dateLike) {
       var daysInYear = ES.GetMethod(calendar, 'daysInYear');
-      return ES.ToPositiveInteger(ES.Call(daysInYear, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInYear, calendar, [dateLike]));
     },
     CalendarMonthsInYear: function CalendarMonthsInYear(calendar, dateLike) {
       var monthsInYear = ES.GetMethod(calendar, 'monthsInYear');
-      return ES.ToPositiveInteger(ES.Call(monthsInYear, calendar, [dateLike]));
+      return ES.ToPositiveIntegerWithTruncation(ES.Call(monthsInYear, calendar, [dateLike]));
     },
     CalendarInLeapYear: function CalendarInLeapYear(calendar, dateLike) {
       var inLeapYear = ES.GetMethod(calendar, 'inLeapYear');
@@ -15202,13 +15197,13 @@
     function PlainDate(isoYear, isoMonth, isoDay) {
       var calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ES.GetISO8601Calendar();
       _classCallCheck(this, PlainDate);
-      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
-      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
-      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+      isoYear = ES.ToIntegerWithTruncation(isoYear);
+      isoMonth = ES.ToIntegerWithTruncation(isoMonth);
+      isoDay = ES.ToIntegerWithTruncation(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
 
       // Note: if the arguments are not passed,
-      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
       //       exists only to improve the error message.
       if (arguments.length < 3) {
@@ -15529,19 +15524,19 @@
       var nanosecond = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
       var calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : ES.GetISO8601Calendar();
       _classCallCheck(this, PlainDateTime);
-      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
-      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
-      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
-      hour = ES.ToIntegerThrowOnInfinity(hour);
-      minute = ES.ToIntegerThrowOnInfinity(minute);
-      second = ES.ToIntegerThrowOnInfinity(second);
-      millisecond = ES.ToIntegerThrowOnInfinity(millisecond);
-      microsecond = ES.ToIntegerThrowOnInfinity(microsecond);
-      nanosecond = ES.ToIntegerThrowOnInfinity(nanosecond);
+      isoYear = ES.ToIntegerWithTruncation(isoYear);
+      isoMonth = ES.ToIntegerWithTruncation(isoMonth);
+      isoDay = ES.ToIntegerWithTruncation(isoDay);
+      hour = ES.ToIntegerWithTruncation(hour);
+      minute = ES.ToIntegerWithTruncation(minute);
+      second = ES.ToIntegerWithTruncation(second);
+      millisecond = ES.ToIntegerWithTruncation(millisecond);
+      microsecond = ES.ToIntegerWithTruncation(microsecond);
+      nanosecond = ES.ToIntegerWithTruncation(nanosecond);
       calendar = ES.ToTemporalCalendar(calendar);
 
       // Note: if the arguments are not passed,
-      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
       //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
       //       check exists only to improve the error message.
       if (arguments.length < 3) {
@@ -15978,16 +15973,16 @@
       var microseconds = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
       var nanoseconds = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 0;
       _classCallCheck(this, Duration);
-      years = ES.ToIntegerWithoutRounding(years);
-      months = ES.ToIntegerWithoutRounding(months);
-      weeks = ES.ToIntegerWithoutRounding(weeks);
-      days = ES.ToIntegerWithoutRounding(days);
-      hours = ES.ToIntegerWithoutRounding(hours);
-      minutes = ES.ToIntegerWithoutRounding(minutes);
-      seconds = ES.ToIntegerWithoutRounding(seconds);
-      milliseconds = ES.ToIntegerWithoutRounding(milliseconds);
-      microseconds = ES.ToIntegerWithoutRounding(microseconds);
-      nanoseconds = ES.ToIntegerWithoutRounding(nanoseconds);
+      years = ES.ToIntegerIfIntegral(years);
+      months = ES.ToIntegerIfIntegral(months);
+      weeks = ES.ToIntegerIfIntegral(weeks);
+      days = ES.ToIntegerIfIntegral(days);
+      hours = ES.ToIntegerIfIntegral(hours);
+      minutes = ES.ToIntegerIfIntegral(minutes);
+      seconds = ES.ToIntegerIfIntegral(seconds);
+      milliseconds = ES.ToIntegerIfIntegral(milliseconds);
+      microseconds = ES.ToIntegerIfIntegral(microseconds);
+      nanoseconds = ES.ToIntegerIfIntegral(nanoseconds);
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       CreateSlots(this);
       SetSlot(this, YEARS, years);
@@ -16385,13 +16380,13 @@
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ES.GetISO8601Calendar();
       var referenceISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
       _classCallCheck(this, PlainMonthDay);
-      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
-      isoDay = ES.ToIntegerThrowOnInfinity(isoDay);
+      isoMonth = ES.ToIntegerWithTruncation(isoMonth);
+      isoDay = ES.ToIntegerWithTruncation(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISOYear = ES.ToIntegerThrowOnInfinity(referenceISOYear);
+      referenceISOYear = ES.ToIntegerWithTruncation(referenceISOYear);
 
       // Note: if the arguments are not passed,
-      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalMonthDaySlots. This
       //       check exists only to improve the error message.
       if (arguments.length < 2) {
@@ -16635,12 +16630,12 @@
       var isoMicrosecond = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
       var isoNanosecond = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
       _classCallCheck(this, PlainTime);
-      isoHour = ES.ToIntegerThrowOnInfinity(isoHour);
-      isoMinute = ES.ToIntegerThrowOnInfinity(isoMinute);
-      isoSecond = ES.ToIntegerThrowOnInfinity(isoSecond);
-      isoMillisecond = ES.ToIntegerThrowOnInfinity(isoMillisecond);
-      isoMicrosecond = ES.ToIntegerThrowOnInfinity(isoMicrosecond);
-      isoNanosecond = ES.ToIntegerThrowOnInfinity(isoNanosecond);
+      isoHour = ES.ToIntegerWithTruncation(isoHour);
+      isoMinute = ES.ToIntegerWithTruncation(isoMinute);
+      isoSecond = ES.ToIntegerWithTruncation(isoSecond);
+      isoMillisecond = ES.ToIntegerWithTruncation(isoMillisecond);
+      isoMicrosecond = ES.ToIntegerWithTruncation(isoMicrosecond);
+      isoNanosecond = ES.ToIntegerWithTruncation(isoNanosecond);
       ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
       CreateSlots(this);
       SetSlot(this, ISO_HOUR, isoHour);
@@ -16944,13 +16939,13 @@
       var calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ES.GetISO8601Calendar();
       var referenceISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
       _classCallCheck(this, PlainYearMonth);
-      isoYear = ES.ToIntegerThrowOnInfinity(isoYear);
-      isoMonth = ES.ToIntegerThrowOnInfinity(isoMonth);
+      isoYear = ES.ToIntegerWithTruncation(isoYear);
+      isoMonth = ES.ToIntegerWithTruncation(isoMonth);
       calendar = ES.ToTemporalCalendar(calendar);
-      referenceISODay = ES.ToIntegerThrowOnInfinity(referenceISODay);
+      referenceISODay = ES.ToIntegerWithTruncation(referenceISODay);
 
       // Note: if the arguments are not passed,
-      //       ToIntegerThrowOnInfinity(undefined) will have returned 0, which will
+      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
       //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
       //       check exists only to improve the error message.
       if (arguments.length < 2) {
