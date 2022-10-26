@@ -279,7 +279,7 @@ As the broadest <code>Temporal</code> type, <code>Temporal.ZonedDateTime</code> 
 <li>Creating derived values (e.g. change time to 2:30AM) can avoid worrying that the result will be invalid due to the time zone&#39;s DST rules.</li>
 <li>Properties are available to easily measure attributes like &quot;length of day&quot; or &quot;starting time of day&quot; which may not be the same on all days in all time zones due to DST transitions or political changes to the definitions of time zones.</li>
 <li>It&#39;s easy to flip back and forth between a human-readable representation (like <code>Temporal.PlainDateTime</code>) and the UTC timeline (like <code>Temporal.Instant</code>) without having to do any work to keep the two in sync.</li>
-<li>A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string that can be sorted alphabetically by the exact time they happened.
+<li>A date/time, an offset, a time zone, and an optional calendar can be persisted in a single string.
 This behavior is also be helpful for developers who are not sure which of those components will be needed by later readers of this data.</li>
 <li>Multiple time-zone-sensitive operations can be performed in a chain without having to repeatedly provide the same time zone.</li>
 </ul>
