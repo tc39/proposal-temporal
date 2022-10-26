@@ -1405,37 +1405,37 @@
       <dt>description</dt>
       <dd>It parses the argument as an ISO 8601 duration string and returns a Duration Record.</dd>
     </dl>
-    <emu-note>The value of ToIntegerOrInfinity(*""*) is 0.</emu-note>
+    <emu-note>The value of ToIntegerWithTruncation(*""*) is 0.</emu-note>
     <emu-note>Use of mathematical values rather than approximations is important to avoid off-by-one errors with input like "PT46H66M71.50040904S".</emu-note>
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
       1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node contained within _duration_, or an empty sequence of code points if not present.
-      1. Let _yearsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_years_)).
-      1. Let _monthsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_months_)).
-      1. Let _weeksMV_ be ! ToIntegerOrInfinity(CodePointsToString(_weeks_)).
-      1. Let _daysMV_ be ! ToIntegerOrInfinity(CodePointsToString(_days_)).
-      1. Let _hoursMV_ be ! ToIntegerOrInfinity(CodePointsToString(_hours_)).
+      1. Let _yearsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_years_)).
+      1. Let _monthsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_months_)).
+      1. Let _weeksMV_ be ? ToIntegerWithTruncation(CodePointsToString(_weeks_)).
+      1. Let _daysMV_ be ? ToIntegerWithTruncation(CodePointsToString(_days_)).
+      1. Let _hoursMV_ be ? ToIntegerWithTruncation(CodePointsToString(_hours_)).
       1. If _fHours_ is not empty, then
         1. If any of _minutes_, _fMinutes_, _seconds_, _fSeconds_ is not empty, throw a *RangeError* exception.
         1. Let _fHoursDigits_ be the substring of CodePointsToString(_fHours_) from 1.
         1. Let _fHoursScale_ be the length of _fHoursDigits_.
-        1. Let _minutesMV_ be ! ToIntegerOrInfinity(_fHoursDigits_) / 10<sup>_fHoursScale_</sup> &times; 60.
+        1. Let _minutesMV_ be ? ToIntegerWithTruncation(_fHoursDigits_) / 10<sup>_fHoursScale_</sup> &times; 60.
       1. Else,
-        1. Let _minutesMV_ be ! ToIntegerOrInfinity(CodePointsToString(_minutes_)).
+        1. Let _minutesMV_ be ? ToIntegerWithTruncation(CodePointsToString(_minutes_)).
       1. If _fMinutes_ is not empty, then
         1. If any of _seconds_, _fSeconds_ is not empty, throw a *RangeError* exception.
         1. Let _fMinutesDigits_ be the substring of CodePointsToString(_fMinutes_) from 1.
         1. Let _fMinutesScale_ be the length of _fMinutesDigits_.
-        1. Let _secondsMV_ be ! ToIntegerOrInfinity(_fMinutesDigits_) / 10<sup>_fMinutesScale_</sup> &times; 60.
+        1. Let _secondsMV_ be ? ToIntegerWithTruncation(_fMinutesDigits_) / 10<sup>_fMinutesScale_</sup> &times; 60.
       1. Else if _seconds_ is not empty, then
-        1. Let _secondsMV_ be ! ToIntegerOrInfinity(CodePointsToString(_seconds_)).
+        1. Let _secondsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_seconds_)).
       1. Else,
         1. Let _secondsMV_ be remainder(_minutesMV_, 1) &times; 60.
       1. If _fSeconds_ is not empty, then
         1. Let _fSecondsDigits_ be the substring of CodePointsToString(_fSeconds_) from 1.
         1. Let _fSecondsScale_ be the length of _fSecondsDigits_.
-        1. Let _millisecondsMV_ be ! ToIntegerOrInfinity(_fSecondsDigits_) / 10<sup>_fSecondsScale_</sup> &times; 1000.
+        1. Let _millisecondsMV_ be ? ToIntegerWithTruncation(_fSecondsDigits_) / 10<sup>_fSecondsScale_</sup> &times; 1000.
       1. Else,
         1. Let _millisecondsMV_ be remainder(_secondsMV_, 1) &times; 1000.
       1. Let _microsecondsMV_ be remainder(_millisecondsMV_, 1) &times; 1000.
@@ -1444,7 +1444,7 @@
         1. Let _factor_ be -1.
       1. Else,
         1. Let _factor_ be 1.
-      1. Return ? CreateDurationRecord(_yearsMV_ &times; _factor_, _monthsMV_ &times; _factor_, _weeksMV_ &times; _factor_, _daysMV_ &times; _factor_, _hoursMV_ &times; _factor_, floor(_minutesMV_) &times; _factor_, floor(_secondsMV_) &times; _factor_, floor(_millisecondsMV_) &times; _factor_, floor(_microsecondsMV_) &times; _factor_, floor(_nanosecondsMV_) &times; _factor_).
+      1. Return ! CreateDurationRecord(_yearsMV_ &times; _factor_, _monthsMV_ &times; _factor_, _weeksMV_ &times; _factor_, _daysMV_ &times; _factor_, _hoursMV_ &times; _factor_, floor(_minutesMV_) &times; _factor_, floor(_secondsMV_) &times; _factor_, floor(_millisecondsMV_) &times; _factor_, floor(_microsecondsMV_) &times; _factor_, floor(_nanosecondsMV_) &times; _factor_).
     </emu-alg>
   </emu-clause>
 
