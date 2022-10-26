@@ -531,11 +531,11 @@ export const ES = ObjectAssign({}, ES2022, {
       throw new RangeError(`invalid duration: ${isoString}`);
     }
     const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
-    const years = ES.ToIntegerOrInfinity(match[2]) * sign;
-    const months = ES.ToIntegerOrInfinity(match[3]) * sign;
-    const weeks = ES.ToIntegerOrInfinity(match[4]) * sign;
-    const days = ES.ToIntegerOrInfinity(match[5]) * sign;
-    const hours = ES.ToIntegerOrInfinity(match[6]) * sign;
+    const years = ES.ToIntegerWithTruncation(match[2]) * sign;
+    const months = ES.ToIntegerWithTruncation(match[3]) * sign;
+    const weeks = ES.ToIntegerWithTruncation(match[4]) * sign;
+    const days = ES.ToIntegerWithTruncation(match[5]) * sign;
+    const hours = ES.ToIntegerWithTruncation(match[6]) * sign;
     let fHours = match[7];
     let minutesStr = match[8];
     let fMinutes = match[9];
@@ -550,18 +550,18 @@ export const ES = ObjectAssign({}, ES2022, {
       if (minutesStr ?? fMinutes ?? secondsStr ?? fSeconds ?? false) {
         throw new RangeError('only the smallest unit can be fractional');
       }
-      excessNanoseconds = ES.ToIntegerOrInfinity((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+      excessNanoseconds = ES.ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
     } else {
-      minutes = ES.ToIntegerOrInfinity(minutesStr) * sign;
+      minutes = ES.ToIntegerWithTruncation(minutesStr) * sign;
       if (fMinutes !== undefined) {
         if (secondsStr ?? fSeconds ?? false) {
           throw new RangeError('only the smallest unit can be fractional');
         }
-        excessNanoseconds = ES.ToIntegerOrInfinity((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+        excessNanoseconds = ES.ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
       } else {
-        seconds = ES.ToIntegerOrInfinity(secondsStr) * sign;
+        seconds = ES.ToIntegerWithTruncation(secondsStr) * sign;
         if (fSeconds !== undefined) {
-          excessNanoseconds = ES.ToIntegerOrInfinity((fSeconds + '000000000').slice(0, 9)) * sign;
+          excessNanoseconds = ES.ToIntegerWithTruncation((fSeconds + '000000000').slice(0, 9)) * sign;
         }
       }
     }
@@ -572,7 +572,6 @@ export const ES = ObjectAssign({}, ES2022, {
     seconds += MathTrunc(excessNanoseconds / 1e9) % 60;
     minutes += MathTrunc(excessNanoseconds / 6e10);
 
-    ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   ParseTemporalInstant: (isoString) => {
