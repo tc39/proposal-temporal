@@ -25,7 +25,6 @@ import {
 
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
-const ArrayPrototypeSort = Array.prototype.sort;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ArraySort = Array.prototype.sort;
 const MathAbs = Math.abs;
@@ -1881,7 +1880,6 @@ const nonIsoGeneralImpl = {
   dateFromFields(fields, options, calendar) {
     const cache = new OneObjectCache();
     const fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
-    ES.Call(ArrayPrototypeSort, fieldNames, []);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const overflow = ES.ToTemporalOverflow(options);
     const { year, month, day } = this.helper.calendarToIsoDate(fields, overflow, cache);
@@ -1892,7 +1890,6 @@ const nonIsoGeneralImpl = {
   yearMonthFromFields(fields, options, calendar) {
     const cache = new OneObjectCache();
     const fieldNames = this.fields(['month', 'monthCode', 'year']);
-    ES.Call(ArrayPrototypeSort, fieldNames, []);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const overflow = ES.ToTemporalOverflow(options);
     const { year, month, day } = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
@@ -1905,7 +1902,6 @@ const nonIsoGeneralImpl = {
     // For lunisolar calendars, either `monthCode` or `year` must be provided
     // because `month` is ambiguous without a year or a code.
     const fieldNames = this.fields(['day', 'month', 'monthCode', 'year']);
-    ES.Call(ArrayPrototypeSort, fieldNames, []);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const overflow = ES.ToTemporalOverflow(options);
     const { year, month, day } = this.helper.monthDayFromFields(fields, overflow, cache);
