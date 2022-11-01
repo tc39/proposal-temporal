@@ -914,14 +914,15 @@ export const ES = ObjectAssign({}, ES2022, {
         'second',
         'year'
       ]);
+      ES.Call(ArrayPrototypePush, fieldNames, ['timeZone', 'offset']);
       const fields = ES.PrepareTemporalFields(relativeTo, fieldNames, []);
       const dateOptions = ObjectCreate(null);
       dateOptions.overflow = 'constrain';
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, dateOptions));
-      offset = relativeTo.offset;
+      offset = fields.offset;
       if (offset === undefined) offsetBehaviour = 'wall';
-      timeZone = relativeTo.timeZone;
+      timeZone = fields.timeZone;
     } else {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset, z } =
@@ -944,7 +945,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     if (timeZone === undefined) return ES.CreateTemporalDate(year, month, day, calendar);
     timeZone = ES.ToTemporalTimeZone(timeZone);
-    const offsetNs = offsetBehaviour === 'option' ? ES.ParseTimeZoneOffsetString(ES.ToString(offset)) : 0;
+    const offsetNs = offsetBehaviour === 'option' ? ES.ParseTimeZoneOffsetString(offset) : 0;
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
