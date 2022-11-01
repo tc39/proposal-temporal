@@ -2,6 +2,7 @@
 
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
+const ArrayPrototypeSort = Array.prototype.sort;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathMin = Math.min;
 const MathMax = Math.max;
@@ -1007,6 +1008,7 @@ export const ES = ObjectAssign({}, ES2022, {
   ) => {
     const result = ObjectCreate(null);
     let any = false;
+    ES.Call(ArrayPrototypeSort, fields, []);
     for (let index = 0; index < fields.length; index++) {
       const property = fields[index];
       let value = bag[property];
