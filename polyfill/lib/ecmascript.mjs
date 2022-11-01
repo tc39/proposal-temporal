@@ -1034,7 +1034,6 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return result;
   },
-  // field access in the following operations is intentionally alphabetical
   ToTemporalTimeRecord: (bag, completeness = 'complete') => {
     const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
     const partial = ES.PrepareTemporalFields(bag, fields, 'partial', { emptySourceErrorMessage: 'invalid time-like' });
