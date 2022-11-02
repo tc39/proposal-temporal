@@ -141,11 +141,16 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-toshowcalendaroption" aoid="ToShowCalendarOption">
-    <h1>ToShowCalendarOption ( _normalizedOptions_ )</h1>
-    <p>
-      The abstract operation ToShowCalendarOption extracts the value of the property named *"calendarName"* from _normalizedOptions_ and makes sure it is a valid value for the option.
-    </p>
+  <emu-clause id="sec-temporal-tocalendarnameoption" type="abstract operation">
+    <h1>
+      ToCalendarNameOption (
+        _normalizedOptions_: an Object,
+      ): either a normal completion containing a String, or an abrupt completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It extracts the value of the property named *"calendarName"* from _normalizedOptions_ and makes sure it is a valid value for the option.</dd>
+    </dl>
     <emu-note>
       This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>

@@ -763,7 +763,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (options === undefined) return fallback;
     return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
   },
-  ToShowCalendarOption: (options) => {
+  ToCalendarNameOption: (options) => {
     return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
   },
   ToTimeZoneNameOption: (options) => {

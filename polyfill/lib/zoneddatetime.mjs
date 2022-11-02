@@ -422,7 +422,7 @@ export class ZonedDateTime {
     options = ES.GetOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const showCalendar = ES.ToShowCalendarOption(options);
+    const showCalendar = ES.ToCalendarNameOption(options);
     const showTimeZone = ES.ToTimeZoneNameOption(options);
     const showOffset = ES.ToShowOffsetOption(options);
     return ES.TemporalZonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {

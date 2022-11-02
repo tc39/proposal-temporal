@@ -154,7 +154,7 @@ export class PlainDate {
   toString(options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    const showCalendar = ES.ToShowCalendarOption(options);
+    const showCalendar = ES.ToCalendarNameOption(options);
     return ES.TemporalDateToString(this, showCalendar);
   }
   toJSON() {
