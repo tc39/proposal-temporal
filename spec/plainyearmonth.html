@@ -312,7 +312,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
+        1. Let _showCalendar_ be ? ToCalendarNameOption(_options_).
         1. Return ? TemporalYearMonthToString(_yearMonth_, _showCalendar_).
       </emu-alg>
     </emu-clause>

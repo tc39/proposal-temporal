@@ -183,7 +183,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
+        1. Let _showCalendar_ be ? ToCalendarNameOption(_options_).
         1. Return ? TemporalMonthDayToString(_monthDay_, _showCalendar_).
       </emu-alg>
     </emu-clause>
