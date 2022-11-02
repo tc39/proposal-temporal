@@ -765,7 +765,7 @@
         1. Let _precision_ be ? ToSecondsStringPrecision(_options_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _showCalendar_ be ? ToShowCalendarOption(_options_).
-        1. Let _showTimeZone_ be ? ToShowTimeZoneNameOption(_options_).
+        1. Let _showTimeZone_ be ? ToTimeZoneNameOption(_options_).
         1. Let _showOffset_ be ? ToShowOffsetOption(_options_).
         1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _showTimeZone_, _showOffset_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
       </emu-alg>

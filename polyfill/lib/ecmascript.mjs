@@ -766,7 +766,7 @@ export const ES = ObjectAssign({}, ES2022, {
   ToShowCalendarOption: (options) => {
     return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
   },
-  ToShowTimeZoneNameOption: (options) => {
+  ToTimeZoneNameOption: (options) => {
     return ES.GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
   },
   ToShowOffsetOption: (options) => {
