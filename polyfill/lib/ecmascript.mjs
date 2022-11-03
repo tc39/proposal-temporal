@@ -3691,9 +3691,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const sign = operation === 'since' ? -1 : 1;
     other = ES.ToTemporalTime(other);
     options = ES.GetOptionsObject(options);
+    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
     if (largestUnit === 'auto') largestUnit = 'hour';
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
     if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
