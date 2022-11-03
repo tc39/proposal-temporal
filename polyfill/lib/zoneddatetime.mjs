@@ -177,12 +177,6 @@ export class ZonedDateTime {
     }
     ES.RejectObjectWithCalendarOrTimeZone(temporalZonedDateTimeLike);
 
-    // TODO: Reorder according to spec.
-    options = ES.GetOptionsObject(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
-    const offset = ES.ToTemporalOffset(options, 'prefer');
-
-    const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, [
       'day',
@@ -198,6 +192,12 @@ export class ZonedDateTime {
     ]);
     ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
     const props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
+
+    options = ES.GetOptionsObject(options);
+    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const offset = ES.ToTemporalOffset(options, 'prefer');
+
+    const timeZone = GetSlot(this, TIME_ZONE);
     ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
     fields = ES.CalendarMergeFields(calendar, fields, props);
