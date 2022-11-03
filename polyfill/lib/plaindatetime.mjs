@@ -363,8 +363,8 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
-    const showCalendar = ES.ToCalendarNameOption(options);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    const showCalendar = ES.ToCalendarNameOption(options);
     return ES.TemporalDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toJSON() {
