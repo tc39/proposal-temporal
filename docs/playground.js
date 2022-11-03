@@ -7832,10 +7832,10 @@
       if (options === undefined) return fallback;
       return ES.GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
     },
-    ToShowCalendarOption: function ToShowCalendarOption(options) {
+    ToCalendarNameOption: function ToCalendarNameOption(options) {
       return ES.GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
     },
-    ToShowTimeZoneNameOption: function ToShowTimeZoneNameOption(options) {
+    ToTimeZoneNameOption: function ToTimeZoneNameOption(options) {
       return ES.GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
     },
     ToShowOffsetOption: function ToShowOffsetOption(options) {
@@ -8426,6 +8426,12 @@
         ES.Call(ArrayPrototypePush$4, fieldNames, ['timeZone', 'offset']);
         var fields = ES.PrepareTemporalFields(item, fieldNames, ['timeZone']);
         timeZone = ES.ToTemporalTimeZone(fields.timeZone);
+        offset = fields.offset;
+        if (offset === undefined) {
+          offsetBehaviour = 'wall';
+        } else {
+          offset = ES.ToString(offset);
+        }
         var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
         year = _ES$InterpretTemporal3.year;
         month = _ES$InterpretTemporal3.month;
@@ -8436,12 +8442,6 @@
         millisecond = _ES$InterpretTemporal3.millisecond;
         microsecond = _ES$InterpretTemporal3.microsecond;
         nanosecond = _ES$InterpretTemporal3.nanosecond;
-        offset = fields.offset;
-        if (offset === undefined) {
-          offsetBehaviour = 'wall';
-        } else {
-          offset = ES.ToString(offset);
-        }
       } else {
         ES.ToTemporalOverflow(options); // validate and ignore
         var ianaName, z;
@@ -14008,10 +14008,10 @@
     monthsInYear: function monthsInYear() {
       return 12;
     },
-    minimumMonthLength: function /* calendarDate */ minimumMonthLength() {
+    minimumMonthLength: function minimumMonthLength( /* calendarDate */) {
       return 29;
     },
-    maximumMonthLength: function /* calendarDate */ maximumMonthLength() {
+    maximumMonthLength: function maximumMonthLength( /* calendarDate */) {
       return 30;
     },
     DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
@@ -14721,10 +14721,10 @@
     monthsInYear: function monthsInYear(calendarDate, cache) {
       return this.inLeapYear(calendarDate, cache) ? 13 : 12;
     },
-    minimumMonthLength: function /* calendarDate */ minimumMonthLength() {
+    minimumMonthLength: function minimumMonthLength( /* calendarDate */) {
       return 29;
     },
-    maximumMonthLength: function /* calendarDate */ maximumMonthLength() {
+    maximumMonthLength: function maximumMonthLength( /* calendarDate */) {
       return 30;
     },
     getMonthList: function getMonthList(calendarYear, cache) {
@@ -15377,7 +15377,7 @@
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         options = ES.GetOptionsObject(options);
-        var showCalendar = ES.ToShowCalendarOption(options);
+        var showCalendar = ES.ToCalendarNameOption(options);
         return ES.TemporalDateToString(this, showCalendar);
       }
     }, {
@@ -15844,7 +15844,7 @@
           precision = _ES$ToSecondsStringPr.precision,
           unit = _ES$ToSecondsStringPr.unit,
           increment = _ES$ToSecondsStringPr.increment;
-        var showCalendar = ES.ToShowCalendarOption(options);
+        var showCalendar = ES.ToCalendarNameOption(options);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
         return ES.TemporalDateTimeToString(this, precision, showCalendar, {
           unit: unit,
@@ -16449,7 +16449,7 @@
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
         options = ES.GetOptionsObject(options);
-        var showCalendar = ES.ToShowCalendarOption(options);
+        var showCalendar = ES.ToCalendarNameOption(options);
         return ES.TemporalMonthDayToString(this, showCalendar);
       }
     }, {
@@ -17078,7 +17078,7 @@
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
         if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
         options = ES.GetOptionsObject(options);
-        var showCalendar = ES.ToShowCalendarOption(options);
+        var showCalendar = ES.ToCalendarNameOption(options);
         return ES.TemporalYearMonthToString(this, showCalendar);
       }
     }, {
@@ -17586,8 +17586,8 @@
           unit = _ES$ToSecondsStringPr.unit,
           increment = _ES$ToSecondsStringPr.increment;
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-        var showCalendar = ES.ToShowCalendarOption(options);
-        var showTimeZone = ES.ToShowTimeZoneNameOption(options);
+        var showCalendar = ES.ToCalendarNameOption(options);
+        var showTimeZone = ES.ToTimeZoneNameOption(options);
         var showOffset = ES.ToShowOffsetOption(options);
         return ES.TemporalZonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
           unit: unit,
