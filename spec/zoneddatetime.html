@@ -1188,7 +1188,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_ns_).
         1. Let _isoCalendar_ be ! GetISO8601Calendar().
         1. Let _temporalDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _isoCalendar_).
-        1. Let _dateTimeString_ be ? TemporalDateTimeToString(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _isoCalendar_, _precision_, *"never"*).
+        1. Let _dateTimeString_ be ! TemporalDateTimeToString(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _isoCalendar_, _precision_, *"never"*).
         1. If _showOffset_ is *"never"*, then
           1. Let _offsetString_ be the empty String.
         1. Else,
