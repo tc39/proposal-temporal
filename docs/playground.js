@@ -10573,9 +10573,9 @@
       var sign = operation === 'since' ? -1 : 1;
       other = ES.ToTemporalTime(other);
       options = ES.GetOptionsObject(options);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
       var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
       if (largestUnit === 'auto') largestUnit = 'hour';
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
       if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
         throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
       }
@@ -15844,8 +15844,8 @@
           precision = _ES$ToSecondsStringPr.precision,
           unit = _ES$ToSecondsStringPr.unit,
           increment = _ES$ToSecondsStringPr.increment;
-        var showCalendar = ES.ToCalendarNameOption(options);
         var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+        var showCalendar = ES.ToCalendarNameOption(options);
         return ES.TemporalDateTimeToString(this, precision, showCalendar, {
           unit: unit,
           increment: increment,
@@ -17382,16 +17382,14 @@
           throw new TypeError('invalid zoned-date-time-like');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalZonedDateTimeLike);
-
-        // TODO: Reorder according to spec.
-        options = ES.GetOptionsObject(options);
-        var disambiguation = ES.ToTemporalDisambiguation(options);
-        var offset = ES.ToTemporalOffset(options, 'prefer');
-        var timeZone = GetSlot(this, TIME_ZONE);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
         var props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
+        options = ES.GetOptionsObject(options);
+        var disambiguation = ES.ToTemporalDisambiguation(options);
+        var offset = ES.ToTemporalOffset(options, 'prefer');
+        var timeZone = GetSlot(this, TIME_ZONE);
         ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
         var fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
         fields = ES.CalendarMergeFields(calendar, fields, props);
