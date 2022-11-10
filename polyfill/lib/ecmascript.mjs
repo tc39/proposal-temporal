@@ -1683,9 +1683,17 @@ export const ES = ObjectAssign({}, ES2022, {
     if (ES.Type(calendarLike) === 'Object') {
       if (ES.IsTemporalCalendar(calendarLike)) return calendarLike;
       if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
+      if (ES.IsTemporalTimeZone(calendarLike)) {
+        throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
+      }
       if (!('calendar' in calendarLike)) return calendarLike;
       calendarLike = calendarLike.calendar;
-      if (ES.Type(calendarLike) === 'Object' && !('calendar' in calendarLike)) return calendarLike;
+      if (ES.Type(calendarLike) === 'Object') {
+        if (ES.IsTemporalTimeZone(calendarLike)) {
+          throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.TimeZone');
+        }
+        if (!('calendar' in calendarLike)) return calendarLike;
+      }
     }
     const identifier = ES.ToString(calendarLike);
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
@@ -1746,10 +1754,16 @@ export const ES = ObjectAssign({}, ES2022, {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
       if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
       if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
+      if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
+        throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
+      }
       if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
       temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
-      if (ES.Type(temporalTimeZoneLike) === 'Object' && !('timeZone' in temporalTimeZoneLike)) {
-        return temporalTimeZoneLike;
+      if (ES.Type(temporalTimeZoneLike) === 'Object') {
+        if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
+          throw new RangeError('Expected a time zone object as the timeZone property but received a Temporal.Calendar');
+        }
+        if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
       }
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
