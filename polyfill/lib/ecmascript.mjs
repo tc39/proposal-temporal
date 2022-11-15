@@ -1386,8 +1386,6 @@ export const ES = ObjectAssign({}, ES2022, {
       offset = fields.offset;
       if (offset === undefined) {
         offsetBehaviour = 'wall';
-      } else {
-        offset = ES.ToString(offset);
       }
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
