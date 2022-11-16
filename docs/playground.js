@@ -8429,8 +8429,6 @@
         offset = fields.offset;
         if (offset === undefined) {
           offsetBehaviour = 'wall';
-        } else {
-          offset = ES.ToString(offset);
         }
         var _ES$InterpretTemporal3 = ES.InterpretTemporalDateTimeFields(calendar, fields, options);
         year = _ES$InterpretTemporal3.year;
@@ -14007,7 +14005,7 @@
     },
     monthsInYear: function monthsInYear() {
       return 12;
-    },
+    } /* calendarYear, cache */,
     minimumMonthLength: function minimumMonthLength( /* calendarDate */) {
       return 29;
     },
@@ -14037,7 +14035,7 @@
     },
     monthsInYear: function monthsInYear() {
       return 12;
-    },
+    } /* calendarYear, cache */,
     minimumMonthLength: function minimumMonthLength(calendarDate) {
       var month = calendarDate.month;
       if (month === 12) return 29;
@@ -14072,7 +14070,7 @@
     },
     monthsInYear: function monthsInYear() {
       return 12;
-    },
+    } /* calendarYear, cache */,
     minimumMonthLength: function minimumMonthLength(calendarDate) {
       return this.getMonthInfo(calendarDate).length;
     },
@@ -14330,7 +14328,7 @@
       },
       monthsInYear: function monthsInYear() {
         return 12;
-      },
+      } /* calendarDate */,
       minimumMonthLength: function minimumMonthLength(calendarDate) {
         var month = calendarDate.month;
         if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
@@ -14475,7 +14473,7 @@
       },
       monthsInYear: function monthsInYear() {
         return 13;
-      },
+      } /* calendarDate */,
       minimumMonthLength: function minimumMonthLength(calendarDate) {
         var month = calendarDate.month;
         // Ethiopian/Coptic calendars have 12 30-day months and an extra 5-6 day 13th month.
