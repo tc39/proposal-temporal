@@ -772,12 +772,23 @@ export const ES = ObjectAssign({}, ES2022, {
   ToShowOffsetOption: (options) => {
     return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
   },
-  ToTemporalRoundingIncrement: (options, dividend, inclusive) => {
-    let maximum = Infinity;
-    if (dividend !== undefined) maximum = dividend;
-    if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
-    const increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
-    if (dividend !== undefined && dividend % increment !== 0) {
+  ToTemporalRoundingIncrement: (options) => {
+    let increment = options.roundingIncrement;
+    if (increment === undefined) return 1;
+    increment = ES.ToNumber(increment);
+    if (!NumberIsFinite(increment) || increment < 1) {
+      throw new RangeError(`roundingIncrement must be at least 1 and finite, not ${increment}`);
+    }
+    return increment;
+  },
+  ValidateTemporalRoundingIncrement: (increment, dividend, inclusive) => {
+    let maximum = dividend;
+    if (!inclusive) maximum = dividend > 1 ? dividend - 1 : 1;
+    if (increment > maximum) {
+      throw new RangeError(`roundingIncrement must be at least 1 and less than ${maximum}, not ${increment}`);
+    }
+    increment = MathFloor(increment);
+    if (dividend % increment !== 0) {
       throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);
     }
     return increment;
@@ -795,7 +806,10 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond: 1000,
       nanosecond: 1000
     };
-    return ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    const increment = ES.ToTemporalRoundingIncrement(options);
+    const maximum = maximumIncrements[smallestUnit];
+    if (maximum == undefined) return MathFloor(increment);
+    return ES.ValidateTemporalRoundingIncrement(increment, maximum, false);
   },
   ToSecondsStringPrecision: (options) => {
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
@@ -3553,7 +3567,12 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_DIFFERENCE_INCREMENTS[smallestUnit], false);
+    let roundingIncrement = ES.ToTemporalRoundingIncrement(options);
+    roundingIncrement = ES.ValidateTemporalRoundingIncrement(
+      roundingIncrement,
+      MAX_DIFFERENCE_INCREMENTS[smallestUnit],
+      false
+    );
     const onens = GetSlot(first, EPOCHNANOSECONDS);
     const twons = GetSlot(second, EPOCHNANOSECONDS);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
@@ -3588,7 +3607,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+    const roundingIncrement = MathFloor(ES.ToTemporalRoundingIncrement(options));
 
     const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
@@ -3727,7 +3746,8 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
+    let roundingIncrement = ES.ToTemporalRoundingIncrement(options);
+    roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, MAX_INCREMENTS[smallestUnit], false);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(plainTime, ISO_HOUR),
       GetSlot(plainTime, ISO_MINUTE),
@@ -3815,7 +3835,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+    const roundingIncrement = MathFloor(ES.ToTemporalRoundingIncrement(options));
 
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
@@ -5029,15 +5049,6 @@ export const ES = ObjectAssign({}, ES2022, {
       return value;
     }
     return fallback;
-  },
-  GetNumberOption: (options, property, minimum, maximum, fallback) => {
-    let value = options[property];
-    if (value === undefined) return fallback;
-    value = ES.ToNumber(value);
-    if (NumberIsNaN(value) || value < minimum || value > maximum) {
-      throw new RangeError(`${property} must be between ${minimum} and ${maximum}, not ${value}`);
-    }
-    return MathFloor(value);
   },
   IsBuiltinCalendar: (id) => {
     return ES.Call(ArrayIncludes, BUILTIN_CALENDAR_IDS, [ES.ASCIILowercase(id)]);
