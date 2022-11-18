@@ -795,7 +795,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (!NumberIsFinite(increment) || increment < 1) {
       throw new RangeError(`roundingIncrement must be at least 1 and finite, not ${increment}`);
     }
-    return increment;
+    return MathTrunc(increment);
   },
   ValidateTemporalRoundingIncrement: (increment, dividend, inclusive) => {
     let maximum = dividend;
@@ -803,11 +803,9 @@ export const ES = ObjectAssign({}, ES2022, {
     if (increment > maximum) {
       throw new RangeError(`roundingIncrement must be at least 1 and less than ${maximum}, not ${increment}`);
     }
-    increment = MathFloor(increment);
     if (dividend % increment !== 0) {
       throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);
     }
-    return increment;
   },
   ToFractionalSecondDigits: (normalizedOptions) => {
     let digitsValue = normalizedOptions.fractionalSecondDigits;
@@ -3579,13 +3577,10 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond: 1000,
       nanosecond: 1000
     };
-    let roundingIncrement = ES.ToTemporalRoundingIncrement(options);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options);
     const maximum = MAX_DIFFERENCE_INCREMENTS[smallestUnit];
-    if (maximum === undefined) {
-      roundingIncrement = MathFloor(roundingIncrement);
-    } else {
-      roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    }
+    if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+
     return { largestUnit, roundingIncrement, roundingMode, smallestUnit };
   },
   DifferenceTemporalInstant: (operation, instant, other, options) => {

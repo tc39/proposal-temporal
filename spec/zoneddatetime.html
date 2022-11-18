@@ -741,7 +741,7 @@
           1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
           1. Assert: _maximum_ is not *undefined*.
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
-        1. Set _roundingIncrement_ to ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+        1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].

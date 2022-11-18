@@ -89,8 +89,8 @@ export class Instant {
       microsecond: 86400e6,
       nanosecond: 86400e9
     };
-    let roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
-    roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], true);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+    ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], true);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
     return new Instant(roundedNs);
