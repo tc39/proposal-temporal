@@ -3542,23 +3542,34 @@ export const ES = ObjectAssign({}, ES2022, {
     );
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
-  DifferenceTemporalInstant: (operation, instant, other, options) => {
-    other = ES.ToTemporalInstant(other);
-    let first, second;
-    if (operation === 'until') {
-      [first, second] = [instant, other];
-    } else {
-      [first, second] = [other, instant];
-    }
+  GetDifferenceSettings: (op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) => {
     options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+
+    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
+      const p = unitInfo[0];
+      const s = unitInfo[1];
+      const c = unitInfo[2];
+      if ((group === 'datetime' || c === group) && !ES.Call(ArrayIncludes, disallowed, [s])) {
+        allowed.push(s, p);
+      }
+      return allowed;
+    }, []);
+
+    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
+    if (ES.Call(ArrayIncludes, disallowed, [smallestUnit])) {
+      throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
+    }
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
+    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', group, 'auto');
+    if (ES.Call(ArrayIncludes, disallowed, [largestUnit])) {
+      throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
+    }
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    if (op === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const MAX_DIFFERENCE_INCREMENTS = {
       hour: 24,
       minute: 60,
@@ -3568,23 +3579,43 @@ export const ES = ObjectAssign({}, ES2022, {
       nanosecond: 1000
     };
     let roundingIncrement = ES.ToTemporalRoundingIncrement(options);
-    roundingIncrement = ES.ValidateTemporalRoundingIncrement(
-      roundingIncrement,
-      MAX_DIFFERENCE_INCREMENTS[smallestUnit],
-      false
-    );
-    const onens = GetSlot(first, EPOCHNANOSECONDS);
-    const twons = GetSlot(second, EPOCHNANOSECONDS);
+    const maximum = MAX_DIFFERENCE_INCREMENTS[smallestUnit];
+    if (maximum === undefined) {
+      roundingIncrement = MathFloor(roundingIncrement);
+    } else {
+      roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+    }
+    return { largestUnit, roundingIncrement, roundingMode, smallestUnit };
+  },
+  DifferenceTemporalInstant: (operation, instant, other, options) => {
+    const sign = operation === 'since' ? -1 : 1;
+    other = ES.ToTemporalInstant(other);
+
+    const settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'second');
+
+    const onens = GetSlot(instant, EPOCHNANOSECONDS);
+    const twons = GetSlot(other, EPOCHNANOSECONDS);
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
       onens,
       twons,
-      roundingIncrement,
-      smallestUnit,
-      largestUnit,
-      roundingMode
+      settings.roundingIncrement,
+      settings.smallestUnit,
+      settings.largestUnit,
+      settings.roundingMode
     );
     const Duration = GetIntrinsic('%Temporal.Duration%');
-    return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    return new Duration(
+      0,
+      0,
+      0,
+      0,
+      sign * hours,
+      sign * minutes,
+      sign * seconds,
+      sign * milliseconds,
+      sign * microseconds,
+      sign * nanoseconds
+    );
   },
   DifferenceTemporalPlainDate: (operation, plainDate, other, options) => {
     const sign = operation === 'since' ? -1 : 1;
@@ -3597,24 +3628,14 @@ export const ES = ObjectAssign({}, ES2022, {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
 
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'day');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
-    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = MathFloor(ES.ToTemporalRoundingIncrement(options));
+    const settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
 
     const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
-    untilOptions.largestUnit = largestUnit;
+    untilOptions.largestUnit = settings.largestUnit;
     let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions);
 
-    if (smallestUnit !== 'day' || roundingIncrement !== 1) {
+    if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
       ({ years, months, weeks, days } = ES.RoundDuration(
         years,
         months,
@@ -3626,9 +3647,9 @@ export const ES = ObjectAssign({}, ES2022, {
         0,
         0,
         0,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
+        settings.roundingIncrement,
+        settings.smallestUnit,
+        settings.roundingMode,
         plainDate
       ));
     }
@@ -3646,17 +3667,8 @@ export const ES = ObjectAssign({}, ES2022, {
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
-    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
+
+    const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       ES.DifferenceISODateTime(
@@ -3679,7 +3691,7 @@ export const ES = ObjectAssign({}, ES2022, {
         GetSlot(other, ISO_MICROSECOND),
         GetSlot(other, ISO_NANOSECOND),
         calendar,
-        largestUnit,
+        settings.largestUnit,
         options
       );
 
@@ -3696,9 +3708,9 @@ export const ES = ObjectAssign({}, ES2022, {
         milliseconds,
         microseconds,
         nanoseconds,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
+        settings.roundingIncrement,
+        settings.smallestUnit,
+        settings.roundingMode,
         relativeTo
       ));
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
@@ -3709,7 +3721,7 @@ export const ES = ObjectAssign({}, ES2022, {
       milliseconds,
       microseconds,
       nanoseconds,
-      largestUnit
+      settings.largestUnit
     ));
 
     const Duration = GetIntrinsic('%Temporal.Duration%');
@@ -3729,25 +3741,9 @@ export const ES = ObjectAssign({}, ES2022, {
   DifferenceTemporalPlainTime: (operation, plainTime, other, options) => {
     const sign = operation === 'since' ? -1 : 1;
     other = ES.ToTemporalTime(other);
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
-    if (largestUnit === 'auto') largestUnit = 'hour';
-    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const MAX_INCREMENTS = {
-      hour: 24,
-      minute: 60,
-      second: 60,
-      millisecond: 1000,
-      microsecond: 1000,
-      nanosecond: 1000
-    };
-    let roundingIncrement = ES.ToTemporalRoundingIncrement(options);
-    roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, MAX_INCREMENTS[smallestUnit], false);
+
+    const settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'hour');
+
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(plainTime, ISO_HOUR),
       GetSlot(plainTime, ISO_MINUTE),
@@ -3773,9 +3769,9 @@ export const ES = ObjectAssign({}, ES2022, {
       milliseconds,
       microseconds,
       nanoseconds,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode
+      settings.roundingIncrement,
+      settings.smallestUnit,
+      settings.roundingMode
     ));
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceDuration(
       0,
@@ -3785,7 +3781,7 @@ export const ES = ObjectAssign({}, ES2022, {
       milliseconds,
       microseconds,
       nanoseconds,
-      largestUnit
+      settings.largestUnit
     ));
     const Duration = GetIntrinsic('%Temporal.Duration%');
     return new Duration(
@@ -3813,29 +3809,8 @@ export const ES = ObjectAssign({}, ES2022, {
         `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
       );
     }
-    options = ES.GetOptionsObject(options);
-    const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
-      const p = unitInfo[0];
-      const s = unitInfo[1];
-      const c = unitInfo[2];
-      if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
-      return allowed;
-    }, []);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'month');
-    if (smallestUnit === 'week' || smallestUnit === 'day') {
-      throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
-    }
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
-    if (largestUnit === 'week' || largestUnit === 'day') {
-      throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
-    }
-    if (largestUnit === 'auto') largestUnit = 'year';
-    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = MathFloor(ES.ToTemporalRoundingIncrement(options));
+
+    const settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
 
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
@@ -3847,10 +3822,10 @@ export const ES = ObjectAssign({}, ES2022, {
 
     const untilOptions = ObjectCreate(null);
     ES.CopyDataProperties(untilOptions, options, []);
-    untilOptions.largestUnit = largestUnit;
+    untilOptions.largestUnit = settings.largestUnit;
     let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
 
-    if (smallestUnit !== 'month' || roundingIncrement !== 1) {
+    if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
       ({ years, months } = ES.RoundDuration(
         years,
         months,
@@ -3862,9 +3837,9 @@ export const ES = ObjectAssign({}, ES2022, {
         0,
         0,
         0,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode,
+        settings.roundingIncrement,
+        settings.smallestUnit,
+        settings.roundingMode,
         thisDate
       ));
     }
@@ -3882,22 +3857,18 @@ export const ES = ObjectAssign({}, ES2022, {
     if (calendarId !== otherCalendarId) {
       throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
     }
-    options = ES.GetOptionsObject(options);
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits('hour', smallestUnit);
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
-    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-    if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
-    }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
+
+    const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
 
     const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
     const ns2 = GetSlot(other, EPOCHNANOSECONDS);
     let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-    if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
+    if (
+      settings.largestUnit !== 'year' &&
+      settings.largestUnit !== 'month' &&
+      settings.largestUnit !== 'week' &&
+      settings.largestUnit !== 'day'
+    ) {
       // The user is only asking for a time difference, so return difference of instants.
       years = 0;
       months = 0;
@@ -3906,10 +3877,10 @@ export const ES = ObjectAssign({}, ES2022, {
       ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceInstant(
         ns1,
         ns2,
-        roundingIncrement,
-        smallestUnit,
-        largestUnit,
-        roundingMode
+        settings.roundingIncrement,
+        settings.smallestUnit,
+        settings.largestUnit,
+        settings.roundingMode
       ));
     } else {
       const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
@@ -3921,9 +3892,9 @@ export const ES = ObjectAssign({}, ES2022, {
       }
       const untilOptions = ObjectCreate(null);
       ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = largestUnit;
+      untilOptions.largestUnit = settings.largestUnit;
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions));
+        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, untilOptions));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.RoundDuration(
           years,
@@ -3936,9 +3907,9 @@ export const ES = ObjectAssign({}, ES2022, {
           milliseconds,
           microseconds,
           nanoseconds,
-          roundingIncrement,
-          smallestUnit,
-          roundingMode,
+          settings.roundingIncrement,
+          settings.smallestUnit,
+          settings.roundingMode,
           zonedDateTime
         ));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
@@ -3953,9 +3924,9 @@ export const ES = ObjectAssign({}, ES2022, {
           milliseconds,
           microseconds,
           nanoseconds,
-          roundingIncrement,
-          smallestUnit,
-          roundingMode,
+          settings.roundingIncrement,
+          settings.smallestUnit,
+          settings.roundingMode,
           zonedDateTime
         ));
     }
