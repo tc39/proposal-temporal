@@ -35,20 +35,19 @@
       <p>
         The `Temporal.Duration` function performs the following steps when called:
       </p>
-      <emu-note>The value of ! ToIntegerIfIntegral(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _y_ be ? ToIntegerIfIntegral(_years_).
-        1. Let _mo_ be ? ToIntegerIfIntegral(_months_).
-        1. Let _w_ be ? ToIntegerIfIntegral(_weeks_).
-        1. Let _d_ be ? ToIntegerIfIntegral(_days_).
-        1. Let _h_ be ? ToIntegerIfIntegral(_hours_).
-        1. Let _m_ be ? ToIntegerIfIntegral(_minutes_).
-        1. Let _s_ be ? ToIntegerIfIntegral(_seconds_).
-        1. Let _ms_ be ? ToIntegerIfIntegral(_milliseconds_).
-        1. Let _mis_ be ? ToIntegerIfIntegral(_microseconds_).
-        1. Let _ns_ be ? ToIntegerIfIntegral(_nanoseconds_).
+        1. If _years_ is *undefined*, let _y_ be 0; else let _y_ be ? ToIntegerIfIntegral(_years_).
+        1. If _months_ is *undefined*, let _mo_ be 0; else let _mo_ be ? ToIntegerIfIntegral(_months_).
+        1. If _weeks_ is *undefined*, let _w_ be 0; else let _w_ be ? ToIntegerIfIntegral(_weeks_).
+        1. If _days_ is *undefined*, let _d_ be 0; else let _d_ be ? ToIntegerIfIntegral(_days_).
+        1. If _hours_ is *undefined*, let _h_ be 0; else let _h_ be ? ToIntegerIfIntegral(_hours_).
+        1. If _minutes_ is *undefined*, let _m_ be 0; else let _m_ be ? ToIntegerIfIntegral(_minutes_).
+        1. If _seconds_ is *undefined*, let _s_ be 0; else let _s_ be ? ToIntegerIfIntegral(_seconds_).
+        1. If _milliseconds_ is *undefined*, let _ms_ be 0; else let _ms_ be ? ToIntegerIfIntegral(_milliseconds_).
+        1. If _microseconds_ is *undefined*, let _mis_ be 0; else let _mis_ be ? ToIntegerIfIntegral(_microseconds_).
+        1. If _nanoseconds_ is *undefined*, let _ns_ be 0; else let _ns_ be ? ToIntegerIfIntegral(_nanoseconds_).
         1. Return ? CreateTemporalDuration(_y_, _mo_, _w_, _d_, _h_, _m_, _s_, _ms_, _mis_, _ns_, NewTarget).
       </emu-alg>
     </emu-clause>
