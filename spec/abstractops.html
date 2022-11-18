@@ -1611,7 +1611,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not finite or not positive.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated, or throws a *RangeError* when the result is *NaN*, not finite or not positive.</dd>
     </dl>
     <emu-alg>
       1. Let _integer_ be ? ToIntegerWithTruncation(_argument_).
@@ -1628,13 +1628,12 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not finite.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated or throws a *RangeError* when the result is *NaN* or not finite.</dd>
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
-      1. If _number_ is *NaN*, return 0.
-      1. If _number_ is *+&infin;*<sub>𝔽</sub> or *-&infin;*<sub>𝔽</sub>, throw a *RangeError* exception.
-      1. Return truncate(ℝ(number)).
+      1. If _number_ is *NaN*, *+&infin;*<sub>𝔽</sub> or *-&infin;*<sub>𝔽</sub>, throw a *RangeError* exception.
+      1. Return truncate(ℝ(_number_)).
     </emu-alg>
   </emu-clause>
 
@@ -1646,7 +1645,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value (replacing *NaN* with 0), or throws a *RangeError* when that Number value is not a finite integral Number.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value, or throws a *RangeError* when the result is *NaN* or not finite.</dd>
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
@@ -1702,10 +1701,6 @@
         1. Throw a *TypeError* exception.
       1. Return _result_.
     </emu-alg>
-    <emu-note>
-      The value of ! ToIntegerWithTruncation(*undefined*) is 0.
-      ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.
-    </emu-note>
     <emu-table id="table-temporal-field-requirements">
       <emu-caption>Temporal field requirements</emu-caption>
       <table class="real-table">

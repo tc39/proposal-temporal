@@ -28,19 +28,18 @@
       <p>
         This function performs the following steps when called:
       </p>
-      <emu-note>The value of ! ToIntegerWithTruncation(*undefined*) is 0.</emu-note>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _isoYear_ be ? ToIntegerWithTruncation(_isoYear_).
-        1. Let _isoMonth_ be ? ToIntegerWithTruncation(_isoMonth_).
-        1. Let _isoDay_ be ? ToIntegerWithTruncation(_isoDay_).
-        1. Let _hour_ be ? ToIntegerWithTruncation(_hour_).
-        1. Let _minute_ be ? ToIntegerWithTruncation(_minute_).
-        1. Let _second_ be ? ToIntegerWithTruncation(_second_).
-        1. Let _millisecond_ be ? ToIntegerWithTruncation(_millisecond_).
-        1. Let _microsecond_ be ? ToIntegerWithTruncation(_microsecond_).
-        1. Let _nanosecond_ be ? ToIntegerWithTruncation(_nanosecond_).
+        1. Set _isoYear_ to ? ToIntegerWithTruncation(_isoYear_).
+        1. Set _isoMonth_ to ? ToIntegerWithTruncation(_isoMonth_).
+        1. Set _isoDay_ to ? ToIntegerWithTruncation(_isoDay_).
+        1. If _hour_ is *undefined*, set _hour_ to 0; else set _hour_ to ? ToIntegerWithTruncation(_hour_).
+        1. If _minute_ is *undefined*, set _minute_ to 0; else set _minute_ to ? ToIntegerWithTruncation(_minute_).
+        1. If _second_ is *undefined*, set _second_ to 0; else set _second_ to ? ToIntegerWithTruncation(_second_).
+        1. If _millisecond_ is *undefined*, set _millisecond_ to 0; else set _millisecond_ to ? ToIntegerWithTruncation(_millisecond_).
+        1. If _microsecond_ is *undefined*, set _microsecond_ to 0; else set _microsecond_ to ? ToIntegerWithTruncation(_microsecond_).
+        1. If _nanosecond_ is *undefined*, set _nanosecond_ to 0; else set _nanosecond_ to ? ToIntegerWithTruncation(_nanosecond_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
         1. Return ? CreateTemporalDateTime(_isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, NewTarget).
       </emu-alg>
