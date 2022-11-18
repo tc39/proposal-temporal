@@ -107,7 +107,10 @@ export class Instant {
     options = ES.GetOptionsObject(options);
     let timeZone = options.timeZone;
     if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
-    const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
+    const digits = ES.ToFractionalSecondDigits(options);
+    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+    const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, increment, unit, roundingMode);

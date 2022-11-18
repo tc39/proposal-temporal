@@ -405,8 +405,12 @@ export class Duration {
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    const { precision, unit, increment } = ES.ToSecondsStringPrecision(options);
-    if (precision === 'minute') throw new RangeError('smallestUnit must not be "minute"');
+    const digits = ES.ToFractionalSecondDigits(options);
+    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+    if (smallestUnit === 'hour' || smallestUnit === 'minute') {
+      throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
+    }
+    const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
   }
