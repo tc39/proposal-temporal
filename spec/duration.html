@@ -431,10 +431,7 @@
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
-        1. If _maximum_ is *undefined*, then
-          1. Set _roundingIncrement_ to floor(ℝ(_roundingIncrement_)).
-        1. Else,
-          1. Set _roundingIncrement_ to ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+        1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_roundTo_).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _largestUnit_, _relativeTo_).
         1. Let _roundResult_ be (? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_)).[[DurationRecord]].

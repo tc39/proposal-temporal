@@ -196,50 +196,48 @@
     <h1>
       ToTemporalRoundingIncrement (
         _normalizedOptions_: an Object,
-      ): either a normal completion containing a Number, or an abrupt completion
+      ): either a normal completion containing a positive integer, or an abrupt completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        It extracts the value of the property named *"roundingIncrement"* from _normalizedOptions_, makes sure it is a finite Number greater than or equal to 1, and returns that value.
-        It performs no further validation.
+        It extracts the value of the property named *"roundingIncrement"* from _normalizedOptions_, makes sure it represents a finite number greater than or equal to 1, and returns that value truncated to an integer.
       </dd>
     </dl>
     <emu-alg>
       1. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, *"number"*, *undefined*, *1*<sub>𝔽</sub>).
       1. If _increment_ is not finite, throw a *RangeError* exception.
       1. If _increment_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
-      1. Return _increment_.
+      1. Return truncate(ℝ(_increment_)).
     </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-validatetemporalroundingincrement" type="abstract operation">
     <h1>
       ValidateTemporalRoundingIncrement (
-        _increment_: a Number,
+        _increment_: a positive integer,
         _dividend_: a positive integer,
         _inclusive_: a Boolean,
-      ): either a normal completion containing an integer, or an abrupt completion
+      ): either a normal completion containing ~unused~, or an abrupt completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        It truncates an _increment_ from ToTemporalRoundingIncrement to an integer and returns the result if it evenly divides _dividend_, otherwise throwing a *RangeError*.
+        It verifies that _increment_ evenly divides _dividend_, otherwise throwing a *RangeError*.
         _dividend_ must be divided into more than one part unless _inclusive_ is *true*.
       </dd>
     </dl>
     <emu-alg>
       1. If _inclusive_ is *true*, then
-        1. Let _maximum_ be 𝔽(_dividend_).
+        1. Let _maximum_ be _dividend_.
       1. Else if _dividend_ is more than 1, then
-        1. Let _maximum_ be 𝔽(_dividend_ - 1).
+        1. Let _maximum_ be _dividend_ - 1.
       1. Else,
-        1. Let _maximum_ be *1*<sub>𝔽</sub>.
+        1. Let _maximum_ be 1.
       1. If _increment_ &gt; _maximum_, throw a *RangeError* exception.
-      1. Set _increment_ to floor(ℝ(_increment_)).
       1. If _dividend_ modulo _increment_ &ne; 0, then
         1. Throw a *RangeError* exception.
-      1. Return _increment_.
+      1. Return ~unused~.
     </emu-alg>
   </emu-clause>
 
@@ -1824,10 +1822,7 @@
         1. Set _roundingMode_ to ! NegateTemporalRoundingMode(_roundingMode_).
       1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
       1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_).
-      1. If _maximum_ is *undefined*, then
-        1. Set _roundingIncrement_ to floor(ℝ(_roundingIncrement_)).
-      1. Else,
-        1. Set _roundingIncrement_ to ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+      1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
       1. Return the Record {
             [[SmallestUnit]]: _smallestUnit_,
             [[LargestUnit]]: _largestUnit_,

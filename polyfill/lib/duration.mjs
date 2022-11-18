@@ -18,7 +18,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-const MathFloor = Math.floor;
 const ObjectCreate = Object.create;
 
 export class Duration {
@@ -265,14 +264,9 @@ export class Duration {
       microsecond: 1000,
       nanosecond: 1000
     };
-    let roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     const maximum = maximumIncrements[smallestUnit];
-    if (maximum == undefined) {
-      roundingIncrement = MathFloor(roundingIncrement);
-    } else {
-      roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    }
-
+    if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
     let relativeTo = ES.ToRelativeTemporalObject(roundTo);
 
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(
