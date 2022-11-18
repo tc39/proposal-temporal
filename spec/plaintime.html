@@ -306,11 +306,12 @@
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
+        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
         1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Assert: _maximum_ is not *undefined*.
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. Let _result_ be ! RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
@@ -405,11 +406,12 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _digits_ be ? ToFractionalSecondDigits(_options_).
+        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecision(_smallestUnit_, _digits_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
         1. Let _roundResult_ be ! RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return ! TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
       </emu-alg>

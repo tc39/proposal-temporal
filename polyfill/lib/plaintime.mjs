@@ -161,8 +161,9 @@ export class PlainTime {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
+    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
     const MAX_INCREMENTS = {
       hour: 24,
       minute: 60,
@@ -171,7 +172,6 @@ export class PlainTime {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, MAX_INCREMENTS[smallestUnit], false);
 
     let hour = GetSlot(this, ISO_HOUR);
@@ -209,10 +209,10 @@ export class PlainTime {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
     const digits = ES.ToFractionalSecondDigits(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
