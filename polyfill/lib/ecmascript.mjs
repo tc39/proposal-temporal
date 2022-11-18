@@ -809,15 +809,22 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return increment;
   },
-  ToSecondsStringPrecision: (options) => {
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
-    if (smallestUnit === 'hour') {
-      const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, [p, s, c]) => {
-        if (c === 'time' && s !== 'hour') allowed.push(s, p);
-        return allowed;
-      }, []);
-      throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
+  ToFractionalSecondDigits: (normalizedOptions) => {
+    let digitsValue = normalizedOptions.fractionalSecondDigits;
+    if (digitsValue === undefined) return 'auto';
+    if (ES.Type(digitsValue) !== 'Number') {
+      if (ES.ToString(digitsValue) !== 'auto') {
+        throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
+      }
+      return 'auto';
     }
+    const digitCount = MathFloor(digitsValue);
+    if (!NumberIsFinite(digitCount) || digitCount < 0 || digitCount > 9) {
+      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
+    }
+    return digitCount;
+  },
+  ToSecondsStringPrecision: (smallestUnit, precision) => {
     switch (smallestUnit) {
       case 'minute':
         return { precision: 'minute', unit: 'minute', increment: 1 };
@@ -831,18 +838,9 @@ export const ES = ObjectAssign({}, ES2022, {
         return { precision: 9, unit: 'nanosecond', increment: 1 };
       default: // fall through if option not given
     }
-    let digits = options.fractionalSecondDigits;
-    if (digits === undefined) digits = 'auto';
-    if (ES.Type(digits) !== 'Number') {
-      digits = ES.ToString(digits);
-      if (digits === 'auto') return { precision: 'auto', unit: 'nanosecond', increment: 1 };
-      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digits}`);
-    }
-    const precision = MathTrunc(digits);
-    if (!NumberIsFinite(precision) || precision < 0 || precision > 9) {
-      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digits}`);
-    }
     switch (precision) {
+      case 'auto':
+        return { precision, unit: 'nanosecond', increment: 1 };
       case 0:
         return { precision, unit: 'second', increment: 1 };
       case 1:
