@@ -243,22 +243,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporaldatetimeroundingincrement" aoid="ToTemporalDateTimeRoundingIncrement">
-    <h1>ToTemporalDateTimeRoundingIncrement ( _normalizedOptions_, _smallestUnit_ )</h1>
-    <p>
-      The abstract operation ToTemporalDateTimeRoundingIncrement extracts the value of the property named *"roundingIncrement"* from _normalizedOptions_ and makes sure it is a valid value for the option, setting the correct maximum for rounding Temporal.ZonedDateTime and Temporal.PlainDateTime.
-    </p>
-    <emu-alg>
-      1. If _smallestUnit_ is *"day"*, then
-        1. Let _maximum_ be 1.
-      1. Else,
-        1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
-        1. Assert: _maximum_ is not *undefined*.
-      1. Let _increment_ be ? ToTemporalRoundingIncrement(_normalizedOptions_).
-      1. Return ? ValidateTemporalRoundingIncrement(_increment_, _maximum_, *false*).
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tosecondsstringprecision" aoid="ToSecondsStringPrecision">
     <h1>ToSecondsStringPrecision ( _normalizedOptions_ )</h1>
     <p>

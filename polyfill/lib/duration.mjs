@@ -18,6 +18,7 @@ import {
   SetSlot
 } from './slots.mjs';
 
+const MathFloor = Math.floor;
 const ObjectCreate = Object.create;
 
 export class Duration {
@@ -255,7 +256,23 @@ export class Duration {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
-    const roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(roundTo, smallestUnit);
+
+    const maximumIncrements = {
+      hour: 24,
+      minute: 60,
+      second: 60,
+      millisecond: 1000,
+      microsecond: 1000,
+      nanosecond: 1000
+    };
+    let roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+    const maximum = maximumIncrements[smallestUnit];
+    if (maximum == undefined) {
+      roundingIncrement = MathFloor(roundingIncrement);
+    } else {
+      roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+    }
+
     let relativeTo = ES.ToRelativeTemporalObject(roundTo);
 
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(

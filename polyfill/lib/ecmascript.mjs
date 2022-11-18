@@ -793,24 +793,6 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return increment;
   },
-  ToTemporalDateTimeRoundingIncrement: (options, smallestUnit) => {
-    const maximumIncrements = {
-      year: undefined,
-      month: undefined,
-      week: undefined,
-      day: undefined,
-      hour: 24,
-      minute: 60,
-      second: 60,
-      millisecond: 1000,
-      microsecond: 1000,
-      nanosecond: 1000
-    };
-    const increment = ES.ToTemporalRoundingIncrement(options);
-    const maximum = maximumIncrements[smallestUnit];
-    if (maximum == undefined) return MathFloor(increment);
-    return ES.ValidateTemporalRoundingIncrement(increment, maximum, false);
-  },
   ToSecondsStringPrecision: (options) => {
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') {
