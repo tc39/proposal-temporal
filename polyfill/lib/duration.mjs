@@ -234,14 +234,19 @@ export class Duration {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
+
+    let largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
+    let relativeTo = ES.ToRelativeTemporalObject(roundTo);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     let smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
+
     let smallestUnitPresent = true;
     if (!smallestUnit) {
       smallestUnitPresent = false;
       smallestUnit = 'nanosecond';
     }
     defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
-    let largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;
@@ -254,7 +259,6 @@ export class Duration {
     if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
-    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
 
     const maximumIncrements = {
       hour: 24,
@@ -264,10 +268,8 @@ export class Duration {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     const maximum = maximumIncrements[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    let relativeTo = ES.ToRelativeTemporalObject(roundTo);
 
     ({ years, months, weeks, days } = ES.UnbalanceDurationRelative(
       years,
@@ -400,12 +402,12 @@ export class Duration {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
     const digits = ES.ToFractionalSecondDigits(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour' || smallestUnit === 'minute') {
       throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
     }
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {

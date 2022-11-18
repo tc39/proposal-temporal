@@ -79,8 +79,9 @@ export class Instant {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
+    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
     const maximumIncrements = {
       hour: 24,
       minute: 1440,
@@ -89,7 +90,6 @@ export class Instant {
       microsecond: 86400e6,
       nanosecond: 86400e9
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], true);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
@@ -105,13 +105,13 @@ export class Instant {
   toString(options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    let timeZone = options.timeZone;
-    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
     const digits = ES.ToFractionalSecondDigits(options);
+    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+    let timeZone = options.timeZone;
+    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, increment, unit, roundingMode);
     const roundedInstant = new Instant(roundedNs);

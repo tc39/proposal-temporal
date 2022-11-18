@@ -1372,6 +1372,7 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   ToTemporalZonedDateTime: (item, options) => {
     let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+    let disambiguation, offsetOpt;
     let matchMinute = false;
     let offsetBehaviour = 'option';
     if (ES.Type(item) === 'Object') {
@@ -1396,10 +1397,11 @@ export const ES = ObjectAssign({}, ES2022, {
       if (offset === undefined) {
         offsetBehaviour = 'wall';
       }
+      disambiguation = ES.ToTemporalDisambiguation(options);
+      offsetOpt = ES.ToTemporalOffset(options, 'reject');
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
         ES.InterpretTemporalDateTimeFields(calendar, fields, options));
     } else {
-      ES.ToTemporalOverflow(options); // validate and ignore
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, ianaName, offset, z, calendar } =
         ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
@@ -1413,11 +1415,12 @@ export const ES = ObjectAssign({}, ES2022, {
       if (!calendar) calendar = ES.GetISO8601Calendar();
       calendar = ES.ToTemporalCalendar(calendar);
       matchMinute = true; // ISO strings may specify offset with less precision
+      disambiguation = ES.ToTemporalDisambiguation(options);
+      offsetOpt = ES.ToTemporalOffset(options, 'reject');
+      ES.ToTemporalOverflow(options); // validate and ignore
     }
     let offsetNs = 0;
     if (offsetBehaviour === 'option') offsetNs = ES.ParseTimeZoneOffsetString(offset);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
-    const offsetOpt = ES.ToTemporalOffset(options, 'reject');
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
@@ -3554,21 +3557,26 @@ export const ES = ObjectAssign({}, ES2022, {
       return allowed;
     }, []);
 
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
-    if (ES.Call(ArrayIncludes, disallowed, [smallestUnit])) {
-      throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
-    }
-    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
     let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', group, 'auto');
     if (ES.Call(ArrayIncludes, disallowed, [largestUnit])) {
       throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
     }
+
+    const roundingIncrement = ES.ToTemporalRoundingIncrement(options);
+
+    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+    if (op === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
+
+    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
+    if (ES.Call(ArrayIncludes, disallowed, [smallestUnit])) {
+      throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
+    }
+
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
     if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
     if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
       throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
     }
-    let roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    if (op === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
     const MAX_DIFFERENCE_INCREMENTS = {
       hour: 24,
       minute: 60,
@@ -3577,7 +3585,6 @@ export const ES = ObjectAssign({}, ES2022, {
       microsecond: 1000,
       nanosecond: 1000
     };
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(options);
     const maximum = MAX_DIFFERENCE_INCREMENTS[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
 
