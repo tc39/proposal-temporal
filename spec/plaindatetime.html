@@ -397,7 +397,7 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. If Type(_temporalDateTimeLike_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Perform ? RejectObjectWithCalendarOrTimeZone(_temporalDateTimeLike_).
+        1. Perform ? RejectTemporalObject(_temporalDateTimeLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
