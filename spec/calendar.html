@@ -465,13 +465,13 @@
         1. If Type(_temporalCalendarLike_) is Object, then
           1. If _temporalCalendarLike_ has an [[InitializedTemporalCalendar]] internal slot, then
             1. Return _temporalCalendarLike_.
-          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalCalendarLike_.[[Calendar]].
-          1. If _temporalCalendarLike_ has an [[InitializedTemporalTimeZone]] internal slot, throw a *RangeError* exception.
+          1. If _temporalCalendarLike_ has an [[InitializedTemporalTime]] or [[InitializedTemporalTimeZone]] internal slot, throw a *RangeError* exception.
           1. If ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
           1. Set _temporalCalendarLike_ to ? Get(_temporalCalendarLike_, *"calendar"*).
           1. If Type(_temporalCalendarLike_) is Object, then
-            1. If _temporalCalendarLike_ has an [[InitializedTemporalTimeZone]] internal slot, throw a *RangeError* exception.
+            1. If _temporalCalendarLike_ has an [[InitializedTemporalTime]] or [[InitializedTemporalTimeZone]] internal slot, throw a *RangeError* exception.
             1. If ? HasProperty(_temporalCalendarLike_, *"calendar"*) is *false*, return _temporalCalendarLike_.
         1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
         1. Set _identifier_ to ? ParseTemporalCalendarString(_identifier_).
@@ -500,7 +500,7 @@
         If no such property is present, the ISO 8601 calendar is returned.
       </p>
       <emu-alg>
-        1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
         1. Return ? ToTemporalCalendarWithISODefault(_calendarLike_).

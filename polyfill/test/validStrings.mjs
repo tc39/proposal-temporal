@@ -426,7 +426,7 @@ const comparisonItems = {
     'nanoseconds'
   ],
   MonthDay: ['month', 'day', 'calendar'],
-  Time: [...timeItems, 'calendar'],
+  Time: [...timeItems],
   TimeZone: ['offset', 'ianaName'],
   YearMonth: ['year', 'month', 'calendar'],
   ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'ianaName', 'calendar']

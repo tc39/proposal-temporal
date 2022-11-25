@@ -70,7 +70,6 @@ export class PlainTime {
     SetSlot(this, ISO_MILLISECOND, isoMillisecond);
     SetSlot(this, ISO_MICROSECOND, isoMicrosecond);
     SetSlot(this, ISO_NANOSECOND, isoNanosecond);
-    SetSlot(this, CALENDAR, ES.GetISO8601Calendar());
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
@@ -82,10 +81,6 @@ export class PlainTime {
     }
   }
 
-  get calendar() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
-  }
   get hour() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, ISO_HOUR);
@@ -116,7 +111,7 @@ export class PlainTime {
     if (ES.Type(temporalTimeLike) !== 'Object') {
       throw new TypeError('invalid argument');
     }
-    ES.RejectObjectWithCalendarOrTimeZone(temporalTimeLike);
+    ES.RejectTemporalLikeObject(temporalTimeLike);
     options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
 
@@ -305,7 +300,6 @@ export class PlainTime {
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return {
-      calendar: GetSlot(this, CALENDAR),
       isoHour: GetSlot(this, ISO_HOUR),
       isoMicrosecond: GetSlot(this, ISO_MICROSECOND),
       isoMillisecond: GetSlot(this, ISO_MILLISECOND),

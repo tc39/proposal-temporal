@@ -36,7 +36,7 @@ export class PlainMonthDay {
     if (ES.Type(temporalMonthDayLike) !== 'Object') {
       throw new TypeError('invalid argument');
     }
-    ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
+    ES.RejectTemporalLikeObject(temporalMonthDayLike);
     options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
