@@ -200,10 +200,6 @@ time.nanosecond;  // => 205
 ```
 <!-- prettier-ignore-end -->
 
-### time.**calendar**: Temporal.Calendar
-
-The value of the `calendar` read-only property is always the ISO 8601 calendar, for future compatibility.
-
 ## Methods
 
 ### time.**with**(_timeLike_: object | string, _options_?: object) : Temporal.PlainTime
@@ -322,9 +318,6 @@ A value of `'auto'` means `'hour'`.
 You can round the result using the `smallestUnit`, `roundingIncrement`, and `roundingMode` options.
 These behave as in the `Temporal.Duration.round()` method.
 The default is to do no rounding.
-
-Computing the difference between two times in different calendar systems is not supported.
-If you need to do this, choose the calendar in which the computation takes place by converting one of the times with `time.withCalendar()`.
 
 Usage example:
 
@@ -640,7 +633,7 @@ date = Temporal.PlainDate.from('2006-08-24');
 time.toPlainDateTime(date); // => 2006-08-24T15:23:30.003
 ```
 
-### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: Temporal.Calendar }
+### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number }
 
 **Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar.
 
