@@ -1660,7 +1660,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (result === undefined) {
       throw new RangeError('calendar yearOfWeek result must be an integer');
     }
-    return ES.ToIntegerThrowOnInfinity(result);
+    return ES.ToIntegerWithTruncation(result);
   },
   CalendarDaysInWeek: (calendar, dateLike) => {
     const daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
