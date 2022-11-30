@@ -311,7 +311,9 @@ export class PlainDateTime {
       microsecond: 1000,
       nanosecond: 1000
     };
-    ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], false);
+    const maximum = maximumIncrements[smallestUnit];
+    const inclusive = maximum === 1;
+    ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
 
     let year = GetSlot(this, ISO_YEAR);
     let month = GetSlot(this, ISO_MONTH);

@@ -741,10 +741,12 @@
         1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « *"day"* »).
         1. If _smallestUnit_ is *"day"*, then
           1. Let _maximum_ be 1.
+          1. Let _inclusive_ be *true*.
         1. Else,
           1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
           1. Assert: _maximum_ is not *undefined*.
-        1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+          1. Let _inclusive_ be *false*.
+        1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, _inclusive_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].

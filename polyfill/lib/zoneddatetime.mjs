@@ -348,7 +348,9 @@ export class ZonedDateTime {
       microsecond: 1000,
       nanosecond: 1000
     };
-    ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], false);
+    const maximum = maximumIncrements[smallestUnit];
+    const inclusive = maximum === 1;
+    ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
 
     // first, round the underlying DateTime fields
     const dt = dateTime(this);
