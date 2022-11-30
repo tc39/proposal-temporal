@@ -460,6 +460,7 @@
           1. Perform ! CreateDataPropertyOrThrow(_totalOf_, *"unit"*, _paramString_).
         1. Else,
           1. Set _totalOf_ to ? GetOptionsObject(_totalOf_).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToRelativeTemporalObject reads *"relativeTo"*).
         1. Let _relativeTo_ be ? ToRelativeTemporalObject(_totalOf_).
         1. Let _unit_ be ? GetTemporalUnit(_totalOf_, *"unit"*, ~datetime~, ~required~).
         1. Let _unbalanceResult_ be ? UnbalanceDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _unit_, _relativeTo_).
@@ -1054,6 +1055,7 @@
         1. If Type(_temporalDurationLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
+        1. NOTE: The following steps read properties and perform independent validation in alphabetical order.
         1. Let _days_ be ? Get(_temporalDurationLike_, *"days"*).
         1. If _days_ is not *undefined*, set _result_.[[Days]] to ? ToIntegerIfIntegral(_days_).
         1. Let _hours_ be ? Get(_temporalDurationLike_, *"hours"*).
