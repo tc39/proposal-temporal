@@ -433,7 +433,7 @@ export class ZonedDateTime {
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     const showTimeZone = ES.ToTimeZoneNameOption(options);
-    const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return ES.TemporalZonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
       unit,
       increment,

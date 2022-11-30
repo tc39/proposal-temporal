@@ -822,7 +822,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return digitCount;
   },
-  ToSecondsStringPrecision: (smallestUnit, precision) => {
+  ToSecondsStringPrecisionRecord: (smallestUnit, precision) => {
     switch (smallestUnit) {
       case 'minute':
         return { precision: 'minute', unit: 'minute', increment: 1 };

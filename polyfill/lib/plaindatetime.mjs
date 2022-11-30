@@ -372,7 +372,7 @@ export class PlainDateTime {
     const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
-    const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return ES.TemporalDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
   toJSON() {

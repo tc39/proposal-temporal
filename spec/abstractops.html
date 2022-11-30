@@ -264,9 +264,9 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tosecondsstringprecision" type="abstract operation">
+  <emu-clause id="sec-temporal-tosecondsstringprecisionrecord" type="abstract operation">
     <h1>
-      ToSecondsStringPrecision (
+      ToSecondsStringPrecisionRecord (
         _smallestUnit_: one of *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"*, or *undefined*,
         _fractionalDigitCount_: either *"auto"* or an integer in the inclusive range 0 to 9,
       ): a Record with fields [[Precision]] (one of *"minute"*, *"auto"*, or an integer in the inclusive range 0 to 9), [[Unit]] (one of *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*), and [[Increment]] (one of 1, 10, or 100)

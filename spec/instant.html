@@ -329,7 +329,7 @@
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
           1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
-        1. Let _precision_ be ToSecondsStringPrecision(_smallestUnit_, _digits_).
+        1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _roundedNs_ be ! RoundTemporalInstant(_instant_.[[Nanoseconds]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Let _roundedInstant_ be ! CreateTemporalInstant(_roundedNs_).
         1. Return ? TemporalInstantToString(_roundedInstant_, _timeZone_, _precision_.[[Precision]]).
