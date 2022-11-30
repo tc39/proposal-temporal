@@ -1026,15 +1026,15 @@
         <dd>It implements the logic used in the `Temporal.Duration.prototype.round()` method and elsewhere, where the `largestUnit` option, if not given explicitly, is set to the largest non-zero unit in the input Temporal.Duration.</dd>
       </dl>
       <emu-alg>
-        1. If _years_ is not zero, return *"year"*.
-        1. If _months_ is not zero, return *"month"*.
-        1. If _weeks_ is not zero, return *"week"*.
-        1. If _days_ is not zero, return *"day"*.
-        1. If _hours_ is not zero, return *"hour"*.
-        1. If _minutes_ is not zero, return *"minute"*.
-        1. If _seconds_ is not zero, return *"second"*.
-        1. If _milliseconds_ is not zero, return *"millisecond"*.
-        1. If _microseconds_ is not zero, return *"microsecond"*.
+        1. If _years_ &ne; 0, return *"year"*.
+        1. If _months_ &ne; 0, return *"month"*.
+        1. If _weeks_ &ne; 0, return *"week"*.
+        1. If _days_ &ne; 0, return *"day"*.
+        1. If _hours_ &ne; 0, return *"hour"*.
+        1. If _minutes_ &ne; 0, return *"minute"*.
+        1. If _seconds_ &ne; 0, return *"second"*.
+        1. If _milliseconds_ &ne; 0, return *"millisecond"*.
+        1. If _microseconds_ &ne; 0, return *"microsecond"*.
         1. Return *"nanosecond"*.
       </emu-alg>
     </emu-clause>
