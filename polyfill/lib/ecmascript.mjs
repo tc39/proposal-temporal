@@ -798,8 +798,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return MathTrunc(increment);
   },
   ValidateTemporalRoundingIncrement: (increment, dividend, inclusive) => {
-    let maximum = dividend;
-    if (!inclusive) maximum = dividend > 1 ? dividend - 1 : 1;
+    const maximum = inclusive ? dividend : dividend - 1;
     if (increment > maximum) {
       throw new RangeError(`roundingIncrement must be at least 1 and less than ${maximum}, not ${increment}`);
     }
