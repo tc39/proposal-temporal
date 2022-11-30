@@ -407,7 +407,7 @@ export class Duration {
     if (smallestUnit === 'hour' || smallestUnit === 'minute') {
       throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
     }
-    const { precision, unit, increment } = ES.ToSecondsStringPrecision(smallestUnit, digits);
+    const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return ES.TemporalDurationToString(this, precision, { unit, increment, roundingMode });
   }
   toJSON() {
