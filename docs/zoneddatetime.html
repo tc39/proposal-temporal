@@ -200,6 +200,8 @@
 </li>
 <li><a href="#weekOfYear">weekOfYear</a>
 </li>
+<li><a href="#yearOfWeek">yearOfWeek</a>
+</li>
 <li><a href="#daysInWeek">daysInWeek</a>
 </li>
 <li><a href="#daysInMonth">daysInMonth</a>
@@ -637,10 +639,16 @@ console<span class="token punctuation">.</span><span class="token function">log<
 For the ISO 8601 calendar, this is normally a value between 1 and 52, but in a few cases it can be 53 as well.
 ISO week 1 is the week containing the first Thursday of the year.
 For more information on ISO week numbers, see for example the Wikipedia article on <a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>.</p>
+<p>When combining the week number with a year number, make sure to use <code>zonedDateTime.yearOfWeek</code> instead of <code>zonedDateTime.year</code>.
+This is because the first few days of a calendar year may be part of the last week of the previous year, and the last few days of a calendar year may be part of the first week of the new year, depending on which year the first Thursday falls in.</p>
 <p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2022-01-01T03:24-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// ISO week date</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>year<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '1995 49 4'</span></code></pre><h3 id="daysInWeek"><a class="heading-link" href="#daysInWeek"></a>zonedDateTime.<strong>daysInWeek</strong> : number</h3><p>The <code>daysInWeek</code> read-only property gives the number of days in the week that the date falls in.
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>zdt<span class="token punctuation">.</span>yearOfWeek<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>weekOfYear<span class="token punctuation">,</span> zdt<span class="token punctuation">.</span>dayOfWeek<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '2021 52 6'</span></code></pre><h3 id="yearOfWeek"><a class="heading-link" href="#yearOfWeek"></a>zonedDateTime.<strong>yearOfWeek</strong> : number</h3><p>The <code>yearOfWeek</code> read-only property gives the ISO &quot;week calendar year&quot; of the date, which is the year number corresponding to the ISO week number.
+For the ISO 8601 calendar, this is normally the same as <code>zonedDateTime.year</code>, but in a few cases it may be the previous or following year.
+For more information on ISO week numbers, see for example the Wikipedia article on <a href="https://en.wikipedia.org/wiki/ISO_week_date">ISO week date</a>.</p>
+<p>See <code>weekOfYear</code> for a usage example.</p>
+<h3 id="daysInWeek"><a class="heading-link" href="#daysInWeek"></a>zonedDateTime.<strong>daysInWeek</strong> : number</h3><p>The <code>daysInWeek</code> read-only property gives the number of days in the week that the date falls in.
 For the ISO 8601 calendar, this is always 7, but in other calendar systems it may differ from week to week.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24-08:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -7116,7 +7116,7 @@
   var MathMin = Math.min;
   var MathMax = Math.max;
   var MathAbs$1 = Math.abs;
-  var MathFloor$1 = Math.floor;
+  var MathFloor$2 = Math.floor;
   var MathSign = Math.sign;
   var MathTrunc = Math.trunc;
   var NumberIsNaN = Number.isNaN;
@@ -7859,30 +7859,26 @@
     ToShowOffsetOption: function ToShowOffsetOption(options) {
       return ES.GetOption(options, 'offset', ['auto', 'never'], 'auto');
     },
-    ToTemporalRoundingIncrement: function ToTemporalRoundingIncrement(options, dividend, inclusive) {
-      var maximum = Infinity;
-      if (dividend !== undefined) maximum = dividend;
-      if (!inclusive && dividend !== undefined) maximum = dividend > 1 ? dividend - 1 : 1;
-      var increment = ES.GetNumberOption(options, 'roundingIncrement', 1, maximum, 1);
-      if (dividend !== undefined && dividend % increment !== 0) {
-        throw new RangeError("Rounding increment must divide evenly into ".concat(dividend));
+    ToTemporalRoundingIncrement: function ToTemporalRoundingIncrement(options) {
+      var increment = options.roundingIncrement;
+      if (increment === undefined) return 1;
+      increment = ES.ToNumber(increment);
+      if (!NumberIsFinite(increment) || increment < 1) {
+        throw new RangeError("roundingIncrement must be at least 1 and finite, not ".concat(increment));
       }
       return increment;
     },
-    ToTemporalDateTimeRoundingIncrement: function ToTemporalDateTimeRoundingIncrement(options, smallestUnit) {
-      var maximumIncrements = {
-        year: undefined,
-        month: undefined,
-        week: undefined,
-        day: undefined,
-        hour: 24,
-        minute: 60,
-        second: 60,
-        millisecond: 1000,
-        microsecond: 1000,
-        nanosecond: 1000
-      };
-      return ES.ToTemporalRoundingIncrement(options, maximumIncrements[smallestUnit], false);
+    ValidateTemporalRoundingIncrement: function ValidateTemporalRoundingIncrement(increment, dividend, inclusive) {
+      var maximum = dividend;
+      if (!inclusive) maximum = dividend > 1 ? dividend - 1 : 1;
+      if (increment > maximum) {
+        throw new RangeError("roundingIncrement must be at least 1 and less than ".concat(maximum, ", not ").concat(increment));
+      }
+      increment = MathFloor$2(increment);
+      if (dividend % increment !== 0) {
+        throw new RangeError("Rounding increment must divide evenly into ".concat(dividend));
+      }
+      return increment;
     },
     ToSecondsStringPrecision: function ToSecondsStringPrecision(options) {
       var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
@@ -8727,6 +8723,14 @@
       var weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
       return ES.ToPositiveIntegerWithTruncation(ES.Call(weekOfYear, calendar, [dateLike]));
     },
+    CalendarYearOfWeek: function CalendarYearOfWeek(calendar, dateLike) {
+      var yearOfWeek = ES.GetMethod(calendar, 'yearOfWeek');
+      var result = ES.Call(yearOfWeek, calendar, [dateLike]);
+      if (result === undefined) {
+        throw new RangeError('calendar yearOfWeek result must be an integer');
+      }
+      return ES.ToIntegerWithTruncation(result);
+    },
     CalendarDaysInWeek: function CalendarDaysInWeek(calendar, dateLike) {
       var daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
       return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInWeek, calendar, [dateLike]));
@@ -9246,9 +9250,9 @@
       var sign = offsetNanoseconds < 0 ? '-' : '+';
       offsetNanoseconds = MathAbs$1(offsetNanoseconds);
       var nanoseconds = offsetNanoseconds % 1e9;
-      var seconds = MathFloor$1(offsetNanoseconds / 1e9) % 60;
-      var minutes = MathFloor$1(offsetNanoseconds / 60e9) % 60;
-      var hours = MathFloor$1(offsetNanoseconds / 3600e9);
+      var seconds = MathFloor$2(offsetNanoseconds / 1e9) % 60;
+      var minutes = MathFloor$2(offsetNanoseconds / 60e9) % 60;
+      var hours = MathFloor$2(offsetNanoseconds / 3600e9);
       var hourString = ES.ISODateTimePartString(hours);
       var minuteString = ES.ISODateTimePartString(minutes);
       var secondString = ES.ISODateTimePartString(seconds);
@@ -9269,7 +9273,7 @@
       var sign = offsetNanoseconds < 0 ? '-' : '+';
       offsetNanoseconds = MathAbs$1(offsetNanoseconds);
       var minutes = offsetNanoseconds / 60e9 % 60;
-      var hours = MathFloor$1(offsetNanoseconds / 3600e9);
+      var hours = MathFloor$2(offsetNanoseconds / 3600e9);
       var hourString = ES.ISODateTimePartString(hours);
       var minuteString = ES.ISODateTimePartString(minutes);
       return "".concat(sign).concat(hourString, ":").concat(minuteString);
@@ -9298,7 +9302,7 @@
         nanos += 1e6;
         epochMilliseconds -= 1;
       }
-      var microsecond = MathFloor$1(nanos / 1e3) % 1e3;
+      var microsecond = MathFloor$2(nanos / 1e3) % 1e3;
       var nanosecond = nanos % 1e3;
       var item = new Date(epochMilliseconds);
       var year = item.getUTCFullYear();
@@ -9445,13 +9449,13 @@
     DayOfWeek: function DayOfWeek(year, month, day) {
       var m = month + (month < 3 ? 10 : -2);
       var Y = year - (month < 3 ? 1 : 0);
-      var c = MathFloor$1(Y / 100);
+      var c = MathFloor$2(Y / 100);
       var y = Y - c * 100;
       var d = day;
       var pD = d;
-      var pM = MathFloor$1(2.6 * m - 0.2);
-      var pY = y + MathFloor$1(y / 4);
-      var pC = MathFloor$1(c / 4) - 2 * c;
+      var pM = MathFloor$2(2.6 * m - 0.2);
+      var pY = y + MathFloor$2(y / 4);
+      var pC = MathFloor$2(c / 4) - 2 * c;
       var dow = (pD + pM + pY + pC) % 7;
       return dow + (dow <= 0 ? 7 : 0);
     },
@@ -9466,20 +9470,32 @@
       var doy = ES.DayOfYear(year, month, day);
       var dow = ES.DayOfWeek(year, month, day) || 7;
       var doj = ES.DayOfWeek(year, 1, 1);
-      var week = MathFloor$1((doy - dow + 10) / 7);
+      var week = MathFloor$2((doy - dow + 10) / 7);
       if (week < 1) {
         if (doj === 5 || doj === 6 && ES.LeapYear(year - 1)) {
-          return 53;
+          return {
+            week: 53,
+            year: year - 1
+          };
         } else {
-          return 52;
+          return {
+            week: 52,
+            year: year - 1
+          };
         }
       }
       if (week === 53) {
         if ((ES.LeapYear(year) ? 366 : 365) - doy < 4 - dow) {
-          return 1;
+          return {
+            week: 1,
+            year: year + 1
+          };
         }
       }
-      return week;
+      return {
+        week: week,
+        year: year
+      };
     },
     DurationSign: function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
       var fields = [y, mon, w, d, h, min, s, ms, µs, ns];
@@ -9492,7 +9508,7 @@
     BalanceISOYearMonth: function BalanceISOYearMonth(year, month) {
       if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError('infinity is out of range');
       month -= 1;
-      year += MathFloor$1(month / 12);
+      year += MathFloor$2(month / 12);
       month %= 12;
       if (month < 0) month += 12;
       month += 1;
@@ -10281,7 +10297,7 @@
             }
             var weeks = 0;
             if (largestUnit === 'week') {
-              weeks = MathFloor$1(_days2 / 7);
+              weeks = MathFloor$2(_days2 / 7);
               _days2 %= 7;
             }
             weeks *= _sign;
@@ -10465,25 +10481,32 @@
         nanoseconds: nanoseconds
       };
     },
-    DifferenceTemporalInstant: function DifferenceTemporalInstant(operation, instant, other, options) {
-      other = ES.ToTemporalInstant(other);
-      var first, second;
-      if (operation === 'until') {
-        first = instant;
-        second = other;
-      } else {
-        first = other;
-        second = instant;
-      }
+    GetDifferenceSettings: function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
       options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
-      var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('second', smallestUnit);
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
+      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, unitInfo) {
+        var p = unitInfo[0];
+        var s = unitInfo[1];
+        var c = unitInfo[2];
+        if ((group === 'datetime' || c === group) && !ES.Call(ArrayIncludes$1, disallowed, [s])) {
+          allowed.push(s, p);
+        }
+        return allowed;
+      }, []);
+      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
+      if (ES.Call(ArrayIncludes$1, disallowed, [smallestUnit])) {
+        throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
+      }
+      var defaultLargestUnit = ES.LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
+      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', group, 'auto');
+      if (ES.Call(ArrayIncludes$1, disallowed, [largestUnit])) {
+        throw new RangeError("largestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(largestUnit));
+      }
       if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
       if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
         throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
       }
       var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
+      if (op === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
       var MAX_DIFFERENCE_INCREMENTS = {
         hour: 24,
         minute: 60,
@@ -10492,10 +10515,27 @@
         microsecond: 1000,
         nanosecond: 1000
       };
-      var roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_DIFFERENCE_INCREMENTS[smallestUnit], false);
-      var onens = GetSlot(first, EPOCHNANOSECONDS);
-      var twons = GetSlot(second, EPOCHNANOSECONDS);
-      var _ES$DifferenceInstant = ES.DifferenceInstant(onens, twons, roundingIncrement, smallestUnit, largestUnit, roundingMode),
+      var roundingIncrement = ES.ToTemporalRoundingIncrement(options);
+      var maximum = MAX_DIFFERENCE_INCREMENTS[smallestUnit];
+      if (maximum === undefined) {
+        roundingIncrement = MathFloor$2(roundingIncrement);
+      } else {
+        roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+      }
+      return {
+        largestUnit: largestUnit,
+        roundingIncrement: roundingIncrement,
+        roundingMode: roundingMode,
+        smallestUnit: smallestUnit
+      };
+    },
+    DifferenceTemporalInstant: function DifferenceTemporalInstant(operation, instant, other, options) {
+      var sign = operation === 'since' ? -1 : 1;
+      other = ES.ToTemporalInstant(other);
+      var settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'second');
+      var onens = GetSlot(instant, EPOCHNANOSECONDS);
+      var twons = GetSlot(other, EPOCHNANOSECONDS);
+      var _ES$DifferenceInstant = ES.DifferenceInstant(onens, twons, settings.roundingIncrement, settings.smallestUnit, settings.largestUnit, settings.roundingMode),
         hours = _ES$DifferenceInstant.hours,
         minutes = _ES$DifferenceInstant.minutes,
         seconds = _ES$DifferenceInstant.seconds,
@@ -10503,7 +10543,7 @@
         microseconds = _ES$DifferenceInstant.microseconds,
         nanoseconds = _ES$DifferenceInstant.nanoseconds;
       var Duration = GetIntrinsic('%Temporal.Duration%');
-      return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+      return new Duration(0, 0, 0, 0, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
     },
     DifferenceTemporalPlainDate: function DifferenceTemporalPlainDate(operation, plainDate, other, options) {
       var sign = operation === 'since' ? -1 : 1;
@@ -10515,27 +10555,17 @@
       if (calendarId !== otherCalendarId) {
         throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
       }
-      options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'day');
-      var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
-      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-      var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-      if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-      var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+      var settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
       var untilOptions = ObjectCreate$8(null);
       ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = largestUnit;
+      untilOptions.largestUnit = settings.largestUnit;
       var _ES$CalendarDateUntil2 = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions),
         years = _ES$CalendarDateUntil2.years,
         months = _ES$CalendarDateUntil2.months,
         weeks = _ES$CalendarDateUntil2.weeks,
         days = _ES$CalendarDateUntil2.days;
-      if (smallestUnit !== 'day' || roundingIncrement !== 1) {
-        var _ES$RoundDuration3 = ES.RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, roundingIncrement, smallestUnit, roundingMode, plainDate);
+      if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
+        var _ES$RoundDuration3 = ES.RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, plainDate);
         years = _ES$RoundDuration3.years;
         months = _ES$RoundDuration3.months;
         weeks = _ES$RoundDuration3.weeks;
@@ -10554,18 +10584,8 @@
       if (calendarId !== otherCalendarId) {
         throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
       }
-      options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
-      var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('day', smallestUnit);
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
-      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-      var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-      if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-      var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
-      var _ES$DifferenceISODate3 = ES.DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, largestUnit, options),
+      var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
+      var _ES$DifferenceISODate3 = ES.DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, options),
         years = _ES$DifferenceISODate3.years,
         months = _ES$DifferenceISODate3.months,
         weeks = _ES$DifferenceISODate3.weeks,
@@ -10577,7 +10597,7 @@
         microseconds = _ES$DifferenceISODate3.microseconds,
         nanoseconds = _ES$DifferenceISODate3.nanoseconds;
       var relativeTo = ES.TemporalDateTimeToDate(plainDateTime);
-      var _ES$RoundDuration4 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo);
+      var _ES$RoundDuration4 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, relativeTo);
       years = _ES$RoundDuration4.years;
       months = _ES$RoundDuration4.months;
       weeks = _ES$RoundDuration4.weeks;
@@ -10588,7 +10608,7 @@
       milliseconds = _ES$RoundDuration4.milliseconds;
       microseconds = _ES$RoundDuration4.microseconds;
       nanoseconds = _ES$RoundDuration4.nanoseconds;
-      var _ES$BalanceDuration4 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+      var _ES$BalanceDuration4 = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit);
       days = _ES$BalanceDuration4.days;
       hours = _ES$BalanceDuration4.hours;
       minutes = _ES$BalanceDuration4.minutes;
@@ -10602,24 +10622,7 @@
     DifferenceTemporalPlainTime: function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
       var sign = operation === 'since' ? -1 : 1;
       other = ES.ToTemporalTime(other);
-      options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', 'nanosecond');
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'time', 'auto');
-      if (largestUnit === 'auto') largestUnit = 'hour';
-      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-      var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-      if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-      var MAX_INCREMENTS = {
-        hour: 24,
-        minute: 60,
-        second: 60,
-        millisecond: 1000,
-        microsecond: 1000,
-        nanosecond: 1000
-      };
-      var roundingIncrement = ES.ToTemporalRoundingIncrement(options, MAX_INCREMENTS[smallestUnit], false);
+      var settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'hour');
       var _ES$DifferenceTime2 = ES.DifferenceTime(GetSlot(plainTime, ISO_HOUR), GetSlot(plainTime, ISO_MINUTE), GetSlot(plainTime, ISO_SECOND), GetSlot(plainTime, ISO_MILLISECOND), GetSlot(plainTime, ISO_MICROSECOND), GetSlot(plainTime, ISO_NANOSECOND), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND)),
         hours = _ES$DifferenceTime2.hours,
         minutes = _ES$DifferenceTime2.minutes,
@@ -10627,14 +10630,14 @@
         milliseconds = _ES$DifferenceTime2.milliseconds,
         microseconds = _ES$DifferenceTime2.microseconds,
         nanoseconds = _ES$DifferenceTime2.nanoseconds;
-      var _ES$RoundDuration5 = ES.RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode);
+      var _ES$RoundDuration5 = ES.RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode);
       hours = _ES$RoundDuration5.hours;
       minutes = _ES$RoundDuration5.minutes;
       seconds = _ES$RoundDuration5.seconds;
       milliseconds = _ES$RoundDuration5.milliseconds;
       microseconds = _ES$RoundDuration5.microseconds;
       nanoseconds = _ES$RoundDuration5.nanoseconds;
-      var _ES$BalanceDuration5 = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+      var _ES$BalanceDuration5 = ES.BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit);
       hours = _ES$BalanceDuration5.hours;
       minutes = _ES$BalanceDuration5.minutes;
       seconds = _ES$BalanceDuration5.seconds;
@@ -10654,29 +10657,7 @@
       if (calendarID !== otherCalendarID) {
         throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
       }
-      options = ES.GetOptionsObject(options);
-      var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, unitInfo) {
-        var p = unitInfo[0];
-        var s = unitInfo[1];
-        var c = unitInfo[2];
-        if (c === 'date' && s !== 'week' && s !== 'day') allowed.push(s, p);
-        return allowed;
-      }, []);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'date', 'month');
-      if (smallestUnit === 'week' || smallestUnit === 'day') {
-        throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
-      }
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
-      if (largestUnit === 'week' || largestUnit === 'day') {
-        throw new RangeError("largestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(largestUnit));
-      }
-      if (largestUnit === 'auto') largestUnit = 'year';
-      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-      var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-      if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-      var roundingIncrement = ES.ToTemporalRoundingIncrement(options, undefined, false);
+      var settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
       otherFields.day = 1;
@@ -10686,12 +10667,12 @@
       var thisDate = ES.CalendarDateFromFields(calendar, thisFields);
       var untilOptions = ObjectCreate$8(null);
       ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = largestUnit;
+      untilOptions.largestUnit = settings.largestUnit;
       var _ES$CalendarDateUntil3 = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions),
         years = _ES$CalendarDateUntil3.years,
         months = _ES$CalendarDateUntil3.months;
-      if (smallestUnit !== 'month' || roundingIncrement !== 1) {
-        var _ES$RoundDuration6 = ES.RoundDuration(years, months, 0, 0, 0, 0, 0, 0, 0, 0, roundingIncrement, smallestUnit, roundingMode, thisDate);
+      if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
+        var _ES$RoundDuration6 = ES.RoundDuration(years, months, 0, 0, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, thisDate);
         years = _ES$RoundDuration6.years;
         months = _ES$RoundDuration6.months;
       }
@@ -10708,27 +10689,17 @@
       if (calendarId !== otherCalendarId) {
         throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
       }
-      options = ES.GetOptionsObject(options);
-      var smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'datetime', 'nanosecond');
-      var defaultLargestUnit = ES.LargerOfTwoTemporalUnits('hour', smallestUnit);
-      var largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'datetime', 'auto');
-      if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
-      if (ES.LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-        throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
-      }
-      var roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-      if (operation === 'since') roundingMode = ES.NegateTemporalRoundingMode(roundingMode);
-      var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(options, smallestUnit);
+      var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
       var ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
       var ns2 = GetSlot(other, EPOCHNANOSECONDS);
       var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-      if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
+      if (settings.largestUnit !== 'year' && settings.largestUnit !== 'month' && settings.largestUnit !== 'week' && settings.largestUnit !== 'day') {
         // The user is only asking for a time difference, so return difference of instants.
         years = 0;
         months = 0;
         weeks = 0;
         days = 0;
-        var _ES$DifferenceInstant2 = ES.DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, largestUnit, roundingMode);
+        var _ES$DifferenceInstant2 = ES.DifferenceInstant(ns1, ns2, settings.roundingIncrement, settings.smallestUnit, settings.largestUnit, settings.roundingMode);
         hours = _ES$DifferenceInstant2.hours;
         minutes = _ES$DifferenceInstant2.minutes;
         seconds = _ES$DifferenceInstant2.seconds;
@@ -10742,8 +10713,8 @@
         }
         var untilOptions = ObjectCreate$8(null);
         ES.CopyDataProperties(untilOptions, options, []);
-        untilOptions.largestUnit = largestUnit;
-        var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, untilOptions);
+        untilOptions.largestUnit = settings.largestUnit;
+        var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, untilOptions);
         years = _ES$DifferenceZonedDa.years;
         months = _ES$DifferenceZonedDa.months;
         weeks = _ES$DifferenceZonedDa.weeks;
@@ -10754,7 +10725,7 @@
         milliseconds = _ES$DifferenceZonedDa.milliseconds;
         microseconds = _ES$DifferenceZonedDa.microseconds;
         nanoseconds = _ES$DifferenceZonedDa.nanoseconds;
-        var _ES$RoundDuration7 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, zonedDateTime);
+        var _ES$RoundDuration7 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime);
         years = _ES$RoundDuration7.years;
         months = _ES$RoundDuration7.months;
         weeks = _ES$RoundDuration7.weeks;
@@ -10765,7 +10736,7 @@
         milliseconds = _ES$RoundDuration7.milliseconds;
         microseconds = _ES$RoundDuration7.microseconds;
         nanoseconds = _ES$RoundDuration7.nanoseconds;
-        var _ES$AdjustRoundedDura = ES.AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, zonedDateTime);
+        var _ES$AdjustRoundedDura = ES.AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime);
         years = _ES$AdjustRoundedDura.years;
         months = _ES$AdjustRoundedDura.months;
         weeks = _ES$AdjustRoundedDura.weeks;
@@ -11692,15 +11663,6 @@
       }
       return fallback;
     },
-    GetNumberOption: function GetNumberOption(options, property, minimum, maximum, fallback) {
-      var value = options[property];
-      if (value === undefined) return fallback;
-      value = ES.ToNumber(value);
-      if (NumberIsNaN(value) || value < minimum || value > maximum) {
-        throw new RangeError("".concat(property, " must be between ").concat(minimum, " and ").concat(maximum, ", not ").concat(value));
-      }
-      return MathFloor$1(value);
-    },
     IsBuiltinCalendar: function IsBuiltinCalendar(id) {
       return ES.Call(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [ES.ASCIILowercase(id)]);
     },
@@ -12429,7 +12391,8 @@
           microsecond: 86400e6,
           nanosecond: 86400e9
         };
-        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, maximumIncrements[smallestUnit], true);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+        roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], true);
         var ns = GetSlot(this, EPOCHNANOSECONDS);
         var roundedNs = ES.RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
         return new Instant(roundedNs);
@@ -12572,7 +12535,7 @@
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
   var ArraySort = Array.prototype.sort;
   var MathAbs = Math.abs;
-  var MathFloor = Math.floor;
+  var MathFloor$1 = Math.floor;
   var ObjectAssign$1 = Object.assign;
   var ObjectCreate$6 = Object.create;
   var ObjectEntries = Object.entries;
@@ -12756,6 +12719,13 @@
         return impl[GetSlot(this, CALENDAR_ID)].weekOfYear(date);
       }
     }, {
+      key: "yearOfWeek",
+      value: function yearOfWeek(date) {
+        if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
+        date = ES.ToTemporalDate(date);
+        return impl[GetSlot(this, CALENDAR_ID)].yearOfWeek(date);
+      }
+    }, {
       key: "daysInWeek",
       value: function daysInWeek(date) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -12912,7 +12882,10 @@
       return ES.DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
     },
     weekOfYear: function weekOfYear(date) {
-      return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
+      return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).week;
+    },
+    yearOfWeek: function yearOfWeek(date) {
+      return ES.WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).year;
     },
     daysInWeek: function daysInWeek() {
       return 7;
@@ -14051,7 +14024,7 @@
       var _this$adjustCalendarD2 = this.adjustCalendarDate(calendarDate),
         year = _this$adjustCalendarD2.year;
       return {
-        year: MathFloor(year * this.DAYS_PER_ISLAMIC_YEAR / this.DAYS_PER_ISO_YEAR) + 622,
+        year: MathFloor$1(year * this.DAYS_PER_ISLAMIC_YEAR / this.DAYS_PER_ISO_YEAR) + 622,
         month: 1,
         day: 1
       };
@@ -15131,6 +15104,9 @@
     weekOfYear: function weekOfYear(date) {
       return impl['iso8601'].weekOfYear(date);
     },
+    yearOfWeek: function yearOfWeek(date) {
+      return impl['iso8601'].yearOfWeek(date);
+    },
     daysInWeek: function daysInWeek(date) {
       return impl['iso8601'].daysInWeek(date);
     },
@@ -15300,6 +15276,12 @@
       get: function get() {
         if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
         return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), this);
+      }
+    }, {
+      key: "yearOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+        return ES.CalendarYearOfWeek(GetSlot(this, CALENDAR), this);
       }
     }, {
       key: "daysInWeek",
@@ -15671,6 +15653,12 @@
         return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), this);
       }
     }, {
+      key: "yearOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+        return ES.CalendarYearOfWeek(GetSlot(this, CALENDAR), this);
+      }
+    }, {
       key: "daysInWeek",
       get: function get() {
         if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -15826,7 +15814,8 @@
           microsecond: 1000,
           nanosecond: 1000
         };
-        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, maximumIncrements[smallestUnit], false);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+        roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], false);
         var year = GetSlot(this, ISO_YEAR);
         var month = GetSlot(this, ISO_MONTH);
         var day = GetSlot(this, ISO_DAY);
@@ -15989,6 +15978,7 @@
   }();
   MakeIntrinsicClass(PlainDateTime, 'Temporal.PlainDateTime');
 
+  var MathFloor = Math.floor;
   var ObjectCreate$4 = Object.create;
   var Duration = /*#__PURE__*/function () {
     function Duration() {
@@ -16206,7 +16196,21 @@
           throw new RangeError("largestUnit ".concat(largestUnit, " cannot be smaller than smallestUnit ").concat(smallestUnit));
         }
         var roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
-        var roundingIncrement = ES.ToTemporalDateTimeRoundingIncrement(roundTo, smallestUnit);
+        var maximumIncrements = {
+          hour: 24,
+          minute: 60,
+          second: 60,
+          millisecond: 1000,
+          microsecond: 1000,
+          nanosecond: 1000
+        };
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+        var maximum = maximumIncrements[smallestUnit];
+        if (maximum == undefined) {
+          roundingIncrement = MathFloor(roundingIncrement);
+        } else {
+          roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+        }
         var relativeTo = ES.ToRelativeTemporalObject(roundTo);
         var _ES$UnbalanceDuration = ES.UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo);
         years = _ES$UnbalanceDuration.years;
@@ -16803,7 +16807,8 @@
           microsecond: 1000,
           nanosecond: 1000
         };
-        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, MAX_INCREMENTS[smallestUnit], false);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+        roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, MAX_INCREMENTS[smallestUnit], false);
         var hour = GetSlot(this, ISO_HOUR);
         var minute = GetSlot(this, ISO_MINUTE);
         var second = GetSlot(this, ISO_SECOND);
@@ -17341,6 +17346,12 @@
         return ES.CalendarWeekOfYear(GetSlot(this, CALENDAR), dateTime(this));
       }
     }, {
+      key: "yearOfWeek",
+      get: function get() {
+        if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+        return ES.CalendarYearOfWeek(GetSlot(this, CALENDAR), dateTime(this));
+      }
+    }, {
       key: "hoursInDay",
       get: function get() {
         if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -17550,7 +17561,8 @@
           microsecond: 1000,
           nanosecond: 1000
         };
-        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo, maximumIncrements[smallestUnit], false);
+        var roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
+        roundingIncrement = ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], false);
 
         // first, round the underlying DateTime fields
         var dt = dateTime(this);
