@@ -91,13 +91,13 @@
   <emu-clause id="sec-function-properties-of-the-temporal-now-object">
     <h1>Function Properties of the Temporal.Now Object</h1>
 
-    <emu-clause id="sec-temporal.now.timezone">
-      <h1>Temporal.Now.timeZone ( )</h1>
+    <emu-clause id="sec-temporal.now.timezoneid">
+      <h1>Temporal.Now.timeZoneId ( )</h1>
       <p>
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Return ! SystemTimeZone().
+        1. Return DefaultTimeZone().
       </emu-alg>
     </emu-clause>
 
@@ -192,14 +192,6 @@
   <emu-clause id="sec-temporal-now-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-systemtimezone" aoid="SystemTimeZone">
-      <h1>SystemTimeZone ( )</h1>
-      <emu-alg>
-        1. Let _identifier_ be DefaultTimeZone().
-        1. Return ! CreateTemporalTimeZone(_identifier_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-systemutcepochnanoseconds" aoid="SystemUTCEpochNanoseconds">
       <h1>SystemUTCEpochNanoseconds ( )</h1>
       <emu-alg>
@@ -232,7 +224,7 @@
       <h1>SystemDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be ! SystemTimeZone().
+          1. Let _timeZone_ be DefaultTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
@@ -245,7 +237,7 @@
       <h1>SystemZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be ! SystemTimeZone().
+          1. Let _timeZone_ be DefaultTimeZone().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
