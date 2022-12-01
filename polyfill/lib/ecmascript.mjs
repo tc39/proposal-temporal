@@ -5069,10 +5069,8 @@ export const ES = ObjectAssign({}, ES2022, {
       return bigInt.min(NS_MAX, bigInt.max(NS_MIN, result));
     };
   })(),
-  SystemTimeZone: () => {
-    const fmt = new IntlDateTimeFormat('en-us');
-    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    return new TemporalTimeZone(ES.ParseTemporalTimeZone(fmt.resolvedOptions().timeZone));
+  DefaultTimeZone: () => {
+    return new Intl.DateTimeFormat().resolvedOptions().timeZone;
   },
   ComparisonResult: (value) => (value < 0 ? -1 : value > 0 ? 1 : value),
   GetOptionsObject: (options) => {

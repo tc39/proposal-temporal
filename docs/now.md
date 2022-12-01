@@ -82,23 +82,24 @@ timeit(() => JSON.parse(someData));
 // The function took PT0.001031756S
 ```
 
-### Temporal.Now.**timeZone**() : Temporal.TimeZone
+### Temporal.Now.**timeZoneId**() : string
 
-**Returns:** a `Temporal.TimeZone` object representing the time zone according to the current system settings.
+**Returns:** The identifier of time zone according to the current system settings.
 
-This method gets the current system time zone.
+This method gets the identifier of the current system time zone.
 This will usually be a named [IANA time zone](https://www.iana.org/time-zones), as that is how most people configure their computers.
 
 Example usage:
 
 ```js
 // When is the next daylight saving change from now, in the current location?
-tz = Temporal.Now.timeZone();
+id = Temporal.Now.timeZoneId();
 now = Temporal.Now.instant();
+tz = Temporal.TimeZone.from(id);
 nextTransition = tz.getNextTransition(now);
 before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
 after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
-console.log(`At ${nextTransition.toZonedDateTimeISO(tz)} the offset will change from UTC ${before} to ${after}`);
+console.log(`At ${nextTransition.toZonedDateTimeISO(id)} the offset will change from UTC ${before} to ${after}`);
 // example output:
 // At 2021-03-14T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00
 ```
