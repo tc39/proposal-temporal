@@ -1456,13 +1456,13 @@ export namespace Temporal {
     plainTimeISO: (tzLike?: TimeZoneLike) => Temporal.PlainTime;
 
     /**
-     * Get the environment's current time zone.
+     * Get the identifier of the environment's current time zone.
      *
-     * This method gets the current system time zone. This will usually be a
-     * named
+     * This method gets the identifier of the current system time zone. This
+     * will usually be a named
      * {@link https://en.wikipedia.org/wiki/List_of_tz_database_time_zones|IANA time zone}.
      */
-    timeZone: () => Temporal.TimeZone;
+    timeZoneId: () => string;
 
     readonly [Symbol.toStringTag]: 'Temporal.Now';
   };

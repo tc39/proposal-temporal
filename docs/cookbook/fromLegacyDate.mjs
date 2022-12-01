@@ -21,7 +21,7 @@ assert.equal(instant.toString(), '1970-01-01T00:00:01Z');
 // will be the user's time zone, but on a server the value may not
 // be what you expect, so avoid doing this in a server context.
 
-const zoned = instant.toZonedDateTimeISO(Temporal.Now.timeZone());
+const zoned = instant.toZonedDateTimeISO(Temporal.Now.timeZoneId());
 
 assert.equal(zoned.epochMilliseconds, legacyDate.getTime());
 
