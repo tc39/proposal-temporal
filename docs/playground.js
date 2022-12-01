@@ -7090,19 +7090,23 @@
   var datesplit = new RegExp("(".concat(yearpart.source, ")(?:-(").concat(monthpart.source, ")-(").concat(daypart.source, ")|(").concat(monthpart.source, ")(").concat(daypart.source, "))"));
   var timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
   var offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-  var zonesplit = new RegExp("(?:([zZ])|(?:".concat(offset.source, ")?)(?:\\[!?(").concat(timeZoneID.source, ")\\])?"));
+  var offsetpart = new RegExp("([zZ])|".concat(offset.source, "?"));
   var annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
-  var zoneddatetime = new RegExp("^".concat(datesplit.source, "(?:(?:T|\\s+)").concat(timesplit.source, ")?").concat(zonesplit.source, "((?:").concat(annotation.source, ")*)$"), 'i');
-  var time = new RegExp("^T?".concat(timesplit.source, "(?:").concat(zonesplit.source, ")?((?:").concat(annotation.source, ")*)$"), 'i');
+  var zoneddatetime = new RegExp(["^".concat(datesplit.source), "(?:(?:T|\\s+)".concat(timesplit.source, "(?:").concat(offsetpart.source, ")?)?"), "(?:\\[!?(".concat(timeZoneID.source, ")\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''), 'i');
+  var time = new RegExp(["^T?".concat(timesplit.source), "(?:".concat(offsetpart.source, ")?"), "(?:\\[!?".concat(timeZoneID.source, "\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''), 'i');
 
-  // The short forms of YearMonth and MonthDay are only for the ISO calendar.
+  // The short forms of YearMonth and MonthDay are only for the ISO calendar, but
+  // annotations are still allowed, and will throw if the calendar annotation is
+  // not ISO.
   // Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
   // with the reference fields.
   // YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
   // RFC 3339 and we don't allow 2-digit years, so we allow it.
   // Not ambiguous with HHMMSS because that requires a 'T' prefix
-  var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(").concat(monthpart.source, ")$"));
-  var monthday = new RegExp("^(?:--)?(".concat(monthpart.source, ")-?(").concat(daypart.source, ")$"));
+  // UTC offsets are not allowed, because they are not allowed with any date-only
+  // format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
+  var yearmonth = new RegExp("^(".concat(yearpart.source, ")-?(").concat(monthpart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
+  var monthday = new RegExp("^(?:--)?(".concat(monthpart.source, ")-?(").concat(daypart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
   var fraction = /(\d+)(?:[.,](\d{1,9}))?/;
   var durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
   var durationTime = new RegExp("(?:".concat(fraction.source, "H)?(?:").concat(fraction.source, "M)?(?:").concat(fraction.source, "S)?"));
@@ -7130,7 +7134,6 @@
   var StringFromCharCode = String.fromCharCode;
   var StringPrototypeCharCodeAt = String.prototype.charCodeAt;
   var StringPrototypeReplace = String.prototype.replace;
-  var StringPrototypeSlice = String.prototype.slice;
   var $TypeError = GetIntrinsic('%TypeError%');
   var $isEnumerable = callBound$7('Object.prototype.propertyIsEnumerable');
   var DAY_SECONDS = 86400;
@@ -7429,7 +7432,7 @@
         millisecond = ES.ToIntegerOrInfinity(fraction.slice(0, 3));
         microsecond = ES.ToIntegerOrInfinity(fraction.slice(3, 6));
         nanosecond = ES.ToIntegerOrInfinity(fraction.slice(6, 9));
-        annotations = match[15];
+        annotations = match[14];
         var _iterator2 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
           _step2;
         try {
@@ -7478,17 +7481,14 @@
         };
       }
       // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
-      // The annotations must be stripped so presence of a calendar doesn't result
-      // in interpretation of otherwise ambiguous input as a time.
-      var isoStringWithoutAnnotations = annotations ? ES.Call(StringPrototypeSlice, isoString, [0, -annotations.length]) : isoString;
       try {
-        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoStringWithoutAnnotations),
+        var _ES$ParseTemporalMont = ES.ParseTemporalMonthDayString(isoString),
           month = _ES$ParseTemporalMont.month,
           day = _ES$ParseTemporalMont.day;
         ES.RejectISODate(1972, month, day);
       } catch (_unused) {
         try {
-          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoStringWithoutAnnotations),
+          var _ES$ParseTemporalYear = ES.ParseTemporalYearMonthString(isoString),
             year = _ES$ParseTemporalYear.year,
             _month = _ES$ParseTemporalYear.month;
           ES.RejectISODate(year, _month, 1);
@@ -7515,7 +7515,29 @@
         if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
         year = ES.ToIntegerOrInfinity(yearString);
         month = ES.ToIntegerOrInfinity(match[2]);
-        calendar = match[3];
+        var annotations = match[3];
+        var _iterator3 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
+          _step3;
+        try {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+            var _step3$value = _slicedToArray(_step3.value, 4),
+              critical = _step3$value[1],
+              key = _step3$value[2],
+              value = _step3$value[3];
+            if (key === 'u-ca') {
+              if (calendar === undefined) calendar = value;
+            } else if (critical === '!') {
+              throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
+            }
+          }
+        } catch (err) {
+          _iterator3.e(err);
+        } finally {
+          _iterator3.f();
+        }
+        if (calendar !== undefined && calendar !== 'iso8601') {
+          throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
+        }
       } else {
         var z;
         var _ES$ParseISODateTime2 = ES.ParseISODateTime(isoString);
@@ -7539,6 +7561,29 @@
       if (match) {
         month = ES.ToIntegerOrInfinity(match[1]);
         day = ES.ToIntegerOrInfinity(match[2]);
+        var annotations = match[3];
+        var _iterator4 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
+          _step4;
+        try {
+          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+            var _step4$value = _slicedToArray(_step4.value, 4),
+              critical = _step4$value[1],
+              key = _step4$value[2],
+              value = _step4$value[3];
+            if (key === 'u-ca') {
+              if (calendar === undefined) calendar = value;
+            } else if (critical === '!') {
+              throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
+            }
+          }
+        } catch (err) {
+          _iterator4.e(err);
+        } finally {
+          _iterator4.f();
+        }
+        if (calendar !== undefined && calendar !== 'iso8601') {
+          throw new RangeError('MM-DD format is only valid with iso8601 calendar');
+        }
       } else {
         var z;
         var _ES$ParseISODateTime3 = ES.ParseISODateTime(isoString);
@@ -7805,19 +7850,19 @@
     },
     ToLimitedTemporalDuration: function ToLimitedTemporalDuration(item, disallowedProperties) {
       var record = ES.ToTemporalDurationRecord(item);
-      var _iterator3 = _createForOfIteratorHelper(disallowedProperties),
-        _step3;
+      var _iterator5 = _createForOfIteratorHelper(disallowedProperties),
+        _step5;
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var property = _step3.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          var property = _step5.value;
           if (record[property] !== 0) {
             throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
           }
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator3.f();
+        _iterator5.f();
       }
       return record;
     },
@@ -8631,18 +8676,18 @@
       if (fields === undefined) return fieldNames;
       fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
-      var _iterator4 = _createForOfIteratorHelper(fieldNames),
-        _step4;
+      var _iterator6 = _createForOfIteratorHelper(fieldNames),
+        _step6;
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var name = _step4.value;
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+          var name = _step6.value;
           if (ES.Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
           ES.Call(ArrayPrototypePush$4, result, [name]);
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator6.e(err);
       } finally {
-        _iterator4.f();
+        _iterator6.f();
       }
       return result;
     },
@@ -8775,7 +8820,13 @@
         var _ES$ParseISODateTime5 = ES.ParseISODateTime(identifier);
         calendar = _ES$ParseISODateTime5.calendar;
       } catch (_unused4) {
-        throw new RangeError("Invalid calendar: ".concat(identifier));
+        try {
+          var _ES$ParseTemporalYear3 = ES.ParseTemporalYearMonthString(identifier);
+          calendar = _ES$ParseTemporalYear3.calendar;
+        } catch (_unused5) {
+          var _ES$ParseTemporalMont3 = ES.ParseTemporalMonthDayString(identifier);
+          calendar = _ES$ParseTemporalMont3.calendar;
+        }
       }
       if (!calendar) calendar = 'iso8601';
       return new TemporalCalendar(calendar);
@@ -8965,20 +9016,20 @@
       var getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
       var possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
       var result = [];
-      var _iterator5 = _createForOfIteratorHelper(possibleInstants),
-        _step5;
+      var _iterator7 = _createForOfIteratorHelper(possibleInstants),
+        _step7;
       try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          var instant = _step5.value;
+        for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+          var instant = _step7.value;
           if (!ES.IsTemporalInstant(instant)) {
             throw new TypeError('bad return from getPossibleInstantsFor');
           }
           ES.Call(ArrayPrototypePush$4, result, [instant]);
         }
       } catch (err) {
-        _iterator5.e(err);
+        _iterator7.e(err);
       } finally {
-        _iterator5.f();
+        _iterator7.f();
       }
       return result;
     },
