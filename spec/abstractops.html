@@ -1611,7 +1611,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated, or throws a *RangeError* when the result is *NaN*, not finite or not positive.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated, or throws a *RangeError* when that value is not finite or not positive.</dd>
     </dl>
     <emu-alg>
       1. Let _integer_ be ? ToIntegerWithTruncation(_argument_).
@@ -1628,7 +1628,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated or throws a *RangeError* when the result is *NaN* or not finite.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value with fractional part truncated, or throws a *RangeError* when that value is not finite.</dd>
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
@@ -1645,7 +1645,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value, or throws a *RangeError* when the result is *NaN* or not finite.</dd>
+      <dd>It converts _argument_ to an integer representing its Number value, or throws a *RangeError* when that value is not <emu-xref href="#integral-number">integral</emu-xref>.</dd>
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
