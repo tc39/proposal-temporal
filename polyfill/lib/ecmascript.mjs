@@ -2723,10 +2723,13 @@ export const ES = ObjectAssign({}, ES2022, {
       throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
     }
     if (!nanoseconds.isZero() && MathSign(nanoseconds.toJSNumber()) != sign) {
+      if (nanoseconds.lt(0) && sign === 1) {
+        throw new Error('assert not reached');
+      }
       throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
     }
     if (nanoseconds.abs().geq(MathAbs(dayLengthNs))) {
-      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds longer than the day length');
+      throw new Error('assert not reached');
     }
     return { days: days.toJSNumber(), nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
   },
