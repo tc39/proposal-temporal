@@ -3801,12 +3801,12 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
   const otherCalendar = GetSlot(other, CALENDAR);
   CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-  const settings = GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
+  resolvedOptions.largestUnit = settings.largestUnit;
 
-  const untilOptions = ObjectCreate(null);
-  CopyDataProperties(untilOptions, options, []);
-  untilOptions.largestUnit = settings.largestUnit;
-  let { years, months, weeks, days } = CalendarDateUntil(calendar, plainDate, other, untilOptions);
+  let { years, months, weeks, days } = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
 
   if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
     ({ years, months, weeks, days } = RoundDuration(
@@ -3838,7 +3838,9 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
   const otherCalendar = GetSlot(other, CALENDAR);
   CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-  const settings = GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
     DifferenceISODateTime(
@@ -3862,7 +3864,7 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
       GetSlot(other, ISO_NANOSECOND),
       calendar,
       settings.largestUnit,
-      options
+      resolvedOptions
     );
 
   const relativeTo = TemporalDateTimeToDate(plainDateTime);
@@ -3975,7 +3977,10 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   const otherCalendar = GetSlot(other, CALENDAR);
   CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
 
-  const settings = GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
+  resolvedOptions.largestUnit = settings.largestUnit;
 
   const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
   const thisFields = PrepareTemporalFields(yearMonth, fieldNames, []);
@@ -3985,10 +3990,7 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   otherFields.day = 1;
   const otherDate = CalendarDateFromFields(calendar, otherFields);
 
-  const untilOptions = ObjectCreate(null);
-  CopyDataProperties(untilOptions, options, []);
-  untilOptions.largestUnit = settings.largestUnit;
-  let { years, months } = CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
+  let { years, months } = CalendarDateUntil(calendar, thisDate, otherDate, resolvedOptions);
 
   if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
     ({ years, months } = RoundDuration(
@@ -4020,7 +4022,10 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   const otherCalendar = GetSlot(other, CALENDAR);
   CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-  const settings = GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
+  resolvedOptions.largestUnit = settings.largestUnit;
 
   const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
   const ns2 = GetSlot(other, EPOCHNANOSECONDS);
@@ -4052,11 +4057,8 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
           'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
       );
     }
-    const untilOptions = ObjectCreate(null);
-    CopyDataProperties(untilOptions, options, []);
-    untilOptions.largestUnit = settings.largestUnit;
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-      DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, untilOptions));
+      DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
       years,
       months,
