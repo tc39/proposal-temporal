@@ -2415,7 +2415,7 @@
 
   // https://262.ecma-international.org/5.1/#sec-8
 
-  var Type$c = function Type(x) {
+  var Type$d = function Type(x) {
   	if (x === null) {
   		return 'Null';
   	}
@@ -2436,11 +2436,11 @@
   	}
   };
 
-  var ES5Type = Type$c;
+  var ES5Type = Type$d;
 
   // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
 
-  var Type$a = function Type(x) {
+  var Type$b = function Type(x) {
   	if (typeof x === 'symbol') {
   		return 'Symbol';
   	}
@@ -2450,18 +2450,18 @@
   	return ES5Type(x);
   };
 
-  var Type$b = Type$a;
+  var Type$c = Type$b;
 
   var assertRecord$1 = assertRecord$2;
   var fromPropertyDescriptor = fromPropertyDescriptor$1;
 
-  var Type$9 = Type$a;
+  var Type$a = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-frompropertydescriptor
 
   var FromPropertyDescriptor$1 = function FromPropertyDescriptor(Desc) {
   	if (typeof Desc !== 'undefined') {
-  		assertRecord$1(Type$9, 'Property Descriptor', 'Desc', Desc);
+  		assertRecord$1(Type$a, 'Property Descriptor', 'Desc', Desc);
   	}
 
   	return fromPropertyDescriptor(Desc);
@@ -2470,6 +2470,7 @@
   var GetIntrinsic$l = getIntrinsic;
 
   var $gOPD$1 = GetIntrinsic$l('%Object.getOwnPropertyDescriptor%', true);
+
   if ($gOPD$1) {
   	try {
   		$gOPD$1([], 'length');
@@ -2479,7 +2480,7 @@
   	}
   }
 
-  var getOwnPropertyDescriptor = $gOPD$1;
+  var gopd = $gOPD$1;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
 
@@ -2689,14 +2690,14 @@
 
   var $TypeError$d = GetIntrinsic$j('%TypeError%');
 
-  var Type$8 = Type$a;
+  var Type$9 = Type$b;
   var ToBoolean = ToBoolean$2;
   var IsCallable$1 = IsCallable$2;
 
   // https://262.ecma-international.org/5.1/#sec-8.10.5
 
   var ToPropertyDescriptor$1 = function ToPropertyDescriptor(Obj) {
-  	if (Type$8(Obj) !== 'Object') {
+  	if (Type$9(Obj) !== 'Object') {
   		throw new $TypeError$d('ToPropertyDescriptor requires an object');
   	}
 
@@ -2736,7 +2737,7 @@
 
   var GetIntrinsic$i = getIntrinsic;
 
-  var $gOPD = getOwnPropertyDescriptor;
+  var $gOPD = gopd;
   var $TypeError$c = GetIntrinsic$i('%TypeError%');
 
   var callBound$3 = callBound$7;
@@ -2749,12 +2750,12 @@
   var IsPropertyKey$6 = IsPropertyKey$7;
   var IsRegExp = IsRegExp$1;
   var ToPropertyDescriptor = ToPropertyDescriptor$1;
-  var Type$7 = Type$a;
+  var Type$8 = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-ordinarygetownproperty
 
   var OrdinaryGetOwnProperty$1 = function OrdinaryGetOwnProperty(O, P) {
-  	if (Type$7(O) !== 'Object') {
+  	if (Type$8(O) !== 'Object') {
   		throw new $TypeError$c('Assertion failed: O must be an Object');
   	}
   	if (!IsPropertyKey$6(P)) {
@@ -2781,7 +2782,7 @@
 
   var assertRecord = assertRecord$2;
 
-  var Type$6 = Type$a;
+  var Type$7 = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-isdatadescriptor
 
@@ -2790,7 +2791,7 @@
   		return false;
   	}
 
-  	assertRecord(Type$6, 'Property Descriptor', 'Desc', Desc);
+  	assertRecord(Type$7, 'Property Descriptor', 'Desc', Desc);
 
   	if (!has$3(Desc, '[[Value]]') && !has$3(Desc, '[[Writable]]')) {
   		return false;
@@ -2850,12 +2851,12 @@
   var IsExtensible = IsExtensible$1;
   var IsPropertyKey$5 = IsPropertyKey$7;
   var SameValue = SameValue$1;
-  var Type$5 = Type$a;
+  var Type$6 = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-createdataproperty
 
   var CreateDataProperty$1 = function CreateDataProperty(O, P, V) {
-  	if (Type$5(O) !== 'Object') {
+  	if (Type$6(O) !== 'Object') {
   		throw new $TypeError$b('Assertion failed: Type(O) is not Object');
   	}
   	if (!IsPropertyKey$5(P)) {
@@ -2888,12 +2889,12 @@
 
   var CreateDataProperty = CreateDataProperty$1;
   var IsPropertyKey$4 = IsPropertyKey$7;
-  var Type$4 = Type$a;
+  var Type$5 = Type$b;
 
   // // https://ecma-international.org/ecma-262/6.0/#sec-createdatapropertyorthrow
 
   var CreateDataPropertyOrThrow = function CreateDataPropertyOrThrow(O, P, V) {
-  	if (Type$4(O) !== 'Object') {
+  	if (Type$5(O) !== 'Object') {
   		throw new $TypeError$a('Assertion failed: Type(O) is not Object');
   	}
   	if (!IsPropertyKey$4(P)) {
@@ -6240,13 +6241,13 @@
   var inspect = objectInspect;
 
   var IsPropertyKey$3 = IsPropertyKey$7;
-  var Type$3 = Type$a;
+  var Type$4 = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-get-o-p
 
   var Get = function Get(O, P) {
   	// 7.3.1.1
-  	if (Type$3(O) !== 'Object') {
+  	if (Type$4(O) !== 'Object') {
   		throw new $TypeError$9('Assertion failed: Type(O) is not Object');
   	}
   	// 7.3.1.2
@@ -6356,13 +6357,18 @@
   	return $abs(x);
   };
 
+  var Type$3 = Type$b;
+
   // var modulo = require('./modulo');
   var $floor = Math.floor;
 
-  // http://262.ecma-international.org/5.1/#sec-5.2
+  // http://262.ecma-international.org/11.0/#eqn-floor
 
   var floor$2 = function floor(x) {
   	// return x - modulo(x, 1);
+  	if (Type$3(x) === 'BigInt') {
+  		return x;
+  	}
   	return $floor(x);
   };
 
@@ -6372,7 +6378,7 @@
 
   var abs$1 = abs$2;
   var floor$1 = floor$2;
-  var Type$2 = Type$a;
+  var Type$2 = Type$b;
 
   var $isNaN$1 = _isNaN;
   var $isFinite$1 = _isFinite;
@@ -6584,7 +6590,7 @@
   	return $replace(value, trimRegex, '');
   };
 
-  var Type$1 = Type$a;
+  var Type$1 = Type$b;
 
   // https://ecma-international.org/ecma-262/13.0/#sec-stringtonumber
 
@@ -6703,7 +6709,7 @@
   var has$1 = src;
 
   var IsPropertyKey = IsPropertyKey$7;
-  var Type = Type$a;
+  var Type = Type$b;
 
   // https://ecma-international.org/ecma-262/6.0/#sec-hasownproperty
 
@@ -7203,7 +7209,7 @@
     ToObject: ToObject$2,
     ToPrimitive: ToPrimitive$2,
     ToString: ToString$1,
-    Type: Type$b
+    Type: Type$c
   };
   var IntlDateTimeFormatEnUsCache = new Map();
   function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
@@ -7228,7 +7234,7 @@
     // copied from es-abstract/2022/CopyDataProperties.js
     // with modifications per Temporal spec/mainadditions.html
     CopyDataProperties: function CopyDataProperties(target, source, excludedKeys, excludedValues) {
-      if (Type$b(target) !== 'Object') {
+      if (Type$c(target) !== 'Object') {
         throw new $TypeError('Assertion failed: "target" must be an Object');
       }
       if (!IsArray$3(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$8)) {

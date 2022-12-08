@@ -208,7 +208,7 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 Converting between such types and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.</p>
 <p>Several important concepts are explained elsewhere: <a href="./ambiguity.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
 <h3 id="Temporal-Now"><a class="heading-link" href="#Temporal-Now"></a><strong>Temporal.Now</strong></h3><ul>
-<li><code>Temporal.Now.instant()</code> - get the exact time since <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a></li>
+<li><code>Temporal.Now.instant()</code> - get the current system exact time</li>
 <li><code>Temporal.Now.timeZone()</code> - get the current system time zone</li>
 <li><code>Temporal.Now.zonedDateTime(calendar)</code> - get the current date and wall-clock time in the system time zone and specified calendar</li>
 <li><code>Temporal.Now.zonedDateTimeISO()</code> - get the current date and wall-clock time in the system time zone and ISO-8601 calendar</li>
