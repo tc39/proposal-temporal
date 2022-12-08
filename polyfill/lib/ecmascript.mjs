@@ -3717,8 +3717,6 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-  options = GetOptionsObject(options);
-
   const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
     const p = unitInfo[0];
     const s = unitInfo[1];
@@ -3767,7 +3765,9 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
   const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalInstant(other);
 
-  const settings = GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'second');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
 
   const onens = GetSlot(instant, EPOCHNANOSECONDS);
   const twons = GetSlot(other, EPOCHNANOSECONDS);
@@ -3914,7 +3914,9 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
   const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalTime(other);
 
-  const settings = GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'hour');
+  const resolvedOptions = ObjectCreate(null);
+  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
 
   let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = DifferenceTime(
     GetSlot(plainTime, ISO_HOUR),
