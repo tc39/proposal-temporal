@@ -1791,7 +1791,7 @@
     <h1>
       GetDifferenceSettings (
         _operation_: ~since~ or ~until~,
-        _options_: an ECMAScript language value,
+        _options_: an Object,
         _unitGroup_: ~date~, ~time~, or ~datetime~,
         _disallowedUnits_: a List of Strings,
         _fallbackSmallestUnit_: a String,
@@ -1803,7 +1803,6 @@
       <dd>It reads unit and rounding options needed by difference operations.</dd>
     </dl>
     <emu-alg>
-      1. Set _options_ to ? GetOptionsObject(_options_).
       1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
       1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, _unitGroup_, *"auto"*).
       1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
