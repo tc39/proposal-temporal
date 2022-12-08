@@ -3628,8 +3628,6 @@ export const ES = ObjectAssign({}, ES2022, {
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
   },
   GetDifferenceSettings: (op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) => {
-    options = ES.GetOptionsObject(options);
-
     const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
       const p = unitInfo[0];
       const s = unitInfo[1];
@@ -3677,7 +3675,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const sign = operation === 'since' ? -1 : 1;
     other = ES.ToTemporalInstant(other);
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'second');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
 
     const onens = GetSlot(instant, EPOCHNANOSECONDS);
     const twons = GetSlot(other, EPOCHNANOSECONDS);
@@ -3822,7 +3822,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const sign = operation === 'since' ? -1 : 1;
     other = ES.ToTemporalTime(other);
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'hour');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
 
     let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.DifferenceTime(
       GetSlot(plainTime, ISO_HOUR),
