@@ -3710,12 +3710,12 @@ export const ES = ObjectAssign({}, ES2022, {
     const otherCalendar = GetSlot(other, CALENDAR);
     ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
+    resolvedOptions.largestUnit = settings.largestUnit;
 
-    const untilOptions = ObjectCreate(null);
-    ES.CopyDataProperties(untilOptions, options, []);
-    untilOptions.largestUnit = settings.largestUnit;
-    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions);
+    let { years, months, weeks, days } = ES.CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
 
     if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
       ({ years, months, weeks, days } = ES.RoundDuration(
@@ -3746,7 +3746,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const otherCalendar = GetSlot(other, CALENDAR);
     ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 
     let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       ES.DifferenceISODateTime(
@@ -3770,7 +3772,7 @@ export const ES = ObjectAssign({}, ES2022, {
         GetSlot(other, ISO_NANOSECOND),
         calendar,
         settings.largestUnit,
-        options
+        resolvedOptions
       );
 
     const relativeTo = ES.TemporalDateTimeToDate(plainDateTime);
@@ -3882,7 +3884,10 @@ export const ES = ObjectAssign({}, ES2022, {
     const otherCalendar = GetSlot(other, CALENDAR);
     ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
+    resolvedOptions.largestUnit = settings.largestUnit;
 
     const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
     const thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
@@ -3892,10 +3897,7 @@ export const ES = ObjectAssign({}, ES2022, {
     otherFields.day = 1;
     const otherDate = ES.CalendarDateFromFields(calendar, otherFields);
 
-    const untilOptions = ObjectCreate(null);
-    ES.CopyDataProperties(untilOptions, options, []);
-    untilOptions.largestUnit = settings.largestUnit;
-    let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions);
+    let { years, months } = ES.CalendarDateUntil(calendar, thisDate, otherDate, resolvedOptions);
 
     if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
       ({ years, months } = ES.RoundDuration(
@@ -3926,7 +3928,10 @@ export const ES = ObjectAssign({}, ES2022, {
     const otherCalendar = GetSlot(other, CALENDAR);
     ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
-    const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
+    const resolvedOptions = ObjectCreate(null);
+    ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+    const settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
+    resolvedOptions.largestUnit = settings.largestUnit;
 
     const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
     const ns2 = GetSlot(other, EPOCHNANOSECONDS);
@@ -3958,11 +3963,8 @@ export const ES = ObjectAssign({}, ES2022, {
             'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
         );
       }
-      const untilOptions = ObjectCreate(null);
-      ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = settings.largestUnit;
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, untilOptions));
+        ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.RoundDuration(
           years,
