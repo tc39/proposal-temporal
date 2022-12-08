@@ -565,12 +565,20 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-isodaysinmonth" aoid="ISODaysInMonth">
-      <h1>ISODaysInMonth ( _year_, _month_ )</h1>
+      <h1>
+        ISODaysInMonth (
+          _year_: an integer,
+          _month_: an integer between 1 and 12 inclusive,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns the number of days in the given year and month in the ISO 8601 calendar.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_ is an integer.
-        1. Assert: _month_ is an integer, _month_ &ge; 1, and _month_ &le; 12.
         1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
         1. If _month_ is 4, 6, 9, or 11, return 30.
+        1. Assert: _month_ is 2.
         1. Return 28 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_)))).
       </emu-alg>
     </emu-clause>
