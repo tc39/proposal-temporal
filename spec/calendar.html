@@ -564,7 +564,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isodaysinmonth" aoid="ISODaysInMonth">
+    <emu-clause id="sec-temporal-isodaysinmonth" type="abstract operation">
       <h1>
         ISODaysInMonth (
           _year_: an integer,
@@ -1199,7 +1199,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slots, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(! ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]])).
+        1. Return 𝔽(ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]])).
       </emu-alg>
     </emu-clause>
 
