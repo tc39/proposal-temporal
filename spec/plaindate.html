@@ -788,8 +788,8 @@
           1. If _mid_.[[Month]] = _end_.[[Month]], then
             1. Assert: _mid_.[[Year]] = _end_.[[Year]].
             1. Let _days_ be _end_.[[Day]] - _mid_.[[Day]].
-          1. Else if _sign_ &lt; 0, let _days_ be -_mid_.[[Day]] - (! ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
-          1. Else, let _days_ be _end_.[[Day]] + (! ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
+          1. Else if _sign_ &lt; 0, let _days_ be -_mid_.[[Day]] - (ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
+          1. Else, let _days_ be _end_.[[Day]] + (ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
           1. If _largestUnit_ is *"month"*, then
             1. Set _months_ to _months_ + _years_ &times; 12.
             1. Set _years_ to 0.
@@ -829,7 +829,7 @@
       <emu-alg>
         1. If _overflow_ is *"constrain"*, then
           1. Set _month_ to the result of clamping _month_ between 1 and 12.
-          1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
+          1. Let _daysInMonth_ be ISODaysInMonth(_year_, _month_).
           1. Set _day_ to the result of clamping _day_ between 1 and _daysInMonth_.
           1. Return CreateISODateRecord(_year_, _month_, _day_).
         1. Else,
@@ -857,7 +857,7 @@
       <emu-alg>
         1. If _month_ &lt; 1 or _month_ &gt; 12, then
           1. Return *false*.
-        1. Let _daysInMonth_ be ! ISODaysInMonth(_year_, _month_).
+        1. Let _daysInMonth_ be ISODaysInMonth(_year_, _month_).
         1. If _day_ &lt; 1 or _day_ &gt; _daysInMonth_, then
           1. Return *false*.
         1. Return *true*.
