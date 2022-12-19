@@ -81,53 +81,14 @@ rules:
   '@typescript-eslint/ban-ts-comment': off
 overrides:
   - files:
-      - polyfill/test/Calendar/**/*.js
-      - polyfill/test/Duration/**/*.js
-      - polyfill/test/helpers/*.js
-      - polyfill/test/Instant/**/*.js
-      - polyfill/test/intl402/**/*.js
-      - polyfill/test/Now/**/*.js
-      - polyfill/test/PlainDate/**/*.js
-      - polyfill/test/PlainDateTime/**/*.js
-      - polyfill/test/PlainMonthDay/**/*.js
-      - polyfill/test/PlainTime/**/*.js
-      - polyfill/test/PlainYearMonth/**/*.js
-      - polyfill/test/Temporal/**/*.js
-      - polyfill/test/TimeZone/**/*.js
-      - polyfill/test/ZonedDateTime/**/*.js
-    globals:
-      Temporal: readonly
-      TemporalHelpers: readonly
-      Test262Error: readonly
-      assert: readonly
-      isConstructor: readonly
-      verifyProperty: readonly
-      arrayContains: readonly
-    # test262 code complies to a different coding style
-    extends: 'eslint:recommended'
-    rules:
-      brace-style: 'off'
-      comma-dangle: 'off'
-      function-call-argument-newline: 'off'
-      max-len: 'off'
-      no-prototype-builtins: 'off'
-      prettier/prettier: 'off'
-      quotes: 'off'
-  - files:
       - docs/cookbook/fromLegacyDateOnly.mjs
     rules:
       prettier/prettier: 'off'
-  - files:
-      - polyfill/test/helpers/temporalHelpers.js
-    rules:
-      no-unused-vars: 'off'
-      '@typescript-eslint/no-unused-vars': 'off'
   - files:
       - docs/buildDocs.js
       - polyfill/lib/duration.mjs
       - polyfill/lib/init.js
       - polyfill/test/all.mjs
-      - polyfill/test/exhaust.mjs
       - polyfill/test/validStrings.mjs
     rules:
       no-console: off
