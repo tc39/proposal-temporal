@@ -7362,9 +7362,7 @@
         var offsetFraction = match[18] || '0';
         offset = "".concat(offsetSign).concat(offsetHours, ":").concat(offsetMinutes);
         if (+offsetFraction) {
-          while (offsetFraction.endsWith('0')) {
-            offsetFraction = offsetFraction.slice(0, -1);
-          }
+          while (offsetFraction.endsWith('0')) offsetFraction = offsetFraction.slice(0, -1);
           offset += ":".concat(offsetSeconds, ".").concat(offsetFraction);
         } else if (+offsetSeconds) {
           offset += ":".concat(offsetSeconds);
@@ -9056,9 +9054,7 @@
       if (precision === 'auto') {
         if (fraction === 0) return secs;
         fraction = "".concat(fraction).padStart(9, '0');
-        while (fraction[fraction.length - 1] === '0') {
-          fraction = fraction.slice(0, -1);
-        }
+        while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
       } else {
         if (precision === 0) return secs;
         fraction = "".concat(fraction).padStart(9, '0').slice(0, precision);
@@ -9312,9 +9308,7 @@
       var post = '';
       if (nanoseconds) {
         var fraction = "".concat(nanoseconds).padStart(9, '0');
-        while (fraction[fraction.length - 1] === '0') {
-          fraction = fraction.slice(0, -1);
-        }
+        while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
         post = ":".concat(secondString, ".").concat(fraction);
       } else if (seconds) {
         post = ":".concat(secondString);
@@ -9755,10 +9749,13 @@
         throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
       }
       if (!nanoseconds.isZero() && MathSign(nanoseconds.toJSNumber()) != sign) {
+        if (nanoseconds.lt(0) && sign === 1) {
+          throw new Error('assert not reached');
+        }
         throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
       }
       if (nanoseconds.abs().geq(MathAbs$1(dayLengthNs))) {
-        throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds longer than the day length');
+        throw new Error('assert not reached');
       }
       return {
         days: days.toJSNumber(),
