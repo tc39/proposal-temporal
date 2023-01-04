@@ -2374,7 +2374,26 @@
   		return true;
   	},
   	// https://262.ecma-international.org/13.0/#sec-match-records
-  	'Match Record': isMatchRecord
+  	'Match Record': isMatchRecord,
+  	'Iterator Record': function isIteratorRecord(value) {
+  		return has$7(value, '[[Iterator]]') && has$7(value, '[[NextMethod]]') && has$7(value, '[[Done]]');
+  	},
+  	'PromiseCapability Record': function isPromiseCapabilityRecord(value) {
+  		return value
+  			&& has$7(value, '[[Resolve]]')
+  			&& typeof value['[[Resolve]]'] === 'function'
+  			&& has$7(value, '[[Reject]]')
+  			&& typeof value['[[Reject]]'] === 'function'
+  			&& has$7(value, '[[Promise]]')
+  			&& value['[[Promise]]']
+  			&& typeof value['[[Promise]]'].then === 'function';
+  	},
+  	'AsyncGeneratorRequest Record': function isAsyncGeneratorRequestRecord(value) {
+  		return value
+  			&& has$7(value, '[[Completion]]') // TODO: confirm is a completion record
+  			&& has$7(value, '[[Capability]]')
+  			&& predicates['PromiseCapability Record'](value['[[Capability]]']);
+  	}
   };
 
   var assertRecord$2 = function assertRecord(Type, recordType, argumentName, value) {
@@ -6320,6 +6339,8 @@
   var IsCallable = IsCallable$2;
   var IsPropertyKey$1 = IsPropertyKey$7;
 
+  var debug = objectInspect;
+
   // https://ecma-international.org/ecma-262/6.0/#sec-getmethod
 
   var GetMethod$1 = function GetMethod(O, P) {
@@ -6338,7 +6359,7 @@
 
   	// 7.3.9.5
   	if (!IsCallable(func)) {
-  		throw new $TypeError$6(P + 'is not a function');
+  		throw new $TypeError$6(P + ' is not a function: ' + debug(func));
   	}
 
   	// 7.3.9.6
