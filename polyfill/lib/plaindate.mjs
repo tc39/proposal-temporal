@@ -23,14 +23,6 @@ export class PlainDate {
     isoDay = ES.ToIntegerWithTruncation(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
 
-    // Note: if the arguments are not passed,
-    //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-    //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
-    //       exists only to improve the error message.
-    if (arguments.length < 3) {
-      throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
-    }
-
     ES.CreateTemporalDateSlots(this, isoYear, isoMonth, isoDay, calendar);
   }
   get calendar() {
