@@ -1531,7 +1531,7 @@
         1. Let _intermediateNs_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_).
         1. Let _endNs_ be ? AddZonedDateTime(_intermediateNs_, _timeZone_, _calendar_, _y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. If _largestUnit_ is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
-          1. Let _result_ be ! DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, _largestUnit_, *"halfExpand"*).
+          1. Let _result_ be DifferenceInstant(_relativeTo_.[[Nanoseconds]], _endNs_, 1, *"nanosecond"*, _largestUnit_, *"halfExpand"*).
           1. Return ! CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Return ? DifferenceZonedDateTime(_relativeTo_.[[Nanoseconds]], _endNs_, _timeZone_, _calendar_, _largestUnit_, OrdinaryObjectCreate(*null*)).
       </emu-alg>
@@ -1804,7 +1804,7 @@
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ - _dayStart_).
         1. If (_timeRemainderNs_ - _dayLengthNs_) &times; _direction_ &lt; 0, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _timeRemainderNs_ to ! RoundTemporalInstant(ℤ(_timeRemainderNs_ - _dayLengthNs_), _increment_, _unit_, _roundingMode_).
+        1. Set _timeRemainderNs_ to ℝ(RoundTemporalInstant(ℤ(_timeRemainderNs_ - _dayLengthNs_), _increment_, _unit_, _roundingMode_)).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
         1. Let _adjustedTimeDuration_ be ? <emu-meta suppress-effects="user-code">BalanceDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*)</emu-meta>.
         1. Return ! CreateDurationRecord(_adjustedDateDuration_.[[Years]], _adjustedDateDuration_.[[Months]], _adjustedDateDuration_.[[Weeks]], _adjustedDateDuration_.[[Days]], _adjustedTimeDuration_.[[Hours]], _adjustedTimeDuration_.[[Minutes]], _adjustedTimeDuration_.[[Seconds]], _adjustedTimeDuration_.[[Milliseconds]], _adjustedTimeDuration_.[[Microseconds]], _adjustedTimeDuration_.[[Nanoseconds]]).
