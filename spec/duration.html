@@ -1660,12 +1660,11 @@
           1. Let _monthsWeeksInDays_ be DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _relativeTo_ to _yearsLater_.
           1. Let _days_ be _days_ + _monthsWeeksInDays_.
-          1. Assert: _days_ is an integer.
-          1. Let _daysDuration_ be ? CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
-          1. Let _daysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _daysDuration_, *undefined*, _dateAdd_).
+          1. Let _wholeDaysDuration_ be ? CreateTemporalDuration(0, 0, 0, truncate(_days_), 0, 0, 0, 0, 0, 0).
+          1. Let _wholeDaysLater_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _wholeDaysDuration_, *undefined*, _dateAdd_).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"year"*).
-          1. Let _timePassed_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _daysLater_, _untilOptions_).
+          1. Let _timePassed_ be ? CalendarDateUntil(_calendar_, _relativeTo_, _wholeDaysLater_, _untilOptions_).
           1. Let _yearsPassed_ be _timePassed_.[[Years]].
           1. Set _years_ to _years_ + _yearsPassed_.
           1. Let _oldRelativeTo_ be _relativeTo_.
