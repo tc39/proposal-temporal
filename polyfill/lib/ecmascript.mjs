@@ -116,9 +116,9 @@ const BUILTIN_CALENDAR_IDS = [
 
 export function ToIntegerWithTruncation(value) {
   const number = ToNumber(value);
-  if (NumberIsNaN(number) || number === 0) return 0;
-  if (!NumberIsFinite(number)) {
-    throw new RangeError('infinity is out of range');
+  if (number === 0) return 0;
+  if (NumberIsNaN(number) || !NumberIsFinite(number)) {
+    throw new RangeError('invalid number value');
   }
   const integer = MathTrunc(number);
   if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -138,7 +138,6 @@ export function ToPositiveIntegerWithTruncation(value, property) {
 
 export function ToIntegerIfIntegral(value) {
   const number = ToNumber(value);
-  if (NumberIsNaN(number) || number === 0) return 0;
   if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
   if (!IsIntegralNumber(number)) throw new RangeError(`unsupported fractional value ${value}`);
   if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -586,11 +585,11 @@ export function ParseTemporalDurationString(isoString) {
     throw new RangeError(`invalid duration: ${isoString}`);
   }
   const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
-  const years = ToIntegerWithTruncation(match[2]) * sign;
-  const months = ToIntegerWithTruncation(match[3]) * sign;
-  const weeks = ToIntegerWithTruncation(match[4]) * sign;
-  const days = ToIntegerWithTruncation(match[5]) * sign;
-  const hours = ToIntegerWithTruncation(match[6]) * sign;
+  const years = match[2] === undefined ? 0 : ToIntegerWithTruncation(match[2]) * sign;
+  const months = match[3] === undefined ? 0 : ToIntegerWithTruncation(match[3]) * sign;
+  const weeks = match[4] === undefined ? 0 : ToIntegerWithTruncation(match[4]) * sign;
+  const days = match[5] === undefined ? 0 : ToIntegerWithTruncation(match[5]) * sign;
+  const hours = match[6] === undefined ? 0 : ToIntegerWithTruncation(match[6]) * sign;
   let fHours = match[7];
   let minutesStr = match[8];
   let fMinutes = match[9];
@@ -607,14 +606,14 @@ export function ParseTemporalDurationString(isoString) {
     }
     excessNanoseconds = ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
   } else {
-    minutes = ToIntegerWithTruncation(minutesStr) * sign;
+    minutes = minutesStr === undefined ? 0 : ToIntegerWithTruncation(minutesStr) * sign;
     if (fMinutes !== undefined) {
       if (secondsStr ?? fSeconds ?? false) {
         throw new RangeError('only the smallest unit can be fractional');
       }
       excessNanoseconds = ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
     } else {
-      seconds = ToIntegerWithTruncation(secondsStr) * sign;
+      seconds = secondsStr === undefined ? 0 : ToIntegerWithTruncation(secondsStr) * sign;
       if (fSeconds !== undefined) {
         excessNanoseconds = ToIntegerWithTruncation((fSeconds + '000000000').slice(0, 9)) * sign;
       }
@@ -1701,9 +1700,6 @@ export function CalendarDateUntil(calendar, date, otherDate, options, dateUntil)
 export function CalendarYear(calendar, dateLike) {
   const year = GetMethod(calendar, 'year');
   const result = Call(year, calendar, [dateLike]);
-  if (result === undefined) {
-    throw new RangeError('calendar year result must be an integer');
-  }
   return ToIntegerWithTruncation(result);
 }
 
@@ -1764,9 +1760,6 @@ export function CalendarWeekOfYear(calendar, dateLike) {
 export function CalendarYearOfWeek(calendar, dateLike) {
   const yearOfWeek = GetMethod(calendar, 'yearOfWeek');
   const result = Call(yearOfWeek, calendar, [dateLike]);
-  if (result === undefined) {
-    throw new RangeError('calendar yearOfWeek result must be an integer');
-  }
   return ToIntegerWithTruncation(result);
 }
 

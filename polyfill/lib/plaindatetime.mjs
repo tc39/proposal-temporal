@@ -35,21 +35,13 @@ export class PlainDateTime {
     isoYear = ES.ToIntegerWithTruncation(isoYear);
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     isoDay = ES.ToIntegerWithTruncation(isoDay);
-    hour = ES.ToIntegerWithTruncation(hour);
-    minute = ES.ToIntegerWithTruncation(minute);
-    second = ES.ToIntegerWithTruncation(second);
-    millisecond = ES.ToIntegerWithTruncation(millisecond);
-    microsecond = ES.ToIntegerWithTruncation(microsecond);
-    nanosecond = ES.ToIntegerWithTruncation(nanosecond);
+    hour = hour === undefined ? 0 : ES.ToIntegerWithTruncation(hour);
+    minute = minute === undefined ? 0 : ES.ToIntegerWithTruncation(minute);
+    second = second === undefined ? 0 : ES.ToIntegerWithTruncation(second);
+    millisecond = millisecond === undefined ? 0 : ES.ToIntegerWithTruncation(millisecond);
+    microsecond = microsecond === undefined ? 0 : ES.ToIntegerWithTruncation(microsecond);
+    nanosecond = nanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(nanosecond);
     calendar = ES.ToTemporalCalendar(calendar);
-
-    // Note: if the arguments are not passed,
-    //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-    //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
-    //       check exists only to improve the error message.
-    if (arguments.length < 3) {
-      throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
-    }
 
     ES.CreateTemporalDateTimeSlots(
       this,
