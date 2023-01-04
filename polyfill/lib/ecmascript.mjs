@@ -4873,10 +4873,11 @@ export function RoundDuration(
       relativeTo = yearsLater;
       days += monthsWeeksInDays;
 
-      const daysLater = CalendarDateAdd(calendar, relativeTo, { days }, undefined, dateAdd);
+      const wholeDays = new TemporalDuration(0, 0, 0, days);
+      const wholeDaysLater = CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
       const untilOptions = ObjectCreate(null);
       untilOptions.largestUnit = 'year';
-      const yearsPassed = CalendarDateUntil(calendar, relativeTo, daysLater, untilOptions).years;
+      const yearsPassed = CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
       years += yearsPassed;
       const oldRelativeTo = relativeTo;
       relativeTo = CalendarDateAdd(calendar, relativeTo, { years: yearsPassed }, undefined, dateAdd);
