@@ -4771,10 +4771,11 @@ export const ES = ObjectAssign({}, ES2022, {
         relativeTo = yearsLater;
         days += monthsWeeksInDays;
 
-        const daysLater = ES.CalendarDateAdd(calendar, relativeTo, { days }, undefined, dateAdd);
+        const wholeDays = new TemporalDuration(0, 0, 0, days);
+        const wholeDaysLater = ES.CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
         const untilOptions = ObjectCreate(null);
         untilOptions.largestUnit = 'year';
-        const yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, daysLater, untilOptions).years;
+        const yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
         years += yearsPassed;
         const oldRelativeTo = relativeTo;
         relativeTo = ES.CalendarDateAdd(calendar, relativeTo, { years: yearsPassed }, undefined, dateAdd);
