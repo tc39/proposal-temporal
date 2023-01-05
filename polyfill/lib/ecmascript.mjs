@@ -1605,78 +1605,164 @@ export const ES = ObjectAssign({}, ES2022, {
   CalendarYear: (calendar, dateLike) => {
     const year = ES.GetMethod(calendar, 'year');
     const result = ES.Call(year, calendar, [dateLike]);
-    return ES.ToIntegerWithTruncation(result);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar year result must be an integer');
+    }
+    if (!IsIntegralNumber(result)) {
+      throw new RangeError('calendar year result must be an integer');
+    }
+    return result;
   },
   CalendarMonth: (calendar, dateLike) => {
     const month = ES.GetMethod(calendar, 'month');
     const result = ES.Call(month, calendar, [dateLike]);
-    return ES.ToPositiveIntegerWithTruncation(result);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar month result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar month result must be a positive integer');
+    }
+    return result;
   },
   CalendarMonthCode: (calendar, dateLike) => {
     const monthCode = ES.GetMethod(calendar, 'monthCode');
     const result = ES.Call(monthCode, calendar, [dateLike]);
-    if (result === undefined) {
-      throw new RangeError('calendar monthCode result must be a string');
+    if (typeof result !== 'string') {
+      throw new TypeError('calendar monthCode result must be a string');
     }
-    return ES.ToString(result);
+    return result;
   },
   CalendarDay: (calendar, dateLike) => {
     const day = ES.GetMethod(calendar, 'day');
     const result = ES.Call(day, calendar, [dateLike]);
-    return ES.ToPositiveIntegerWithTruncation(result);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar day result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar day result must be a positive integer');
+    }
+    return result;
   },
   CalendarEra: (calendar, dateLike) => {
     const era = ES.GetMethod(calendar, 'era');
     let result = ES.Call(era, calendar, [dateLike]);
-    if (result !== undefined) {
-      result = ES.ToString(result);
+    if (result === undefined) {
+      return result;
+    }
+    if (typeof result !== 'string') {
+      throw new TypeError('calendar era result must be a string');
     }
     return result;
   },
   CalendarEraYear: (calendar, dateLike) => {
     const eraYear = ES.GetMethod(calendar, 'eraYear');
     let result = ES.Call(eraYear, calendar, [dateLike]);
-    if (result !== undefined) {
-      result = ES.ToIntegerWithTruncation(result);
+    if (result === undefined) {
+      return result;
+    }
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar eraYear result must be an integer');
+    }
+    if (!IsIntegralNumber(result)) {
+      throw new RangeError('calendar eraYear result must be an integer');
     }
     return result;
   },
   CalendarDayOfWeek: (calendar, dateLike) => {
     const dayOfWeek = ES.GetMethod(calendar, 'dayOfWeek');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfWeek, calendar, [dateLike]));
+    const result = ES.Call(dayOfWeek, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar dayOfWeek result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar dayOfWeek result must be a positive integer');
+    }
+    return result;
   },
   CalendarDayOfYear: (calendar, dateLike) => {
     const dayOfYear = ES.GetMethod(calendar, 'dayOfYear');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(dayOfYear, calendar, [dateLike]));
+    const result = ES.Call(dayOfYear, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar dayOfYear result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar dayOfYear result must be a positive integer');
+    }
+    return result;
   },
   CalendarWeekOfYear: (calendar, dateLike) => {
     const weekOfYear = ES.GetMethod(calendar, 'weekOfYear');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(weekOfYear, calendar, [dateLike]));
+    const result = ES.Call(weekOfYear, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar weekOfYear result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar weekOfYear result must be a positive integer');
+    }
+    return result;
   },
   CalendarYearOfWeek: (calendar, dateLike) => {
     const yearOfWeek = ES.GetMethod(calendar, 'yearOfWeek');
     const result = ES.Call(yearOfWeek, calendar, [dateLike]);
-    return ES.ToIntegerWithTruncation(result);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar yearOfWeek result must be an integer');
+    }
+    if (!IsIntegralNumber(result)) {
+      throw new RangeError('calendar yearOfWeek result must be an integer');
+    }
+    return result;
   },
   CalendarDaysInWeek: (calendar, dateLike) => {
     const daysInWeek = ES.GetMethod(calendar, 'daysInWeek');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInWeek, calendar, [dateLike]));
+    const result = ES.Call(daysInWeek, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar daysInWeek result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar daysInWeek result must be a positive integer');
+    }
+    return result;
   },
   CalendarDaysInMonth: (calendar, dateLike) => {
     const daysInMonth = ES.GetMethod(calendar, 'daysInMonth');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInMonth, calendar, [dateLike]));
+    const result = ES.Call(daysInMonth, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar daysInMonth result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar daysInMonth result must be a positive integer');
+    }
+    return result;
   },
   CalendarDaysInYear: (calendar, dateLike) => {
     const daysInYear = ES.GetMethod(calendar, 'daysInYear');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(daysInYear, calendar, [dateLike]));
+    const result = ES.Call(daysInYear, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar daysInYear result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar daysInYear result must be a positive integer');
+    }
+    return result;
   },
   CalendarMonthsInYear: (calendar, dateLike) => {
     const monthsInYear = ES.GetMethod(calendar, 'monthsInYear');
-    return ES.ToPositiveIntegerWithTruncation(ES.Call(monthsInYear, calendar, [dateLike]));
+    const result = ES.Call(monthsInYear, calendar, [dateLike]);
+    if (typeof result !== 'number') {
+      throw new TypeError('calendar monthsInYear result must be a positive integer');
+    }
+    if (!IsIntegralNumber(result) || result <= 0) {
+      throw new RangeError('calendar monthsInYear result must be a positive integer');
+    }
+    return result;
   },
   CalendarInLeapYear: (calendar, dateLike) => {
     const inLeapYear = ES.GetMethod(calendar, 'inLeapYear');
-    return !!ES.Call(inLeapYear, calendar, [dateLike]);
+    const result = ES.Call(inLeapYear, calendar, [dateLike]);
+    if (typeof result !== 'boolean') {
+      throw new TypeError('calendar inLeapYear result must be a boolean');
+    }
+    return result;
   },
 
   ToTemporalCalendar: (calendarLike) => {
