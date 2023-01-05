@@ -206,9 +206,10 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _dateLike_ »).
-        1. Return ? ToIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarmonth" type="abstract operation">
@@ -224,9 +225,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarmonthcode" type="abstract operation">
@@ -242,8 +245,8 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _dateLike_ »).
-        1. If _result_ is *undefined*, throw a *RangeError* exception.
-        1. Return ? ToString(_result_).
+        1. If Type(_result_) is not String, throw a *TypeError* exception.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
@@ -260,9 +263,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardayofweek" type="abstract operation">
@@ -278,9 +283,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardayofyear" type="abstract operation">
@@ -296,9 +303,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarweekofyear" type="abstract operation">
@@ -314,9 +323,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendaryearofweek" type="abstract operation">
@@ -332,9 +343,10 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
-        1. Return ? ToIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardaysinweek" type="abstract operation">
@@ -350,9 +362,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardaysinmonth" type="abstract operation">
@@ -368,9 +382,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardaysinyear" type="abstract operation">
@@ -386,9 +402,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarmonthsinyear" type="abstract operation">
@@ -404,9 +422,11 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
-        1. Return ? ToPositiveIntegerWithTruncation(_result_).
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. If _result_ &le; 0, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
       </emu-alg>
-      <emu-note>ToPositiveIntegerWithTruncation(*undefined*) will throw a *RangeError*.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarinleapyear" type="abstract operation">
@@ -422,7 +442,8 @@
       </dl>
       <emu-alg>
         1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
-        1. Return ToBoolean(_result_).
+        1. If Type(_result_) is not Boolean, throw a *TypeError* exception.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
