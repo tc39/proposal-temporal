@@ -1688,35 +1688,56 @@ export function CalendarDateUntil(calendar, date, otherDate, options, dateUntil)
 export function CalendarYear(calendar, dateLike) {
   const year = GetMethod(calendar, 'year');
   const result = Call(year, calendar, [dateLike]);
-  return ToIntegerWithTruncation(result);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar year result must be an integer');
+  }
+  if (!IsIntegralNumber(result)) {
+    throw new RangeError('calendar year result must be an integer');
+  }
+  return result;
 }
 
 export function CalendarMonth(calendar, dateLike) {
   const month = GetMethod(calendar, 'month');
   const result = Call(month, calendar, [dateLike]);
-  return ToPositiveIntegerWithTruncation(result);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar month result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar month result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarMonthCode(calendar, dateLike) {
   const monthCode = GetMethod(calendar, 'monthCode');
   const result = Call(monthCode, calendar, [dateLike]);
-  if (result === undefined) {
-    throw new RangeError('calendar monthCode result must be a string');
+  if (typeof result !== 'string') {
+    throw new TypeError('calendar monthCode result must be a string');
   }
-  return ToString(result);
+  return result;
 }
 
 export function CalendarDay(calendar, dateLike) {
   const day = GetMethod(calendar, 'day');
   const result = Call(day, calendar, [dateLike]);
-  return ToPositiveIntegerWithTruncation(result);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar day result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar day result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarEra(calendar, dateLike) {
   const era = GetMethod(calendar, 'era');
   let result = Call(era, calendar, [dateLike]);
-  if (result !== undefined) {
-    result = ToString(result);
+  if (result === undefined) {
+    return result;
+  }
+  if (typeof result !== 'string') {
+    throw new TypeError('calendar era result must be a string');
   }
   return result;
 }
@@ -1724,56 +1745,121 @@ export function CalendarEra(calendar, dateLike) {
 export function CalendarEraYear(calendar, dateLike) {
   const eraYear = GetMethod(calendar, 'eraYear');
   let result = Call(eraYear, calendar, [dateLike]);
-  if (result !== undefined) {
-    result = ToIntegerWithTruncation(result);
+  if (result === undefined) {
+    return result;
+  }
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar eraYear result must be an integer');
+  }
+  if (!IsIntegralNumber(result)) {
+    throw new RangeError('calendar eraYear result must be an integer');
   }
   return result;
 }
 
 export function CalendarDayOfWeek(calendar, dateLike) {
   const dayOfWeek = GetMethod(calendar, 'dayOfWeek');
-  return ToPositiveIntegerWithTruncation(Call(dayOfWeek, calendar, [dateLike]));
+  const result = Call(dayOfWeek, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar dayOfWeek result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar dayOfWeek result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarDayOfYear(calendar, dateLike) {
   const dayOfYear = GetMethod(calendar, 'dayOfYear');
-  return ToPositiveIntegerWithTruncation(Call(dayOfYear, calendar, [dateLike]));
+  const result = Call(dayOfYear, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar dayOfYear result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar dayOfYear result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarWeekOfYear(calendar, dateLike) {
   const weekOfYear = GetMethod(calendar, 'weekOfYear');
-  return ToPositiveIntegerWithTruncation(Call(weekOfYear, calendar, [dateLike]));
+  const result = Call(weekOfYear, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar weekOfYear result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar weekOfYear result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarYearOfWeek(calendar, dateLike) {
   const yearOfWeek = GetMethod(calendar, 'yearOfWeek');
   const result = Call(yearOfWeek, calendar, [dateLike]);
-  return ToIntegerWithTruncation(result);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar yearOfWeek result must be an integer');
+  }
+  if (!IsIntegralNumber(result)) {
+    throw new RangeError('calendar yearOfWeek result must be an integer');
+  }
+  return result;
 }
 
 export function CalendarDaysInWeek(calendar, dateLike) {
   const daysInWeek = GetMethod(calendar, 'daysInWeek');
-  return ToPositiveIntegerWithTruncation(Call(daysInWeek, calendar, [dateLike]));
+  const result = Call(daysInWeek, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar daysInWeek result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar daysInWeek result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarDaysInMonth(calendar, dateLike) {
   const daysInMonth = GetMethod(calendar, 'daysInMonth');
-  return ToPositiveIntegerWithTruncation(Call(daysInMonth, calendar, [dateLike]));
+  const result = Call(daysInMonth, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar daysInMonth result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar daysInMonth result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarDaysInYear(calendar, dateLike) {
   const daysInYear = GetMethod(calendar, 'daysInYear');
-  return ToPositiveIntegerWithTruncation(Call(daysInYear, calendar, [dateLike]));
+  const result = Call(daysInYear, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar daysInYear result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar daysInYear result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarMonthsInYear(calendar, dateLike) {
   const monthsInYear = GetMethod(calendar, 'monthsInYear');
-  return ToPositiveIntegerWithTruncation(Call(monthsInYear, calendar, [dateLike]));
+  const result = Call(monthsInYear, calendar, [dateLike]);
+  if (typeof result !== 'number') {
+    throw new TypeError('calendar monthsInYear result must be a positive integer');
+  }
+  if (!IsIntegralNumber(result) || result <= 0) {
+    throw new RangeError('calendar monthsInYear result must be a positive integer');
+  }
+  return result;
 }
 
 export function CalendarInLeapYear(calendar, dateLike) {
   const inLeapYear = GetMethod(calendar, 'inLeapYear');
-  return !!Call(inLeapYear, calendar, [dateLike]);
+  const result = Call(inLeapYear, calendar, [dateLike]);
+  if (typeof result !== 'boolean') {
+    throw new TypeError('calendar inLeapYear result must be a boolean');
+  }
+  return result;
 }
 
 export function ToTemporalCalendar(calendarLike) {
