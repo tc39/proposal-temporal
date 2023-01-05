@@ -1933,8 +1933,8 @@ const nonIsoGeneralImpl = {
       eraYear: newEraYear
     } = additionalFieldsCopy;
     if (newMonth === undefined && newMonthCode === undefined) {
-      original.month = month;
-      original.monthCode = monthCode;
+      if (month !== undefined) original.month = month;
+      if (monthCode !== undefined) original.monthCode = monthCode;
     }
     if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
       // Only `year` is needed. We don't set era and eraYear because it's
