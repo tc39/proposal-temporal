@@ -247,7 +247,7 @@ export class PlainDate {
       nanosecond,
       calendar
     );
-    const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, 'compatible');
+    const instant = ES.GetInstantFor(timeZone, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toPlainYearMonth() {
