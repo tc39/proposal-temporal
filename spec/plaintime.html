@@ -372,7 +372,7 @@
           1. Throw a *TypeError* exception.
         1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
         1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _temporalDate_.[[Calendar]]).
-        1. Let _instant_ be ? BuiltinTimeZoneGetInstantFor(_timeZone_, _temporalDateTime_, *"compatible"*).
+        1. Let _instant_ be ? GetInstantFor(_timeZone_, _temporalDateTime_, *"compatible"*).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>

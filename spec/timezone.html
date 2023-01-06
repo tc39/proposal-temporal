@@ -249,7 +249,7 @@
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Return ? BuiltinTimeZoneGetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Return ? GetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -614,15 +614,23 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-builtintimezonegetinstantfor" aoid="BuiltinTimeZoneGetInstantFor">
-      <h1>BuiltinTimeZoneGetInstantFor ( _timeZone_, _dateTime_, _disambiguation_ )</h1>
-      <p>
-        The abstract operation BuiltinTimeZoneGetInstantFor is the internal implementation of the `Temporal.TimeZone.prototype.getInstantFor` method.
-        It observably calls the given _timeZone_'s `getPossibleInstantsFor` method at least once.
-        If that call returns an empty array and _disambiguation_ is not *"reject"*, it observably calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` an additional time.
-      </p>
+    <emu-clause id="sec-temporal-getinstantfor" type="abstract operation">
+      <h1>
+        GetInstantFor (
+          _timeZone_: an Object,
+          _dateTime_: a Temporal.PlainDateTime,
+          _disambiguation_: *"compatible"*, *"earlier"*, *"later"*, or *"reject"*,
+        ): either a normal completion containing a Temporal.Instant, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It is the internal implementation of the `Temporal.TimeZone.prototype.getInstantFor` method.
+          It observably calls the given _timeZone_'s `getPossibleInstantsFor` method at least once.
+          If that call returns an empty array and _disambiguation_ is not *"reject"*, it observably calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` an additional time.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
         1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
