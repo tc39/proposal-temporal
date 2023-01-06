@@ -220,7 +220,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. Return ? BuiltinTimeZoneGetOffsetStringFor(_timeZone_, _instant_).
+        1. Return ? GetOffsetStringFor(_timeZone_, _instant_).
       </emu-alg>
     </emu-clause>
 
@@ -571,8 +571,20 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-builtintimezonegetoffsetstringfor" aoid="BuiltinTimeZoneGetOffsetStringFor">
-      <h1>BuiltinTimeZoneGetOffsetStringFor ( _timeZone_, _instant_ )</h1>
+    <emu-clause id="sec-temporal-getoffsetstringfor" type="abstract operation">
+      <h1>
+        GetOffsetStringFor (
+          _timeZone_: an Object,
+          _instant_: a Temporal.Instant,
+        ): either a normal completion containing a String, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          This operation is the internal implementation of the `Temporal.TimeZone.prototype.getOffsetStringFor` method.
+          It observably calls the given _timeZone_'s `getOffsetNanosecondsFor` method.
+        </dd>
+      </dl>
       <emu-alg>
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
