@@ -1830,7 +1830,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return offsetNs;
   },
-  BuiltinTimeZoneGetOffsetStringFor: (timeZone, instant) => {
+  GetOffsetStringFor: (timeZone, instant) => {
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, instant);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   },

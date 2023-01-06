@@ -566,7 +566,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Return ? BuiltinTimeZoneGetOffsetStringFor(_zonedDateTime_.[[TimeZone]], _instant_).
+        1. Return ? GetOffsetStringFor(_zonedDateTime_.[[TimeZone]], _instant_).
       </emu-alg>
     </emu-clause>
 
@@ -971,7 +971,7 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _dateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
-        1. Let _offset_ be ? BuiltinTimeZoneGetOffsetStringFor(_timeZone_, _instant_).
+        1. Let _offset_ be ? GetOffsetStringFor(_timeZone_, _instant_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[ISODay]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_dateTime_.[[ISOHour]])).
