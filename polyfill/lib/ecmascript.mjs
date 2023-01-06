@@ -1305,7 +1305,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
       // Simple case: ISO string without a TZ offset (or caller wants to ignore
       // the offset), so just convert DateTime to Instant in the given time zone
-      const instant = ES.BuiltinTimeZoneGetInstantFor(timeZone, dt, disambiguation);
+      const instant = ES.GetInstantFor(timeZone, dt, disambiguation);
       return GetSlot(instant, EPOCHNANOSECONDS);
     }
 
@@ -1843,7 +1843,7 @@ export const ES = ObjectAssign({}, ES2022, {
       calendar
     );
   },
-  BuiltinTimeZoneGetInstantFor: (timeZone, dateTime, disambiguation) => {
+  GetInstantFor: (timeZone, dateTime, disambiguation) => {
     const possibleInstants = ES.GetPossibleInstantsFor(timeZone, dateTime);
     return ES.DisambiguatePossibleInstants(possibleInstants, timeZone, dateTime, disambiguation);
   },
@@ -4218,7 +4218,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     // Note that 'compatible' is used below because this disambiguation behavior
     // is required by RFC 5545.
-    const instantIntermediate = ES.BuiltinTimeZoneGetInstantFor(timeZone, dtIntermediate, 'compatible');
+    const instantIntermediate = ES.GetInstantFor(timeZone, dtIntermediate, 'compatible');
     return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   },
   AddDurationToOrSubtractDurationFromDuration: (operation, duration, other, options) => {
