@@ -2362,7 +2362,7 @@
             1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
             1. Return ? CalendarEra(_calendar_, _plainDateTime_).
           </emu-alg>
         </emu-clause>
@@ -2379,7 +2379,7 @@
             1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
             1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).
           </emu-alg>
         </emu-clause>

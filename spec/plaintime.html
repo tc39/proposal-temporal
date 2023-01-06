@@ -595,7 +595,7 @@
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
             1. Return ! CreateTemporalTime(_plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
