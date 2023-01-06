@@ -1051,11 +1051,7 @@ export const ES = ObjectAssign({}, ES2022, {
       if (ES.IsTemporalDate(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
         ES.ToTemporalOverflow(options); // validate and ignore
-        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
-          GetSlot(item, TIME_ZONE),
-          GetSlot(item, INSTANT),
-          GetSlot(item, CALENDAR)
-        );
+        item = ES.GetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
       }
       if (ES.IsTemporalDateTime(item)) {
         ES.ToTemporalOverflow(options); // validate and ignore
@@ -1101,11 +1097,7 @@ export const ES = ObjectAssign({}, ES2022, {
       if (ES.IsTemporalDateTime(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
         ES.ToTemporalOverflow(options); // validate and ignore
-        return ES.BuiltinTimeZoneGetPlainDateTimeFor(
-          GetSlot(item, TIME_ZONE),
-          GetSlot(item, INSTANT),
-          GetSlot(item, CALENDAR)
-        );
+        return ES.GetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
       }
       if (ES.IsTemporalDate(item)) {
         ES.ToTemporalOverflow(options); // validate and ignore
@@ -1231,11 +1223,7 @@ export const ES = ObjectAssign({}, ES2022, {
     if (ES.Type(item) === 'Object') {
       if (ES.IsTemporalTime(item)) return item;
       if (ES.IsTemporalZonedDateTime(item)) {
-        item = ES.BuiltinTimeZoneGetPlainDateTimeFor(
-          GetSlot(item, TIME_ZONE),
-          GetSlot(item, INSTANT),
-          GetSlot(item, CALENDAR)
-        );
+        item = ES.GetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
       }
       if (ES.IsTemporalDateTime(item)) {
         const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
@@ -1834,7 +1822,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, instant);
     return ES.FormatTimeZoneOffsetString(offsetNs);
   },
-  BuiltinTimeZoneGetPlainDateTimeFor: (timeZone, instant, calendar) => {
+  GetPlainDateTimeFor: (timeZone, instant, calendar) => {
     const ns = GetSlot(instant, EPOCHNANOSECONDS);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, instant);
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.GetISOPartsFromEpoch(ns);
@@ -2048,7 +2036,7 @@ export const ES = ObjectAssign({}, ES2022, {
       outputTimeZone = new TemporalTimeZone('UTC');
     }
     const iso = ES.GetISO8601Calendar();
-    const dateTime = ES.BuiltinTimeZoneGetPlainDateTimeFor(outputTimeZone, instant, iso);
+    const dateTime = ES.GetPlainDateTimeFor(outputTimeZone, instant, iso);
     const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
     const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
@@ -2222,7 +2210,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     const tz = GetSlot(zdt, TIME_ZONE);
     const iso = ES.GetISO8601Calendar();
-    const dateTime = ES.BuiltinTimeZoneGetPlainDateTimeFor(tz, instant, iso);
+    const dateTime = ES.GetPlainDateTimeFor(tz, instant, iso);
 
     const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
@@ -2659,8 +2647,8 @@ export const ES = ObjectAssign({}, ES2022, {
     const calendar = GetSlot(relativeTo, CALENDAR);
 
     // Find the difference in days only.
-    const dtStart = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, start, calendar);
-    const dtEnd = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, end, calendar);
+    const dtStart = ES.GetPlainDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.GetPlainDateTimeFor(timeZone, end, calendar);
     let { days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
@@ -3502,8 +3490,8 @@ export const ES = ObjectAssign({}, ES2022, {
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     const start = new TemporalInstant(ns1);
     const end = new TemporalInstant(ns2);
-    const dtStart = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, start, calendar);
-    const dtEnd = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, end, calendar);
+    const dtStart = ES.GetPlainDateTimeFor(timeZone, start, calendar);
+    const dtEnd = ES.GetPlainDateTimeFor(timeZone, end, calendar);
     let { years, months, weeks, days } = ES.DifferenceISODateTime(
       GetSlot(dtStart, ISO_YEAR),
       GetSlot(dtStart, ISO_MONTH),
@@ -4213,7 +4201,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     // RFC 5545 requires the date portion to be added in calendar days and the
     // time portion to be added in exact time.
-    let dt = ES.BuiltinTimeZoneGetPlainDateTimeFor(timeZone, instant, calendar);
+    let dt = ES.GetPlainDateTimeFor(timeZone, instant, calendar);
     const datePart = ES.CreateTemporalDate(
       GetSlot(dt, ISO_YEAR),
       GetSlot(dt, ISO_MONTH),

@@ -234,7 +234,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
-        1. Return ? BuiltinTimeZoneGetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. Return ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -591,14 +591,22 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-builtintimezonegetplaindatetimefor" aoid="BuiltinTimeZoneGetPlainDateTimeFor">
-      <h1>BuiltinTimeZoneGetPlainDateTimeFor ( _timeZone_, _instant_, _calendar_ )</h1>
-      <p>
-        The abstract operation BuiltinTimeZoneGetPlainDateTimeFor is the internal implementation of the `Temporal.TimeZone.prototype.getPlainDateTimeFor` method.
-        It observably calls the given _timeZone_'s `getOffsetNanosecondsFor` method.
-      </p>
+    <emu-clause id="sec-temporal-getplaindatetimefor" type="abstract operation">
+      <h1>
+        GetPlainDateTimeFor (
+          _timeZone_: an Object,
+          _instant_: a Temporal.Instant,
+          _calendar_: an Object,
+        ): either a normal completion containing a Temporal.PlainDateTime, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          This operation is the internal implementation if the `Temporal.TimeZone.prototype.getPlainDateTimeFor` method.
+          It observably calls the given _timeZone_'s `getOffsetNanosecondsFor` method.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Let _result_ be ! GetISOPartsFromEpoch(ℝ(_instant_.[[Nanoseconds]])).
         1. Set _result_ to ! BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).

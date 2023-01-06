@@ -64,7 +64,7 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     instant = ES.ToTemporalInstant(instant);
     calendar = ES.ToTemporalCalendar(calendar);
-    return ES.BuiltinTimeZoneGetPlainDateTimeFor(this, instant, calendar);
+    return ES.GetPlainDateTimeFor(this, instant, calendar);
   }
   getInstantFor(dateTime, options = undefined) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

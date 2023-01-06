@@ -723,7 +723,7 @@
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Perform ? ToTemporalOverflow(_options_).
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Let _plainDateTime_ be ? BuiltinTimeZoneGetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
             1. Return ! CreateTemporalDate(_plainDateTime_.[[ISOYear]], _plainDateTime_.[[ISOMonth]], _plainDateTime_.[[ISODay]], _plainDateTime_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Perform ? ToTemporalOverflow(_options_).
