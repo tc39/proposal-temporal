@@ -1931,7 +1931,7 @@ export function GetOffsetNanosecondsFor(timeZone, instant) {
   return offsetNs;
 }
 
-export function BuiltinTimeZoneGetOffsetStringFor(timeZone, instant) {
+export function GetOffsetStringFor(timeZone, instant) {
   const offsetNs = GetOffsetNanosecondsFor(timeZone, instant);
   return FormatTimeZoneOffsetString(offsetNs);
 }

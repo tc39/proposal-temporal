@@ -168,7 +168,7 @@ export class ZonedDateTime {
   }
   get offset() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.BuiltinTimeZoneGetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
+    return ES.GetOffsetStringFor(GetSlot(this, TIME_ZONE), GetSlot(this, INSTANT));
   }
   get offsetNanoseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -520,7 +520,7 @@ export class ZonedDateTime {
       isoNanosecond: GetSlot(dt, ISO_NANOSECOND),
       isoSecond: GetSlot(dt, ISO_SECOND),
       isoYear: GetSlot(dt, ISO_YEAR),
-      offset: ES.BuiltinTimeZoneGetOffsetStringFor(tz, GetSlot(this, INSTANT)),
+      offset: ES.GetOffsetStringFor(tz, GetSlot(this, INSTANT)),
       timeZone: tz
     };
   }
