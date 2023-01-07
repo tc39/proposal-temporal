@@ -1650,7 +1650,7 @@ export const ES = ObjectAssign({}, ES2022, {
       return result;
     }
     if (typeof result !== 'string') {
-      throw new TypeError('calendar era result must be a string');
+      throw new TypeError('calendar era result must be a string or undefined');
     }
     return result;
   },
@@ -1661,10 +1661,10 @@ export const ES = ObjectAssign({}, ES2022, {
       return result;
     }
     if (typeof result !== 'number') {
-      throw new TypeError('calendar eraYear result must be an integer');
+      throw new TypeError('calendar eraYear result must be an integer or undefined');
     }
     if (!IsIntegralNumber(result)) {
-      throw new RangeError('calendar eraYear result must be an integer');
+      throw new RangeError('calendar eraYear result must be an integer or undefined');
     }
     return result;
   },
