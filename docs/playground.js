@@ -7175,9 +7175,9 @@
   var BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
   var ToIntegerWithTruncation = function ToIntegerWithTruncation(value) {
     var number = ToNumber$2(value);
-    if (NumberIsNaN(number) || number === 0) return 0;
-    if (!NumberIsFinite(number)) {
-      throw new RangeError('infinity is out of range');
+    if (number === 0) return 0;
+    if (NumberIsNaN(number) || !NumberIsFinite(number)) {
+      throw new RangeError('invalid number value');
     }
     var integer = MathTrunc(number);
     if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -7195,7 +7195,6 @@
   };
   var ToIntegerIfIntegral = function ToIntegerIfIntegral(value) {
     var number = ES.ToNumber(value);
-    if (NumberIsNaN(number) || number === 0) return 0;
     if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
     if (!IsIntegralNumber$1(number)) throw new RangeError("unsupported fractional value ".concat(value));
     if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -7652,11 +7651,11 @@
         throw new RangeError("invalid duration: ".concat(isoString));
       }
       var sign = match[1] === '-' || match[1] === "\u2212" ? -1 : 1;
-      var years = ES.ToIntegerWithTruncation(match[2]) * sign;
-      var months = ES.ToIntegerWithTruncation(match[3]) * sign;
-      var weeks = ES.ToIntegerWithTruncation(match[4]) * sign;
-      var days = ES.ToIntegerWithTruncation(match[5]) * sign;
-      var hours = ES.ToIntegerWithTruncation(match[6]) * sign;
+      var years = match[2] === undefined ? 0 : ES.ToIntegerWithTruncation(match[2]) * sign;
+      var months = match[3] === undefined ? 0 : ES.ToIntegerWithTruncation(match[3]) * sign;
+      var weeks = match[4] === undefined ? 0 : ES.ToIntegerWithTruncation(match[4]) * sign;
+      var days = match[5] === undefined ? 0 : ES.ToIntegerWithTruncation(match[5]) * sign;
+      var hours = match[6] === undefined ? 0 : ES.ToIntegerWithTruncation(match[6]) * sign;
       var fHours = match[7];
       var minutesStr = match[8];
       var fMinutes = match[9];
@@ -7673,7 +7672,7 @@
         }
         excessNanoseconds = ES.ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
       } else {
-        minutes = ES.ToIntegerWithTruncation(minutesStr) * sign;
+        minutes = minutesStr === undefined ? 0 : ES.ToIntegerWithTruncation(minutesStr) * sign;
         if (fMinutes !== undefined) {
           var _ref8;
           if ((_ref8 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref8 !== void 0 ? _ref8 : false) {
@@ -7681,7 +7680,7 @@
           }
           excessNanoseconds = ES.ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
         } else {
-          seconds = ES.ToIntegerWithTruncation(secondsStr) * sign;
+          seconds = secondsStr === undefined ? 0 : ES.ToIntegerWithTruncation(secondsStr) * sign;
           if (fSeconds !== undefined) {
             excessNanoseconds = ES.ToIntegerWithTruncation((fSeconds + '000000000').slice(0, 9)) * sign;
           }
@@ -8738,9 +8737,6 @@
     CalendarYear: function CalendarYear(calendar, dateLike) {
       var year = ES.GetMethod(calendar, 'year');
       var result = ES.Call(year, calendar, [dateLike]);
-      if (result === undefined) {
-        throw new RangeError('calendar year result must be an integer');
-      }
       return ES.ToIntegerWithTruncation(result);
     },
     CalendarMonth: function CalendarMonth(calendar, dateLike) {
@@ -8792,9 +8788,6 @@
     CalendarYearOfWeek: function CalendarYearOfWeek(calendar, dateLike) {
       var yearOfWeek = ES.GetMethod(calendar, 'yearOfWeek');
       var result = ES.Call(yearOfWeek, calendar, [dateLike]);
-      if (result === undefined) {
-        throw new RangeError('calendar yearOfWeek result must be an integer');
-      }
       return ES.ToIntegerWithTruncation(result);
     },
     CalendarDaysInWeek: function CalendarDaysInWeek(calendar, dateLike) {
@@ -15273,14 +15266,6 @@
       isoMonth = ES.ToIntegerWithTruncation(isoMonth);
       isoDay = ES.ToIntegerWithTruncation(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
-
-      // Note: if the arguments are not passed,
-      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-      //       be rejected by RejectISODate in CreateTemporalDateSlots. This check
-      //       exists only to improve the error message.
-      if (arguments.length < 3) {
-        throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
-      }
       ES.CreateTemporalDateSlots(this, isoYear, isoMonth, isoDay, calendar);
     }
     _createClass(PlainDate, [{
@@ -15605,21 +15590,13 @@
       isoYear = ES.ToIntegerWithTruncation(isoYear);
       isoMonth = ES.ToIntegerWithTruncation(isoMonth);
       isoDay = ES.ToIntegerWithTruncation(isoDay);
-      hour = ES.ToIntegerWithTruncation(hour);
-      minute = ES.ToIntegerWithTruncation(minute);
-      second = ES.ToIntegerWithTruncation(second);
-      millisecond = ES.ToIntegerWithTruncation(millisecond);
-      microsecond = ES.ToIntegerWithTruncation(microsecond);
-      nanosecond = ES.ToIntegerWithTruncation(nanosecond);
+      hour = hour === undefined ? 0 : ES.ToIntegerWithTruncation(hour);
+      minute = minute === undefined ? 0 : ES.ToIntegerWithTruncation(minute);
+      second = second === undefined ? 0 : ES.ToIntegerWithTruncation(second);
+      millisecond = millisecond === undefined ? 0 : ES.ToIntegerWithTruncation(millisecond);
+      microsecond = microsecond === undefined ? 0 : ES.ToIntegerWithTruncation(microsecond);
+      nanosecond = nanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(nanosecond);
       calendar = ES.ToTemporalCalendar(calendar);
-
-      // Note: if the arguments are not passed,
-      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-      //       be rejected by RejectDateTime in CreateTemporalDateTimeSlots. This
-      //       check exists only to improve the error message.
-      if (arguments.length < 3) {
-        throw new RangeError('missing argument: isoYear, isoMonth and isoDay are required');
-      }
       ES.CreateTemporalDateTimeSlots(this, isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
     }
     _createClass(PlainDateTime, [{
@@ -16063,16 +16040,16 @@
       var microseconds = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 0;
       var nanoseconds = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 0;
       _classCallCheck(this, Duration);
-      years = ES.ToIntegerIfIntegral(years);
-      months = ES.ToIntegerIfIntegral(months);
-      weeks = ES.ToIntegerIfIntegral(weeks);
-      days = ES.ToIntegerIfIntegral(days);
-      hours = ES.ToIntegerIfIntegral(hours);
-      minutes = ES.ToIntegerIfIntegral(minutes);
-      seconds = ES.ToIntegerIfIntegral(seconds);
-      milliseconds = ES.ToIntegerIfIntegral(milliseconds);
-      microseconds = ES.ToIntegerIfIntegral(microseconds);
-      nanoseconds = ES.ToIntegerIfIntegral(nanoseconds);
+      years = years === undefined ? 0 : ES.ToIntegerIfIntegral(years);
+      months = months === undefined ? 0 : ES.ToIntegerIfIntegral(months);
+      weeks = weeks === undefined ? 0 : ES.ToIntegerIfIntegral(weeks);
+      days = days === undefined ? 0 : ES.ToIntegerIfIntegral(days);
+      hours = hours === undefined ? 0 : ES.ToIntegerIfIntegral(hours);
+      minutes = minutes === undefined ? 0 : ES.ToIntegerIfIntegral(minutes);
+      seconds = seconds === undefined ? 0 : ES.ToIntegerIfIntegral(seconds);
+      milliseconds = milliseconds === undefined ? 0 : ES.ToIntegerIfIntegral(milliseconds);
+      microseconds = microseconds === undefined ? 0 : ES.ToIntegerIfIntegral(microseconds);
+      nanoseconds = nanoseconds === undefined ? 0 : ES.ToIntegerIfIntegral(nanoseconds);
       ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       CreateSlots(this);
       SetSlot(this, YEARS, years);
@@ -16488,14 +16465,6 @@
       isoDay = ES.ToIntegerWithTruncation(isoDay);
       calendar = ES.ToTemporalCalendar(calendar);
       referenceISOYear = ES.ToIntegerWithTruncation(referenceISOYear);
-
-      // Note: if the arguments are not passed,
-      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-      //       be rejected by RejectISODate in CreateTemporalMonthDaySlots. This
-      //       check exists only to improve the error message.
-      if (arguments.length < 2) {
-        throw new RangeError('missing argument: isoMonth and isoDay are required');
-      }
       ES.CreateTemporalMonthDaySlots(this, isoMonth, isoDay, calendar, referenceISOYear);
     }
     _createClass(PlainMonthDay, [{
@@ -16734,12 +16703,12 @@
       var isoMicrosecond = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
       var isoNanosecond = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
       _classCallCheck(this, PlainTime);
-      isoHour = ES.ToIntegerWithTruncation(isoHour);
-      isoMinute = ES.ToIntegerWithTruncation(isoMinute);
-      isoSecond = ES.ToIntegerWithTruncation(isoSecond);
-      isoMillisecond = ES.ToIntegerWithTruncation(isoMillisecond);
-      isoMicrosecond = ES.ToIntegerWithTruncation(isoMicrosecond);
-      isoNanosecond = ES.ToIntegerWithTruncation(isoNanosecond);
+      isoHour = isoHour === undefined ? 0 : ES.ToIntegerWithTruncation(isoHour);
+      isoMinute = isoMinute === undefined ? 0 : ES.ToIntegerWithTruncation(isoMinute);
+      isoSecond = isoSecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoSecond);
+      isoMillisecond = isoMillisecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMillisecond);
+      isoMicrosecond = isoMicrosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMicrosecond);
+      isoNanosecond = isoNanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoNanosecond);
       ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
       CreateSlots(this);
       SetSlot(this, ISO_HOUR, isoHour);
@@ -17051,14 +17020,6 @@
       isoMonth = ES.ToIntegerWithTruncation(isoMonth);
       calendar = ES.ToTemporalCalendar(calendar);
       referenceISODay = ES.ToIntegerWithTruncation(referenceISODay);
-
-      // Note: if the arguments are not passed,
-      //       ToIntegerWithTruncation(undefined) will have returned 0, which will
-      //       be rejected by RejectISODate in CreateTemporalYearMonthSlots. This
-      //       check exists only to improve the error message.
-      if (arguments.length < 2) {
-        throw new RangeError('missing argument: isoYear and isoMonth are required');
-      }
       ES.CreateTemporalYearMonthSlots(this, isoYear, isoMonth, calendar, referenceISODay);
     }
     _createClass(PlainYearMonth, [{
