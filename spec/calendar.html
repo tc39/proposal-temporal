@@ -101,42 +101,24 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarfields" type="abstract operation">
-      <h1>
-        CalendarFields (
-          _calendar_: an Object,
-          _fieldNames_: a List of Strings,
-        ): either a normal completion containing a List of Strings, or an abrupt completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It transforms _fieldNames_ into another list by calling the `fields` method of the given _calendar_.</dd>
-      </dl>
+    <emu-clause id="sec-temporal-calendarfields" aoid="CalendarFields">
+      <h1>CalendarFields ( _calendar_, _fieldNames_ )</h1>
+      <p>
+        The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object.
+      </p>
       <emu-alg>
-        1. Let _fields_ be ? GetMethod(_calendar_, *"fields"*).
-        1. If _fields_ is *undefined*, return _fieldNames_.
-        1. Let _fieldsArray_ be ? Call(_fields_, _calendar_, « CreateArrayFromList(_fieldNames_) »).
+        1. Let _fieldsArray_ be ? Invoke(_calendar_, *"fields"*, « CreateArrayFromList(_fieldNames_) »).
         1. Return ? IterableToListOfType(_fieldsArray_, « String »).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmergefields" type="abstract operation">
-      <h1>
-        CalendarMergeFields (
-          _calendar_: an Object,
-          _fields_: an Object,
-          _additionalFields_: an Object,
-        ): either a normal completion containing an Object, or an abrupt completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It merges the properties of _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_.</dd>
-      </dl>
+    <emu-clause id="sec-temporal-calendarmergefields" aoid="CalendarMergeFields">
+      <h1>CalendarMergeFields ( _calendar_, _fields_, _additionalFields_ )</h1>
+      <p>
+        The CalendarMergeFields abstract operation merges the properties of two Objects _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_ Object.
+      </p>
       <emu-alg>
-        1. Let _mergeFields_ be ? GetMethod(_calendar_, *"mergeFields"*).
-        1. If _mergeFields_ is *undefined*, then
-          1. Return ? DefaultMergeCalendarFields(_fields_, _additionalFields_).
-        1. Let _result_ be ? Call(_mergeFields_, _calendar_, « _fields_, _additionalFields_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"mergeFields"*, « _fields_, _additionalFields_ »).
         1. If Type(_result_) is not Object, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
@@ -809,16 +791,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-defaultmergecalendarfields" type="abstract operation">
+    <emu-clause id="sec-temporal-isomergecalendarfields" type="abstract operation">
       <h1>
-        DefaultMergeCalendarFields (
+        ISOMergeCalendarFields (
           _fields_: an Object,
           _additionalFields_: an Object,
         ): either a normal completion containing an Object or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It implements the default logic for the `Temporal.Calendar.prototype.mergeFields` method, which is used for the ISO 8601 calendar and as a fallback if the method is not present on a calendar.</dd>
+        <dd>It implements the default logic for the `Temporal.Calendar.prototype.mergeFields` method, which is used for the ISO 8601 calendar.</dd>
       </dl>
       <emu-alg>
         1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
@@ -1384,7 +1366,7 @@
         1. Set _fields_ to ? ToObject(_fields_).
         1. Set _additionalFields_ to ? ToObject(_additionalFields_).
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? DefaultMergeCalendarFields(_fields_, _additionalFields_).
+        1. Return ? ISOMergeCalendarFields(_fields_, _additionalFields_).
       </emu-alg>
     </emu-clause>
 
