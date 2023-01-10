@@ -11430,12 +11430,11 @@
             var monthsWeeksInDays = ES.DaysUntil(yearsLater, yearsMonthsWeeksLater);
             relativeTo = yearsLater;
             days += monthsWeeksInDays;
-            var daysLater = ES.CalendarDateAdd(calendar, relativeTo, {
-              days: days
-            }, undefined, dateAdd);
+            var wholeDays = new TemporalDuration(0, 0, 0, days);
+            var wholeDaysLater = ES.CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
             var untilOptions = ObjectCreate$8(null);
             untilOptions.largestUnit = 'year';
-            var yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, daysLater, untilOptions).years;
+            var yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
             years += yearsPassed;
             var oldRelativeTo = relativeTo;
             relativeTo = ES.CalendarDateAdd(calendar, relativeTo, {
