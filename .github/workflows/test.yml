@@ -8,11 +8,11 @@ jobs:
   test-polyfill:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: use node.js v18.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - name: use node.js v19.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 19.x
       - run: npm ci
       - run: npm run test-demitasse
         env:
@@ -20,13 +20,13 @@ jobs:
   test-test262:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
-      - name: use node.js v18.x
-        uses: actions/setup-node@v1
+      - name: use node.js v19.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 19.x
       - run: npm ci
       - run: npm run codecov:test262
         env:
@@ -34,21 +34,21 @@ jobs:
   test-cookbook:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: use node.js v18.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - name: use node.js v19.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 19.x
       - run: npm ci
       - run: npm run test-cookbook
   test-validstrings:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: use node.js v18.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - name: use node.js v19.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 19.x
       - run: npm ci
       - run: |
           cd polyfill
