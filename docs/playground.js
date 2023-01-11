@@ -6393,9 +6393,9 @@
   	return $floor(x);
   };
 
-  var $isNaN$2 = Number.isNaN || function (a) { return a !== a; };
+  var $isNaN$2 = _isNaN;
 
-  var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
+  var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
 
   var abs$1 = abs$2;
   var floor$1 = floor$2;
@@ -6617,7 +6617,7 @@
 
   var StringToNumber$1 = function StringToNumber(argument) {
   	if (Type$1(argument) !== 'String') {
-  		throw new $TypeError$4('Conversion from \'BigInt\' to \'number\' is not allowed.');
+  		throw new $TypeError$4('Assertion failed: `argument` is not a String');
   	}
   	if (isBinary(argument)) {
   		return $Number$2($parseInteger($strSlice(argument, 2), 2));
