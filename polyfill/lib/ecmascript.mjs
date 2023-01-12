@@ -4917,7 +4917,7 @@ export const ES = ObjectAssign({}, ES2022, {
       }
       case 'nanosecond': {
         total = nanoseconds;
-        nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
+        nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode).toJSNumber();
         break;
       }
     }
