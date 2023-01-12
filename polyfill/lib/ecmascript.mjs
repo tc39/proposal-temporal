@@ -5026,7 +5026,7 @@ export function RoundDuration(
     }
     case 'nanosecond': {
       total = nanoseconds;
-      nanoseconds = RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
+      nanoseconds = RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode).toJSNumber();
       break;
     }
   }
