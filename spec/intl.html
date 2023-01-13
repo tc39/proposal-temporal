@@ -1685,20 +1685,71 @@
           </dl>
         </emu-clause>
 
-        <emu-clause id="sec-temporal-calendardatemergefields" type="abstract operation">
+        <emu-clause id="sec-temporal-calendarfieldkeystoignore" type="abstract operation">
           <h1>
-            CalendarDateMergeFields (
+            CalendarFieldKeysToIgnore (
               _calendar_: a String,
-              _fields_: an Object,
-              _additionalFields_: an Object,
-            ): an Object
+              _keys_: a List of property keys,
+            ): a List of property keys
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It takes two Objects of calendar-specific fields for the calendar represented by _calendar_ in _fields_ and _additionalFields_ and returns a new Object that includes both sets of fields. The values in _additionalFields_ should supersede the values in _fields_. Also, the returned Object must be free of ambiguity or conflicts. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
+            <dd>
+              It determines which calendar date fields changing any of the fields named in _keys_ can potentially conflict with or invalidate, for the given _calendar_.
+              A field always invalidates at least itself.
+            </dd>
           </dl>
+          <p>
+            This operation is relevant for calendars which accept fields other than the standard set of ISO calendar fields, in order to implement the Temporal objects' `with()` methods, and `Temporal.Calendar.prototype.mergeFields()` in such a way that the result is free of ambiguity or conflicts.
+          </p>
+          <p>
+            For example, given a _calendar_ that uses eras, such as *"gregory"*, a key in _keys_ being any one of *"year"*, *"era"*, or *"eraYear"* would exclude all three.
+            Passing any one of the three to a `with()` method might conflict with either of the other two properties on the receiver object, so those properties of the receiver object should be ignored.
+            Given this, in addition to the ISO 8601 mutual exclusion of *"month"* and *"monthCode"* as in ISOFieldKeysToIgnore, a possible implementation might produce the following results when _calendar_ is *"gregory"*:
+          </p>
+          <emu-table id="table-calendarfieldkeystoignore-example">
+            <emu-caption>Example results of CalendarFieldKeysToIgnore</emu-caption>
+            <table>
+              <thead>
+                <tr>
+                  <th>_keys_</th>
+                  <th>Returned List</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>« *"era"* »</td>
+                  <td>« *"era"*, *"eraYear"*, *"year*" »</td>
+                </tr>
+                <tr>
+                  <td>« *"eraYear"* »</td>
+                  <td>« *"era"*, *"eraYear"*, *"year"* »</td>
+                </tr>
+                <tr>
+                  <td>« *"year"* »</td>
+                  <td>« *"era"*, *"eraYear"*, *"year"* »</td>
+                </tr>
+                <tr>
+                  <td>« *"month"* »</td>
+                  <td>« *"month"*, *"monthCode*" »</td>
+                </tr>
+                <tr>
+                  <td>« *"monthCode"* »</td>
+                  <td>« *"month"*, *"monthCode"* »</td>
+                </tr>
+                <tr>
+                  <td>« *"day"* »</td>
+                  <td>« *"day"* »</td>
+                </tr>
+                <tr>
+                  <td>« *"year"*, *"month"*, *"day"* »</td>
+                  <td>« *"era"*, *"eraYear"*, *"year"*, *"month"*, *"monthCode"*, *"day"* »</td>
+                </tr>
+              </tbody>
+            </table>
+          </emu-table>
           <emu-note>
-            For example, if _fields_ contains *"year"* but _additionalFields_ contains *"era"* and *"eraYear"*, then the returned list must not include *"year"* in order to avoid ambiguity or conflict between different ways of specifying the year.
+            In a _calendar_ such as *"japanese"* where eras do not start and end at year and/or month boundaries, note that the returned List should contain *"era"* and *"eraYear"* if _keys_ contains *"day"*, *"month"*, or *"monthCode"* (not only if it contains *"era"*, *"eraYear"*, or *"year"*, as in the example above) because it's possible for changing the day or month to cause a conflict with the era.
           </emu-note>
         </emu-clause>
       </emu-clause>
@@ -2147,14 +2198,21 @@
             1. Let _calendar_ be the *this* value.
             1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
             1. Set _fields_ to ? ToObject(_fields_).
-            1. Set _additionalFields_ to ? ToObject(_additionalFields_).
-            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Return ? ISOMergeCalendarFields(_fields_, _additionalFields_).
-            1. Let _fieldsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+            1. Let _fieldsCopy_ be OrdinaryObjectCreate(*null*).
             1. Perform ? CopyDataProperties(_fieldsCopy_, _fields_, « », « *undefined* »).
-            1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(%Object.prototype%).
+            1. Set _additionalFields_ to ? ToObject(_additionalFields_).
+            1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(*null*).
             1. Perform ? CopyDataProperties(_additionalFieldsCopy_, _additionalFields_, « », « *undefined* »).
-            1. Return CalendarDateMergeFields(_calendar_.[[Identifier]], _fieldsCopy_, _additionalFieldsCopy_).
+            1. NOTE: Every property of _additionalFieldsCopy_ is a data property with non-*undefined* value, but some property keys may be Symbols.
+            1. Let _additionalKeys_ be ! _additionalFieldsCopy_.[[OwnPropertyKeys]]().
+            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Let _overriddenKeys_ be ISOFieldKeysToIgnore(_additionalKeys_).
+            1. Else,
+              1. Let _overriddenKeys_ be CalendarFieldKeysToIgnore(_calendar_, _additionalKeys_).
+            1. Let _merged_ be OrdinaryObjectCreate(*null*).
+            1. Perform ! CopyDataProperties(_merged_, _fieldsCopy_, _overriddenKeys_, « *undefined* »).
+            1. Perform ! CopyDataProperties(_merged_, _additionalFieldsCopy_, « »).
+            1. Return _merged_.
           </emu-alg>
         </emu-clause>
       </emu-clause>
