@@ -791,28 +791,25 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isomergecalendarfields" type="abstract operation">
+    <emu-clause id="sec-temporal-isofieldkeystoignore" type="abstract operation">
       <h1>
-        ISOMergeCalendarFields (
-          _fields_: an Object,
-          _additionalFields_: an Object,
-        ): either a normal completion containing an Object or an abrupt completion
+        ISOFieldKeysToIgnore (
+          _keys_: a List of property keys,
+        ): a List of property keys
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It implements the default logic for the `Temporal.Calendar.prototype.mergeFields` method, which is used for the ISO 8601 calendar.</dd>
+        <dd>
+          It determines which calendar date fields changing any of the fields named in _keys_ can potentially conflict with or invalidate, for the ISO 8601 calendar.
+        </dd>
       </dl>
       <emu-alg>
-        1. Let _merged_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ? CopyDataProperties(_merged_, _fields_, « », « *undefined* »).
-        1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(*null*).
-        1. Perform ? CopyDataProperties(_additionalFieldsCopy_, _additionalFields_, « », « *undefined* »).
-        1. NOTE: Every property of _additionalFieldsCopy_ is a data property with non-*undefined* value, but some property keys may be Symbols.
-        1. If ! _additionalFieldsCopy_.[[OwnPropertyKeys]]() contains *"month"* or *"monthCode"*, then
-          1. Perform ! DeletePropertyOrThrow(_merged_, *"month"*).
-          1. Perform ! DeletePropertyOrThrow(_merged_, *"monthCode"*).
-        1. Perform ? CopyDataProperties(_merged_, _additionalFieldsCopy_, « »).
-        1. Return _merged_.
+        1. Let _ignoredKeys_ be an empty Set.
+        1. For each element _key_ of _keys_, do
+          1. Add _key_ to _ignoredKeys_.
+          1. If _key_ is *"month"*, add *"monthCode"* to _ignoredKeys_.
+          1. Else if _key_ is *"monthCode"*, add *"month"* to _ignoredKeys_.
+        1. Return the List of _ignoredKeys_' elements.
       </emu-alg>
     </emu-clause>
 
@@ -1364,9 +1361,19 @@
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
         1. Set _fields_ to ? ToObject(_fields_).
+        1. Let _fieldsCopy_ be OrdinaryObjectCreate(*null*).
+        1. Perform ? CopyDataProperties(_fieldsCopy_, _fields_, « », « *undefined* »).
         1. Set _additionalFields_ to ? ToObject(_additionalFields_).
+        1. Let _additionalFieldsCopy_ be OrdinaryObjectCreate(*null*).
+        1. Perform ? CopyDataProperties(_additionalFieldsCopy_, _additionalFields_, « », « *undefined* »).
+        1. NOTE: Every property of _additionalFieldsCopy_ is a data property with non-*undefined* value, but some property keys may be Symbols.
+        1. Let _additionalKeys_ be ! _additionalFieldsCopy_.[[OwnPropertyKeys]]().
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Return ? ISOMergeCalendarFields(_fields_, _additionalFields_).
+        1. Let _ignoredKeys_ be ISOFieldKeysToIgnore(_additionalKeys_).
+        1. Let _merged_ be OrdinaryObjectCreate(*null*).
+        1. Perform ! CopyDataProperties(_merged_, _fieldsCopy_, _ignoredKeys_, « *undefined* »).
+        1. Perform ! CopyDataProperties(_merged_, _additionalFieldsCopy_, « »).
+        1. Return _merged_.
       </emu-alg>
     </emu-clause>
 
