@@ -383,8 +383,17 @@
   <emu-clause id="sec-temporal-timezone-abstract-ops">
     <h1>Abstract operations</h1>
 
-    <emu-clause id="sec-temporal-createtemporaltimezone" aoid="CreateTemporalTimeZone">
-      <h1>CreateTemporalTimeZone ( _identifier_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporaltimezone" type="abstract operation">
+      <h1>
+        CreateTemporalTimeZone (
+          _identifier_: a String,
+          optional _newTarget_: a constructor,
+        ): either a normal completion containing a Temporal.TimeZone, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a new Temporal.TimeZone instance and fills the internal slots with valid values.</dd>
+      </dl>
       <emu-alg>
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.TimeZone%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]], [[OffsetNanoseconds]] »).

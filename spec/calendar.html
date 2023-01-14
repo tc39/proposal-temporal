@@ -66,8 +66,17 @@
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations for Temporal.Calendar Objects</h1>
 
-    <emu-clause id="sec-temporal-createtemporalcalendar" aoid="CreateTemporalCalendar">
-      <h1>CreateTemporalCalendar ( _identifier_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporalcalendar" type="abstract operation">
+      <h1>
+        CreateTemporalCalendar (
+          _identifier_: a String,
+          optional _newTarget_: a constructor,
+        ): either a normal completion containing a Temporal.Calendar, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a Temporal.Calendar instance and fills the internal slots with valid values.</dd>
+      </dl>
       <emu-alg>
         1. Assert: IsBuiltinCalendar(_identifier_) is *true*.
         1. If _newTarget_ is not provided, set _newTarget_ to %Temporal.Calendar%.

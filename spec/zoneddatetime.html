@@ -1178,12 +1178,12 @@
           _epochNanoseconds_: a BigInt,
           _timeZone_: an Object,
           _calendar_: an Object,
-          optional _newTarget_: a function object,
-        ): either a normal completion containing a `Temporal.ZonedDateTime` or an abrupt completion
+          optional _newTarget_: a constructor,
+        ): either a normal completion containing a Temporal.ZonedDateTime, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It is used to specify the creation of a new `Temporal.ZonedDateTime` object.</dd>
+        <dd>It creates a Temporal.ZonedDateTime instance and fills the internal slots with valid values.</dd>
       </dl>
       <emu-alg>
         1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
