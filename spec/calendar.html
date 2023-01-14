@@ -101,11 +101,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarfields" aoid="CalendarFields">
-      <h1>CalendarFields ( _calendar_, _fieldNames_ )</h1>
-      <p>
-        The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object, falling back to a default operation if not present.
-      </p>
+    <emu-clause id="sec-temporal-calendarfields" type="abstract operation">
+      <h1>
+        CalendarFields (
+          _calendar_: an Object,
+          _fieldNames_: a List of Strings,
+        ): either a normal completion containing a List of Strings, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It transforms _fieldNames_ into another list by calling the `fields` method of the given _calendar_.</dd>
+      </dl>
       <emu-alg>
         1. Let _fields_ be ? GetMethod(_calendar_, *"fields"*).
         1. If _fields_ is *undefined*, return _fieldNames_.
@@ -114,11 +120,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarmergefields" aoid="CalendarMergeFields">
-      <h1>CalendarMergeFields ( _calendar_, _fields_, _additionalFields_ )</h1>
-      <p>
-        The CalendarMergeFields abstract operation merges the properties of two Objects _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_ Object, falling back to a default operation if not present.
-      </p>
+    <emu-clause id="sec-temporal-calendarmergefields" type="abstract operation">
+      <h1>
+        CalendarMergeFields (
+          _calendar_: an Object,
+          _fields_: an Object,
+          _additionalFields_: an Object,
+        ): either a normal completion containing an Object, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It merges the properties of _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_.</dd>
+      </dl>
       <emu-alg>
         1. Let _mergeFields_ be ? GetMethod(_calendar_, *"mergeFields"*).
         1. If _mergeFields_ is *undefined*, then
@@ -129,12 +142,25 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardateadd" aoid="CalendarDateAdd">
-      <h1>CalendarDateAdd ( _calendar_, _date_, _duration_ [ , _options_ [ , _dateAdd_ ] ] )</h1>
+    <emu-clause id="sec-temporal-calendardateadd" type="abstract operation">
+      <h1>
+        CalendarDateAdd (
+          _calendar_: an Object,
+          _date_: a Temporal.PlainDate,
+          _duration_: a Temporal.Duration,
+          optional _options_: an Object or *undefined*,
+          optional _dateAdd_: a function object,
+        ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It adds _duration_ to _date_ by calling the `dateAdd` method of the given _calendar_.
+          If _dateAdd_ is present, the `dateAdd` method will not be observably looked up.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: Type(_options_) is Object or Undefined.
         1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
         1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
@@ -142,10 +168,24 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardateuntil" aoid="CalendarDateUntil">
-      <h1>CalendarDateUntil ( _calendar_, _one_, _two_, _options_ [ , _dateUntil_ ] )</h1>
+    <emu-clause id="sec-temporal-calendardateuntil" type="abstract operation">
+      <h1>
+        CalendarDateUntil (
+          _calendar_: an Object,
+          _one_: a Temporal.PlainDate,
+          _two_: a Temporal.PlainDate,
+          _options_: an Object or *undefined*,
+          optional _dateUntil_: a function object,
+        ): either a normal completion containing a Temporal.Duration, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the difference between the dates _one_ and _two_ by calling the `dateUntil` method of the given _calendar_.
+          If _dateUntil_ is present, the `dateUntil` method will not be observably looked up.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_calendar_) is Object.
         1. If _dateUntil_ is not present, set _dateUntil_ to ? GetMethod(_calendar_, *"dateUntil"*).
         1. Let _duration_ be ? Call(_dateUntil_, _calendar_, « _one_, _two_, _options_ »).
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
