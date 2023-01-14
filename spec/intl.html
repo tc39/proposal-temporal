@@ -1394,18 +1394,33 @@
           <h1>
             CalendarDateToISO (
               _calendar_: a String,
-              _fields_: an ordinary Object with one or more own data properties,
-              _overflow_: a String,
+              _fields_: an ordinary null-prototype Object with one or more own data properties and no accessor properties,
+              _overflow_: *"constrain"* or *"reject"*,
             ): either a normal completion containing an ISO Date Record, or an abrupt completion
           </h1>
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_ that describes a date in the calendar represented by _calendar_ to the ISO calendar and returns the corresponding day, month and year values as an ISO Date Record.
-              It may throw a *TypeError* exception if the own data properties present on _fields_ are insufficient to calculate an ISO date in _calendar_.
-              It may throw a *RangeError* exception if the values of the own data properties of _fields_ are out of range for _calendar_ and _overflow_ is *"reject"*, or if the date described by _fields_ forms a date outside the range allowed by ISODateTimeWithinLimits.
+              It performs implementation-defined processing to convert _fields_, that describes a date in the calendar represented by _calendar_, to the ISO calendar.
+              It performs the overflow correction given by _overflow_ on the date described by _fields_ in order to arrive at a valid month code and day pair in _calendar_.
+              For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
+              For *"constrain"*, values that do not form a valid date are clamped to the correct range.
+              It then returns an ISO Date Record with the corresponding ISO date.
             </dd>
           </dl>
+          <p>
+            The operation throws a *TypeError* exception if the own data properties present on _fields_ are insufficient to calculate a date in _calendar_.
+            For example, for a _calendar_ that uses eras, a *TypeError* is thrown if _fields_ does not include any of the following minimum combinations of properties:
+          </p>
+          <ul>
+            <li>*"year"*, *"monthCode"*, *"day"*</li>
+            <li>*"year"*, *"month"*, *"day"*</li>
+            <li>*"era"*, *"eraYear"*, *"monthCode"*, *"day"*</li>
+            <li>*"era"*, *"eraYear"*, *"month"*, *"day"*</li>
+          </ul>
+          <p>
+            The operation throws a *RangeError* exception if the date described by _fields_ forms a date outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+          </p>
         </emu-clause>
 
         <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
