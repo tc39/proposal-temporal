@@ -686,13 +686,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createtemporaldate" aoid="CreateTemporalDate">
-      <h1>CreateTemporalDate ( _isoYear_, _isoMonth_, _isoDay_, _calendar_ [ , _newTarget_ ] )</h1>
+    <emu-clause id="sec-temporal-createtemporaldate" type="abstract operation">
+      <h1>
+        CreateTemporalDate (
+          _isoYear_: an integer,
+          _isoMonth_: an integer,
+          _isoDay_: an integer,
+          _calendar_: an Object,
+          optional _newTarget_: a constructor,
+        ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a Temporal.PlainDate instance and fills the internal slots with valid values.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _isoYear_ is an integer.
-        1. Assert: _isoMonth_ is an integer.
-        1. Assert: _isoDay_ is an integer.
-        1. Assert: Type(_calendar_) is Object.
         1. If IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
         1. If ISODateTimeWithinLimits(_isoYear_, _isoMonth_, _isoDay_, 12, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainDate%.
