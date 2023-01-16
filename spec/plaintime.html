@@ -233,9 +233,9 @@
         1. If Type(_temporalTimeLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Perform ? RejectObjectWithCalendarOrTimeZone(_temporalTimeLike_).
-        1. Let _partialTime_ be ? ToTemporalTimeRecord(_temporalTimeLike_, ~partial~).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _partialTime_ be ? ToTemporalTimeRecord(_temporalTimeLike_, ~partial~).
         1. If _partialTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialTime_.[[Hour]].
         1. Else,

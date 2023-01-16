@@ -95,15 +95,14 @@ export class PlainDate {
       throw new TypeError('invalid argument');
     }
     ES.RejectObjectWithCalendarOrTimeZone(temporalDateLike);
+    options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-    const partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    const partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialDate);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
-
-    options = ES.GetOptionsObject(options);
 
     return ES.CalendarDateFromFields(calendar, fields, options);
   }

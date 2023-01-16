@@ -227,11 +227,11 @@
         1. If Type(_temporalYearMonthLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Perform ? RejectObjectWithCalendarOrTimeZone(_temporalYearMonthLike_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _partialYearMonth_ be ? PrepareTemporalFields(_temporalYearMonthLike_, _fieldNames_, ~partial~).
-        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
+        1. Let _partialYearMonth_ be ? PrepareTemporalFields(_temporalYearMonthLike_, _fieldNames_, ~partial~).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
         1. Return ? CalendarYearMonthFromFields(_calendar_, _fields_, _options_).
@@ -611,12 +611,12 @@
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _options_, ~date~, &laquo; *"week"*, *"day"* &raquo;, *"month"*, *"year"*).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
-        1. Let _otherFields_ be ? PrepareTemporalFields(_other_, _fieldNames_, «»).
-        1. Perform ! CreateDataPropertyOrThrow(_otherFields_, *"day"*, *1*<sub>𝔽</sub>).
-        1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_).
         1. Let _thisFields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_).
+        1. Let _otherFields_ be ? PrepareTemporalFields(_other_, _fieldNames_, «»).
+        1. Perform ! CreateDataPropertyOrThrow(_otherFields_, *"day"*, *1*<sub>𝔽</sub>).
+        1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_).
         1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ? CopyDataProperties(_untilOptions_, _settings_.[[Options]], « »).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
