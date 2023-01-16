@@ -5944,16 +5944,20 @@
       }
       if (isMap(obj)) {
           var mapParts = [];
-          mapForEach.call(obj, function (value, key) {
-              mapParts.push(inspect(key, obj, true) + ' => ' + inspect(value, obj));
-          });
+          if (mapForEach) {
+              mapForEach.call(obj, function (value, key) {
+                  mapParts.push(inspect(key, obj, true) + ' => ' + inspect(value, obj));
+              });
+          }
           return collectionOf('Map', mapSize.call(obj), mapParts, indent);
       }
       if (isSet(obj)) {
           var setParts = [];
-          setForEach.call(obj, function (value) {
-              setParts.push(inspect(value, obj));
-          });
+          if (setForEach) {
+              setForEach.call(obj, function (value) {
+                  setParts.push(inspect(value, obj));
+              });
+          }
           return collectionOf('Set', setSize.call(obj), setParts, indent);
       }
       if (isWeakMap(obj)) {
@@ -11437,9 +11441,8 @@
             var yearsPassed = ES.CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
             years += yearsPassed;
             var oldRelativeTo = relativeTo;
-            relativeTo = ES.CalendarDateAdd(calendar, relativeTo, {
-              years: yearsPassed
-            }, undefined, dateAdd);
+            var yearsPassedDuration = new TemporalDuration(yearsPassed);
+            relativeTo = ES.CalendarDateAdd(calendar, relativeTo, yearsPassedDuration, undefined, dateAdd);
             var daysPassed = ES.DaysUntil(oldRelativeTo, relativeTo);
             days -= daysPassed;
             var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
@@ -11618,7 +11621,7 @@
         case 'nanosecond':
           {
             total = nanoseconds;
-            nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode);
+            nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode).toJSNumber();
             break;
           }
       }
@@ -15079,8 +15082,8 @@
         newEra = additionalFieldsCopy.era,
         newEraYear = additionalFieldsCopy.eraYear;
       if (newMonth === undefined && newMonthCode === undefined) {
-        original.month = month;
-        original.monthCode = monthCode;
+        if (month !== undefined) original.month = month;
+        if (monthCode !== undefined) original.monthCode = monthCode;
       }
       if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
         // Only `year` is needed. We don't set era and eraYear because it's
