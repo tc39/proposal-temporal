@@ -3976,12 +3976,12 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   const settings = GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
 
   const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
-  const otherFields = PrepareTemporalFields(other, fieldNames, []);
-  otherFields.day = 1;
-  const otherDate = CalendarDateFromFields(calendar, otherFields);
   const thisFields = PrepareTemporalFields(yearMonth, fieldNames, []);
   thisFields.day = 1;
   const thisDate = CalendarDateFromFields(calendar, thisFields);
+  const otherFields = PrepareTemporalFields(other, fieldNames, []);
+  otherFields.day = 1;
+  const otherDate = CalendarDateFromFields(calendar, otherFields);
 
   const untilOptions = ObjectCreate(null);
   CopyDataProperties(untilOptions, options, []);

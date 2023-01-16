@@ -63,15 +63,14 @@ export class PlainYearMonth {
       throw new TypeError('invalid argument');
     }
     ES.RejectObjectWithCalendarOrTimeZone(temporalYearMonthLike);
+    options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-    const partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    const partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
-
-    options = ES.GetOptionsObject(options);
 
     return ES.CalendarYearMonthFromFields(calendar, fields, options);
   }
