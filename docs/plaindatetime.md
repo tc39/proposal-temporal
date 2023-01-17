@@ -36,7 +36,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 
 ## Constructor
 
-### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_?: string | object) : Temporal.PlainDateTime
+### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_: string | object = "iso8601") : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -49,7 +49,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 - `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the datetime into.
+- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the datetime into.
 
 **Returns:** a new `Temporal.PlainDateTime` object.
 
@@ -64,6 +64,9 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 
 The range of allowed values for this type is exactly enough that calling `timeZone.getPlainDateTimeFor(instant)` will succeed when `timeZone` is any built-in `Temporal.TimeZone` and `instant` is any valid `Temporal.Instant`.
 If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
+
+Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -96,7 +99,7 @@ If the value is any other object, a `Temporal.PlainDateTime` will be constructed
 At least the `year` (or `era` and `eraYear`), `month` (or `monthCode`), and `day` properties must be present.
 Default values for other missing fields are determined by the calendar.
 
-If the `calendar` property is not present, it's assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+If the `calendar` property is not present, it's assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 Any other missing properties will be assumed to be 0 (for time fields).
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
@@ -147,12 +150,8 @@ dt = Temporal.PlainDateTime.from(Temporal.PlainDate.from('1995-12-07T03:24:30'))
   // => 1995-12-07T00:00:00
   // same as above; Temporal.PlainDate has year, month, and day properties
 
-calendar = Temporal.Calendar.from('hebrew');
-dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar });
-  // => 1995-12-07T03:24:30[u-ca=hebrew]
 dt = Temporal.PlainDateTime.from({ year: 5756, month: 3, day: 14, hour: 3, minute: 24, second: 30, calendar: 'hebrew' });
   // => 1995-12-07T03:24:30[u-ca=hebrew]
-  // same as above
 
 // Different overflow modes
 dt = Temporal.PlainDateTime.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
@@ -290,9 +289,10 @@ dt.nanosecond;  // => 500
 ```
 <!-- prettier-ignore-end -->
 
-### datetime.**calendar** : object
+### datetime.**calendarId** : string
 
-The `calendar` read-only property gives the calendar that the `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, and `nanosecond` properties are interpreted in.
+The `calendarId` read-only property gives the identifier of the calendar that the `year`, `month`, `monthCode`, and `day` properties are interpreted in.
+If the date was created with a custom calendar object, this gives the `id` property of that object.
 
 ### datetime.**era** : string | undefined
 
@@ -1053,9 +1053,16 @@ dt.toPlainMonthDay(); // => 12-07
 dt.toPlainTime(); // => 03:24:30.0000035
 ```
 
-### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: object }
+### datetime.**getCalendar**(): object
 
-**Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the value of `datetime.calendar`.
+**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `datetime` is reckoned.
+
+This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.
+
+### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `datetime` is reckoned.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.
