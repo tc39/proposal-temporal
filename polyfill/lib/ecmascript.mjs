@@ -1723,6 +1723,18 @@ export const ES = ObjectAssign({}, ES2022, {
     const cal2 = ES.ToString(two);
     return cal1 === cal2;
   },
+  // This operation is not in the spec, it implements the following:
+  // "If ? CalendarEquals(one, two) is false, throw a RangeError exception."
+  // This is so that we can build an informative error message without
+  // re-getting the .id properties.
+  CalendarEqualsOrThrow: (one, two, errorMessageAction) => {
+    if (one === two) return true;
+    const cal1 = ES.ToString(one);
+    const cal2 = ES.ToString(two);
+    if (cal1 !== cal2) {
+      throw new RangeError(`cannot ${errorMessageAction} of ${cal1} and ${cal2} calendars`);
+    }
+  },
   ConsolidateCalendars: (one, two) => {
     if (one === two) return two;
     const sOne = ES.ToString(one);
@@ -3608,11 +3620,7 @@ export const ES = ObjectAssign({}, ES2022, {
     other = ES.ToTemporalDate(other);
     const calendar = GetSlot(plainDate, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.ToString(calendar);
-    const otherCalendarId = ES.ToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
-    }
+    ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
     const settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
 
@@ -3648,11 +3656,7 @@ export const ES = ObjectAssign({}, ES2022, {
     other = ES.ToTemporalDateTime(other);
     const calendar = GetSlot(plainDateTime, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.ToString(calendar);
-    const otherCalendarId = ES.ToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
-    }
+    ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
     const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
 
@@ -3788,13 +3792,7 @@ export const ES = ObjectAssign({}, ES2022, {
     other = ES.ToTemporalYearMonth(other);
     const calendar = GetSlot(yearMonth, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarID = ES.ToString(calendar);
-    const otherCalendarID = ES.ToString(otherCalendar);
-    if (calendarID !== otherCalendarID) {
-      throw new RangeError(
-        `cannot compute difference between months of ${calendarID} and ${otherCalendarID} calendars`
-      );
-    }
+    ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
 
     const settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
 
@@ -3838,11 +3836,7 @@ export const ES = ObjectAssign({}, ES2022, {
     other = ES.ToTemporalZonedDateTime(other);
     const calendar = GetSlot(zonedDateTime, CALENDAR);
     const otherCalendar = GetSlot(other, CALENDAR);
-    const calendarId = ES.ToString(calendar);
-    const otherCalendarId = ES.ToString(otherCalendar);
-    if (calendarId !== otherCalendarId) {
-      throw new RangeError(`cannot compute difference between dates of ${calendarId} and ${otherCalendarId} calendars`);
-    }
+    ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
 
     const settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
 
