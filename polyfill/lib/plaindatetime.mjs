@@ -30,7 +30,7 @@ export class PlainDateTime {
     millisecond = 0,
     microsecond = 0,
     nanosecond = 0,
-    calendar = ES.GetISO8601Calendar()
+    calendar = 'iso8601'
   ) {
     isoYear = ES.ToIntegerWithTruncation(isoYear);
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);

@@ -408,8 +408,7 @@
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
-        1. Let _calendar_ be ! GetISO8601Calendar().
-        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -654,8 +653,7 @@
         1. Let _outputTimeZone_ be _timeZone_.
         1. If _outputTimeZone_ is *undefined*, then
           1. Set _outputTimeZone_ to ! CreateTemporalTimeZone(*"UTC"*).
-        1. Let _isoCalendar_ be ! GetISO8601Calendar().
-        1. Let _dateTime_ be ? GetPlainDateTimeFor(_outputTimeZone_, _instant_, _isoCalendar_).
+        1. Let _dateTime_ be ? GetPlainDateTimeFor(_outputTimeZone_, _instant_, *"iso8601"*).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], *"iso8601"*, _precision_, *"never"*).
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZoneString_ be *"Z"*.

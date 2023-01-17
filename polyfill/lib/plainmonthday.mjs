@@ -9,7 +9,7 @@ const SetPrototypeAdd = Set.prototype.add;
 const SetPrototypeForEach = Set.prototype.forEach;
 
 export class PlainMonthDay {
-  constructor(isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) {
+  constructor(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     isoDay = ES.ToIntegerWithTruncation(isoDay);
     calendar = ES.ToTemporalCalendar(calendar);
