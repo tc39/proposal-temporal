@@ -396,8 +396,7 @@
     </emu-clause>
 
     <emu-clause id="sec-formatdatetimepattern" aoid="FormatDateTimePattern">
-      <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ )</h1>
-
+      <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ <ins>[ , _timeZone_ ]</ins> )</h1>
       <p>
       The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which is a Record of the type contained by the %DateTimeFormat%.[[LocaleData]].[[<_locale_>]].[[formats]].[[<_calendar_>]] List as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a <del>Number</del><ins>BigInt</ins> value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2023, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
       </p>
@@ -419,7 +418,10 @@
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
           1. Let _nf3_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nf3Options_ &raquo;).
-        1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. <ins>If _timeZone_ is present, then</ins>
+          1. <ins>Let _tm_ be ToLocalTime(<ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _timeZone_).</ins>
+        1. <ins>Else,</ins>
+          1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. Let _result_ be a new empty List.
         1. For each Record { [[Type]], [[Value]] } _patternPart_ in _patternParts_, do
           1. Let _p_ be _patternPart_.[[Type]].
@@ -497,7 +499,7 @@
       <emu-alg>
         1. <ins>Let _x_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. Let _patternParts_ be PartitionPattern(<del>_dateTimeFormat_.[[Pattern]]</del><ins>_x_.[[pattern]]</ins>).
-        1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_x_.[[pattern]]</ins>, _patternParts_, <del>_x_</del><ins>_x_.[[epochNanoseconds]]</ins>, *undefined*).
+        1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_x_.[[pattern]]</ins>, _patternParts_, <del>_x_</del><ins>_x_.[[epochNanoseconds]]</ins>, *undefined*, <ins>x.[[timeZone]]</ins>).
         1. Return _result_.
       </emu-alg>
 
