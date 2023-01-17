@@ -167,9 +167,6 @@ export class PlainDateTime {
       'year'
     ]);
     const props = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
-    if (!props) {
-      throw new TypeError('invalid date-time-like');
-    }
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
