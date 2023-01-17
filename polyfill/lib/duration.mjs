@@ -141,7 +141,7 @@ export class Duration {
   }
   with(durationLike) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const props = ES.PrepareTemporalFields(
+    const partialDuration = ES.PrepareTemporalFields(
       durationLike,
       [
         'days',
@@ -168,7 +168,7 @@ export class Duration {
       milliseconds = GetSlot(this, MILLISECONDS),
       microseconds = GetSlot(this, MICROSECONDS),
       nanoseconds = GetSlot(this, NANOSECONDS)
-    } = props;
+    } = partialDuration;
     return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   }
   negated() {
