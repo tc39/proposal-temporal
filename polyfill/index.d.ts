@@ -613,7 +613,7 @@ export namespace Temporal {
   type MonthOrMonthCode = { month: number } | { monthCode: string };
 
   export interface CalendarProtocol {
-    id?: string;
+    id: string;
     calendar?: never;
     year(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string): number;
     month(
@@ -677,7 +677,7 @@ export namespace Temporal {
     ): Temporal.Duration;
     fields?(fields: Iterable<string>): Iterable<string>;
     mergeFields?(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
-    toString(): string;
+    toString?(): string;
     toJSON?(): string;
   }
 

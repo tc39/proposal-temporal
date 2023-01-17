@@ -651,14 +651,13 @@
         <dd>
           It returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
           Depending on the given _calendar_ and the value of _showCalendar_, the string may be empty if no calendar annotation need be included.
-          This operation may invoke an observable ToString operation on _calendarObject_, but not if _showCalendar_ is *"never"*.
+          This operation may invoke an observable Get operation on _calendar_ if it is a custom calendar, but not if _showCalendar_ is *"never"*.
         </dd>
       </dl>
       <emu-alg>
         1. If _showCalendar_ is *"never"*, return the empty String.
-        1. Let _calendarObject_ be ToTemporalCalendarObject(_calendar_).
-        1. Let _calendarID_ be ? ToString(_calendarObject_).
-        1. Return FormatCalendarAnnotation(_calendarID_, _showCalendar_).
+        1. Let _calendarIdentifier_ be ? ToTemporalCalendarIdentifier(_calendar_).
+        1. Return FormatCalendarAnnotation(_calendarIdentifier_, _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -693,8 +692,8 @@
       </p>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return *true*.
-        1. Let _calendarOne_ be ? ToString(_one_).
-        1. Let _calendarTwo_ be ? ToString(_two_).
+        1. Let _calendarOne_ be ? ToTemporalCalendarIdentifier(_one_).
+        1. Let _calendarTwo_ be ? ToTemporalCalendarIdentifier(_two_).
         1. If _calendarOne_ is _calendarTwo_, return *true*.
         1. Return *false*.
       </emu-alg>
@@ -709,8 +708,8 @@
       </p>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return _two_.
-        1. Let _calendarOne_ be ? ToString(_one_).
-        1. Let _calendarTwo_ be ? ToString(_two_).
+        1. Let _calendarOne_ be ? ToTemporalCalendarIdentifier(_one_).
+        1. Let _calendarTwo_ be ? ToTemporalCalendarIdentifier(_two_).
         1. If _calendarOne_ is _calendarTwo_, return _two_.
         1. If _calendarOne_ is *"iso8601"*, return _two_.
         1. If _calendarTwo_ is *"iso8601"*, return _one_.

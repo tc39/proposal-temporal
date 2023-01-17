@@ -108,16 +108,17 @@ There are two ways to do this.
 The recommended way is to create a class inheriting from `Temporal.Calendar`.
 You must use one of the built-in calendars as the "base calendar".
 In the class's constructor, call `super()` with the identifier of the base calendar.
-The class must override `toString()` to return its own identifier.
+The class must override the `id` property to be its own identifier.
 Overriding all the other properties of `Temporal.Calendar.prototype` is optional.
 If you don't override the optional properties, then they will behave as in the base calendar.
-It's recommended to override `dateFromFields()`, `monthDayFromFields()`, `yearMonthFromFields()`, and `dateAdd()`so that they return Temporal objects with the custom calendar and not the base calendar.
+`toString()` and `toJSON()` should also be overridden to return the identifier.
+It's also recommended to override `dateFromFields()`, `monthDayFromFields()`, `yearMonthFromFields()`, and `dateAdd()`so that they return Temporal objects with the custom calendar and not the base calendar.
 
 The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
-The object must implement all of the `Temporal.Calendar` properties and methods except for `id`, `fields()`, `mergeFields()`, and `toJSON()`.
+The object must implement all of the `Temporal.Calendar` properties and methods except for `fields()`, `mergeFields()`, `toString()`, and `toJSON()`.
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement the `id` property and the `fields()`, `mergeFields()`, and `toJSON()` methods as well.
+To interoperate with libraries or other code that you didn't write, then you should implement the `fields()`, `mergeFields()`, `toString()`, and `toJSON()` methods as well.
 Your object must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
 
 The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
@@ -236,7 +237,7 @@ cal2 = Temporal.Calendar.from(cal);
 The `id` property gives an unambiguous identifier for the calendar.
 Effectively, this is whatever `calendarIdentifier` was passed as a parameter to the constructor.
 
-When subclassing `Temporal.Calendar`, this property doesn't need to be overridden because the default implementation gives the result of calling `toString()`.
+When subclassing `Temporal.Calendar`, this property must be overridden to provide an identifier for the custom calendar.
 
 ## Methods
 
