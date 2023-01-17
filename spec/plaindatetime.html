@@ -114,16 +114,16 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.plaindatetime.prototype.calendar">
-      <h1>get Temporal.PlainDateTime.prototype.calendar</h1>
+    <emu-clause id="sec-get-temporal.plaindatetime.prototype.calendarid">
+      <h1>get Temporal.PlainDateTime.prototype.calendarId</h1>
       <p>
-        `Temporal.PlainDateTime.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.PlainDateTime.prototype.calendarId` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return _dateTime_.[[Calendar]].
+        1. Return ? ToTemporalCalendarIdentifier(_dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -706,6 +706,18 @@
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.plaindatetime.prototype.getcalendar">
+      <h1>Temporal.PlainDateTime.prototype.getCalendar ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _dateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+        1. Return ToTemporalCalendarObject(_dateTime_).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-plaindatetime-instances">
@@ -945,7 +957,7 @@
           _millisecond_: an integer,
           _microsecond_: an integer,
           _nanosecond_: an integer,
-          _calendar_: an Object,
+          _calendar_: a String or Object,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.PlainDateTime instance, or an abrupt completion
       </h1>

@@ -1829,7 +1829,7 @@
             1. Else,
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~date~).
               1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
-            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_.[[Identifier]]).
           </emu-alg>
         </emu-clause>
 
@@ -1859,7 +1859,7 @@
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~year-month~).
               1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
               1. Set _result_.[[ReferenceISODay]] to _result_.[[Day]].
-            1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
+            1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_.[[Identifier]], _result_.[[ReferenceISODay]]).
           </emu-alg>
         </emu-clause>
 
@@ -1886,7 +1886,7 @@
             1. Else,
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~month-day~).
               1. Let _result_ be ? CalendarMonthDayToISOReferenceDate(_calendar_.[[Identifier]], _fields_, _overflow_).
-            1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
+            1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_.[[Identifier]], _result_.[[ReferenceISOYear]]).
           </emu-alg>
         </emu-clause>
 
@@ -1909,7 +1909,7 @@
             1. Else,
               1. Let _balancedDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]]).
               1. Let _result_ be ? CalendarDateAddition(_calendar_.[[Identifier]], _date_, _balancedDuration_, _overflow_).
-            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+            1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_.[[Identifier]]).
           </emu-alg>
         </emu-clause>
 

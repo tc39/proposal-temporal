@@ -109,8 +109,9 @@ The recommended way is to create a class inheriting from `Temporal.Calendar`.
 You must use one of the built-in calendars as the "base calendar".
 In the class's constructor, call `super()` with the identifier of the base calendar.
 The class must override `toString()` to return its own identifier.
-Overriding all the other members is optional.
-If you don't override the optional members, then they will behave as in the base calendar.
+Overriding all the other properties of `Temporal.Calendar.prototype` is optional.
+If you don't override the optional properties, then they will behave as in the base calendar.
+It's recommended to override `dateFromFields()`, `monthDayFromFields()`, `yearMonthFromFields()`, and `dateAdd()`so that they return Temporal objects with the custom calendar and not the base calendar.
 
 The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
 The object must implement all of the `Temporal.Calendar` properties and methods except for `id`, `fields()`, `mergeFields()`, and `toJSON()`.

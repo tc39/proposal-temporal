@@ -29,9 +29,9 @@ export class PlainYearMonth {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
     return ES.CalendarMonthCode(GetSlot(this, CALENDAR), this);
   }
-  get calendar() {
+  get calendarId() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
+    return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
   }
   get era() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
@@ -153,6 +153,11 @@ export class PlainYearMonth {
       isoYear: GetSlot(this, ISO_YEAR)
     };
   }
+  getCalendar() {
+    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
+  }
+
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
     if (ES.IsTemporalYearMonth(item)) {

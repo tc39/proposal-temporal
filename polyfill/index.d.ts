@@ -776,7 +776,7 @@ export namespace Temporal {
     isoYear: number;
     isoMonth: number;
     isoDay: number;
-    calendar: CalendarProtocol;
+    calendar: string | CalendarProtocol;
   };
 
   /**
@@ -801,7 +801,7 @@ export namespace Temporal {
     readonly month: number;
     readonly monthCode: string;
     readonly day: number;
-    readonly calendar: CalendarProtocol;
+    readonly calendarId: string;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -835,6 +835,7 @@ export namespace Temporal {
     ): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
+    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -869,7 +870,7 @@ export namespace Temporal {
     isoMillisecond: number;
     isoMicrosecond: number;
     isoNanosecond: number;
-    calendar: CalendarProtocol;
+    calendar: string | CalendarProtocol;
   };
 
   /**
@@ -915,7 +916,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    readonly calendar: CalendarProtocol;
+    readonly calendarId: string;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -954,6 +955,7 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
+    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -987,10 +989,11 @@ export namespace Temporal {
     constructor(isoMonth: number, isoDay: number, calendar?: CalendarLike, referenceISOYear?: number);
     readonly monthCode: string;
     readonly day: number;
-    readonly calendar: CalendarProtocol;
+    readonly calendarId: string;
     equals(other: Temporal.PlainMonthDay | PlainMonthDayLike | string): boolean;
     with(monthDayLike: PlainMonthDayLike, options?: AssignmentOptions): Temporal.PlainMonthDay;
     toPlainDate(year: { year: number }): Temporal.PlainDate;
+    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1168,7 +1171,7 @@ export namespace Temporal {
     readonly year: number;
     readonly month: number;
     readonly monthCode: string;
-    readonly calendar: CalendarProtocol;
+    readonly calendarId: string;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly monthsInYear: number;
@@ -1189,6 +1192,7 @@ export namespace Temporal {
       options?: DifferenceOptions<'year' | 'month'>
     ): Temporal.Duration;
     toPlainDate(day: { day: number }): Temporal.PlainDate;
+    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1227,7 +1231,7 @@ export namespace Temporal {
     isoNanosecond: number;
     offset: string;
     timeZone: TimeZoneProtocol;
-    calendar: CalendarProtocol;
+    calendar: string | CalendarProtocol;
   };
 
   export class ZonedDateTime {
@@ -1253,7 +1257,7 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly timeZone: TimeZoneProtocol;
-    readonly calendar: CalendarProtocol;
+    readonly calendarId: string;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
@@ -1302,6 +1306,7 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
+    getCalendar(): CalendarProtocol;
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

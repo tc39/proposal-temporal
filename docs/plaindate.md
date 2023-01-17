@@ -17,14 +17,14 @@ It can also be combined with a `Temporal.PlainTime` to yield a "zoneless" `Tempo
 
 ## Constructor
 
-### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_?: string | object) : Temporal.PlainDate
+### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_: string | object = "iso8601") : Temporal.PlainDate
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the date into.
+- `calendar` (optional string, `Temporal.Calendar`, or plain object): A calendar to project the date into.
 
 **Returns:** a new `Temporal.PlainDate` object.
 
@@ -36,6 +36,9 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 
 The range of allowed values for this type is exactly enough that calling [`toPlainDate()`](./plaindatetime.md#toPlainDate) on any valid `Temporal.PlainDateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then this function will throw a `RangeError`.
+
+Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -103,10 +106,8 @@ date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'
   // => 2006-08-24
   // same as above; Temporal.PlainDateTime has year, month, and day properties
 
-calendar = Temporal.Calendar.from('islamic');
-date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar }); // => 2006-08-24[u-ca=islamic]
 date = Temporal.PlainDate.from({ year: 1427, month: 8, day: 1, calendar: 'islamic' });
-  // => 2006-08-24[u-ca=islamic] (same as above)
+  // => 2006-08-24[u-ca=islamic]
 
 // Different overflow modes
 date = Temporal.PlainDate.from({ year: 2001, month: 13, day: 1 }, { overflow: 'constrain' });
@@ -199,9 +200,10 @@ date.day;       // => 18
 ```
 <!-- prettier-ignore-end -->
 
-### date.**calendar** : object
+### date.**calendarId** : string
 
-The `calendar` read-only property gives the calendar that the `year`, `month`, and `day` properties are interpreted in.
+The `calendarId` read-only property gives the identifier of the calendar that the `year`, `month`, `monthCode`, and `day` properties are interpreted in.
+If the date was created with a custom calendar, this gives its `id` property.
 
 ### date.**era** : string | undefined
 
@@ -805,9 +807,16 @@ date.toPlainYearMonth(); // => 2006-08
 date.toPlainMonthDay(); // => 08-24
 ```
 
-### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
+### date.**getCalendar**(): object
 
-**Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the value of `date.calendar`.
+**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `date` is reckoned.
+
+This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.
+
+### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the calendar in which `date` is reckoned.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.

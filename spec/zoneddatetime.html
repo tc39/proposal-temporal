@@ -112,16 +112,16 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.calendar">
-      <h1>get Temporal.ZonedDateTime.prototype.calendar</h1>
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.calendarid">
+      <h1>get Temporal.ZonedDateTime.prototype.calendarId</h1>
       <p>
-        `Temporal.ZonedDateTime.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.ZonedDateTime.prototype.calendarId` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return _zonedDateTime_.[[Calendar]].
+        1. Return ? ToTemporalCalendarIdentifier(_zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -990,6 +990,18 @@
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.getcalendar">
+      <h1>Temporal.ZonedDateTime.prototype.getCalendar ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return ToTemporalCalendarObject(_zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-zoneddatetime-instances">
@@ -1180,7 +1192,7 @@
         CreateTemporalZonedDateTime (
           _epochNanoseconds_: a BigInt,
           _timeZone_: an Object,
-          _calendar_: an Object,
+          _calendar_: a String or Object,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.ZonedDateTime, or an abrupt completion
       </h1>

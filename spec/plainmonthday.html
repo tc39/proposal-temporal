@@ -98,16 +98,16 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.plainmonthday.prototype.calendar">
-      <h1>get Temporal.PlainMonthDay.prototype.calendar</h1>
+    <emu-clause id="sec-get-temporal.plainmonthday.prototype.calendarid">
+      <h1>get Temporal.PlainMonthDay.prototype.calendarId</h1>
       <p>
-        `Temporal.PlainMonthDay.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.PlainMonthDay.prototype.calendarId` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. Return _monthDay_.[[Calendar]].
+        1. Return ? ToTemporalCalendarIdentifier(_monthDay_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -272,6 +272,18 @@
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal.plainmonthday.prototype.getcalendar">
+      <h1>Temporal.PlainMonthDay.prototype.getCalendar ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _monthDay_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
+        1. Return ToTemporalCalendarObject(_monthDay_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-plainmonthday-instances">
@@ -387,7 +399,7 @@
         CreateTemporalMonthDay (
           _isoMonth_: an integer,
           _isoDay_: an integer,
-          _calendar_: an Object,
+          _calendar_: a String or Object,
           _referenceISOYear_: an integer,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.PlainMonthDay, or an abrupt completion

@@ -25,9 +25,9 @@ export class PlainDate {
 
     ES.CreateTemporalDateSlots(this, isoYear, isoMonth, isoDay, calendar);
   }
-  get calendar() {
+  get calendarId() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
+    return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
   }
   get era() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -269,6 +269,11 @@ export class PlainDate {
       isoYear: GetSlot(this, ISO_YEAR)
     };
   }
+  getCalendar() {
+    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
+    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
+  }
+
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
     if (ES.IsTemporalDate(item)) {
