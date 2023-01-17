@@ -57,9 +57,9 @@ export class PlainDateTime {
       calendar
     );
   }
-  get calendar() {
+  get calendarId() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR);
+    return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -422,6 +422,10 @@ export class PlainDateTime {
       isoSecond: GetSlot(this, ISO_SECOND),
       isoYear: GetSlot(this, ISO_YEAR)
     };
+  }
+  getCalendar() {
+    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
   }
 
   static from(item, options = undefined) {
