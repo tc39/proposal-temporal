@@ -66,9 +66,9 @@ export class PlainYearMonth {
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-    const props = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
+    const partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
-    fields = ES.CalendarMergeFields(calendar, fields, props);
+    fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
     options = ES.GetOptionsObject(options);
