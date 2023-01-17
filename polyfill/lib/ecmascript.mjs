@@ -369,7 +369,7 @@ export function ParseTemporalTimeZone(stringIdent) {
 
 export function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
   if (showCalendar === 'never') return '';
-  return FormatCalendarAnnotation(ToString(ToTemporalCalendarObject(calendar)), showCalendar);
+  return FormatCalendarAnnotation(ToTemporalCalendarIdentifier(calendar), showCalendar);
 }
 
 export function FormatCalendarAnnotation(id, showCalendar) {
@@ -1993,8 +1993,8 @@ export function ToTemporalCalendarObject(slotValue) {
 
 export function CalendarEquals(one, two) {
   if (one === two) return true;
-  const cal1 = ToString(one);
-  const cal2 = ToString(two);
+  const cal1 = ToTemporalCalendarIdentifier(one);
+  const cal2 = ToTemporalCalendarIdentifier(two);
   return cal1 === cal2;
 }
 // This operation is not in the spec, it implements the following:
@@ -2004,8 +2004,8 @@ export function CalendarEquals(one, two) {
 
 export function CalendarEqualsOrThrow(one, two, errorMessageAction) {
   if (one === two) return true;
-  const cal1 = ToString(one);
-  const cal2 = ToString(two);
+  const cal1 = ToTemporalCalendarIdentifier(one);
+  const cal2 = ToTemporalCalendarIdentifier(two);
   if (cal1 !== cal2) {
     throw new RangeError(`cannot ${errorMessageAction} of ${cal1} and ${cal2} calendars`);
   }
@@ -2013,8 +2013,8 @@ export function CalendarEqualsOrThrow(one, two, errorMessageAction) {
 
 export function ConsolidateCalendars(one, two) {
   if (one === two) return two;
-  const sOne = ToString(one);
-  const sTwo = ToString(two);
+  const sOne = ToTemporalCalendarIdentifier(one);
+  const sTwo = ToTemporalCalendarIdentifier(two);
   if (sOne === sTwo || sOne === 'iso8601') {
     return two;
   } else if (sTwo === 'iso8601') {
@@ -2464,7 +2464,7 @@ export function TemporalMonthDayToString(monthDay, showCalendar = 'auto') {
   const day = ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
   let resultString = `${month}-${day}`;
   const calendar = GetSlot(monthDay, CALENDAR);
-  const calendarID = ToString(calendar);
+  const calendarID = ToTemporalCalendarIdentifier(calendar);
   if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
     const year = ISOYearString(GetSlot(monthDay, ISO_YEAR));
     resultString = `${year}-${resultString}`;
@@ -2479,7 +2479,7 @@ export function TemporalYearMonthToString(yearMonth, showCalendar = 'auto') {
   const month = ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
   let resultString = `${year}-${month}`;
   const calendar = GetSlot(yearMonth, CALENDAR);
-  const calendarID = ToString(calendar);
+  const calendarID = ToTemporalCalendarIdentifier(calendar);
   if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
     const day = ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
     resultString += `-${day}`;
