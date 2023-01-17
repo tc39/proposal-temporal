@@ -341,7 +341,7 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   MaybeFormatCalendarAnnotation: (calendar, showCalendar) => {
     if (showCalendar === 'never') return '';
-    return ES.FormatCalendarAnnotation(ES.ToString(ES.ToTemporalCalendarObject(calendar)), showCalendar);
+    return ES.FormatCalendarAnnotation(ES.ToTemporalCalendarIdentifier(calendar), showCalendar);
   },
   FormatCalendarAnnotation: (id, showCalendar) => {
     if (showCalendar === 'never') return '';
@@ -1904,8 +1904,8 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   CalendarEquals: (one, two) => {
     if (one === two) return true;
-    const cal1 = ES.ToString(one);
-    const cal2 = ES.ToString(two);
+    const cal1 = ES.ToTemporalCalendarIdentifier(one);
+    const cal2 = ES.ToTemporalCalendarIdentifier(two);
     return cal1 === cal2;
   },
   // This operation is not in the spec, it implements the following:
@@ -1914,16 +1914,16 @@ export const ES = ObjectAssign({}, ES2022, {
   // re-getting the .id properties.
   CalendarEqualsOrThrow: (one, two, errorMessageAction) => {
     if (one === two) return true;
-    const cal1 = ES.ToString(one);
-    const cal2 = ES.ToString(two);
+    const cal1 = ES.ToTemporalCalendarIdentifier(one);
+    const cal2 = ES.ToTemporalCalendarIdentifier(two);
     if (cal1 !== cal2) {
       throw new RangeError(`cannot ${errorMessageAction} of ${cal1} and ${cal2} calendars`);
     }
   },
   ConsolidateCalendars: (one, two) => {
     if (one === two) return two;
-    const sOne = ES.ToString(one);
-    const sTwo = ES.ToString(two);
+    const sOne = ES.ToTemporalCalendarIdentifier(one);
+    const sTwo = ES.ToTemporalCalendarIdentifier(two);
     if (sOne === sTwo || sOne === 'iso8601') {
       return two;
     } else if (sTwo === 'iso8601') {
@@ -2372,7 +2372,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const day = ES.ISODateTimePartString(GetSlot(monthDay, ISO_DAY));
     let resultString = `${month}-${day}`;
     const calendar = GetSlot(monthDay, CALENDAR);
-    const calendarID = ES.ToString(calendar);
+    const calendarID = ES.ToTemporalCalendarIdentifier(calendar);
     if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
       const year = ES.ISOYearString(GetSlot(monthDay, ISO_YEAR));
       resultString = `${year}-${resultString}`;
@@ -2386,7 +2386,7 @@ export const ES = ObjectAssign({}, ES2022, {
     const month = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
     let resultString = `${year}-${month}`;
     const calendar = GetSlot(yearMonth, CALENDAR);
-    const calendarID = ES.ToString(calendar);
+    const calendarID = ES.ToTemporalCalendarIdentifier(calendar);
     if (showCalendar === 'always' || showCalendar === 'critical' || calendarID !== 'iso8601') {
       const day = ES.ISODateTimePartString(GetSlot(yearMonth, ISO_DAY));
       resultString += `-${day}`;
