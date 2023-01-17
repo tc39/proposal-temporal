@@ -99,9 +99,6 @@ export class PlainDate {
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
     const props = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
-    if (!props) {
-      throw new TypeError('invalid date-like');
-    }
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     fields = ES.CalendarMergeFields(calendar, fields, props);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);

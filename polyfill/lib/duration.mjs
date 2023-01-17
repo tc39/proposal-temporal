@@ -157,9 +157,6 @@ export class Duration {
       ],
       'partial'
     );
-    if (!props) {
-      throw new TypeError('invalid duration-like');
-    }
     let {
       years = GetSlot(this, YEARS),
       months = GetSlot(this, MONTHS),
