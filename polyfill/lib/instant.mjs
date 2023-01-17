@@ -148,8 +148,7 @@ export class Instant {
   toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     timeZone = ES.ToTemporalTimeZone(timeZone);
-    const calendar = ES.GetISO8601Calendar();
-    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
   }
 
   static fromEpochSeconds(epochSeconds) {
