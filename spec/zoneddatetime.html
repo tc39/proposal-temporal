@@ -590,13 +590,13 @@
         1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"timeZone"*, *"offset"* »).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"timeZone"*, *"offset"* »).
-        1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
-        1. Assert: Type(_offsetString_) is String.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
+        1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
+        1. Assert: Type(_offsetString_) is String.
         1. If IsTimeZoneOffsetString(_offsetString_) is *false*, throw a *RangeError* exception.
         1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_offsetString_).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match exactly~).
