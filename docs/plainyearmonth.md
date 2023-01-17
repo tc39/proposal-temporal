@@ -13,13 +13,13 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 
 ## Constructor
 
-### **new Temporal.PlainYearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_?: string | object, _referenceISODay_: number = 1) : Temporal.PlainYearMonth
+### **new Temporal.PlainYearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_: string | object = "iso8601", _referenceISODay_: number = 1) : Temporal.PlainYearMonth
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the month into.
+- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the month into.
 - `referenceISODay` (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
   For the ISO 8601 calendar, this parameter will default to 1 if omitted.
   For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
@@ -35,9 +35,13 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 **Returns:** a new `Temporal.PlainYearMonth` object.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
 
 The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./plaindate.md#toPlainYearMonth) on any valid `Temporal.PlainDate` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
+
+Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -69,7 +73,7 @@ If the value is another `Temporal.PlainYearMonth` object, a new object represent
 If the value is any other object, it must have `year` (or `era` and `eraYear`), `month` (or `monthCode`) properties, and optionally a `calendar` property.
 A `Temporal.PlainYearMonth` will be constructed from these properties.
 
-If the `calendar` property is not present, it's assumed to be `Temporal.Calendar.from('iso8601')`, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+If the `calendar` property is not present, it's assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 In this calendar, `era` is ignored.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
@@ -185,9 +189,10 @@ ym.month; // => 6
 ym.monthCode; // => 'M05L'
 ```
 
-### yearMonth.**calendar** : object
+### yearMonth.**calendarId** : object
 
-The `calendar` read-only property gives the calendar that the `year` and `month` properties are interpreted in.
+The `calendarId` read-only property gives the identifier of the calendar that the `year`, `month`, and `monthCode` properties are interpreted in.
+If `yearMonth` was created with a custom calendar object, this gives the `id` property of that project.
 
 ### yearMonth.**era** : string | undefined
 
@@ -632,9 +637,16 @@ ym = Temporal.PlainYearMonth.from('2019-06');
 ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
 
-### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
+### yearMonth.**getCalendar**(): object
 
-**Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the value of `yearMonth.calendar`.
+**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `yearMonth` is reckoned.
+
+This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.
+
+### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that `yearMonth` is reckoned in.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.

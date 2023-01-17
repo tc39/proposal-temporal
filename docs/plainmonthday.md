@@ -13,13 +13,13 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 
 ## Constructor
 
-### **new Temporal.PlainMonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_?: string | object, _referenceISOYear_?: number) : Temporal.PlainMonthDay
+### **new Temporal.PlainMonthDay**(_isoMonth_: number, _isoDay_: number, _calendar_: string | object = "iso8601", _referenceISOYear_: number = 1972) : Temporal.PlainMonthDay
 
 **Parameters:**
 
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): A calendar to project the date into.
+- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the date into.
 - `referenceISOYear` (optional for ISO 8601 calendar; required for other calendars):
   A reference year in the ISO 8601 calendar for disambiguation when implementing calendar systems.
   The default for the ISO 8601 calendar is the first leap year after the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
@@ -31,6 +31,10 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 > When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the `from()` method which will automatically set a valid and `equals`-compatible reference year.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
+Together, `referenceISOYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
+
+Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
 
 The `referenceISOYear` ensures that month/day combinations like February 29 (a leap day in the ISO 8601 calendar) or 15 Adar I (in a leap month in the Hebrew calendar) can be used for `Temporal.PlainMonthDay`, even though those dates don't occur every calendar year.
 `referenceISOYear` corresponds to a calendar year where this month and day actually exist.
@@ -162,9 +166,10 @@ md.month; // => undefined
 // (no `month` property; use `monthCode` instead)
 ```
 
-### monthDay.**calendar** : object
+### monthDay.**calendarId** : object
 
-The `calendar` read-only property gives the calendar that the `monthCode` and `day` properties are interpreted in.
+The `calendarId` read-only property gives the calendar that the `monthCode` and `day` properties are interpreted in.
+If `monthDay` was created with a custom calendar object, this gives the `id` property of that object.
 
 ## Methods
 
@@ -384,9 +389,16 @@ md = Temporal.PlainMonthDay.from({
 date = md.toPlainDate({ era: 'reiwa', eraYear: 2 }); // => 2020-01-01[u-ca=japanese]
 ```
 
-### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }
+### monthDay.**getCalendar**(): object
 
-**Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar, as well as the value of `monthDay.calendar`.
+**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `monthDay` is reckoned.
+
+This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.
+
+### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `monthDay` is reckoned.
 
 This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.

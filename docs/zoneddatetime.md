@@ -25,13 +25,13 @@ The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, whic
 
 ## Constructor
 
-### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string | object, _calendar_?: string | object) : Temporal.ZonedDateTime
+### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string | object, _calendar_: string | object = "iso8601") : Temporal.ZonedDateTime
 
 **Parameters:**
 
 - `epochNanoseconds` (bigint): A number of nanoseconds.
 - `timeZone` (`Temporal.TimeZone` or plain object): The time zone in which the event takes place.
-- `calendar` (optional `Temporal.Calendar`, plain object, or string): Calendar used to interpret dates and times. Usually set to `'iso8601'`.
+- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): Calendar used to interpret dates and times.
 
 **Returns:** a new `Temporal.ZonedDateTime` object.
 
@@ -41,12 +41,15 @@ Instead of the constructor, `Temporal.ZonedDateTime.from()` is preferred instead
 The range of allowed values for this type is the same as the old-style JavaScript `Date`: 100 million (10<sup>8</sup>) days before or after the Unix epoch.
 This range covers approximately half a million years. If `epochNanoseconds` is outside of this range, a `RangeError` will be thrown.
 
+Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
+
 Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
 // UNIX epoch in California
-new Temporal.ZonedDateTime(0n, Temporal.TimeZone.from('America/Los_Angeles'), Temporal.Calendar.from('iso8601'));
+new Temporal.ZonedDateTime(0n, Temporal.TimeZone.from('America/Los_Angeles'), 'iso8601');
   // => 1969-12-31T16:00:00-08:00[America/Los_Angeles]
 new Temporal.ZonedDateTime(0n, 'America/Los_Angeles');
   // => 1969-12-31T16:00:00-08:00[America/Los_Angeles]
@@ -78,7 +81,7 @@ This static method creates a new `Temporal.ZonedDateTime` object from another va
 If the value is another `Temporal.ZonedDateTime` object, a new but otherwise identical object will be returned.
 If the value is any other object, a `Temporal.ZonedDateTime` will be constructed from the values of any `timeZone`, `year` (or `era` and `eraYear`), `month` (or `monthCode`), `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`, `nanosecond`, and/or `calendar` properties that are present.
 At least the `timeZone`, `year` (or `era` and `eraYear`), `month` (or `monthCode`), and `day` properties must be present. Other properties are optional.
-If `calendar` is missing, it will be assumed to be `Temporal.Calendar.from('iso8601')`.
+If `calendar` is missing, it will be assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 Any other missing properties will be assumed to be 0 (for time fields).
 
 Date/time values will be interpreted in context of the provided offset and/or time zone, depending on the `offset` option.
@@ -390,9 +393,11 @@ epochNanos = zdt.epochNanoseconds;
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**calendar** : object
+### zonedDateTime.**calendarId** : object
 
-The `calendar` read-only property gives the calendar used to calculate date/time field values.
+The `calendarId` read-only property gives the identifier of the calendar used to calculate date/time field values.
+If the date was created with a custom calendar object, this gives the `id` property of that object.
+
 Calendar-sensitive values are used in most places, including:
 
 - Accessing properties like `.year` or `.month`
@@ -1433,9 +1438,16 @@ zdt.toPlainMonthDay(); // => 12-07
 zdt.toPlainTime(); // => 03:24:30
 ```
 
-### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: object }
+### zonedDateTime.**getCalendar**(): object
 
-**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `calendar`, `timeZone`, and `offset` properties.
+**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `zonedDateTime` is reckoned.
+
+This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.
+
+### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `timeZone`, and `offset` properties, and the calendar in which `zonedDateTime` is reckoned.
 
 This is an advanced method that's mainly useful if you are implementing a custom calendar.
 Most developers will not need to use it.

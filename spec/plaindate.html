@@ -111,16 +111,16 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.plaindate.prototype.calendar">
-      <h1>get Temporal.PlainDate.prototype.calendar</h1>
+    <emu-clause id="sec-get-temporal.plaindate.prototype.calendarid">
+      <h1>get Temporal.PlainDate.prototype.calendarId</h1>
       <p>
-        `Temporal.PlainDate.prototype.calendar` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.PlainDate.prototype.calendarId` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return _temporalDate_.[[Calendar]].
+        1. Return ? ToTemporalCalendarIdentifier(_temporalDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -352,6 +352,18 @@
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_temporalDate_.[[ISOMonth]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_temporalDate_.[[ISOYear]])).
         1. Return _fields_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.plaindate.prototype.getcalendar">
+      <h1>Temporal.PlainDate.prototype.getCalendar ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _temporalDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Return ToTemporalCalendarObject(_temporalDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -696,7 +708,7 @@
           _isoYear_: an integer,
           _isoMonth_: an integer,
           _isoDay_: an integer,
-          _calendar_: an Object,
+          _calendar_: a String or Object,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
       </h1>
