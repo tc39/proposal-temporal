@@ -4919,7 +4919,7 @@ export function RoundDuration(
       oneMonthDays = MathAbs(oneMonthDays);
       const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
-      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
+      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
       const { quotient, remainder } = nanoseconds.divmod(divisor);
       total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
       months = rounded.divide(divisor).toJSNumber();
@@ -4943,7 +4943,7 @@ export function RoundDuration(
       oneWeekDays = MathAbs(oneWeekDays);
       const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
-      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
+      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
       const { quotient, remainder } = nanoseconds.divmod(divisor);
       total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
       weeks = rounded.divide(divisor).toJSNumber();
@@ -4953,7 +4953,7 @@ export function RoundDuration(
     case 'day': {
       const divisor = bigInt(dayLengthNs);
       nanoseconds = divisor.multiply(days).plus(nanoseconds);
-      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
+      const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
       const { quotient, remainder } = nanoseconds.divmod(divisor);
       total = quotient.toJSNumber() + remainder.toJSNumber() / divisor;
       days = rounded.divide(divisor).toJSNumber();
