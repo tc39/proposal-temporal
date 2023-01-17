@@ -17,7 +17,7 @@ import {
 } from './slots.mjs';
 
 export class PlainDate {
-  constructor(isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) {
+  constructor(isoYear, isoMonth, isoDay, calendar = 'iso8601') {
     isoYear = ES.ToIntegerWithTruncation(isoYear);
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     isoDay = ES.ToIntegerWithTruncation(isoDay);

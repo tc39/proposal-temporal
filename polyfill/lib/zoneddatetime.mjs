@@ -24,7 +24,7 @@ const ArrayPrototypePush = Array.prototype.push;
 const ObjectCreate = Object.create;
 
 export class ZonedDateTime {
-  constructor(epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) {
+  constructor(epochNanoseconds, timeZone, calendar = 'iso8601') {
     // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
     //       to improve the error message.
     //       ToTemporalTimeZone(undefined) will end up calling TimeZone.from("undefined"), which
