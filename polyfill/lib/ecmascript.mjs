@@ -791,10 +791,14 @@ export const ES = ObjectAssign({}, ES2022, {
     let increment = options.roundingIncrement;
     if (increment === undefined) return 1;
     increment = ES.ToNumber(increment);
-    if (!NumberIsFinite(increment) || increment < 1) {
-      throw new RangeError(`roundingIncrement must be at least 1 and finite, not ${increment}`);
+    if (!NumberIsFinite(increment)) {
+      throw new RangeError('roundingIncrement must be finite');
     }
-    return MathTrunc(increment);
+    const integerIncrement = MathTrunc(increment);
+    if (integerIncrement < 1 || integerIncrement > 1e9) {
+      throw new RangeError(`roundingIncrement must be at least 1 and at most 1e9, not ${increment}`);
+    }
+    return integerIncrement;
   },
   ValidateTemporalRoundingIncrement: (increment, dividend, inclusive) => {
     const maximum = inclusive ? dividend : dividend - 1;
