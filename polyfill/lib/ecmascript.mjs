@@ -939,7 +939,7 @@ export const ES = ObjectAssign({}, ES2022, {
           'Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone'
         );
       }
-      if (!calendar) calendar = ES.GetISO8601Calendar();
+      if (!calendar) calendar = 'iso8601';
       calendar = ES.ToTemporalCalendar(calendar);
     }
     if (timeZone === undefined) return ES.CreateTemporalDate(year, month, day, calendar);
@@ -1142,7 +1142,7 @@ export const ES = ObjectAssign({}, ES2022, {
         ES.ParseTemporalDateTimeString(ES.ToString(item)));
       if (z) throw new RangeError('Z designator not supported for PlainDateTime');
       ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-      if (calendar === undefined) calendar = ES.GetISO8601Calendar();
+      if (calendar === undefined) calendar = 'iso8601';
       calendar = ES.ToTemporalCalendar(calendar);
     }
     return ES.CreateTemporalDateTime(
@@ -1196,7 +1196,7 @@ export const ES = ObjectAssign({}, ES2022, {
       } else {
         calendar = item.calendar;
         calendarAbsent = calendar === undefined;
-        if (calendar === undefined) calendar = ES.GetISO8601Calendar();
+        if (calendar === undefined) calendar = 'iso8601';
         calendar = ES.ToTemporalCalendar(calendar);
       }
       const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
@@ -1212,7 +1212,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     ES.ToTemporalOverflow(options); // validate and ignore
     let { month, day, referenceISOYear, calendar } = ES.ParseTemporalMonthDayString(ES.ToString(item));
-    if (calendar === undefined) calendar = ES.GetISO8601Calendar();
+    if (calendar === undefined) calendar = 'iso8601';
     calendar = ES.ToTemporalCalendar(calendar);
 
     if (referenceISOYear === undefined) {
@@ -1268,7 +1268,7 @@ export const ES = ObjectAssign({}, ES2022, {
 
     ES.ToTemporalOverflow(options); // validate and ignore
     let { year, month, referenceISODay, calendar } = ES.ParseTemporalYearMonthString(ES.ToString(item));
-    if (calendar === undefined) calendar = ES.GetISO8601Calendar();
+    if (calendar === undefined) calendar = 'iso8601';
     calendar = ES.ToTemporalCalendar(calendar);
 
     if (referenceISODay === undefined) {
@@ -1394,7 +1394,7 @@ export const ES = ObjectAssign({}, ES2022, {
       }
       const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       timeZone = new TemporalTimeZone(ianaName);
-      if (!calendar) calendar = ES.GetISO8601Calendar();
+      if (!calendar) calendar = 'iso8601';
       calendar = ES.ToTemporalCalendar(calendar);
       matchMinute = true; // ISO strings may specify offset with less precision
       disambiguation = ES.ToTemporalDisambiguation(options);
@@ -1443,7 +1443,7 @@ export const ES = ObjectAssign({}, ES2022, {
       });
     }
   },
-  CreateTemporalDate: (isoYear, isoMonth, isoDay, calendar = ES.GetISO8601Calendar()) => {
+  CreateTemporalDate: (isoYear, isoMonth, isoDay, calendar = 'iso8601') => {
     const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
     const result = ObjectCreate(TemporalPlainDate.prototype);
     ES.CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar);
@@ -1474,7 +1474,7 @@ export const ES = ObjectAssign({}, ES2022, {
       });
     }
   },
-  CreateTemporalDateTime: (isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar = ES.GetISO8601Calendar()) => {
+  CreateTemporalDateTime: (isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar = 'iso8601') => {
     const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
     const result = ObjectCreate(TemporalPlainDateTime.prototype);
     ES.CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar);
@@ -1500,7 +1500,7 @@ export const ES = ObjectAssign({}, ES2022, {
       });
     }
   },
-  CreateTemporalMonthDay: (isoMonth, isoDay, calendar = ES.GetISO8601Calendar(), referenceISOYear = 1972) => {
+  CreateTemporalMonthDay: (isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) => {
     const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
     const result = ObjectCreate(TemporalPlainMonthDay.prototype);
     ES.CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
@@ -1526,7 +1526,7 @@ export const ES = ObjectAssign({}, ES2022, {
       });
     }
   },
-  CreateTemporalYearMonth: (isoYear, isoMonth, calendar = ES.GetISO8601Calendar(), referenceISODay = 1) => {
+  CreateTemporalYearMonth: (isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) => {
     const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
     const result = ObjectCreate(TemporalPlainYearMonth.prototype);
     ES.CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
@@ -1553,17 +1553,13 @@ export const ES = ObjectAssign({}, ES2022, {
       });
     }
   },
-  CreateTemporalZonedDateTime: (epochNanoseconds, timeZone, calendar = ES.GetISO8601Calendar()) => {
+  CreateTemporalZonedDateTime: (epochNanoseconds, timeZone, calendar = 'iso8601') => {
     const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
     const result = ObjectCreate(TemporalZonedDateTime.prototype);
     ES.CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
     return result;
   },
 
-  GetISO8601Calendar: () => {
-    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-    return new TemporalCalendar('iso8601');
-  },
   CalendarFields: (calendar, fieldNames) => {
     if (typeof calendar === 'string') {
       const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
@@ -1895,7 +1891,7 @@ export const ES = ObjectAssign({}, ES2022, {
   GetTemporalCalendarWithISODefault: (item) => {
     if (HasSlot(item, CALENDAR)) return GetSlot(item, CALENDAR);
     const { calendar } = item;
-    if (calendar === undefined) return ES.GetISO8601Calendar();
+    if (calendar === undefined) return 'iso8601';
     return ES.ToTemporalCalendar(calendar);
   },
   ToTemporalCalendarIdentifier: (slotValue) => {
@@ -2247,8 +2243,7 @@ export const ES = ObjectAssign({}, ES2022, {
       const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
       outputTimeZone = new TemporalTimeZone('UTC');
     }
-    const iso = ES.GetISO8601Calendar();
-    const dateTime = ES.GetPlainDateTimeFor(outputTimeZone, instant, iso);
+    const dateTime = ES.GetPlainDateTimeFor(outputTimeZone, instant, 'iso8601');
     const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
     const day = ES.ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
@@ -2421,8 +2416,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
 
     const tz = GetSlot(zdt, TIME_ZONE);
-    const iso = ES.GetISO8601Calendar();
-    const dateTime = ES.GetPlainDateTimeFor(tz, instant, iso);
+    const dateTime = ES.GetPlainDateTimeFor(tz, instant, 'iso8601');
 
     const year = ES.ISOYearString(GetSlot(dateTime, ISO_YEAR));
     const month = ES.ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));

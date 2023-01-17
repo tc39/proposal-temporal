@@ -760,7 +760,7 @@
       1. If _calendar_ is _dateTimeFormat_.[[Calendar]], then
         1. Let _calendarOverride_ be _temporalDate_.[[Calendar]].
       1. Else if _calendar_ is *"iso8601"*, then
-        1. Let _calendarOverride_ be ? GetBuiltinCalendar(_dateTimeFormat_.[[Calendar]]).
+        1. Let _calendarOverride_ be _dateTimeFormat_.[[Calendar]].
       1. Else,
         1. Throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 12, 0, 0, 0, 0, 0, _calendarOverride_).
@@ -840,8 +840,7 @@
       <emu-alg>
       1. Assert: _temporalTime_ has an [[InitializedTemporalTime]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
-      1. Let _isoCalendar_ be ! GetISO8601Calendar().
-      1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _isoCalendar_).
+      1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"iso8601"*).
       1. Let _timeZone_ be ! CreateTemporalTimeZone(_dateTimeFormat_.[[TimeZone]]).
       1. Let _instant_ be ? GetInstantFor(_timeZone_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.

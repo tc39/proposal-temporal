@@ -499,7 +499,8 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. Let _string_ be ? ToString(_item_).
         1. Let _result_ be ? ParseTemporalYearMonthString(_string_).
-        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_result_.[[Calendar]]).
+        1. Let _calendar_ be _result_.[[Calendar]].
+        1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
         1. Return ? CalendarYearMonthFromFields(_calendar_, _result_).
