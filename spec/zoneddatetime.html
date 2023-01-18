@@ -1254,9 +1254,9 @@
         1. If _showTimeZone_ is *"never"*, then
           1. Let _timeZoneString_ be the empty String.
         1. Else,
-          1. Let _timeZoneID_ be ? ToString(_timeZone_).
+          1. Let _timeZoneIdentifier_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
           1. If _showTimeZone_ is *"critical"*, let _flag_ be *"!"*; else let _flag_ be the empty String.
-          1. Let _timeZoneString_ be the string-concatenation of the code unit 0x005B (LEFT SQUARE BRACKET), _flag_, _timeZoneID_, and the code unit 0x005D (RIGHT SQUARE BRACKET).
+          1. Let _timeZoneString_ be the string-concatenation of the code unit 0x005B (LEFT SQUARE BRACKET), _flag_, _timeZoneIdentifier_, and the code unit 0x005D (RIGHT SQUARE BRACKET).
         1. Let _calendarString_ be ? MaybeFormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, _timeZoneString_, and _calendarString_.
       </emu-alg>

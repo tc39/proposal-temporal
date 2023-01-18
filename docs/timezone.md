@@ -20,15 +20,16 @@ There are two ways to do this.
 The recommended way is to create a class inheriting from `Temporal.TimeZone`.
 You must use one of the built-in time zones as the "base time zone".
 In the class's constructor, call `super()` with the identifier of the base time zone.
-The class must override `toString()` to return its own identifier.
+The class must override the `id` property to be its own identifier.
 Overriding all the other properties of `Temporal.TimeZone.prototype` is optional.
 If you don't override the optional properties, then they will behave as in the base time zone.
+`toString()` and `toJSON()` should also be overridden to return the identifier.
 
 The other, more difficult, way to create a custom time zone is to create a plain object implementing the `Temporal.TimeZone` protocol, without subclassing.
-The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
+The object must have at least `getOffsetNanosecondsFor()` and `getPossibleInstantsFor()` methods, and an `id` property.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `id`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
+To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `toString()`, `toJSON()`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
 Your object must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
@@ -136,7 +137,7 @@ tz2 = Temporal.TimeZone.from(tz);
 The `id` property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
-When subclassing `Temporal.TimeZone`, this property doesn't need to be overridden because the default implementation gives the result of calling `toString()`.
+When subclassing `Temporal.TimeZone`, this property must be overridden to provide an identifier for the custom time zone.
 
 ## Methods
 

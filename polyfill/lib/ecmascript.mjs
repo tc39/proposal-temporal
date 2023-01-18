@@ -2002,8 +2002,8 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   TimeZoneEquals: (one, two) => {
     if (one === two) return true;
-    const tz1 = ES.ToString(one);
-    const tz2 = ES.ToString(two);
+    const tz1 = ES.ToTemporalTimeZoneIdentifier(one);
+    const tz2 = ES.ToTemporalTimeZoneIdentifier(two);
     return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {
@@ -2453,8 +2453,9 @@ export const ES = ObjectAssign({}, ES2022, {
       result += ES.FormatISOTimeZoneOffsetString(offsetNs);
     }
     if (showTimeZone !== 'never') {
+      const identifier = ES.ToTemporalTimeZoneIdentifier(tz);
       const flag = showTimeZone === 'critical' ? '!' : '';
-      result += `[${flag}${tz}]`;
+      result += `[${flag}${identifier}]`;
     }
     result += ES.MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
     return result;
