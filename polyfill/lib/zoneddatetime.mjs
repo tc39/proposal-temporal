@@ -197,7 +197,6 @@ export class ZonedDateTime {
     ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
     const partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
 
-    const timeZone = GetSlot(this, TIME_ZONE);
     ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
     fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
@@ -210,6 +209,7 @@ export class ZonedDateTime {
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
     const offsetNs = ES.ParseTimeZoneOffsetString(fields.offset);
+    const timeZone = GetSlot(this, TIME_ZONE);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
@@ -228,7 +228,7 @@ export class ZonedDateTime {
       /* matchMinute = */ false
     );
 
-    return ES.CreateTemporalZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   }
   withPlainDate(temporalDate) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
