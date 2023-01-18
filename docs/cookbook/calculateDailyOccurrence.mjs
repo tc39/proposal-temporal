@@ -5,7 +5,7 @@
  *
  * @param {Temporal.PlainDate} startDate - Starting date
  * @param {Temporal.PlainTime} plainTime - Local time that event occurs at
- * @param {Temporal.TimeZone} timeZone - Time zone in which event is defined
+ * @param {string} timeZone - Time zone in which event is defined
  */
 function* calculateDailyOccurrence(startDate, plainTime, timeZone) {
   for (let date = startDate; ; date = date.add({ days: 1 })) {
@@ -16,7 +16,7 @@ function* calculateDailyOccurrence(startDate, plainTime, timeZone) {
 // Daily meeting at 8 AM California time
 const startDate = Temporal.PlainDate.from('2017-03-10');
 const time = Temporal.PlainTime.from('08:00');
-const timeZone = Temporal.TimeZone.from('America/Los_Angeles');
+const timeZone = 'America/Los_Angeles';
 const iter = calculateDailyOccurrence(startDate, time, timeZone);
 
 assert.equal(iter.next().value.toString(), '2017-03-10T16:00:00Z');

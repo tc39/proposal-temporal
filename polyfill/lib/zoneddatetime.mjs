@@ -42,9 +42,9 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
   }
-  get timeZone() {
+  get timeZoneId() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, TIME_ZONE);
+    return ES.ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
   }
   get year() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -525,6 +525,10 @@ export class ZonedDateTime {
   getCalendar() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
+  }
+  getTimeZone() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    return ES.ToTemporalTimeZoneObject(GetSlot(this, TIME_ZONE));
   }
 
   static from(item, options = undefined) {

@@ -1230,7 +1230,7 @@ export namespace Temporal {
     isoMicrosecond: number;
     isoNanosecond: number;
     offset: string;
-    timeZone: TimeZoneProtocol;
+    timeZone: string | TimeZoneProtocol;
     calendar: string | CalendarProtocol;
   };
 
@@ -1256,7 +1256,7 @@ export namespace Temporal {
     readonly millisecond: number;
     readonly microsecond: number;
     readonly nanosecond: number;
-    readonly timeZone: TimeZoneProtocol;
+    readonly timeZoneId: string;
     readonly calendarId: string;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
@@ -1307,6 +1307,7 @@ export namespace Temporal {
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
     getCalendar(): CalendarProtocol;
+    getTimeZone(): TimeZoneProtocol;
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;

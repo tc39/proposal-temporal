@@ -19,11 +19,10 @@ There are two ways to do this.
 
 The recommended way is to create a class inheriting from `Temporal.TimeZone`.
 You must use one of the built-in time zones as the "base time zone".
-In the class's constructor, call `super()` with the identifier of the base time zone.
+In the class's constructor, call `super()` with the identifier of a built-in time zone to serve as a base.
 The class must override `toString()` to return its own identifier.
-Overriding `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, `getNextTransition()`, and `getPreviousTransition()` is optional.
-If you don't override the optional members, then they will behave as in the base time zone.
-You don't need to override any other methods such as `getOffsetStringFor()` because they will call `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` internally.
+Overriding all the other properties of `Temporal.TimeZone.prototype` is optional.
+Any property that is not overridden will behave as in the base time zone.
 
 The other, more difficult, way to create a custom time zone is to create a plain object implementing the `Temporal.TimeZone` protocol, without subclassing.
 The object must have at least `getOffsetNanosecondsFor()`, `getPossibleInstantsFor()`, and `toString()` methods.
