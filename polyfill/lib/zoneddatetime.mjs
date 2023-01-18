@@ -196,11 +196,9 @@ export class ZonedDateTime {
     ]);
     ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
     const partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
-
-    ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
-    let fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
+    let fields = ES.PrepareTemporalFields(this, fieldNames, ['offset']);
     fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
-    fields = ES.PrepareTemporalFields(fields, fieldNames, ['timeZone', 'offset']);
+    fields = ES.PrepareTemporalFields(fields, fieldNames, ['offset']);
 
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
