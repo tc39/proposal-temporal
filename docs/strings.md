@@ -128,7 +128,7 @@ For more about TZDB, see the [`Temporal.TimeZone` documentation](timezone.md) or
 In order to achieve round-trip persistence for `Temporal` objects using non-ISO calendar systems, a calendar system identifier can be added.
 
 Therefore, we are proposing the following extension:
-_Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer._
+_Calendar-specific dates are expressed as their equivalent date in the ISO 8601 calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer._
 
 For example, when parsed, the following string would represent the date **28 Iyar 5780** in the Hebrew calendar:
 

@@ -240,7 +240,7 @@ Usage example:
 <!-- prettier-ignore-start -->
 ```javascript
 duration = Temporal.Duration.from({ months: 50, days: 50, hours: 50, minutes: 100 });
-// Perform a balance operation using additional ISO calendar rules:
+// Perform a balance operation using additional ISO 8601 calendar rules:
 let { years, months } = duration;
 years += Math.floor(months / 12);
 months %= 12;

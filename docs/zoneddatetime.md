@@ -95,7 +95,7 @@ For example:
 
 If the string isn't valid, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-Note that this string format (albeit limited to the ISO calendar system) is also used by `java.time` and some other time-zone-aware libraries.
+Note that this string format (albeit limited to the ISO 8601 calendar system) is also used by `java.time` and some other time-zone-aware libraries.
 For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
 
 The time zone ID is always required.

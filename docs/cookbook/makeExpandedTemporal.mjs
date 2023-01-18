@@ -53,7 +53,7 @@ const expandedYears = new WeakMap();
 
 class ExpandedPlainDate extends Temporal.PlainDate {
   // The expanded-year versions of the Temporal types are limited to using the
-  // ISO calendar.
+  // ISO 8601 calendar.
   constructor(year, isoMonth, isoDay) {
     year = BigInt(year);
     const isoYear = isLeapYear(year) ? 1972 : 1970;

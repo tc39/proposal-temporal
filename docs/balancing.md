@@ -56,7 +56,7 @@ d.round({ largestUnit: 'hour' }); // => PT1H21M30S (fully balanced)
 ## Balancing Relative to a Reference Point
 
 Balancing that includes days, weeks, months, and years is more complicated because those units can be different lengths.
-In the default ISO calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
+In the default ISO 8601 calendar, a year can be 365 or 366 days, and a month can be 28, 29, 30, or 31 days.
 In other calendars, years aren't always 12 months long and weeks aren't always 7 days.
 Finally, in time zones that use Daylight Saving Time (DST) days are not always 24 hours long.
 
