@@ -478,9 +478,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporalcalendar" type="abstract operation">
+    <emu-clause id="sec-temporal-totemporalcalendarslotvalue" type="abstract operation">
       <h1>
-        ToTemporalCalendar (
+        ToTemporalCalendarSlotValue (
           _temporalCalendarLike_: an ECMAScript value,
         ): either a normal completion containing either a String or an Object, or an abrupt completion
       </h1>
@@ -507,30 +507,44 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporalcalendarwithisodefault" aoid="ToTemporalCalendarWithISODefault">
-      <h1>ToTemporalCalendarWithISODefault ( _temporalCalendarLike_ )</h1>
-      <p>
-        The abstract operation ToTemporalCalendarWithISODefault converts a value into an Object suitable for use as a calendar.
-        If the value is *undefined*, the ISO 8601 calendar is returned.
-      </p>
+    <emu-clause id="sec-temporal-totemporalcalendarslotvaluewithisodefault" type="abstract operation">
+      <h1>
+        ToTemporalCalendarSlotValueWithISODefault (
+          _temporalCalendarLike_: an ECMAScript value,
+        ): either a normal completion containing either a String or an Object, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It converts a value into another value suitable for storing in a Temporal object's [[Calendar]] internal slot.
+          If the value is *undefined*, the built-in ISO 8601 calendar is returned.
+        </dd>
+      </dl>
       <emu-alg>
         1. If _temporalCalendarLike_ is *undefined*, then
           1. Return *"iso8601"*.
-        1. Return ? ToTemporalCalendar(_temporalCalendarLike_).
+        1. Return ? ToTemporalCalendarSlotValue(_temporalCalendarLike_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-gettemporalcalendarwithisodefault" aoid="GetTemporalCalendarWithISODefault">
-      <h1>GetTemporalCalendarWithISODefault ( _item_ )</h1>
-      <p>
-        The abstract operation GetTemporalCalendarWithISODefault looks for a `calendar` property on the given _item_ and converts its value to an Object suitable for use as a calendar.
-        If no such property is present, the ISO 8601 calendar is returned.
-      </p>
+    <emu-clause id="sec-temporal-gettemporalcalendarslotvaluewithisodefault" type="abstract operation">
+      <h1>
+        GetTemporalCalendarSlotValueWithISODefault (
+          _item_: an Object,
+        ): either a normal completion containing either a String or an Object, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It looks for a `calendar` property on the given _item_ and converts its value into another value suitable for storing in a Temporal object's [[Calendar]] internal slot.
+          If no such property is present, the built-in ISO 8601 calendar is returned.
+        </dd>
+      </dl>
       <emu-alg>
         1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-        1. Return ? ToTemporalCalendarWithISODefault(_calendarLike_).
+        1. Return ? ToTemporalCalendarSlotValueWithISODefault(_calendarLike_).
       </emu-alg>
     </emu-clause>
 
@@ -1008,7 +1022,7 @@
         The `Temporal.Calendar.from` function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Let _calendarSlotValue_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendarSlotValue_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Return ToTemporalCalendarObject(_calendarSlotValue_).
       </emu-alg>
     </emu-clause>

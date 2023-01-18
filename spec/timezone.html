@@ -230,7 +230,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendarSlotValueWithISODefault(_calendarLike_).
         1. Return ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>

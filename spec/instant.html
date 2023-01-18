@@ -390,7 +390,7 @@
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
         1. If _calendarLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _calendar_ be ? ToTemporalCalendar(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Throw a *TypeError* exception.

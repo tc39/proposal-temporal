@@ -35,7 +35,7 @@
           1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
         1. Let _y_ be ? ToIntegerWithTruncation(_isoYear_).
         1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
-        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendarSlotValueWithISODefault(_calendarLike_).
         1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISODay_).
         1. Return ? CreateTemporalYearMonth(_y_, _m_, _calendar_, _ref_, NewTarget).
       </emu-alg>
@@ -492,7 +492,7 @@
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _item_.
-          1. Let _calendar_ be ? GetTemporalCalendarWithISODefault(_item_).
+          1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Return ? CalendarYearMonthFromFields(_calendar_, _fields_, _options_).
