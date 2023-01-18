@@ -328,7 +328,7 @@
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
-          1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+          1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _roundedNs_ be RoundTemporalInstant(_instant_.[[Nanoseconds]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Let _roundedInstant_ be ! CreateTemporalInstant(_roundedNs_).
@@ -394,7 +394,7 @@
         1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -407,7 +407,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+        1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, *"iso8601"*).
       </emu-alg>
     </emu-clause>

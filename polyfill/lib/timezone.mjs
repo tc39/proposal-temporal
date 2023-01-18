@@ -149,7 +149,7 @@ export class TimeZone {
     return ES.ToString(this);
   }
   static from(item) {
-    const timeZoneSlotValue = ES.ToTemporalTimeZone(item);
+    const timeZoneSlotValue = ES.ToTemporalTimeZoneSlotValue(item);
     return ES.ToTemporalTimeZoneObject(timeZoneSlotValue);
   }
 }

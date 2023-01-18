@@ -110,7 +110,7 @@ export class Instant {
     const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     let timeZone = options.timeZone;
-    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
+    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundInstant(ns, increment, unit, roundingMode);
@@ -142,12 +142,12 @@ export class Instant {
     if (temporalTimeZoneLike === undefined) {
       throw new TypeError('missing timeZone property in toZonedDateTime');
     }
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    timeZone = ES.ToTemporalTimeZone(timeZone);
+    timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
   }
 
