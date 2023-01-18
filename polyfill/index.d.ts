@@ -1090,7 +1090,7 @@ export namespace Temporal {
    * A plain object implementing the protocol for a custom time zone.
    */
   export interface TimeZoneProtocol {
-    id?: string;
+    id: string;
     timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor?(instant: Temporal.Instant | string): string;
@@ -1102,7 +1102,7 @@ export namespace Temporal {
     getNextTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
     getPreviousTransition?(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
     getPossibleInstantsFor(dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string): Temporal.Instant[];
-    toString(): string;
+    toString?(): string;
     toJSON?(): string;
   }
 
