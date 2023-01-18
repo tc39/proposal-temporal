@@ -113,7 +113,7 @@ md = Temporal.PlainMonthDay.from({ month: 13, day: 1, year: 2000 }, { overflow: 
 md = Temporal.PlainMonthDay.from({ month: 1, day: 32, year: 2000 }, { overflow: 'reject' });
 // => throws
 md = Temporal.PlainMonthDay.from({ month: 2, day: 29, year: 2001 }, { overflow: 'reject' });
-// => throws (this year is not a leap year in the ISO calendar)
+// => throws (this year is not a leap year in the ISO 8601 calendar)
 
 // non-ISO calendars
 md = Temporal.PlainMonthDay.from({ monthCode: 'M05L', day: 15, calendar: 'hebrew' });

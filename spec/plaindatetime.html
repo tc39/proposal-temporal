@@ -833,7 +833,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>The return value is *true* if the combination of a date in the ISO calendar with a wall-clock time, given by the arguments, is within the representable range of `Temporal.PlainDateTime`, and *false* otherwise.</dd>
+        <dd>The return value is *true* if the combination of a date in the ISO 8601 calendar with a wall-clock time, given by the arguments, is within the representable range of `Temporal.PlainDateTime`, and *false* otherwise.</dd>
       </dl>
       <emu-note>
         <p>
@@ -855,7 +855,7 @@
     <emu-clause id="sec-temporal-interprettemporaldatetimefields" aoid="InterpretTemporalDateTimeFields">
       <h1>InterpretTemporalDateTimeFields ( _calendar_, _fields_, _options_ )</h1>
       <p>
-        The abstract operation InterpretTemporalDateTimeFields interprets the date/time fields in the object _fields_ using the given _calendar_, and returns a Record with the fields according to the ISO calendar.
+        The abstract operation InterpretTemporalDateTimeFields interprets the date/time fields in the object _fields_ using the given _calendar_, and returns a Record with the fields according to the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).

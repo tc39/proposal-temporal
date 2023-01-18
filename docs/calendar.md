@@ -48,7 +48,7 @@ The following "invariants" (statements that are always true) hold for all built-
 
 Here are best practices for writing code that will work regardless of the calendar used:
 
-- Validate or coerce the calendar of all external input. If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO calendar using `withCalendar('iso8601')`. Otherwise, you may end up with unexpected behavior in your app or introduce security or performance issues by introducing an unexpected calendar.
+- Validate or coerce the calendar of all external input. If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO 8601 calendar using `withCalendar('iso8601')`. Otherwise, you may end up with unexpected behavior in your app or introduce security or performance issues by introducing an unexpected calendar.
 - Use `compare` methods (e.g. `Temporal.PlainDate.compare(date1, '2000-01-01')`) instead of manually comparing individual properties (e.g. `date.year > 2000`) whose meaning may vary across calendars.
 - Never compare field values in different calendars. A `month` or `year` in one calendar is unrelated to the same property values in another calendar. If dates in different calendars must be compared, use `compare`.
 - When comparing dates for equality that might be in different calendars, convert them both to the same calendar using `withCalendar`. The same ISO date in different calendars will return `false` from the `equals` method and will return a non-zero value from `compare` because the calendars are not equal.
@@ -260,7 +260,7 @@ They provide a way to construct other Temporal objects from values in the calend
 None of the above methods need to be called directly except in specialized code.
 They are called indirectly when using `Temporal.PlainDate.from()`, `Temporal.PlainDateTime.from()`, `Temporal.PlainYearMonth.from()`, and `Temporal.PlainMonthDay.from()`.
 
-A custom implementation of these methods would convert the calendar-space arguments to the ISO calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`, with `PlainYearMonth` and `PlainMonthDay` substituted for `PlainDate` as appropriate.
+A custom implementation of these methods would convert the calendar-space arguments to the ISO 8601 calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`, with `PlainYearMonth` and `PlainMonthDay` substituted for `PlainDate` as appropriate.
 
 For example:
 
@@ -304,7 +304,7 @@ If `date` is not a `Temporal.PlainDate` object, or `duration` not a `Temporal.Du
 This method does not need to be called directly except in specialized code.
 It is called indirectly when using `add()` and `subtract()` of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
 
-A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`.
+A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO 8601 calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`.
 
 For example:
 
@@ -391,7 +391,7 @@ Usage example:
 
 <!-- prettier-ignore-start -->
 ```js
-// In the ISO calendar, this method just makes a copy of the input array
+// In the ISO 8601 calendar, this method just makes a copy of the input array
 Temporal.Calendar.from('iso8601').fields(['monthCode', 'day']);
 // => [ 'monthCode', 'day' ]
 ```

@@ -332,7 +332,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
-The `overflow` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+The `overflow` option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.PlainYearMonth` does not distinguish days.
 However, `overflow` may have an effect in other calendars where years can be different numbers of months.
 
@@ -365,7 +365,7 @@ If `duration` is not a `Temporal.Duration` object, then it will be converted to 
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
-The `overflow` option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+The `overflow` option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.PlainYearMonth` does not distinguish days.
 However, `overflow` may have an effect in other calendars where years can be different numbers of months.
 
