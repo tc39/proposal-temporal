@@ -8861,6 +8861,18 @@
       var cal2 = ES.ToString(two);
       return cal1 === cal2;
     },
+    // This operation is not in the spec, it implements the following:
+    // "If ? CalendarEquals(one, two) is false, throw a RangeError exception."
+    // This is so that we can build an informative error message without
+    // re-getting the .id properties.
+    CalendarEqualsOrThrow: function CalendarEqualsOrThrow(one, two, errorMessageAction) {
+      if (one === two) return true;
+      var cal1 = ES.ToString(one);
+      var cal2 = ES.ToString(two);
+      if (cal1 !== cal2) {
+        throw new RangeError("cannot ".concat(errorMessageAction, " of ").concat(cal1, " and ").concat(cal2, " calendars"));
+      }
+    },
     ConsolidateCalendars: function ConsolidateCalendars(one, two) {
       if (one === two) return two;
       var sOne = ES.ToString(one);
@@ -10614,11 +10626,7 @@
       other = ES.ToTemporalDate(other);
       var calendar = GetSlot(plainDate, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
-      var calendarId = ES.ToString(calendar);
-      var otherCalendarId = ES.ToString(otherCalendar);
-      if (calendarId !== otherCalendarId) {
-        throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
-      }
+      ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
       var settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
       var untilOptions = ObjectCreate$8(null);
       ES.CopyDataProperties(untilOptions, options, []);
@@ -10643,11 +10651,7 @@
       other = ES.ToTemporalDateTime(other);
       var calendar = GetSlot(plainDateTime, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
-      var calendarId = ES.ToString(calendar);
-      var otherCalendarId = ES.ToString(otherCalendar);
-      if (calendarId !== otherCalendarId) {
-        throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
-      }
+      ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
       var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
       var _ES$DifferenceISODate3 = ES.DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, options),
         years = _ES$DifferenceISODate3.years,
@@ -10716,11 +10720,7 @@
       other = ES.ToTemporalYearMonth(other);
       var calendar = GetSlot(yearMonth, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
-      var calendarID = ES.ToString(calendar);
-      var otherCalendarID = ES.ToString(otherCalendar);
-      if (calendarID !== otherCalendarID) {
-        throw new RangeError("cannot compute difference between months of ".concat(calendarID, " and ").concat(otherCalendarID, " calendars"));
-      }
+      ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
       var settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
@@ -10748,11 +10748,7 @@
       other = ES.ToTemporalZonedDateTime(other);
       var calendar = GetSlot(zonedDateTime, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
-      var calendarId = ES.ToString(calendar);
-      var otherCalendarId = ES.ToString(otherCalendar);
-      if (calendarId !== otherCalendarId) {
-        throw new RangeError("cannot compute difference between dates of ".concat(calendarId, " and ").concat(otherCalendarId, " calendars"));
-      }
+      ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
       var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
       var ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
       var ns2 = GetSlot(other, EPOCHNANOSECONDS);
@@ -11500,7 +11496,7 @@
             oneMonthDays = MathAbs$1(oneMonthDays);
             var _divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
             nanoseconds = _divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
-            var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor.multiply(increment).toJSNumber(), roundingMode);
+            var _rounded = ES.RoundNumberToIncrement(nanoseconds, _divisor.multiply(increment), roundingMode);
             var _nanoseconds$divmod8 = nanoseconds.divmod(_divisor),
               _quotient = _nanoseconds$divmod8.quotient,
               _remainder = _nanoseconds$divmod8.remainder;
@@ -11531,7 +11527,7 @@
             oneWeekDays = MathAbs$1(oneWeekDays);
             var _divisor2 = bigInt(oneWeekDays).multiply(dayLengthNs);
             nanoseconds = _divisor2.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
-            var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2.multiply(increment).toJSNumber(), roundingMode);
+            var _rounded2 = ES.RoundNumberToIncrement(nanoseconds, _divisor2.multiply(increment), roundingMode);
             var _nanoseconds$divmod9 = nanoseconds.divmod(_divisor2),
               _quotient2 = _nanoseconds$divmod9.quotient,
               _remainder2 = _nanoseconds$divmod9.remainder;
@@ -11544,7 +11540,7 @@
           {
             var _divisor3 = bigInt(dayLengthNs);
             nanoseconds = _divisor3.multiply(days).plus(nanoseconds);
-            var _rounded3 = ES.RoundNumberToIncrement(nanoseconds, _divisor3.multiply(increment).toJSNumber(), roundingMode);
+            var _rounded3 = ES.RoundNumberToIncrement(nanoseconds, _divisor3.multiply(increment), roundingMode);
             var _nanoseconds$divmod10 = nanoseconds.divmod(_divisor3),
               _quotient3 = _nanoseconds$divmod10.quotient,
               _remainder3 = _nanoseconds$divmod10.remainder;
@@ -15377,12 +15373,9 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalDateLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var props = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
-        if (!props) {
-          throw new TypeError('invalid date-like');
-        }
+        var partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
-        fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, partialDate);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
         options = ES.GetOptionsObject(options);
         return ES.CalendarDateFromFields(calendar, fields, options);
@@ -15745,12 +15738,9 @@
         options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
-        var props = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
-        if (!props) {
-          throw new TypeError('invalid date-time-like');
-        }
+        var partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
-        fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
           year = _ES$InterpretTemporal.year,
@@ -16149,30 +16139,27 @@
       key: "with",
       value: function _with(durationLike) {
         if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-        var props = ES.PrepareTemporalFields(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], 'partial');
-        if (!props) {
-          throw new TypeError('invalid duration-like');
-        }
-        var _props$years = props.years,
-          years = _props$years === void 0 ? GetSlot(this, YEARS) : _props$years,
-          _props$months = props.months,
-          months = _props$months === void 0 ? GetSlot(this, MONTHS) : _props$months,
-          _props$weeks = props.weeks,
-          weeks = _props$weeks === void 0 ? GetSlot(this, WEEKS) : _props$weeks,
-          _props$days = props.days,
-          days = _props$days === void 0 ? GetSlot(this, DAYS) : _props$days,
-          _props$hours = props.hours,
-          hours = _props$hours === void 0 ? GetSlot(this, HOURS) : _props$hours,
-          _props$minutes = props.minutes,
-          minutes = _props$minutes === void 0 ? GetSlot(this, MINUTES) : _props$minutes,
-          _props$seconds = props.seconds,
-          seconds = _props$seconds === void 0 ? GetSlot(this, SECONDS) : _props$seconds,
-          _props$milliseconds = props.milliseconds,
-          milliseconds = _props$milliseconds === void 0 ? GetSlot(this, MILLISECONDS) : _props$milliseconds,
-          _props$microseconds = props.microseconds,
-          microseconds = _props$microseconds === void 0 ? GetSlot(this, MICROSECONDS) : _props$microseconds,
-          _props$nanoseconds = props.nanoseconds,
-          nanoseconds = _props$nanoseconds === void 0 ? GetSlot(this, NANOSECONDS) : _props$nanoseconds;
+        var partialDuration = ES.PrepareTemporalFields(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], 'partial');
+        var _partialDuration$year = partialDuration.years,
+          years = _partialDuration$year === void 0 ? GetSlot(this, YEARS) : _partialDuration$year,
+          _partialDuration$mont = partialDuration.months,
+          months = _partialDuration$mont === void 0 ? GetSlot(this, MONTHS) : _partialDuration$mont,
+          _partialDuration$week = partialDuration.weeks,
+          weeks = _partialDuration$week === void 0 ? GetSlot(this, WEEKS) : _partialDuration$week,
+          _partialDuration$days = partialDuration.days,
+          days = _partialDuration$days === void 0 ? GetSlot(this, DAYS) : _partialDuration$days,
+          _partialDuration$hour = partialDuration.hours,
+          hours = _partialDuration$hour === void 0 ? GetSlot(this, HOURS) : _partialDuration$hour,
+          _partialDuration$minu = partialDuration.minutes,
+          minutes = _partialDuration$minu === void 0 ? GetSlot(this, MINUTES) : _partialDuration$minu,
+          _partialDuration$seco = partialDuration.seconds,
+          seconds = _partialDuration$seco === void 0 ? GetSlot(this, SECONDS) : _partialDuration$seco,
+          _partialDuration$mill = partialDuration.milliseconds,
+          milliseconds = _partialDuration$mill === void 0 ? GetSlot(this, MILLISECONDS) : _partialDuration$mill,
+          _partialDuration$micr = partialDuration.microseconds,
+          microseconds = _partialDuration$micr === void 0 ? GetSlot(this, MICROSECONDS) : _partialDuration$micr,
+          _partialDuration$nano = partialDuration.nanoseconds,
+          nanoseconds = _partialDuration$nano === void 0 ? GetSlot(this, NANOSECONDS) : _partialDuration$nano;
         return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
       }
     }, {
@@ -16498,12 +16485,9 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var props = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
-        if (!props) {
-          throw new TypeError('invalid month-day-like');
-        }
+        var partialMonthDay = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
-        fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, partialMonthDay);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
         options = ES.GetOptionsObject(options);
         return ES.CalendarMonthDayFromFields(calendar, fields, options);
@@ -17095,12 +17079,9 @@
         ES.RejectObjectWithCalendarOrTimeZone(temporalYearMonthLike);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-        var props = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
-        if (!props) {
-          throw new TypeError('invalid year-month-like');
-        }
+        var partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
-        fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
         options = ES.GetOptionsObject(options);
         return ES.CalendarYearMonthFromFields(calendar, fields, options);
@@ -17462,11 +17443,11 @@
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
-        var props = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
+        var partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
         var timeZone = GetSlot(this, TIME_ZONE);
         ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
         var fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
-        fields = ES.CalendarMergeFields(calendar, fields, props);
+        fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
         fields = ES.PrepareTemporalFields(fields, fieldNames, ['timeZone', 'offset']);
         options = ES.GetOptionsObject(options);
         var disambiguation = ES.ToTemporalDisambiguation(options);
