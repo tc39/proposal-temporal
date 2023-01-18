@@ -1394,22 +1394,21 @@
           <h1>
             CalendarDateToISO (
               _calendar_: a String,
-              _fields_: an ordinary null-prototype Object with one or more own data properties and no accessor properties,
+              _fields_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
               _overflow_: *"constrain"* or *"reject"*,
             ): either a normal completion containing an ISO Date Record, or an abrupt completion
           </h1>
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_, that describes a date in the calendar represented by _calendar_, to the ISO calendar.
-              It performs the overflow correction given by _overflow_ on the date described by _fields_ in order to arrive at a valid month code and day pair in _calendar_.
+              It performs implementation-defined processing to convert _fields_, which describes a date in the calendar represented by _calendar_, to the ISO 8601 calendar, subject to processing specified by _overflow_.
               For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
               For *"constrain"*, values that do not form a valid date are clamped to the correct range.
               It then returns an ISO Date Record with the corresponding ISO date.
             </dd>
           </dl>
           <p>
-            The operation throws a *TypeError* exception if the own data properties present on _fields_ are insufficient to calculate a date in _calendar_.
+            The operation throws a *TypeError* exception if the properties present on _fields_ are insufficient to identify a unique date in _calendar_.
             For example, for a _calendar_ that uses eras, a *TypeError* is thrown if _fields_ does not include any of the following minimum combinations of properties:
           </p>
           <ul>
@@ -1419,7 +1418,7 @@
             <li>*"era"*, *"eraYear"*, *"month"*, *"day"*</li>
           </ul>
           <p>
-            The operation throws a *RangeError* exception if the date described by _fields_ forms a date outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+            The operation throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
           </p>
         </emu-clause>
 
