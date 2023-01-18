@@ -15,7 +15,6 @@ import {
   CALENDAR,
   TIME_ZONE
 } from './slots.mjs';
-import { TimeZone } from './timezone.mjs';
 
 const DATE = Symbol('date');
 const YM = Symbol('ym');
@@ -51,15 +50,6 @@ function getPropLazy(obj, prop) {
   if (typeof val === 'function') {
     val = new IntlDateTimeFormat(obj[LOCALE], val(obj[OPTIONS]));
     obj[prop] = val;
-  }
-  return val;
-}
-// Similarly, lazy-init TimeZone instances.
-function getResolvedTimeZoneLazy(obj) {
-  let val = obj[TZ_RESOLVED];
-  if (typeof val === 'string') {
-    val = new TimeZone(val);
-    obj[TZ_RESOLVED] = val;
   }
   return val;
 }
@@ -383,7 +373,7 @@ function extractOverrides(temporalObj, main) {
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
     return {
-      instant: ES.GetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: getPropLazy(main, TIME)
     };
   }
@@ -400,7 +390,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.GetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: getPropLazy(main, YM)
     };
   }
@@ -417,7 +407,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
     return {
-      instant: ES.GetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: getPropLazy(main, MD)
     };
   }
@@ -432,7 +422,7 @@ function extractOverrides(temporalObj, main) {
     }
     const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
     return {
-      instant: ES.GetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: getPropLazy(main, DATE)
     };
   }
@@ -469,7 +459,7 @@ function extractOverrides(temporalObj, main) {
       );
     }
     return {
-      instant: ES.GetInstantFor(getResolvedTimeZoneLazy(main), datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
       formatter: getPropLazy(main, DATETIME)
     };
   }
