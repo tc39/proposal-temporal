@@ -364,7 +364,9 @@ export function ParseTemporalTimeZone(stringIdent) {
   const { ianaName, offset, z } = ParseTemporalTimeZoneString(stringIdent);
   if (ianaName) return GetCanonicalTimeZoneIdentifier(ianaName);
   if (z) return 'UTC';
-  return offset; // if !ianaName && !z then offset must be present
+  // if !ianaName && !z then offset must be present
+  const offsetNs = ParseTimeZoneOffsetString(offset);
+  return FormatTimeZoneOffsetString(offsetNs);
 }
 
 export function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
@@ -2077,9 +2079,20 @@ export function ToTemporalTimeZone(temporalTimeZoneLike) {
     }
   }
   const identifier = ToString(temporalTimeZoneLike);
-  const timeZone = ParseTemporalTimeZone(identifier);
+  return ParseTemporalTimeZone(identifier);
+}
+
+export function ToTemporalTimeZoneIdentifier(slotValue) {
+  if (typeof slotValue === 'string') return slotValue;
+  const result = slotValue.id;
+  if (typeof result !== 'string') throw new TypeError('timeZone.id should be a string');
+  return result;
+}
+
+export function ToTemporalTimeZoneObject(slotValue) {
+  if (Type(slotValue) === 'Object') return slotValue;
   const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-  return new TemporalTimeZone(timeZone);
+  return new TemporalTimeZone(slotValue);
 }
 
 export function TimeZoneEquals(one, two) {
@@ -2111,6 +2124,11 @@ export function TemporalDateTimeToTime(dateTime) {
 }
 
 export function GetOffsetNanosecondsFor(timeZone, instant) {
+  if (typeof timeZone === 'string') {
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    timeZone = new TemporalTimeZone(timeZone);
+    return Call(GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%'), timeZone, [instant]);
+  }
   const getOffsetNanosecondsFor = GetMethod(timeZone, 'getOffsetNanosecondsFor');
   const offsetNs = Call(getOffsetNanosecondsFor, timeZone, [instant]);
   if (typeof offsetNs !== 'number') {
@@ -2277,7 +2295,12 @@ export function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTim
 }
 
 export function GetPossibleInstantsFor(timeZone, dateTime) {
-  let getPossibleInstantsFor = GetMethod(timeZone, 'getPossibleInstantsFor');
+  if (typeof timeZone === 'string') {
+    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+    timeZone = new TemporalTimeZone(timeZone);
+    return Call(GetIntrinsic('%Temporal.TimeZone.prototype.getPossibleInstantsFor%'), timeZone, [dateTime]);
+  }
+  const getPossibleInstantsFor = GetMethod(timeZone, 'getPossibleInstantsFor');
   const possibleInstants = Call(getPossibleInstantsFor, timeZone, [dateTime]);
   const result = [];
   for (const instant of possibleInstants) {
