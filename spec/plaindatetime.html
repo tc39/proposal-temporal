@@ -620,7 +620,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
         1. Let _instant_ be ? GetInstantFor(_timeZone_, _dateTime_, _disambiguation_).

@@ -268,7 +268,7 @@ export class PlainTime {
     if (timeZoneLike === undefined) {
       throw new TypeError('missing timeZone property');
     }
-    const timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+    const timeZone = ES.ToTemporalTimeZoneSlotValue(timeZoneLike);
 
     const year = GetSlot(temporalDate, ISO_YEAR);
     const month = GetSlot(temporalDate, ISO_MONTH);

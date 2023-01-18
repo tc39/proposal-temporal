@@ -222,7 +222,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be DefaultTimeZone().
         1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _instant_ be ! SystemInstant().
         1. Return ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
@@ -235,7 +235,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be DefaultTimeZone().
         1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZone(_temporalTimeZoneLike_).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _ns_ be ! SystemUTCEpochNanoseconds().
         1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).

@@ -35,7 +35,7 @@
           1. Throw a *TypeError* exception.
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
         1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
+        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValueWithISODefault(_calendarLike_).
         1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_, NewTarget).
       </emu-alg>
@@ -655,7 +655,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneLike_).
+        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneLike_).
         1. Return ! CreateTemporalZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
@@ -1159,7 +1159,7 @@
           1. Append *"offset"* to _fieldNames_.
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
           1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
-          1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+          1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
           1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
           1. Assert: _offsetString_ is a String or *undefined*.
           1. If _offsetString_ is *undefined*, then
@@ -1173,7 +1173,7 @@
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
           1. Let _timeZoneName_ be _result_.[[TimeZone]].[[Name]].
           1. Assert: _timeZoneName_ is not *undefined*.
-          1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneName_).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneName_).
           1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.

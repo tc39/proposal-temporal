@@ -380,7 +380,7 @@ export class PlainDateTime {
 
   toZonedDateTime(temporalTimeZoneLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+    const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
     const instant = ES.GetInstantFor(timeZone, this, disambiguation);

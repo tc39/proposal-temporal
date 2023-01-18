@@ -924,13 +924,13 @@ export const ES = ObjectAssign({}, ES2022, {
       offset = fields.offset;
       if (offset === undefined) offsetBehaviour = 'wall';
       timeZone = fields.timeZone;
-      if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZone(timeZone);
+      if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
     } else {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset, z } =
         ES.ParseISODateTime(ES.ToString(relativeTo)));
       if (ianaName) {
-        timeZone = ES.ToTemporalTimeZone(ianaName);
+        timeZone = ES.ToTemporalTimeZoneSlotValue(ianaName);
         if (z) {
           offsetBehaviour = 'exact';
         } else if (!offset) {
@@ -1376,7 +1376,7 @@ export const ES = ObjectAssign({}, ES2022, {
       ]);
       ES.Call(ArrayPrototypePush, fieldNames, ['timeZone', 'offset']);
       const fields = ES.PrepareTemporalFields(item, fieldNames, ['timeZone']);
-      timeZone = ES.ToTemporalTimeZone(fields.timeZone);
+      timeZone = ES.ToTemporalTimeZoneSlotValue(fields.timeZone);
       offset = fields.offset;
       if (offset === undefined) {
         offsetBehaviour = 'wall';
@@ -1389,7 +1389,7 @@ export const ES = ObjectAssign({}, ES2022, {
       let ianaName, z;
       ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, ianaName, offset, z, calendar } =
         ES.ParseTemporalZonedDateTimeString(ES.ToString(item)));
-      timeZone = ES.ToTemporalTimeZone(ianaName);
+      timeZone = ES.ToTemporalTimeZoneSlotValue(ianaName);
       if (z) {
         offsetBehaviour = 'exact';
       } else if (!offset) {
@@ -1970,7 +1970,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return result;
   },
 
-  ToTemporalTimeZone: (temporalTimeZoneLike) => {
+  ToTemporalTimeZoneSlotValue: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
       if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
       if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
