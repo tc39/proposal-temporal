@@ -774,8 +774,8 @@
       </p>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return *true*.
-        1. Let _timeZoneOne_ be ? ToString(_one_).
-        1. Let _timeZoneTwo_ be ? ToString(_two_).
+        1. Let _timeZoneOne_ be ? ToTemporalTimeZoneIdentifier(_one_).
+        1. Let _timeZoneTwo_ be ? ToTemporalTimeZoneIdentifier(_two_).
         1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
         1. Return *false*.
       </emu-alg>

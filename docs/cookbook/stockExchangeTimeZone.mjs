@@ -80,6 +80,7 @@ function getPreviousMarketClose(instant) {
 }
 
 class NYSETimeZone extends Temporal.TimeZone {
+  #id = 'NYSE';
   constructor() {
     super('America/New_York');
   }
@@ -124,8 +125,11 @@ class NYSETimeZone extends Temporal.TimeZone {
     const ns = zdt.offsetNanoseconds + zdt.until(zdtWhenMarketIsOpen, { largestUnit: 'nanosecond' }).nanoseconds;
     return ns;
   }
+  get id() {
+    return this.#id;
+  }
   toString() {
-    return 'NYSE';
+    return this.#id;
   }
 }
 
