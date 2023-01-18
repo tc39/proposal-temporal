@@ -506,10 +506,7 @@
         1. If _timeZoneName_ is *undefined*, then
           1. Let _timeZone_ be *undefined*.
         1. Else,
-          1. If IsTimeZoneOffsetString(_timeZoneName_) is *false*, then
-            1. If IsAvailableTimeZoneName(_timeZoneName_) is *false*, throw a *RangeError* exception.
-            1. Set _timeZoneName_ to ! CanonicalizeTimeZoneName(_timeZoneName_).
-          1. Let _timeZone_ be ! CreateTemporalTimeZone(_timeZoneName_).
+          1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneName_).
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.
           1. Else if _offsetString_ is *undefined*, then
