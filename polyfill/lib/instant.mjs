@@ -137,7 +137,7 @@ export class Instant {
     if (calendarLike === undefined) {
       throw new TypeError('missing calendar property in toZonedDateTime');
     }
-    const calendar = ES.ToTemporalCalendar(calendarLike);
+    const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
     const temporalTimeZoneLike = item.timeZone;
     if (temporalTimeZoneLike === undefined) {
       throw new TypeError('missing timeZone property in toZonedDateTime');

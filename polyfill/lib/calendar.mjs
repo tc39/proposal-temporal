@@ -253,7 +253,7 @@ export class Calendar {
     return ES.ToString(this);
   }
   static from(item) {
-    const calendarSlotValue = ES.ToTemporalCalendar(item);
+    const calendarSlotValue = ES.ToTemporalCalendarSlotValue(item);
     return ES.ToTemporalCalendarObject(calendarSlotValue);
   }
 }

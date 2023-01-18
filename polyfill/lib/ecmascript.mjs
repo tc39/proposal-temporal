@@ -951,7 +951,7 @@ export function ToRelativeTemporalObject(options) {
   if (Type(relativeTo) === 'Object') {
     if (IsTemporalZonedDateTime(relativeTo) || IsTemporalDate(relativeTo)) return relativeTo;
     if (IsTemporalDateTime(relativeTo)) return TemporalDateTimeToDate(relativeTo);
-    calendar = GetTemporalCalendarWithISODefault(relativeTo);
+    calendar = GetTemporalCalendarSlotValueWithISODefault(relativeTo);
     const fieldNames = CalendarFields(calendar, [
       'day',
       'hour',
@@ -994,7 +994,7 @@ export function ToRelativeTemporalObject(options) {
       );
     }
     if (!calendar) calendar = 'iso8601';
-    calendar = ToTemporalCalendar(calendar);
+    calendar = ToTemporalCalendarSlotValue(calendar);
   }
   if (timeZone === undefined) return CreateTemporalDate(year, month, day, calendar);
   timeZone = ToTemporalTimeZone(timeZone);
@@ -1121,7 +1121,7 @@ export function ToTemporalDate(item, options) {
         GetSlot(item, CALENDAR)
       );
     }
-    const calendar = GetTemporalCalendarWithISODefault(item);
+    const calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const fieldNames = CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
     const fields = PrepareTemporalFields(item, fieldNames, []);
     return CalendarDateFromFields(calendar, fields, options);
@@ -1176,7 +1176,7 @@ export function ToTemporalDateTime(item, options) {
       );
     }
 
-    calendar = GetTemporalCalendarWithISODefault(item);
+    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const fieldNames = CalendarFields(calendar, [
       'day',
       'hour',
@@ -1203,7 +1203,7 @@ export function ToTemporalDateTime(item, options) {
     if (z) throw new RangeError('Z designator not supported for PlainDateTime');
     RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (calendar === undefined) calendar = 'iso8601';
-    calendar = ToTemporalCalendar(calendar);
+    calendar = ToTemporalCalendarSlotValue(calendar);
   }
   return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 }
@@ -1249,7 +1249,7 @@ export function ToTemporalMonthDay(item, options) {
       calendar = item.calendar;
       calendarAbsent = calendar === undefined;
       if (calendar === undefined) calendar = 'iso8601';
-      calendar = ToTemporalCalendar(calendar);
+      calendar = ToTemporalCalendarSlotValue(calendar);
     }
     const fieldNames = CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
     const fields = PrepareTemporalFields(item, fieldNames, []);
@@ -1265,7 +1265,7 @@ export function ToTemporalMonthDay(item, options) {
   ToTemporalOverflow(options); // validate and ignore
   let { month, day, referenceISOYear, calendar } = ParseTemporalMonthDayString(ToString(item));
   if (calendar === undefined) calendar = 'iso8601';
-  calendar = ToTemporalCalendar(calendar);
+  calendar = ToTemporalCalendarSlotValue(calendar);
 
   if (referenceISOYear === undefined) {
     RejectISODate(1972, month, day);
@@ -1314,7 +1314,7 @@ export function ToTemporalTime(item, overflow = 'constrain') {
 export function ToTemporalYearMonth(item, options) {
   if (Type(item) === 'Object') {
     if (IsTemporalYearMonth(item)) return item;
-    const calendar = GetTemporalCalendarWithISODefault(item);
+    const calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const fieldNames = CalendarFields(calendar, ['month', 'monthCode', 'year']);
     const fields = PrepareTemporalFields(item, fieldNames, []);
     return CalendarYearMonthFromFields(calendar, fields, options);
@@ -1323,7 +1323,7 @@ export function ToTemporalYearMonth(item, options) {
   ToTemporalOverflow(options); // validate and ignore
   let { year, month, referenceISODay, calendar } = ParseTemporalYearMonthString(ToString(item));
   if (calendar === undefined) calendar = 'iso8601';
-  calendar = ToTemporalCalendar(calendar);
+  calendar = ToTemporalCalendarSlotValue(calendar);
 
   if (referenceISODay === undefined) {
     RejectISODate(year, month, 1);
@@ -1411,7 +1411,7 @@ export function ToTemporalZonedDateTime(item, options) {
   let offsetBehaviour = 'option';
   if (Type(item) === 'Object') {
     if (IsTemporalZonedDateTime(item)) return item;
-    calendar = GetTemporalCalendarWithISODefault(item);
+    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const fieldNames = CalendarFields(calendar, [
       'day',
       'hour',
@@ -1450,7 +1450,7 @@ export function ToTemporalZonedDateTime(item, options) {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     timeZone = new TemporalTimeZone(ianaName);
     if (!calendar) calendar = 'iso8601';
-    calendar = ToTemporalCalendar(calendar);
+    calendar = ToTemporalCalendarSlotValue(calendar);
     matchMinute = true; // ISO strings may specify offset with less precision
     disambiguation = ToTemporalDisambiguation(options);
     offsetOpt = ToTemporalOffset(options, 'reject');
@@ -1932,7 +1932,7 @@ export function CalendarInLeapYear(calendar, dateLike) {
   return result;
 }
 
-export function ToTemporalCalendar(calendarLike) {
+export function ToTemporalCalendarSlotValue(calendarLike) {
   if (Type(calendarLike) === 'Object') {
     if (IsTemporalCalendar(calendarLike)) return calendarLike;
     if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
@@ -1971,11 +1971,11 @@ export function ToTemporalCalendar(calendarLike) {
   return ASCIILowercase(calendar);
 }
 
-export function GetTemporalCalendarWithISODefault(item) {
+export function GetTemporalCalendarSlotValueWithISODefault(item) {
   if (HasSlot(item, CALENDAR)) return GetSlot(item, CALENDAR);
   const { calendar } = item;
   if (calendar === undefined) return 'iso8601';
-  return ToTemporalCalendar(calendar);
+  return ToTemporalCalendarSlotValue(calendar);
 }
 
 export function ToTemporalCalendarIdentifier(slotValue) {

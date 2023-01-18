@@ -34,7 +34,7 @@ export class ZonedDateTime {
     }
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
     timeZone = ES.ToTemporalTimeZone(timeZone);
-    calendar = ES.ToTemporalCalendar(calendar);
+    calendar = ES.ToTemporalCalendarSlotValue(calendar);
 
     ES.CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
   }
@@ -305,7 +305,7 @@ export class ZonedDateTime {
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    calendar = ES.ToTemporalCalendar(calendar);
+    calendar = ES.ToTemporalCalendarSlotValue(calendar);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), GetSlot(this, TIME_ZONE), calendar);
   }
   add(temporalDurationLike, options = undefined) {
