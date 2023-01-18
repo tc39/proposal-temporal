@@ -27,13 +27,12 @@ export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = 'iso8601') {
     // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
     //       to improve the error message.
-    //       ToTemporalTimeZone(undefined) will end up calling TimeZone.from("undefined"), which
-    //       could succeed.
+    //       ToTemporalTimeZoneSlotValue(undefined) has a clear enough message.
     if (arguments.length < 1) {
       throw new TypeError('missing argument: epochNanoseconds is required');
     }
     epochNanoseconds = ES.ToBigInt(epochNanoseconds);
-    timeZone = ES.ToTemporalTimeZone(timeZone);
+    timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
     calendar = ES.ToTemporalCalendarSlotValue(calendar);
 
     ES.CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
@@ -300,7 +299,7 @@ export class ZonedDateTime {
   }
   withTimeZone(timeZone) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    timeZone = ES.ToTemporalTimeZone(timeZone);
+    timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   withCalendar(calendar) {

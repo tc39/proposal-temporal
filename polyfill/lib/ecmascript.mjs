@@ -978,13 +978,13 @@ export function ToRelativeTemporalObject(options) {
     offset = fields.offset;
     if (offset === undefined) offsetBehaviour = 'wall';
     timeZone = fields.timeZone;
-    if (timeZone !== undefined) timeZone = ToTemporalTimeZone(timeZone);
+    if (timeZone !== undefined) timeZone = ToTemporalTimeZoneSlotValue(timeZone);
   } else {
     let ianaName, z;
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, ianaName, offset, z } =
       ParseISODateTime(ToString(relativeTo)));
     if (ianaName) {
-      timeZone = ToTemporalTimeZone(ianaName);
+      timeZone = ToTemporalTimeZoneSlotValue(ianaName);
       if (z) {
         offsetBehaviour = 'exact';
       } else if (!offset) {
@@ -1428,7 +1428,7 @@ export function ToTemporalZonedDateTime(item, options) {
     ]);
     Call(ArrayPrototypePush, fieldNames, ['timeZone', 'offset']);
     const fields = PrepareTemporalFields(item, fieldNames, ['timeZone']);
-    timeZone = ToTemporalTimeZone(fields.timeZone);
+    timeZone = ToTemporalTimeZoneSlotValue(fields.timeZone);
     offset = fields.offset;
     if (offset === undefined) {
       offsetBehaviour = 'wall';
@@ -1444,7 +1444,7 @@ export function ToTemporalZonedDateTime(item, options) {
     let ianaName, z;
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, ianaName, offset, z, calendar } =
       ParseTemporalZonedDateTimeString(ToString(item)));
-    timeZone = ToTemporalTimeZone(ianaName);
+    timeZone = ToTemporalTimeZoneSlotValue(ianaName);
     if (z) {
       offsetBehaviour = 'exact';
     } else if (!offset) {
@@ -2061,7 +2061,7 @@ export function CalendarMonthDayFromFields(calendar, fields, options) {
   return result;
 }
 
-export function ToTemporalTimeZone(temporalTimeZoneLike) {
+export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
   if (Type(temporalTimeZoneLike) === 'Object') {
     if (IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
     if (IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);

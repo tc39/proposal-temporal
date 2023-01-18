@@ -6,18 +6,18 @@ const instant = () => {
   return new Instant(ES.SystemUTCEpochNanoSeconds());
 };
 const plainDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
   const inst = instant();
   return ES.GetPlainDateTimeFor(timeZone, inst, calendar);
 };
 const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const inst = instant();
   return ES.GetPlainDateTimeFor(timeZone, inst, 'iso8601');
 };
 const zonedDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
+  const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
   return ES.CreateTemporalZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
 };
