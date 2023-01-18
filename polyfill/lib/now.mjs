@@ -7,7 +7,7 @@ const instant = () => {
 };
 const plainDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = ES.ToTemporalCalendar(calendarLike);
+  const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
   const inst = instant();
   return ES.GetPlainDateTimeFor(timeZone, inst, calendar);
 };
@@ -18,7 +18,7 @@ const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
 };
 const zonedDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZone(temporalTimeZoneLike);
-  const calendar = ES.ToTemporalCalendar(calendarLike);
+  const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
   return ES.CreateTemporalZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, calendar);
 };
 const zonedDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {

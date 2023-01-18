@@ -35,7 +35,7 @@
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
         1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
         1. Let _d_ be ? ToIntegerWithTruncation(_isoDay_).
-        1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
+        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
         1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>
@@ -373,7 +373,7 @@
               1. Let _calendarAbsent_ be *true*.
             1. Else,
               1. Let _calendarAbsent_ be *false*.
-            1. Let _calendar_ be ? ToTemporalCalendarWithISODefault(_calendarLike_).
+            1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Let _month_ be ? Get(_fields_, *"month"*).

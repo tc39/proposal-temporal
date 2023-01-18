@@ -12,7 +12,7 @@ export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     isoDay = ES.ToIntegerWithTruncation(isoDay);
-    calendar = ES.ToTemporalCalendar(calendar);
+    calendar = ES.ToTemporalCalendarSlotValue(calendar);
     referenceISOYear = ES.ToIntegerWithTruncation(referenceISOYear);
 
     ES.CreateTemporalMonthDaySlots(this, isoMonth, isoDay, calendar, referenceISOYear);
