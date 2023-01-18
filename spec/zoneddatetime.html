@@ -585,10 +585,9 @@
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
         1. Append *"offset"* to _fieldNames_.
         1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_, ~partial~).
-        1. Append *"timeZone"* to _fieldNames_.
-        1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"timeZone"*, *"offset"* »).
+        1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"offset"* »).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"timeZone"*, *"offset"* »).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"offset"* »).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
