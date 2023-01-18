@@ -493,7 +493,7 @@
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
         1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
-          1. Set _timeZone_ to ? ToTemporalTimeZone(_timeZone_).
+          1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
         1. If _offsetString_ is *undefined*, then
           1. Set _offsetBehaviour_ to ~wall~.
       1. Else,
@@ -506,7 +506,7 @@
         1. If _timeZoneName_ is *undefined*, then
           1. Let _timeZone_ be *undefined*.
         1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZone(_timeZoneName_).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneName_).
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.
           1. Else if _offsetString_ is *undefined*, then

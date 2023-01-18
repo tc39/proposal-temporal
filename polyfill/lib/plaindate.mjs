@@ -200,14 +200,14 @@ export class PlainDate {
       } else {
         let timeZoneLike = item.timeZone;
         if (timeZoneLike === undefined) {
-          timeZone = ES.ToTemporalTimeZone(item);
+          timeZone = ES.ToTemporalTimeZoneSlotValue(item);
         } else {
-          timeZone = ES.ToTemporalTimeZone(timeZoneLike);
+          timeZone = ES.ToTemporalTimeZoneSlotValue(timeZoneLike);
           temporalTime = item.plainTime;
         }
       }
     } else {
-      timeZone = ES.ToTemporalTimeZone(item);
+      timeZone = ES.ToTemporalTimeZoneSlotValue(item);
     }
 
     const year = GetSlot(this, ISO_YEAR);

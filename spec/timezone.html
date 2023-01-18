@@ -151,7 +151,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Let _slotValue_ be ? ToTemporalTimeZone(_item_).
+        1. Let _slotValue_ be ? ToTemporalTimeZoneSlotValue(_item_).
         1. Return ToTemporalTimeZoneObject(_slotValue_).
       </emu-alg>
     </emu-clause>
@@ -546,8 +546,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaltimezone" aoid="ToTemporalTimeZone">
-      <h1>ToTemporalTimeZone ( _temporalTimeZoneLike_ )</h1>
+    <emu-clause id="sec-temporal-totemporaltimezoneslotvalue" type="abstract operation">
+      <h1>
+        ToTemporalTimeZoneSlotValue (
+          _temporalTimeZoneLike_: an ECMAScript value,
+        ): either a normal completion containing either a String or an Object, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It attempts to derive a value from _temporalTimeZoneLike_ that is suitable for storing in a Temporal.ZonedDateTime's [[TimeZone]] internal slot, and returns that value if found or throws an exception if not.</dd>
+      </dl>
       <emu-alg>
         1. If Type(_temporalTimeZoneLike_) is Object, then
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalTimeZone]] internal slot, then
