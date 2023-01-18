@@ -31,11 +31,12 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     const index = (openDate.dayOfWeek + 7) % 7;
     if (!businessHours[index]) continue;
 
+    const timeZone = now.timeZoneId;
     const { open: openTime, close: closeTime } = businessHours[index];
-    const open = openDate.toZonedDateTime({ plainTime: openTime, timeZone: now.timeZone });
+    const open = openDate.toZonedDateTime({ plainTime: openTime, timeZone });
     const isWrap = Temporal.PlainTime.compare(closeTime, openTime) < 0;
     const closeDate = isWrap ? openDate.add({ days: 1 }) : openDate;
-    const close = closeDate.toZonedDateTime({ plainTime: closeTime, timeZone: now.timeZone });
+    const close = closeDate.toZonedDateTime({ plainTime: closeTime, timeZone });
 
     if (inRange(now, open, close)) {
       return compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';

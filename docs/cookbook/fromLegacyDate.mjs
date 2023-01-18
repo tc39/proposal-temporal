@@ -32,7 +32,7 @@ assert.equal(zoned.epochMilliseconds, legacyDate.getTime());
 const zoned2 = instant.toZonedDateTimeISO('Asia/Shanghai');
 
 assert.equal(zoned2.epochMilliseconds, legacyDate.getTime());
-assert.equal(zoned2.timeZone.id, 'Asia/Shanghai');
+assert.equal(zoned2.timeZoneId, 'Asia/Shanghai');
 
 // (And if the legacy Date instance was accessed using the
 // getUTCFullYear(), getUTCMonth(), etc. methods, consider just

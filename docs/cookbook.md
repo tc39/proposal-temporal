@@ -84,7 +84,8 @@ Legacy `Date` represents an exact time, so it's straightforward to convert a `Te
 
 ### Time zone object from name
 
-`Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object.
+`Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object, if you need to call `Temporal.TimeZone` methods.
+Usually this is not necessary.
 
 <!-- prettier-ignore-start -->
 ```javascript
