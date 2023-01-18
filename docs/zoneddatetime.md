@@ -30,7 +30,7 @@ The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, whic
 **Parameters:**
 
 - `epochNanoseconds` (bigint): A number of nanoseconds.
-- `timeZone` (`Temporal.TimeZone` or plain object): The time zone in which the event takes place.
+- `timeZone` (string, `Temporal.TimeZone`, or plain object): The time zone in which the event takes place.
 - `calendar` (optional string, `Temporal.Calendar`, or plain object): Calendar used to interpret dates and times.
 
 **Returns:** a new `Temporal.ZonedDateTime` object.
@@ -41,15 +41,15 @@ Instead of the constructor, `Temporal.ZonedDateTime.from()` is preferred instead
 The range of allowed values for this type is the same as the old-style JavaScript `Date`: 100 million (10<sup>8</sup>) days before or after the Unix epoch.
 This range covers approximately half a million years. If `epochNanoseconds` is outside of this range, a `RangeError` will be thrown.
 
-Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
-Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
+Usually `timeZone` will be a string containing the identifier of a built-in time zone, such as `'UTC'` or `'Europe/Madrid'` or `'+05:30'`, and `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+Use an object if you need to supply [custom calendar](./calendar.md#custom-calendars) or [custom time zone](./timezone.md#custom-time-zones) behaviour.
 
 Usage examples:
 
 <!-- prettier-ignore-start -->
 ```javascript
 // UNIX epoch in California
-new Temporal.ZonedDateTime(0n, Temporal.TimeZone.from('America/Los_Angeles'), 'iso8601');
+new Temporal.ZonedDateTime(0n, 'America/Los_Angeles', 'iso8601');
   // => 1969-12-31T16:00:00-08:00[America/Los_Angeles]
 new Temporal.ZonedDateTime(0n, 'America/Los_Angeles');
   // => 1969-12-31T16:00:00-08:00[America/Los_Angeles]
@@ -413,9 +413,11 @@ Calendar-specific date/time values are NOT used in only a few places:
 - In the values returned by the `getISOFields()` method which is explicitly used to provide ISO 8601 calendar values
 - In arguments to the `Temporal.ZonedDateTime` constructor which is used for advanced use cases only
 
-### zonedDateTime.**timeZone** : Temporal.TimeZoneProtocol
+### zonedDateTime.**timeZoneId** : string
 
-The `timeZone` read-only property represents the persistent time zone of `zonedDateTime`.
+The `timeZoneId` read-only property is the identifier of the persistent time zone of `zonedDateTime`.
+If `zonedDateTime` was created with a custom time zone, this gives its `id` property.
+
 By storing its time zone, `Temporal.ZonedDateTime` is able to use that time zone when deriving other values, e.g. to automatically perform DST adjustment when adding or subtracting time.
 
 If a non-canonical time zone ID is used, it will be normalized by `Temporal` into its canonical name listed in the [IANA time zone database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
@@ -437,29 +439,27 @@ To change the time zone while keeping the exact time constant, use `.withTimeZon
 The time zone is a required property when creating `Temporal.ZonedDateTime` instances.
 If you don't know the time zone of your underlying data, please use `Temporal.Instant` and/or `Temporal.PlainDateTime`, neither of which have awareness of time zones.
 
-Although this property is a `Temporal.TimeZoneProtocol` object (which is usually a `Temporal.TimeZone` except custom timezones), it will be automatically coerced to its string form (e.g. `"Europe/Paris"`) when displayed by `console.log()`, `JSON.stringify()`, `` `${zonedDateTime.timeZone}` ``, or other similar APIs.
-
 Usage example:
 
 <!-- prettier-ignore-start -->
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24-08:00[America/Los_Angeles]');
-`Time zone is: ${zdt.timeZone}`;
+`Time zone is: ${zdt.timeZoneId}`;
   // => 'Time zone is: America/Los_Angeles'
-zdt.withTimeZone('Asia/Singapore').timeZone;
+zdt.withTimeZone('Asia/Singapore').timeZoneId;
   // => Asia/Singapore
-zdt.withTimeZone('Asia/Chongqing').timeZone;
+zdt.withTimeZone('Asia/Chongqing').timeZoneId;
   // => Asia/Shanghai
   // (time zone IDs are normalized, e.g. Asia/Chongqing -> Asia/Shanghai)
-zdt.withTimeZone('+05:00').timeZone;
+zdt.withTimeZone('+05:00').timeZoneId;
   // => +05:00
-zdt.withTimeZone('+05').timeZone;
+zdt.withTimeZone('+05').timeZoneId;
   // => +05:00
   // (normalized to canonical form)
-zdt.withTimeZone('utc').timeZone;
+zdt.withTimeZone('utc').timeZoneId;
   // => UTC
   // (normalized to canonical form which is uppercase)
-zdt.withTimeZone('GMT').timeZone;
+zdt.withTimeZone('GMT').timeZoneId;
   // => UTC
   // (normalized to canonical form)
 ```
@@ -1445,9 +1445,16 @@ zdt.toPlainTime(); // => 03:24:30
 This method is mainly useful if you need an object on which to call calendar methods.
 Most code will not need to use it.
 
-### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: object, calendar: string | object }
+### zonedDateTime.**getTimeZone**(): object
 
-**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `timeZone`, and `offset` properties, and the calendar in which `zonedDateTime` is reckoned.
+**Returns:** a `Temporal.TimeZone` instance or plain object representing the time zone in which `zonedDateTime` is reckoned.
+
+This method is mainly useful if you need an object on which to call time zone methods.
+Most code will not need to use it.
+
+### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: string | object, calendar: string | object }
+
+**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `offset` property, and the calendar and time zone in which `zonedDateTime` is reckoned.
 
 This is an advanced method that's mainly useful if you are implementing a custom calendar.
 Most developers will not need to use it.

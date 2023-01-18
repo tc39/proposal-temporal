@@ -149,9 +149,11 @@ export class TimeZone {
     return ES.ToString(this);
   }
   static from(item) {
-    return ES.ToTemporalTimeZone(item);
+    const timeZoneSlotValue = ES.ToTemporalTimeZone(item);
+    return ES.ToTemporalTimeZoneObject(timeZoneSlotValue);
   }
 }
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
+DefineIntrinsic('Temporal.TimeZone.prototype.getPossibleInstantsFor', TimeZone.prototype.getPossibleInstantsFor);

@@ -125,16 +125,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.timezone">
-      <h1>get Temporal.ZonedDateTime.prototype.timeZone</h1>
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.timezoneid">
+      <h1>get Temporal.ZonedDateTime.prototype.timeZoneId</h1>
       <p>
-        `Temporal.ZonedDateTime.prototype.timeZone` is an accessor property whose set accessor function is *undefined*.
+        `Temporal.ZonedDateTime.prototype.timeZoneId` is an accessor property whose set accessor function is *undefined*.
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return _zonedDateTime_.[[TimeZone]].
+        1. Return ? ToTemporalTimeZoneIdentifier(_zonedDateTime_.[[TimeZone]]).
       </emu-alg>
     </emu-clause>
 
@@ -998,6 +998,18 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Return ToTemporalCalendarObject(_zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.gettimezone">
+      <h1>Temporal.ZonedDateTime.prototype.getTimeZone ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Return ToTemporalTimeZoneObject(_zonedDateTime_.[[TimeZone]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

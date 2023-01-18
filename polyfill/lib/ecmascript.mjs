@@ -337,7 +337,9 @@ export const ES = ObjectAssign({}, ES2022, {
     const { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
     if (ianaName) return ES.GetCanonicalTimeZoneIdentifier(ianaName);
     if (z) return 'UTC';
-    return offset; // if !ianaName && !z then offset must be present
+    // if !ianaName && !z then offset must be present
+    const offsetNs = ES.ParseTimeZoneOffsetString(offset);
+    return ES.FormatTimeZoneOffsetString(offsetNs);
   },
   MaybeFormatCalendarAnnotation: (calendar, showCalendar) => {
     if (showCalendar === 'never') return '';
@@ -1986,9 +1988,18 @@ export const ES = ObjectAssign({}, ES2022, {
       }
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
-    const timeZone = ES.ParseTemporalTimeZone(identifier);
+    return ES.ParseTemporalTimeZone(identifier);
+  },
+  ToTemporalTimeZoneIdentifier: (slotValue) => {
+    if (typeof slotValue === 'string') return slotValue;
+    const result = slotValue.id;
+    if (typeof result !== 'string') throw new TypeError('timeZone.id should be a string');
+    return result;
+  },
+  ToTemporalTimeZoneObject: (slotValue) => {
+    if (ES.Type(slotValue) === 'Object') return slotValue;
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
-    return new TemporalTimeZone(timeZone);
+    return new TemporalTimeZone(slotValue);
   },
   TimeZoneEquals: (one, two) => {
     if (one === two) return true;
@@ -2016,6 +2027,11 @@ export const ES = ObjectAssign({}, ES2022, {
     );
   },
   GetOffsetNanosecondsFor: (timeZone, instant) => {
+    if (typeof timeZone === 'string') {
+      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+      timeZone = new TemporalTimeZone(timeZone);
+      return ES.Call(GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%'), timeZone, [instant]);
+    }
     const getOffsetNanosecondsFor = ES.GetMethod(timeZone, 'getOffsetNanosecondsFor');
     const offsetNs = ES.Call(getOffsetNanosecondsFor, timeZone, [instant]);
     if (typeof offsetNs !== 'number') {
@@ -2198,7 +2214,12 @@ export const ES = ObjectAssign({}, ES2022, {
     throw new Error(`assertion failed: invalid disambiguation value ${disambiguation}`);
   },
   GetPossibleInstantsFor: (timeZone, dateTime) => {
-    let getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
+    if (typeof timeZone === 'string') {
+      const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
+      timeZone = new TemporalTimeZone(timeZone);
+      return ES.Call(GetIntrinsic('%Temporal.TimeZone.prototype.getPossibleInstantsFor%'), timeZone, [dateTime]);
+    }
+    const getPossibleInstantsFor = ES.GetMethod(timeZone, 'getPossibleInstantsFor');
     const possibleInstants = ES.Call(getPossibleInstantsFor, timeZone, [dateTime]);
     const result = [];
     for (const instant of possibleInstants) {
