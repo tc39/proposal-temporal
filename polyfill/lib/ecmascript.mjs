@@ -2063,19 +2063,11 @@ export function CalendarMonthDayFromFields(calendar, fields, options) {
 
 export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
   if (Type(temporalTimeZoneLike) === 'Object') {
-    if (IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
     if (IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
     if (IsTemporalCalendar(temporalTimeZoneLike)) {
       throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
     }
-    if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-    temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
-    if (Type(temporalTimeZoneLike) === 'Object') {
-      if (IsTemporalCalendar(temporalTimeZoneLike)) {
-        throw new RangeError('Expected a time zone object as the timeZone property but received a Temporal.Calendar');
-      }
-      if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-    }
+    return temporalTimeZoneLike;
   }
   const identifier = ToString(temporalTimeZoneLike);
   return ParseTemporalTimeZone(identifier);
