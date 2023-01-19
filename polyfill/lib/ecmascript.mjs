@@ -1935,7 +1935,6 @@ export function CalendarInLeapYear(calendar, dateLike) {
 
 export function ToTemporalCalendarSlotValue(calendarLike) {
   if (Type(calendarLike) === 'Object') {
-    if (IsTemporalCalendar(calendarLike)) return calendarLike;
     if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
     if (IsTemporalTime(calendarLike)) {
       throw new RangeError('Expected a calendar object but received a Temporal.PlainTime');
@@ -1943,17 +1942,7 @@ export function ToTemporalCalendarSlotValue(calendarLike) {
     if (IsTemporalTimeZone(calendarLike)) {
       throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
     }
-    if (!('calendar' in calendarLike)) return calendarLike;
-    calendarLike = calendarLike.calendar;
-    if (Type(calendarLike) === 'Object') {
-      if (IsTemporalTime(calendarLike)) {
-        throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.PlainTime');
-      }
-      if (IsTemporalTimeZone(calendarLike)) {
-        throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.TimeZone');
-      }
-      if (!('calendar' in calendarLike)) return calendarLike;
-    }
+    return calendarLike;
   }
   const identifier = ToString(calendarLike);
   if (IsBuiltinCalendar(identifier)) return ASCIILowercase(identifier);
