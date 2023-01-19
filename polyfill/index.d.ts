@@ -614,7 +614,6 @@ export namespace Temporal {
 
   export interface CalendarProtocol {
     id: string;
-    calendar?: never;
     year(date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string): number;
     month(
       date:
@@ -681,7 +680,7 @@ export namespace Temporal {
     toJSON?(): string;
   }
 
-  export type CalendarLike = CalendarProtocol | string | { calendar: CalendarProtocol | string };
+  export type CalendarLike = CalendarProtocol | string;
 
   /**
    * A `Temporal.Calendar` is a representation of a calendar system. It includes
@@ -691,7 +690,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/calendar.html for more details.
    */
-  export class Calendar implements Omit<Required<CalendarProtocol>, 'calendar'> {
+  export class Calendar implements CalendarProtocol {
     static from(item: CalendarLike): Temporal.Calendar | CalendarProtocol;
     constructor(calendarIdentifier: string);
     readonly id: string;
