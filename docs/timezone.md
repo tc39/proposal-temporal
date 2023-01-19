@@ -29,7 +29,6 @@ The object must have at least `getOffsetNanosecondsFor()` and `getPossibleInstan
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
 To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `toString()`, `toJSON()`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
-Your object must not have a `timeZone` property, so that it can be distinguished in `Temporal.TimeZone.from()` from other Temporal objects that have a time zone.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
 Each component must consist of between one and 14 characters.

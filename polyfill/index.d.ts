@@ -1091,7 +1091,6 @@ export namespace Temporal {
    */
   export interface TimeZoneProtocol {
     id: string;
-    timeZone?: never;
     getOffsetNanosecondsFor(instant: Temporal.Instant | string): number;
     getOffsetStringFor?(instant: Temporal.Instant | string): string;
     getPlainDateTimeFor?(instant: Temporal.Instant | string, calendar?: CalendarLike): Temporal.PlainDateTime;
@@ -1106,7 +1105,7 @@ export namespace Temporal {
     toJSON?(): string;
   }
 
-  export type TimeZoneLike = TimeZoneProtocol | string | { timeZone: TimeZoneProtocol | string };
+  export type TimeZoneLike = TimeZoneProtocol | string;
 
   /**
    * A `Temporal.TimeZone` is a representation of a time zone: either an
@@ -1121,7 +1120,7 @@ export namespace Temporal {
    *
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
-  export class TimeZone implements Omit<Required<TimeZoneProtocol>, 'timeZone'> {
+  export class TimeZone implements TimeZoneProtocol {
     static from(timeZone: TimeZoneLike): Temporal.TimeZone | TimeZoneProtocol;
     constructor(timeZoneIdentifier: string);
     readonly id: string;
