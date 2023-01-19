@@ -1969,19 +1969,11 @@ export const ES = ObjectAssign({}, ES2022, {
 
   ToTemporalTimeZoneSlotValue: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
-      if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
       if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
       if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
         throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
       }
-      if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-      temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
-      if (ES.Type(temporalTimeZoneLike) === 'Object') {
-        if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
-          throw new RangeError('Expected a time zone object as the timeZone property but received a Temporal.Calendar');
-        }
-        if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-      }
+      return temporalTimeZoneLike;
     }
     const identifier = ES.ToString(temporalTimeZoneLike);
     return ES.ParseTemporalTimeZone(identifier);
