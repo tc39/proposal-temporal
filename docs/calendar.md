@@ -118,7 +118,6 @@ The object must implement all of the `Temporal.Calendar` properties and methods 
 Any object with the required methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
 To interoperate with libraries or other code that you didn't write, then you should implement the `fields()`, `mergeFields()`, `toString()`, and `toJSON()` methods as well.
-Your object must not have a `calendar` property, so that it can be distinguished in `Temporal.Calendar.from()` from other Temporal objects that have a calendar.
 
 The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
 

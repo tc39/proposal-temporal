@@ -1850,7 +1850,6 @@ export const ES = ObjectAssign({}, ES2022, {
 
   ToTemporalCalendarSlotValue: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
-      if (ES.IsTemporalCalendar(calendarLike)) return calendarLike;
       if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
       if (ES.IsTemporalTime(calendarLike)) {
         throw new RangeError('Expected a calendar object but received a Temporal.PlainTime');
@@ -1858,17 +1857,7 @@ export const ES = ObjectAssign({}, ES2022, {
       if (ES.IsTemporalTimeZone(calendarLike)) {
         throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
       }
-      if (!('calendar' in calendarLike)) return calendarLike;
-      calendarLike = calendarLike.calendar;
-      if (ES.Type(calendarLike) === 'Object') {
-        if (ES.IsTemporalTime(calendarLike)) {
-          throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.PlainTime');
-        }
-        if (ES.IsTemporalTimeZone(calendarLike)) {
-          throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.TimeZone');
-        }
-        if (!('calendar' in calendarLike)) return calendarLike;
-      }
+      return calendarLike;
     }
     const identifier = ES.ToString(calendarLike);
     if (ES.IsBuiltinCalendar(identifier)) return ES.ASCIILowercase(identifier);
