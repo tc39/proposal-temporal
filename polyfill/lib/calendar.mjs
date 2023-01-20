@@ -244,7 +244,7 @@ export class Calendar {
   }
   toJSON() {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return ES.ToString(this);
+    return GetSlot(this, CALENDAR_ID);
   }
   static from(item) {
     const calendarSlotValue = ES.ToTemporalCalendarSlotValue(item);
