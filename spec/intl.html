@@ -396,9 +396,9 @@
     </emu-clause>
 
     <emu-clause id="sec-formatdatetimepattern" aoid="FormatDateTimePattern">
-      <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_ <ins>[ , _timeZone_ ]</ins> )</h1>
+      <h1>FormatDateTimePattern ( _dateTimeFormat_, <ins>_pattern_</ins>, _patternParts_, <del>_x_</del><ins>_epochNanoseconds_</ins>, _rangeFormatOptions_<ins>, _timeZone_</ins> )</h1>
       <p>
-      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which is a Record of the type contained by the %DateTimeFormat%.[[LocaleData]].[[<_locale_>]].[[formats]].[[<_calendar_>]] List as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a <del>Number</del><ins>BigInt</ins> value), and _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*), interprets _x_ as a time value as specified in ES2023, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
+      The FormatDateTimePattern abstract operation is called with arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat), <ins>_pattern_ (which is a Record of the type contained by the %DateTimeFormat%.[[LocaleData]].[[<_locale_>]].[[formats]].[[<_calendar_>]] List as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>),</ins> _patternParts_ (which is a list of Records as returned by PartitionPattern), <del>_x_</del><ins>_epochNanoseconds_</ins> (which must be a <del>Number</del><ins>BigInt</ins> value), _rangeFormatOptions_ (which is a range pattern Record as used in [[rangePattern]] or *undefined*) <ins>and _timeZone_</ins>, interprets _x_ as a time value as specified in ES2023, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and creates the corresponding parts according _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _rangeFormatOptions_. The following steps are taken:
       </p>
 
       <emu-alg>
@@ -418,10 +418,9 @@
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, _fractionalSecondDigits_).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
           1. Let _nf3_ be ? Construct(%NumberFormat%, &laquo; _locale_, _nf3Options_ &raquo;).
-        1. <ins>If _timeZone_ is present, then</ins>
-          1. <ins>Let _tm_ be ToLocalTime(<ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _timeZone_).</ins>
-        1. <ins>Else,</ins>
-          1. Let _tm_ be ToLocalTime(<del>_x_</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. <ins>If _dateTimeFormat_.[[TimeZone]] is not *undefined*, then</ins>
+          1. <ins>Throw a *RangeError* exception.</ins>
+        1. <ins>Let _tm_ be ToLocalTime(_epochNanoseconds_, _dateTimeFormat_.[[Calendar]], _timeZone_).</ins>
         1. Let _result_ be a new empty List.
         1. For each Record { [[Type]], [[Value]] } _patternPart_ in _patternParts_, do
           1. Let _p_ be _patternPart_.[[Type]].
@@ -438,7 +437,7 @@
             1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else if _p_ is equal to *"timeZoneName"*, then
             1. Let _f_ be _dateTimeFormat_.[[TimeZoneName]].
-            1. Let _v_ be _dateTimeFormat_.[[TimeZone]].
+            1. Let _v_ be <del>_dateTimeFormat_.[[TimeZone]]</del><ins>_timeZone_</ins>.
             1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_. The String value may also depend on the value of the [[InDST]] field of _tm_ if _f_ is *"short"*, *"long"*, *"shortOffset"*, or *"longOffset"*. If the implementation does not have a localized representation of _f_, then use the String value of _v_ itself.
             1. Append a new Record { [[Type]]: _p_, [[Value]]: _fv_ } as the last element of the list _result_.
           1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
@@ -564,9 +563,15 @@
           1. <ins>If ! SameTemporalType(_x_, _y_) is *false*, throw a *TypeError* exception.</ins>
         1. <ins>Let _x_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. <ins>Let _y_ be ? HandleDateTimeValue(_dateTimeFormat_, _y_).</ins>
+        1. <ins>If x.[[timeZone]] is not equal to y.[[timeZone]], then</ins>
+          1. <ins>Throw a *RangeError* exception.</ins>
+        1. <ins>Else if x.[[timeZone]] is not *undefined*, then</ins>
+          1. <ins>Let _timeZone_ be x.[[timeZone]].</ins>
+        1. <ins>Else,</ins>
+          1. <ins>Let _timeZone_ be _dateTimeFormat_.[[TimeZone]].</ins>
         1. If _x_<ins>.[[epochNanoseconds]]</ins> is greater than _y_<ins>.[[epochNanoseconds]]</ins>, throw a *RangeError* exception.
-        1. Let _tm1_ be ToLocalTime(_x_<ins>.[[epochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
-        1. Let _tm2_ be ToLocalTime(_y_<ins>.[[epochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _tm1_ be ToLocalTime(_x_<ins>.[[epochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], <del>_dateTimeFormat_.[[TimeZone]]</del> <ins>_timeZone_</ins>).
+        1. Let _tm2_ be ToLocalTime(_y_<ins>.[[epochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], <del>_dateTimeFormat_.[[TimeZone]]</del><ins>_timeZone_</ins>).
         1. Let _rangePatterns_ be <del>_dateTimeFormat_.[[RangePatterns]]</del><ins>_x_.[[rangePatterns]]</ins>.
         1. <ins>Assert: _rangePatterns_ is equal to _y_.[[rangePatterns]].</ins>
         1. Let _rangePattern_ be *undefined*.
@@ -612,7 +617,7 @@
         1. If _dateFieldsPracticallyEqual_ is *true*, then
           1. Let _pattern_ be <del>_dateTimeFormat_.[[Pattern]]</del><ins>_x_.[[pattern]]</ins>.
           1. Let _patternParts_ be PartitionPattern(_pattern_).
-          1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_,</ins> _patternParts_, _x_<ins>.[[epochNanoseconds]]</ins>, *undefined*).
+          1. Let _result_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_,</ins> _patternParts_, _x_<ins>.[[epochNanoseconds]]</ins>, *undefined*, <ins>_timeZone_</ins>).
           1. For each element _r_ in _result_, do
             1. Set _r_.[[Source]] to *"shared"*.
           1. Return _result_.
@@ -627,7 +632,7 @@
           1. Else,
             1. Let _z_ be _y_<ins>.[[epochNanoseconds]]</ins>.
           1. Let _patternParts_ be PartitionPattern(_pattern_).
-          1. Let _partResult_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_,</ins> _patternParts_, _z_, _rangePattern_).
+          1. Let _partResult_ be ? FormatDateTimePattern(_dateTimeFormat_, <ins>_pattern_,</ins> _patternParts_, _z_, _rangePattern_, <ins>_timeZone_</ins>).
           1. For each element _r_ in _partResult_, do
             1. Set _r_.[[Source]] to _source_.
           1. Add all elements in _partResult_ to _result_ in order.
@@ -772,7 +777,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -798,7 +804,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -825,7 +832,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -850,7 +858,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -876,7 +885,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -897,7 +907,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
@@ -907,7 +918,7 @@
       <h1>HandleDateTimeTemporalZonedDateTime ( _dateTimeFormat_, _zonedDateTime_ )</h1>
 
       <p>
-        The abstract operation HandleDateTimeTemporalZonedDateTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _zonedDateTime_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+        The abstract operation HandleDateTimeTemporalZonedDateTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _zonedDateTime_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern, epochNanoseconds and timezone values for the input. This abstract operation functions as follows:
       </p>
 
       <emu-alg>
@@ -924,7 +935,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
-          [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
+          [[epochNanoseconds]]: _instant_.[[Nanoseconds]],
+          [[timeZone]]: _timeZone_,
         }.
       </emu-alg>
     </emu-clause>
@@ -952,7 +964,8 @@
       1. Return the Record {
           [[pattern]]: _pattern_,
           [[rangePatterns]]: _rangePatterns_,
-          [[epochNanoseconds]]: _epochNanoseconds_
+          [[epochNanoseconds]]: _epochNanoseconds_,
+          [[timeZone]]: *undefined*
         }.
       </emu-alg>
     </emu-clause>
