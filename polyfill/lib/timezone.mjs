@@ -146,7 +146,7 @@ export class TimeZone {
   }
   toJSON() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    return ES.ToString(this);
+    return GetSlot(this, TIMEZONE_ID);
   }
   static from(item) {
     const timeZoneSlotValue = ES.ToTemporalTimeZoneSlotValue(item);
