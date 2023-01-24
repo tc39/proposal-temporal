@@ -8,16 +8,16 @@
   },
   "main": "polyfill/lib/index.mjs",
   "devDependencies": {
-    "@tc39/ecma262-biblio": "=2.1.2458",
-    "@typescript-eslint/eslint-plugin": "^5.12.1",
-    "@typescript-eslint/parser": "^5.12.1",
-    "ecmarkup": "^15.0.2",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.4.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "mkdirp": "^1.0.4",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "@tc39/ecma262-biblio": "=2.1.2497",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "ecmarkup": "^16.0.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "mkdirp": "^2.1.3",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.4"
   },
   "scripts": {
     "test": "cd polyfill && npm install && npm test && npm run test-cookbook && npm run test262",

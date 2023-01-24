@@ -12,8 +12,8 @@
     "test-cookbook-one": "node --loader ./test/resolve.cookbook.mjs ../docs/cookbook/$TEST.mjs",
     "test262": "npm run build262 && node runtest262.mjs",
     "codecov:test262": "./ci_codecov_test262.sh",
-    "build": "rollup -c rollup.config.js",
-    "build262": "TEST262=1 rollup -c rollup.config.js",
+    "build": "rollup -c rollup.config.js --bundleConfigAsCjs",
+    "build262": "TEST262=1 rollup -c rollup.config.js --bundleConfigAsCjs",
     "prepublishOnly": "npm run build",
     "playground": "node -r ./lib/init.js"
   },
@@ -64,24 +64,23 @@
   "dependencies": {
     "big-integer": "^1.6.51",
     "call-bind": "^1.0.2",
-    "es-abstract": "^1.20.4"
+    "es-abstract": "^1.21.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/preset-env": "^7.16.11",
-    "@js-temporal/temporal-test262-runner": "^0.7.0",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@js-temporal/temporal-test262-runner": "^0.8.0",
     "@pipobscure/demitasse": "^1.0.10",
     "@pipobscure/demitasse-pretty": "^1.0.10",
     "@pipobscure/demitasse-run": "^1.0.10",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^21.0.2",
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.2",
     "c8": "^7.12.0",
     "codecov": "^3.8.2",
-    "rollup": "^2.68.0",
-    "rollup-plugin-node-polyfills": "^0.2.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup": "^3.10.1",
+    "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "engines": {
     "node": ">=18"
