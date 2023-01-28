@@ -674,8 +674,8 @@ export namespace Temporal {
       two: Temporal.PlainDate | PlainDateLike | string,
       options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
     ): Temporal.Duration;
-    fields?(fields: Iterable<string>): Iterable<string>;
-    mergeFields?(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
+    fields(fields: Iterable<string>): Iterable<string>;
+    mergeFields(fields: Record<string, unknown>, additionalFields: Record<string, unknown>): Record<string, unknown>;
     toString?(): string;
     toJSON?(): string;
   }

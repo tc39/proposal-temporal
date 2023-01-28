@@ -114,10 +114,10 @@ Any property that's not overridden will behave as in the base calendar.
 It's recommended to override `dateFromFields()`, `monthDayFromFields()`, `yearMonthFromFields()`, and `dateAdd()`so that they return Temporal objects with the custom calendar and not the base calendar.
 
 The other, more difficult, way to create a custom calendar is to create a plain object implementing the `Temporal.Calendar` protocol, without subclassing.
-The object must implement all of the `Temporal.Calendar` properties and methods except for `fields()`, `mergeFields()`, `toString()`, and `toJSON()`.
-Any object with the required methods will return the correct output from any Temporal property or method.
+The object must implement all of the `Temporal.Calendar` properties and methods except for `toString()` and `toJSON()`.
+Any object with the required properties and methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in `Temporal.Calendar` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement the `fields()`, `mergeFields()`, `toString()`, and `toJSON()` methods as well.
+To interoperate with libraries or other code that you didn't write, then you should implement the `toString()` and `toJSON()` methods as well.
 
 The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in [Unicode Technical Standard 35](https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
 
