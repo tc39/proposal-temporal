@@ -2050,11 +2050,16 @@ export function CalendarMonthDayFromFields(calendar, fields, options) {
   return result;
 }
 
+export function ObjectImplementsTemporalTimeZoneProtocol(object) {
+  if (IsTemporalTimeZone(object)) return true;
+  return 'getOffsetNanosecondsFor' in object && 'getPossibleInstantsFor' in object && 'id' in object;
+}
+
 export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
   if (Type(temporalTimeZoneLike) === 'Object') {
     if (IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
-    if (IsTemporalCalendar(temporalTimeZoneLike)) {
-      throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
+    if (!ObjectImplementsTemporalTimeZoneProtocol(temporalTimeZoneLike)) {
+      throw new TypeError('expected a Temporal.TimeZone or object implementing the Temporal.TimeZone protocol');
     }
     return temporalTimeZoneLike;
   }
