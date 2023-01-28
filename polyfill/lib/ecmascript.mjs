@@ -1848,14 +1848,37 @@ export const ES = ObjectAssign({}, ES2022, {
     return result;
   },
 
+  ObjectImplementsTemporalCalendarProtocol: (object) => {
+    if (ES.IsTemporalCalendar(object)) return true;
+    return (
+      'dateAdd' in object &&
+      'dateFromFields' in object &&
+      'dateUntil' in object &&
+      'day' in object &&
+      'dayOfWeek' in object &&
+      'dayOfYear' in object &&
+      'daysInMonth' in object &&
+      'daysInWeek' in object &&
+      'daysInYear' in object &&
+      'fields' in object &&
+      'id' in object &&
+      'inLeapYear' in object &&
+      'mergeFields' in object &&
+      'month' in object &&
+      'monthCode' in object &&
+      'monthDayFromFields' in object &&
+      'monthsInYear' in object &&
+      'weekOfYear' in object &&
+      'year' in object &&
+      'yearMonthFromFields' in object &&
+      'yearOfWeek' in object
+    );
+  },
   ToTemporalCalendarSlotValue: (calendarLike) => {
     if (ES.Type(calendarLike) === 'Object') {
       if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
-      if (ES.IsTemporalTime(calendarLike)) {
-        throw new RangeError('Expected a calendar object but received a Temporal.PlainTime');
-      }
-      if (ES.IsTemporalTimeZone(calendarLike)) {
-        throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
+      if (!ES.ObjectImplementsTemporalCalendarProtocol(calendarLike)) {
+        throw new TypeError('expected a Temporal.Calendar or object implementing the Temporal.Calendar protocol');
       }
       return calendarLike;
     }
