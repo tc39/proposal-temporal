@@ -1956,11 +1956,15 @@ export const ES = ObjectAssign({}, ES2022, {
     return result;
   },
 
+  ObjectImplementsTemporalTimeZoneProtocol: (object) => {
+    if (ES.IsTemporalTimeZone(object)) return true;
+    return 'getOffsetNanosecondsFor' in object && 'getPossibleInstantsFor' in object && 'id' in object;
+  },
   ToTemporalTimeZoneSlotValue: (temporalTimeZoneLike) => {
     if (ES.Type(temporalTimeZoneLike) === 'Object') {
       if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
-      if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
-        throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
+      if (!ES.ObjectImplementsTemporalTimeZoneProtocol(temporalTimeZoneLike)) {
+        throw new TypeError('expected a Temporal.TimeZone or object implementing the Temporal.TimeZone protocol');
       }
       return temporalTimeZoneLike;
     }

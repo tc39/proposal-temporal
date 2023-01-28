@@ -546,6 +546,28 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-objectimplementstemporaltimezoneprotocol" type="abstract operation">
+      <h1>
+        ObjectImplementsTemporalTimeZoneProtocol (
+          _object_: an Object,
+        ): either a normal completion containing a Boolean, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines whether the given _object_ is a Temporal.TimeZone instance or implements the required methods from the Temporal.TimeZone protocol.
+          For ordinary objects, and some exotic objects, this operation is infallible and will always return a normal completion.
+          However, if _object_ is a Proxy or has one in its prototype chain, user code may be called.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _object_ has an [[InitializedTemporalTimeZone]] internal slot, return *true*.
+        1. For each property key _key_ of « *"getOffsetNanosecondsFor"*, *"getPossibleInstantsFor"*, *"id"* », do
+          1. If ? HasProperty(_object_, _key_) is *false*, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporaltimezoneslotvalue" type="abstract operation">
       <h1>
         ToTemporalTimeZoneSlotValue (
@@ -560,7 +582,7 @@
         1. If Type(_temporalTimeZoneLike_) is Object, then
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
-          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalCalendar]] internal slot, throw a *RangeError* exception.
+          1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
           1. Return _temporalTimeZoneLike_.
         1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
         1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
