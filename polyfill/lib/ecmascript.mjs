@@ -1933,14 +1933,38 @@ export function CalendarInLeapYear(calendar, dateLike) {
   return result;
 }
 
+export function ObjectImplementsTemporalCalendarProtocol(object) {
+  if (IsTemporalCalendar(object)) return true;
+  return (
+    'dateAdd' in object &&
+    'dateFromFields' in object &&
+    'dateUntil' in object &&
+    'day' in object &&
+    'dayOfWeek' in object &&
+    'dayOfYear' in object &&
+    'daysInMonth' in object &&
+    'daysInWeek' in object &&
+    'daysInYear' in object &&
+    'fields' in object &&
+    'id' in object &&
+    'inLeapYear' in object &&
+    'mergeFields' in object &&
+    'month' in object &&
+    'monthCode' in object &&
+    'monthDayFromFields' in object &&
+    'monthsInYear' in object &&
+    'weekOfYear' in object &&
+    'year' in object &&
+    'yearMonthFromFields' in object &&
+    'yearOfWeek' in object
+  );
+}
+
 export function ToTemporalCalendarSlotValue(calendarLike) {
   if (Type(calendarLike) === 'Object') {
     if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
-    if (IsTemporalTime(calendarLike)) {
-      throw new RangeError('Expected a calendar object but received a Temporal.PlainTime');
-    }
-    if (IsTemporalTimeZone(calendarLike)) {
-      throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
+    if (!ObjectImplementsTemporalCalendarProtocol(calendarLike)) {
+      throw new TypeError('expected a Temporal.Calendar or object implementing the Temporal.Calendar protocol');
     }
     return calendarLike;
   }
