@@ -86,7 +86,9 @@
         <dt>redefinition</dt>
         <dd>true</dd>
       </dl>
-
+      <p>
+        <ins>Given the same value of _timeZone_, the result must be the same for the lifetime of the surrounding agent.</ins>
+      </p>
       <emu-alg>
         1. Let _ianaTimeZone_ be the String value of the Zone or Link name of the IANA Time Zone Database that is an ASCII-case-insensitive match of _timeZone_.
         1. If _ianaTimeZone_ is a Link name, let _ianaTimeZone_ be the String value of the corresponding Zone name as specified in the file <code>backward</code> of the IANA Time Zone Database.
