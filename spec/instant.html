@@ -69,7 +69,7 @@
       <emu-alg>
         1. Set _epochSeconds_ to ? ToNumber(_epochSeconds_).
         1. Set _epochSeconds_ to ? NumberToBigInt(_epochSeconds_).
-        1. Let _epochNanoseconds_ be _epochSeconds_ &times; *10<sup>9</sup>*<sub>ℤ</sub>.
+        1. Let _epochNanoseconds_ be _epochSeconds_ &times; ℤ(10<sup>9</sup>).
         1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
@@ -83,7 +83,7 @@
       <emu-alg>
         1. Set _epochMilliseconds_ to ? ToNumber(_epochMilliseconds_).
         1. Set _epochMilliseconds_ to ? NumberToBigInt(_epochMilliseconds_).
-        1. Let _epochNanoseconds_ be _epochMilliseconds_ &times; *10<sup>6</sup>*<sub>ℤ</sub>.
+        1. Let _epochNanoseconds_ be _epochMilliseconds_ &times; ℤ(10<sup>6</sup>).
         1. If ! IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
@@ -579,10 +579,10 @@
       <emu-alg>
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +
             ℤ(_microseconds_) &times; *1000*<sub>ℤ</sub> +
-            ℤ(_milliseconds_) &times; *10<sup>6</sup>*<sub>ℤ</sub> +
-            ℤ(_seconds_) &times; *10<sup>9</sup>*<sub>ℤ</sub> +
-            ℤ(_minutes_) &times; *60*<sub>ℤ</sub> &times; *10<sup>9</sup>*<sub>ℤ</sub> +
-            ℤ(_hours_) &times; *3600*<sub>ℤ</sub> &times; *10<sup>9</sup>*<sub>ℤ</sub>.
+            ℤ(_milliseconds_) &times; ℤ(10<sup>6</sup>) +
+            ℤ(_seconds_) &times; ℤ(10<sup>9</sup>) +
+            ℤ(_minutes_) &times; *60*<sub>ℤ</sub> &times; ℤ(10<sup>9</sup>) +
+            ℤ(_hours_) &times; *3600*<sub>ℤ</sub> &times; ℤ(10<sup>9</sup>).
         1. If ! IsValidEpochNanoseconds(_result_) is *false*, throw a *RangeError* exception.
         1. Return _result_.
       </emu-alg>
