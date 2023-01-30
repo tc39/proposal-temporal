@@ -17765,7 +17765,6 @@
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
         var partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
-        var timeZone = GetSlot(this, TIME_ZONE);
         ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
         var fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
         fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
@@ -17784,8 +17783,9 @@
           microsecond = _ES$InterpretTemporal.microsecond,
           nanosecond = _ES$InterpretTemporal.nanosecond;
         var offsetNs = ES.ParseTimeZoneOffsetString(fields.offset);
+        var timeZone = GetSlot(this, TIME_ZONE);
         var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, disambiguation, offset, /* matchMinute = */false);
-        return ES.CreateTemporalZonedDateTime(epochNanoseconds, GetSlot(this, TIME_ZONE), calendar);
+        return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
       }
     }, {
       key: "withPlainDate",

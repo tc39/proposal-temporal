@@ -291,7 +291,7 @@ A file name component must not exceed 14 characters or start with <code>&#39;-&#
 <p>For more about TZDB, see the <a href="timezone.html"><code>Temporal.TimeZone</code> documentation</a> or the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">TZDB documentation</a>.</p>
 <h3 id="calendar-systems"><a class="heading-link" href="#calendar-systems"></a>Calendar systems</h3><p>In order to achieve round-trip persistence for <code>Temporal</code> objects using non-ISO calendar systems, a calendar system identifier can be added.</p>
 <p>Therefore, we are proposing the following extension:
-<em>Calendar-specific dates are expressed as their equivalent date in the ISO calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
+<em>Calendar-specific dates are expressed as their equivalent date in the ISO 8601 calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
 <p>For example, when parsed, the following string would represent the date <strong>28 Iyar 5780</strong> in the Hebrew calendar:</p>
 <pre><code>2020-05-22[u-ca=hebrew]</code></pre><p>The syntax of the calendar suffix is currently on a standards track led by the <a href="https://datatracker.ietf.org/wg/sedate/about/">IETF SEDATE</a> working group.</p>
 <p>The calendar identifiers <a href="http://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">are defined by CLDR</a> as <a href="http://unicode.org/reports/tr35/#unicode_locale_extensions">a sequence of 3-8 character BCP47 subtags</a>.

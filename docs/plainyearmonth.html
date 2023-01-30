@@ -440,7 +440,7 @@ The default is <code>constrain</code>.</li>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
-<p>The <code>overflow</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
 However, <code>overflow</code> may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
@@ -462,7 +462,7 @@ The default is <code>constrain</code>.</li>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
-<p>The <code>overflow</code> option has no effect in the default ISO calendar, because a year is always 12 months and therefore not ambiguous.
+<p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
 However, <code>overflow</code> may have an effect in other calendars where years can be different numbers of months.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>

@@ -204,7 +204,7 @@ A dedicated third-party library might be a better solution to this problem.</p>
 
 <span class="token keyword">class</span> <span class="token class-name">ExpandedPlainDate</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span> <span class="token punctuation">{</span>
   <span class="token comment">// The expanded-year versions of the Temporal types are limited to using the</span>
-  <span class="token comment">// ISO calendar.</span>
+  <span class="token comment">// ISO 8601 calendar.</span>
   <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">year<span class="token punctuation">,</span> isoMonth<span class="token punctuation">,</span> isoDay</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     year <span class="token operator">=</span> <span class="token function">BigInt</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> isoYear <span class="token operator">=</span> <span class="token function">isLeapYear</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1972</span> <span class="token operator">:</span> <span class="token number">1970</span><span class="token punctuation">;</span>

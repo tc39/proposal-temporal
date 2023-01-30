@@ -339,7 +339,7 @@ However, date/time values in string inputs are always interpreted in the context
 <p>Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
 For example:</p>
 <pre><code>2020-08-05T20:06:13+09:00[Asia/Tokyo][u-ca=japanese]</code></pre><p>If the string isn&#39;t valid, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
-<p>Note that this string format (albeit limited to the ISO calendar system) is also used by <code>java.time</code> and some other time-zone-aware libraries.
+<p>Note that this string format (albeit limited to the ISO 8601 calendar system) is also used by <code>java.time</code> and some other time-zone-aware libraries.
 For more information on <code>Temporal</code>&#39;s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see <a href="./strings.html">String Parsing, Serialization, and Formatting</a>.</p>
 <p>The time zone ID is always required.
 <code>2020-08-05T20:06:13+09:00</code> and <code>2020-08-05T11:06:13Z</code> are not valid inputs to this method because they don&#39;t include a time zone ID in square brackets.
