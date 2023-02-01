@@ -11130,12 +11130,12 @@
       ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
       var settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
-      var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
-      otherFields.day = 1;
-      var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
       var thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
       thisFields.day = 1;
       var thisDate = ES.CalendarDateFromFields(calendar, thisFields);
+      var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
+      otherFields.day = 1;
+      var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
       var untilOptions = ObjectCreate$8(null);
       ES.CopyDataProperties(untilOptions, options, []);
       untilOptions.largestUnit = settings.largestUnit;
@@ -15778,13 +15778,13 @@
           throw new TypeError('invalid argument');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalDateLike);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
+        var partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
         fields = ES.CalendarMergeFields(calendar, fields, partialDate);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
-        options = ES.GetOptionsObject(options);
         return ES.CalendarDateFromFields(calendar, fields, options);
       }
     }, {
@@ -16145,8 +16145,8 @@
         options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
-        var partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
+        var partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
         fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
@@ -16890,13 +16890,13 @@
           throw new TypeError('invalid argument');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalMonthDayLike);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-        var partialMonthDay = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
+        var partialMonthDay = ES.PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
         fields = ES.CalendarMergeFields(calendar, fields, partialMonthDay);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
-        options = ES.GetOptionsObject(options);
         return ES.CalendarMonthDayFromFields(calendar, fields, options);
       }
     }, {
@@ -17171,9 +17171,9 @@
           throw new TypeError('invalid argument');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalTimeLike);
-        var partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
         options = ES.GetOptionsObject(options);
         var overflow = ES.ToTemporalOverflow(options);
+        var partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
         var fields = ES.ToTemporalTimeRecord(this);
         var _ObjectAssign = ObjectAssign(fields, partialTime),
           hour = _ObjectAssign.hour,
@@ -17484,13 +17484,13 @@
           throw new TypeError('invalid argument');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalYearMonthLike);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['month', 'monthCode', 'year']);
-        var partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
         var fields = ES.PrepareTemporalFields(this, fieldNames, []);
+        var partialYearMonth = ES.PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
         fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
         fields = ES.PrepareTemporalFields(fields, fieldNames, []);
-        options = ES.GetOptionsObject(options);
         return ES.CalendarYearMonthFromFields(calendar, fields, options);
       }
     }, {
@@ -17847,15 +17847,14 @@
           throw new TypeError('invalid zoned-date-time-like');
         }
         ES.RejectObjectWithCalendarOrTimeZone(temporalZonedDateTimeLike);
+        options = ES.GetOptionsObject(options);
         var calendar = GetSlot(this, CALENDAR);
         var fieldNames = ES.CalendarFields(calendar, ['day', 'hour', 'microsecond', 'millisecond', 'minute', 'month', 'monthCode', 'nanosecond', 'second', 'year']);
         ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
+        var fields = ES.PrepareTemporalFields(this, fieldNames, ['offset']);
         var partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
-        ES.Call(ArrayPrototypePush, fieldNames, ['timeZone']);
-        var fields = ES.PrepareTemporalFields(this, fieldNames, ['timeZone', 'offset']);
         fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
-        fields = ES.PrepareTemporalFields(fields, fieldNames, ['timeZone', 'offset']);
-        options = ES.GetOptionsObject(options);
+        fields = ES.PrepareTemporalFields(fields, fieldNames, ['offset']);
         var disambiguation = ES.ToTemporalDisambiguation(options);
         var offset = ES.ToTemporalOffset(options, 'prefer');
         var _ES$InterpretTemporal = ES.InterpretTemporalDateTimeFields(calendar, fields, options),
