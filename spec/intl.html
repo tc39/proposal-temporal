@@ -1411,24 +1411,22 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_, which describes a date in the calendar represented by _calendar_, to the ISO 8601 calendar, subject to processing specified by _overflow_.
+              It performs implementation-defined processing to convert _fields_, which describes a date in the built-in calendar identified by _calendar_, to the ISO 8601 calendar, subject to processing specified by _overflow_.
               For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
               For *"constrain"*, values that do not form a valid date are clamped to the correct range.
               It then returns an ISO Date Record with the corresponding ISO date.
             </dd>
           </dl>
           <p>
-            The operation throws a *TypeError* exception if the properties present on _fields_ are insufficient to identify a unique date in _calendar_.
-            For example, for a _calendar_ that uses eras, a *TypeError* is thrown if _fields_ does not include any of the following minimum combinations of properties:
+            Like ISODateFromFields, the operation throws a *TypeError* exception if the properties of _fields_ are insufficient to identify a unique date in the calendar. For example:
           </p>
           <ul>
-            <li>*"year"*, *"monthCode"*, *"day"*</li>
-            <li>*"year"*, *"month"*, *"day"*</li>
-            <li>*"era"*, *"eraYear"*, *"monthCode"*, *"day"*</li>
-            <li>*"era"*, *"eraYear"*, *"month"*, *"day"*</li>
+            <li>If *"day"* has the usual interpretation in the calendar and the corresponding value is *undefined*.</li>
+            <li>If *"month"* and *"monthCode"* have the usual interpretation in the calendar and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
+            <li>If the calendar supports the usual partitioning of years into eras with their own year counting (as in the Gregorian or traditional Japanese calendars) as represented by *"year"*, *"era"*, and *"eraYear"* and either the corresponding values for all three are *undefined*, or the value for one but not both of *"era"* and *"eraYear"* is *undefined*, or none of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
           </ul>
           <p>
-            The operation throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+            Like RegulateISODate, the operation throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
           </p>
         </emu-clause>
 
