@@ -1716,11 +1716,11 @@
             CalendarDateFields (
               _calendar_: a String,
               _fields_: a List of Strings,
-            )
+            ): a List of Strings
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It takes a list of standard fields in _fields_ that are necessary for a given operation and returns a new list by adding relevant calendar-specific fields for the calendar represented by _calendar_. This is relevant for calendars which accept fields other than the standard set of built-in calendar fields.</dd>
+            <dd>It interprets _fields_ as the names of fields (<emu-xref href="#table-temporal-field-requirements"></emu-xref>) necessary for a given operation and returns a new List by appending the names of additional calendar-specific fields that are relevant for the built-in calendar identified by _calendar_. For example, *"era"* and *"eraYear"* are appended when _calendar_ is *"gregory"* or *"japanese"*.</dd>
           </dl>
         </emu-clause>
 
@@ -2223,7 +2223,7 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Let _result_ be _fieldNames_.
             1. Else,
-              1. Let _result_ be ! CalendarDateFields(_calendar_.[[Identifier]], _fieldNames_).
+              1. Let _result_ be CalendarDateFields(_calendar_.[[Identifier]], _fieldNames_).
             1. Return CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
