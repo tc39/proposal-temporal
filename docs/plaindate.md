@@ -735,9 +735,9 @@ For a list of IANA time zone names, see the current version of the [IANA time zo
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
 In addition to the `timeZone`, the converted object carries a copy of all the relevant fields of `date` and `plainTime`.
-If `plainTime` is given, this method is equivalent to [`Temporal.PlainTime.from(plainTime).toZonedDateTime(date)`](./plaintime.md#toZonedDateTime).
+If `plainTime` is provided but is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
+If `plainTime` is provided, this method is equivalent to [`Temporal.PlainTime.from(plainTime).toPlainDateTime(date).toZonedDateTime(timeZone)`](./plaintime.md#toZonedDateTime).
 
-If `plainTime` is given but is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
 
 In the case of ambiguity caused by DST or other time zone changes, the earlier time will be used for backward transitions and the later time for forward transitions.
 When interoperating with existing code or services, this matches the behavior of legacy `Date` as well as libraries like moment.js, Luxon, and date-fns.
