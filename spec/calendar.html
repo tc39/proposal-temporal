@@ -741,14 +741,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-isodatefromfields" aoid="ISODateFromFields">
-      <h1>ISODateFromFields ( _fields_, _options_ )</h1>
+      <h1>ISODateFromFields ( _fields_, _overflow_ )</h1>
       <p>
         The ISODateFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.dateFromFields` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"year"*, *"day"* »).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _year_ be ! Get(_fields_, *"year"*).
         1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
@@ -759,15 +758,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-isoyearmonthfromfields" aoid="ISOYearMonthFromFields">
-      <h1>ISOYearMonthFromFields ( _fields_, _options_ )</h1>
+      <h1>ISOYearMonthFromFields ( _fields_, _overflow_ )</h1>
       <p>
         The ISOYearMonthFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.yearMonthFromFields` method for the ISO 8601 calendar.
         It returns a Record with three fields ([[Year]], [[Month]], and [[ReferenceISODay]]). All are integers.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _year_ be ! Get(_fields_, *"year"*).
         1. Assert: Type(_year_) is Number.
         1. Let _month_ be ? ResolveISOMonth(_fields_).
@@ -781,14 +779,13 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal-isomonthdayfromfields" aoid="ISOMonthDayFromFields">
-      <h1>ISOMonthDayFromFields ( _fields_, _options_ )</h1>
+      <h1>ISOMonthDayFromFields ( _fields_, _overflow_ )</h1>
       <p>
         The ISOMonthDayFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.monthDayFromFields` method for the ISO 8601 calendar.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _month_ be ! Get(_fields_, *"month"*).
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
         1. Let _year_ be ! Get(_fields_, *"year"*).
@@ -992,7 +989,9 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _result_ be ? ISODateFromFields(_fields_, _options_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"year"*, *"day"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1012,7 +1011,9 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _options_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[ReferenceISODay]]).
       </emu-alg>
     </emu-clause>
@@ -1032,7 +1033,9 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _options_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[ReferenceISOYear]]).
       </emu-alg>
     </emu-clause>
