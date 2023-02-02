@@ -107,6 +107,7 @@
         The CalendarFields abstract operation transforms a List of String values _fieldNames_ into another List of String values by calling the `fields` method of the given _calendar_ Object.
       </p>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.fields"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.fields"></emu-xref>.
         1. Let _fieldsArray_ be ? Invoke(_calendar_, *"fields"*, « CreateArrayFromList(_fieldNames_) »).
         1. Return ? IterableToListOfType(_fieldsArray_, « String »).
       </emu-alg>
@@ -118,6 +119,7 @@
         The CalendarMergeFields abstract operation merges the properties of two Objects _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_ Object.
       </p>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.mergefields"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.mergefields"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"mergeFields"*, « _fields_, _additionalFields_ »).
         1. If Type(_result_) is not Object, throw a *TypeError* exception.
         1. Return _result_.
@@ -144,6 +146,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.dateadd"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.dateadd"></emu-xref>.
         1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_ »).
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
@@ -169,6 +172,7 @@
       </dl>
       <emu-alg>
         1. If _dateUntil_ is not present, set _dateUntil_ to ? GetMethod(_calendar_, *"dateUntil"*).
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.dateuntil"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.dateuntil"></emu-xref>.
         1. Let _duration_ be ? Call(_dateUntil_, _calendar_, « _one_, _two_, _options_ »).
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return _duration_.
@@ -187,6 +191,7 @@
         <dd>It calls the given _calendar_'s `year()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.year"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.year"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -206,6 +211,7 @@
         <dd>It calls the given _calendar_'s `month()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.month"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.month"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -226,6 +232,7 @@
         <dd>It calls the given _calendar_'s `monthCode()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.monthcode"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.monthcode"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _dateLike_ »).
         1. If Type(_result_) is not String, throw a *TypeError* exception.
         1. Return _result_.
@@ -244,6 +251,7 @@
         <dd>It calls the given _calendar_'s `day()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.day"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.day"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -264,6 +272,7 @@
         <dd>It calls the given _calendar_'s `dayOfWeek()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.dayofweek"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.dayofweek"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -284,6 +293,7 @@
         <dd>It calls the given _calendar_'s `dayOfYear()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.dayofyear"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.dayofyear"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -304,6 +314,7 @@
         <dd>It calls the given _calendar_'s `weekOfYear()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.weekofyear"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.weekofyear"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -324,6 +335,7 @@
         <dd>It calls the given _calendar_'s `yearOfWeek()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.yearofweek"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.yearofweek"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -343,6 +355,7 @@
         <dd>It calls the given _calendar_'s `daysInWeek()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.daysinweek"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.daysinweek"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -363,6 +376,7 @@
         <dd>It calls the given _calendar_'s `daysInMonth()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.daysinmonth"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.daysinmonth"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -383,6 +397,7 @@
         <dd>It calls the given _calendar_'s `daysInYear()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.daysinyear"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.daysinyear"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -403,6 +418,7 @@
         <dd>It calls the given _calendar_'s `monthsInYear()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.monthsinyear"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.monthsinyear"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -423,6 +439,7 @@
         <dd>It calls the given _calendar_'s `inLeapYear()` method and validates the result.</dd>
       </dl>
       <emu-alg>
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.inleapyear"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.inleapyear"></emu-xref>.
         1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Boolean, throw a *TypeError* exception.
         1. Return _result_.
@@ -491,6 +508,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.datefromfields"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.datefromfields"></emu-xref>.
         1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
@@ -511,6 +529,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.yearmonthfromfields"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.yearmonthfromfields"></emu-xref>.
         1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
@@ -531,6 +550,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
+        1. NOTE: If _calendar_ is a built-in object, then the following step will usually invoke <emu-xref href="#sec-temporal.calendar.prototype.monthdayfromfields"></emu-xref> or <emu-xref href="#sup-temporal.calendar.prototype.monthdayfromfields"></emu-xref>.
         1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.
