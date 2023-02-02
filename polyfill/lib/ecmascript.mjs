@@ -269,12 +269,13 @@ export function CopyDataProperties(target, source, excludedKeys, excludedValues)
     var excluded = some(excludedKeys, function (e) {
       return SameValue(e, nextKey) === true;
     });
+    if (excluded) return;
 
     var enumerable =
       $isEnumerable(from, nextKey) ||
       // this is to handle string keys being non-enumerable in older engines
       (typeof source === 'string' && nextKey >= 0 && IsIntegralNumber(ToNumber(nextKey)));
-    if (excluded === false && enumerable) {
+    if (enumerable) {
       var propValue = Get(from, nextKey);
       if (excludedValues !== undefined) {
         forEach(excludedValues, function (e) {
