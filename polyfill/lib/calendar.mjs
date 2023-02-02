@@ -32,6 +32,10 @@ const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 const ObjectEntries = Object.entries;
+const ObjectKeys = Object.keys;
+const OriginalSet = Set;
+const SetPrototypeAdd = Set.prototype.add;
+const SetPrototypeValues = Set.prototype.values;
 
 const impl = {};
 
@@ -104,7 +108,18 @@ export class Calendar {
   }
   mergeFields(fields, additionalFields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return impl[GetSlot(this, CALENDAR_ID)].mergeFields(fields, additionalFields);
+    fields = ES.ToObject(fields);
+    const fieldsCopy = ObjectCreate(null);
+    ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
+    additionalFields = ES.ToObject(additionalFields);
+    const additionalFieldsCopy = ObjectCreate(null);
+    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+    const additionalKeys = ObjectKeys(additionalFieldsCopy);
+    const ignoredKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
+    const merged = ObjectCreate(null);
+    ES.CopyDataProperties(merged, fieldsCopy, ignoredKeys, [undefined]);
+    ES.CopyDataProperties(merged, additionalFieldsCopy, []);
+    return merged;
   }
   dateAdd(date, duration, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -268,19 +283,18 @@ impl['iso8601'] = {
   fields(fields) {
     return fields;
   },
-  mergeFields(fields, additionalFields) {
-    fields = ES.ToObject(fields);
-    additionalFields = ES.ToObject(additionalFields);
-    const merged = {};
-    ES.CopyDataProperties(merged, fields, [], [undefined]);
-    const additionalFieldsCopy = ObjectCreate(null);
-    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
-    if ('month' in additionalFieldsCopy || 'monthCode' in additionalFieldsCopy) {
-      delete merged.month;
-      delete merged.monthCode;
+  fieldKeysToIgnore(keys) {
+    const result = new OriginalSet();
+    for (let ix = 0; ix < keys.length; ix++) {
+      const key = keys[ix];
+      ES.Call(SetPrototypeAdd, result, [key]);
+      if (key === 'month') {
+        ES.Call(SetPrototypeAdd, result, ['monthCode']);
+      } else if (key === 'monthCode') {
+        ES.Call(SetPrototypeAdd, result, ['month']);
+      }
     }
-    ES.CopyDataProperties(merged, additionalFieldsCopy, []);
-    return merged;
+    return [...ES.Call(SetPrototypeValues, result, [])];
   },
   dateAdd(date, years, months, weeks, days, overflow, calendar) {
     let year = GetSlot(date, ISO_YEAR);
@@ -1688,6 +1702,7 @@ const helperJapanese = ObjectAssign(
     // The last 3 Japanese eras confusingly return only one character in the
     // default "short" era, so need to use the long format.
     eraLength: 'long',
+    erasBeginMidYear: true,
     calendarIsVulnerableToJulianBug: true,
     reviseIntlEra(calendarDate, isoDate) {
       const { era, eraYear } = calendarDate;
@@ -1914,35 +1929,48 @@ const nonIsoGeneralImpl = {
     if (ES.Call(ArrayIncludes, fields, ['year'])) fields = [...fields, 'era', 'eraYear'];
     return fields;
   },
-  mergeFields(fields, additionalFields) {
-    fields = ES.ToObject(fields);
-    additionalFields = ES.ToObject(additionalFields);
-    const fieldsCopy = {};
-    ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
-    const additionalFieldsCopy = {};
-    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
-
-    // era and eraYear are intentionally unused
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { month, monthCode, year, era, eraYear, ...original } = fieldsCopy;
-    const {
-      month: newMonth,
-      monthCode: newMonthCode,
-      year: newYear,
-      era: newEra,
-      eraYear: newEraYear
-    } = additionalFieldsCopy;
-    if (newMonth === undefined && newMonthCode === undefined) {
-      if (month !== undefined) original.month = month;
-      if (monthCode !== undefined) original.monthCode = monthCode;
+  fieldKeysToIgnore(keys) {
+    const result = new OriginalSet();
+    for (let ix = 0; ix < keys.length; ix++) {
+      const key = keys[ix];
+      ES.Call(SetPrototypeAdd, result, [key]);
+      switch (key) {
+        case 'era':
+          ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          ES.Call(SetPrototypeAdd, result, ['year']);
+          break;
+        case 'eraYear':
+          ES.Call(SetPrototypeAdd, result, ['era']);
+          ES.Call(SetPrototypeAdd, result, ['year']);
+          break;
+        case 'year':
+          ES.Call(SetPrototypeAdd, result, ['era']);
+          ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          break;
+        case 'month':
+          ES.Call(SetPrototypeAdd, result, ['monthCode']);
+          // See https://github.com/tc39/proposal-temporal/issues/1784
+          if (this.helper.erasBeginMidYear) {
+            ES.Call(SetPrototypeAdd, result, ['era']);
+            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          }
+          break;
+        case 'monthCode':
+          ES.Call(SetPrototypeAdd, result, ['month']);
+          if (this.helper.erasBeginMidYear) {
+            ES.Call(SetPrototypeAdd, result, ['era']);
+            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          }
+          break;
+        case 'day':
+          if (this.helper.erasBeginMidYear) {
+            ES.Call(SetPrototypeAdd, result, ['era']);
+            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          }
+          break;
+      }
     }
-    if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
-      // Only `year` is needed. We don't set era and eraYear because it's
-      // possible to create a conflict for eras that start or end mid-year. See
-      // https://github.com/tc39/proposal-temporal/issues/1784.
-      original.year = year;
-    }
-    return { ...original, ...additionalFieldsCopy };
+    return [...ES.Call(SetPrototypeValues, result, [])];
   },
   dateAdd(date, years, months, weeks, days, overflow, calendar) {
     const cache = OneObjectCache.getCacheForObject(date);
