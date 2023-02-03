@@ -834,22 +834,22 @@
       <h1>
         ISOResolveMonth (
           _fields_: an Object,
-        ): either a normal completion containing an integer or a throw completion
+        ): either a normal completion containing ~unused~ or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It validates that the *"month"* and *"monthCode"* properties of the given _fields_ are not inconsistent and merges them into an integer month which is returned, or throws an exception if both are *undefined*.
+          It validates that the *"month"* and *"monthCode"* properties of the given _fields_ are not inconsistent and merges them into a *"month"* property with an integral Number value, or throws an exception if both are *undefined*.
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: _fields_ is an ordinary object with no more and no less than the own data properties listed in <emu-xref href="#table-temporal-field-requirements"></emu-xref>.
+        1. Assert: _fields_ is an ordinary Object that is not directly observable from ECMAScript code and for which the value of the [[Prototype]] internal slot is *null* and every property is a data property whose value is a primitive value.
         1. Let _month_ be ! Get(_fields_, *"month"*).
         1. Assert: _month_ is *undefined* or _month_ is a Number.
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
         1. If _monthCode_ is *undefined*, then
           1. If _month_ is *undefined*, throw a *TypeError* exception.
-          1. Return ℝ(_month_).
+          1. Return ~unused~.
         1. Assert: _monthCode_ is a String.
         1. NOTE: The ISO 8601 calendar does not include leap months.
         1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
@@ -859,7 +859,8 @@
         1. Let _monthCodeInteger_ be ! ToIntegerOrInfinity(_monthCodeDigits_).
         1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
         1. If _month_ is not *undefined* and ℝ(_month_) ≠ _monthCodeInteger_, throw a *RangeError* exception.
-        1. Return _monthCodeInteger_.
+        1. Perform ! Set(_fields_, *"month"*, 𝔽(_monthCodeInteger_), *false*).
+        1. Return ~unused~.
       </emu-alg>
     </emu-clause>
 
@@ -872,11 +873,10 @@
         1. Assert: Type(_fields_) is Object.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _year_ be ! Get(_fields_, *"year"*).
-        1. Assert: Type(_year_) is Number.
-        1. Let _month_ be ? ISOResolveMonth(_fields_).
+        1. Let _month_ be ! Get(_fields_, *"month"*).
         1. Let _day_ be ! Get(_fields_, *"day"*).
-        1. Assert: Type(_day_) is Number.
-        1. Return ? RegulateISODate(ℝ(_year_), _month_, ℝ(_day_), _overflow_).
+        1. Assert: _year_, _month_, and _day_ are all Numbers.
+        1. Return ? RegulateISODate(ℝ(_year_), ℝ(_month_), ℝ(_day_), _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -890,9 +890,9 @@
         1. Assert: Type(_fields_) is Object.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _year_ be ! Get(_fields_, *"year"*).
-        1. Assert: Type(_year_) is Number.
-        1. Let _month_ be ? ISOResolveMonth(_fields_).
-        1. Let _result_ be ? RegulateISOYearMonth(ℝ(_year_), _month_, _overflow_).
+        1. Let _month_ be ! Get(_fields_, *"month"*).
+        1. Assert: _year_ and _month_ are Numbers.
+        1. Let _result_ be ? RegulateISOYearMonth(ℝ(_year_), ℝ(_month_), _overflow_).
         1. Return the Record {
             [[Year]]: _result_.[[Year]],
             [[Month]]: _result_.[[Month]],
@@ -910,19 +910,15 @@
         1. Assert: Type(_fields_) is Object.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. Let _month_ be ! Get(_fields_, *"month"*).
-        1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
-        1. Let _year_ be ! Get(_fields_, *"year"*).
-        1. If _month_ is not *undefined*, and _monthCode_ and _year_ are both *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Set _month_ to ? ISOResolveMonth(_fields_).
         1. Let _day_ be ! Get(_fields_, *"day"*).
-        1. Assert: Type(_day_) is Number.
+        1. Assert: _month_ and _day_ are Numbers.
+        1. Let _year_ be ! Get(_fields_, *"year"*).
         1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
-        1. If _monthCode_ is *undefined*, then
-          1. Assert: Type(_year_) is Number.
-          1. Let _result_ be ? RegulateISODate(ℝ(_year_), _month_, ℝ(_day_), _overflow_).
+        1. If _year_ is *undefined*, then
+          1. Let _result_ be ? RegulateISODate(_referenceISOYear_, ℝ(_month_), ℝ(_day_), _overflow_).
         1. Else,
-          1. Let _result_ be ? RegulateISODate(_referenceISOYear_, _month_, ℝ(_day_), _overflow_).
+          1. Assert: _year_ is a Number.
+          1. Let _result_ be ? RegulateISODate(ℝ(_year_), ℝ(_month_), ℝ(_day_), _overflow_).
         1. Return the Record {
             [[Month]]: _result_.[[Month]],
             [[Day]]: _result_.[[Day]],
@@ -1113,6 +1109,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"year"*, *"day"* »).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Perform ? ISOResolveMonth(_fields_).
         1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], *"iso8601"*).
       </emu-alg>
@@ -1135,6 +1132,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Perform ? ISOResolveMonth(_fields_).
         1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], *"iso8601"*, _result_.[[ReferenceISODay]]).
       </emu-alg>
@@ -1157,6 +1155,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Perform ? ISOResolveMonth(_fields_).
         1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
         1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], *"iso8601"*, _result_.[[ReferenceISOYear]]).
       </emu-alg>
