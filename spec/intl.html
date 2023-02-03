@@ -1754,16 +1754,16 @@
           </emu-note>
         </emu-clause>
 
-        <emu-clause id="sec-temporal-calendardatefields" type="abstract operation">
+        <emu-clause id="sec-temporal-calendarfielddescriptors" type="abstract operation">
           <h1>
-            CalendarDateFields (
+            CalendarFieldDescriptors (
               _calendar_: a String,
-              _fields_: a List of Strings,
-            ): a List of Strings
+              _type_: ~date~, ~year-month~, or ~month-day~,
+            ): a List of Calendar Field Descriptor Records
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It interprets _fields_ as the names of fields (<emu-xref href="#table-temporal-field-requirements"></emu-xref>) necessary for a given operation and returns a new List by appending the names of additional relevant fields specific to the built-in calendar identified by _calendar_. For example, when _calendar_ is *"gregory"* or *"japanese"*, *"era"* and *"eraYear"* are appended if and only if _fields_ contains *"year"*.</dd>
+            <dd>It characterizes calendar-specific fields that are relevant for values of the provided _type_ in the built-in calendar identified by _calendar_. For example, *"era"* (with ToString conversion) and *"eraYear"* (with ToIntegerWithTruncation conversion) are returned when _calendar_ is *"gregory"* or *"japanese"* and _type_ is ~date~ or ~year-month~.</dd>
           </dl>
         </emu-clause>
 
@@ -1883,8 +1883,8 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"year"*, *"day"* »).
             1. Else,
-              1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], _relevantFieldNames_).
-              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
+              1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~date~).
+              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Perform ? ISOResolveMonth(_fields_).
@@ -1911,8 +1911,8 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"year"* »).
             1. Else,
-              1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], _relevantFieldNames_).
-              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
+              1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~year-month~).
+              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
               1. Let _firstDayIndex_ be the 1-based index of the first day of the month described by _fields_ (i.e., 1 unless the month's first day is skipped by this calendar.)
               1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_firstDayIndex_)).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
@@ -1942,8 +1942,8 @@
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"day"* »).
             1. Else,
-              1. Let _fieldNames_ be CalendarDateFields(_calendar_.[[Identifier]], _relevantFieldNames_).
-              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
+              1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~month-day~).
+              1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
               1. Perform ? ISOResolveMonth(_fields_).
@@ -2310,10 +2310,12 @@
                     1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
                     1. Return ? IteratorClose(_iteratorRecord_, _completion_).
                 1. Append _nextValue_ to the end of the List _fieldNames_.
-            1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-              1. Let _result_ be _fieldNames_.
-            1. Else,
-              1. Let _result_ be CalendarDateFields(_calendar_.[[Identifier]], _fieldNames_).
+            1. Let _result_ be _fieldNames_.
+            1. If _calendar_.[[Identifier]] is not *"iso8601"*, then
+              1. NOTE: Every built-in calendar preserves all input field names in output.
+              1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~date~).
+              1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+                1. Append _desc_.[[Property]] to _result_.
             1. Return CreateArrayFromList(_result_).
           </emu-alg>
         </emu-clause>
