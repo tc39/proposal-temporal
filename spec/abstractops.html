@@ -1799,6 +1799,7 @@
         _fields_: an Object,
         _fieldNames_: a List of property names,
         _requiredFields_: ~partial~ or a List of property names,
+        optional _extraFieldDescriptors_: a List of Calendar Field Descriptor Records
       ): either a normal completion containing an Object, or an abrupt completion
     </h1>
     <dl class="header">
@@ -1807,11 +1808,18 @@
         The returned Object has a null prototype, and an own data property for each element of _fieldNames_ that corresponds with a non-*undefined* property of the same name on _fields_ used as the input for relevant conversion.
         When _requiredFields_ is ~partial~, this operation throws if none of the properties are present with a non-*undefined* value.
         When _requiredFields_ is a List, this operation throws if any of the properties named by it are absent or undefined, and otherwise substitutes a relevant default for any absent or undefined non-required property (ensuring that the returned object has a property for each element of _fieldNames_).
+        When _extraFieldDescriptors_ is present, its contents are treated as an extension of <emu-xref href="#table-temporal-field-requirements"></emu-xref>.
       </dd>
     </dl>
     <emu-alg>
       1. Let _result_ be OrdinaryObjectCreate(*null*).
       1. Let _any_ be *false*.
+      1. If _extraFieldDescriptors_ is present, then
+        1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+          1. Assert: _fieldNames_ does not contain _desc_.[[Property]].
+          1. Append _desc_.[[Property]] to _fieldNames_.
+          1. If _desc_.[[Required]] is *true* and _requiredFields_ is a List, then
+            1. Append _desc_.[[Property]] to _requiredFields_.
       1. Let _sortedFieldNames_ be SortStringListByCodeUnit(_fieldNames_).
       1. For each property name _property_ of _sortedFieldNames_, do
         1. Let _value_ be ? Get(_fields_, _property_).
@@ -1828,6 +1836,9 @@
             1. Else,
               1. Assert: _Conversion_ is ~ToString~.
               1. Set _value_ to ? ToString(_value_).
+          1. Else if _extraFieldDescriptors_ is present and _extraFieldDescriptors_ contains a Calendar Field Descriptor Record _desc_ such that _desc_.[[Property]] is _property_, then
+            1. Let _converter_ be _desc_.[[Conversion]].
+            1. Set _value_ to ? _converter_(_value_).
           1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
         1. Else if _requiredFields_ is a List, then
           1. If _requiredFields_ contains _property_, then
@@ -1906,16 +1917,6 @@
             <td>*undefined*</td>
           </tr>
           <tr>
-            <td>*"era"*</td>
-            <td>~ToString~</td>
-            <td>*undefined*</td>
-          </tr>
-          <tr>
-            <td>*"eraYear"*</td>
-            <td>~ToIntegerWithTruncation~</td>
-            <td>*undefined*</td>
-          </tr>
-          <tr>
             <td>*"timeZone"*</td>
             <td></td>
             <td>*undefined*</td>
@@ -1923,6 +1924,36 @@
         </tbody>
       </table>
     </emu-table>
+
+    <emu-clause id="sec-temporal-calendar-field-descriptor-record">
+      <h1>Calendar Field Descriptor Record</h1>
+      <p>A <dfn variants="Calendar Field Descriptor Records">Calendar Field Descriptor Record</dfn> is a Record value used to describe a calendar-specific field for use in creating and interacting with instances of Temporal types.</p>
+      <p>Calendar Field Descriptor Records have the fields listed in <emu-xref href="#table-temporal-calendar-field-descriptor-record"></emu-xref>.</p>
+      <emu-table id="table-temporal-calendar-field-descriptor-record" caption="Calendar Field Descriptor Record Fields">
+        <table>
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Property]]</td>
+            <td>a String</td>
+            <td>The property name associated with the field, analogous to the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>.</td>
+          </tr>
+          <tr>
+            <td>[[Conversion]]</td>
+            <td>an Abstract Closure accepting a single ECMAScript language value and returning either a normal completion containing an ECMAScript language value representing purely static data or a throw completion.</td>
+            <td>The means by which purported values are coerced to a static representation of the correct type (or rejected if that fails), analogous to steps indicated by the Conversion column of <emu-xref href="#table-temporal-field-requirements"></emu-xref>.</td>
+          </tr>
+          <tr>
+            <td>[[Required]]</td>
+            <td>a Boolean</td>
+            <td>Whether PrepareTemporalFields should consider the field as required when not accepting partial data.</td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-getdifferencesettings" type="abstract operation">
