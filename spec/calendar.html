@@ -841,7 +841,7 @@
         <dd>It validates that the *"month"* and *"monthCode"* properties of the given _fields_ are not inconsistent and merges them into a *"month"* property with an integral Number value, or throws an exception if both are *undefined*.</dd>
       </dl>
       <emu-alg>
-        1. Assert: _fields_ is an ordinary Object that is not directly observable from ECMAScript code and for which the value of the [[Prototype]] internal slot is *null* and every property is a data property whose value is a primitive value.
+        1. Assert: _fields_ is an ordinary Object that is not directly observable from ECMAScript code and for which the value of the [[Prototype]] internal slot is *null* and every property is a data property.
         1. Let _month_ be ! Get(_fields_, *"month"*).
         1. Assert: _month_ is *undefined* or _month_ is a Number.
         1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
