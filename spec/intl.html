@@ -1790,6 +1790,7 @@
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Perform ? ISOResolveMonth(_fields_).
               1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
             1. Else,
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~date~).
@@ -1819,6 +1820,7 @@
               1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_firstDayIndex_)).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Perform ? ISOResolveMonth(_fields_).
               1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
             1. Else,
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~year-month~).
@@ -1847,6 +1849,7 @@
               1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « »).
             1. Let _overflow_ be ? ToTemporalOverflow(_options_).
             1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+              1. Perform ? ISOResolveMonth(_fields_).
               1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
             1. Else,
               1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~month-day~).
