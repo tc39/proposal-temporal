@@ -839,7 +839,8 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It validates that the *"month"* and *"monthCode"* properties of the given _fields_ are not inconsistent and merges them into a *"month"* property with an integral Number value, or throws an exception if both are *undefined*.
+          It ensures that the *"month"* property of _fields_, if *undefined*, is set to the integral Number value in the inclusive interval from 1 to 12 that corresponds to the *"monthCode"* property of _fields_.
+          It throws an exception if both properties are *undefined*, or if either property is invalid, or if the properties are inconsistent.
         </dd>
       </dl>
       <emu-alg>
