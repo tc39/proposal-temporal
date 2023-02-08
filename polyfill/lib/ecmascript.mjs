@@ -1653,7 +1653,6 @@ export function GetISO8601Calendar() {
 
 export function CalendarFields(calendar, fieldNames) {
   const fields = GetMethod(calendar, 'fields');
-  if (fields === undefined) return fieldNames;
   fieldNames = Call(fields, calendar, [fieldNames]);
   const result = [];
   for (const name of fieldNames) {
@@ -1665,7 +1664,6 @@ export function CalendarFields(calendar, fieldNames) {
 
 export function CalendarMergeFields(calendar, fields, additionalFields) {
   const mergeFields = GetMethod(calendar, 'mergeFields');
-  if (mergeFields === undefined) return { ...fields, ...additionalFields };
   const result = Call(mergeFields, calendar, [fields, additionalFields]);
   if (Type(result) !== 'Object') throw new TypeError('bad return from calendar.mergeFields()');
   return result;
