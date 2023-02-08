@@ -1574,7 +1574,6 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   CalendarFields: (calendar, fieldNames) => {
     const fields = ES.GetMethod(calendar, 'fields');
-    if (fields === undefined) return fieldNames;
     fieldNames = ES.Call(fields, calendar, [fieldNames]);
     const result = [];
     for (const name of fieldNames) {
@@ -1585,7 +1584,6 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   CalendarMergeFields: (calendar, fields, additionalFields) => {
     const mergeFields = ES.GetMethod(calendar, 'mergeFields');
-    if (mergeFields === undefined) return { ...fields, ...additionalFields };
     const result = ES.Call(mergeFields, calendar, [fields, additionalFields]);
     if (ES.Type(result) !== 'Object') throw new TypeError('bad return from calendar.mergeFields()');
     return result;
