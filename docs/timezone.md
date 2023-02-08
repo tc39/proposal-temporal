@@ -299,7 +299,11 @@ During "skipped" clock time like the hour after DST starts in the spring or cert
 
 **Returns:** A `Temporal.Instant` object representing the next UTC offset transition in this time zone, or `null` if no transitions later than `startingPoint` could be found.
 
-This method is used to calculate a possible future UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
+This method is used to calculate a possible future UTC offset transition after `startingPoint` for this time zone.
+A "transition" is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
+Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.
+
+The returned `Temporal.Instant` will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.
 
 Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
 Also note that some IANA time zones (e.g., `Etc/GMT+5`) have no offset transitions either.
@@ -329,7 +333,11 @@ duration.toLocaleString(); // output will vary
 
 **Returns:** A `Temporal.Instant` object representing the previous UTC offset transition in this time zone, or `null` if no transitions earlier than `startingPoint` could be found.
 
-This method is used to calculate a possible past UTC offset transition after `startingPoint` for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.
+This method is used to calculate a possible past UTC offset transition before `startingPoint` for this time zone.
+A "transition" is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
+Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.
+
+The returned `Temporal.Instant` will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.
 
 Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
 Also note that some IANA time zones (e.g., `Etc/GMT+5`) have no offset transitions either.
