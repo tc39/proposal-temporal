@@ -1148,10 +1148,9 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
             if (overflow === 'reject') {
               throw new RangeError(`Hebrew monthCode M05L is invalid in year ${year} which is not a leap year`);
             } else {
-              // constrain to last day of previous month (Av)
-              month = 5;
-              day = 30;
-              monthCode = 'M05';
+              // constrain to same day of next month (Adar)
+              month = 6;
+              monthCode = 'M06';
             }
           }
         } else {
@@ -1817,7 +1816,8 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (numberPart[0] === '0') numberPart = numberPart.slice(1);
         let monthInfo = months[numberPart];
         month = monthInfo && monthInfo.monthIndex;
-        // If this leap month isn't present in this year, constrain down to the last day of the previous month.
+        // If this leap month isn't present in this year, constrain to the same
+        // day of the previous month.
         if (
           month === undefined &&
           monthCode.endsWith('L') &&
@@ -1828,7 +1828,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           if (withoutML[0] === '0') withoutML = withoutML.slice(1);
           monthInfo = months[withoutML];
           if (monthInfo) {
-            ({ daysInMonth: day, monthIndex: month } = monthInfo);
+            month = monthInfo.monthIndex;
             monthCode = buildMonthCode(withoutML);
           }
         }
