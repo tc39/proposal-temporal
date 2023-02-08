@@ -1027,12 +1027,14 @@ const nonIsoHelperBase = {
   // All built-in calendars except Chinese/Dangi and Hebrew use an era
   hasEra: true,
   monthDayFromFields(fields, overflow, cache) {
-    let { year, month, monthCode, day, era, eraYear } = fields;
+    let { monthCode, day } = fields;
     if (monthCode === undefined) {
+      let { year, era, eraYear } = fields;
       if (year === undefined && (era === undefined || eraYear === undefined)) {
         throw new TypeError('`monthCode`, `year`, or `era` and `eraYear` is required');
       }
-      ({ monthCode, year } = this.adjustCalendarDate({ year, month, monthCode, day, era, eraYear }, cache, overflow));
+      // Apply overflow behaviour to year/month/day, to get correct monthCode/day
+      ({ monthCode, day } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
     }
 
     let isoYear, isoMonth, isoDay;
