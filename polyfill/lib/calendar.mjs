@@ -1037,12 +1037,18 @@ const nonIsoHelperBase = {
 
     let isoYear, isoMonth, isoDay;
     let closestCalendar, closestIso;
-    // Look backwards starting from the calendar year of 1972-01-01 up to 100
-    // calendar years to find a year that has this month and day. Normal months
-    // and days will match immediately, but for leap days and leap months we may
-    // have to look for a while.
-    const startDateIso = { year: 1972, month: 1, day: 1 };
-    const { year: calendarYear } = this.isoToCalendarDate(startDateIso, cache);
+    // Look backwards starting from one of the calendar years spanning ISO year
+    // 1972, up to 100 calendar years prior, to find a year that has this month
+    // and day. Normal months and days will match immediately, but for leap days
+    // and leap months we may have to look for a while.
+    const startDateIso = { year: 1972, month: 12, day: 31 };
+    const calendarOfStartDateIso = this.isoToCalendarDate(startDateIso, cache);
+    // Note: relies on lexicographical ordering of monthCodes
+    const calendarYear =
+      calendarOfStartDateIso.monthCode > monthCode ||
+      (calendarOfStartDateIso.monthCode === monthCode && calendarOfStartDateIso.day >= day)
+        ? calendarOfStartDateIso.year
+        : calendarOfStartDateIso.year - 1;
     for (let i = 0; i < 100; i++) {
       let testCalendarDate = this.adjustCalendarDate({ day, monthCode, year: calendarYear - i }, cache);
       const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
