@@ -393,7 +393,10 @@ During &quot;skipped&quot; clock time like the hour after DST starts in the spri
 <li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time after which to find the next UTC offset transition.</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the next UTC offset transition in this time zone, or <code>null</code> if no transitions later than <code>startingPoint</code> could be found.</p>
-<p>This method is used to calculate a possible future UTC offset transition after <code>startingPoint</code> for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.</p>
+<p>This method is used to calculate a possible future UTC offset transition after <code>startingPoint</code> for this time zone.
+A &quot;transition&quot; is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
+Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.</p>
+<p>The returned <code>Temporal.Instant</code> will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.</p>
 <p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
 Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
 In that case, this method will return <code>null</code>.</p>
@@ -411,7 +414,10 @@ duration<span class="token punctuation">.</span><span class="token function">toL
 <li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time before which to find the previous UTC offset transition.</li>
 </ul>
 <p><strong>Returns:</strong> A <code>Temporal.Instant</code> object representing the previous UTC offset transition in this time zone, or <code>null</code> if no transitions earlier than <code>startingPoint</code> could be found.</p>
-<p>This method is used to calculate a possible past UTC offset transition after <code>startingPoint</code> for this time zone. This can be because of DST or other political changes like a country having permanently changed its offset.</p>
+<p>This method is used to calculate a possible past UTC offset transition before <code>startingPoint</code> for this time zone.
+A &quot;transition&quot; is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
+Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.</p>
+<p>The returned <code>Temporal.Instant</code> will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.</p>
 <p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
 Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
 In that case, this method will return <code>null</code>.</p>
