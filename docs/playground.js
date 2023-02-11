@@ -9022,7 +9022,6 @@
     },
     CalendarFields: function CalendarFields(calendar, fieldNames) {
       var fields = ES.GetMethod(calendar, 'fields');
-      if (fields === undefined) return fieldNames;
       fieldNames = ES.Call(fields, calendar, [fieldNames]);
       var result = [];
       var _iterator6 = _createForOfIteratorHelper(fieldNames),
@@ -9042,7 +9041,6 @@
     },
     CalendarMergeFields: function CalendarMergeFields(calendar, fields, additionalFields) {
       var mergeFields = ES.GetMethod(calendar, 'mergeFields');
-      if (mergeFields === undefined) return _objectSpread2(_objectSpread2({}, fields), additionalFields);
       var result = ES.Call(mergeFields, calendar, [fields, additionalFields]);
       if (ES.Type(result) !== 'Object') throw new TypeError('bad return from calendar.mergeFields()');
       return result;
