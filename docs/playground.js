@@ -10971,7 +10971,6 @@
       };
     },
     GetDifferenceSettings: function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-      options = ES.GetOptionsObject(options);
       var ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce(function (allowed, unitInfo) {
         var p = unitInfo[0];
         var s = unitInfo[1];
@@ -11017,7 +11016,9 @@
     DifferenceTemporalInstant: function DifferenceTemporalInstant(operation, instant, other, options) {
       var sign = operation === 'since' ? -1 : 1;
       other = ES.ToTemporalInstant(other);
-      var settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'second');
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
       var onens = GetSlot(instant, EPOCHNANOSECONDS);
       var twons = GetSlot(other, EPOCHNANOSECONDS);
       var _ES$DifferenceInstant = ES.DifferenceInstant(onens, twons, settings.roundingIncrement, settings.smallestUnit, settings.largestUnit, settings.roundingMode),
@@ -11036,11 +11037,11 @@
       var calendar = GetSlot(plainDate, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
       ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
-      var settings = ES.GetDifferenceSettings(operation, options, 'date', [], 'day', 'day');
-      var untilOptions = ObjectCreate$8(null);
-      ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = settings.largestUnit;
-      var _ES$CalendarDateUntil2 = ES.CalendarDateUntil(calendar, plainDate, other, untilOptions),
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
+      resolvedOptions.largestUnit = settings.largestUnit;
+      var _ES$CalendarDateUntil2 = ES.CalendarDateUntil(calendar, plainDate, other, resolvedOptions),
         years = _ES$CalendarDateUntil2.years,
         months = _ES$CalendarDateUntil2.months,
         weeks = _ES$CalendarDateUntil2.weeks,
@@ -11061,8 +11062,10 @@
       var calendar = GetSlot(plainDateTime, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
       ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
-      var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'day');
-      var _ES$DifferenceISODate3 = ES.DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, options),
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
+      var _ES$DifferenceISODate3 = ES.DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, resolvedOptions),
         years = _ES$DifferenceISODate3.years,
         months = _ES$DifferenceISODate3.months,
         weeks = _ES$DifferenceISODate3.weeks,
@@ -11099,7 +11102,9 @@
     DifferenceTemporalPlainTime: function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
       var sign = operation === 'since' ? -1 : 1;
       other = ES.ToTemporalTime(other);
-      var settings = ES.GetDifferenceSettings(operation, options, 'time', [], 'nanosecond', 'hour');
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
       var _ES$DifferenceTime2 = ES.DifferenceTime(GetSlot(plainTime, ISO_HOUR), GetSlot(plainTime, ISO_MINUTE), GetSlot(plainTime, ISO_SECOND), GetSlot(plainTime, ISO_MILLISECOND), GetSlot(plainTime, ISO_MICROSECOND), GetSlot(plainTime, ISO_NANOSECOND), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND)),
         hours = _ES$DifferenceTime2.hours,
         minutes = _ES$DifferenceTime2.minutes,
@@ -11130,7 +11135,10 @@
       var calendar = GetSlot(yearMonth, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
       ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
-      var settings = ES.GetDifferenceSettings(operation, options, 'date', ['week', 'day'], 'month', 'year');
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
+      resolvedOptions.largestUnit = settings.largestUnit;
       var fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
       var thisFields = ES.PrepareTemporalFields(yearMonth, fieldNames, []);
       thisFields.day = 1;
@@ -11138,10 +11146,7 @@
       var otherFields = ES.PrepareTemporalFields(other, fieldNames, []);
       otherFields.day = 1;
       var otherDate = ES.CalendarDateFromFields(calendar, otherFields);
-      var untilOptions = ObjectCreate$8(null);
-      ES.CopyDataProperties(untilOptions, options, []);
-      untilOptions.largestUnit = settings.largestUnit;
-      var _ES$CalendarDateUntil3 = ES.CalendarDateUntil(calendar, thisDate, otherDate, untilOptions),
+      var _ES$CalendarDateUntil3 = ES.CalendarDateUntil(calendar, thisDate, otherDate, resolvedOptions),
         years = _ES$CalendarDateUntil3.years,
         months = _ES$CalendarDateUntil3.months;
       if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
@@ -11158,7 +11163,10 @@
       var calendar = GetSlot(zonedDateTime, CALENDAR);
       var otherCalendar = GetSlot(other, CALENDAR);
       ES.CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
-      var settings = ES.GetDifferenceSettings(operation, options, 'datetime', [], 'nanosecond', 'hour');
+      var resolvedOptions = ObjectCreate$8(null);
+      ES.CopyDataProperties(resolvedOptions, ES.GetOptionsObject(options), []);
+      var settings = ES.GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
+      resolvedOptions.largestUnit = settings.largestUnit;
       var ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
       var ns2 = GetSlot(other, EPOCHNANOSECONDS);
       var years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
@@ -11180,10 +11188,7 @@
         if (!ES.TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
           throw new RangeError("When calculating difference between time zones, largestUnit must be 'hours' " + 'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.');
         }
-        var untilOptions = ObjectCreate$8(null);
-        ES.CopyDataProperties(untilOptions, options, []);
-        untilOptions.largestUnit = settings.largestUnit;
-        var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, untilOptions);
+        var _ES$DifferenceZonedDa = ES.DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions);
         years = _ES$DifferenceZonedDa.years;
         months = _ES$DifferenceZonedDa.months;
         weeks = _ES$DifferenceZonedDa.weeks;
