@@ -1818,12 +1818,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         month = monthInfo && monthInfo.monthIndex;
         // If this leap month isn't present in this year, constrain to the same
         // day of the previous month.
-        if (
-          month === undefined &&
-          monthCode.endsWith('L') &&
-          !ES.Call(ArrayIncludes, ['M01L', 'M12L', 'M13L'], [monthCode]) &&
-          overflow === 'constrain'
-        ) {
+        if (month === undefined && monthCode.endsWith('L') && monthCode != 'M13L' && overflow === 'constrain') {
           let withoutML = monthCode.slice(1, -1);
           if (withoutML[0] === '0') withoutML = withoutML.slice(1);
           monthInfo = months[withoutML];
