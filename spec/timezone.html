@@ -16,6 +16,8 @@
     </p>
     <p>
       Built-in time zones may be <dfn variants="named time zone">named time zones</dfn>, represented by Strings for which IsAvailableTimeZoneName returns *true*.
+      Caller-supplied names of named time zones can be aliases for <dfn variants="canonical time zone">canonical time zones</dfn>.
+      CanonicalizeTimeZoneName is used to translate aliases into canonical time zone names.
       They may also be <dfn variants="offset time zone">offset time zones</dfn>, represented by Strings for which IsTimeZoneOffsetString returns *true*.
     </p>
     <p>
@@ -26,6 +28,28 @@
       An ECMAScript implementation that includes the ECMA-402 Internationalization API must define built-in named time zones in correspondence with the Zone and Link names of the IANA Time Zone Database (and <strong>only</strong> such names) and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
       Other implementations are encouraged to do the same.
     </p>
+
+    <emu-clause id="sec-time-zone-data-updates">
+      <h1>Handling Updates and Ensuring Consistency of Time Zone Data</h1>
+      <p>
+        The IANA Time Zone Database is frequently updated, averaging 10 annual releases in recent years.
+        An ECMAScript implementation is strongly encouraged to use the most recent version of the IANA Time Zone Database that was available when the implementation was released.
+      </p>
+      <p>
+        It is also acceptable for implementations to update time zone data dynamically, either directly by loading a new version of the IANA Time Zone Database or indirectly by calling an external, dynamically-updated source like an operating system.
+        It is allowed for these updates to happen during the lifetime of the surrounding agent.
+        However, to ensure that ECMAScript programs can depend on a consistent view of time zone data, this specification places the following requirements on ECMAScript implementations that dynamically update time zone data:
+      </p>
+      <ul>
+        <li>
+          After time zone data for a particular canonical named time zone is used during the lifetime of the surrounding agent, equivalent time zone data must be used for the lifetime of the surrounding agent for all subsequent use of the same canonical time zone name.
+          However, implementations are allowed to use different versions of time zone data for different canonical time zone names.
+        </li>
+        <li>
+          Any time zone name string, when evaluated ASCII-case-insensitively, must be canonicalized to the same canonical time zone name for the lifetime of the surrounding agent.
+        </li>
+      </ul>
+    </emu-clause>
 
     <emu-clause id="sec-isavailabletimezonename" type="abstract operation">
       <h1>
