@@ -115,9 +115,9 @@ export class Calendar {
     const additionalFieldsCopy = ObjectCreate(null);
     ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
     const additionalKeys = ObjectKeys(additionalFieldsCopy);
-    const ignoredKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
+    const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
     const merged = ObjectCreate(null);
-    ES.CopyDataProperties(merged, fieldsCopy, ignoredKeys, [undefined]);
+    ES.CopyDataProperties(merged, fieldsCopy, overriddenKeys, [undefined]);
     ES.CopyDataProperties(merged, additionalFieldsCopy, []);
     return merged;
   }
