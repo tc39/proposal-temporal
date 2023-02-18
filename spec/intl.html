@@ -2275,7 +2275,15 @@
             1. Else,
               1. Let _overriddenKeys_ be CalendarFieldKeysToIgnore(_calendar_, _additionalKeys_).
             1. Let _merged_ be OrdinaryObjectCreate(*null*).
-            1. Perform ! CopyDataProperties(_merged_, _fieldsCopy_, _overriddenKeys_, « *undefined* »).
+            1. NOTE: The following steps ensure that property iteration order of _merged_ matches that of _fields_ as modified by omitting overridden properties and appending non-overlapping properties from _additionalFields_ in iteration order.
+            1. Let _fieldsKeys_ be ! _fieldsCopy_.[[OwnPropertyKeys]]().
+            1. For each element _key_ of _fieldsKeys_, do
+              1. Let _propValue_ be *undefined*.
+              1. If _overriddenKeys_ contains _key_, then
+                1. Set _propValue_ to ! Get(_additionalFieldsCopy_, _key_).
+              1. Else,
+                1. Set _propValue_ to ! Get(_fieldsCopy_, _key_).
+              1. If _propValue_ is not *undefined*, perform ! CreateDataPropertyOrThrow(_merged_, _key_, _propValue_).
             1. Perform ! CopyDataProperties(_merged_, _additionalFieldsCopy_, « »).
             1. Return _merged_.
           </emu-alg>
