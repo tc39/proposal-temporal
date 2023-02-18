@@ -13848,7 +13848,6 @@
       // If the initial guess is not in the same month, then then bisect the
       // distance to the target, starting with 8 days per step.
       var increment = 8;
-      var maybeConstrained = false;
       while (sign) {
         isoEstimate = this.addDaysIso(isoEstimate, sign * increment);
         var oldRoundtripEstimate = roundtripEstimate;
@@ -13861,11 +13860,6 @@
             isoEstimate = calculateSameMonthResult(diff.days);
             // Signal the loop condition that there's a match.
             sign = 0;
-            // If the calendar day is larger than the minimal length for this
-            // month, then it might be larger than the actual length of the month.
-            // So we won't cache it as the correct calendar date for this ISO
-            // date.
-            maybeConstrained = date.day > this.minimumMonthLength(date);
           } else if (oldSign && sign !== oldSign) {
             if (increment > 1) {
               // If the estimate overshot the target, try again with a smaller increment
@@ -13883,7 +13877,6 @@
                 var order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
                 // If current value is larger, then back up to the previous value.
                 if (order > 0) isoEstimate = this.addDaysIso(isoEstimate, -1);
-                maybeConstrained = true;
                 sign = 0;
               }
             }
@@ -13894,17 +13887,6 @@
       if (keyOriginal) cache.set(keyOriginal, isoEstimate);
       if (date.year === undefined || date.month === undefined || date.day === undefined || date.monthCode === undefined || this.hasEra && (date.era === undefined || date.eraYear === undefined)) {
         throw new RangeError('Unexpected missing property');
-      }
-      if (!maybeConstrained) {
-        // Also cache the reverse mapping
-        var keyReverse = JSON.stringify({
-          func: 'isoToCalendarDate',
-          isoYear: isoEstimate.year,
-          isoMonth: isoEstimate.month,
-          isoDay: isoEstimate.day,
-          id: this.id
-        });
-        cache.set(keyReverse, date);
       }
       return isoEstimate;
     },
@@ -14140,40 +14122,34 @@
     // All built-in calendars except Chinese/Dangi and Hebrew use an era
     hasEra: true,
     monthDayFromFields: function monthDayFromFields(fields, overflow, cache) {
-      var year = fields.year,
-        month = fields.month,
-        monthCode = fields.monthCode,
-        day = fields.day,
-        era = fields.era,
-        eraYear = fields.eraYear;
+      var monthCode = fields.monthCode,
+        day = fields.day;
       if (monthCode === undefined) {
+        var year = fields.year,
+          era = fields.era,
+          eraYear = fields.eraYear;
         if (year === undefined && (era === undefined || eraYear === undefined)) {
-          throw new TypeError('`monthCode`, `year`, or `era` and `eraYear` is required');
+          throw new TypeError('when `monthCode` is omitted, `year` (or `era` and `eraYear`) and `month` are required');
         }
-        var _this$adjustCalendarD = this.adjustCalendarDate({
-          year: year,
-          month: month,
-          monthCode: monthCode,
-          day: day,
-          era: era,
-          eraYear: eraYear
-        }, cache, overflow);
-        monthCode = _this$adjustCalendarD.monthCode;
-        year = _this$adjustCalendarD.year;
+        // Apply overflow behaviour to year/month/day, to get correct monthCode/day
+        var _this$isoToCalendarDa = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache);
+        monthCode = _this$isoToCalendarDa.monthCode;
+        day = _this$isoToCalendarDa.day;
       }
       var isoYear, isoMonth, isoDay;
       var closestCalendar, closestIso;
-      // Look backwards starting from the calendar year of 1972-01-01 up to 100
-      // calendar years to find a year that has this month and day. Normal months
-      // and days will match immediately, but for leap days and leap months we may
-      // have to look for a while.
+      // Look backwards starting from one of the calendar years spanning ISO year
+      // 1972, up to 100 calendar years prior, to find a year that has this month
+      // and day. Normal months and days will match immediately, but for leap days
+      // and leap months we may have to look for a while.
       var startDateIso = {
         year: 1972,
-        month: 1,
-        day: 1
+        month: 12,
+        day: 31
       };
-      var _this$isoToCalendarDa = this.isoToCalendarDate(startDateIso, cache),
-        calendarYear = _this$isoToCalendarDa.year;
+      var calendarOfStartDateIso = this.isoToCalendarDate(startDateIso, cache);
+      // Note: relies on lexicographical ordering of monthCodes
+      var calendarYear = calendarOfStartDateIso.monthCode > monthCode || calendarOfStartDateIso.monthCode === monthCode && calendarOfStartDateIso.day >= day ? calendarOfStartDateIso.year : calendarOfStartDateIso.year - 1;
       for (var i = 0; i < 100; i++) {
         var testCalendarDate = this.adjustCalendarDate({
           day: day,
@@ -14396,10 +14372,9 @@
               if (overflow === 'reject') {
                 throw new RangeError("Hebrew monthCode M05L is invalid in year ".concat(year, " which is not a leap year"));
               } else {
-                // constrain to last day of previous month (Av)
-                month = 5;
-                day = 30;
-                monthCode = 'M05';
+                // constrain to same day of next month (Adar)
+                month = 6;
+                monthCode = 'M06';
               }
             }
           } else {
@@ -14482,8 +14457,8 @@
     DAYS_PER_ISO_YEAR: 365.2425,
     constantEra: 'ah',
     estimateIsoDate: function estimateIsoDate(calendarDate) {
-      var _this$adjustCalendarD2 = this.adjustCalendarDate(calendarDate),
-        year = _this$adjustCalendarD2.year;
+      var _this$adjustCalendarD = this.adjustCalendarDate(calendarDate),
+        year = _this$adjustCalendarD.year;
       return {
         year: MathFloor(year * this.DAYS_PER_ISLAMIC_YEAR / this.DAYS_PER_ISO_YEAR) + 622,
         month: 1,
@@ -14514,8 +14489,8 @@
     },
     constantEra: 'ap',
     estimateIsoDate: function estimateIsoDate(calendarDate) {
-      var _this$adjustCalendarD3 = this.adjustCalendarDate(calendarDate),
-        year = _this$adjustCalendarD3.year;
+      var _this$adjustCalendarD2 = this.adjustCalendarDate(calendarDate),
+        year = _this$adjustCalendarD2.year;
       return {
         year: year + 621,
         month: 1,
@@ -15339,15 +15314,14 @@
           if (numberPart[0] === '0') numberPart = numberPart.slice(1);
           var _monthInfo = _months[numberPart];
           month = _monthInfo && _monthInfo.monthIndex;
-          // If this leap month isn't present in this year, constrain down to the last day of the previous month.
-          if (month === undefined && monthCode.endsWith('L') && !ES.Call(ArrayIncludes, ['M01L', 'M12L', 'M13L'], [monthCode]) && overflow === 'constrain') {
+          // If this leap month isn't present in this year, constrain to the same
+          // day of the previous month.
+          if (month === undefined && monthCode.endsWith('L') && monthCode != 'M13L' && overflow === 'constrain') {
             var withoutML = monthCode.slice(1, -1);
             if (withoutML[0] === '0') withoutML = withoutML.slice(1);
             _monthInfo = _months[withoutML];
             if (_monthInfo) {
-              var _monthInfo2 = _monthInfo;
-              day = _monthInfo2.daysInMonth;
-              month = _monthInfo2.monthIndex;
+              month = _monthInfo.monthIndex;
               monthCode = buildMonthCode(withoutML);
             }
           }
@@ -15379,9 +15353,9 @@
           var _months3 = this.getMonthList(year, cache);
           var _numberPart = monthCode.replace('L', 'bis').slice(1);
           if (_numberPart[0] === '0') _numberPart = _numberPart.slice(1);
-          var _monthInfo3 = _months3[_numberPart];
-          if (!_monthInfo3) throw new RangeError("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
-          if (month !== _monthInfo3.monthIndex) {
+          var _monthInfo2 = _months3[_numberPart];
+          if (!_monthInfo2) throw new RangeError("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
+          if (month !== _monthInfo2.monthIndex) {
             throw new RangeError("monthCode ".concat(monthCode, " doesn't correspond to month ").concat(month, " in Chinese year ").concat(year));
           }
         }
