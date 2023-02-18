@@ -1411,10 +1411,10 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_, which describes a date or year and month or month and day in the built-in calendar identified by _calendar_, to a representative date in the ISO 8601 calendar, subject to processing specified by _overflow_.
+              It performs implementation-defined processing to convert _fields_, which represents a date or year and month or month and day in the built-in calendar identified by _calendar_, to a corresponding representative date in the ISO 8601 calendar, subject to processing specified by _overflow_.
               For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
               For *"constrain"*, values that do not form a valid date are clamped to the correct range.
-              It then returns an ISO Date Record with the corresponding ISO date.
+              It then returns an ISO Date Record with the corresponding ISO 8601 date.
             </dd>
           </dl>
           <p>
@@ -1433,31 +1433,22 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to convert _fields_, which describes a calendar date without a year (i.e., month code and day pair, or equivalent) in the calendar represented by _calendar_, to a reference date in the ISO 8601 calendar, subject to processing specified by _overflow_.
-              For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
+              It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to processing specified by _overflow_.
+              For *"reject"*, values that do not form a valid date cause an exception to be thrown.
               For *"constrain"*, values that do not form a valid date are clamped to the correct range.
-              It then returns a Record with a reference ISO date that corresponds to that month code and day pair in a reference year as described below.
+              It then returns a Record representing the reference ISO 8601 date.
             </dd>
           </dl>
           <p>
-            The fields of the returned Record form a reference date in the ISO calendar that, when converted to the calendar given by _calendar_, corresponds to the given month code and day pair in an arbitrary but deterministically chosen reference year.
-            The reference date is the latest ISO date corresponding to the calendar date, that is also earlier than or equal to the ISO date December 31, 1972.
-            If that calendar date never occurs on or before the ISO date December 31, 1972, then the reference date is the earliest ISO date corresponding to that calendar date.
-            The reference year is almost always 1972 (the first ISO leap year after the epoch), with rare exceptions for some calendars where some dates (e.g. leap days or days in leap months) didn't occur during the ISO year 1972.
+            The fields of the returned Record represent a reference date in the ISO 8601 calendar that, when converted to the built-in calendar identified by _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
+            The reference date is the latest ISO 8601 date corresponding to the calendar date, that is also earlier than or equal to the ISO 8601 date December 31, 1972.
+            If that calendar date never occurs on or before the ISO 8601 date December 31, 1972, then the reference date is the earliest ISO 8601 date corresponding to that calendar date.
+            The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I was a part of calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them.
           </p>
           <p>
-            The operation throws a *TypeError* exception if the properties present on _fields_ are insufficient to identify a unique month code and day pair in _calendar_.
-            For example, for a _calendar_ that uses eras, a *TypeError* is thrown if _fields_ does not include any of the following minimum combinations of properties:
-          </p>
-          <ul>
-            <li>*"monthCode"*, *"day"*</li>
-            <li>*"year"*, *"month"*, *"day"*</li>
-            <li>*"era"*, *"eraYear"*, *"month"*, *"day"*</li>
-          </ul>
-          <p>
-            The operation throws a *RangeError* exception if _overflow_ is *"reject"* and the date described by _fields_ does not exist, i.e. cannot be resolved to a month code and day pair.
+            Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist.
             For example, when _calendar_ is *"gregory"* and _overflow_ is *"reject"*, _fields_ values of `{ monthCode: "M01", day: "32" }` and `{ "year": 2001, "month": 2, "day": 29 }` would both cause a *RangeError* to be thrown.
-            In the latter case, even though 02-29 is a date in the Gregorian calendar, a month code cannot be determined from the nonexistent date 2001-02-29.
+            In the latter case, even though February 29 is a date in leap years of the Gregorian calendar, 2001 was not a leap year and a month code cannot be determined from the nonexistent date 2001-02-29 with the specified month index.
           </p>
         </emu-clause>
 
