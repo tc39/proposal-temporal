@@ -97,33 +97,6 @@
     }
     return obj;
   }
-  function _objectWithoutPropertiesLoose(source, excluded) {
-    if (source == null) return {};
-    var target = {};
-    var sourceKeys = Object.keys(source);
-    var key, i;
-    for (i = 0; i < sourceKeys.length; i++) {
-      key = sourceKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      target[key] = source[key];
-    }
-    return target;
-  }
-  function _objectWithoutProperties(source, excluded) {
-    if (source == null) return {};
-    var target = _objectWithoutPropertiesLoose(source, excluded);
-    var key, i;
-    if (Object.getOwnPropertySymbols) {
-      var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-      for (i = 0; i < sourceSymbolKeys.length; i++) {
-        key = sourceSymbolKeys[i];
-        if (excluded.indexOf(key) >= 0) continue;
-        if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-        target[key] = source[key];
-      }
-    }
-    return target;
-  }
   function _slicedToArray(arr, i) {
     return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
@@ -7594,10 +7567,11 @@
         var excluded = some$1(excludedKeys, function (e) {
           return SameValue$1(e, nextKey) === true;
         });
+        if (excluded) return;
         var enumerable = $isEnumerable(from, nextKey) ||
         // this is to handle string keys being non-enumerable in older engines
         typeof source === 'string' && nextKey >= 0 && IsIntegralNumber$1(ToNumber$2(nextKey));
-        if (excluded === false && enumerable) {
+        if (enumerable) {
           var propValue = Get$1(from, nextKey);
           if (excludedValues !== undefined) {
             forEach$1(excludedValues, function (e) {
@@ -13003,7 +12977,6 @@
     return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
   }
 
-  var _excluded = ["month", "monthCode", "year", "era", "eraYear"];
   var ArrayIncludes = Array.prototype.includes;
   var ArrayPrototypePush$3 = Array.prototype.push;
   var IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
@@ -13013,6 +12986,10 @@
   var ObjectAssign$1 = Object.assign;
   var ObjectCreate$6 = Object.create;
   var ObjectEntries = Object.entries;
+  var ObjectKeys = Object.keys;
+  var OriginalSet = Set;
+  var SetPrototypeAdd$2 = Set.prototype.add;
+  var SetPrototypeValues = Set.prototype.values;
   var impl = {};
   var Calendar = /*#__PURE__*/function () {
     function Calendar(id) {
@@ -13095,7 +13072,18 @@
       key: "mergeFields",
       value: function mergeFields(fields, additionalFields) {
         if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        return impl[GetSlot(this, CALENDAR_ID)].mergeFields(fields, additionalFields);
+        fields = ES.ToObject(fields);
+        var fieldsCopy = ObjectCreate$6(null);
+        ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
+        additionalFields = ES.ToObject(additionalFields);
+        var additionalFieldsCopy = ObjectCreate$6(null);
+        ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+        var additionalKeys = ObjectKeys(additionalFieldsCopy);
+        var ignoredKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
+        var merged = ObjectCreate$6(null);
+        ES.CopyDataProperties(merged, fieldsCopy, ignoredKeys, [undefined]);
+        ES.CopyDataProperties(merged, additionalFieldsCopy, []);
+        return merged;
       }
     }, {
       key: "dateAdd",
@@ -13304,19 +13292,18 @@
     fields: function fields(_fields5) {
       return _fields5;
     },
-    mergeFields: function mergeFields(fields, additionalFields) {
-      fields = ES.ToObject(fields);
-      additionalFields = ES.ToObject(additionalFields);
-      var merged = {};
-      ES.CopyDataProperties(merged, fields, [], [undefined]);
-      var additionalFieldsCopy = ObjectCreate$6(null);
-      ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
-      if ('month' in additionalFieldsCopy || 'monthCode' in additionalFieldsCopy) {
-        delete merged.month;
-        delete merged.monthCode;
+    fieldKeysToIgnore: function fieldKeysToIgnore(keys) {
+      var result = new OriginalSet();
+      for (var ix = 0; ix < keys.length; ix++) {
+        var key = keys[ix];
+        ES.Call(SetPrototypeAdd$2, result, [key]);
+        if (key === 'month') {
+          ES.Call(SetPrototypeAdd$2, result, ['monthCode']);
+        } else if (key === 'monthCode') {
+          ES.Call(SetPrototypeAdd$2, result, ['month']);
+        }
       }
-      ES.CopyDataProperties(merged, additionalFieldsCopy, []);
-      return merged;
+      return _toConsumableArray(ES.Call(SetPrototypeValues, result, []));
     },
     dateAdd: function dateAdd(date, years, months, weeks, days, overflow, calendar) {
       var year = GetSlot(date, ISO_YEAR);
@@ -15168,6 +15155,7 @@
     // The last 3 Japanese eras confusingly return only one character in the
     // default "short" era, so need to use the long format.
     eraLength: 'long',
+    erasBeginMidYear: true,
     calendarIsVulnerableToJulianBug: true,
     reviseIntlEra: function reviseIntlEra(calendarDate, isoDate) {
       var era = calendarDate.era,
@@ -15470,38 +15458,48 @@
       if (ES.Call(ArrayIncludes, _fields6, ['year'])) _fields6 = [].concat(_toConsumableArray(_fields6), ['era', 'eraYear']);
       return _fields6;
     },
-    mergeFields: function mergeFields(fields, additionalFields) {
-      fields = ES.ToObject(fields);
-      additionalFields = ES.ToObject(additionalFields);
-      var fieldsCopy = {};
-      ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
-      var additionalFieldsCopy = {};
-      ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
-
-      // era and eraYear are intentionally unused
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      var month = fieldsCopy.month,
-        monthCode = fieldsCopy.monthCode,
-        year = fieldsCopy.year;
-        fieldsCopy.era;
-        fieldsCopy.eraYear;
-        var original = _objectWithoutProperties(fieldsCopy, _excluded);
-      var newMonth = additionalFieldsCopy.month,
-        newMonthCode = additionalFieldsCopy.monthCode,
-        newYear = additionalFieldsCopy.year,
-        newEra = additionalFieldsCopy.era,
-        newEraYear = additionalFieldsCopy.eraYear;
-      if (newMonth === undefined && newMonthCode === undefined) {
-        if (month !== undefined) original.month = month;
-        if (monthCode !== undefined) original.monthCode = monthCode;
+    fieldKeysToIgnore: function fieldKeysToIgnore(keys) {
+      var result = new OriginalSet();
+      for (var ix = 0; ix < keys.length; ix++) {
+        var key = keys[ix];
+        ES.Call(SetPrototypeAdd$2, result, [key]);
+        switch (key) {
+          case 'era':
+            ES.Call(SetPrototypeAdd$2, result, ['eraYear']);
+            ES.Call(SetPrototypeAdd$2, result, ['year']);
+            break;
+          case 'eraYear':
+            ES.Call(SetPrototypeAdd$2, result, ['era']);
+            ES.Call(SetPrototypeAdd$2, result, ['year']);
+            break;
+          case 'year':
+            ES.Call(SetPrototypeAdd$2, result, ['era']);
+            ES.Call(SetPrototypeAdd$2, result, ['eraYear']);
+            break;
+          case 'month':
+            ES.Call(SetPrototypeAdd$2, result, ['monthCode']);
+            // See https://github.com/tc39/proposal-temporal/issues/1784
+            if (this.helper.erasBeginMidYear) {
+              ES.Call(SetPrototypeAdd$2, result, ['era']);
+              ES.Call(SetPrototypeAdd$2, result, ['eraYear']);
+            }
+            break;
+          case 'monthCode':
+            ES.Call(SetPrototypeAdd$2, result, ['month']);
+            if (this.helper.erasBeginMidYear) {
+              ES.Call(SetPrototypeAdd$2, result, ['era']);
+              ES.Call(SetPrototypeAdd$2, result, ['eraYear']);
+            }
+            break;
+          case 'day':
+            if (this.helper.erasBeginMidYear) {
+              ES.Call(SetPrototypeAdd$2, result, ['era']);
+              ES.Call(SetPrototypeAdd$2, result, ['eraYear']);
+            }
+            break;
+        }
       }
-      if (newYear === undefined && newEra === undefined && newEraYear === undefined) {
-        // Only `year` is needed. We don't set era and eraYear because it's
-        // possible to create a conflict for eras that start or end mid-year. See
-        // https://github.com/tc39/proposal-temporal/issues/1784.
-        original.year = year;
-      }
-      return _objectSpread2(_objectSpread2({}, original), additionalFieldsCopy);
+      return _toConsumableArray(ES.Call(SetPrototypeValues, result, []));
     },
     dateAdd: function dateAdd(date, years, months, weeks, days, overflow, calendar) {
       var cache = OneObjectCache.getCacheForObject(date);
