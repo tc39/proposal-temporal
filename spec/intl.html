@@ -1720,7 +1720,7 @@
             </dd>
           </dl>
           <p>
-            This operation is relevant for calendars which accept fields other than the standard set of ISO calendar fields, in order to implement the Temporal objects' `with()` methods, and `Temporal.Calendar.prototype.mergeFields()` in such a way that the result is free of ambiguity or conflicts.
+            This operation is relevant for calendars which accept fields other than the standard set of ISO 8601 calendar fields, in order to implement the Temporal objects' `with()` methods, and `Temporal.Calendar.prototype.mergeFields()` in such a way that the result is free of ambiguity or conflicts.
           </p>
           <p>
             For example, given a _calendar_ that uses eras, such as *"gregory"*, a key in _keys_ being any one of *"year"*, *"era"*, or *"eraYear"* would exclude all three.
@@ -1784,15 +1784,15 @@
           <dl class="header">
             <dt>description</dt>
             <dd>
-              It performs implementation-defined processing to validate that _fields_ (which describes a date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and merges data that can be represented in multiple forms into standard properties of _fields_ (for example, merging *"month"* and *"monthCode"* into *"month"* and merging *"era"* and *"eraYear"* into *"year"*).
+              It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard properties and removing redundant properties (for example, merging *"month"* and *"monthCode"* into *"month"* and merging *"era"* and *"eraYear"* into *"year"*).
             </dd>
           </dl>
           <p>
             The operation throws a *TypeError* exception if the properties of _fields_ are internally inconsistent within the calendar or insufficient to identify a unique instance of _type_ in the calendar. For example:
           </p>
           <ul>
-            <li>If _type_ is ~date~ or ~month-day~ and *"day"* has the usual interpretation in the calendar and the corresponding value is *undefined*.</li>
-            <li>If *"month"* and *"monthCode"* have the usual interpretation in the calendar and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
+            <li>If _type_ is ~date~ or ~month-day~ and *"day"* in the calendar has an interpretation analogous to ISO 8601 and its corresponding value is *undefined*.</li>
+            <li>If *"month"* and *"monthCode"* in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
             <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting (as in the Gregorian or traditional Japanese calendars) as represented by *"year"*, *"era"*, and *"eraYear"* and the value for one but not both of *"era"* and *"eraYear"* is *undefined*, or none of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
           </ul>
         </emu-clause>
