@@ -761,7 +761,7 @@
       <h1>ISOYearMonthFromFields ( _fields_, _overflow_ )</h1>
       <p>
         The ISOYearMonthFromFields abstract operation implements the calendar-specific logic in the `Temporal.Calendar.prototype.yearMonthFromFields` method for the ISO 8601 calendar.
-        It returns a Record with three fields ([[Year]], [[Month]], and [[ReferenceISODay]]). All are integers.
+        It returns a Record with three fields ([[Year]], [[Month]], and [[ReferenceISODay]]). [[Month]], and [[ReferenceISODay]] are positive integers, while [[Year]] is a signed integer.
       </p>
       <emu-alg>
         1. Assert: Type(_fields_) is Object.
