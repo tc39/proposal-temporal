@@ -15,10 +15,9 @@
       In addition, implementations may support any number of other built-in time zones.
     </p>
     <p>
-      Built-in time zones may be <dfn variants="named time zone">named time zones</dfn>, represented by Strings for which IsAvailableTimeZoneName returns *true*.
-      Caller-supplied names of named time zones can be aliases for <dfn variants="canonical time zone">canonical time zones</dfn>.
-      CanonicalizeTimeZoneName is used to translate aliases into canonical time zone names.
-      They may also be <dfn variants="offset time zone">offset time zones</dfn>, represented by Strings for which IsTimeZoneOffsetString returns *true*.
+      A built-in time zone may be a <dfn variants="named time zones">named time zone</dfn>, represented by a String for which IsAvailableTimeZoneName returns *true*.
+      Some of those Strings are <dfn variants="canonical time zone name">canonical time zone names</dfn> for which CanonicalizeTimeZoneName returns its input unmodified, while each other one is an <em>alias</em> for a canonical time zone name (for example, *"utc"* and *"Utc"* and [if supported by IsAvailableTimeZoneName] *"Etc/UTC"* are aliases for *"UTC"*, and the IANA Time Zone Database defines many other aliases as “Links”).
+      A built-in time zone may also be an <dfn variants="offset time zones">offset time zone</dfn>, represented by a String for which IsTimeZoneOffsetString returns *true*.
     </p>
     <p>
       <emu-xref href="#sec-temporal-timezone-constructor">The `Temporal.TimeZone` constructor</emu-xref>, when called with the name of a built-in time zone as the argument, will return a valid `Temporal.TimeZone` object.
