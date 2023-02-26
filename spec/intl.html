@@ -1701,7 +1701,7 @@
           </h1>
           <dl class="header">
             <dt>description</dt>
-            <dd>It interprets _fields_ as the names of fields (<emu-xref href="#table-temporal-field-requirements"></emu-xref>) necessary for a given operation and returns a new List by appending the names of additional calendar-specific fields that are relevant for the built-in calendar identified by _calendar_. For example, *"era"* and *"eraYear"* are appended when _calendar_ is *"gregory"* or *"japanese"*.</dd>
+            <dd>It interprets _fields_ as the names of fields (<emu-xref href="#table-temporal-field-requirements"></emu-xref>) necessary for a given operation and returns a new List by appending the names of additional relevant fields specific to the built-in calendar identified by _calendar_. For example, when _calendar_ is *"gregory"* or *"japanese"*, *"era"* and *"eraYear"* are appended if and only if _fields_ contains *"year"*.</dd>
           </dl>
         </emu-clause>
 
@@ -1793,7 +1793,12 @@
           <ul>
             <li>If _type_ is ~date~ or ~month-day~ and *"day"* in the calendar has an interpretation analogous to ISO 8601 and its corresponding value is *undefined*.</li>
             <li>If *"month"* and *"monthCode"* in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
-            <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting (as in the Gregorian or traditional Japanese calendars) as represented by *"year"*, *"era"*, and *"eraYear"* and the value for one but not both of *"era"* and *"eraYear"* is *undefined*, or none of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
+            <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by *"year"*, *"era"*, and *"eraYear"* (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:<ul>
+              <li>The value for each of *"year"* and *"era"* and *"eraYear"* is *undefined*.</li>
+              <li>The value for *"era"* is *undefined* but the value for *"eraYear"* is not.</li>
+              <li>The value for *"eraYear"* is *undefined* but the value for *"era"* is not.</li>
+              <li>None of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
+            </ul></li>
           </ul>
         </emu-clause>
       </emu-clause>
