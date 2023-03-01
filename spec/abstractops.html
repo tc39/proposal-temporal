@@ -988,11 +988,17 @@
           MinuteSecond
           `60`
 
-      FractionalPart :
-          DecimalDigit DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit? DecimalDigit?
-
       Fraction :
-          DecimalSeparator FractionalPart
+          > Readability note: This production matches a decimal separator followed by 1 to 9 digits
+          DecimalSeparator DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       TimeFraction :
           Fraction
