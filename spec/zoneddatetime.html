@@ -586,12 +586,12 @@
         1. Perform ? RejectTemporalLikeObject(_temporalZonedDateTimeLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « »).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_, _offsetNanoseconds_).
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, « »).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[ISOHour]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[ISOMinute]]).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[ISOSecond]]).

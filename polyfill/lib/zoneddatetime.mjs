@@ -183,11 +183,11 @@ export class ZonedDateTime {
     options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     const timeZone = GetSlot(this, TIME_ZONE);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
     const dt = dateTime(this, offsetNs);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    let fields = ES.PrepareTemporalFields(dt, fieldNames, []);
     fields.hour = GetSlot(dt, ISO_HOUR);
     fields.minute = GetSlot(dt, ISO_MINUTE);
     fields.second = GetSlot(dt, ISO_SECOND);
