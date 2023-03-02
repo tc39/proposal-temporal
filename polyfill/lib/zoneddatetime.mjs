@@ -351,7 +351,9 @@ export class ZonedDateTime {
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
 
     // first, round the underlying DateTime fields
-    const dt = dateTime(this);
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
+    const dt = dateTime(this, offsetNs);
     let year = GetSlot(dt, ISO_YEAR);
     let month = GetSlot(dt, ISO_MONTH);
     let day = GetSlot(dt, ISO_DAY);
@@ -363,7 +365,6 @@ export class ZonedDateTime {
     let nanosecond = GetSlot(dt, ISO_NANOSECOND);
 
     const DateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
     const dtStart = new DateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0);
     const instantStart = ES.GetInstantFor(timeZone, dtStart, 'compatible');
@@ -393,7 +394,6 @@ export class ZonedDateTime {
     // offset. Otherwise the offset will be changed to be compatible with the
     // new date/time values. If DST disambiguation is required, the `compatible`
     // disambiguation algorithm will be used.
-    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
@@ -559,9 +559,9 @@ export class ZonedDateTime {
   }
   getISOFields() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const dt = dateTime(this);
     const tz = GetSlot(this, TIME_ZONE);
     const offsetNanoseconds = ES.GetOffsetNanosecondsFor(tz, GetSlot(this, INSTANT));
+    const dt = dateTime(this, offsetNanoseconds);
     return {
       calendar: GetSlot(this, CALENDAR),
       isoDay: GetSlot(dt, ISO_DAY),
@@ -613,6 +613,11 @@ export class ZonedDateTime {
 
 MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
 
-function dateTime(zdt) {
-  return ES.GetPlainDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
+function dateTime(zdt, precalculatedOffsetNs = undefined) {
+  return ES.GetPlainDateTimeFor(
+    GetSlot(zdt, TIME_ZONE),
+    GetSlot(zdt, INSTANT),
+    GetSlot(zdt, CALENDAR),
+    precalculatedOffsetNs
+  );
 }
