@@ -1485,7 +1485,7 @@
             1. If _fieldNames_ contains _nextValue_, then
               1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
               1. Return ? IteratorClose(_iteratorRecord_, _completion_).
-            1. If _nextValue_ is not one of *"year"*, *"month"*, *"monthCode"*, *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, *"nanosecond"*, then
+            1. If _nextValue_ is not one of *"year"*, *"month"*, *"monthCode"*, or *"day"*, then
                 1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
                 1. Return ? IteratorClose(_iteratorRecord_, _completion_).
             1. Append _nextValue_ to the end of the List _fieldNames_.

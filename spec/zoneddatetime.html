@@ -586,8 +586,8 @@
         1. Perform ? RejectTemporalLikeObject(_temporalZonedDateTimeLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
-        1. Append *"offset"* to _fieldNames_.
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, and *"second"* to _fieldNames_.
         1. Let _fields_ be ? PrepareTemporalFields(_zonedDateTime_, _fieldNames_, « *"offset"* »).
         1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_, ~partial~).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
@@ -1154,9 +1154,8 @@
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
-          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
-          1. Append *"timeZone"* to _fieldNames_.
-          1. Append *"offset"* to _fieldNames_.
+          1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+          1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
           1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).

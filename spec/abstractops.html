@@ -592,9 +592,8 @@
         1. If _value_ has an [[InitializedTemporalDateTime]] internal slot, then
           1. Return ! CreateTemporalDate(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], _value_.[[Calendar]]).
         1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_value_).
-        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"month"*, *"monthCode"*, *"nanosecond"*, *"second"*, *"year"* »).
-        1. Append *"timeZone"* to _fieldNames_.
-        1. Append *"offset"* to _fieldNames_.
+        1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
         1. Let _fields_ be ? PrepareTemporalFields(_value_, _fieldNames_, «»).
         1. Let _dateOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_dateOptions_, *"overflow"*, *"constrain"*).

@@ -183,19 +183,16 @@ export class ZonedDateTime {
     options = ES.GetOptionsObject(options);
 
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, [
-      'day',
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    ES.Call(ArrayPrototypePush, fieldNames, [
       'hour',
       'microsecond',
       'millisecond',
       'minute',
-      'month',
-      'monthCode',
       'nanosecond',
-      'second',
-      'year'
+      'offset',
+      'second'
     ]);
-    ES.Call(ArrayPrototypePush, fieldNames, ['offset']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, ['offset']);
     const partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
