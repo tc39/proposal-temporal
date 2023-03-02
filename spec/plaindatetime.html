@@ -401,8 +401,14 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, and *"second"* to _fieldNames_.
         1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, «»).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[ISOHour]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[ISOMinute]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[ISOSecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
+        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, and *"second"* to _fieldNames_.
         1. Let _partialDateTime_ be ? PrepareTemporalFields(_temporalDateTimeLike_, _fieldNames_, ~partial~).
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialDateTime_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).

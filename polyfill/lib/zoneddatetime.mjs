@@ -184,6 +184,17 @@ export class ZonedDateTime {
 
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
+    const dt = dateTime(this, offsetNs);
+    fields.hour = GetSlot(dt, ISO_HOUR);
+    fields.minute = GetSlot(dt, ISO_MINUTE);
+    fields.second = GetSlot(dt, ISO_SECOND);
+    fields.millisecond = GetSlot(dt, ISO_MILLISECOND);
+    fields.microsecond = GetSlot(dt, ISO_MICROSECOND);
+    fields.nanosecond = GetSlot(dt, ISO_NANOSECOND);
+    fields.offset = ES.FormatUTCOffsetNanoseconds(offsetNs);
     ES.Call(ArrayPrototypePush, fieldNames, [
       'hour',
       'microsecond',
@@ -193,7 +204,6 @@ export class ZonedDateTime {
       'offset',
       'second'
     ]);
-    let fields = ES.PrepareTemporalFields(this, fieldNames, ['offset']);
     const partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, ['offset']);
@@ -203,8 +213,7 @@ export class ZonedDateTime {
 
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
-    const offsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
-    const timeZone = GetSlot(this, TIME_ZONE);
+    const newOffsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
       month,
@@ -216,7 +225,7 @@ export class ZonedDateTime {
       microsecond,
       nanosecond,
       'option',
-      offsetNs,
+      newOffsetNs,
       timeZone,
       disambiguation,
       offset,

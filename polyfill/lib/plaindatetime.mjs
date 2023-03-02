@@ -156,8 +156,14 @@ export class PlainDateTime {
     options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
-    ES.Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    fields.hour = GetSlot(this, ISO_HOUR);
+    fields.minute = GetSlot(this, ISO_MINUTE);
+    fields.second = GetSlot(this, ISO_SECOND);
+    fields.millisecond = GetSlot(this, ISO_MILLISECOND);
+    fields.microsecond = GetSlot(this, ISO_MICROSECOND);
+    fields.nanosecond = GetSlot(this, ISO_NANOSECOND);
+    ES.Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
     const partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
