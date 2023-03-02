@@ -17,6 +17,7 @@ import {
   GetSlot
 } from './slots.mjs';
 
+const ArrayPrototypePush = Array.prototype.push;
 const ObjectCreate = Object.create;
 
 export class PlainDateTime {
@@ -154,18 +155,8 @@ export class PlainDateTime {
 
     options = ES.GetOptionsObject(options);
     const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, [
-      'day',
-      'hour',
-      'microsecond',
-      'millisecond',
-      'minute',
-      'month',
-      'monthCode',
-      'nanosecond',
-      'second',
-      'year'
-    ]);
+    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    ES.Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     const partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);

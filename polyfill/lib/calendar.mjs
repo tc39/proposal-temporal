@@ -83,18 +83,7 @@ export class Calendar {
   fields(fields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const fieldsArray = [];
-    const allowed = new Set([
-      'year',
-      'month',
-      'monthCode',
-      'day',
-      'hour',
-      'minute',
-      'second',
-      'millisecond',
-      'microsecond',
-      'nanosecond'
-    ]);
+    const allowed = new Set(['year', 'month', 'monthCode', 'day']);
     for (const name of fields) {
       if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
       if (!allowed.has(name)) throw new RangeError(`invalid field name ${name}`);
