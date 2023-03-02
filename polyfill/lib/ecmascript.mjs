@@ -2264,9 +2264,9 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
   return `${sign}${timeString}`;
 }
 
-export function GetPlainDateTimeFor(timeZone, instant, calendar) {
+export function GetPlainDateTimeFor(timeZone, instant, calendar, precalculatedOffsetNs = undefined) {
   const ns = GetSlot(instant, EPOCHNANOSECONDS);
-  const offsetNs = GetOffsetNanosecondsFor(timeZone, instant);
+  const offsetNs = precalculatedOffsetNs ?? GetOffsetNanosecondsFor(timeZone, instant);
   let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = GetISOPartsFromEpoch(ns);
   ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = BalanceISODateTime(
     year,
@@ -2474,11 +2474,11 @@ export function FormatTimeString(hour, minute, second, subSecondNanoseconds, pre
 export function TemporalInstantToString(instant, timeZone, precision) {
   let outputTimeZone = timeZone;
   if (outputTimeZone === undefined) outputTimeZone = 'UTC';
-  const dateTime = GetPlainDateTimeFor(outputTimeZone, instant, 'iso8601');
+  const offsetNs = GetOffsetNanosecondsFor(outputTimeZone, instant);
+  const dateTime = GetPlainDateTimeFor(outputTimeZone, instant, 'iso8601', offsetNs);
   const dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
   let timeZoneString = 'Z';
   if (timeZone !== undefined) {
-    const offsetNs = GetOffsetNanosecondsFor(outputTimeZone, instant);
     timeZoneString = FormatDateTimeUTCOffsetRounded(offsetNs);
   }
   return `${dateTimeString}${timeZoneString}`;
@@ -2632,10 +2632,10 @@ export function TemporalZonedDateTimeToString(
   }
 
   const tz = GetSlot(zdt, TIME_ZONE);
-  const dateTime = GetPlainDateTimeFor(tz, instant, 'iso8601');
+  const offsetNs = GetOffsetNanosecondsFor(tz, instant);
+  const dateTime = GetPlainDateTimeFor(tz, instant, 'iso8601', offsetNs);
   let dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
   if (showOffset !== 'never') {
-    const offsetNs = GetOffsetNanosecondsFor(tz, instant);
     dateTimeString += FormatDateTimeUTCOffsetRounded(offsetNs);
   }
   if (showTimeZone !== 'never') {

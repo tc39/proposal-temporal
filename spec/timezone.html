@@ -691,17 +691,19 @@
           _timeZone_: a String or Object,
           _instant_: a Temporal.Instant,
           _calendar_: a String or Object,
+          optional _precalculatedOffsetNanoseconds_: an integer,
         ): either a normal completion containing a Temporal.PlainDateTime, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          This operation is the internal implementation if the `Temporal.TimeZone.prototype.getPlainDateTimeFor` method.
-          If the given _timeZone_ is an Object, it observably calls _timeZone_'s `getOffsetNanosecondsFor` method.
+          This operation is the internal implementation of the `Temporal.TimeZone.prototype.getPlainDateTimeFor` method.
+          If the given _timeZone_ is an Object, it observably calls _timeZone_'s `getOffsetNanosecondsFor` method unless _precalculatedOffsetNanoseconds_ is supplied.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. If _precalculatedOffsetNanoseconds_ is present, let _offsetNanoseconds_ be _precalculatedOffsetNanoseconds_.
+        1. Else, let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Let _result_ be ! GetISOPartsFromEpoch(ℝ(_instant_.[[Nanoseconds]])).
         1. Set _result_ to BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
