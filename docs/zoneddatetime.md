@@ -224,13 +224,12 @@ zdt = Temporal.ZonedDateTime.from({ timeZone: 'Europe/Paris', year: 2001, month:
 - Zero if the two instances describe the same exact instant, ignoring the time zone and calendar
 - 1 if `one` is greater than `two`
 
+Comparison uses exact time, not calendar date and clock time, because sorting is almost always based on when events happen in the real world (and note that sorting by clock time may not match the order of actual occurrence near discontinuities such as DST transitions).
+
+Calendars and time zones are also ignored in the comparison for the same reason.
+For example, this method returns `0` for instances that fall on the same date and time in the ISO 8601 calendar and UTC time zone, even if fields like `day` or `hour` do not match due to use of different calendars and/or time zones.
+
 This function can be used to sort arrays of `Temporal.ZonedDateTime` objects.
-
-Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
-Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.
-
-Note that this function will return `0` if the two objects have different `calendar` or `timeZone` properties, as long as their exact timestamps are equal.
-
 For example:
 
 ```javascript
@@ -246,8 +245,8 @@ JSON.stringify(sorted, undefined, 2);
 // '[
 //   "2020-02-01T12:30+01:00[Europe/Brussels]",
 //   "2020-02-01T12:30+00:00[Europe/London]",
-//   "2020-02-01T12:30-05:00[America/New_York]",
-//   "2020-02-01T12:30-05:00[America/Toronto]"
+//   "2020-02-01T12:30-05:00[America/Toronto]",
+//   "2020-02-01T12:30-05:00[America/New_York]"
 // ]'
 ```
 
@@ -1224,7 +1223,7 @@ Compares two `Temporal.ZonedDateTime` objects for equality.
 This function exists because it's not possible to compare using `zonedDateTime == other` or `zonedDateTime === other`, due to ambiguity in the primitive representation and between Temporal types.
 
 If you don't need to know the order in which two events occur, then this function is easier to use than `Temporal.ZonedDateTime.compare`.
-But both methods do the same thing, so a `0` returned from `compare` implies a `true` result from `equals`, and vice-versa.
+However, there are subtle differences between the two methods—a `true` result from `equals` includes comparison of calendar and time zone, and is therefore stronger than a `0` result from compare (which ignores calendar and time zone).
 
 Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
 In this case, the two instances will have different `offsetNanoseconds` field values.
