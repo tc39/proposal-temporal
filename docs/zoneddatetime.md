@@ -246,8 +246,8 @@ JSON.stringify(sorted, undefined, 2);
 // '[
 //   "2020-02-01T12:30+01:00[Europe/Brussels]",
 //   "2020-02-01T12:30+00:00[Europe/London]",
-//   "2020-02-01T12:30-05:00[America/New_York]",
-//   "2020-02-01T12:30-05:00[America/Toronto]"
+//   "2020-02-01T12:30-05:00[America/Toronto]",
+//   "2020-02-01T12:30-05:00[America/New_York]"
 // ]'
 ```
 
