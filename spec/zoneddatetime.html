@@ -584,7 +584,7 @@
         1. If Type(_temporalZonedDateTimeLike_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Perform ? RejectTemporalLikeObject(_temporalZonedDateTimeLike_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
@@ -604,9 +604,9 @@
         1. Set _fields_ to ? CalendarMergeFields(_calendar_, _fields_, _partialZonedDateTime_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"offset"* »).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _offset_ be ? ToTemporalOffset(_options_, *"prefer"*).
-        1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
+        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
+        1. Let _offset_ be ? ToTemporalOffset(_resolvedOptions_, *"prefer"*).
+        1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _resolvedOptions_).
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
         1. Assert: Type(_offsetString_) is String.
         1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_offsetString_).
@@ -1158,6 +1158,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match exactly~.
         1. If Type(_item_) is Object, then
@@ -1174,9 +1175,9 @@
           1. If _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
           1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
-          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-          1. Let _offsetOption_ be ? ToTemporalOffset(_options_, *"reject"*).
-          1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
+          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
+          1. Let _offsetOption_ be ? ToTemporalOffset(_resolvedOptions_, *"reject"*).
+          1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _resolvedOptions_).
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_item_).
@@ -1193,9 +1194,9 @@
           1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
           1. Set _calendar_ to the ASCII-lowercase of _calendar_.
           1. Set _matchBehaviour_ to ~match minutes~.
-          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-          1. Let _offsetOption_ be ? ToTemporalOffset(_options_, *"reject"*).
-          1. Perform ? ToTemporalOverflow(_options_).
+          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
+          1. Let _offsetOption_ be ? ToTemporalOffset(_resolvedOptions_, *"reject"*).
+          1. Perform ? ToTemporalOverflow(_resolvedOptions_).
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).

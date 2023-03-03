@@ -153,7 +153,7 @@ export class PlainDateTime {
     }
     ES.RejectTemporalLikeObject(temporalDateTimeLike);
 
-    options = ES.GetOptionsObject(options);
+    const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
     const calendar = GetSlot(this, CALENDAR);
     const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
@@ -168,7 +168,7 @@ export class PlainDateTime {
     fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-      ES.InterpretTemporalDateTimeFields(calendar, fields, options);
+      ES.InterpretTemporalDateTimeFields(calendar, fields, resolvedOptions);
 
     return ES.CreateTemporalDateTime(
       year,
