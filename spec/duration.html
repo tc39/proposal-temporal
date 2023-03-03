@@ -421,8 +421,8 @@
         1. If _smallestUnit_ is *undefined*, then
           1. Set _smallestUnitPresent_ to *false*.
           1. Set _smallestUnit_ to *"nanosecond"*.
-        1. Let _defaultLargestUnit_ be ! DefaultTemporalLargestUnit(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]]).
-        1. Set _defaultLargestUnit_ to ! LargerOfTwoTemporalUnits(_defaultLargestUnit_, _smallestUnit_).
+        1. Let _existingLargestUnit_ be ! DefaultTemporalLargestUnit(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]]).
+        1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(_existingLargestUnit_, _smallestUnit_).
         1. If _largestUnit_ is *undefined*, then
           1. Set _largestUnitPresent_ to *false*.
           1. Set _largestUnit_ to _defaultLargestUnit_.
@@ -433,6 +433,12 @@
         1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+        1. Let _hoursToDaysConversionMayOccur_ be *false*.
+        1. If _duration_.[[Days]] &ne; 0 and _relativeTo_ is an Object with an [[InitializedTemporalZonedDateTime]] internal slot, set _hoursToDaysConversionMayOccur_ to *true*.
+        1. Else if _duration_.[[Hours]] &ge; 24, set _hoursToDaysConversionMayOccur_ to *true*.
+        1. If _smallestUnit_ is *"nanosecond"*, and _roundingIncrement_ = 1, and _largestUnit_ is _existingLargestUnit_, and _duration_.[[Years]] = 0, and _duration_.[[Months]] = 0, and _duration_.[[Weeks]] = 0, and _hoursToDaysConversionMayOccur_ is *false*, and _duration_.[[Minutes]] &lt; 60, and _duration_.[[Seconds]] &lt; 60, and _duration_.[[Milliseconds]] &lt; 1000, and _duration_.[[Microseconds]] &lt; 1000, and _duration_.[[Nanoseconds]] &lt; 1000, then
+          1. NOTE: The above conditions mean that the operation will have no effect: the smallest unit and rounding increment will leave the total duration unchanged, and it can be determined without calling a calendar or time zone method that no balancing will take place.
+          1. Return ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _unbalanceResult_ be ? UnbalanceDateDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _largestUnit_, _relativeTo_).
         1. Let _roundRecord_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _relativeTo_).
         1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].

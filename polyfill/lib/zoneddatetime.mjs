@@ -364,6 +364,14 @@ export class ZonedDateTime {
     const inclusive = maximum === 1;
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
 
+    if (smallestUnit === 'nanosecond' && roundingIncrement === 1) {
+      return ES.CreateTemporalZonedDateTime(
+        GetSlot(this, EPOCHNANOSECONDS),
+        GetSlot(this, TIME_ZONE),
+        GetSlot(this, CALENDAR)
+      );
+    }
+
     // first, round the underlying DateTime fields
     const timeZone = GetSlot(this, TIME_ZONE);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));

@@ -310,6 +310,20 @@ export class PlainDateTime {
     let millisecond = GetSlot(this, ISO_MILLISECOND);
     let microsecond = GetSlot(this, ISO_MICROSECOND);
     let nanosecond = GetSlot(this, ISO_NANOSECOND);
+    if (roundingIncrement === 1 && smallestUnit === 'nanosecond') {
+      return ES.CreateTemporalDateTime(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        GetSlot(this, CALENDAR)
+      );
+    }
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
       year,
       month,

@@ -223,7 +223,7 @@ export class Duration {
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
 
-    let defaultLargestUnit = ES.DefaultTemporalLargestUnit(
+    const existingLargestUnit = ES.DefaultTemporalLargestUnit(
       years,
       months,
       weeks,
@@ -254,7 +254,7 @@ export class Duration {
       smallestUnitPresent = false;
       smallestUnit = 'nanosecond';
     }
-    defaultLargestUnit = ES.LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
+    const defaultLargestUnit = ES.LargerOfTwoTemporalUnits(existingLargestUnit, smallestUnit);
     let largestUnitPresent = true;
     if (!largestUnit) {
       largestUnitPresent = false;
@@ -278,6 +278,22 @@ export class Duration {
     };
     const maximum = maximumIncrements[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+
+    const roundingGranularityIsNoop = smallestUnit === 'nanosecond' && roundingIncrement === 1;
+    const balancingRequested = largestUnit !== existingLargestUnit;
+    const calendarUnitsPresent = years !== 0 || months !== 0 || weeks !== 0;
+    const timeUnitsOverflowWillOccur =
+      minutes >= 60 || seconds >= 60 || milliseconds >= 1000 || microseconds >= 1000 || nanoseconds >= 1000;
+    const hoursToDaysConversionMayOccur = (days !== 0 && ES.IsTemporalZonedDateTime(relativeTo)) || hours >= 24;
+    if (
+      roundingGranularityIsNoop &&
+      !balancingRequested &&
+      !calendarUnitsPresent &&
+      !timeUnitsOverflowWillOccur &&
+      !hoursToDaysConversionMayOccur
+    ) {
+      return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    }
 
     ({ years, months, weeks, days } = ES.UnbalanceDateDurationRelative(
       years,
