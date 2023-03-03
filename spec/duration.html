@@ -98,6 +98,7 @@
         1. Let _shift1_ be ? CalculateOffsetShift(_relativeTo_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
         1. Let _shift2_ be ? CalculateOffsetShift(_relativeTo_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
         1. If _one_.[[Years]] &ne; 0, or _two_.[[Years]] &ne; 0, or _one_.[[Months]] &ne; 0, or _two_.[[Months]] &ne; 0, or _one_.[[Weeks]] &ne; 0, or _two_.[[Weeks]] &ne; 0, then
+          1. If _relativeTo_ is an Object with an [[InitializedTemporalZonedDateTime]] internal slot, set _relativeTo_ to ? ToTemporalDate(_relativeTo_).
           1. Let _unbalanceResult1_ be ? UnbalanceDateDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], *"day"*, _relativeTo_).
           1. Let _unbalanceResult2_ be ? UnbalanceDateDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], *"day"*, _relativeTo_).
           1. Let _days1_ be _unbalanceResult1_.[[Days]].
