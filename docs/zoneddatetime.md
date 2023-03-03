@@ -227,7 +227,7 @@ zdt = Temporal.ZonedDateTime.from({ timeZone: 'Europe/Paris', year: 2001, month:
 Comparison uses exact time, not calendar date and clock time, because sorting is almost always based on when events happen in the real world (and note that sorting by clock time may not match the order of actual occurrence near discontinuities such as DST transitions).
 
 Calendars and time zones are also ignored in the comparison for the same reason.
-For example, this method returns `0` for instances that fall on the same day and time in the ISO 8601 calendar, even if their fields do not match due to use of different calendars and/or time zones.
+For example, this method returns `0` for instances that fall on the same date and time in the ISO 8601 calendar and UTC time zone, even if fields like `day` or `hour` do not match due to use of different calendars and/or time zones.
 
 This function can be used to sort arrays of `Temporal.ZonedDateTime` objects.
 For example:
