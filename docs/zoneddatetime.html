@@ -444,11 +444,11 @@ zdt <span class="token operator">=</span> Temporal<span class="token punctuation
 <li>Zero if the two instances describe the same exact instant, ignoring the time zone and calendar</li>
 <li>1 if <code>one</code> is greater than <code>two</code></li>
 </ul>
-<p>This function can be used to sort arrays of <code>Temporal.ZonedDateTime</code> objects.</p>
-<p>Comparison will use exact time, not clock time, because sorting is almost always based on when events happened in the real world.
-Note that during the hour before and after DST ends, sorting of clock time may not match the order the events actually occurred.</p>
-<p>Note that this function will return <code>0</code> if the two objects have different <code>calendar</code> or <code>timeZone</code> properties, as long as their exact timestamps are equal.</p>
-<p>For example:</p>
+<p>Comparison uses exact time, not calendar date and clock time, because sorting is almost always based on when events happen in the real world (and note that sorting by clock time may not match the order of actual occurrence near discontinuities such as DST transitions).</p>
+<p>Calendars and time zones are also ignored in the comparison for the same reason.
+For example, this method returns <code>0</code> for instances that fall on the same date and time in the ISO 8601 calendar and UTC time zone, even if fields like <code>day</code> or <code>hour</code> do not match due to use of different calendars and/or time zones.</p>
+<p>This function can be used to sort arrays of <code>Temporal.ZonedDateTime</code> objects.
+For example:</p>
 <pre class="language-javascript"><code class="language-javascript">arr <span class="token operator">=</span> <span class="token punctuation">[</span>
   Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-01T12:30-05:00[America/Toronto]'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-02-01T12:30-05:00[America/New_York]'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
@@ -461,8 +461,8 @@ sorted <span class="token operator">=</span> arr<span class="token punctuation">
 <span class="token comment">// '[</span>
 <span class="token comment">//   "2020-02-01T12:30+01:00[Europe/Brussels]",</span>
 <span class="token comment">//   "2020-02-01T12:30+00:00[Europe/London]",</span>
-<span class="token comment">//   "2020-02-01T12:30-05:00[America/New_York]",</span>
-<span class="token comment">//   "2020-02-01T12:30-05:00[America/Toronto]"</span>
+<span class="token comment">//   "2020-02-01T12:30-05:00[America/Toronto]",</span>
+<span class="token comment">//   "2020-02-01T12:30-05:00[America/New_York]"</span>
 <span class="token comment">// ]'</span></code></pre><p>Note that in unusual cases like the repeated clock hour after DST ends, values that are later in the real world can be earlier in clock time, or vice versa.
 To sort <code>Temporal.ZonedDateTime</code> values according to clock time only (which is a very rare use case), convert each value to <code>Temporal.PlainDateTime</code>.
 For example:</p>
@@ -1153,7 +1153,7 @@ zdt<span class="token punctuation">.</span><span class="token function">round</s
 <p>Compares two <code>Temporal.ZonedDateTime</code> objects for equality.</p>
 <p>This function exists because it&#39;s not possible to compare using <code>zonedDateTime == other</code> or <code>zonedDateTime === other</code>, due to ambiguity in the primitive representation and between Temporal types.</p>
 <p>If you don&#39;t need to know the order in which two events occur, then this function is easier to use than <code>Temporal.ZonedDateTime.compare</code>.
-But both methods do the same thing, so a <code>0</code> returned from <code>compare</code> implies a <code>true</code> result from <code>equals</code>, and vice-versa.</p>
+However, there are subtle differences between the two methods—a <code>true</code> result from <code>equals</code> includes comparison of calendar and time zone, and is therefore stronger than a <code>0</code> result from compare (which ignores calendar and time zone).</p>
 <p>Note that two <code>Temporal.ZonedDateTime</code> instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
 In this case, the two instances will have different <code>offsetNanoseconds</code> field values.</p>
 <p>To ignore calendars, convert both instances to use the ISO 8601 calendar:</p>
