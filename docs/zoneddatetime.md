@@ -1224,7 +1224,7 @@ Compares two `Temporal.ZonedDateTime` objects for equality.
 This function exists because it's not possible to compare using `zonedDateTime == other` or `zonedDateTime === other`, due to ambiguity in the primitive representation and between Temporal types.
 
 If you don't need to know the order in which two events occur, then this function is easier to use than `Temporal.ZonedDateTime.compare`.
-But both methods do the same thing, so a `0` returned from `compare` implies a `true` result from `equals`, and vice-versa.
+However, there are subtle differences between the two methods—a `true` result from `equals` includes comparison of calendar and time zone, and is therefore stronger than a `0` result from compare (which ignores calendar and time zone).
 
 Note that two `Temporal.ZonedDateTime` instances can have the same clock time, time zone, and calendar but still be unequal, e.g. when a clock hour is repeated after DST ends in the Fall.
 In this case, the two instances will have different `offsetNanoseconds` field values.
