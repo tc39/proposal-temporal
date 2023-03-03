@@ -596,6 +596,8 @@
         1. Let _microseconds_ be remainder(truncate(_difference_ / 1000), 1000).
         1. Let _milliseconds_ be remainder(truncate(_difference_ / 10<sup>6</sup>), 1000).
         1. Let _seconds_ be truncate(_difference_ / 10<sup>9</sup>).
+        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ is 1, then
+          1. Return ! BalanceTimeDuration(0, 0, 0, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_).
         1. Let _roundResult_ be ! RoundDuration(0, 0, 0, 0, 0, 0, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Assert: _roundResult_.[[Days]] is 0.
         1. Return ! BalanceTimeDuration(0, _roundResult_.[[Hours]], _roundResult_.[[Minutes]], _roundResult_.[[Seconds]], _roundResult_.[[Milliseconds]], _roundResult_.[[Microseconds]], _roundResult_.[[Nanoseconds]], _largestUnit_).

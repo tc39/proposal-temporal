@@ -4045,21 +4045,23 @@ export function DifferenceInstant(ns1, ns2, increment, smallestUnit, largestUnit
   let milliseconds = diff.divide(1e6).mod(1e3).toJSNumber();
   let seconds = diff.divide(1e9).toJSNumber();
 
-  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds,
-    increment,
-    smallestUnit,
-    roundingMode
-  ));
+  if (smallestUnit !== 'nanosecond' || increment !== 1) {
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      increment,
+      smallestUnit,
+      roundingMode
+    ));
+  }
   return BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 }
 
@@ -4359,33 +4361,35 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
       resolvedOptions
     );
 
-  const relativeTo = TemporalDateTimeToDate(plainDateTime);
-  ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
-    years,
-    months,
-    weeks,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds,
-    settings.roundingIncrement,
-    settings.smallestUnit,
-    settings.roundingMode,
-    relativeTo
-  ));
-  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds,
-    settings.largestUnit
-  ));
+  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+    const relativeTo = TemporalDateTimeToDate(plainDateTime);
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      settings.roundingIncrement,
+      settings.smallestUnit,
+      settings.roundingMode,
+      relativeTo
+    ));
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
+      days,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      settings.largestUnit
+    ));
+  }
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(
@@ -4423,21 +4427,23 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     GetSlot(other, ISO_MICROSECOND),
     GetSlot(other, ISO_NANOSECOND)
   );
-  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
-    0,
-    0,
-    0,
-    0,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds,
-    settings.roundingIncrement,
-    settings.smallestUnit,
-    settings.roundingMode
-  ));
+  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
+      0,
+      0,
+      0,
+      0,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      settings.roundingIncrement,
+      settings.smallestUnit,
+      settings.roundingMode
+    ));
+  }
   ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     0,
     hours,
@@ -4550,24 +4556,9 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
     }
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
-    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds,
-      settings.roundingIncrement,
-      settings.smallestUnit,
-      settings.roundingMode,
-      zonedDateTime
-    ));
-    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-      AdjustRoundedDurationDays(
+
+    if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
         years,
         months,
         weeks,
@@ -4583,6 +4574,24 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
         settings.roundingMode,
         zonedDateTime
       ));
+      ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+        AdjustRoundedDurationDays(
+          years,
+          months,
+          weeks,
+          days,
+          hours,
+          minutes,
+          seconds,
+          milliseconds,
+          microseconds,
+          nanoseconds,
+          settings.roundingIncrement,
+          settings.smallestUnit,
+          settings.roundingMode,
+          zonedDateTime
+        ));
+    }
   }
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
