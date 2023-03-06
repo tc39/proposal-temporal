@@ -12986,8 +12986,8 @@
   var ObjectAssign$1 = Object.assign;
   var ObjectCreate$6 = Object.create;
   var ObjectEntries = Object.entries;
-  var ObjectKeys = Object.keys;
   var OriginalSet = Set;
+  var ReflectOwnKeys = Reflect.ownKeys;
   var SetPrototypeAdd$2 = Set.prototype.add;
   var SetPrototypeValues = Set.prototype.values;
   var impl = {};
@@ -13078,10 +13078,24 @@
         additionalFields = ES.ToObject(additionalFields);
         var additionalFieldsCopy = ObjectCreate$6(null);
         ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
-        var additionalKeys = ObjectKeys(additionalFieldsCopy);
-        var ignoredKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
+        var additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
+        var overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
         var merged = ObjectCreate$6(null);
-        ES.CopyDataProperties(merged, fieldsCopy, ignoredKeys, [undefined]);
+        var fieldsKeys = ReflectOwnKeys(fieldsCopy);
+        var _iterator2 = _createForOfIteratorHelper(fieldsKeys),
+          _step2;
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var key = _step2.value;
+            var propValue = undefined;
+            if (ES.Call(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];else propValue = fieldsCopy[key];
+            if (propValue !== undefined) merged[key] = propValue;
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
         ES.CopyDataProperties(merged, additionalFieldsCopy, []);
         return merged;
       }
@@ -13444,19 +13458,19 @@
       this.misses = 0;
       if (cacheToClone !== undefined) {
         var i = 0;
-        var _iterator2 = _createForOfIteratorHelper(cacheToClone.map.entries()),
-          _step2;
+        var _iterator3 = _createForOfIteratorHelper(cacheToClone.map.entries()),
+          _step3;
         try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
             var _this$map;
-            var entry = _step2.value;
+            var entry = _step3.value;
             if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
             (_this$map = this.map).set.apply(_this$map, _toConsumableArray(entry));
           }
         } catch (err) {
-          _iterator2.e(err);
+          _iterator3.e(err);
         } finally {
-          _iterator2.f();
+          _iterator3.f();
         }
       }
     }
@@ -13585,13 +13599,13 @@
         })));
       }
       var result = {};
-      var _iterator3 = _createForOfIteratorHelper(parts),
-        _step3;
+      var _iterator4 = _createForOfIteratorHelper(parts),
+        _step4;
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var _step3$value = _step3.value,
-            type = _step3$value.type,
-            value = _step3$value.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var _step4$value = _step4.value,
+            type = _step4$value.type,
+            value = _step4$value.value;
           if (type === 'year') result.eraYear = +value;
           if (type === 'relatedYear') result.eraYear = +value;
           if (type === 'month') {
@@ -13633,9 +13647,9 @@
           }
         }
       } catch (err) {
-        _iterator3.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator3.f();
+        _iterator4.f();
       }
       if (result.eraYear === undefined) {
         // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
