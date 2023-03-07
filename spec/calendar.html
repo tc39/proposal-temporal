@@ -99,9 +99,12 @@
       </dl>
       <emu-alg>
         1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Let _fieldsArray_ be ? Call(%Temporal.Calendar.prototype.fields%, _calendar_, « CreateArrayFromList(_fieldNames_) »).
-          1. Return ! CreateListFromArrayLike(_fieldsArray_, « String »).
+          1. Assert: _fieldNames_ contains no String other than *"year"*, *"month"*, *"monthCode"*, or *"day"*.
+          1. If _calendar_ is *"iso8601"*, return _fieldNames_.
+          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendar_, _fieldNames_).
+          1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+            1. Append _desc_.[[Property]] to _fieldNames_.
+          1. Return _fieldNames_.
         1. Let _fieldsArray_ be ? Invoke(_calendar_, *"fields"*, « CreateArrayFromList(_fieldNames_) »).
         1. Let _iteratorRecord_ be ? GetIterator(_fieldsArray_, ~sync~).
         1. Return ? IteratorToListOfType(_iteratorRecord_, « String »).
