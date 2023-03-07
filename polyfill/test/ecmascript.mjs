@@ -120,6 +120,96 @@ describe('ECMAScript', () => {
       }
     });
   });
+
+  describe('ToRelativeTemporalObject', () => {
+    it('bare date-time string', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00' });
+      equal(`${plainRelativeTo}`, '2019-11-01');
+      equal(zonedRelativeTo, undefined);
+    });
+
+    it('bare date-time property bag', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: { year: 2019, month: 11, day: 1 }
+      });
+      equal(`${plainRelativeTo}`, '2019-11-01');
+      equal(zonedRelativeTo, undefined);
+    });
+
+    it('date-time + offset string', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: '2019-11-01T00:00-07:00'
+      });
+      equal(`${plainRelativeTo}`, '2019-11-01');
+      equal(zonedRelativeTo, undefined);
+    });
+
+    it('date-time + offset property bag', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: { year: 2019, month: 11, day: 1, offset: '-07:00' }
+      });
+      equal(`${plainRelativeTo}`, '2019-11-01');
+      equal(zonedRelativeTo, undefined);
+    });
+
+    it('date-time + annotation string', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: '2019-11-01T00:00[-07:00]'
+      });
+      equal(plainRelativeTo, undefined);
+      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00-07:00[-07:00]');
+    });
+
+    it('date-time + annotation property bag', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: { year: 2019, month: 11, day: 1, timeZone: '-07:00' }
+      });
+      equal(plainRelativeTo, undefined);
+      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00-07:00[-07:00]');
+    });
+
+    it('date-time + offset + annotation string', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: '2019-11-01T00:00+00:00[UTC]'
+      });
+      equal(plainRelativeTo, undefined);
+      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00+00:00[UTC]');
+    });
+
+    it('date-time + offset + annotation property bag', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: { year: 2019, month: 11, day: 1, offset: '+00:00', timeZone: 'UTC' }
+      });
+      equal(plainRelativeTo, undefined);
+      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00+00:00[UTC]');
+    });
+
+    it('date-time + Z + offset', () => {
+      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+        relativeTo: '2019-11-01T00:00Z[-07:00]'
+      });
+      equal(plainRelativeTo, undefined);
+      equal(`${zonedRelativeTo}`, '2019-10-31T17:00:00-07:00[-07:00]');
+    });
+
+    it('date-time + Z', () => {
+      throws(() => ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00Z' }), RangeError);
+    });
+
+    it('string offset does not agree', () => {
+      throws(() => ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00+04:15[UTC]' }), RangeError);
+    });
+
+    it('property bag offset does not agree', () => {
+      throws(
+        () =>
+          ES.ToRelativeTemporalObject({
+            relativeTo: { year: 2019, month: 11, day: 1, offset: '+04:15', timeZone: 'UTC' }
+          }),
+        RangeError
+      );
+    });
+  });
 });
 
 import { normalize } from 'path';
