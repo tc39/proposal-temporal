@@ -2160,3 +2160,10 @@ impl['indian'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperIndian });
 impl['buddhist'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperBuddhist });
 impl['japanese'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperJapanese });
 impl['gregory'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperGregory });
+
+function calendarFieldsImpl(calendar, fieldNames) {
+  return impl[calendar].fields(fieldNames);
+}
+// Probably not what the intrinsics mechanism was intended for, but view this as
+// an export of calendarFieldsImpl while avoiding circular dependencies
+DefineIntrinsic('calendarFieldsImpl', calendarFieldsImpl);
