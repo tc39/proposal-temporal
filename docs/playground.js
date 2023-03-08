@@ -8487,9 +8487,6 @@
       if (requiredFields === 'partial' && !any) {
         throw new TypeError(emptySourceErrorMessage);
       }
-      if (result['era'] === undefined !== (result['eraYear'] === undefined)) {
-        throw new RangeError("properties 'era' and 'eraYear' must be provided together");
-      }
       return result;
     },
     ToTemporalTimeRecord: function ToTemporalTimeRecord(bag) {
@@ -13711,6 +13708,11 @@
         }
         if (eraYear !== undefined && year !== undefined && eraYear !== year) {
           throw new RangeError("eraYear ".concat(eraYear, " does not match year ").concat(year));
+        }
+      }
+      if (this.hasEra) {
+        if (calendarDate['era'] === undefined !== (calendarDate['eraYear'] === undefined)) {
+          throw new RangeError("properties 'era' and 'eraYear' must be provided together");
         }
       }
     },
