@@ -1,5 +1,7 @@
 /* global __debug__ */
 
+import bigInt from 'big-integer';
+
 import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -13,6 +15,9 @@ import {
   MILLISECONDS,
   MICROSECONDS,
   NANOSECONDS,
+  CALENDAR,
+  INSTANT,
+  TIME_ZONE,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -583,7 +588,7 @@ export class Duration {
     const mon1 = GetSlot(one, MONTHS);
     const w1 = GetSlot(one, WEEKS);
     let d1 = GetSlot(one, DAYS);
-    const h1 = GetSlot(one, HOURS);
+    let h1 = GetSlot(one, HOURS);
     const min1 = GetSlot(one, MINUTES);
     const s1 = GetSlot(one, SECONDS);
     const ms1 = GetSlot(one, MILLISECONDS);
@@ -593,7 +598,7 @@ export class Duration {
     const mon2 = GetSlot(two, MONTHS);
     const w2 = GetSlot(two, WEEKS);
     let d2 = GetSlot(two, DAYS);
-    const h2 = GetSlot(two, HOURS);
+    let h2 = GetSlot(two, HOURS);
     const min2 = GetSlot(two, MINUTES);
     const s2 = GetSlot(two, SECONDS);
     const ms2 = GetSlot(two, MILLISECONDS);
@@ -614,17 +619,60 @@ export class Duration {
     ) {
       return 0;
     }
-    let { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(options);
+    const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(options);
 
-    const shift1 = ES.CalculateOffsetShift(zonedRelativeTo, y1, mon1, w1, d1);
-    const shift2 = ES.CalculateOffsetShift(zonedRelativeTo, y2, mon2, w2, d2);
-    if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
-      if (zonedRelativeTo) plainRelativeTo = ES.ToTemporalDate(zonedRelativeTo);
+    const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
+
+    if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
+      const instant = GetSlot(zonedRelativeTo, INSTANT);
+      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+      const precalculatedPlainDateTime = ES.GetPlainDateTimeFor(timeZone, instant, calendar);
+
+      const after1 = ES.AddZonedDateTime(
+        instant,
+        timeZone,
+        calendar,
+        y1,
+        mon1,
+        w1,
+        d1,
+        h1,
+        min1,
+        s1,
+        ms1,
+        µs1,
+        ns1,
+        precalculatedPlainDateTime
+      );
+      const after2 = ES.AddZonedDateTime(
+        instant,
+        timeZone,
+        calendar,
+        y2,
+        mon2,
+        w2,
+        d2,
+        h2,
+        min2,
+        s2,
+        ms2,
+        µs2,
+        ns2,
+        precalculatedPlainDateTime
+      );
+      return ES.ComparisonResult(after1.minus(after2).toJSNumber());
+    }
+
+    if (calendarUnitsPresent) {
+      // plainRelativeTo may be undefined, and if so Unbalance will throw
       ({ days: d1 } = ES.UnbalanceDateDurationRelative(y1, mon1, w1, d1, 'day', plainRelativeTo));
       ({ days: d2 } = ES.UnbalanceDateDurationRelative(y2, mon2, w2, d2, 'day', plainRelativeTo));
     }
-    ns1 = ES.TotalDurationNanoseconds(d1, h1, min1, s1, ms1, µs1, ns1, shift1);
-    ns2 = ES.TotalDurationNanoseconds(d2, h2, min2, s2, ms2, µs2, ns2, shift2);
+    h1 = bigInt(h1).add(bigInt(d1).multiply(24));
+    h2 = bigInt(h2).add(bigInt(d2).multiply(24));
+    ns1 = ES.TotalDurationNanoseconds(h1, min1, s1, ms1, µs1, ns1);
+    ns2 = ES.TotalDurationNanoseconds(h2, min2, s2, ms2, µs2, ns2);
     return ES.ComparisonResult(ns1.minus(ns2).toJSNumber());
   }
 }
