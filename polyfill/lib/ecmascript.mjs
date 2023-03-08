@@ -2769,6 +2769,18 @@ export const ES = ObjectAssign({}, ES2022, {
   BalanceISODate: (year, month, day) => {
     if (!NumberIsFinite(day)) throw new RangeError('infinity is out of range');
     ({ year, month } = ES.BalanceISOYearMonth(year, month));
+
+    // The pattern of leap years in the ISO 8601 calendar repeats every 400
+    // years. So if we have more than 400 years in days, there's no need to
+    // convert days to a year 400 times. We can convert a multiple of 400 all at
+    // once.
+    const daysIn400YearCycle = 400 * 365 + 97;
+    if (MathAbs(day) > daysIn400YearCycle) {
+      const nCycles = MathTrunc(day / daysIn400YearCycle);
+      year += 400 * nCycles;
+      day -= nCycles * daysIn400YearCycle;
+    }
+
     let daysInYear = 0;
     let testYear = month > 2 ? year : year - 1;
     while (((daysInYear = ES.LeapYear(testYear) ? 366 : 365), day < -daysInYear)) {
