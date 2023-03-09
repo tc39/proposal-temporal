@@ -377,7 +377,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _duration_, _options_).
+        1. Return ? AddDate(_temporalDate_.[[Calendar]], _temporalDate_, _duration_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -392,7 +392,7 @@
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _negatedDuration_ be ! CreateNegatedTemporalDuration(_duration_).
-        1. Return ? CalendarDateAdd(_temporalDate_.[[Calendar]], _temporalDate_, _negatedDuration_, _options_).
+        1. Return ? AddDate(_temporalDate_.[[Calendar]], _temporalDate_, _negatedDuration_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -951,6 +951,38 @@
         1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
         1. Return BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-adddate" type="abstract operation">
+      <h1>
+        AddDate (
+          _calendar_: a String or Object,
+          _plainDate_: a Temporal.PlainDate,
+          _duration_: a Temporal.Duration,
+          optional _options_: an Object or *undefined*,
+          optional _dateAdd_: a function Object or ~unused~,
+        ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It adds _duration_ to _plainDate_.
+          Usually this is accomplished by calling the `dateAdd` method of the given _calendar_ as in CalendarDateAdd, but if the duration only contains days, the computation will not cause an observable method call.
+          If _dateAdd_ is present, the `dateAdd` method will not be observably looked up.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _options_ is not present, set _options_ to *undefined*.
+        1. If _duration_.[[Years]] &ne; 0, or _duration_.[[Months]] &ne; 0, or _duration_.[[Weeks]] &ne; 0, then
+          1. If _dateAdd_ is not present, then
+            1. Set _dateAdd_ to ~unused~.
+            1. If _calendar_ is an Object, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
+          1. Return ? CalendarDateAdd(_calendar_, _plainDate_, _duration_, _options_, _dateAdd_).
+        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _days_ be ? BalanceTimeDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).[[Days]].
+        1. Let _result_ be ? AddISODate(_plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], 0, 0, 0, _days_, _overflow_).
+        1. Return ! CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 
