@@ -762,7 +762,7 @@
         1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
         1. If _month_ is 4, 6, 9, or 11, return 30.
         1. Assert: _month_ is 2.
-        1. Return 28 + ℝ(InLeapYear(TimeFromYear(𝔽(_year_)))).
+        1. Return 28 + MathematicalInLeapYear(EpochTimeForYear(_year_)).
       </emu-alg>
     </emu-clause>
 
@@ -794,11 +794,11 @@
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
             1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
-          1. If _dayOfJan1st_ is _saturday_, and InLeapYear(TimeFromYear(𝔽(_year_ - 1))) is *1*<sub>𝔽</sub>, then
+          1. If _dayOfJan1st_ is _saturday_, and MathematicalInLeapYear(EpochTimeForYear(_year_ - 1)) is 1, then
             1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
           1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
         1. If _week_ is _maxWeekNumber_, then
-          1. Let _daysInYear_ be DaysInYear(𝔽(_year_)).
+          1. Let _daysInYear_ be MathematicalDaysInYear(_year_).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
           1. If _daysLaterInYear_ &lt; _daysAfterThursday_, then
@@ -955,9 +955,8 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be MakeDay(𝔽(year), 𝔽(month - 1), 𝔽(day)).
-        1. Assert: _epochDays_ is finite.
-        1. Return ℝ(DayWithinYear(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>))) + 1.
+        1. Let _epochDays_ be ISODateToEpochDays(year, month - 1, day).
+        1. Return EpochTimeToDayInYear(EpochDaysToEpochMs(_epochDays_, 0)) + 1.
       </emu-alg>
     </emu-clause>
 
@@ -975,11 +974,10 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be MakeDay(𝔽(year), 𝔽(month - 1), 𝔽(day)).
-        1. Assert: _epochDays_ is finite.
-        1. Let _dayOfWeek_ be WeekDay(MakeDate(_epochDays_, *+0*<sub>𝔽</sub>)).
-        1. If _dayOfWeek_ = *+0*<sub>𝔽</sub>, return 7.
-        1. Return ℝ(_dayOfWeek_).
+        1. Let _epochDays_ be ISODateToEpochDays(year, month - 1, day).
+        1. Let _dayOfWeek_ be EpochTimeToWeekDay(EpochDaysToEpochMs(_epochDays_, 0)).
+        1. If _dayOfWeek_ = 0, return 7.
+        1. Return _dayOfWeek_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -1406,7 +1404,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return DaysInYear(𝔽(_temporalDateLike_.[[ISOYear]])).
+        1. Return 𝔽(MathematicalDaysInYear(_temporalDateLike_.[[ISOYear]])).
       </emu-alg>
     </emu-clause>
 
@@ -1444,7 +1442,7 @@
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. If InLeapYear(TimeFromYear(𝔽(_temporalDateLike_.[[ISOYear]]))) is *1*<sub>𝔽</sub>, return *true*.
+        1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) is 1, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
