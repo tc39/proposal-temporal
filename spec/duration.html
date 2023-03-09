@@ -1599,12 +1599,14 @@
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration1_ be ! CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
           1. Let _dateDuration2_ be ! CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
-          1. If _calendar_ is an Object, then
+          1. Let _calendarUnitsPresent_ be *true*.
+          1. If _y1_ = 0 and _mon1_ = 0 and _w1_ = 0 and _y2_ = 0 and _mon2_ = 0 and _w2_ = 0, set _calendarUnitsPresent_ to *false*.
+          1. If _calendar_ is an Object and _calendarUnitsPresent_ is *true*, then
             1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Else,
             1. Let _dateAdd_ be ~unused~.
-          1. Let _intermediate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_, _dateDuration1_, *undefined*, _dateAdd_).
-          1. Let _end_ be ? CalendarDateAdd(_calendar_, _intermediate_, _dateDuration2_, *undefined*, _dateAdd_).
+          1. Let _intermediate_ be ? AddDate(_calendar_, _plainRelativeTo_, _dateDuration1_, *undefined*, _dateAdd_).
+          1. Let _end_ be ? AddDate(_calendar_, _intermediate_, _dateDuration2_, *undefined*, _dateAdd_).
           1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
           1. Let _differenceOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_differenceOptions_, *"largestUnit"*, _dateLargestUnit_).
@@ -1659,7 +1661,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _newDate_ be ? CalendarDateAdd(_calendar_, _relativeTo_, _duration_, *undefined*, _dateAdd_).
+        1. Let _newDate_ be ? AddDate(_calendar_, _relativeTo_, _duration_, *undefined*, _dateAdd_).
         1. Let _days_ be DaysUntil(_relativeTo_, _newDate_).
         1. Return the Record {
             [[RelativeTo]]: _newDate_,
@@ -1742,9 +1744,9 @@
             1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Else,
             1. Let _dateAdd_ be ~unused~.
-          1. Let _yearsLater_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
+          1. Let _yearsLater_ be ? AddDate(_calendar_, _plainRelativeTo_, _yearsDuration_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
+          1. Let _yearsMonthsWeeksLater_ be ? AddDate(_calendar_, _plainRelativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
           1. Let _monthsWeeksInDays_ be DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _plainRelativeTo_ to _yearsLater_.
           1. Set _fractionalDays_ to _fractionalDays_ + _monthsWeeksInDays_.
@@ -1775,9 +1777,9 @@
             1. Let _dateAdd_ be ? GetMethod(_calendar_, *"dateAdd"*).
           1. Else,
             1. Let _dateAdd_ be ~unused~.
-          1. Let _yearsMonthsLater_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_, _yearsMonths_, *undefined*, _dateAdd_).
+          1. Let _yearsMonthsLater_ be ? AddDate(_calendar_, _plainRelativeTo_, _yearsMonths_, *undefined*, _dateAdd_).
           1. Let _yearsMonthsWeeks_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _yearsMonthsWeeksLater_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
+          1. Let _yearsMonthsWeeksLater_ be ? AddDate(_calendar_, _plainRelativeTo_, _yearsMonthsWeeks_, *undefined*, _dateAdd_).
           1. Let _weeksInDays_ be DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _plainRelativeTo_ to _yearsMonthsLater_.
           1. Set _fractionalDays_ to _fractionalDays_ + _weeksInDays_.
