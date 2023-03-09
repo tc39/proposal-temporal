@@ -243,7 +243,7 @@
           1. Set _timeZone_ to ? ToString(_timeZone_).
           1. If <del>the result of IsValidTimeZoneName(_timeZone_)</del><ins>IsAvailableTimeZoneName(_timeZone_)</ins> is *false*, then
             1. Throw a *RangeError* exception.
-          1. Set _timeZone_ to ! CanonicalizeTimeZoneName(_timeZone_).
+          1. Set _timeZone_ to CanonicalizeTimeZoneName(_timeZone_).
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
         1. Let _formatOptions_ be a new Record.
         1. Set _formatOptions_.[[hourCycle]] to _hc_.
