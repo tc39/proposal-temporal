@@ -473,9 +473,17 @@ function extractOverrides(temporalObj, main) {
     }
 
     let timeZone = GetSlot(temporalObj, TIME_ZONE);
-    const objTimeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
-    if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
-      throw new RangeError(`timeZone option ${main[TZ_GIVEN]} doesn't match actual time zone ${objTimeZone}`);
+    const id = ES.ToTemporalTimeZoneIdentifier(timeZone);
+    if (ES.Type(timeZone) === 'Object' && !ES.IsAvailableTimeZoneIdentifier(id)) {
+      throw new RangeError(`Unrecognized time zone identifier ${id}`);
+    }
+    const objTimeZone = ES.GetCanonicalTimeZoneIdentifier(id);
+    if (main[TZ_GIVEN]) {
+      if (this[TZ_RESOLVED] !== objTimeZone) {
+        throw new RangeError(
+          `timeZone option ${main[TZ_GIVEN]} and ZonedDateTime timeZoneId ${id} do not resolve to the same time zone`
+        );
+      }
     }
 
     return {

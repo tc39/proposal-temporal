@@ -50,9 +50,20 @@ Valid characters are ASCII letters, `.`, `-`, and `_`.
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
-The string `timeZoneIdentifier` is canonicalized before being used to determine the time zone.
-For example, values like `+01` will be understood to mean `+01:00`, and capitalization will be corrected.
+Named identifiers are normalized to match the capitalization of that identifier in the IANA Time Zone Database.
+For example, the identifier `america/new_york` will be normalized to `America/New_York`.
+Offset string identifiers are stored in their canonical form.
+For example, `+01` will be stored as`+01:00`.
 If no time zone can be determined from `timeZoneIdentifier`, then a `RangeError` is thrown.
+
+Note that identifiers of time zones can change over time, often due to changes in the preferred English name of a city.
+When a name changes in the IANA Time Zone Database, the old identifier continues to work in order to maintain backwards compatibility.
+For example, even though `Europe/Kiev` and `Europe/Kyiv` will behave identically in all Temporal methods except `toString` and `toJSON`.
+This behavior minimizes the chance that renaming of a time zone in the IANA Time Zone Database will break existing Temporal code.
+
+Newer versions of the IANA Time Zone Database also merge multiple unrelated time zones together, for example `Atlantic/Reykjavik` and `Africa/Abidjan`, as long as they have had the same time zone rules since January 1, 1970.
+ECMAScript does not adopt this practice.
+Time zones that refer to distinct geographical areas, whose time zones might diverge in the future, continue treated as separate time zones in Temporal.
 
 Use this constructor directly if you have a string that is known to be a correct time zone identifier.
 If you have an ISO 8601 date-time string, `Temporal.TimeZone.from()` is probably more convenient.
@@ -134,8 +145,7 @@ tz2 = Temporal.TimeZone.from(tz);
 
 ### timeZone.**id** : string
 
-The `id` property gives an unambiguous identifier for the time zone.
-Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
+The `id` property is whatever identifier was passed in the parameter to the constructor or `from`, normalized to match the capitalization of that identifier in the IANA Time Zone Database.
 
 When subclassing `Temporal.TimeZone`, this property must be overridden to provide an identifier for the custom time zone.
 

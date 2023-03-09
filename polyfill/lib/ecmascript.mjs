@@ -335,7 +335,11 @@ export const ES = ObjectAssign({}, ES2022, {
 
   ParseTemporalTimeZone: (stringIdent) => {
     const { ianaName, offset, z } = ES.ParseTemporalTimeZoneString(stringIdent);
-    if (ianaName) return ES.GetCanonicalTimeZoneIdentifier(ianaName);
+    if (ianaName) {
+      const identifier = ES.GetAvailableTimeZoneIdentifier(ianaName);
+      if (!identifier) throw new RangeError(`Unrecognized time zone ${ianaName}`);
+      return identifier;
+    }
     if (z) return 'UTC';
     // if !ianaName && !z then offset must be present
     const offsetNs = ES.ParseTimeZoneOffsetString(offset);
@@ -1989,6 +1993,70 @@ export const ES = ObjectAssign({}, ES2022, {
     const identifier = ES.ToString(temporalTimeZoneLike);
     return ES.ParseTemporalTimeZone(identifier);
   },
+  GetAvailableTimeZoneIdentifier: (identifier) => {
+    let canonical;
+    try {
+      // In the spec, GetCanonicalTimeZoneIdentifier doesn't throw because
+      // implementations only call it with available time zone identifiers. But
+      // when polyfilling, we don't know if a time zone identifier is available
+      // without doing exactly what GetCanonicalTimeZoneIdentifier does and
+      // seeing if it fails. So we'll deviate from the spec here. All other uses
+      // of GetCanonicalTimeZoneIdentifier follow the spec.
+      canonical = ES.GetCanonicalTimeZoneIdentifier(identifier);
+    } catch {
+      return undefined;
+    }
+    const lower = identifier.toLowerCase();
+    if (canonical.toLowerCase() === lower) return canonical;
+    if (canonical === 'UTC') return canonical;
+    if (ES.IsTimeZoneOffsetString(canonical)) return canonical;
+
+    // The identifier is an alias (a deprecated identifier that's a synonym for
+    // a canonical identifier), so we need to case-normalize the identifier to
+    // match the IANA TZDB, e.g. america/new_york => America/New_York. There's
+    // no built-in way to do this using Intl.DateTimeFormat, but the we can
+    // normalize almost all aliases (modulo a few special cases) using the
+    // TZDB's basic capitalization pattern:
+    // 1. capitalize the first letter of the identifier
+    // 2. capitalize the letter after every slash, dash, or underscore delimiter
+    const standardCase = [...lower]
+      .map((c, i) => (i === 0 || '/-_'.includes(lower[i - 1]) ? c.toUpperCase() : c))
+      .join('');
+    const segments = standardCase.split('/');
+
+    // Legacy US identifiers like US/Alaska or US/Indiana-Starke
+    if (segments.length === 2 && segments[0] === 'Us') return `US/${segments[1]}`;
+
+    const specialCases = {
+      'africa/dar_es_salaam': 'Africa/Dar_es_Salaam',
+      'america/port_of_spain': 'America/Port_of_Spain',
+      'europe/isle_of_man': 'Europe/Isle_of_Man',
+      'america/argentina/comodrivadavia': 'America/Argentina/ComodRivadavia',
+      'america/knox_in': 'America/Knox_IN',
+      'antarctica/dumontdurville': 'Antarctica/DumontDUrville',
+      'antarctica/mcmurdo': 'Antarctica/McMurdo',
+      'australia/act': 'Australia/ACT',
+      'australia/lhi': 'Australia/LHI',
+      'australia/nsw': 'Australia/NSW',
+      'brazil/denoronha': 'Brazil/DeNoronha',
+      'chile/easterisland': 'Chile/EasterIsland',
+      gb: 'GB',
+      'gb-eire': 'GB-Eire',
+      'mexico/bajanorte': 'Mexico/BajaNorte',
+      'mexico/bajasur': 'Mexico/BajaSur',
+      nz: 'NZ',
+      'nz-chat': 'NZ-CHAT',
+      prc: 'PRC',
+      roc: 'ROC',
+      rok: 'ROK',
+      'w-su': 'W-SU'
+    };
+    // If not a special case, then use the standard casing.
+    return specialCases[lower] ?? segments.join('/');
+  },
+  IsAvailableTimeZoneIdentifier: (identifier) => {
+    return ES.GetAvailableTimeZoneIdentifier(identifier) !== undefined;
+  },
   ToTemporalTimeZoneIdentifier: (slotValue) => {
     if (typeof slotValue === 'string') return slotValue;
     const result = slotValue.id;
@@ -2002,8 +2070,11 @@ export const ES = ObjectAssign({}, ES2022, {
   },
   TimeZoneEquals: (one, two) => {
     if (one === two) return true;
-    const tz1 = ES.ToTemporalTimeZoneIdentifier(one);
-    const tz2 = ES.ToTemporalTimeZoneIdentifier(two);
+    let tz1 = ES.ToTemporalTimeZoneIdentifier(one);
+    let tz2 = ES.ToTemporalTimeZoneIdentifier(two);
+    if (tz1 === tz2) return true;
+    if (ES.IsAvailableTimeZoneIdentifier(tz1)) tz1 = ES.GetCanonicalTimeZoneIdentifier(tz1);
+    if (ES.IsAvailableTimeZoneIdentifier(tz2)) tz2 = ES.GetCanonicalTimeZoneIdentifier(tz2);
     return tz1 === tz2;
   },
   TemporalDateTimeToDate: (dateTime) => {

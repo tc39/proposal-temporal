@@ -21,19 +21,18 @@ import {
 
 export class TimeZone {
   constructor(timeZoneIdentifier) {
-    // Note: if the argument is not passed, GetCanonicalTimeZoneIdentifier(undefined) will throw.
-    //       This check exists only to improve the error message.
     if (arguments.length < 1) {
       throw new RangeError('missing argument: identifier is required');
     }
 
-    timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+    const caseNormalizedIdentifier = ES.GetAvailableTimeZoneIdentifier(timeZoneIdentifier);
+    if (!caseNormalizedIdentifier) throw new RangeError(`Invalid time zone identifier: ${timeZoneIdentifier}`);
     CreateSlots(this);
-    SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
+    SetSlot(this, TIMEZONE_ID, caseNormalizedIdentifier);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${timeZoneIdentifier}>`,
+        value: `${this[Symbol.toStringTag]} <${caseNormalizedIdentifier}>`,
         writable: false,
         enumerable: false,
         configurable: false

@@ -27,6 +27,30 @@
       Other implementations are encouraged to do the same.
     </p>
 
+    <emu-clause id="sec-getavailabletimezonename" type="abstract operation">
+      <h1>
+        GetAvailableTimeZoneName (
+          _timeZone_: a String
+        ): either a String that is one of the time zone identifiers returned by AvailableTimeZones(), or *undefined*
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned value is the supported time zone identifier that is an ASCII-case-insensitive match for the provided time zone identifier.</dd>
+      </dl>
+      <p>
+        Once GetAvailableTimeZoneName(_timeZone_) has returned a String, for the lifetime of the surrounding agent, GetAvailableTimeZoneName(_variant_) must return the same String if _variant_ is an ASCII-case-insensitive match for either _timeZone_ or CanonicalizeTimeZoneName(_timeZone_).
+      </p>
+
+      <emu-alg>
+        1. Let _timeZones_ be AvailableTimeZones().
+        1. For each String _candidate_ in _timeZones_, do
+          1. If _timeZone_ is an ASCII-case-insensitive match for _candidate_, then
+            1. If CanonicalizeTimeZoneName(_candidate_) is *"UTC"*, return *"UTC"*.
+            1. Return _candidate_.
+        1. Return *undefined*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-isavailabletimezonename" type="abstract operation">
       <h1>
         IsAvailableTimeZoneName (
@@ -42,17 +66,15 @@
       </p>
 
       <emu-alg>
-        1. Let _timeZones_ be AvailableTimeZones().
-        1. For each String _candidate_ in _timeZones_, do
-          1. If _timeZone_ is an ASCII-case-insensitive match for _candidate_, return *true*.
-        1. Return *false*.
+        1. If GetAvailableTimeZoneName(_timeZone_) is *undefined*, return *false*.
+        1. Return *true*.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-canonicalizetimezonename" type="abstract operation">
       <h1>
         CanonicalizeTimeZoneName (
-          _timeZone_: a String that is a valid time zone name as verified by IsAvailableTimeZoneName,
+          _timeZone_: a String that is a valid time zone name as verified by GetAvailableTimeZoneName,
         )
       </h1>
       <dl class="header">
@@ -126,9 +148,9 @@
           1. Throw a *TypeError* exception.
         1. Set _identifier_ to ? ToString(_identifier_).
         1. If IsTimeZoneOffsetString(_identifier_) is *false*, then
-          1. If IsAvailableTimeZoneName(_identifier_) is *false*, then
+          1. Let _identifier_ be GetAvailableTimeZoneName(_identifier_).
+          1. If _identifier_ is *undefined*, then
             1. Throw a *RangeError* exception.
-          1. Set _identifier_ to ! CanonicalizeTimeZoneName(_identifier_).
         1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -400,7 +422,7 @@
           1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_offsetNanosecondsResult_).
           1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.
         1. Else,
-          1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
+          1. Assert: GetAvailableTimeZoneName(_identifier_) is _identifier_.
           1. Set _object_.[[Identifier]] to _identifier_.
           1. Set _object_.[[OffsetNanoseconds]] to *undefined*.
         1. Return _object_.
@@ -575,8 +597,9 @@
           1. If IsTimeZoneOffsetString(_name_) is *true*, then
             1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_name_).
             1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
-          1. If IsAvailableTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
-          1. Return ! CanonicalizeTimeZoneName(_name_).
+          1. Let _name_ be GetAvailableTimeZoneName(_name_).
+          1. If _name_ is *undefined*, throw a *RangeError* exception.
+          1. Return _name_.
         1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
         1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_parseResult_.[[OffsetString]]).
         1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
@@ -777,13 +800,16 @@
       <h1>TimeZoneEquals ( _one_, _two_ )</h1>
       <p>
         The abstract operation TimeZoneEquals takes two arguments _one_ and _two_, which must be Objects.
-        It returns *true* if its arguments represent the same time zone.
+        It returns *true* if its arguments represent the same canonical time zone.
         It performs the following steps:
       </p>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return *true*.
         1. Let _timeZoneOne_ be ? ToTemporalTimeZoneIdentifier(_one_).
         1. Let _timeZoneTwo_ be ? ToTemporalTimeZoneIdentifier(_two_).
+        1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
+        1. If IsAvailableTimeZoneName(_timeZoneOne_) is *true*, set _timeZoneOne_ to CanonicalizeTimeZoneName(_timeZoneOne_).
+        1. If IsAvailableTimeZoneName(_timeZoneTwo_) is *true*, set _timeZoneOne_ to CanonicalizeTimeZoneName(_timeZoneTwo_).
         1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
         1. Return *false*.
       </emu-alg>

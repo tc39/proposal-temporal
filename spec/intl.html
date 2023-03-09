@@ -904,6 +904,8 @@
       1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
       1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_zonedDateTime_.[[TimeZone]]).
+      1. <ins>If _zonedDateTime_.[[TimeZone]] is an Object and IsAvailableTimeZoneName(_timeZone_) is *false*, throw a *RangeError* exception.</ins>
+      1. <ins>Set _timeZone_ to CanonicalizeTimeZoneName(_timeZone).</ins>
       1. If _dateTimeFormat_.[[TimeZone]] is not equal to DefaultTimeZone(), and _timeZone_ is not equal to _dateTimeFormat_.[[TimeZone]], then
         1. Throw a *RangeError* exception.
       1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).

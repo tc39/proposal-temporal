@@ -1221,7 +1221,7 @@ zdt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor'
 
 - `other` (`Temporal.ZonedDateTime`): Another date/time to compare.
 
-**Returns:** `true` if `zonedDateTime` and `other` are have equivalent fields (date/time fields, offset, time zone ID, and calendar ID), or `false` if not.
+**Returns:** `true` if `zonedDateTime` and `other` represent the same exact instant, the same time zone, and the same calendar, or `false` if not.
 
 Compares two `Temporal.ZonedDateTime` objects for equality.
 
@@ -1245,7 +1245,26 @@ To ignore both time zones and calendars, compare the instants of both:
 zdt.toInstant().equals(other.toInstant());
 ```
 
-Example usage:
+Note that identifiers of time zones can change over time, often due to changes in the preferred English name of a city.
+When a name changes in the IANA Time Zone Database, the old identifier continues to work in order to maintain backwards compatibility.
+For example, `Europe/Kiev` and `Europe/Kyiv` will behave identically in `eqials` and all other Temporal methods except `toString` and `toJSON`.
+This behavior minimizes the chance that renaming of a time zone in the IANA Time Zone Database will break existing Temporal code.
+
+```javascript
+zdt = Temporal.ZonedDateTime.from('2024-07-01T14:00[Asia/Calcutta]');
+zdt.equals(zdt.withTimeZone('Asia/Kolkata')); // => true
+```
+
+Newer versions of the IANA Time Zone Database also merge multiple unrelated time zones together, for example `Atlantic/Reykjavik` and `Africa/Abidjan`, as long as they have had the same time zone rules since January 1, 1970.
+ECMAScript does not adopt this practice.
+Time zones that refer to distinct geographical areas, whose time zones might diverge in the future, continue to be treated as separate time zones in Temporal.
+
+```javascript
+zdt = Temporal.ZonedDateTime.from('2024-07-01T14:00[Atlantic/Reykjavik]');
+zdt.equals(zdt.withTimeZone('Africa/Abidjan')); // => false
+```
+
+More example usage:
 
 ```javascript
 zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Paris]');
