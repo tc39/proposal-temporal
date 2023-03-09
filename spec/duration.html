@@ -1330,7 +1330,13 @@
         This operation observably calls time zone and calendar methods.
       </p>
       <emu-alg>
-        1. Let _endNs_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _zonedRelativeTo_.[[TimeZone]], _zonedRelativeTo_.[[Calendar]], 0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _intermediateNs_ be _zonedRelativeTo_.[[Nanoseconds]].
+        1. If _days_ &ne; 0, then
+          1. Let _startInstant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
+          1. Let _startDateTime_ be ? GetPlainDateTimeFor(_zonedRelativeTo_.[[TimeZone]], _startInstant_, *"iso8601"*).
+          1. Let _intermediateResult_ be ? AddDaysToZonedDateTime(_startInstant_, _startDateTime_, _zonedRelativeTo_.[[TimeZone]], *"iso8601"*, _days_, *"constrain"*).
+          1. Set _intermediateNs_ to _intermediateResult_.[[EpochNanoseconds]].
+        1. Let _endNs_ be AddInstant(_intermediateNs_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _nanoseconds_ to ℝ(_endNs_ - _zonedRelativeTo_.[[Nanoseconds]]).
         1. If _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _result_ be ? NanosecondsToDays(_nanoseconds_, _zonedRelativeTo_).
