@@ -1884,7 +1884,9 @@
         1. Else if _timeRemainderNs_ &lt; 0, let _direction_ be -1.
         1. Else, let _direction_ be 1.
         1. Let _dayStart_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _zonedRelativeTo_.[[TimeZone]], _zonedRelativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
-        1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _zonedRelativeTo_.[[TimeZone]], _zonedRelativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
+        1. Let _dayStartInstant_ be ! CreateTemporalInstant(_dayStart_).
+        1. Let _dayStartDateTime_ be ? GetPlainDateTimeFor(_zonedRelativeTo_.[[TimeZone]], _dayStartInstant_, _zonedRelativeTo_.[[Calendar]]).
+        1. Let _dayEnd_ be ? AddDaysToZonedDateTime(_dayStartInstant_, _dayStartDateTime_, _zonedRelativeTo_.[[TimeZone]], _zonedRelativeTo_.[[Calendar]], _direction_).[[EpochNanoseconds]].
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ - _dayStart_).
         1. Let _oneDayLess_ be _timeRemainderNs_ - _dayLengthNs_.
         1. If _oneDayLess_ &times; _direction_ &lt; 0, then
