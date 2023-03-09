@@ -1311,6 +1311,10 @@
         1. Else,
           1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
           1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, then
+          1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+          1. Let _intermediate_ be ? AddDaysToZonedDateTime(_instant_, _temporalDateTime_, _timeZone_, _calendar_, _days_, _overflow_).[[EpochNanoseconds]].
+          1. Return ? AddInstant(_intermediate_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Let _datePart_ be ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
         1. Let _dateDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _options_).
@@ -1328,6 +1332,7 @@
           _timeZone_: a String or Object,
           _calendar_: a String or Object,
           _days_: an integer,
+          optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a Record, or an abrupt completion
       </h1>
       <dl class="header">
@@ -1341,13 +1346,14 @@
       </p>
       <emu-alg>
         1. Assert: If _timeZone_ is a String, _dateTime_'s internal slots are the same as those of the Object returned from ! GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
         1. If _days_ = 0, then
           1. Return the Record {
               [[EpochNanoseconds]]: _instant_.[[Nanoseconds]],
               [[Instant]]: _instant_,
               [[DateTime]]: _dateTime_
             }.
-        1. Let _addedDate_ be ? AddISODate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], 0, 0, 0, _days_, *"constrain"*).
+        1. Let _addedDate_ be ? AddISODate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], 0, 0, 0, _days_, _overflow_).
         1. Let _dateTimeResult_ be ? CreateTemporalDateTime(_addedDate_.[[Year]], _addedDate_.[[Month]], _addedDate_.[[Day]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _calendar_).
         1. Let _instantResult_ be ? GetInstantFor(_timeZone_, _dateTimeResult_, *"compatible"*).
         1. Return the Record {

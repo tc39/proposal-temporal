@@ -3535,22 +3535,17 @@ export function BalancePossiblyInfiniteTimeDurationRelative(
   largestUnit,
   zonedRelativeTo
 ) {
-  const endNs = AddZonedDateTime(
-    GetSlot(zonedRelativeTo, INSTANT),
-    GetSlot(zonedRelativeTo, TIME_ZONE),
-    GetSlot(zonedRelativeTo, CALENDAR),
-    0,
-    0,
-    0,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  );
   const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+
+  let intermediateNs = startNs;
+  if (days !== 0) {
+    const startInstant = GetSlot(zonedRelativeTo, INSTANT);
+    const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+    const startDt = GetPlainDateTimeFor(timeZone, startInstant, 'iso8601');
+    intermediateNs = AddDaysToZonedDateTime(startInstant, startDt, timeZone, 'iso8601', days, 'constrain').epochNs;
+  }
+
+  const endNs = AddInstant(intermediateNs, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   nanoseconds = endNs.subtract(startNs);
 
   if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
@@ -4943,9 +4938,15 @@ export function AddZonedDateTime(
     return AddInstant(GetSlot(instant, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
   }
 
+  const dt = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZone, instant, calendar);
+  if (DurationSign(years, months, weeks, 0, 0, 0, 0, 0, 0, 0) === 0) {
+    const overflow = ToTemporalOverflow(options);
+    const intermediate = AddDaysToZonedDateTime(instant, dt, timeZone, calendar, days, overflow).epochNs;
+    return AddInstant(intermediate, h, min, s, ms, µs, ns);
+  }
+
   // RFC 5545 requires the date portion to be added in calendar days and the
   // time portion to be added in exact time.
-  const dt = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZone, instant, calendar);
   const datePart = CreateTemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
   const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   const addedDate = CalendarDateAdd(calendar, datePart, dateDuration, options);
@@ -4968,7 +4969,7 @@ export function AddZonedDateTime(
   return AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
 }
 
-export function AddDaysToZonedDateTime(instant, dateTime, timeZone, calendar, days) {
+export function AddDaysToZonedDateTime(instant, dateTime, timeZone, calendar, days, overflow = 'constrain') {
   // Same as AddZonedDateTime above, but an optimized version with fewer
   // observable calls that only adds a number of days. Returns an object with
   // all three versions of the ZonedDateTime: epoch nanoseconds, Instant, and
@@ -4985,7 +4986,7 @@ export function AddDaysToZonedDateTime(instant, dateTime, timeZone, calendar, da
     0,
     0,
     days,
-    'constrain'
+    overflow
   );
   const dateTimeResult = CreateTemporalDateTime(
     addedDate.year,
