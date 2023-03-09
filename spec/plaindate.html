@@ -824,11 +824,9 @@
           1. Return ! CreateDateDurationRecord(_years_, _months_, 0, _days_).
         1. Else,
           1. Assert: _largestUnit_ is *"day"* or *"week"*.
-          1. Let _epochDays1_ be MakeDay(𝔽(_y1_), 𝔽(_m1_ - 1), 𝔽(_d1_)).
-          1. Assert: _epochDays1_ is finite.
-          1. Let _epochDays2_ be MakeDay(𝔽(_y2_), 𝔽(_m2_ - 1), 𝔽(_d2_)).
-          1. Assert: _epochDays2_ is finite.
-          1. Let _days_ be ℝ(_epochDays2_) - ℝ(_epochDays1_).
+          1. Let _epochDays1_ be ISODateToEpochDays(_y1_, _m1_ - 1, _d1_).
+          1. Let _epochDays2_ be ISODateToEpochDays(_y2_, _m2_ - 1, _d2_).
+          1. Let _days_ be _epochDays2_ - _epochDays1_.
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is *"week"*, then
             1. Set _weeks_ to truncate(_days_ / 7).
@@ -906,10 +904,9 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _epochDays_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
-        1. Assert: _epochDays_ is finite.
-        1. Let _ms_ be MakeDate(_epochDays_, *+0*<sub>𝔽</sub>).
-        1. Return CreateISODateRecord(ℝ(YearFromTime(_ms_)), ℝ(MonthFromTime(_ms_)) + 1, ℝ(DateFromTime(_ms_))).
+        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
+        1. Let _ms_ be EpochDaysToEpochMs(_epochDays_, 0).
+        1. Return CreateISODateRecord(EpochTimeToEpochYear(_ms_), EpochTimeToMonthInYear(_ms_) + 1, EpochTimeToDate(_ms_)).
       </emu-alg>
     </emu-clause>
 

@@ -1576,11 +1576,9 @@
         If _earlier_ is later than _later_, then the result is negative.</dd>
       </dl>
       <emu-alg>
-        1. Let _epochDays1_ be MakeDay(𝔽(_earlier_.[[ISOYear]]), 𝔽(_earlier_.[[ISOMonth]] - 1), 𝔽(_earlier_.[[ISODay]])).
-        1. Assert: _epochDays1_ is finite.
-        1. Let _epochDays2_ be MakeDay(𝔽(_later_.[[ISOYear]]), 𝔽(_later_.[[ISOMonth]] - 1), 𝔽(_later_.[[ISODay]])).
-        1. Assert: _epochDays2_ is finite.
-        1. Return ℝ(_epochDays2_) - ℝ(_epochDays1_).
+        1. Let _epochDays1_ be ISODateToEpochDays(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]] - 1, _earlier_.[[ISODay]]).
+        1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[ISOYear]], _later_.[[ISOMonth]] - 1, _later_.[[ISODay]]).
+        1. Return _epochDays2_ - _epochDays1_.
       </emu-alg>
     </emu-clause>
 

@@ -421,9 +421,9 @@
         1. Assert: ! IsValidEpochNanoseconds(ℤ(_epochNanoseconds_)) is *true*.
         1. Let _remainderNs_ be _epochNanoseconds_ modulo 10<sup>6</sup>.
         1. Let _epochMilliseconds_ be 𝔽((_epochNanoseconds_ - _remainderNs_) / 10<sup>6</sup>).
-        1. Let _year_ be ℝ(! YearFromTime(_epochMilliseconds_)).
-        1. Let _month_ be ℝ(! MonthFromTime(_epochMilliseconds_)) + 1.
-        1. Let _day_ be ℝ(! DateFromTime(_epochMilliseconds_)).
+        1. Let _year_ be EpochTimeToEpochYear(_epochMilliseconds_).
+        1. Let _month_ be EpochTimeToMonthInYear(_epochMilliseconds_) + 1.
+        1. Let _day_ be EpochTimeToDate(_epochMilliseconds_).
         1. Let _hour_ be ℝ(! HourFromTime(_epochMilliseconds_)).
         1. Let _minute_ be ℝ(! MinFromTime(_epochMilliseconds_)).
         1. Let _second_ be ℝ(! SecFromTime(_epochMilliseconds_)).
