@@ -1129,14 +1129,17 @@
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
-        1. For each element _candidate_ of _possibleInstants_, do
-          1. Let _candidateNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _candidate_).
-          1. If _candidateNanoseconds_ = _offsetNanoseconds_, then
-            1. Return _candidate_.[[Nanoseconds]].
-          1. If _matchBehaviour_ is ~match minutes~, then
-            1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
-            1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
+        1. If _possibleInstants_ is not empty, then
+          1. Let _getOffsetNanosecondsFor_ be ~unused~.
+          1. If _timeZone_ is an Object, set _getOffsetNanosecondsFor_ to ? GetMethod(_timeZone_, *"getOffsetNanosecondsFor"*).
+          1. For each element _candidate_ of _possibleInstants_, do
+            1. Let _candidateNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _candidate_, _getOffsetNanosecondsFor_).
+            1. If _candidateNanoseconds_ = _offsetNanoseconds_, then
               1. Return _candidate_.[[Nanoseconds]].
+            1. If _matchBehaviour_ is ~match minutes~, then
+              1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateNanoseconds_, 60 &times; 10<sup>9</sup>, *"halfExpand"*).
+              1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
+                1. Return _candidate_.[[Nanoseconds]].
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
         1. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
         1. Return _instant_.[[Nanoseconds]].
