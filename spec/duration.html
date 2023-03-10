@@ -94,6 +94,8 @@
         1. Set _one_ to ? ToTemporalDuration(_one_).
         1. Set _two_ to ? ToTemporalDuration(_two_).
         1. Set _options_ to ? GetOptionsObject(_options_).
+        1. If _one_.[[Years]] = _two_.[[Years]], and _one_.[[Months]] = _two_.[[Months]], and _one_.[[Weeks]] = _two_.[[Weeks]], and _one_.[[Days]] = _two_.[[Days]], and _one_.[[Hours]] = _two_.[[Hours]], and _one_.[[Minutes]] = _two_.[[Minutes]], and _one_.[[Seconds]] = _two_.[[Seconds]], and _one_.[[Millieconds]] = _two_.[[Millieconds]], and _one_.[[Microseconds]] = _two_.[[Microseconds]], and _one_.[[Nanoseconds]] = _two_.[[Nanoseconds]], then
+          1. Return *+0*<sub>𝔽</sub>.
         1. Let _relativeToRecord_ be ? ToRelativeTemporalObject(_options_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
