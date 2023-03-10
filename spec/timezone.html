@@ -635,13 +635,26 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getoffsetnanosecondsfor" aoid="GetOffsetNanosecondsFor">
-      <h1>GetOffsetNanosecondsFor ( _timeZone_, _instant_ )</h1>
+    <emu-clause id="sec-temporal-getoffsetnanosecondsfor" type="abstract operation">
+      <h1>
+        GetOffsetNanosecondsFor (
+          _timeZone_: a String or Object,
+          _instant_: a Temporal.Instant,
+          optional _getOffsetNanosecondsFor_: a function object,
+        ): either a normal completion containing an integer, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the UTC offset of an _instant_, in nanoseconds, by calling the `getOffsetNanosecondsFor` method of the given _timeZone_.
+          If _getOffsetNanosecondsFor_ is present, the `getOffsetNanosecondsFor` method will not be observably looked up.
+        </dd>
+      </dl>
       <emu-alg>
         1. If _timeZone_ is a String, then
           1. Set _timeZone_ to ! CreateTemporalTimeZone(_timeZone_).
           1. Return ? Call(%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%, _timeZone_, « _instant_ »).
-        1. Let _getOffsetNanosecondsFor_ be ? GetMethod(_timeZone_, *"getOffsetNanosecondsFor"*).
+        1. If _getOffsetNanosecondsFor_ is not present, set _getOffsetNanosecondsFor_ to ? GetMethod(_timeZone_, *"getOffsetNanosecondsFor"*).
         1. Let _offsetNanoseconds_ be ? Call(_getOffsetNanosecondsFor_, _timeZone_, « _instant_ »).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
@@ -765,15 +778,28 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getpossibleinstantsfor" aoid="GetPossibleInstantsFor">
-      <h1>GetPossibleInstantsFor ( _timeZone_, _dateTime_ )</h1>
+    <emu-clause id="sec-temporal-getpossibleinstantsfor" type="abstract operation">
+      <h1>
+        GetPossibleInstantsFor (
+          _timeZone_: a String or Object,
+          _dateTime_: a Temporal.PlainDateTime,
+          optional _getPossibleInstantsFor_: a function object,
+        ): either a normal completion containing a List of Temporal.Instant objects, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the possible Temporal.Instant exact times that may correspond to _dateTime_, by calling the `getPossibleInstantsFor` method of the given _timeZone_.
+          If _getPossibleInstantsFor_ is present, the `getPossibleInstantsFor` method will not be observably looked up.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
         1. If _timeZone_ is a String, then
           1. Set _timeZone_ to ! CreateTemporalTimeZone(_timeZone_).
           1. Let _array_ be ? Call(%Temporal.TimeZone.prototype.getPossibleInstantsFor%, _timeZone_, « _dateTime_ »).
           1. Return ! CreateListFromArrayLike(_array_, « Object »).
-        1. Let _possibleInstants_ be ? Invoke(_timeZone_, *"getPossibleInstantsFor"*, « _dateTime_ »).
+        1. If _getPossibleInstantsFor_ is not present, set _getPossibleInstantsFor_ to ? GetMethod(_timeZone_, *"getPossibleInstantsFor"*).
+        1. Let _possibleInstants_ be ? Call(_timeZone_, *"getPossibleInstantsFor"*, « _dateTime_ »).
         1. Let _iteratorRecord_ be ? GetIterator(_possibleInstants_, ~sync~).
         1. Let _list_ be a new empty List.
         1. Let _next_ be *true*.
