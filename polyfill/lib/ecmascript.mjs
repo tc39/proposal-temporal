@@ -3268,32 +3268,55 @@ export function NanosecondsToDays(nanoseconds, zonedRelativeTo) {
   const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
   const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 
-  // Find the difference in days only.
-  const dtStart = GetPlainDateTimeFor(timeZone, start, calendar);
-  const dtEnd = GetPlainDateTimeFor(timeZone, end, calendar);
-  let { days } = DifferenceISODateTime(
-    GetSlot(dtStart, ISO_YEAR),
-    GetSlot(dtStart, ISO_MONTH),
-    GetSlot(dtStart, ISO_DAY),
+  // Find the difference in days only. Inline DifferenceISODateTime because we
+  // don't need the path that potentially calls calendar methods.
+  const dtStart = GetPlainDateTimeFor(timeZone, start, 'iso8601');
+  const dtEnd = GetPlainDateTimeFor(timeZone, end, 'iso8601');
+  let hours, minutes, seconds, milliseconds, microseconds;
+  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = DifferenceTime(
     GetSlot(dtStart, ISO_HOUR),
     GetSlot(dtStart, ISO_MINUTE),
     GetSlot(dtStart, ISO_SECOND),
     GetSlot(dtStart, ISO_MILLISECOND),
     GetSlot(dtStart, ISO_MICROSECOND),
     GetSlot(dtStart, ISO_NANOSECOND),
-    GetSlot(dtEnd, ISO_YEAR),
-    GetSlot(dtEnd, ISO_MONTH),
-    GetSlot(dtEnd, ISO_DAY),
     GetSlot(dtEnd, ISO_HOUR),
     GetSlot(dtEnd, ISO_MINUTE),
     GetSlot(dtEnd, ISO_SECOND),
     GetSlot(dtEnd, ISO_MILLISECOND),
     GetSlot(dtEnd, ISO_MICROSECOND),
-    GetSlot(dtEnd, ISO_NANOSECOND),
-    calendar,
-    'day',
-    ObjectCreate(null)
-  );
+    GetSlot(dtEnd, ISO_NANOSECOND)
+  ));
+
+  const timeSign = DurationSign(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  let y1 = GetSlot(dtStart, ISO_YEAR);
+  let mon1 = GetSlot(dtStart, ISO_MONTH);
+  let d1 = GetSlot(dtStart, ISO_DAY);
+  const y2 = GetSlot(dtEnd, ISO_YEAR);
+  const mon2 = GetSlot(dtEnd, ISO_MONTH);
+  const d2 = GetSlot(dtEnd, ISO_DAY);
+  const dateSign = CompareISODate(y2, mon2, d2, y1, mon1, d1);
+  if (dateSign === -timeSign) {
+    ({ year: y1, month: mon1, day: d1 } = BalanceISODate(y1, mon1, d1 - timeSign));
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
+      -timeSign,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
+      'day'
+    ));
+  }
+
+  const date1 = CreateTemporalDate(y1, mon1, d1, 'iso8601');
+  const date2 = CreateTemporalDate(y2, mon2, d2, 'iso8601');
+
+  let days = DaysUntil(date1, date2);
+  // Signs of date part and time part may not agree; balance them together
+  ({ days } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
+
   let relativeResult = AddDaysToZonedDateTime(start, dtStart, timeZone, calendar, days);
   // may disambiguate
 
@@ -4071,6 +4094,21 @@ export function DifferenceInstant(ns1, ns2, increment, smallestUnit, largestUnit
   return BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 }
 
+export function DifferenceDate(calendar, plainDate1, plainDate2, options) {
+  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+  if (
+    GetSlot(plainDate1, ISO_YEAR) === GetSlot(plainDate2, ISO_YEAR) &&
+    GetSlot(plainDate1, ISO_MONTH) === GetSlot(plainDate2, ISO_MONTH) &&
+    GetSlot(plainDate1, ISO_DAY) === GetSlot(plainDate2, ISO_DAY)
+  ) {
+    return new TemporalDuration();
+  }
+  if (options.largestUnit === 'day') {
+    return new TemporalDuration(0, 0, 0, DaysUntil(plainDate1, plainDate2));
+  }
+  return CalendarDateUntil(calendar, plainDate1, plainDate2, options);
+}
+
 export function DifferenceISODateTime(
   y1,
   mon1,
@@ -4130,7 +4168,7 @@ export function DifferenceISODateTime(
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
   const untilOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   untilOptions.largestUnit = dateLargestUnit;
-  const untilResult = CalendarDateUntil(calendar, date1, date2, untilOptions);
+  const untilResult = DifferenceDate(calendar, date1, date2, untilOptions);
   const years = GetSlot(untilResult, YEARS);
   const months = GetSlot(untilResult, MONTHS);
   const weeks = GetSlot(untilResult, WEEKS);
@@ -4312,7 +4350,7 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
     return new Duration();
   }
 
-  const untilResult = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
+  const untilResult = DifferenceDate(calendar, plainDate, other, resolvedOptions);
   let years = GetSlot(untilResult, YEARS);
   let months = GetSlot(untilResult, MONTHS);
   let weeks = GetSlot(untilResult, WEEKS);
@@ -4785,7 +4823,7 @@ export function AddDuration(
     const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
     const differenceOptions = ObjectCreate(null);
     differenceOptions.largestUnit = dateLargestUnit;
-    const untilResult = CalendarDateUntil(calendar, plainRelativeTo, end, differenceOptions);
+    const untilResult = DifferenceDate(calendar, plainRelativeTo, end, differenceOptions);
     years = GetSlot(untilResult, YEARS);
     months = GetSlot(untilResult, MONTHS);
     weeks = GetSlot(untilResult, WEEKS);
@@ -5600,7 +5638,7 @@ export function RoundDuration(
       const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendar);
       const untilOptions = ObjectCreate(null);
       untilOptions.largestUnit = 'year';
-      const yearsPassed = GetSlot(CalendarDateUntil(calendar, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
+      const yearsPassed = GetSlot(DifferenceDate(calendar, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
       years += yearsPassed;
       const yearsPassedDuration = new TemporalDuration(yearsPassed);
       let daysPassed;
