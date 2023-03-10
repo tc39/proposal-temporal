@@ -2135,13 +2135,13 @@ export function TemporalDateTimeToTime(dateTime) {
   );
 }
 
-export function GetOffsetNanosecondsFor(timeZone, instant) {
+export function GetOffsetNanosecondsFor(timeZone, instant, getOffsetNanosecondsFor) {
   if (typeof timeZone === 'string') {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     timeZone = new TemporalTimeZone(timeZone);
     return Call(GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%'), timeZone, [instant]);
   }
-  const getOffsetNanosecondsFor = GetMethod(timeZone, 'getOffsetNanosecondsFor');
+  getOffsetNanosecondsFor ??= GetMethod(timeZone, 'getOffsetNanosecondsFor');
   const offsetNs = Call(getOffsetNanosecondsFor, timeZone, [instant]);
   if (typeof offsetNs !== 'number') {
     throw new TypeError('bad return from getOffsetNanosecondsFor');
@@ -2306,13 +2306,13 @@ export function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTim
   throw new Error(`assertion failed: invalid disambiguation value ${disambiguation}`);
 }
 
-export function GetPossibleInstantsFor(timeZone, dateTime) {
+export function GetPossibleInstantsFor(timeZone, dateTime, getPossibleInstantsFor = undefined) {
   if (typeof timeZone === 'string') {
     const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
     timeZone = new TemporalTimeZone(timeZone);
     return Call(GetIntrinsic('%Temporal.TimeZone.prototype.getPossibleInstantsFor%'), timeZone, [dateTime]);
   }
-  const getPossibleInstantsFor = GetMethod(timeZone, 'getPossibleInstantsFor');
+  getPossibleInstantsFor ??= GetMethod(timeZone, 'getPossibleInstantsFor');
   const possibleInstants = Call(getPossibleInstantsFor, timeZone, [dateTime]);
   const result = [];
   for (const instant of possibleInstants) {
