@@ -841,6 +841,36 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-differencedate" type="abstract operation">
+      <h1>
+        DifferenceDate (
+          _calendar_: a String or Object,
+          _one_: a Temporal.PlainDate,
+          _two_: a Temporal.PlainDate,
+          _options_: an Object,
+        ): either a normal completion containing a Temporal.Duration, or an abrupt completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the difference between the dates _one_ and _two_.
+          Usually this is accomplished by calling the `dateUntil` method of the given _calendar_ as in CalendarDateUntil, but if the dates are equal or no units greater than days are needed in the difference, the computation will not cause an observable method call.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Assert: _one_.[[Calendar]] and _two_.[[Calendar]] have been determined to be equivalent as with CalendarEquals.
+        1. Assert: _options_ is an ordinary Object.
+        1. Assert: _options_.[[Prototype]] is *null*.
+        1. Assert: _options_ has a *"largestUnit"* data property.
+        1. If _one_.[[ISOYear]] = _two_.[[ISOYear]] and _one_.[[ISOMonth]] = _two_.[[ISOMonth]] and _one_.[[ISODay]] = _two_.[[ISODay]], then
+          1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+        1. If ! Get(_options_, *"largestUnit"*) is *"day"*, then
+          1. Let _days_ be DaysUntil(_one_, _two_).
+          1. Return ! CreateTemporalDuration(0, 0, 0, _days_, 0, 0, 0, 0, 0, 0).
+        1. Return ? CalendarDateUntil(_calendar_, _one_, _two_, _options_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-regulateisodate" type="abstract operation">
       <h1>
         RegulateISODate (
@@ -1021,7 +1051,7 @@
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. If _temporalDate_.[[ISOYear]] = _other_.[[ISOYear]], and _temporalDate_.[[ISOMonth]] = _other_.[[ISOMonth]], and _temporalDate_.[[ISODay]] = _other_.[[ISODay]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _resolvedOptions_).
+        1. Let _result_ be ? DifferenceDate(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _resolvedOptions_).
         1. If _settings_.[[SmallestUnit]] is not *"day"* or _settings_.[[RoundingIncrement]] &ne; 1, then
           1. Let _roundRecord_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _temporalDate_).
           1. Set _result_ to _roundRecord_.[[DurationRecord]].
