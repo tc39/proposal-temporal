@@ -1500,12 +1500,16 @@ export function InterpretISODateTimeOffset(
 
   // "prefer" or "reject"
   const possibleInstants = GetPossibleInstantsFor(timeZone, dt);
-  for (let index = 0; index < possibleInstants.length; index++) {
-    const candidate = possibleInstants[index];
-    const candidateOffset = GetOffsetNanosecondsFor(timeZone, candidate);
-    const roundedCandidateOffset = RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
-    if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
-      return GetSlot(candidate, EPOCHNANOSECONDS);
+  if (possibleInstants.length > 0) {
+    const getOffsetNanosecondsFor =
+      typeof timeZone !== 'string' ? GetMethod(timeZone, 'getOffsetNanosecondsFor') : undefined;
+    for (let index = 0; index < possibleInstants.length; index++) {
+      const candidate = possibleInstants[index];
+      const candidateOffset = GetOffsetNanosecondsFor(timeZone, candidate, getOffsetNanosecondsFor);
+      const roundedCandidateOffset = RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
+      if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
+        return GetSlot(candidate, EPOCHNANOSECONDS);
+      }
     }
   }
 
@@ -2424,8 +2428,10 @@ export function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTim
   const dayBefore = new Instant(utcns.minus(DAY_NANOS));
   const dayAfter = new Instant(utcns.plus(DAY_NANOS));
 
-  const offsetBefore = GetOffsetNanosecondsFor(timeZone, dayBefore);
-  const offsetAfter = GetOffsetNanosecondsFor(timeZone, dayAfter);
+  const getOffsetNanosecondsFor =
+    typeof timeZone !== 'string' ? GetMethod(timeZone, 'getOffsetNanosecondsFor') : undefined;
+  const offsetBefore = GetOffsetNanosecondsFor(timeZone, dayBefore, getOffsetNanosecondsFor);
+  const offsetAfter = GetOffsetNanosecondsFor(timeZone, dayAfter, getOffsetNanosecondsFor);
   const nanoseconds = offsetAfter - offsetBefore;
   switch (disambiguation) {
     case 'earlier': {
