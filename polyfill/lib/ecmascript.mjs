@@ -4303,6 +4303,15 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
   resolvedOptions.largestUnit = settings.largestUnit;
 
+  const Duration = GetIntrinsic('%Temporal.Duration%');
+  if (
+    GetSlot(plainDate, ISO_YEAR) === GetSlot(other, ISO_YEAR) &&
+    GetSlot(plainDate, ISO_MONTH) === GetSlot(other, ISO_MONTH) &&
+    GetSlot(plainDate, ISO_DAY) === GetSlot(other, ISO_DAY)
+  ) {
+    return new Duration();
+  }
+
   const untilResult = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
   let years = GetSlot(untilResult, YEARS);
   let months = GetSlot(untilResult, MONTHS);
@@ -4328,7 +4337,6 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
     ));
   }
 
-  const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(sign * years, sign * months, sign * weeks, sign * days, 0, 0, 0, 0, 0, 0);
 }
 
@@ -4341,6 +4349,21 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
+
+  const Duration = GetIntrinsic('%Temporal.Duration%');
+  if (
+    GetSlot(plainDateTime, ISO_YEAR) === GetSlot(other, ISO_YEAR) &&
+    GetSlot(plainDateTime, ISO_MONTH) === GetSlot(other, ISO_MONTH) &&
+    GetSlot(plainDateTime, ISO_DAY) === GetSlot(other, ISO_DAY) &&
+    GetSlot(plainDateTime, ISO_HOUR) == GetSlot(other, ISO_HOUR) &&
+    GetSlot(plainDateTime, ISO_MINUTE) == GetSlot(other, ISO_MINUTE) &&
+    GetSlot(plainDateTime, ISO_SECOND) == GetSlot(other, ISO_SECOND) &&
+    GetSlot(plainDateTime, ISO_MILLISECOND) == GetSlot(other, ISO_MILLISECOND) &&
+    GetSlot(plainDateTime, ISO_MICROSECOND) == GetSlot(other, ISO_MICROSECOND) &&
+    GetSlot(plainDateTime, ISO_NANOSECOND) == GetSlot(other, ISO_NANOSECOND)
+  ) {
+    return new Duration();
+  }
 
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
     DifferenceISODateTime(
@@ -4397,7 +4420,6 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
     ));
   }
 
-  const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(
     sign * years,
     sign * months,
@@ -4484,6 +4506,16 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
+
+  const Duration = GetIntrinsic('%Temporal.Duration%');
+  if (
+    GetSlot(yearMonth, ISO_YEAR) === GetSlot(other, ISO_YEAR) &&
+    GetSlot(yearMonth, ISO_MONTH) === GetSlot(other, ISO_MONTH) &&
+    GetSlot(yearMonth, ISO_DAY) === GetSlot(other, ISO_DAY)
+  ) {
+    return new Duration();
+  }
+
   resolvedOptions.largestUnit = settings.largestUnit;
 
   const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
@@ -4515,7 +4547,6 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
     ));
   }
 
-  const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -4532,6 +4563,9 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
 
   const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
   const ns2 = GetSlot(other, EPOCHNANOSECONDS);
+
+  const Duration = GetIntrinsic('%Temporal.Duration%');
+
   let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
   if (
     settings.largestUnit !== 'year' &&
@@ -4560,6 +4594,9 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
           'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.'
       );
     }
+
+    if (ns1.equals(ns2)) return new Duration();
+
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
 
@@ -4604,7 +4641,6 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
     }
   }
 
-  const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(
     sign * years,
     sign * months,

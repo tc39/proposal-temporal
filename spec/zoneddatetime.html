@@ -1481,6 +1481,8 @@
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
           1. Throw a *RangeError* exception.
+        1. If _zonedDateTime_.[[Nanoseconds]] = _other_.[[Nanoseconds]], then
+          1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _settings_.[[LargestUnit]], _resolvedOptions_).
         1. If _settings_.[[SmallestUnit]] is *"nanosecond"* and _settings_.[[RoundingIncrement]] is 1, then
           1. Return ! CreateTemporalDuration(_sign_ &times; _difference_.[[Years]], _sign_ &times; _difference_.[[Months]], _sign_ &times; _difference_.[[Weeks]], _sign_ &times; _difference_.[[Days]], _sign_ &times; _difference_.[[Hours]], _sign_ &times; _difference_.[[Minutes]], _sign_ &times; _difference_.[[Seconds]], _sign_ &times; _difference_.[[Milliseconds]], _sign_ &times; _difference_.[[Microseconds]], _sign_ &times; _difference_.[[Nanoseconds]]).
