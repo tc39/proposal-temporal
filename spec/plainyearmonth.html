@@ -636,6 +636,8 @@
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, &laquo; *"week"*, *"day"* &raquo;, *"month"*, *"year"*).
+        1. If _yearMonth_.[[ISOYear]] = _other_.[[ISOYear]] and _yearMonth_.[[ISOMonth]] = _other_.[[ISOMonth]] and _yearMonth_.[[ISODay]] = _other_.[[ISODay]], then
+          1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _thisFields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
